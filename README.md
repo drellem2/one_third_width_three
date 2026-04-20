@@ -8,7 +8,7 @@
 **📄 Paper (PDF):** **[`main.pdf`](main.pdf)** &nbsp;·&nbsp;
 **LaTeX source:** [`main.tex`](main.tex) (Theorem 1.1 / `thm:main`) &nbsp;·&nbsp;
 **Lean 4 formalization:** [`lean/`](lean/) &nbsp;·&nbsp;
-**Contact:** [gate46dmiller@gmail.com](mailto:gate46dmiller@gmail.com)
+**Contact:** [d.miller@hey.com](mailto:d.miller@hey.com)
 
 [![Lean build](https://github.com/drellem2/one_third_width_three/actions/workflows/lean.yml/badge.svg)](https://github.com/drellem2/one_third_width_three/actions/workflows/lean.yml)
 ![Release](https://img.shields.io/badge/release-v0.1--candidate-yellow)
@@ -237,7 +237,7 @@ See [`LICENSE`](LICENSE) for the full text.
 
 ## Contact
 
-- **Email:** [gate46dmiller@gmail.com](mailto:gate46dmiller@gmail.com)
+- **Email:** [d.miller@hey.com](mailto:d.miller@hey.com)
 - **Issues and pull requests** on this repository are also welcome
   and are the preferred channel for anything proof-specific (so the
   discussion is public and line-number-anchored).
