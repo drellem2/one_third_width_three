@@ -1,0 +1,24 @@
+# Editor / IDE
+.aider*
+.DS_Store
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# Lean / lake
+lean/.lake/
+lean/build/
+lean/lake-packages/

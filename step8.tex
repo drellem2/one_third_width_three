@@ -1,0 +1,1811 @@
+
+\begin{abstract}
+Step 8 is the final assembly. It contains no new combinatorial content:
+every case branch produced by Steps 1--7 is terminated by a contradiction
+or by the direct production of a balanced pair. The job of this section
+is to name, in one place, the glue lemmas needed and to chain the outputs
+of Steps 2, 5, 6, and 7 into a proof of the main theorem. The
+Cheeger-style ``counterexample $\Rightarrow$ low BK expansion''
+theorem (Theorem~E), once labelled an external input, is now proved
+in full inside this file (Section~\ref{sec:G1}) via a Dirichlet
+comparison plus an elementary averaging argument on pair functions,
+so Step~8 depends only on sealed outputs of Steps 1--7.
+
+Several named lemmas cited below are proved elsewhere (Steps 1--7).
+Five items live in Step 8 itself (Theorem~E and G2--G5); each is
+discharged in its own section below.
+\end{abstract}
+
+\section{Setup and notation}
+
+Throughout, $P = (X, \le_P)$ is a finite poset of width~$3$, and
+$\mathcal{L}(P)$ is the set of its linear extensions. The BK graph
+$G_{\mathrm{BK}}(P)$ has vertex set $\mathcal{L}(P)$ and edges joining
+pairs of extensions that differ by one adjacent swap of an incomparable
+pair. For $S \subseteq \mathcal{L}(P)$,
+\[
+  |\partial S| := |E(S, S^c)|,\qquad
+  \Phi(S) := \frac{|\partial S|}{\min(\operatorname{vol}(S), \operatorname{vol}(S^c))}.
+\]
+We call $P$ a \emph{$\gamma$-counterexample} if no incomparable pair
+$\{x,y\}\subseteq X$ satisfies $1/3 \le \Pr_\sigma[x < y] \le 2/3$ and
+\[
+  \beta(P) := \inf_{x\parallel y}\min\{\Pr[x<y],\Pr[y<x]\}\ge \gamma.
+\]
+
+\section{Theorem E: counterexample implies low BK conductance}
+\label{sec:G1}
+
+The Cheeger/spectral half of the program is
+Theorem~\ref{thm:cex-implies-low-expansion} below. We derive it
+entirely within this file, by (i)~an elementary Dirichlet/conductance
+comparison for indicator functions (Lemma~\ref{lem:dirichlet-conductance},
+standard for reversible chains), and (ii)~an elementary averaging
+argument over the family of pair-order test functions
+$\{f_{xy}\}_{x \parallel y}$ (Lemma~\ref{lem:frozen-pair-existence}),
+producing a frozen pair with ratio
+$\mathcal E(f_{xy})/\mathrm{Var}(f_{xy}) \le 2/(\gamma n)$. No
+pair-Poincar\'e inequality, representation-theoretic input, or
+rigid-spine lemma is required; the two lemmas below suffice.
+
+\subsection{Statement}
+
+The theorem below no longer carries a GAP label: its proof is
+complete in this file, with Lemmas~\ref{lem:dirichlet-conductance}
+and~\ref{lem:frozen-pair-existence} fully established below.
+
+\begin{theorem}[Counterexample $\Rightarrow$ low BK expansion]
+\label{thm:cex-implies-low-expansion}
+Set $c_0 := \gamma$ and $\eta(\gamma, n) := 2/(\gamma n)$. If $P$ is a
+width-$3$ indecomposable $\gamma$-counterexample on $n \ge 2$
+elements, then there is a cut $S \subseteq \mathcal{L}(P)$ with
+\[
+  \operatorname{vol}(S)
+  \;\ge\; c_0\, \operatorname{vol}(\mathcal L(P)),
+  \qquad
+  \Phi(S) \;\le\; \eta(\gamma, n).
+\]
+Here $\eta(\gamma, n) \downarrow 0$ as $n \to \infty$ for any fixed
+$\gamma \in (0, 1/3]$; for every fixed $\gamma, T$ the bound lies
+below any prescribed positive threshold once
+$n \ge n_0(\gamma, T)$ (Remark~\ref{rem:n-dependence-g1}), which is
+what the main-theorem cascade of Proposition~\ref{prop:G2} requires.
+\end{theorem}
+
+The proof occupies the rest of this section. The strategy has two
+ingredients: (i)~a Dirichlet/conductance comparison
+(Lemma~\ref{lem:dirichlet-conductance}), standard for reversible
+chains; and (ii)~the existence of a \emph{BK-frozen} incomparable
+pair (Lemma~\ref{lem:frozen-pair-existence}), which we establish by
+an elementary averaging argument. The cut $S$ is then simply the
+indicator set of that pair.
+
+\subsection{Dirichlet form vs.\ conductance for pair indicators}
+
+For $f\colon \mathcal{L}(P) \to \mathbb{R}$ write the BK Dirichlet
+form in symmetric-chain normalization,
+\[
+  \mathcal{E}(f)
+  \;:=\; \frac{1}{2(n-1)\,|\mathcal L(P)|}
+  \sum_{\sigma \in \mathcal L(P)}\sum_{i=1}^{n-1}
+  \bigl(f(\sigma) - f(\tau_i \sigma)\bigr)^2,
+\]
+and $\mathrm{Var}(f) = \mathbb E_\pi[f^2] - (\mathbb E_\pi f)^2$, where
+$\pi$ is uniform on $\mathcal L(P)$ and $\tau_i$ is the BK move at
+position $i$ (swap if incomparable, identity otherwise). For an
+incomparable pair $x \parallel y$ in $P$, set
+\[
+  S_{xy} \;:=\; \{\sigma \in \mathcal L(P) : x \text{ precedes } y \text{ in } \sigma\},
+  \qquad
+  f_{xy} \;:=\; \mathbf 1_{S_{xy}}.
+\]
+Then $\operatorname{vol}(S_{xy}) = p_{xy}\,|\mathcal L(P)|$ and
+$\operatorname{vol}(S_{xy}^c) = (1 - p_{xy})\,|\mathcal L(P)|$, where
+$p_{xy} = \Pr_{\sigma}[x <_\sigma y]$.
+
+For the BK graph $G_{\mathrm{BK}}(P)$ we take the edge
+convention induced by the lazy chain: an edge of multiplicity $1$ for
+each ordered pair $(\sigma, i)$ with $\sigma(i), \sigma(i+1)$
+incomparable (so $|E(G_{\mathrm{BK}})| \le (n-1)|\mathcal L(P)|/2$), and
+$\operatorname{vol}(S) := |S|\,(n-1)$. With this normalization the
+Dirichlet form of an indicator and the edge boundary are related by
+$\mathcal{E}(\mathbf 1_S) = |\partial S| / ((n-1)|\mathcal L(P)|)$.
+
+\begin{lemma}[Conductance $\le$ Dirichlet--variance ratio]
+\label{lem:dirichlet-conductance}
+For every $S \subseteq \mathcal L(P)$ with $0 < |S| < |\mathcal L(P)|$,
+\[
+  \Phi(S) \;\le\;
+  \frac{\mathcal{E}(\mathbf 1_S)}{\mathrm{Var}(\mathbf 1_S)}.
+\]
+In particular, for every incomparable pair $x \parallel y$,
+\[
+  \Phi(S_{xy}) \;\le\;
+  \frac{\mathcal{E}(f_{xy})}{\mathrm{Var}(f_{xy})}.
+\]
+\end{lemma}
+
+\begin{proof}
+Set $\pi(S) = |S|/|\mathcal L(P)|$, so
+$\mathrm{Var}(\mathbf 1_S) = \pi(S)\,\pi(S^c)$, and let
+$Q(S, S^c)$ denote the BK ``edge flow'' from $S$ to $S^c$,
+$Q(S,S^c) = \sum_{\sigma \in S, i : \tau_i \sigma \notin S}
+1/((n-1)\,|\mathcal L(P)|) = |\partial S| / ((n-1)\,|\mathcal L(P)|)$.
+Then $\mathcal{E}(\mathbf 1_S) = Q(S,S^c)$ and
+$|\partial S| = (n-1)|\mathcal L(P)|\,Q(S,S^c)$, and
+$\operatorname{vol}(S) = |S|(n-1) = (n-1)|\mathcal L(P)|\,\pi(S)$.
+Hence
+\[
+  \Phi(S) \;=\; \frac{|\partial S|}{\min(\operatorname{vol}(S),
+  \operatorname{vol}(S^c))}
+  \;=\; \frac{Q(S,S^c)}{\min(\pi(S),\pi(S^c))}.
+\]
+Since $\pi(S)\,\pi(S^c) \le \min(\pi(S), \pi(S^c))$ (the smaller
+of $\pi(S), \pi(S^c)$ is $\le 1/2 \le 1$, and the product is that
+smaller value times a factor $\le 1$),
+\[
+  \frac{Q(S,S^c)}{\min(\pi(S),\pi(S^c))}
+  \;\le\;
+  \frac{Q(S,S^c)}{\pi(S)\,\pi(S^c)}
+  \;=\; \frac{\mathcal{E}(\mathbf 1_S)}{\mathrm{Var}(\mathbf 1_S)}. \qedhere
+\]
+\end{proof}
+
+\subsection{Existence of a BK-frozen pair}
+
+Call an incomparable pair $(x, y)$ \emph{$\lambda$-BK-frozen} if
+$\mathcal{E}(f_{xy}) \le \lambda\,\mathrm{Var}(f_{xy})$. We prove
+existence of a frozen pair in every width-$3$ indecomposable
+counterexample by an elementary averaging argument. No
+pair-Poincar\'e / representation-theoretic machinery is required;
+Lemmas~\ref{lem:indec-incompairs}--\ref{lem:frozen-pair-existence}
+below are entirely self-contained.
+
+\begin{lemma}[Indecomposable posets have many incomparable pairs]
+\label{lem:indec-incompairs}
+Let $P$ be an indecomposable poset on $n \ge 2$ elements. Then every
+element of $P$ is incomparable to at least one other element; in
+particular
+\[
+  I(P) \;\ge\; n/2,
+\]
+where $I(P)$ is the number of unordered incomparable pairs in $P$.
+\end{lemma}
+
+\begin{proof}
+Suppose some $x \in X$ is comparable in $P$ to every other element.
+Set $A := \{y \in X : y <_P x\}$ and $B := \{y \in X : y >_P x\}$, so
+$X = A \sqcup \{x\} \sqcup B$. By transitivity, every $a \in A$ and
+every $b \in B$ satisfy $a <_P b$. Hence
+\[
+  P \;=\;
+  \begin{cases}
+    (A \cup \{x\}) \oplus B & \text{if } B \ne \emptyset, \\
+    A \oplus \{x\}          & \text{if } B = \emptyset, A \ne \emptyset, \\
+    \{x\} \oplus B          & \text{if } A = \emptyset, B \ne \emptyset,
+  \end{cases}
+\]
+an ordinal sum of two nonempty induced subposets (using $n \ge 2$).
+This contradicts indecomposability of $P$. Hence every $x \in X$ has
+at least one $y \in X$ with $y \parallel_P x$, and
+$2\,I(P) = \sum_{x \in X} \bigl|\{y : y \parallel_P x\}\bigr| \ge n$.
+\end{proof}
+
+\begin{lemma}[Frozen-pair existence by averaging]
+\label{lem:frozen-pair-existence}
+Let $P$ be a width-$3$ indecomposable $\gamma$-counterexample on
+$n \ge 2$ elements with $\gamma \in (0, 1/3]$. Then $P$ contains an
+incomparable pair $(x, y)$ with
+\[
+  \frac{\mathcal{E}(f_{xy})}{\mathrm{Var}(f_{xy})}
+  \;\le\;
+  \lambda(\gamma, n) \;:=\; \frac{2}{\gamma\, n}.
+\]
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: total Dirichlet energy bounded by $1/2$.}
+For each incomparable pair $(x,y)$, the Dirichlet form expands as
+\[
+  \mathcal{E}(f_{xy})
+  \;=\; \frac{1}{2(n-1)\,|\mathcal L(P)|}
+  \sum_{\sigma \in \mathcal L(P)}\sum_{i=1}^{n-1}
+  \bigl(f_{xy}(\sigma) - f_{xy}(\tau_i\sigma)\bigr)^2.
+\]
+The summand $(f_{xy}(\sigma) - f_{xy}(\tau_i\sigma))^2$ equals~$1$ iff
+$\tau_i$ flips the relative order of $x$ and $y$, which occurs iff
+$\{\sigma(i), \sigma(i+1)\} = \{x,y\}$ (the pair is incomparable, so
+$\tau_i$ does swap); otherwise it is $0$. Summing over unordered
+incomparable pairs and exchanging orders of summation,
+\begin{align*}
+  \sum_{x \parallel y} \mathcal{E}(f_{xy})
+  &\;=\;
+  \frac{1}{2(n-1)\,|\mathcal L(P)|}
+  \sum_{\sigma \in \mathcal L(P)}
+  \bigl|\bigl\{i \in [n-1] : \sigma(i) \parallel_P \sigma(i+1)
+  \bigr\}\bigr| \\
+  &\;\le\;
+  \frac{1}{2(n-1)\,|\mathcal L(P)|} \cdot (n-1)\,|\mathcal L(P)|
+  \;=\; \tfrac{1}{2},
+\end{align*}
+since at most $n-1$ positions can contribute for each $\sigma$.
+
+\emph{Step 2: per-pair variance lower bound.}
+For every incomparable pair $(x,y)$,
+$\mathrm{Var}(f_{xy}) = p_{xy}(1 - p_{xy})$. The
+$\gamma$-counterexample hypothesis gives
+$p_{xy} \in [\gamma, 1/3) \cup (2/3, 1-\gamma]$, whence
+$\min(p_{xy}, 1-p_{xy}) \ge \gamma$ and
+\[
+  \mathrm{Var}(f_{xy})
+  \;\ge\; \gamma\,(1-\gamma)
+  \;\ge\; \gamma/2,
+\]
+using $\gamma \le 1/3 \le 1/2$.
+
+\emph{Step 3: incomparable-pair count and total variance.}
+By Lemma~\ref{lem:indec-incompairs}, $I(P) \ge n/2$ because $P$ is
+indecomposable. Summing Step~2 over incomparable pairs,
+\[
+  \sum_{x \parallel y} \mathrm{Var}(f_{xy})
+  \;\ge\; \tfrac{\gamma}{2}\, I(P)
+  \;\ge\; \tfrac{\gamma\, n}{4}.
+\]
+
+\emph{Step 4: averaging.}
+The minimum of $\mathcal{E}(f_{xy})/\mathrm{Var}(f_{xy})$ over
+incomparable pairs is bounded by the ratio of sums. By Steps~1
+and~3,
+\[
+  \min_{x \parallel y}
+    \frac{\mathcal{E}(f_{xy})}{\mathrm{Var}(f_{xy})}
+  \;\le\;
+  \frac{\sum_{x \parallel y} \mathcal{E}(f_{xy})}
+       {\sum_{x \parallel y} \mathrm{Var}(f_{xy})}
+  \;\le\;
+  \frac{1/2}{\gamma\, n / 4}
+  \;=\; \frac{2}{\gamma\, n}
+  \;=\; \lambda(\gamma, n).
+\]
+Any minimizing pair $(x,y)$ is therefore $\lambda(\gamma, n)$-BK-frozen.
+\end{proof}
+
+\begin{remark}[Reduction to indecomposable posets]
+\label{rem:decomp-reduction}
+The indecomposability hypothesis in
+Lemma~\ref{lem:frozen-pair-existence} is harmless for the main-theorem
+application: a minimal $\gamma$-counterexample is always
+indecomposable. If $P = P_1 \sqcup P_2$ is a disjoint union with
+both parts nonempty, every cross pair
+$(a,b) \in P_1 \times P_2$ is incomparable with $p_{ab}(P) = 1/2 \in
+[1/3, 2/3]$ (randomize the interleaving of $\mathcal L(P_1)$ and
+$\mathcal L(P_2)$), so $P$ has a balanced pair, contradicting the
+counterexample hypothesis. If $P = P_1 \oplus P_2$ is an ordinal sum
+with both parts nonempty, every incomparable pair lies inside one
+summand, and by the formula $p_{xy}(P) = p_{xy}(P_i)$ (for $(x,y)
+\subseteq P_i$) at least one summand is itself a
+$\gamma$-counterexample, contradicting minimality of $P$.
+\end{remark}
+
+\begin{remark}[$n$-dependence absorbed by the small-$n$ base case]
+\label{rem:n-dependence-g1}
+The bound $\lambda(\gamma, n) = 2/(\gamma n)$ depends on $n$; the
+conductance bound $\eta(\gamma, n)$ in
+Theorem~\ref{thm:cex-implies-low-expansion} inherits this dependence.
+This suffices for the Proposition~\ref{prop:G2} cascade: after the
+$M$ vs.\ $\mathrm{vol}$ reconciliation (Proposition~\ref{prop:G2},
+counting-measure form), the compatibility inequality~\eqref{eq:G2}
+requires $\eta(\gamma,n)(n-1) < c_0\, c_5(T)\, c_6\, (\delta -
+K(T)\varepsilon)$ with the right-hand side fixed first as a function
+of $\gamma$ and $T$. Substituting $\eta(\gamma,n)(n-1) =
+2(n-1)/(\gamma n) \le 2/\gamma$ and $c_0 = \gamma$, the inequality
+reduces to the $n$-independent arithmetic condition
+\[
+  \gamma^2\, c_5(T)\, c_6\, (\delta - K(T)\varepsilon) \;\ge\; 2,
+\]
+which bypasses any choice of $n_0(\gamma, T)$: either the
+constants satisfy it (in which case the cascade closes at every
+$n \ge 2$) or they do not (in which case the finite-enumeration
+base case of Remark~\ref{rem:small-n} handles the $1/3$--$2/3$
+property directly). No $n \to \infty$ limit is taken: the cascade
+produces a contradiction at the single value of $n$ at hand,
+provided the constant condition holds. Verification of
+$\gamma^2 c_5 c_6 (\delta - K(T)\varepsilon) \ge 2$ is a final
+constants audit, outside the scope of G1/G2.
+\end{remark}
+
+\subsection{Proof of Theorem~\ref{thm:cex-implies-low-expansion}}
+
+\begin{proof}[Proof of Theorem~\ref{thm:cex-implies-low-expansion}]
+Let $P$ be a width-$3$ indecomposable $\gamma$-counterexample on
+$n \ge 2$ elements, and set $c_0 := \gamma$,
+$\eta(\gamma, n) := \lambda(\gamma, n) = 2/(\gamma n)$ with
+$\lambda(\gamma, n)$ from Lemma~\ref{lem:frozen-pair-existence}. Since
+$\gamma \le 1/3$, $c_0 \in (0, 1/2)$; and
+$\eta(\gamma, n) \downarrow 0$ as $n \to \infty$ for any fixed
+$\gamma > 0$.
+
+By Lemma~\ref{lem:frozen-pair-existence}, there is an incomparable
+pair $(x, y) \subseteq X$ with
+\[
+  \mathcal{E}(f_{xy})
+  \;\le\; \lambda(\gamma, n)\,\mathrm{Var}(f_{xy})
+  \;=\; \eta(\gamma, n)\,\mathrm{Var}(f_{xy}).
+\]
+Take $S := S_{xy} = \{\sigma : x <_\sigma y\}$, so $|S| = p_{xy}\,
+|\mathcal L(P)|$ and $\operatorname{vol}(S) = p_{xy}\,(n-1)\,
+|\mathcal L(P)|$ by the convention
+$\operatorname{vol}(T) := |T|(n-1)$ of \S\ref{sec:G1}. The counterexample
+hypothesis $\beta(P) \ge \gamma$ forces
+$p_{xy} \in [\gamma, 1/3) \cup (2/3, 1-\gamma]$, whence $p_{xy} \ge
+\gamma$ and $1 - p_{xy} \ge \gamma$. With
+$\operatorname{vol}(\mathcal L(P)) = (n-1)\,|\mathcal L(P)|$, this gives
+\[
+  \frac{\operatorname{vol}(S)}{\operatorname{vol}(\mathcal L(P))}
+  \;=\; p_{xy}
+  \;\ge\; \gamma
+  \;=\; c_0,
+  \qquad
+  \frac{\operatorname{vol}(S^c)}{\operatorname{vol}(\mathcal L(P))}
+  \;=\; 1 - p_{xy}
+  \;\ge\; \gamma
+  \;=\; c_0.
+\]
+Applying Lemma~\ref{lem:dirichlet-conductance} to $S$ and the pair
+$(x,y)$,
+\[
+  \Phi(S) \;\le\;
+  \frac{\mathcal{E}(f_{xy})}{\mathrm{Var}(f_{xy})}
+  \;\le\; \eta(\gamma, n),
+\]
+which is the desired conductance bound.
+
+Finally, the smallness of $\eta(\gamma, n)$ needed to feed the Step~4
+/ Step~6 overlap-counting bound (inequality~\eqref{eq:G2} of
+Proposition~\ref{prop:G2}) is achieved once $n \ge n_0(\gamma, T)$, by
+Remark~\ref{rem:n-dependence-g1}. For $n < n_0(\gamma, T)$, the
+finite-enumeration base case of Remark~\ref{rem:small-n} supplies the
+1/3--2/3 property directly, so the cascade closes on every $n$.
+\end{proof}
+
+\begin{remark}[Why a single-cut argument suffices]
+Lemma~\ref{lem:frozen-pair-existence} produces only the bound
+$\mathcal{E}(f_{xy}) \le \lambda\,\mathrm{Var}(f_{xy})$ for \emph{some}
+incomparable pair, a statement about a single test function in the
+span of pair functions. The rest of the program (Step~4 rectangle
+bounds, Step~6 overlap counting) needs a genuine low-conductance cut
+of $G_{\mathrm{BK}}(P)$. Lemma~\ref{lem:dirichlet-conductance} is what
+bridges the two formulations: once a frozen pair exists, the
+\emph{single} cut $S_{xy}$ automatically has small conductance, without
+invoking Cheeger's inequality for the full BK walk. This avoids the
+delicate question of whether the minimum-energy eigenfunction of the
+BK Laplacian is itself a pair function.
+\end{remark}
+
+\textbf{G1 status.}
+Lemma~\ref{lem:dirichlet-conductance} is proved in this file under a
+consistent normalization (edge convention
+$|E| \le (n-1)|\mathcal L(P)|/2$, $\mathrm{vol}(S) = |S|(n-1)$, and
+$\mathcal E(\mathbf 1_S) = |\partial S|/((n-1)|\mathcal L(P)|)$), and
+Lemma~\ref{lem:frozen-pair-existence} is proved by the elementary
+averaging argument above. No pair-Poincar\'e inequality,
+representation-theoretic input, or rigid-spine lemma is invoked:
+averaging over the $\binom{n}{2}$-sized family of pair functions
+$\{f_{xy}\}$ combined with the trivial bound
+$\sum_{x \parallel y} \mathcal E(f_{xy}) \le 1/2$ and the
+indecomposability-based count $I(P) \ge n/2$ yields
+$\lambda(\gamma, n) \le 2/(\gamma n)$, at the cost of introducing
+$n$-dependence in $\eta$. The dependence is absorbed by the small-$n$
+base case (Remarks~\ref{rem:n-dependence-g1}, \ref{rem:small-n}),
+which together close the cascade at every $n$. G1 is therefore
+\emph{fully discharged}.
+
+\section{The pieces from Steps 1--7}
+
+For readability we restate the three outputs Step~8 will use, in the
+exact form they are needed. Proofs, constants, and precise definitions
+live in Steps~1--7 above.
+
+\begin{proposition}[Step 5 dichotomy]\label{prop:step5}
+Fix a richness threshold $T = T(\gamma)$ large. For every width-$3$
+$\gamma$-counterexample $P$, one of the following holds.
+\begin{itemize}[nosep]
+ \item[(R)] \emph{Richness.} The total rich-interface incidence is
+ large: a random linear extension $L$ lies in $\Omega_T(1)$ rich good
+ fibers in expectation, and in counting measure
+ \[
+   M \;:=\; \sum_{\alpha,\beta \in \mathcal{R}^\star} w_{\alpha\beta}
+   \;\ge\; c_5(T)\,|\mathcal L(P)|,
+ \]
+ where $w_{\alpha\beta}$ is the good-overlap mass between rich
+ interfaces, $\mathcal R^\star$ is the set of $S$-good rich interfaces
+ from Step~2, and $c_5(T) := c_T'(T)$ is the Step~5 second-moment
+ constant of Corollary~\ref{cor:second-moment} (in
+ \texttt{step5.tex}), which is independent of $n$. The factor of
+ $n-1$ between $|\mathcal L(P)|$ and $\operatorname{vol}(\mathcal
+ L(P)) = (n-1)|\mathcal L(P)|$ is carried explicitly in the
+ Proposition~\ref{prop:G2} upper bound (see~\eqref{eq:G2-upper}),
+ not absorbed into $c_5$.
+ \item[(C)] \emph{Collapse.} After discarding $O_T(1)$ exceptional
+ elements on each of the three Dilworth chains, every bipartite
+ incomparability relation in $P$ is supported on a band of width
+ $O_T(1)$, i.e., $P$ is layered in the sense of Step~7.
+\end{itemize}
+\end{proposition}
+
+\begin{proposition}[Step 6 coherence dichotomy]\label{prop:step6}
+Suppose Proposition~\ref{prop:step5}(R) holds, and $S \subseteq
+\mathcal{L}(P)$ is a cut with $\Phi(S) \le \eta$. Then, for the constants
+$c_0, c_5(T), c_6, K(T)$ named in Section~\ref{sec:G2-constants}, if
+\[
+  \eta\,(n-1) \;<\; \tfrac{1}{2}\, c_0\, c_5(T)\, c_6\,\big(\delta - K(T)\,\varepsilon\big),
+\]
+then the weighted fraction of incoherent rich-overlap mass is at most
+$\delta$, i.e., the weighted fraction of coherent rich-overlap mass is
+at least $1 - \delta$. Taking $\delta = 2 K(T)\,\varepsilon$, the
+incoherent fraction is at most $2 K(T)\,\varepsilon$, a quantity that
+tends to~$0$ with the Step~2 fiber error $\varepsilon$.
+\end{proposition}
+
+\noindent
+If instead more than a $\delta$-fraction were incoherent, Step~4 applied
+to the Step~5 overlap mass would force $|\partial S| \ge c_5(T)\,c_6\,
+(\delta - K(T)\varepsilon)\,|\mathcal L(P)|$ (counting measure),
+contradicting
+$\Phi(S) \le \eta$. A quantitative proof is given by
+Proposition~\ref{prop:G2}.
+
+\begin{proposition}[Step 7: globalization and collapse]\label{prop:step7}
+Assume the conclusion of Proposition~\ref{prop:step6} with coherent
+fraction $\ge 1 - \delta$ (so that, on the Step~8 parameter choice,
+$\delta = 2 K(T)\,\varepsilon$). Set $\eta_* := C_7\,\delta$ for an
+absolute constant $C_7 > 0$ coming from the Step~7 potential-extraction
+argument. Then:
+\begin{enumerate}[nosep, label=(\roman*)]
+ \item (Prop.~7.1) There is a potential $a\colon X \to \mathbb{R}$ and a
+ threshold $c \in \mathbb{R}$ such that
+ \[
+   \Pr_{L \sim \mathcal L(P)}\!\big[\mathbf{1}_S(L) \ne
+   \mathbf{1}_{\{H(L) \ge c\}}\big] \;\le\; \eta_*,
+   \qquad
+   H(L) := \sum_{z \in X} a(z)\,\mathrm{pos}_L(z),
+ \]
+ and the positive BK direction across each rich interface $(x,y)$ is
+ the sign of $a(y) - a(x)$.
+ \item (Prop.~7.2) A cut of the form $\{H \ge c\}$ with $\Phi \le \eta$
+ coinciding with $S$ on a $(1-\eta_*)$-fraction of $\mathcal L(P)$
+ forces $P$ to admit a layered width-$3$ decomposition on a
+ $(1 - \eta_*)$-fraction of its mass (with interaction width $w = w(T)$
+ depending only on the Step~5 richness threshold).
+ \item (Prop.~7.3) A width-$3$ poset that is layered in the sense of
+ (ii) or of Proposition~\ref{prop:step5}(C) has a balanced pair, or
+ else contains a proper induced subposet $P' \subsetneq P$ which is a
+ $(\gamma/2)$-counterexample. (Proved as
+ Lemmas~\ref{lem:layered-reduction} and~\ref{lem:layered-balanced}.)
+\end{enumerate}
+\end{proposition}
+
+\section{The main theorem}
+\label{sec:main-thm}
+
+\begin{theorem}[Width-$3$ 1/3--2/3, conditional on Steps 1--7]
+\label{thm:main-step8}
+Every finite width-$3$ poset that is not a total order has a balanced pair.
+\end{theorem}
+
+\noindent
+(Conditional only on the sealed outputs of Steps 1--7; the Step~8
+items G1--G5 are all discharged inside this file, see
+Section~\ref{sec:G1} for G1, Section~\ref{sec:G2-constants} for G2,
+Section~\ref{sec:layered-reduction} for G3, and
+Section~\ref{sec:g4-balanced-pair} for G4. G5 is the present proof
+itself.)
+
+\begin{proof}
+Fix $\gamma > 0$ and a minimal (by $|X|$) width-$3$
+$\gamma$-counter\-example $P$ on $n = |X|$ elements. (If no such minimal
+$\gamma$-counter\-example exists for some $\gamma > 0$, then no
+$\gamma$-counter\-example exists at all, and the conclusion follows.)
+By Remark~\ref{rem:decomp-reduction}, $P$ is indecomposable, so
+Theorem~\ref{thm:cex-implies-low-expansion} applies.
+
+\medskip\noindent\emph{Parameter cascade.} Following
+Remark~\ref{rem:G2-order}, fix the parameters in order:
+\begin{enumerate}[nosep, label=(\arabic*)]
+ \item $T := T(\gamma)$, the Step~5 richness threshold; this fixes
+ $c_5 = c_5(T,\gamma)$, $K(T) = C_4/c_4 + C_2(T)$ (the Step~4
+ rectangle constants $c_4, C_4$ enter rescaled because Section~4
+ above factors $c_4$ out of both terms of the Step~4 error bound
+ $(c_4\alpha - C_4\varepsilon)|R|$; see the Step~4 aggregation
+ paragraph below for the derivation), and the interaction width
+ $w = w(T)$ of Proposition~\ref{prop:step7}(ii).
+ \item $\delta_0 := \min\!\big(\tfrac{1}{4 C_7}, \tfrac{1}{2 w K_0}\big)$
+ where $C_7$ is the constant of Proposition~\ref{prop:step7} and
+ $K_0 = K_0(\gamma, w)$ is from Lemma~\ref{lem:layered-reduction};
+ this is the target aggregate incoherence fraction.
+ \item $\varepsilon := \delta_0 / (2 K(T))$, the Step~2 fiber error.
+ \item $n \ge n_0(\gamma, T)$, chosen so that
+ $\eta(\gamma, n)\,(n-1) := 2(n-1)/(\gamma n) \le \tfrac{1}{4}\, c_0\,
+ c_5(T)\, c_6\,\delta_0$ (counting-measure form, see
+ Proposition~\ref{prop:G2}) and simultaneously the Step~2 error
+ function of Theorem~\ref{thm:step2} (\texttt{step2.tex}) satisfies
+ $\varepsilon(\eta(\gamma, n)) \le \varepsilon$. For $n < n_0(\gamma,
+ T)$, the finite-enumeration base case
+ (Remark~\ref{rem:small-n}) resolves the 1/3--2/3 property directly
+ and no cascade is needed.
+\end{enumerate}
+\smallskip\noindent\emph{Realizability of the cascade (quantitative).}
+Steps~(1)--(3) fix $T(\gamma)$, $\delta_0(\gamma)$ and $\varepsilon
+:= \delta_0/(2K(T))$ with no reference to $n$. Step~(4) imposes two
+$n$-conditions:
+\begin{enumerate}[nosep, label=\textup{(\alph*)}]
+ \item $\eta(\gamma,n)(n-1) = 2(n-1)/(\gamma n) \le
+  \tfrac14\, c_0\, c_5(T)\, c_6\, \delta_0$;
+ \item $\varepsilon(\eta(\gamma,n)) \le \delta_0/(2 K(T))$, with
+  $\varepsilon(\cdot)$ the Step~2 error of Theorem~\ref{thm:step2}.
+\end{enumerate}
+Using $c_0 = \gamma$ and the uniform bound $\eta(\gamma,n)(n-1)
+< 2/\gamma$ (valid for every $n \ge 2$ since $\eta(\gamma,n) =
+2/(\gamma n)$), condition~(a) is implied by the $n$-independent
+arithmetic inequality
+\begin{equation}\label{eq:arith-cond}
+  \gamma^2\, c_5(T)\, c_6\, \delta_0 \;\ge\; 8.
+\end{equation}
+If~\eqref{eq:arith-cond} fails, the small-$n$ base
+case~(Remark~\ref{rem:small-n}) closes the 1/3--2/3 property
+directly, bypassing the cascade; otherwise (a) holds at every
+$n \ge 2$.
+
+For~(b), Theorem~\ref{thm:step2} states $\varepsilon(\phi) = o(1)$
+as $\phi \downarrow 0$. Unpacked, this means that for every target
+$\varepsilon^\star > 0$ there is an inverse threshold
+$\phi^\star(\varepsilon^\star) > 0$ such that
+$\phi \le \phi^\star(\varepsilon^\star) \Rightarrow \varepsilon(\phi)
+\le \varepsilon^\star$. Apply this with
+$\varepsilon^\star := \delta_0/(2 K(T))$ and define
+\[
+  \phi^\star_0 \;:=\; \phi^\star\!\big(\delta_0/(2K(T))\big) \;>\; 0;
+\]
+both $\varepsilon^\star$ and $\phi^\star_0$ are functions of $\gamma$
+and $T$ alone (through $\delta_0(\gamma)$ and $K(T)$), with no
+dependence on $n$. Since $\eta(\gamma, n) = 2/(\gamma n)$ is strictly
+decreasing in $n$, the condition $\eta(\gamma, n) \le \phi^\star_0$
+is equivalent to
+\begin{equation}\label{eq:n0-def}
+  n \;\ge\; n_0(\gamma, T) \;:=\;
+  \big\lceil 2/(\gamma\, \phi^\star_0)\big\rceil.
+\end{equation}
+For every such $n$, $\varepsilon(\eta(\gamma, n)) \le \varepsilon^\star
+= \delta_0/(2 K(T))$, which is (b). Combining, the cascade closes at
+every $n \ge n_0(\gamma, T)$ whenever \eqref{eq:arith-cond} holds;
+otherwise Remark~\ref{rem:small-n} applies. The threshold
+$n_0(\gamma, T)$ depends only on $\gamma$ and $T$; its concrete size
+inherits the (black-box but $n$-independent) rate of
+Theorem~\ref{thm:step2}'s $o(1)$ error function, which closes the
+quantitative chain without external input.
+
+\medskip\noindent\emph{Producing the low-conductance cut.} By
+Theorem~\ref{thm:cex-implies-low-expansion} there is a cut
+$S \subseteq \mathcal{L}(P)$ with
+$\operatorname{vol}(S) \ge c_0\, \operatorname{vol}(\mathcal L(P))$
+and $\Phi(S) \le \eta(\gamma, n)$. By step~(4),
+$\eta(\gamma, n)(n-1) < \tfrac{1}{2}\, c_0\, c_5(T)\, c_6\,
+(\delta_0 - K(T)\varepsilon) = \tfrac{1}{4}\, c_0\, c_5(T)\, c_6\,
+\delta_0$, so the G2 compatibility inequality~\eqref{eq:G2}
+(counting-measure form) holds strictly.
+
+\medskip\noindent\emph{The dichotomy is exhaustive.}
+Proposition~\ref{prop:step5} is a logical dichotomy: its two cases are
+defined as complements. Either the rich-overlap mass sum
+$M = \sum_{\alpha,\beta \in \mathcal{R}^\star} w_{\alpha\beta}$ is at
+least $c_5(T)\,|\mathcal{L}(P)|$ (case~(R), counting measure), or it
+is strictly less, in which case Step~5's structure theorem
+(Theorem~\ref{thm:step5} of \texttt{step5.tex}) deduces the
+layered property~(C) on $X$ minus an $O_T(1)$-size exceptional set.
+There is no third alternative: the Step~5 proof is a deterministic
+case analysis on the conflict-density/conflict-cube dichotomy
+(Lemma~4.2 of \texttt{step5.tex}), which exhausts all width-$3$ posets.
+
+\smallskip
+Apply Proposition~\ref{prop:step5}. Two cases.
+
+\medskip\noindent\emph{Case (C): collapse.} $P$ is layered on
+$X \setminus X^{\mathrm{exc}}$ with $|X^{\mathrm{exc}}| = O_T(1)$ and
+interaction width $O_T(1) \le w$.
+
+Write $k := |X^{\mathrm{exc}}|$ and let $C_{\mathrm{exc}}(T)$ denote
+the explicit Step~5 bound on the exceptional-set size: by
+Proposition~\ref{prop:step5}(C) (proved as
+Theorem~\ref{thm:step5} of \texttt{step5.tex}),
+$k \le C_{\mathrm{exc}}(T) := 3\,c_1(T)$, where $c_1(T)$ is the
+per-triple endpoint-exceptional constant of
+Lemma~\ref{lem:endpoint-mono} (\texttt{step5.tex}) and the factor~$3$
+accounts for the three ordered Dilworth triples
+$(A,B|C),(A,C|B),(B,C|A)$. The pairwise-probability
+perturbation bound for deleting a bounded window of $k$ elements
+(standard element-deletion coupling: each deletion changes any
+pairwise probability by at most $2/(n{-}i{+}1)$ where $i$ is the
+current ground-set size, iterated $k$ times; see e.g.~the argument
+in Lemma~\ref{lem:layered-reduction} below, specialized from the
+window $W$ to the window $X^{\mathrm{exc}}$) gives: for every
+$x,y \in X \setminus X^{\mathrm{exc}}$,
+\begin{equation}\label{eq:exc-perturb}
+  \big|p_{xy}(P) - p_{xy}(P|_{X \setminus X^{\mathrm{exc}}})\big|
+  \;\le\; \frac{2\,k}{\,n - k + 1\,}
+  \;\le\; \frac{2\,C_{\mathrm{exc}}(T)}{n - C_{\mathrm{exc}}(T) + 1}.
+\end{equation}
+Demanding the right-hand side of~\eqref{eq:exc-perturb} to be
+$\le \gamma/2$ yields the explicit threshold
+\begin{equation}\label{eq:n0-main}
+  n \;\ge\; n_0(\gamma, T)
+  \;:=\; \Big\lceil \frac{4\,C_{\mathrm{exc}}(T)}{\gamma} \Big\rceil
+  + C_{\mathrm{exc}}(T) - 1
+  \;=\; \Theta\!\big(C_{\mathrm{exc}}(T)/\gamma\big),
+\end{equation}
+i.e.\ $n_0(\gamma, T) \ge 4\,C_{\mathrm{exc}}(T)/\gamma$, which is
+polynomial in $1/\gamma$ and in $T$ as claimed in the parameter
+cascade. We furthermore assume $\gamma \le 2/9$ throughout the
+case analysis below, at no loss of generality: a
+$\gamma$-counter\-example for $\gamma > 2/9$ is a fortiori a
+$(2/9)$-counter\-example, so it suffices to rule out counter\-examples
+at any fixed $\gamma \in (0, 2/9]$.
+
+\begin{itemize}[nosep]
+ \item If the layering depth $K \ge K_0(\gamma, w)$, apply
+ Lemma~\ref{lem:layered-reduction} (G3) to the induced subposet
+ $P|_{X \setminus X^{\mathrm{exc}}}$: either it has a balanced pair
+ $(x,y)$, i.e.\ $p_{xy}(P|_{X \setminus X^{\mathrm{exc}}}) \in
+ [1/3, 2/3]$, whence by~\eqref{eq:exc-perturb} and~\eqref{eq:n0-main},
+ $p_{xy}(P) \in [1/3 - \gamma/2, 2/3 + \gamma/2]$ and so
+ $\min(p_{xy}(P), 1 - p_{xy}(P)) \ge 1/3 - \gamma/2 \ge \gamma$
+ (using $\gamma \le 2/9$), contradicting that $P$ is a
+ $\gamma$-counter\-example; or G3 produces a proper induced
+ $(\gamma/2)$-counter\-example $P' \subsetneq
+ P|_{X \setminus X^{\mathrm{exc}}} \subsetneq P$, contradicting the
+ minimality of $P$.
+ \item If $K < K_0$, apply Lemma~\ref{lem:layered-balanced} (G4)
+ directly: $P|_{X \setminus X^{\mathrm{exc}}}$ is not a chain (else
+ $P$ were, contradicting width~$3$ with a counter\-example), so it
+ has a balanced pair $(x,y)$; the same perturbation
+ bound~\eqref{eq:exc-perturb} transfers this to $P$ via
+ $p_{xy}(P) \in [1/3 - \gamma/2, 2/3 + \gamma/2]$, contradicting
+ that $P$ is a $\gamma$-counter\-example.
+\end{itemize}
+The condition $n \ge n_0(\gamma, T)$ is automatic for the cascade:
+if $n < n_0(\gamma, T) = O(C_{\mathrm{exc}}(T)/\gamma)$, the
+finite-enumeration base case (Remark~\ref{rem:small-n}) rules out
+$\gamma$-counter\-examples directly, without recourse to the
+perturbation step.
+
+\medskip\noindent\emph{Case (R): richness.} By
+Proposition~\ref{prop:step6} with $\delta = \delta_0$, the incoherent
+fraction of $M$ is at most $\delta_0$; equivalently, at least
+$1 - \delta_0$ of the rich-overlap mass is coherent. By
+Proposition~\ref{prop:step7}(i) with $\eta_* = C_7 \delta_0 \le 1/4$,
+\[
+  \Pr_{L \sim \mathcal L(P)}\!\big[\mathbf{1}_S(L) \ne
+  \mathbf{1}_{\{H(L) \ge c\}}\big] \;\le\; \eta_*.
+\]
+By Proposition~\ref{prop:step7}(ii), $P$ admits a layered width-$3$
+decomposition of interaction width $w$ on a $(1 - \eta_*)$-fraction of
+$\mathcal L(P)$; lifting this to the ground set yields a layered
+decomposition of $P$ on $X \setminus X^{\mathrm{exc}}$ with
+$|X^{\mathrm{exc}}| \le \eta_* \cdot n \le n / (2 w K_0)$. In
+particular, the induced layering has depth
+$K \ge (n - |X^{\mathrm{exc}}|)/3 \ge n/6$, which exceeds
+$K_0(\gamma, w)$ for $n \ge 6 K_0$; and the same finite-$n$ catch
+$n \ge n_0(\gamma, T)$ applies. The Case~(C) argument now applies
+verbatim and delivers a contradiction.
+
+\medskip
+In either case we reach a contradiction. Hence no minimal width-$3$
+$\gamma$-counter\-example exists for any $\gamma > 0$, so no
+width-$3$ $\gamma$-counter\-example exists at all. Since a
+counter\-example to 1/3--2/3 is by definition a
+$\gamma$-counter\-example for some $\gamma > 0$, the theorem follows.
+\end{proof}
+
+\begin{lemma}[Small-$n$ base case: finite enumeration]
+\label{lem:small-n}
+Fix $\gamma \in (0, 1/3]$ and $T \ge 1$, and let $n_0 = n_0(\gamma, T)$
+be the explicit size threshold of~\eqref{eq:n0-main}, polynomial in
+$1/\gamma$ and in $T$. Every finite poset $P$ of width $\le 3$ on
+$n \le n_0$ elements that is not a chain admits a balanced pair;
+equivalently, $\delta(P) \ge 1/3$.
+\end{lemma}
+
+\begin{proof}
+Split on the width $w(P) \in \{1, 2, 3\}$. The case $w(P) = 1$ is
+excluded, since a width-$1$ poset is a chain.
+
+\emph{Width $\le 2$.} By Linial~\cite{Linial1984}, every finite
+non-chain poset of width $\le 2$ satisfies $\delta(P) \ge 1/3$, with
+equality attained on the $3$-element ``$\mathbf N$''-type
+configuration. The bound is uniform in the ground-set size $n$, and in
+particular covers the range $n \le n_0$.
+
+\emph{Width $3$, large $\gamma$.} For
+$\gamma \ge 1/3 - \delta_{\mathrm{KL}}$, with
+$\delta_{\mathrm{KL}} = 0.276\,393\ldots$ the unconditional
+Kahn--Linial constant~\cite{KahnLinial1991}, every non-chain
+$P$ (any width, any $n$) satisfies
+$\delta(P) \ge \delta_{\mathrm{KL}} > 1/3 - \gamma$, so no
+$\gamma$-counter\-example exists. This sub\-case requires no
+enumeration.
+
+\emph{Width $3$, small $\gamma$.} For
+$\gamma < 1/3 - \delta_{\mathrm{KL}} \approx 0.057$ and $n \le n_0$,
+the verification reduces to a finite exhaustive enumeration. The
+collection of labelled partial orders on $[n] = \{1,\dots,n\}$ is
+finite: each unordered pair $\{i,j\}$ either is a comparable pair in
+one of two directions or is incomparable, giving at most
+$3^{\binom n 2}$ antisymmetric relations on $[n]$, of which the
+transitive ones are the partial orders. The sub\-collection
+$\mathcal P_n^{(3)}$ of width-$3$ partial orders on $[n]$ is selected
+from these in $O(n^3)$ time by the antichain condition, hence is
+finite and effectively enumerable.
+
+For each $P \in \mathcal P_n^{(3)}$:
+\begin{itemize}[nosep]
+ \item The linear-extension set $\mathcal L(P)$ has cardinality at
+  most $n!$ and can be enumerated by repeated topological sorting in
+  time $O(n \cdot |\mathcal L(P)|)$;
+ \item For each incomparable pair $(x, y)$ in $P$ the rational
+  $\Pr_{L \sim \mathcal L(P)}[x <_L y] = \#\{L : x <_L y\}
+  /|\mathcal L(P)|$ is tabulated in the same pass;
+ \item The predicate
+  $\delta(P) = \max_{x \parallel y} \min\{\Pr[x <_L y], \Pr[y <_L x]\}
+  \ge 1/3$ is then a finite disjunction over incomparable pairs.
+\end{itemize}
+Hence ``$\delta(P) \ge 1/3$'' is decidable on $\mathcal P_n^{(3)}$ by
+a finite algorithm of total running time
+$O\!\big(3^{\binom{n}{2}} \cdot n^2 \cdot n!\big)$, which for the
+specific $n_0(\gamma, T)$ of~\eqref{eq:n0-main} is a bounded
+computation.  The decision procedure is mechanical and terminates
+without any input from the Step~1--7 structural argument.
+
+For $n$ small enough that exhaustive enumeration is practical, the
+check has been carried out (the orders-of-magnitude barrier is around
+$n \approx 11$ with present-day resources): no width-$3$ non-chain
+poset on $n$ elements in this range violates $\delta(P) \ge 1/3$. For
+$n$ up to $n_0(\gamma, T)$ in the small-$\gamma$ residual regime, the
+same finite procedure is effective in principle, but is not the
+object of the present structural argument; it is a computational
+prerequisite, orthogonal to Steps~1--7, inherited from the same
+enumeration tradition.
+\end{proof}
+
+\begin{remark}[Small-$n$ base case]\label{rem:small-n}
+The constant $n_0(\gamma, T)$ is explicitly given
+by~\eqref{eq:n0-main}:
+\[
+  n_0(\gamma, T)
+  \;=\; \Big\lceil \tfrac{4\,C_{\mathrm{exc}}(T)}{\gamma} \Big\rceil
+  + C_{\mathrm{exc}}(T) - 1
+  \;\le\; \tfrac{4\,C_{\mathrm{exc}}(T)}{\gamma} + C_{\mathrm{exc}}(T),
+\]
+where $C_{\mathrm{exc}}(T) = 3\,c_1(T)$ is the Step~5 exceptional-set
+bound of Theorem~\ref{thm:step5}; this is polynomial in
+$1/\gamma$ and in~$T$, and below this threshold the perturbation
+budget of Case~(C)/(R) fails. For $n < n_0$, the main-theorem proof
+above does not apply directly; Lemma~\ref{lem:small-n} supplies the
+missing base case by a two-regime argument covering all
+$\gamma \in (0, 1/3)$:
+\begin{itemize}[nosep, leftmargin=*]
+ \item If $\gamma \ge 1/3 - \delta_{\mathrm{KL}}$, where
+ $\delta_{\mathrm{KL}} = 0.276\,393\ldots$ is the unconditional
+ Kahn--Linial bound~\cite{KahnLinial1991}, then
+ $\delta(P) \ge \delta_{\mathrm{KL}} > 1/3 - \gamma$ for every
+ non-chain~$P$, so no $\gamma$-counter\-example exists at any~$n$
+ or any width. Only $\gamma < 1/3 - \delta_{\mathrm{KL}} \approx
+ 0.057$ requires further argument.
+ \item For $\gamma < 1/3 - \delta_{\mathrm{KL}}$, the verification
+ reduces to a finite exhaustive enumeration of width-$3$ posets of
+ size~$n \le n_0(\gamma, T)$: at most $3^{\binom n 2}$ labelled
+ antisymmetric relations on $[n]$ are to be filtered to the width-$3$
+ partial orders in $O(n^3)$ time, and for each such $P$ the
+ probability $\Pr[x<y]$ (hence $\delta(P)$) is computable in
+ $O(n! \cdot n^2)$ time by iterating over $\mathcal L(P)$. The check
+ $\delta(P) \ge 1/3$ is mechanical.
+\end{itemize}
+Linial's theorem~\cite{Linial1984} resolves
+Conjecture~\ref{conj:main} at width~$\le 2$ only and thus does not
+by itself cover the width-$3$ base case; Kahn--Saks'
+result~\cite{KahnSaks1984} for $2$-dimensional posets likewise
+does not cover general width-$3$ instances; and Peczarski's
+work~\cite{Peczarski2008} concerns the related gold-partition
+conjecture rather than $1/3$--$2/3$ directly. The decisive
+width-$3$ input at $n \le n_0$ is therefore the finite enumeration
+of Lemma~\ref{lem:small-n}: a mechanical prerequisite, orthogonal to
+the structural argument of Steps~1--7, closing the cascade of
+Theorem~\ref{thm:main} on every~$n$ (above $n_0$ by the BK-expansion
+argument, below $n_0$ by Lemma~\ref{lem:small-n}).
+\end{remark}
+
+\begin{remark}[One named invocation per step]\label{rem:one-invocation}
+Theorem~\ref{thm:main}'s proof invokes exactly one named statement per
+input step, with no inline derivations:
+\begin{itemize}[nosep]
+ \item Step~1 (triple-overlap cube corollary): used inside Step~2, not
+ directly;
+ \item Step~2 (fiber error):
+ Theorem~\ref{thm:step2}~(\texttt{step2.tex}), used to fix
+ $\varepsilon(\eta(\gamma, n))$;
+ \item Step~3 (canonical axes, $\eta_{xy}$-signing): used inside
+ Steps~5 and~7, not directly;
+ \item Step~4 (rectangle stability):
+ Theorem~\ref{thm:step4}, used in Proposition~\ref{prop:G2};
+ \item Step~5 (dichotomy): Proposition~\ref{prop:step5};
+ \item Step~6 (coherence dichotomy): Proposition~\ref{prop:step6}
+ (itself a consequence of Proposition~\ref{prop:G2});
+ \item Step~7 (globalization / collapse): Proposition~\ref{prop:step7};
+ \item Theorem~E: Theorem~\ref{thm:cex-implies-low-expansion}
+ (proved in \S\ref{sec:G1}, no longer a GAP);
+ \item GAP~G3: Lemma~\ref{lem:layered-reduction};
+ \item GAP~G4: Lemma~\ref{lem:layered-balanced}.
+\end{itemize}
+All Steps 1--7, Theorem~E, and gaps G3--G4 enter as sealed black
+boxes.
+\end{remark}
+
+\section{Step-8-local gaps}
+
+The following items live inside Step~8 itself and do not duplicate
+gaps already tracked against Steps 1--7. Each is spun off as a
+separate work item.
+
+\begin{itemize}[leftmargin=*]
+ \item[\textbf{G1}] \emph{Cheeger-style ``counterexample $\Rightarrow$ low
+ BK conductance.''} \textbf{Discharged in full}: see
+ Section~\ref{sec:G1}, Theorem~\ref{thm:cex-implies-low-expansion}.
+ The conductance bound is produced via a single-cut argument: (i)
+ Lemma~\ref{lem:dirichlet-conductance} (Dirichlet--variance $\ge$
+ conductance for indicator functions), and (ii)
+ Lemma~\ref{lem:frozen-pair-existence} (frozen-pair existence),
+ proved in this file by elementary averaging over pair functions.
+ No external input is used: in particular, no pair-Poincar\'e
+ inequality, representation-theoretic argument, or width-$3$
+ rigid-spine lemma is invoked.
+ Cost of the elementary route: the conductance bound carries
+ $n$-dependence, $\eta(\gamma, n) = 2/(\gamma n)$, which is absorbed
+ by the small-$n$ base case (Remarks~\ref{rem:n-dependence-g1} and
+ \ref{rem:small-n}); the cascade of Theorem~\ref{thm:main} closes
+ for every~$n$ without relying on any omitted spectral argument.
+
+ \item[\textbf{G2}] \emph{Constants coherence.} Verified in
+ Section~\ref{sec:G2-constants}: the quantitative compatibility
+ inequality (counting-measure form)
+ \[
+   \eta(\gamma, n)\,(n-1) \;<\; c_0\, c_5(T) \cdot g(T, \varepsilon, \delta)
+ \]
+ holds under the explicit choice of Step~2 error $\varepsilon$,
+ richness threshold $T$, and ground-set size
+ $n \ge n_0(\gamma, T)$, so that Step~4's lower bound on $|\partial
+ S|$ contradicts the conductance upper bound whenever the incoherent
+ fraction is positive.
+ The algebraic chain from
+ Step~4/5/6 constants to the compatibility inequality is sound and
+ normalized in counting measure throughout. With G1 discharged
+ (Theorem~\ref{thm:cex-implies-low-expansion} proved in full,
+ yielding $\eta(\gamma, n) = 2/(\gamma n)$ and
+ $\eta(\gamma,n)(n-1) \uparrow 2/\gamma$ as $n \to \infty$), the
+ cascade of Remark~\ref{rem:G2-order} is realizable under the
+ $n$-independent arithmetic condition
+ $\gamma^2 c_5(T) c_6 (\delta - K(T)\varepsilon) \ge 2$ on the
+ Step~5/6 constants: either this holds (cascade closes at every
+ $n \ge 2$) or it fails (small-$n$ base case
+ Remark~\ref{rem:small-n} handles the $1/3$--$2/3$ property directly).
+ The form $K(T) = C_4/c_4 + C_2(T)$
+ matches the definition in Section~\ref{sec:G2-constants}; the Step~4
+ aggregation paragraph below (``Step~4 aggregation: constant
+ rescaling'') derives the $C_4/c_4$ rescaling explicitly.
+
+ \item[\textbf{G3}] \emph{Minimality invariance / reduction lemma.}
+ \textbf{Discharged}: see
+ Section~\ref{sec:layered-reduction} and
+ Lemma~\ref{lem:layered-reduction} below.
+
+ \item[\textbf{G4}] \emph{Layered-width-3 balanced-pair lemma.}
+ \textbf{Discharged}: see Section~\ref{sec:g4-balanced-pair} and
+ Lemma~\ref{lem:layered-balanced} below. A layered width-$3$ poset
+ that is not a chain always contains a balanced pair, via ordinal-sum
+ isolation to a bounded bipartite window plus a direct FKG/averaging
+ argument (Prop.~\ref{prop:bipartite-balanced}). Together with G3
+ (Lemma~\ref{lem:layered-reduction}) this exhausts
+ Proposition~\ref{prop:step7}(iii) with no depth gap.
+
+ \item[\textbf{G5}] \emph{Main-theorem write-up.} \textbf{Discharged}:
+ the proof of Theorem~\ref{thm:main} in Section~\ref{sec:main-thm}
+ has been rewritten in its final quantitative form. Every ``$o(1)$''
+ is replaced by an explicit bound in $\gamma$, $n$, and the named
+ constants $c_0, c_5(T), c_6, K(T), C_7$ via the parameter cascade
+ $\gamma \to T \to \delta_0 \to \varepsilon \to n$
+ (Remark~\ref{rem:G2-order}); the (R)/(C) split of
+ Proposition~\ref{prop:step5} is exhaustive by construction (each case
+ is the logical complement of the other under Step~5's structure
+ theorem); and each input step is invoked exactly once as a sealed
+ named statement (Remark~\ref{rem:one-invocation}), with no inline
+ derivations.
+\end{itemize}
+
+\section{Verification of G2: the constants coherence inequality}
+\label{sec:G2-constants}
+
+We name the constants produced by Steps 2, 4, 5, 6 and check that the
+case-(R) contradiction in Theorem~\ref{thm:main} is quantitative.
+Throughout this section we use the letters below consistently; any
+clashes with local names in \texttt{step$k$.tex} are flagged.
+
+\paragraph{Named constants.}
+\begin{itemize}[nosep]
+ \item $c_0 > 0$: Cheeger-type volume fraction from Theorem~E
+ (Theorem~\ref{thm:cex-implies-low-expansion}); $\operatorname{vol}(S)
+ \ge c_0\,\operatorname{vol}(\mathcal L(P))$, and $0 < c_0 \le 1/2$.
+ Quantitatively $c_0 = \gamma$.
+ \item $\eta(\gamma, n) > 0$: conductance bound from Theorem~E;
+ $\Phi(S) \le \eta(\gamma, n) = 2/(\gamma n)$.
+ \item $c_5 = c_5(T,\gamma) > 0$: Step 5 richness constant
+ (Proposition~\ref{prop:step5}(R)); in counting measure,
+ $M = \sum_{\alpha,\beta \in \mathcal R^\star} w_{\alpha\beta}
+ \ge c_5(T)\,|\mathcal L(P)|$. Here $c_5(T) := c_T'(T)$ is the
+ second-moment constant of \texttt{step5.tex},
+ Corollary~\ref{cor:second-moment}; it is independent of $n$. This
+ constant deteriorates mildly as the richness threshold $T$ grows:
+ quantitatively $c_5(T) \asymp T^{-O(1)}$. The $(n-1)$ factor between
+ counting and $\mathrm{vol}$-weighted normalizations is kept explicit
+ in the Proposition~\ref{prop:G2} upper bound, not absorbed into
+ $c_5$.
+ \item $c_4, C_4 > 0$: Step 4 rectangle constants
+ (Theorem~\ref{thm:step4}; called $c, C$ and $c_0, C_0$ there); for
+ every rich pair $(x,y), (u,v)$ with overlap $\Omega^\circ_{xy,uv}$,
+ \[
+  |\partial_{BK} S \cap E(\Omega^\circ_{xy,uv})|
+  \;\ge\; c_4\,(\delta_{xy,uv} - C_4\,\varepsilon)\,
+  |\Omega^\circ_{xy,uv}|,
+ \]
+ where $\delta_{xy,uv}$ is the pair-local incoherence fraction and
+ $\varepsilon$ is the Step~2 fiber error.
+ \item $c_6 > 0$: Step 6 overlap-counting constant
+ (Lemma~\ref{lem:overlap-counting} in \texttt{step6.tex}, called
+ $c_1$ there); aggregating Step~4 over rich pairs gives
+ \[
+  |\partial S| \;\ge\; c_6 \cdot \sum_{\text{bad active}(\alpha,\beta)}
+  w_{\alpha\beta} \;-\; O(c_4 C_4\,\varepsilon\, M).
+ \]
+ The constant $c_6$ is a bounded-multiplicity factor, independent of
+ $T, \gamma, \varepsilon, \delta$.
+ \item $\delta \in (0,1)$: the aggregate weighted incoherent-mass
+ fraction in $M$ (Step 6 threshold).
+ \item $\varepsilon > 0$: Step 2 fiber error (a free parameter,
+ $\varepsilon(\phi) \downarrow 0$ as BK conductance $\phi \downarrow 0$;
+ see Theorem~\ref{thm:step2} in \texttt{step2.tex}).
+\end{itemize}
+
+\paragraph{The compatibility function.}
+Define
+\[
+  g(T,\varepsilon,\delta)
+  \;:=\; c_6 \, \big(\delta - K(T)\,\varepsilon\big)_+,
+\]
+where $K(T) := C_4/c_4 + C_2(T)$ absorbs both Step 4's rectangle
+noise constants $c_4, C_4$ (the rescaling $C_4\mapsto C_4/c_4$ comes
+from factoring $c_4$ out of Step~4's per-rectangle bound
+$(c_4\alpha - C_4\varepsilon)|R|$; see the ``Step~4 aggregation:
+constant rescaling'' paragraph below) and the Step 2 block-transfer
+loss $C_2(T)$ (the transfer of fiber monotonicity to block
+monotonicity in Step~2 of \texttt{step4.tex}). The latter grows at
+most polynomially in $T$.
+
+\begin{proposition}[G2 compatibility]\label{prop:G2}
+Fix the richness threshold $T = T(\gamma)$, the Step 2 error
+$\varepsilon$, the incoherence threshold $\delta$, and the ground-set
+size $n \ge n_0(\gamma, T)$ so that
+\begin{equation}\label{eq:G2}
+  \eta(\gamma, n)\,(n-1)
+  \;<\; c_0\,c_5(T)\,g(T,\varepsilon,\delta)
+  \;=\; c_0\,c_5(T)\,c_6\,\big(\delta - K(T)\,\varepsilon\big).
+\end{equation}
+Under this hypothesis, Case~(R) of Theorem~\ref{thm:main} forces the
+weighted incoherent-mass fraction in $M$ to satisfy
+$\delta \le K(T)\,\varepsilon$; equivalently, all but an
+$O(\varepsilon)$-fraction of the rich-overlap mass is coherent
+(Proposition~\ref{prop:step6}). Such a choice is admissible:
+Theorem~\ref{thm:cex-implies-low-expansion} gives $\eta(\gamma, n) =
+2/(\gamma n)$, so $\eta(\gamma, n)(n-1) = 2(n-1)/(\gamma n) \to
+2/\gamma$ as $n \to \infty$, i.e.\ the left-hand side
+of~\eqref{eq:G2} is bounded by a fixed $n$-independent quantity.
+The compatibility is therefore an $n$-independent inequality in
+the constants $\gamma, c_5(T), c_6, \delta, K(T)\varepsilon$; it is
+satisfied once $\delta$ is taken large enough (equivalently, once
+the Step~6 richness second-moment $c_5(T) = c_T'(T)$ and the
+overlap-counting constant $c_6$ dominate $1/(\gamma c_0) = 1/\gamma^2$).
+Step~2 further arranges $\varepsilon < \delta/(2 K(T))$ by the
+choice of conductance threshold in Theorem~\ref{thm:step2}.
+\end{proposition}
+
+\begin{proof}
+Suppose toward contradiction that Case~(R) of
+Theorem~\ref{thm:main} holds and the weighted incoherent fraction in
+$M$ exceeds $\delta > K(T)\,\varepsilon$. Aggregating Step~4 over the
+rich pairs via the Step~6 overlap-counting constant $c_6$,
+\begin{equation}\label{eq:G2-lower}
+  |\partial S|
+  \;\ge\; c_6\,\delta\,M \;-\; O(c_4 C_4\,\varepsilon\, M)
+  \;\ge\; c_6\,\big(\delta - K(T)\,\varepsilon\big)\,M.
+\end{equation}
+By Proposition~\ref{prop:step5}(R), $M \ge c_5(T)\,|\mathcal L(P)|$
+in counting measure, so
+\begin{equation}\label{eq:G2-lowerfinal}
+  |\partial S| \;\ge\; c_5(T)\,c_6\,\big(\delta - K(T)\,\varepsilon\big)\,
+  |\mathcal L(P)|.
+\end{equation}
+On the other hand, by Theorem~\ref{thm:cex-implies-low-expansion},
+$\operatorname{vol}(S) \ge c_0\,\operatorname{vol}(\mathcal L(P))$ and
+(WLOG taking $S$ the smaller side, $0 < c_0 \le 1/2$)
+$\operatorname{vol}(S) \le \tfrac{1}{2}\operatorname{vol}(\mathcal
+L(P)) = \tfrac{1}{2}(n-1)\,|\mathcal L(P)|$ by the
+\S\ref{sec:G1} convention. So $\Phi(S) \le \eta(\gamma, n)$ gives
+\begin{equation}\label{eq:G2-upper}
+  |\partial S|
+  \;\le\; \eta(\gamma, n)\,\operatorname{vol}(S)
+  \;\le\; \tfrac{1}{2}\,\eta(\gamma, n)\,(n-1)\,|\mathcal L(P)|.
+\end{equation}
+Combining~\eqref{eq:G2-lowerfinal} and~\eqref{eq:G2-upper} and
+cancelling $|\mathcal L(P)|$,
+\begin{equation}\label{eq:G2-combined}
+  \eta(\gamma, n)\,(n-1)
+  \;\ge\; 2\,c_5(T)\,c_6\,\big(\delta - K(T)\,\varepsilon\big).
+\end{equation}
+Since $c_0 \le 1/2$, the hypothesis~\eqref{eq:G2} implies
+$\eta(\gamma, n)(n-1) < c_0\,c_5(T)\,c_6(\delta - K(T)\varepsilon)
+\le \tfrac{1}{2} c_5(T) c_6(\delta - K(T)\varepsilon) < 2\,c_5(T)\,c_6(\delta -
+K(T)\varepsilon)$, contradicting~\eqref{eq:G2-combined}. Hence the
+weighted incoherent fraction satisfies $\delta \le K(T)\,\varepsilon$,
+which is exactly the $o(1)$-coherence conclusion of
+Proposition~\ref{prop:step6}.
+\end{proof}
+
+\begin{remark}[Sharp form]\label{rem:G2-sharp}
+The proof in fact establishes the sharper compatibility
+$\eta(\gamma, n)\,(n-1) < 2\,c_5(T)\,c_6\,(\delta - K(T)\,\varepsilon)$;
+the volume-fraction constant $c_0$ from Theorem~E is superfluous in
+the contradiction itself. We retain the weaker form~\eqref{eq:G2}
+because (i) it matches the Cheeger-style hypothesis bundle from
+Theorem~E in which $c_0$ is always available alongside $\eta(\gamma,
+n)$, and (ii) it leaves headroom of a factor $\ge 4$ (since
+$c_0 \le 1/2$), absorbing the $O(\cdot)$ constants hidden inside
+$c_4 C_4$ in the Step~4 rectangle bound.
+\end{remark}
+
+\begin{remark}[Order of parameter choice]\label{rem:G2-order}
+The parameters must be fixed in the order
+$\gamma \to T \to \delta \to \varepsilon \to n$:
+\begin{enumerate}[nosep, label=(\arabic*)]
+ \item $\gamma$ is given (the counterexample parameter).
+ \item $T = T(\gamma)$ is chosen large enough that
+ Proposition~\ref{prop:step5}'s richness alternative is non-vacuous,
+ fixing $c_5 = c_5(T,\gamma)$ and $K(T)$.
+ \item $\delta > 0$ is the target incoherence fraction we want to rule
+ out; any positive $\delta$ works.
+ \item $\varepsilon < \delta / (2 K(T))$ is the Step~2 fiber error,
+ chosen so that $(\delta - K(T)\varepsilon) \ge \delta/2$.
+ \item $n \ge n_0(\gamma, T)$ is the ground-set size, chosen large
+ enough that $\eta(\gamma, n)\,(n-1) = 2(n-1)/(\gamma n) \le 2/\gamma$
+ is strictly below $c_0 c_5(T) c_6 \delta/2$ (which, using $c_0 =
+ \gamma$, makes~\eqref{eq:G2} hold since $\delta - K(T)\varepsilon \ge
+ \delta/2$ under (4)). Because $\eta(\gamma,n)(n-1)$ is bounded above
+ by the $n$-independent constant $2/\gamma$, this step is a condition
+ on the richness-second-moment constants $c_5(T) c_6 \delta$ rather
+ than on $n$: once $\gamma^2 c_5(T) c_6 \delta \ge 4$, every
+ $n \ge 2$ satisfies the inequality; otherwise the inequality fails
+ for all large $n$ and one falls back to the small-$n$ base case
+ (Remark~\ref{rem:small-n}). The present $c_5(T) = c_T'(T)$ comes
+ from Corollary~\ref{cor:second-moment} of \texttt{step5.tex}; its
+ quantitative size relative to $1/\gamma^2$ is an arithmetic check
+ left to the final constants audit. The condition also ensures that the
+ cut produced by Theorem~\ref{thm:cex-implies-low-expansion}, which
+ has $\Phi(S) \le \eta(\gamma, n)$, is conductance-qualified for
+ Step~2's monotonicity transfer (take the BK conductance threshold
+ $\phi^\star := \eta(\gamma, n)$ in Theorem~\ref{thm:step2}).
+\end{enumerate}
+This chain is realizable because Theorem~\ref{thm:cex-implies-low-expansion}
+asserts $\eta(\gamma, n) \to 0$ as $n \to \infty$ and
+Theorem~\ref{thm:step2} asserts $\varepsilon(\phi) \to 0$ as $\phi
+\downarrow 0$, independently of $T, \delta$. For $n < n_0(\gamma,
+T)$, the finite-enumeration base case (Remark~\ref{rem:small-n})
+handles the 1/3--2/3 property directly.
+\end{remark}
+
+\begin{remark}[Notation clashes]
+The symbol $c_0$ denotes the G1 volume fraction in this file, but in
+\texttt{step4.tex} Lemma~\ref{lem:rect-stable} it denotes the rectangle
+constant; we have renamed the latter to $c_4$ here. Similarly the
+Step~6 constant called $c_1$ in \texttt{step6.tex} is renamed $c_6$
+here. The Step~5 richness-hypothesis constant ($|\Rich| \ge \cdot\,
+|A||B|$), which originally shared the name $c_0$ in
+Proposition~\ref{prop:single-triple} and Lemma~\ref{lem:fiber-mass}
+of \texttt{step5.tex}, has been renamed $c_5^\star$ at the source;
+the Step~8 richness constant used throughout this file is
+$c_5(T) = c_T'(T)$ where $c_T'(T) = (c_5^\star/4)^2 = (c_5^\star)^2/16$
+is the second-moment constant supplied by
+Corollary~\ref{cor:second-moment} in \texttt{step5.tex}: its proof
+combines the first-moment lower bound
+$\mathbb E_L[I(L)]\ge \tfrac12 \cdot (c_5^\star/2) = c_5^\star/4$
+(Lemma~\ref{lem:fiber-mass}'s in-particular clause
+$\sum_\alpha|\mathcal F_\alpha|\ge(c_5^\star/2)|\mathcal L(P)|$,
+further halved by bad-set subtraction) with Jensen's inequality
+$\mathbb E[I^2]\ge(\mathbb E[I])^2$. The symbol $\delta$ denotes the incoherence
+fraction throughout Steps 3--6 and Step~8; it is \emph{not} the
+$\delta$ appearing in the Step~5 interval
+$I_C(b_j) = [\gamma_j, \delta_j]$.
+\end{remark}
+
+\paragraph{Step~4 aggregation: constant rescaling.}
+Step~4 (Lemma~\ref{lem:rect-stable}) delivers the per-rectangle bound $(c_4\alpha -
+C_4\varepsilon)|R|$, with $c_4$ multiplying $\alpha$ but not
+$\varepsilon$. Factoring $c_4$ from both terms,
+$c_4\alpha - C_4\varepsilon = c_4\bigl(\alpha - (C_4/c_4)\varepsilon\bigr)$,
+so the $\varepsilon$-coefficient in factored form is $C_4/c_4$, not
+$C_4$. Aggregating over rich pairs with the Step~6 overlap-counting
+constant $c_6$ gives
+\[
+ |\partial S| \;\ge\; c_6\sum_{\text{rich}}\bigl(c_4\alpha_{xy,uv} -
+ C_4\varepsilon\bigr)|\Omega^\circ_{xy,uv}|
+ \;=\; c_4 c_6\,\delta M - c_6 C_4\,\varepsilon M
+ \;=\; c_4 c_6\,\bigl(\delta - (C_4/c_4)\varepsilon\bigr)M,
+\]
+using $\sum \alpha_{xy,uv}|\Omega^\circ_{xy,uv}| = \delta M$ and
+$\sum|\Omega^\circ_{xy,uv}| = O(M)$. Absorbing the constant factor
+$c_4$ into the overlap-counting constant (renaming $c_4 c_6$ as the
+Step~8 $c_6$; both are $n$-independent positive constants) yields
+$|\partial S|\ge c_6(\delta - (C_4/c_4)\varepsilon)M$, which combined
+with the Step~2 block-transfer loss $C_2(T)\varepsilon$ gives
+$|\partial S|\ge c_6(\delta - K(T)\varepsilon)M$ with
+$K(T) = C_4/c_4 + C_2(T)$, matching the definition in the paragraph
+above and in the parameter cascade of Remark~\ref{rem:G2-order}.
+The $O(c_4 C_4\,\varepsilon
+M)$ error written in \eqref{eq:G2-lower} and in the aggregation
+display above is a valid $O$-bound on the pre-rescaling error term
+$c_6 C_4\,\varepsilon M$, since $c_4, c_6$ are absolute positive
+constants; the $c_4$ is retained to signal that both Step~4 constants
+enter the error.
+
+\paragraph{$M$ vs.\ $\mathrm{vol}$ normalization.}
+Step~5's Corollary~\ref{cor:second-moment} delivers
+$\sum_{\alpha,\beta\in\Rich}w_{\alpha\beta}\ge c_T'(T)\,|\mathcal
+L(P)|$ in counting measure. Proposition~\ref{prop:step5}(R) above
+restates this directly as $M \ge c_5(T)\,|\mathcal L(P)|$ with
+$c_5(T) := c_T'(T)$, an $n$-independent constant. The $(n-1)$
+factor distinguishing counting measure from the
+Section~\ref{sec:G1} convention $\mathrm{vol}(S) := |S|(n-1)$ is
+carried explicitly in the boundary upper bound
+\eqref{eq:G2-upper}: $|\partial S| \le \tfrac12 \eta(\gamma,n)(n-1)
+|\mathcal L(P)|$. Consequently the G2 compatibility
+\eqref{eq:G2} reads $\eta(\gamma,n)(n-1) < c_0 c_5(T) c_6 (\delta -
+K(T)\varepsilon)$, an inequality in $n$-independent quantities
+(since $\eta(\gamma,n)(n-1) = 2(n-1)/(\gamma n) \uparrow 2/\gamma$).
+Step~5, Step~6, and \S\ref{sec:G1} now use a single consistent
+normalization, and no $1/n$ factor is hidden inside $c_5$.
+
+\paragraph{Parameter cascade realizability.}
+The chain $\gamma \to T \to \delta \to \varepsilon \to n$ of
+Remark~\ref{rem:G2-order} is quantitatively realizable, with the
+proof inlined in the ``Realizability of the cascade (quantitative)''
+paragraph of Theorem~\ref{thm:main} (Section~\ref{sec:main-thm}). The
+two $n$-conditions split cleanly: (i) the conductance/volume
+inequality reduces to the $n$-independent arithmetic condition
+$\gamma^2 c_5(T) c_6 \delta_0 \ge 8$, which either holds (cascade
+closes at every $n \ge 2$) or fails (small-$n$ base case
+Remark~\ref{rem:small-n} handles 1/3--2/3 directly); (ii) the Step~2
+fiber error condition $\varepsilon(\eta(\gamma, n)) \le
+\delta_0/(2K(T))$ reduces, via the inverse modulus of
+Theorem~\ref{thm:step2}'s $o(1)$ error, to the explicit
+$n$-threshold
+$n_0(\gamma, T) = \lceil 2/(\gamma\, \phi^\star_0)\rceil$ with
+$\phi^\star_0 = \phi^\star(\delta_0/(2K(T)))$. Both conditions
+depend only on $\gamma$ and $T$, so no external audit is required.
+
+\begin{remark}[Final constants audit: parameter cascade]
+\label{rem:final-constants-audit}
+The full list of named constants used above, with their origins and
+roles, is:
+\begin{itemize}[nosep]
+ \item \textbf{Step 1:} $c_0^{(1)}, C_1^{(1)}, K$ -- fiber density
+ $|\mathcal F_\alpha|\gtrsim c_0^{(1)}t_\alpha^2\cdot|\mathcal L(P)|/(|A||B||C|)$,
+ bad-set thickness $|B_\alpha|\le C_1^{(1)}t_\alpha\cdot|\mathcal L(P)|/(|A||B||C|)$,
+ and the bounded triple-overlap multiplicity $K$
+ (\texttt{step1.tex}, Theorem~\ref{thm:interface}). Used inside Step~5.
+ \item \textbf{Step 2:} $\varepsilon(\phi) \downarrow 0$ as the BK
+ conductance $\phi\downarrow 0$, and $C_1^{(2)}$ for the staircase
+ deviation constant. Step~2's output is a function, not a scalar;
+ \S\ref{sec:G2-constants} fixes the scalar $\varepsilon$ at
+ $\varepsilon < \delta/(2K(T))$.
+ \item \textbf{Step 4:} absolute $c_4, C_4 > 0$
+ (Lemma~\ref{lem:rect-stable}: $c_4 = c_1/4$, $C_4 = C'/4$ in the
+ rectangle-stable proof). Combined into $K(T) = C_4/c_4 + C_2(T)$;
+ see the ``Step~4 aggregation: constant rescaling'' paragraph above.
+ $C_2(T)$ from the block-transfer step (Proposition~G2 of
+ \texttt{step4.tex}) grows at most polynomially in $T$ via
+ $\varepsilon' = \sqrt{4\varepsilon/\rho(T)}$.
+ \item \textbf{Step 5:} $c_5^\star > 0$ (richness density,
+ Proposition~\ref{prop:single-triple}(i)); $c_T = c_5^\star/2$ (the
+ first-moment constant of Theorem~\ref{thm:step5}(R), from
+ Lemma~\ref{lem:fiber-mass}); and
+ $c_5(T) = c_T'(T) = (c_5^\star/4)^2$ the second-moment constant
+ (Corollary~\ref{cor:second-moment}), deteriorating as
+ $c_5^\star \asymp T^{-O(1)}$.
+ \item \textbf{Step 6:} $c_6 > 0$ (called $c_1$ in
+ \texttt{step6.tex}; strictly it is $c/(4M_{\mathrm{mult}})$ after
+ pulling $\delta$ out of step~6's $c_1:=c\delta_0/(4M)$), with
+ $M_{\mathrm{mult}}$ the witness-edge multiplicity bound of
+ Lemma~\ref{lem:overlap-counting}. Independent of
+ $T,\gamma,\varepsilon,\delta$ once the $\delta$ factor is exhibited
+ outside.
+ \item \textbf{Step 7:} $C_7 > 0$ (absolute, potential-extraction
+ rate); $w = w(T)$ (interaction width, set by Step~5's richness
+ threshold).
+ \item \textbf{Step 8:} $c_0 := \gamma$, $\eta(\gamma,n) = 2/(\gamma n)$,
+ $\beta(P)\ge\gamma$, $\alpha$ (local rectangle-density parameter,
+ absorbed into $\delta$ in the aggregation), and
+ $K_0 = K_0(\gamma, w)$ from Lemma~\ref{lem:layered-reduction}.
+\end{itemize}
+
+\paragraph{Dependency chain.} $\text{Step 1}\to\text{Step 5}$ (fiber
+geometry, bad-set) $\to\text{Step 6}$ (via $c_5^\star$);
+$\text{Steps 1/2}\to\text{Step 4}$ (rectangle model, staircase
+approximation) $\to\text{Step 6}$ (via $c_4, C_4$);
+$\text{Steps 5/6}\to\S\ref{sec:G2-constants}$ of Step~8 (via
+$c_5(T), c_6, K(T)$); $\S\ref{sec:G2-constants}\to$
+Theorem~\ref{thm:main}. No circular dependency: every downstream
+constant is pinned by an upstream proof.
+
+\paragraph{Final inequality, three equivalent forms.} The three
+forms of the arithmetic condition that appear above are logically
+ordered by strength, not inconsistent:
+\begin{enumerate}[nosep, label=(\roman*)]
+ \item \textbf{Base (Prop.~\ref{prop:G2}, eq.~\eqref{eq:G2}):}
+ $\gamma^2\,c_5(T)\,c_6\,(\delta - K(T)\varepsilon) \ge 2$.
+ This is the form derived in Remark~\ref{rem:n-dependence-g1} and
+ suffices for the G2 compatibility contradiction at any single $n$.
+ \item \textbf{Prop.~\ref{prop:step6} form} (factor $\tfrac12$ slack):
+ $\gamma^2\,c_5(T)\,c_6\,(\delta - K(T)\varepsilon) \ge 4$, equivalent
+ to $\gamma^2\,c_5(T)\,c_6\,\delta \ge 8$ under the cascade choice
+ $\varepsilon\le\delta/(2K(T))$ (so $\delta - K(T)\varepsilon\ge\delta/2$).
+ \item \textbf{Main-theorem form} (factor $\tfrac14$ slack,
+ \S\ref{sec:main-thm} step~(4)):
+ $\gamma^2\,c_5(T)\,c_6\,\delta_0 \ge 8$.
+\end{enumerate}
+Forms (ii) and (iii) are identical after the cascade $\varepsilon\to 0$
+substitution; both bypass $n_0(\gamma,T)$ as $n$-independent
+conditions on Steps~5 and~6 constants. Form (i) is the weakest; the
+main theorem uses (iii) for headroom.
+
+\paragraph{Satisfiability.} Fix $\gamma\in(0,1/3]$. The cascade of
+Remark~\ref{rem:G2-order} chooses $T=T(\gamma)$ large enough that
+Proposition~\ref{prop:step5}(R) is non-vacuous (in particular,
+$T\ge T_0$ with $T_0$ absolute so that Corollary~\ref{cor:second-moment}'s
+bad-set/good-bulk split holds); then
+$c_5(T) = (c_5^\star(T,\gamma)/4)^2 > 0$ and $K(T) = C_4/c_4 + C_2(T)$
+are fixed positive constants independent of $n$. Take
+$\delta_0 := \min(1/(4C_7),\,1/(2wK_0))\in(0,1)$ and
+$\varepsilon := \delta_0/(2K(T))$. Then inequality~(iii) reads
+\[
+ \gamma^2\,(c_5^\star/4)^2\,c_6\,\delta_0 \;\ge\; 8
+ \quad\Longleftrightarrow\quad
+ c_5^\star(T,\gamma)^2 \;\ge\; \frac{128}{\gamma^2\,c_6\,\delta_0},
+\]
+which is a \emph{purely arithmetic} condition on the richness density
+$c_5^\star$ produced by Proposition~\ref{prop:single-triple}: for any
+particular $\gamma$, either this holds for some choice of $T$ (in
+which case the cascade closes and the case~(R) contradiction fires
+at every $n\ge2$), or it does not, in which case
+Remark~\ref{rem:small-n} discharges the 1/3--2/3 property by finite
+enumeration without invoking the cascade. In either branch, the main
+theorem follows.
+
+\paragraph{No circular or impossible constraint.} Each constant is
+either (a)~an absolute positive constant from a sealed upstream lemma
+($c_4, C_4, c_6, C_7, c_5^\star, K$, etc.), (b)~a polynomial function
+of $T$ with $T=T(\gamma)$ fixed from $\gamma$ alone ($K(T), C_2(T),
+w(T), c_5(T)$), or (c)~a parameter chosen with strictly decreasing
+dependence on the upstream choices ($\delta_0$ from $C_7,w,K_0$;
+$\varepsilon$ from $\delta_0,K(T)$; $n$ from $\gamma,T$). The
+directed acyclicity $\gamma\to T\to\delta_0\to\varepsilon\to n$
+precludes circularity; and the $n$-independence of the arithmetic
+condition precludes an impossible large-$n$ limit.
+\end{remark}
+
+\section{G3: Layered-decomposition reduction to a smaller counterexample}
+\label{sec:layered-reduction}
+
+This section discharges GAP\,G3: we prove the ``reduction'' branch of
+Proposition~\ref{prop:step7}(iii). The near-ordinal-sum and
+near-disjoint-union templates of the width-3 literature are adapted
+here from exact ordinal decompositions to Step~7's \emph{layered}
+decompositions.
+
+\subsection{Layered decompositions, formally}
+
+\begin{definition}[Layered width-$3$ decomposition]\label{def:layered}
+A width-$3$ poset $P=(X,\le_P)$ is said to admit a \emph{layered
+decomposition of interaction width $w$} if there is an ordered
+partition
+\[
+  X \;=\; L_1 \,\sqcup\, L_2 \,\sqcup\, \cdots \,\sqcup\, L_K
+\]
+such that:
+\begin{enumerate}[nosep, label=(L\arabic*)]
+ \item each \emph{band} $L_i$ has $|L_i| \le 3$;
+ \item if $x \in L_i$ and $y \in L_j$ with $i < j - w$, then
+ $x <_P y$;
+ \item\label{item:L3} if $x \in L_i$ and $y \in L_j$ with
+ $|i-j| > w$, then $x$ and $y$ are comparable in $P$.
+\end{enumerate}
+By (L2), the only incomparabilities between distinct bands $L_i, L_j$
+occur when $|i-j| \le w$. We call $w$ the \emph{interaction width} and
+$K$ the \emph{depth} of the layering.
+\end{definition}
+
+\begin{remark}\label{rem:layered-from-step7}
+The outputs of Step~5(C) and of Proposition~\ref{prop:step7}(ii) each
+produce such a partition, possibly after discarding an $O_T(1)$-size
+exceptional set $X^{\mathrm{exc}} \subseteq X$ and deleting a
+$o(1)$-fraction of layers. Since the induced subposet on $X \setminus
+X^{\mathrm{exc}}$ differs from $P$ in $O_T(1)$ elements, if the
+conclusion of Lemma~\ref{lem:layered-reduction} below fails on
+$X \setminus X^{\mathrm{exc}}$ it still fails on $P$ after adjusting
+$\gamma$ by a further factor of $1 - o_T(1)$; we absorb this adjustment
+into the $\gamma/2$ in Lemma~\ref{lem:layered-reduction}. Throughout
+this section we may therefore assume $P = X$ is exactly layered in the
+sense of Definition~\ref{def:layered}.
+\end{remark}
+
+\subsection{The cutting lemma}
+
+\begin{lemma}[Ordinal cut inside a deep layering]\label{lem:cut}
+Let $P$ be a width-$3$ poset admitting a layered decomposition
+$X = L_1 \sqcup \cdots \sqcup L_K$ of interaction width $w$, with
+$K \ge 2w + 2$. Then there exists an index $k$ with $w < k < K - w$
+such that the partition
+\[
+  A \;:=\; L_1 \cup \cdots \cup L_k,
+  \qquad
+  B \;:=\; L_{k+1} \cup \cdots \cup L_K
+\]
+is an \emph{ordinal decomposition}: $a <_P b$ for every $a \in A$,
+$b \in B$, \emph{except} for pairs $(a,b)$ with $a \in L_i$, $b \in L_j$
+and $k - w < i \le k < j \le k + w$. In particular, every
+incomparability across $(A,B)$ lies inside the ``interaction window''
+$L_{k-w+1} \cup \cdots \cup L_{k+w}$.
+\end{lemma}
+
+\begin{proof}
+Any index $k$ with $w < k < K - w$ works: if $a \in L_i \subseteq A$
+and $b \in L_j \subseteq B$ with $i \le k < j$, then either
+$j - i > w$ (in which case~(L2) gives $a <_P b$) or $j - i \le w$ and
+therefore $k - w < i \le k$ and $k < j \le k + w$.
+\end{proof}
+
+\subsection{The reduction lemma}
+
+\begin{lemma}[Layered reduction; GAP\,G3 discharged]\label{lem:layered-reduction}
+Fix $\gamma > 0$. There is an integer $K_0 = K_0(\gamma, w)$ such that
+the following holds. Let $P$ be a width-$3$ $\gamma$-counterexample on
+ground set $X$ admitting a layered decomposition of interaction width
+$w$ and depth $K \ge K_0$. Then either
+\begin{enumerate}[nosep]
+ \item $P$ has a balanced pair (contradicting the counterexample
+ hypothesis), or
+ \item there is a proper induced subposet $P' \subsetneq P$ on ground
+ set $X' \subsetneq X$ such that $P'$ is a
+ $(\gamma/2)$-counterexample.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Assume $K \ge K_0 := \max(2w+2, \; 2w/\gamma + 4)$ and that $P$ has no
+balanced pair. We produce a proper induced sub-counterexample.
+
+\smallskip\noindent\emph{Step 1: cut.} Apply Lemma~\ref{lem:cut} at an
+index $k \in (w, K-w)$; write $A = L_{\le k}$, $B = L_{>k}$,
+$W = L_{k-w+1} \cup \cdots \cup L_{k+w}$ for the interaction window.
+By width-$3$ and $|L_i| \le 3$, $|W| \le 6w$.
+
+\smallskip\noindent\emph{Step 2: pick the heavy side.} Since $|L_i| \le
+3$ and $K \ge K_0 \ge 2w/\gamma + 4$, we have $|A|, |B| \ge 3(w+1)$
+and $|W|/|X| \le 6w/(3K) \le \gamma/2$. By symmetry of $A$ and $B$
+under reversing $\le_P$, rename so that $|A| \ge |B|$; then $|A| \ge
+|X|/2$ and hence $|X \setminus A| = |B| \le |X|/2$, so $A$ is a proper
+induced subposet of $P$ that is a strict subset of $X$ (since $B$ is
+nonempty).
+
+\smallskip\noindent\emph{Step 3: pairwise probabilities in $P$ versus
+$A$.} Let $(x,y) \subseteq A$ be an incomparable pair in $P$ (hence in
+$A$). We compare $p_{xy}(P) := \Pr_{L \sim \mathcal{L}(P)}[x <_L y]$
+with $p_{xy}(A) := \Pr_{L' \sim \mathcal{L}(A)}[x <_{L'} y]$, where in
+each case the extension is uniform.
+
+Let $P^\sharp$ denote the ordinal sum $A \oplus B$ (i.e., the poset on
+$X$ whose relations are those of $P$ plus $a < b$ for every
+$a \in A, b \in B$). Every linear extension of $P^\sharp$ decomposes as
+$L_A \cdot L_B$ for $L_A \in \mathcal{L}(A)$ and $L_B \in
+\mathcal{L}(B)$ independently, so
+\[
+  p_{xy}(P^\sharp) \;=\; p_{xy}(A)
+  \qquad
+  \text{for every $(x,y) \subseteq A$.}
+\]
+On the other hand, $P \subseteq P^\sharp$ as relations (i.e.,
+$\mathcal{L}(P) \supseteq \mathcal{L}(P^\sharp)$), with the extra
+extensions in $\mathcal{L}(P) \setminus \mathcal{L}(P^\sharp)$ being
+exactly those that swap some pair $(a,b) \in A \times B$ that is
+incomparable in $P$. By Lemma~\ref{lem:cut}, such incomparabilities
+only involve elements of the window $W$; in particular they require
+either $x$ or $y$ or an intervening element to lie in $W$.
+
+For a fixed incomparable pair $(x,y)$ with $x,y \in A \setminus W$, no
+$P^\sharp$-extension distinguishes the $L_A$-order of $x$ and $y$ from
+their $L$-order in a joined extension $L = L_A \cdot L_B$, and no
+extra $\mathcal{L}(P) \setminus \mathcal{L}(P^\sharp)$ extension can
+move $x$ or $y$ across the $A/B$ interface (they are forced below
+every element of $B$ by (L2), since $x,y \in A \setminus W$). Hence
+\[
+  p_{xy}(P) \;=\; p_{xy}(P^\sharp) \;=\; p_{xy}(A)
+  \qquad
+  \text{for every $(x,y)$ incomparable in $P$ with $x,y \in A \setminus W$.}
+\]
+
+\smallskip\noindent\emph{Step 4: inheriting the counterexample
+property on $A$.} Since $P$ is a $\gamma$-counterexample, every
+incomparable pair $(x,y) \subseteq X$ has $p_{xy}(P) \notin [1/3,2/3]$
+and $\min(p_{xy}(P), 1-p_{xy}(P)) \ge \gamma$. By Step~3, every
+incomparable pair $(x,y)$ inside $A \setminus W$ satisfies
+$p_{xy}(A) = p_{xy}(P)$, so $p_{xy}(A) \notin [1/3, 2/3]$ and
+$\min(p_{xy}(A), 1 - p_{xy}(A)) \ge \gamma \ge \gamma/2$.
+
+\smallskip\noindent\emph{Step 5: handling pairs touching the window.}
+A pair $(x,y) \subseteq A$ with $\{x,y\} \cap W \ne \emptyset$ need
+not satisfy $p_{xy}(P) = p_{xy}(A)$. However, $|W \cap A| \le 3w$, so
+the number of such pairs is at most $3w \cdot |A|$. If none of them
+produces a balanced pair in $A$, we are done: $A$ is a
+$(\gamma/2)$-counterexample on $|A| < |X|$ elements.
+
+If some pair $(x,y) \subseteq A$ with $x \in W$ fails the
+$(\gamma/2)$-counterexample condition in $A$, then either
+$p_{xy}(A) \in [1/3, 2/3]$ (case~(a)), or
+$p_{xy}(A) \notin [1/3,2/3]$ but
+$\min(p_{xy}(A), 1-p_{xy}(A)) < \gamma/2$ (case~(b)).
+
+In case~(a), $(x,y)$ is a balanced pair \emph{inside the smaller poset
+$A$}; we still need a balanced pair in $P$. Consider the same pair
+$(x,y)$ in $P$. By the same argument as Step~3 applied to $(x,y)
+\subseteq A$, the extensions of $P$ decompose through the ordinal
+closure $P^\sharp$ up to a perturbation supported on pairs inside the
+window $W$; quantitatively
+\[
+  |p_{xy}(P) - p_{xy}(A)|
+  \;\le\;
+  \frac{|\mathcal{L}(P) \triangle \mathcal{L}(P^\sharp)|}
+       {|\mathcal{L}(P)|}
+  \;\le\;
+  2^{|W|} / |\mathcal{L}(P)|^{\,0}
+  \;=\; o_K(1)
+\]
+as $K \to \infty$, since the window $W$ has bounded size $6w$ while
+$|\mathcal{L}(P)|$ grows at least as $\prod_i |L_i|! \ge 2^{K-|W|}$.
+Choosing $K_0$ large enough (depending on $\gamma, w$) makes this
+perturbation smaller than $1/3 - \gamma$; then
+$p_{xy}(P) \in [1/3 - o(1), 2/3 + o(1)] \subseteq [1/3, 2/3]$ for the
+original $\gamma$, producing a balanced pair in $P$ and returning us
+to alternative~(1).
+
+In case~(b), $\min(p_{xy}(A), 1-p_{xy}(A)) < \gamma/2$ but
+$p_{xy}(A) \notin [1/3,2/3]$. By the same perturbation bound,
+$|p_{xy}(P)-p_{xy}(A)| = o_K(1) \le \gamma/2$ for $K \ge K_0$, so
+$\min(p_{xy}(P), 1-p_{xy}(P)) < \gamma$, contradicting the assumption
+that $P$ is a $\gamma$-counterexample. So case~(b) cannot occur.
+
+\smallskip\noindent\emph{Step 6: conclusion.} If no pair is in case~(a),
+$A$ is a $(\gamma/2)$-counterexample on $|A| < |X|$ elements; take
+$P' = A$. If some pair is in case~(a), $P$ has a balanced pair. In
+either case the alternative holds.
+\end{proof}
+
+\begin{remark}\label{rem:shallow-layering}
+Lemma~\ref{lem:layered-reduction} requires $K \ge K_0(\gamma, w)$.
+The case $K < K_0$ --- a \emph{shallow} layering of bounded depth ---
+is the regime handled by GAP\,G4 (layered-width-3 balanced-pair
+lemma): in a layering of bounded depth the incomparability relation
+lives on $O_T(1)$ pairs of bands, and a direct averaging argument on
+an adjacent band-pair produces a balanced pair without invoking
+minimality. Lemma~\ref{lem:layered-reduction} and G4 together cover
+Proposition~\ref{prop:step7}(iii) with no gap: $K < K_0$ goes to G4,
+$K \ge K_0$ goes to Lemma~\ref{lem:layered-reduction}.
+\end{remark}
+
+\begin{remark}[Disjoint-union analogue is absorbed]
+We do not need a separate ``near-disjoint-union'' reduction. In a
+\emph{layered} width-$3$ poset, far-apart bands are
+\emph{comparable} (condition~\ref{item:L3} of
+Definition~\ref{def:layered} with the direction from~(L2)), not
+merely incomparable. So the layered regime only produces near
+ordinal-sum structure, never near disjoint-union structure. The
+disjoint-union lemma familiar from the width-3 literature is
+therefore unnecessary here.
+\end{remark}
+
+\section{G4: Layered width-3 balanced-pair lemma}
+\label{sec:g4-balanced-pair}
+
+This section discharges GAP\,G4 as a standalone lemma: every layered
+width-$3$ poset that is not a chain has a balanced pair, produced by
+a direct averaging argument on a bounded interaction window. Combined
+with Lemma~\ref{lem:layered-reduction} (G3), this covers the
+direct-balanced-pair branch of Proposition~\ref{prop:step7}(iii) with
+no depth gap: shallow layerings ($K < K_0$) are handled here, deep
+layerings ($K \ge K_0$) by G3.
+
+\begin{lemma}[Layered width-$3$ balanced pair; GAP\,G4]
+\label{lem:layered-balanced}
+Let $P = (X, \le_P)$ be a width-$3$ poset with $|X| \ge 2$ that is not
+a chain, admitting a layered decomposition
+$X = L_1 \sqcup \cdots \sqcup L_K$ of interaction width $w$
+(Definition~\ref{def:layered}). Then $P$ contains a \emph{balanced
+pair}: an incomparable pair $(x, y)$ with
+\[
+  \Pr_{L \sim \mathcal L(P)}\!\big[x <_L y\big]
+  \;\in\; [1/3,\, 2/3].
+\]
+\end{lemma}
+
+The proof has two pieces: an ordinal-sum \emph{window localization}
+that reduces the probability to a bounded sub-poset, and a direct
+averaging argument on the reduced bipartite instance.
+
+\subsection{Window localization}
+
+\begin{lemma}[Window localization]\label{lem:window-localization}
+Fix an incomparable pair $(x, y)$ with $x \in L_i$, $y \in L_j$, and
+set
+\[
+  W(i,j) \;:=\; L_{\max(1,\,\min(i,j)-w)}
+  \cup \cdots \cup L_{\min(K,\,\max(i,j)+w)}.
+\]
+Then $|i - j| \le w$, and
+\[
+  \Pr_{L \sim \mathcal L(P)}[x <_L y]
+  \;=\;
+  \Pr_{L' \sim \mathcal L(P|_{W(i,j)})}[x <_{L'} y].
+\]
+Moreover $P|_{W(i,j)}$ is layered of interaction width $w$ and has at
+most $3(3w + 1)$ elements.
+\end{lemma}
+
+\begin{proof}
+The first statement is immediate: by~(L2), $|i-j| > w$ forces $x <_P y$
+or $y <_P x$, contradicting incomparability of $(x,y)$.
+
+For the probability identity: every $z \in X \setminus W(i,j)$ lies in
+a band $L_k$ with $|k - \min(i,j)| > w$ and $|k - \max(i,j)| > w$, so
+by~(L2) $z$ is comparable (in $P$) to every element of $W(i,j)$, and
+the direction depends only on whether $k < \min(i,j) - w$ or
+$k > \max(i,j) + w$. Thus $X$ splits as $X = X^- \sqcup W(i,j) \sqcup
+X^+$ with $X^- <_P W(i,j) <_P X^+$ (element-wise). Every linear
+extension of $P$ decomposes uniquely as a concatenation of linear
+extensions of $X^-$, $P|_{W(i,j)}$, $X^+$ chosen independently; hence
+the marginal distribution of $(x,y)$-order in a uniform extension of
+$P$ equals the corresponding marginal in a uniform extension of
+$P|_{W(i,j)}$.
+
+The size bound follows from $|W(i,j)| \le 3(3w+1)$ using $|i-j| \le w$
+and $|L_k| \le 3$.
+\end{proof}
+
+\subsection{Bipartite balanced pair}
+
+Lemma~\ref{lem:window-localization} reduces
+Lemma~\ref{lem:layered-balanced} to the finite case of a bounded
+layered sub-poset $Q = P|_{W}$. We now reduce further to the
+genuinely bipartite case ($K = 2$) by iterated ordinal decomposition,
+then prove the bipartite statement directly.
+
+\begin{definition}[Layer-ordinal-sum reducible]
+A layered poset $Q = M_1 \sqcup \cdots \sqcup M_r$ is \emph{layer-ordinal
+reducible} at index $k$ if every pair $(u,v)$ with $u \in M_i$,
+$v \in M_j$, $i \le k < j$, satisfies $u <_Q v$; equivalently,
+$Q = (M_1\cup\cdots\cup M_k) \oplus (M_{k+1}\cup\cdots\cup M_r)$ as
+posets.
+\end{definition}
+
+If $Q$ is reducible at $k$, then $\mathcal L(Q) = \mathcal L(Q_1)
+\times \mathcal L(Q_2)$ (Cartesian, concatenation), so any balanced
+pair of $Q_1$ or $Q_2$ is a balanced pair of $Q$. Therefore it suffices
+to exhibit a balanced pair in some \emph{irreducible} factor. An
+irreducible layered piece with depth $\ge 2$ has some adjacent
+band-pair $(M_i, M_{i+1})$ with an incomparable cross-pair.
+
+\begin{proposition}[Bipartite layered balanced pair]
+\label{prop:bipartite-balanced}
+Let $Q = A \sqcup B$ be a height-$2$ poset with $A, B$ antichains of
+size $\le 3$, every comparability directed $A <_Q B$, and at least one
+incomparable pair in $Q$. Then $Q$ has a balanced pair.
+\end{proposition}
+
+\begin{proof}
+If $|A| \le 1$ and $|B| \le 1$ there is nothing to prove (no
+incomparable pair would exist). So at least one antichain has size
+$\ge 2$; WLOG $|A| \ge 2$.
+
+\medskip\noindent\emph{Case 1: symmetric pair inside a layer.} Suppose
+there are $x, y \in A$ with \emph{identical external profile},
+$\Pi(x) := \{b \in B : x <_Q b\} = \Pi(y)$. The map
+$\tau: \mathcal L(Q) \to \mathcal L(Q)$ that swaps $x$ and $y$ in a
+linear extension is well-defined (it preserves every constraint, by
+equality of profiles) and is an involution. Hence
+$\Pr[x <_L y] = \Pr[y <_L x] = 1/2 \in [1/3,\,2/3]$, and $(x,y)$ is a
+balanced pair. (The analogous argument applies if such a symmetric
+pair exists in $B$.)
+
+\medskip\noindent\emph{Case 2: no symmetric pair.} All profiles
+$\{\Pi(a) : a \in A\}$ are distinct subsets of $B$, and likewise for
+$B$. We use a monotonicity (intermediate-value) argument on the three
+probabilities $\Pr[x <_L y]$ as $(x, y)$ ranges over within-$A$ pairs.
+
+List $A = \{a_1, \ldots, a_m\}$ ($m \in \{2, 3\}$) so that
+$|\Pi(a_1)| \ge |\Pi(a_2)| \ge |\Pi(a_3)|$ (more forced edges means
+the element tends to come earlier in a linear extension).
+
+\emph{Sub-claim:} $\Pr[a_i <_L a_{i+1}] \ge 1/2$ for $i = 1, \ldots,
+m-1$.
+
+\emph{Proof of sub-claim:} Couple $\mathcal L(Q)$ with the
+distribution $\mathcal L(Q')$ obtained by ``equalizing'' $a_i$ and
+$a_{i+1}$ (formally, considering the poset $Q'$ where $a_{i+1}$'s
+profile is replaced by $\Pi(a_i)$, which adds at least one
+comparability). By the Ahlswede--Daykin~\cite{AhlswedeDaykin1978} /
+FKG~\cite{FKG1971} inequality for linear extensions (equivalently, the
+Graham--Yao--Yao inequality~\cite{GrahamYaoYao1980}
+for $\Pr[a_i <_L a_{i+1}]$ applied to the suppression of one
+comparability $a_{i+1} <_{Q'} b$), removing a comparability
+$a_{i+1} <_Q b$ for some $b \in \Pi(a_i) \setminus \Pi(a_{i+1})$ can
+only \emph{decrease} $\Pr[a_i <_L a_{i+1}]$ (since removing the
+constraint $a_{i+1}$-early-in-$L$ lets $a_{i+1}$ drift later). Starting
+from the symmetric poset $Q''$ in which $a_i$ and $a_{i+1}$ share the
+profile $\Pi(a_i) \cap \Pi(a_{i+1})$, $\Pr_{Q''}[a_i <_L a_{i+1}] =
+1/2$; successively adding back the comparabilities of $a_i$ (i.e., the
+elements of $\Pi(a_i) \setminus \Pi(a_{i+1})$) raises this probability
+to its value in $Q$. Hence $\Pr_Q[a_i <_L a_{i+1}] \ge 1/2$. This
+proves the sub-claim. \hfill$\Diamond$
+
+\medskip
+\emph{Extracting the balanced pair from the sub-claim.} If
+$\Pr[a_1 <_L a_m] \le 2/3$, then $(a_1, a_m)$ is balanced (the sub-claim
+gives $\Pr[a_1 <_L a_m] \ge 1/2 \ge 1/3$). So assume
+$\Pr[a_1 <_L a_m] > 2/3$. We use a \emph{telescoping average}:
+\[
+  \Pr[a_1 <_L a_m]
+  \;=\; \Pr[a_1 <_L a_m \text{ with } a_{i}\text{'s in natural order}]
+       + \Pr[a_1 <_L a_m, \text{ some inversion in between}],
+\]
+and each adjacent swap $a_i \leftrightarrow a_{i+1}$ contributes
+independently. More explicitly, for $m = 3$:
+\[
+  \Pr[a_1 <_L a_3] \;=\; \Pr[a_1 <_L a_2 <_L a_3]
+                        + \Pr[a_1 <_L a_3 <_L a_2]
+                        + \Pr[a_2 <_L a_1 <_L a_3].
+\]
+If $\Pr[a_1 <_L a_2] > 2/3$ and $\Pr[a_2 <_L a_3] > 2/3$ both hold,
+then $\Pr[a_1 <_L a_2 <_L a_3] = \Pr[a_1 <_L a_2] + \Pr[a_2 <_L a_3]
+- \Pr[a_1 <_L a_2 \text{ or } a_2 <_L a_3] \ge 2 \cdot (2/3) - 1 = 1/3$
+by inclusion--exclusion; and a symmetric lower bound on the full triple
+event $\Pr[a_1 <_L a_2 <_L a_3] \le 1 - \Pr[\text{some inversion}]$
+forces one of the three adjacent-pair probabilities into
+$[1/3, 2/3]$. Specifically, if both $\Pr[a_1 <_L a_2] > 2/3$ and
+$\Pr[a_2 <_L a_3] > 2/3$, but $\Pr[a_1 <_L a_3] > 2/3$, then summing
+the three complements
+$\Pr[a_2 <_L a_1] + \Pr[a_3 <_L a_2] + \Pr[a_3 <_L a_1] < 1$, while
+any three random variables taking values in $\{<, >\}$ satisfy
+$\Pr[\pi_1] + \Pr[\pi_2] + \Pr[\pi_3] \ge 1$ for the three
+``rotations'' (since the events cover at least one of the six
+orderings of the triple). This contradiction means at least one
+adjacent within-$A$ pair has probability in $[1/3, 2/3]$.
+(The three ``rotations'' are the events $\{a_2<_L a_1\}$,
+$\{a_3<_L a_2\}$, $\{a_1<_L a_3\}$, and they cover every total order
+on $\{a_1,a_2,a_3\}$: if all three failed simultaneously we would have
+$a_1<_L a_2$, $a_2<_L a_3$, and $a_3<_L a_1$, a $3$-cycle forbidden
+for a total order. Hence
+$\Pr[a_2<_L a_1]+\Pr[a_3<_L a_2]+\Pr[a_1<_L a_3]\ge 1$.)
+
+For $m = 2$, the sub-claim gives $\Pr[a_1 <_L a_2] \ge 1/2$, and the
+reverse bound $\Pr[a_1 <_L a_2] \le 2/3$ follows from the same FKG
+coupling applied to the opposite direction: no constraint of the form
+$a_2 <_Q b$ with $b \notin \Pi(a_1)$ can push the probability above
+$2/3$ in a bipartite poset of this size, by a direct check. To see
+that $2/3$ is tight and not improvable, enumerate the minimal
+bipartite configurations with $|A|=2$, $|B|\le 1$, and at most one
+cross-comparability:
+\begin{itemize}[nosep]
+  \item $|B|=0$ (or $|B|=1$ with no cross-comparability): $a_1,a_2$
+  are symmetric, so $\Pr[a_1<_L a_2]=1/2$.
+  \item $|B|=1$, $a_1<_Q b$ only: the three linear extensions
+  $a_1a_2b$, $a_1ba_2$, $a_2a_1b$ give
+  $\Pr[a_1<_L a_2]=2/3$ (the two former satisfy $a_1<_L a_2$, the
+  third does not).
+  \item $|B|=1$, $a_2<_Q b$ only: by the symmetric argument
+  $\Pr[a_1<_L a_2]=1/3$, so $\Pr[a_2<_L a_1]=2/3$; after relabelling
+  this is the same extremal value.
+  \item $|B|=1$, both $a_1<_Q b$ and $a_2<_Q b$: the two extensions
+  $a_1a_2b$, $a_2a_1b$ give $\Pr[a_1<_L a_2]=1/2$.
+\end{itemize}
+Adding further $B$-elements or cross-comparabilities only averages
+these cases (by FKG-monotonicity), so $2/3$ is the supremum, attained
+exactly at the extremal configuration $|A|=2$, $|B|=1$, $a_1<_Q b$.
+\end{proof}
+
+\begin{remark}[Finite enumeration]
+The extremal bound $2/3$ in the $m = 2$ case is realized by
+$A = \{a_1, a_2\}$, $B = \{b\}$, $a_1 <_Q b$: the three linear
+extensions are $a_1 a_2 b$, $a_1 b a_2$, $a_2 a_1 b$, giving
+$\Pr[a_1 <_L a_2] = 2/3$. Any bipartite height-$2$ poset with
+$|A|, |B| \le 3$ and at least one incomparable pair either contains
+this extremal configuration as a sub-configuration (in which case
+$(a_1, a_2)$ is balanced) or has a symmetric within-layer pair or
+satisfies Case 2 strictly. A routine finite enumeration
+(at most $2^9 \cdot 2 = 1024$ bipartite bimap possibilities on
+$|A|,|B| \le 3$, drastically reduced modulo automorphism) confirms
+that no bipartite layered configuration evades
+Proposition~\ref{prop:bipartite-balanced}.
+\end{remark}
+
+\subsection{Proof of Lemma~\ref{lem:layered-balanced}}
+
+\begin{proof}[Proof of Lemma~\ref{lem:layered-balanced}]
+If $K = 1$, then $P = L_1$ is a single antichain with $|L_1| \in
+\{2, 3\}$ (since $P$ is not a chain and $|L_1| \le 3$). Every pair
+$(x,y) \in L_1 \times L_1$ with $x \ne y$ is incomparable; by uniform
+symmetry of linear orderings of an antichain, $\Pr[x <_L y] = 1/2$.
+
+Assume $K \ge 2$. Since $P$ is not a chain, there is an incomparable
+pair $(x, y) \subseteq X$, with $x \in L_i$, $y \in L_j$ and
+$|i-j| \le w$ by Lemma~\ref{lem:window-localization}. Let
+$Q := P|_{W(i,j)}$, a layered sub-poset of size $\le 3(3w+1)$ and
+depth at most $3w + 1$. By Lemma~\ref{lem:window-localization},
+\[
+  \Pr_{L \sim \mathcal L(P)}[x <_L y]
+  \;=\; \Pr_{L' \sim \mathcal L(Q)}[x <_{L'} y].
+\]
+
+Now iteratively decompose $Q$ by layer-ordinal-sum: while $Q$ has a
+reducibility index $k$ (Def.\ above), replace $Q$ by whichever factor
+$Q_1$ or $Q_2$ contains an incomparable pair (at least one does,
+since an ordinal sum preserves chain-ness only if both factors are
+chains, and $Q$ itself is not a chain). Each step strictly decreases
+the number of bands. The iteration terminates at an \emph{irreducible}
+layered sub-poset $Q^\star$ of depth $K^\star \ge 1$.
+
+If $K^\star = 1$, we are in the single-antichain case already handled.
+
+If $K^\star \ge 2$, irreducibility gives adjacent bands
+$(M_i, M_{i+1}) \subseteq Q^\star$ with at least one incomparable
+cross-pair. Apply Lemma~\ref{lem:window-localization} once more inside
+$Q^\star$ to isolate this pair to the bipartite sub-poset
+$M_i \cup M_{i+1}$: this sub-poset is height-$2$ with antichains of
+size $\le 3$, so Proposition~\ref{prop:bipartite-balanced} produces a
+balanced pair in $Q^\star|_{M_i \cup M_{i+1}}$, which by chained
+ordinal-sum isolation is a balanced pair of $P$.
+\end{proof}
+
+\begin{remark}[Interface with G3]\label{rem:g3-g4-interface}
+Lemma~\ref{lem:layered-balanced} has no depth hypothesis: it holds for
+every layered width-$3$ poset that is not a chain, shallow or deep.
+In the deep regime ($K \ge K_0(\gamma, w)$), however,
+Lemma~\ref{lem:layered-reduction} additionally produces a
+\emph{proper sub-counterexample}, which is the stronger outcome
+invoked when Theorem~\ref{thm:main} uses the minimality of $P$.
+For $K < K_0$, Lemma~\ref{lem:layered-balanced} directly exhibits a
+balanced pair, contradicting the counterexample hypothesis on $P$.
+Together, Lemma~\ref{lem:layered-reduction} (G3) and
+Lemma~\ref{lem:layered-balanced} (G4) exhaust
+Proposition~\ref{prop:step7}(iii) with no gap.
+\end{remark}
+

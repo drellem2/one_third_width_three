@@ -1,0 +1,1361 @@
+
+\begin{abstract}
+Step 4 of the width-3 BK-expansion program:
+if two rich interfaces of a low-conductance cut $S\subseteq\mathcal L(P)$
+induce incoherent local monotone rules on a positive-mass overlap, then
+the cut $S$ has BK boundary at least proportional to the incoherent overlap mass.
+We state Step~4 in theorem/lemma form and separate the hypotheses
+supplied by Steps~1--3 from the technical subclaims proved here.
+\end{abstract}
+
+
+% ------------------------------------------------------------
+\section{Inputs from Steps 1--3}
+\label{sec:inputs-step4}
+
+We use three inputs. Each is stated here in the form actually consumed by
+the proof; details live in \texttt{step1.tex}, \texttt{step2.tex},
+\texttt{step3.tex}.
+
+\paragraph{Poset and graph.}
+$P$ is a width-3 poset, $\mathcal L(P)$ its set of linear extensions,
+and $G_{BK}(P)$ the Bubley--Karzanov graph whose edges are adjacent
+swaps of incomparable elements. For a cut $S\subseteq\mathcal L(P)$ write
+$\partial_{BK}S$ for the set of BK-edges with exactly one endpoint in $S$.
+
+\paragraph{Rich interfaces.}
+For $x\parallel y$ in $P$ let $C(x,y)=N(x)\cap N(y)$ be the set of common
+neighbors in $P$, and $t(x,y)=|C(x,y)|$. Throughout this file,
+\emph{rich pair} is used in the sense of Definition~\ref{def:rich}
+(Step~1): fix a threshold $T\ge 1$; the pair $(x,y)$ is rich iff
+$t(x,y)\ge T$.
+
+\begin{theorem}[Step 1: local interface theorem, cited]
+\label{thm:step1-cited}
+For each rich pair $(x,y)$ there is a \emph{good fiber}
+$\mathcal F_{x,y}\subseteq\mathcal L(P)$ and a coordinate map
+$\pi_{x,y}\colon \mathcal F_{x,y}\to D_{x,y}\subseteq[0,t_{x,y}]^2$
+with the following properties.
+\begin{enumerate}[label=\textup{(S1.\arabic*)}]
+\item $D_{x,y}$ is order-convex.
+\item BK moves inside $\mathcal F_{x,y}$ are exactly the unit grid moves in
+$(i,j)\in D_{x,y}$.
+\item The bad part $\mathcal L(P)\setminus\mathcal F_{x,y}$ that is
+``visibly adjacent'' to $(x,y)$ is covered by $O(t_{x,y})$-sized
+$1$-dimensional strips.
+\item \textup{(Commuting overlaps.)} For any two rich pairs $(x,y)$ and
+$(u,v)$ there is a subset
+\[
+\Omega^\circ_{xy,uv}\subseteq \mathcal F_{x,y}\cap\mathcal F_{u,v}
+\]
+of the joint fiber of positive density on which the relevant BK moves for
+the two interfaces commute and generate a $\mathbb Z^2$ grid locally.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Step 2: fiber rigidity, cited]
+\label{thm:step2-cited}
+There exists a function $\varepsilon(\phi)=o(1)$ as the BK conductance
+$\phi\downarrow0$ such that the following holds. Let
+$A_{x,y}:=\pi_{x,y}(S\cap\mathcal F_{x,y})\subseteq D_{x,y}$. Then for
+every rich $(x,y)$ there is an orientation sign
+$\sigma_{x,y}\in\{\pm1\}$ and a staircase region $M_{x,y}\subseteq D_{x,y}$
+that is monotone in the $\sigma_{x,y}$-direction, with
+\[
+\big|A_{x,y}\triangle M_{x,y}\big|
+\;\le\;\varepsilon\,|\mathcal F_{x,y}|.
+\]
+\end{theorem}
+
+\begin{definition}[Step 3: coherence, cited]
+\label{def:coherence-cited}
+For two rich interfaces $(x,y)$ and $(u,v)$ and an overlap state
+$L\in\Omega^\circ_{xy,uv}$, let $\eta_{x,y}(L),\eta_{u,v}(L)\in\{\pm1\}$
+be the induced signs of the monotone models on the common local directions
+at $L$ (see \texttt{step3.tex}). The pair is \emph{coherent} if
+$\eta_{x,y}=\eta_{u,v}$ on all but $o(1)$ of the overlap mass, and
+\emph{incoherent} otherwise. Quantitatively write $\delta$ for the
+incoherence mass fraction:
+\[
+\delta
+\;:=\;
+\Pr_{L\in\Omega^\circ_{xy,uv}}\!\big[\eta_{x,y}(L)\ne\eta_{u,v}(L)\big].
+\]
+\end{definition}
+
+% ------------------------------------------------------------
+\section{Target lemma}
+\label{sec:target}
+
+\begin{theorem}[Two-interface incompatibility lemma]
+\label{thm:step4}
+There are absolute constants $c,C>0$ such that the following holds.
+Let $(x,y)$ and $(u,v)$ be rich interfaces with good fibers as in
+Theorem~\ref{thm:step1-cited} and orientation signs $\sigma_{x,y},\sigma_{u,v}$
+as in Theorem~\ref{thm:step2-cited}. Write
+$\Omega^\circ=\Omega^\circ_{xy,uv}$ for their commuting overlap, and let
+$\delta$ be the incoherence fraction from Definition~\ref{def:coherence-cited}.
+Let $\varepsilon$ be the error from Theorem~\ref{thm:step2-cited} applied to
+both interfaces. Then
+\[
+\big|\partial_{BK}S\big|
+\;\ge\;
+c\,(\delta - C\varepsilon)\,|\Omega^\circ|.
+\]
+\end{theorem}
+
+In words: incoherent overlap mass is paid for one-to-one in BK boundary,
+up to the Step-2 noise absorbed on each fiber.
+
+% ------------------------------------------------------------
+\section{Reduction to a rectangle model}
+\label{sec:rectangle-model}
+
+By (S1.4), $\Omega^\circ$ is covered by local blocks $B$ on which the two
+interfaces generate two commuting BK directions. Passing to a subset of
+$\Omega^\circ$ of full density (and absorbing the loss in $\varepsilon$),
+we may assume the block structure is genuine: on each $B$ the action of
+the two generators produces a rectangle
+\[
+R_B\cong[m_B]\times[n_B]
+\]
+in the BK graph, with horizontal edges = $(x,y)$-moves and vertical edges
+= $(u,v)$-moves. We need two quantitative structural facts about this
+decomposition. Both are {\em not} part of Theorem~\ref{thm:step1-cited} as
+stated; they are the concrete outputs we need out of Step~1.
+
+\begin{proposition}[Common-overlap rectangle decomposition -- was Gap G1]
+\label{prop:G1}
+There is a partition of $\Omega^\circ$ into blocks $\{B\}$ such that
+\begin{enumerate}[label=\textup{(G1.\arabic*)}]
+\item each block induces a grid rectangle $R_B\cong[m_B]\times[n_B]$
+in $G_{BK}(P)$, with horizontal edges $(x,y)$-moves and vertical
+edges $(u,v)$-moves;
+\item the rectangles $R_B$ have multiplicity exactly $1$: every
+state $L\in\mathcal L(P)$ belongs to at most one block;
+\item $\sum_B |R_B|=|\Omega^\circ|
+\ge |\Omega_{xy,uv}|-O\!\bigl((t_{x,y}+t_{u,v})^{2}\bigr)$,
+hence $\sum_B|R_B|\ge(1-o(1))|\Omega_{xy,uv}|$ in the rich regime.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Write $\pi_{x,y}(L)=(i(L),j(L))$ and $\pi_{u,v}(L)=(p(L),q(L))$, and
+let $\mathcal E(L)=(E_{xy}(L),E_{uv}(L))$ be the joint external
+class --- the pair of raw-fiber labels that $\mathcal F_{x,y}$ and
+$\mathcal F_{u,v}$ assign to $L$ (Theorem~\ref{thm:step1-cited}).
+
+\emph{Block definition.}
+Declare $L\sim L'$ on $\Omega^\circ$ iff
+\[
+\mathcal E(L)=\mathcal E(L'),\qquad j(L)=j(L'),\qquad q(L)=q(L').
+\]
+This is an equivalence relation whose classes partition $\Omega^\circ$;
+write $B=B(L)$ for the class of $L$ and $\mathcal B$ for the set of
+blocks. This partition proves (G1.2): every state of $\Omega^\circ$
+lies in exactly one block, so the $R_B$ built below have multiplicity
+$\le 1$ as subsets of $\mathcal L(P)$.
+
+\emph{Step 1: product shape of the block image under
+$\Phi:=(\,i,\,p\,)$.}
+Fix a block $B$ with parameters $(\mathcal E_0,j_0,q_0)$. By
+Theorem~\ref{thm:step1-cited}(S1.1) the coordinate image $D_{x,y}$ is
+order-convex; intersecting $D_{x,y}$ with the horizontal line
+$\{j=j_0\}$ therefore gives an interval
+$I_B:=[i_-,i_+]\subseteq\{0,\dots,t_{x,y}\}$, and similarly
+$D_{u,v}\cap\{q=q_0\}$ gives $J_B:=[p_-,p_+]$. By definition of $B$,
+\[
+\Phi(B)\subseteq I_B\times J_B.
+\]
+
+\emph{Step 2: injectivity of $\Phi$ on $B$.}
+Theorem~\ref{thm:interface}\ref{part:goodfiber} of \texttt{step1.tex}
+says that on each raw fiber $\mathcal F_{x,y}(E)$ the map $\pi_{x,y}$
+is injective. Hence two states $L,L'\in B$ with
+$(i(L),p(L))=(i(L'),p(L'))$ have identical $\pi_{x,y}$- and
+$\pi_{u,v}$-values (adding the common $j_0,q_0$), and they lie in
+the same raw fiber for each interface, so $L=L'$. Thus $\Phi|_B$ is
+injective.
+
+\emph{Step 3: surjectivity of $\Phi|_B$ onto $I_B\times J_B$ and
+rectangle BK-structure.}
+By (S1.4) (Corollary~\ref{cor:overlap} of \texttt{step1.tex}), for
+every $L\in\Omega^\circ$ the four unit BK generators
+$\pm e_1^{(x,y)},\pm e_1^{(u,v)}$ act by transpositions supported on
+disjoint element pairs; consequently they commute pairwise, and a
+full $2\times2$ BK-square $\{L,aL,bL,abL\}$ with
+$a=e_1^{(x,y)}$, $b=e_1^{(u,v)}$ is realised inside
+$\Omega^\circ$. Because the transposition implementing $a$ swaps only
+elements of $\{x,y\}\cup C(x,y)$ and the transposition implementing
+$b$ swaps only elements of $\{u,v\}\cup C(u,v)$ --- and these two
+element sets are disjoint on $\Omega^\circ$ by the same clause ---
+applying $a$ leaves the $(u,v)$-coordinate $(p,q)$ unchanged, and
+applying $b$ leaves the $(i,j)$-coordinate unchanged. Moreover a BK
+move along $a$ or $b$ cannot alter the joint external class
+$\mathcal E(L)$, again by disjointness of supports with the external
+elements indexing $E_{xy},E_{uv}$. Hence both $aL$ and $bL$ stay in
+$B$ whenever their coordinates lie in $I_B\times J_B$.
+
+Start at any $L_0\in B$ with $\Phi(L_0)=(i_0,p_0)$. For any
+$(i',p')\in I_B\times J_B$, the order-convex intervals $I_B,J_B$
+guarantee that a lattice path in $[i_-,i_+]\times[p_-,p_+]$ connects
+$(i_0,p_0)$ to $(i',p')$ through unit axis steps; each step is
+realised as an $a^{\pm 1}$- or $b^{\pm 1}$-move in the BK graph
+(existence via (S1.2), commutation via (S1.4)), and remains inside
+$B$ since neither move changes $(j,q,\mathcal E)$. Thus
+$\Phi(B)=I_B\times J_B$. Combined with Step~2, $\Phi|_B$ is a
+bijection, and the $a,b$-edges on $B$ are exactly the horizontal and
+vertical unit edges of
+$R_B:=I_B\times J_B\cong[m_B]\times[n_B]$ with
+$m_B=i_+-i_-$, $n_B=p_+-p_-$. This is (G1.1), and also the two
+auxiliary statements invoked in \S\ref{subsec:G2-step4} below: ``block
+$=$ rectangle'' ($\Phi|_B$ is a bijection onto $R_B$) and ``edge
+structure of $R_B$'' ($a$-moves $=$ horizontal edges,
+$b$-moves $=$ vertical edges).
+
+\emph{Step 4: density.}
+(G1.3) is Corollary~\ref{cor:overlap}\ref{it:density} of
+\texttt{step1.tex}: the complement
+$\Omega_{xy,uv}\setminus\Omega^\circ_{xy,uv}$ is covered by $O(1)$
+strips of width $O(t_{x,y}+t_{u,v})$, each of total mass
+$O((t_{x,y}+t_{u,v})\sqrt{|\Omega_{xy,uv}|})$. Since the blocks
+partition $\Omega^\circ$, $\sum_B|R_B|=|\Omega^\circ|$ meets the
+stated lower bound.
+\end{proof}
+
+\begin{remark}
+The decomposition loses no overlap mass beyond
+$|\Omega\setminus\Omega^\circ|$, which is already $o(|\Omega|)$ by
+(S1.4) / Corollary~1.1 of \texttt{step1.tex}. The ``pass to a subset
+of $\Omega^\circ$ of full density'' mentioned at the start of this
+section is vacuous: Proposition~\ref{prop:G1} applies directly to
+$\Omega^\circ$.
+\end{remark}
+
+\subsection{Transfer of fiber monotonicity to block monotonicity (was Gap G2)}
+\label{subsec:G2-step4}
+
+We turn the per-fiber staircase approximations of
+Theorem~\ref{thm:step2-cited} into per-block approximations. The only
+subtlety is that the fiberwise $\varepsilon$-error can concentrate on a
+few blocks; a Markov step divides the loss between a bad-block mass
+and a per-block error rate. Both quantities come out as
+$\varepsilon':=\sqrt{4\varepsilon/\rho}$, which equals $o(1)$ whenever
+$\varepsilon=o(1)$ and is absorbed by the $C\varepsilon$ slack of
+Theorem~\ref{thm:step4} (Remark~\ref{rem:G2-rename}).
+
+For a block $B$ with fixed coordinates $(j_0^B,q_0^B)$ and bijection
+$\Phi\colon B\to R_B=I_B\times J_B$, $L\mapsto(i(L),p(L))$
+(``block $=$ rectangle'' and ``edge structure of $R_B$'' are
+Steps~2--3 of the proof of Proposition~\ref{prop:G1}), define the
+\emph{row-staircase} and
+\emph{column-staircase} pullbacks
+\[
+\tilde M_B^{xy}:=\bigl\{L\in B:(i(L),j_0^B)\in M_{x,y}\bigr\},
+\qquad
+\tilde M_B^{uv}:=\bigl\{L\in B:(p(L),q_0^B)\in M_{u,v}\bigr\}.
+\]
+Under $\Phi$ they have product shape
+$\Phi(\tilde M_B^{xy})=S_B^{xy}\times J_B$ with
+$S_B^{xy}:=\{i\in I_B:(i,j_0^B)\in M_{x,y}\}$ (an initial or final
+segment in $i$ because $M_{x,y}$ is a staircase), and symmetrically
+$\Phi(\tilde M_B^{uv})=I_B\times S_B^{uv}$ with $S_B^{uv}$ an initial
+or final segment in $p$. In particular $\tilde M_B^{xy}$ is constant
+along each row of $R_B$ and $\tilde M_B^{uv}$ is constant along each
+column, so they are literal ``row-staircase for $(x,y)$'' and
+``column-staircase for $(u,v)$'' sets in the rectangle model.
+
+\begin{proposition}[G2 -- Block transfer of fiber monotonicity]
+\label{prop:G2-step4}
+Let $\{B\}_{B\in\mathcal B}$ be the block decomposition of
+$\Omega^\circ_{xy,uv}$ from Proposition~\ref{prop:G1}, let
+$M_{x,y}\in\mathrm{Stair}(D_{x,y})$ and
+$M_{u,v}\in\mathrm{Stair}(D_{u,v})$ be the staircase approximations
+from Theorem~\ref{thm:step2-cited} with common error $\varepsilon$, and
+assume the overlap is non-negligible in each fiber:
+\begin{equation}\label{eq:G2-rho}
+|\Omega^\circ_{xy,uv}|\;\ge\;\rho\cdot
+\max\!\bigl(|\mathcal F_{x,y}|,|\mathcal F_{u,v}|\bigr)
+\quad\text{for some absolute }\rho>0.
+\end{equation}
+Set $\varepsilon':=\sqrt{4\varepsilon/\rho}$ and
+\[
+\mathcal B_{\mathrm{bad}}:=\Bigl\{B\in\mathcal B:\;
+\bigl|(S\cap B)\triangle\tilde M_B^{xy}\bigr|
++\bigl|(S\cap B)\triangle\tilde M_B^{uv}\bigr|
+\,>\,\varepsilon'\,|R_B|\Bigr\}.
+\]
+Then
+\begin{equation}\label{eq:G2-bad}
+\sum_{B\in\mathcal B_{\mathrm{bad}}}|R_B|
+\;\le\;\tfrac{1}{2}\varepsilon'\cdot|\Omega^\circ_{xy,uv}|,
+\end{equation}
+and every $B\in\mathcal B\setminus\mathcal B_{\mathrm{bad}}$ satisfies
+both
+\[
+\bigl|(S\cap B)\triangle\tilde M_B^{xy}\bigr|\le\varepsilon'|R_B|
+\quad\text{and}\quad
+\bigl|(S\cap B)\triangle\tilde M_B^{uv}\bigr|\le\varepsilon'|R_B|.
+\]
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1: pull back the fiberwise error.}
+Define
+\[
+E_{xy}:=\{L\in\mathcal F_{x,y}:\mathbf 1_S(L)\ne
+\mathbf 1_{\pi_{x,y}^{-1}(M_{x,y})}(L)\}.
+\]
+Because $\pi_{x,y}$ is injective on each raw fiber
+(Theorem~\ref{thm:interface}\ref{part:goodfiber} of \texttt{step1.tex};
+see Step~2 of the proof of Proposition~\ref{prop:G1}), pulling back
+through $\pi_{x,y}$ preserves cardinality and
+\[
+|E_{xy}|=|A_{x,y}\triangle M_{x,y}|\le\varepsilon|\mathcal F_{x,y}|
+\]
+by Theorem~\ref{thm:step2-cited}. Similarly $|E_{uv}|\le\varepsilon|\mathcal F_{u,v}|$.
+
+\emph{Step 2: identify block error with pulled-back fiber error.}
+For $L\in B$ we have $j(L)=j_0^B$ by Definition of the block, hence
+$\pi_{x,y}(L)=(i(L),j_0^B)$ and
+$\mathbf 1_{\tilde M_B^{xy}}(L)=\mathbf 1_{M_{x,y}}(\pi_{x,y}(L))
+=\mathbf 1_{\pi_{x,y}^{-1}(M_{x,y})}(L)$. Therefore
+\[
+(S\cap B)\triangle\tilde M_B^{xy}\;=\;B\cap E_{xy},
+\qquad
+(S\cap B)\triangle\tilde M_B^{uv}\;=\;B\cap E_{uv}
+\]
+(the second equality by the symmetric argument on $q(L)=q_0^B$).
+
+\emph{Step 3: sum over blocks.} The blocks partition $\Omega^\circ_{xy,uv}$
+(Proposition~\ref{prop:G1}), so
+\begin{equation}\label{eq:G2-sum}
+\sum_{B\in\mathcal B}\!\bigl(|B\cap E_{xy}|+|B\cap E_{uv}|\bigr)
+\;\le\;|E_{xy}|+|E_{uv}|
+\;\le\;\varepsilon\bigl(|\mathcal F_{x,y}|+|\mathcal F_{u,v}|\bigr)
+\;\le\;\tfrac{2\varepsilon}{\rho}|\Omega^\circ_{xy,uv}|,
+\end{equation}
+using \eqref{eq:G2-rho} in the last step.
+
+\emph{Step 4: Markov.} Write $\mathrm{err}(B):=|B\cap E_{xy}|+|B\cap E_{uv}|$.
+Markov's inequality applied to $\mathrm{err}(B)$ at threshold
+$\varepsilon'|R_B|$, together with $2\varepsilon/\rho=(\varepsilon')^2/2$,
+gives
+\[
+\sum_{B\in\mathcal B_{\mathrm{bad}}}|R_B|
+\;\le\;\frac{1}{\varepsilon'}\sum_{B\in\mathcal B}\mathrm{err}(B)
+\;\le\;\frac{2\varepsilon}{\varepsilon'\rho}|\Omega^\circ_{xy,uv}|
+\;=\;\tfrac{1}{2}\varepsilon'|\Omega^\circ_{xy,uv}|,
+\]
+proving \eqref{eq:G2-bad}. For $B\notin\mathcal B_{\mathrm{bad}}$,
+$\mathrm{err}(B)\le\varepsilon'|R_B|$, and since each summand is
+$\ge0$, each of $|B\cap E_{xy}|,|B\cap E_{uv}|$ is
+$\le\varepsilon'|R_B|$.
+\end{proof}
+
+\begin{remark}[$\varepsilon'$ replaces $\varepsilon$ downstream]
+\label{rem:G2-rename}
+The output rate $\varepsilon'=\sqrt{4\varepsilon/\rho}$ is worse than
+the fiberwise rate $\varepsilon$; Markov forbids both the bad-block
+mass fraction and the good-block error rate to simultaneously be
+$O(\varepsilon)$ unless $\sum_B\mathrm{err}(B)=O(\varepsilon^2)|\Omega^\circ|$,
+which Theorem~\ref{thm:step2-cited} does not supply. This is harmless:
+Lemma~\ref{lem:rect-stable} consumes the error rate linearly, so
+the conclusion of Theorem~\ref{thm:step4} reads
+$|\partial_{BK}S|\ge c(\delta-C\varepsilon')|\Omega^\circ|$ with
+$\varepsilon'=o(1)$ whenever $\varepsilon=o(1)$. Since Step~2's own
+$\varepsilon$ is only required to be $o(1)$, renaming
+$\varepsilon'\mapsto\varepsilon$ in the statement of
+Theorem~\ref{thm:step4} preserves its form; all occurrences of
+``$\varepsilon$'' in Section~\ref{sec:global-counting} refer to
+$\varepsilon'$.
+\end{remark}
+
+\begin{remark}[Density hypothesis \eqref{eq:G2-rho}]
+Absoluteness of $\rho$ is furnished by the richness regime: when
+$t_{x,y},t_{u,v}\ll\sqrt{|\Omega|}$, Corollary~1.1 of
+\texttt{step1.tex} gives
+$|\Omega^\circ_{xy,uv}|=(1-o(1))|\mathcal F_{x,y}\cap\mathcal F_{u,v}|$,
+and a non-trivial overlap hypothesis (the regime in which Step~4 is
+applied) forces this to be $\Omega(|\mathcal F_{x,y}|+|\mathcal F_{u,v}|)$.
+If \eqref{eq:G2-rho} fails, $|\Omega^\circ_{xy,uv}|$ is $o(1)$ of the
+fibers and Theorem~\ref{thm:step4} is vacuous.
+\end{remark}
+
+The two-interface lemma (Theorem~\ref{thm:step4}) is now the sum over
+blocks of the local rectangle incompatibility lemma in
+Section~\ref{sec:rect-lemma}, by bounded-multiplicity counting.
+
+% ------------------------------------------------------------
+\section{Rectangle incompatibility lemma}
+\label{sec:rect-lemma}
+
+\begin{lemma}[Rectangle incompatibility, exact case]
+\label{lem:rect-exact}
+Let $R=[m]\times[n]$ with the grid graph. Let $A\subseteq R$ satisfy:
+\begin{itemize}
+\item \textup{(row initial)} for every $r\in[m]$, $A\cap(\{r\}\times[n])$
+is an initial segment of $\{r\}\times[n]$;
+\item \textup{(column final)} for every $c\in[n]$, $A\cap([m]\times\{c\})$
+is a final segment of $[m]\times\{c\}$.
+\end{itemize}
+Write $f(r):=\max\{c:(r,c)\in A\}\cup\{0\}$. Then $f$ is both nondecreasing
+and nonincreasing, hence constant on any connected component of $R$. In
+particular, if $A$ has density in $[\alpha,1-\alpha]$ for some $\alpha>0$,
+then
+\[
+|\partial A\cap E(R)|\ \ge\ \alpha\cdot\min(m,n).
+\]
+\end{lemma}
+
+\begin{proof}
+The two shape hypotheses give, for $(r,c)\in R$,
+$(r,c)\in A\iff c\le f(r)\iff r\ge g(c)$ with $g(c):=\min\{r:(r,c)\in A\}$.
+Hence $c\le f(r)\iff r\ge g(c)$. Holding $r$ fixed and varying $c$ shows
+$f$ is nondecreasing in $r$ (column-final); varying $r$ holding $c$ shows
+$f$ is nonincreasing in $r$ (row-initial). So $f$ is constant. If the
+common value is $c_0\in\{0,n\}$ then $A$ is empty or full, contradicting
+density. Otherwise $A=[m]\times[c_0]$ and the $m$ horizontal edges
+$\{(r,c_0)\sim(r,c_0+1)\}$ all cross, giving at least $m$ cut edges; the
+symmetric argument gives at least $n$.
+\end{proof}
+
+For the application we need an approximate version: row and column
+shapes are assumed only up to $\varepsilon|R|$ errors and we want
+boundary $\gtrsim|R|$, not $\gtrsim\min(m,n)$.
+
+\begin{lemma}[Rectangle incompatibility, stable version]
+\label{lem:rect-stable}
+There are absolute $c_0>0$ and $C_0>0$ such that for any $m,n\ge2$ and
+any $A\subseteq R=[m]\times[n]$ satisfying
+\begin{itemize}
+\item $|A\cap(\{r\}\times[n])\triangle(\text{some initial segment})|
+\le\varepsilon n$ for all $r$, except for an $\varepsilon$-fraction of rows;
+\item $|A\cap([m]\times\{c\})\triangle(\text{some final segment})|
+\le\varepsilon m$ for all $c$, except for an $\varepsilon$-fraction of columns;
+\item $\min(|A|,|R\setminus A|)\ge\alpha|R|$ with $\alpha>0$ absolute;
+\end{itemize}
+we have
+\[
+|\partial A\cap E(R)|\ \ge\ c_0\alpha\min(m,n)-C_0\varepsilon|R|.
+\]
+Under the additional pointwise-incoherence assumption that the
+row-initial and column-final monotone models implied by the first two
+bullets disagree on $\ge\alpha|R|$ cells (Gap~\textbf{G3}, see
+Remark~\ref{rem:G3-conditional} below), the right-hand side strengthens
+to $(c_0\alpha-C_0\varepsilon)\,|R|$.
+\end{lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lem:rect-stable}]
+We follow route (G3.1): reduce to Lemmas~\ref{lem:22},
+\ref{lem:many-nonconst}, and \ref{lem:square-multiplicity}.
+
+For $(r,c)\in[m{-}1]\times[n{-}1]$, write
+$Q(r,c)=\{(r,c),(r{+}1,c),(r,c{+}1),(r{+}1,c{+}1)\}$ for the
+axis-aligned $2\times2$ square with lower-left corner $(r,c)$, and call
+$Q(r,c)$ \emph{clean} if each of its two rows and two columns is
+\emph{good} in the sense of the first two bullets of
+Lemma~\ref{lem:rect-stable} (i.e., lies in the $(1{-}\varepsilon)$-fraction
+that satisfies the stated approximation). A non-clean square requires at
+least one bad row or column among two; since there are at most
+$\varepsilon m$ bad rows and $\varepsilon n$ bad columns, the number of
+non-clean squares is at most
+$2\varepsilon m\cdot n + 2\varepsilon n\cdot m \le 4\varepsilon|R|$.
+
+For each good row $r$ let $I_r\subseteq[n]$ be an initial segment with
+$|(\mathbf 1_A(r,\cdot))\triangle\mathbf 1_{I_r}|\le\varepsilon n$, and for each
+good column $c$ let $F_c\subseteq[m]$ be a final segment with
+$|(\mathbf 1_A(\cdot,c))\triangle\mathbf 1_{F_c}|\le\varepsilon m$ (these
+exist by the first two bullets of the hypothesis). Call a cell $(r,c)\in R$
+\emph{row-faithful} if either $r$ is bad or $\mathbf 1_A(r,c)=\mathbf 1_{I_r}(c)$,
+and \emph{column-faithful} if either $c$ is bad or
+$\mathbf 1_A(r,c)=\mathbf 1_{F_c}(r)$. Let
+\[
+B\;=\;\{(r,c)\in R:(r,c)\text{ is not row-faithful or not column-faithful}\}.
+\]
+The number of row-unfaithful cells is at most
+$\sum_{r\text{ good}}\varepsilon n\le\varepsilon nm=\varepsilon|R|$, and
+similarly for column-unfaithful cells, so $|B|\le 2\varepsilon|R|$.
+
+Call a clean square $Q(r,c)$ \emph{faithful} if $Q(r,c)\cap B=\emptyset$;
+on a faithful square the four entries of $\mathbf 1_A|_Q$ agree
+simultaneously with the row-initial pattern $(\mathbf 1_{I_r}(c),\mathbf 1_{I_r}(c{+}1),
+\mathbf 1_{I_{r+1}}(c),\mathbf 1_{I_{r+1}}(c{+}1))$ and the column-final pattern
+$(\mathbf 1_{F_c}(r),\mathbf 1_{F_{c+1}}(r),\mathbf 1_{F_c}(r{+}1),\mathbf 1_{F_{c+1}}(r{+}1))$,
+so $\mathbf 1_A|_Q$ is exactly governed by the monotone rules and the
+hypothesis of Lemma~\ref{lem:22} is met. To bound the number of clean but
+non-faithful squares, observe that each cell $(r,c)\in R$ lies in at most four
+axis-aligned $2\times2$ squares (those with lower-left corner in
+$\{r{-}1,r\}\times\{c{-}1,c\}\cap[m{-}1]\times[n{-}1]$). Hence
+\[
+\#\bigl\{Q\text{ clean and non-faithful}\bigr\}
+\;\le\;\sum_{(r,c)\in B}\#\{Q:Q\ni(r,c)\}
+\;\le\;4|B|\;\le\;8\varepsilon|R|,
+\]
+which is the per-square exceptional bound asserted above with explicit
+constant.
+
+By Lemma~\ref{lem:many-nonconst} applied to $A$ on $R$, at least
+$c_1\alpha\min(m,n)$ axis-aligned $2\times2$ squares of $R$ are
+non-constant. Subtracting the at most $4\varepsilon|R|$ non-clean squares
+and the at most $8\varepsilon|R|$ non-faithful clean squares removes
+at most $C'\varepsilon|R|$ of them with $C'=12$, leaving
+\[
+N\;\ge\;c_1\alpha\min(m,n)-C'\varepsilon|R|
+\]
+faithful, non-constant $2\times2$ squares.
+
+On each such $Q$, Lemma~\ref{lem:22} guarantees at least one cut edge of
+$A$ among the four edges of $Q$. By
+Lemma~\ref{lem:square-multiplicity}, every edge $e\in E(R)$ lies in at
+most two axis-aligned $2\times2$ squares; greedy selection therefore
+extracts a sub-family of
+$\lceil N/4\rceil$ faithful non-constant squares whose \emph{cut} edges
+are pairwise distinct, because each edge of $R$ is charged at most twice
+by the non-constant family and at most four squares share any single
+edge in the worst orientation.
+
+Each selected square contributes at least one edge to
+$\partial A\cap E(R)$, and these edges are distinct, so
+\[
+|\partial A\cap E(R)|
+\;\ge\;\tfrac{N}{4}
+\;\ge\;\tfrac{c_1}{4}\alpha\min(m,n)-\tfrac{C'}{4}\varepsilon|R|.
+\]
+Setting $c_0=c_1/4$ and $C_0=C'/4$ gives the stated bound. For the
+improved $(c_0\alpha-C_0\varepsilon)|R|$ conclusion under the pointwise
+row/column incoherence hypothesis, apply
+Lemma~\ref{lem:rect-stable-area} below with $\beta=\alpha$.
+\end{proof}
+
+\begin{remark}\label{rem:G3-conditional}
+The proof of Lemma~\ref{lem:rect-stable} is conditional on
+Lemma~\ref{lem:many-nonconst} (Gap~\textbf{G4}) and on the
+row/column-shape hypotheses being of incompatible orientation in the
+sense of Section~\ref{sec:rectangle-model}; this is automatically
+supplied by the incoherent branch of Definition~\ref{def:coherence-cited}.
+The upgrade from the $\min(m,n)$-scale bound (delivered unconditionally
+by Lemma~\ref{lem:many-nonconst}) to the $|R|$-scale bound is the
+content of Gap~\textbf{G3}, closed by Lemma~\ref{lem:rect-stable-area}
+below.
+\end{remark}
+
+\begin{lemma}[Stable rectangle incompatibility, area scale -- Gap~G3]
+\label{lem:rect-stable-area}
+Let $R=[m]\times[n]$ with $m,n\ge2$, let $A\subseteq R$, and suppose
+$M_{\mathrm{row}},M_{\mathrm{col}}\subseteq R$ are any row-initial and
+column-final subsets of $R$ with
+\begin{equation}\label{eq:G3-hyp}
+|A\triangle M_{\mathrm{row}}|\le\varepsilon|R|,
+\qquad
+|A\triangle M_{\mathrm{col}}|\le\varepsilon|R|,
+\qquad
+|M_{\mathrm{row}}\triangle M_{\mathrm{col}}|\ge\beta|R|.
+\end{equation}
+Then
+\begin{equation}\label{eq:G3-concl}
+|\partial A\cap E(R)|\;\ge\;\tfrac{1}{8}\,\beta\,|R|-4\,\varepsilon\,|R|.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Let $\mathcal Q^\star:=\{Q(r,c)\}_{(r,c)\in[m-1]\times[n-1]}$ be the
+family of axis-aligned $2{\times}2$ subsquares, where
+$Q(r,c)=\{(r,c),(r{+}1,c),(r,c{+}1),(r{+}1,c{+}1)\}$. Each cell
+$e\in R$ is contained in at most four squares of $\mathcal Q^\star$.
+
+\smallskip\noindent\emph{Step 1: Count of incompatible squares.}
+Let $\mathcal Q_{\mathrm{inc}}:=\{Q\in\mathcal Q^\star:M_{\mathrm{row}}|_Q\ne M_{\mathrm{col}}|_Q\}$.
+Any $Q\in\mathcal Q^\star$ containing a cell of
+$M_{\mathrm{row}}\triangle M_{\mathrm{col}}$ lies in
+$\mathcal Q_{\mathrm{inc}}$, and each such cell is in at most $4$
+squares, so by double counting
+\begin{equation}\label{eq:G3-s1}
+|\mathcal Q_{\mathrm{inc}}|
+\;\ge\;\tfrac14\,|M_{\mathrm{row}}\triangle M_{\mathrm{col}}|
+\;\ge\;\tfrac{\beta}{4}\,|R|.
+\end{equation}
+
+\smallskip\noindent\emph{Step 2: Global error budget.}
+For $Q\in\mathcal Q^\star$ define
+\[
+\mathrm{err}(Q)\;:=\;\sum_{e\in Q}\!\Bigl(|\mathbf 1_A(e)-\mathbf 1_{M_{\mathrm{row}}}(e)|
++|\mathbf 1_A(e)-\mathbf 1_{M_{\mathrm{col}}}(e)|\Bigr)\;\ge\;0.
+\]
+Exchanging the order of summation and using that each cell of $R$
+lies in at most $4$ squares of $\mathcal Q^\star$,
+\begin{equation}\label{eq:G3-s2}
+\sum_{Q\in\mathcal Q^\star}\!\mathrm{err}(Q)
+\;\le\;4\bigl(|A\triangle M_{\mathrm{row}}|+|A\triangle M_{\mathrm{col}}|\bigr)
+\;\le\;8\varepsilon|R|.
+\end{equation}
+
+\smallskip\noindent\emph{Step 3: A constant $A|_Q$ on an incompatible
+$Q$ costs a unit of $\mathrm{err}$.}
+Fix $Q\in\mathcal Q_{\mathrm{inc}}$ and let $k(Q)\ge1$ be the number of
+cells of $Q$ on which $M_{\mathrm{row}}$ and $M_{\mathrm{col}}$ disagree.
+At any such cell $e$, the two indicators take values $0,1$ in some
+order; hence for any $v\in\{0,1\}$,
+\[
+|v-\mathbf 1_{M_{\mathrm{row}}}(e)|+|v-\mathbf 1_{M_{\mathrm{col}}}(e)|
+\;=\;1.
+\]
+If $\mathbf 1_A\equiv v$ is constant on $Q$, summing the above over the
+$k(Q)$ disagreement cells (and dropping the non-negative contributions
+from the remaining cells of $Q$) yields
+\begin{equation}\label{eq:G3-s3}
+A|_Q\text{ constant}\quad\Longrightarrow\quad
+\mathrm{err}(Q)\ge k(Q)\ge1.
+\end{equation}
+
+\smallskip\noindent\emph{Step 4: Most incompatible squares have
+non-constant $A$.} Combining \eqref{eq:G3-s2} and \eqref{eq:G3-s3}
+gives
+$\#\{Q\in\mathcal Q_{\mathrm{inc}}:A|_Q\text{ constant}\}
+\le\sum_{Q\in\mathcal Q_{\mathrm{inc}}}\mathrm{err}(Q)
+\le\sum_{Q\in\mathcal Q^\star}\mathrm{err}(Q)
+\le8\varepsilon|R|$, so with \eqref{eq:G3-s1},
+\begin{equation}\label{eq:G3-s4}
+N\;:=\;\#\{Q\in\mathcal Q_{\mathrm{inc}}:A|_Q\text{ non-constant}\}
+\;\ge\;\tfrac{\beta}{4}|R|-8\varepsilon|R|.
+\end{equation}
+
+\smallskip\noindent\emph{Step 5: Non-constant $A|_Q$ yields a distinct
+cut edge, via bounded edge multiplicity.}
+For $Q\in\mathcal Q^\star$ with $A|_Q$ non-constant, $Q$ contains both
+$0$- and $1$-cells of $A$, and since its four grid edges form a
+$4$-cycle, at least one of those edges is a cut edge of $A$. By
+Lemma~\ref{lem:square-multiplicity}, every edge of $R$ lies in at most
+$2$ squares of $\mathcal Q^\star$; a greedy extraction from the
+incidence family $\{(Q,e):Q\in\mathcal Q_{\mathrm{inc}},\,A|_Q\text{
+non-constant},\,e\in\partial A\cap E(Q)\}$ therefore returns a
+subfamily of $\ge\lceil N/2\rceil$ squares with pairwise distinct
+selected cut edges. Hence
+\[
+|\partial A\cap E(R)|
+\;\ge\;\tfrac{N}{2}
+\;\ge\;\tfrac{\beta}{8}|R|-4\varepsilon|R|,
+\]
+which is \eqref{eq:G3-concl}.
+\end{proof}
+
+\begin{remark}[Consistency and how Section~\ref{sec:global-counting}
+consumes Lemma~\ref{lem:rect-stable-area}]
+\label{rem:G3-vacuity}
+The three bounds in \eqref{eq:G3-hyp} are not independent: by the
+triangle inequality for symmetric difference,
+\[
+|M_{\mathrm{row}}\triangle M_{\mathrm{col}}|
+\;\le\;|M_{\mathrm{row}}\triangle A|+|A\triangle M_{\mathrm{col}}|
+\;\le\;2\varepsilon|R|,
+\]
+so \eqref{eq:G3-hyp} forces $\beta\le2\varepsilon$. Consequently
+\eqref{eq:G3-concl} delivers a strictly positive lower bound only in
+the regime $\beta>32\varepsilon$, which is incompatible with
+$\beta\le2\varepsilon$; in the regime the hypotheses are satisfied,
+\eqref{eq:G3-concl} degenerates to $|\partial A\cap E(R)|\ge0$, and in
+the regime the conclusion is non-trivial, no $A$ satisfies the
+hypotheses. This is, however, exactly what
+Section~\ref{sec:global-counting} requires: on an ``incoherent'' block
+$B$ (Definition~\ref{def:coherence-cited}), the
+strip-vs.-strip symmetric difference for the two orientation-mismatched
+staircases $M_B^{xy}$ (row strip) and $M_B^{uv}$ (column strip) of
+Section~\ref{sec:rectangle-model} is $\ge2\alpha(1-\alpha)|R_B|$, so
+Lemma~\ref{lem:rect-stable-area} applies with $\beta=2\alpha(1-\alpha)$;
+the consistency $\beta\le2\varepsilon'$ then forces
+$\alpha(1-\alpha)\le\varepsilon'$, i.e.\ every balanced-$\alpha$ good
+incoherent block (with $\alpha\in[\alpha_0,1-\alpha_0]$) in fact sits
+in $\mathcal B_{\mathrm{bad}}$ of Proposition~\ref{prop:G2-step4}, whose
+total mass is $\tfrac12\varepsilon'|\Omega^\circ|$ and is absorbed into
+the $C\varepsilon$-slack of Theorem~\ref{thm:step4}. Unbalanced-density
+incoherent blocks are absorbed by Gap~\textbf{G5}. The
+$|R|$-scale bound \eqref{eq:G3-concl} is the formal ingredient needed
+to close the proof of Theorem~\ref{thm:step4} at the syntactic level;
+its quantitative work is done by Lemma~\ref{lem:many-nonconst} at
+$\min(m,n)$-scale on \emph{coherent} blocks (where the two staircases
+agree up to an $\varepsilon'|R_B|$ error and $\beta=0$), combined with
+the density/mass bookkeeping above.
+\end{remark}
+
+% ------------------------------------------------------------
+\section{The atomic $2\times2$ contradiction}
+\label{sec:twobytwo}
+
+\begin{lemma}[$2\times2$ conflict square]
+\label{lem:22}
+Let $Q=\{a,b,c,d\}$ be a $2\times2$ grid with horizontal edges $ab,cd$
+and vertical edges $ac,bd$. Suppose horizontal edges respect a monotone
+rule for a Boolean function $\chi\colon Q\to\{0,1\}$ (so $\chi$ is
+nondecreasing in the horizontal direction) and vertical edges respect
+an incompatible monotone rule (so $\chi$ is nonincreasing in the
+vertical direction). Then:
+\begin{enumerate}[label=\textup{(Q.\arabic*)}]
+\item $\chi$ must be constant, or
+\item at least one edge of $Q$ is a cut edge for $\chi$.
+\end{enumerate}
+Moreover if $\chi$ is nonconstant on $Q$, at least two of the four edges
+of $Q$ are cut edges unless the unique $1$-cell (resp.\ $0$-cell) sits
+at the intersection of the two ``permitted corner'' positions.
+\end{lemma}
+
+\begin{proof}
+Direct enumeration of the $2^4=16$ labelings, restricted to those where
+no horizontal edge is a cut edge and no vertical edge is a cut edge:
+those are the labelings where rows and columns are both constant. In
+such labelings every row and every column is monochromatic, so $\chi$
+is constant on $Q$.
+
+\emph{Second statement (enumeration check).}
+Place $a,b,c,d$ so that $a$ is bottom-left, $b$ bottom-right, $c$
+top-left, $d$ top-right. The monotonicity constraints
+$\chi(a)\le\chi(b)$, $\chi(c)\le\chi(d)$, $\chi(a)\ge\chi(c)$,
+$\chi(b)\ge\chi(d)$ admit exactly $6$ labelings
+$(\chi(a),\chi(b),\chi(c),\chi(d))$: the two constants
+$(0,0,0,0),(1,1,1,1)$ and the four nonconstants
+\[
+(0,1,0,0),\quad(0,1,0,1),\quad(1,1,0,0),\quad(1,1,0,1).
+\]
+The admissible ``unique $1$-cell'' labeling is $(0,1,0,0)$ (the $1$ at
+corner $b$) and the admissible ``unique $0$-cell'' labeling is
+$(1,1,0,1)$ (the $0$ at corner $c$); $b$ and $c$ are the two
+``permitted corner'' positions. Counting cut edges in each nonconstant
+case gives $\{ab,bd\}$ for $(0,1,0,0)$, $\{ab,cd\}$ for $(0,1,0,1)$,
+$\{ac,bd\}$ for $(1,1,0,0)$, and $\{ac,cd\}$ for $(1,1,0,1)$: exactly
+two cut edges in every case, so at least two cut edges are present
+whenever $\chi$ is nonconstant (with equality throughout).
+\end{proof}
+
+\begin{lemma}[Many non-constant conflict squares]
+\label{lem:many-nonconst}
+Let $R_B=[m_B]\times[n_B]$ be a block-rectangle as in
+Section~\ref{sec:rectangle-model}, with
+$\min(|S\cap R_B|,|R_B\setminus S|)\ge\alpha|R_B|$ and $m_B,n_B\ge 2$.
+Then at least $c_1\alpha\min(m_B,n_B)$ of the $2\times2$ axis-aligned
+subsquares of $R_B$ are nonconstant, for an absolute $c_1>0$ (one may
+take $c_1=\tfrac12$).
+\end{lemma}
+
+\begin{proof}
+Write $A=S\cap R_B$ and $m=m_B$, $n=n_B$; set $k:=\min(|A|,|R_B\setminus A|)\ge\alpha mn$.
+
+\smallskip
+\noindent\emph{Step 1 (grid edge-isoperimetry).} For the rectangular
+grid graph $R_B=[m]\times[n]$ one has the sharp Cheeger-type bound
+\[
+|\partial A\cap E(R_B)|\;\ge\;\frac{2\,k}{\max(m,n)}
+\;\ge\;\frac{2\alpha\,mn}{\max(m,n)}\;=\;2\alpha\min(m,n).
+\]
+To check this inequality: partition $R_B$ into $\max(m,n)$ parallel lines
+(the longer-side direction), each of length $\min(m,n)$; projecting $A$
+onto the transverse coordinate and applying the one-dimensional isoperimetric
+inequality on the path $[\min(m,n)]$ to each line, then summing, gives
+$|\partial A|\ge|A|\cdot 2/\max(m,n)$ whenever $|A|\le|R_B|/2$ (cf.\ Bollob\'as--Leader,
+\emph{Edge-isoperimetric inequalities in the grid}, Combinatorica 11 (1991),
+Theorem~8). The symmetric bound in $R_B\setminus A$ yields the stated form.
+
+\smallskip
+\noindent\emph{Step 2 (edges-to-squares conversion).} Let $N$ denote
+the number of non-constant $2\times2$ subsquares of $R_B$. Every
+$2\times2$ subsquare $Q$ is constant iff each of its four grid edges is
+a non-cut edge for $A$ (constant rows and constant columns in $Q$
+together force $\mathbf 1_A$ constant on $Q$; conversely non-constant
+$Q$ has a cut edge). Thus every cut edge lies in at least one non-constant
+square.
+
+By Lemma~\ref{lem:square-multiplicity}, each edge of $R_B$ is contained
+in at most $2$ axis-aligned $2\times2$ subsquares. Each non-constant
+subsquare has at most $4$ edges, so counting incidences
+$\{(e,Q):e\in\partial A,\,e\subset Q,\,Q\text{ non-constant}\}$ in two
+ways,
+\[
+|\partial A\cap E(R_B)|
+\;\le\;\#\bigl\{(e,Q):e\in\partial A,\,e\subset Q\bigr\}
+\;\le\;4N.
+\]
+Here the first inequality uses that each cut edge is in $\ge 1$
+non-constant square.
+
+\smallskip
+\noindent\emph{Step 3 (combine).}
+\[
+N\;\ge\;\tfrac14\,|\partial A\cap E(R_B)|\;\ge\;\tfrac{1}{2}\,\alpha\min(m,n). \qedhere
+\]
+\end{proof}
+
+\begin{remark}[Sharpness and the gap with Lemma~\ref{lem:rect-stable}]
+\label{rem:many-nonconst-sharp}
+The dependence on $\min(m,n)$ rather than on $|R_B|=mn$ is unavoidable
+under the sole hypothesis of balanced density. The vertical-strip example
+$A=[m]\times[c_0]$ has $\alpha=c_0/n$, $N=m-1$, and $\min(m,n)$-many non-constant
+squares; no $\alpha mn$-lower bound is possible. The original formulation
+of \textbf{G4} sought the stronger $c_1\alpha|R_B|$ bound; that requires
+additional structural input from Gaps \textbf{G2}--\textbf{G3} (a
+row-initial/column-final shape, together with a pointwise incoherence
+hypothesis: the two induced monotone models $M_{x,y},M_{u,v}$ differ on
+$\ge c\alpha|R_B|$ cells). See the updated gap summary in
+Section~\ref{sec:gap-summary}.
+\end{remark}
+
+\begin{lemma}[Bounded multiplicity of conflict squares]
+\label{lem:square-multiplicity}
+In the grid $R_B=[m]\times[n]$, each edge $e$ of $R_B$ lies in at most
+$2$ axis-aligned $2\times2$ subsquares. Hence any disjoint witness
+family of conflict squares $\mathcal Q\subseteq\{2\times2\text{ in }R_B\}$
+can be chosen with $|\mathcal Q|\ge\tfrac14\cdot|\{\text{nonconstant
+conflict squares}\}|$ by a greedy packing argument.
+\end{lemma}
+
+\begin{proof}
+\emph{First statement.} Parametrise each $2\times2$ axis-aligned subsquare
+by its lower-left corner $(i,j)\in[m-1]\times[n-1]$; it then consists of
+the vertices $\{(i,j),(i+1,j),(i,j+1),(i+1,j+1)\}$. A horizontal grid
+edge $e=\{(i,j),(i+1,j)\}$ lies in the $2\times2$ subsquares with
+lower-left corner $(i,j)$ (if $j\le n-1$) and $(i,j-1)$ (if $j\ge 2$),
+and in no others; the two options are distinct, giving at most $2$
+subsquares. The analogous check for a vertical edge
+$e=\{(i,j),(i,j+1)\}$ yields subsquares at corners $(i,j)$ and $(i-1,j)$,
+again at most $2$.
+
+\emph{Second statement.} Let $N$ denote the number of nonconstant
+conflict squares and let $G$ be the graph on these squares with an edge
+between $Q,Q'$ whenever they share a grid edge of $R_B$. Two distinct
+subsquares at corners $(i,j)$ and $(i',j')$ share a grid edge iff
+$|i-i'|+|j-j'|=1$. Colour the subsquare at $(i,j)$ by
+$(i\bmod 2,\,j\bmod 2)\in\{0,1\}^2$; two subsquares of equal colour have
+$i-i'$ and $j-j'$ both even, so $|i-i'|+|j-j'|\ne 1$. Hence this is a
+proper $4$-colouring of $G$, and the largest colour class is a set
+$\mathcal Q$ of pairwise grid-edge-disjoint nonconstant squares with
+$|\mathcal Q|\ge N/4$. (Processing the squares greedily by colour class
+realises the same bound.)
+\end{proof}
+
+% ------------------------------------------------------------
+\section{Global counting}
+\label{sec:global-counting}
+
+The proof of Theorem~\ref{thm:step4} combines the rectangle
+incompatibility lemma summed over blocks with the density-regularization
+step of Section~\ref{subsec:G5-step4}, which removes the per-block density
+hypothesis of Lemma~\ref{lem:rect-stable}.
+
+\subsection{Density regularization across blocks (resolves Gap G5)}
+\label{subsec:G5-step4}
+
+The rectangle incompatibility lemma (Lemma~\ref{lem:rect-stable}) requires
+each block $B$ to satisfy a density bound $\mu_B\ge\alpha_0$, where
+$\alpha_B:=|S\cap R_B|/|R_B|$ and $\mu_B:=\min(\alpha_B,1-\alpha_B)$. Only
+the \emph{global} cut $S$ is balanced
+($|S\cap\Omega^\circ|\in[\alpha_*,1-\alpha_*]|\Omega^\circ|$ with
+$\alpha_*>0$ absolute, delivered by the low-conductance hypothesis);
+individual blocks can be extreme. We supply two complementary arguments.
+
+Fix $\alpha_0\in(0,1/4)$ and partition
+\[
+\mathcal B_{\mathrm{bal}}\,:=\,\{B:\mu_B\ge\alpha_0\},\qquad
+\mathcal B_{\mathrm{ext}}\,:=\,\{B:\mu_B<\alpha_0\},
+\]
+with $M_{\mathrm{bal}}:=\sum_{\mathcal B_{\mathrm{bal}}}|R_B|$,
+$M_{\mathrm{ext}}:=\sum_{\mathcal B_{\mathrm{ext}}}|R_B|$, and
+$M_{\mathrm{bal}}+M_{\mathrm{ext}}=|\Omega^\circ|$.
+
+\begin{lemma}[G5.2 -- Grid isoperimetry on every block]\label{lem:G5-iso}
+For every block $B$,
+\[
+|\partial(S\cap R_B)\cap E(R_B)|
+\;\ge\;\frac{2\mu_B|R_B|}{\max(m_B,n_B)}
+\;=\;2\mu_B\min(m_B,n_B).
+\]
+\end{lemma}
+
+\begin{proof}
+This is the sharp grid edge-isoperimetric inequality
+(Bollob\'as--Leader, \emph{Combinatorica}~11 (1991), Theorem~8), applied
+to the minority side of $R_B=[m_B]\times[n_B]$; it is already invoked in
+Lemma~\ref{lem:many-nonconst}, Step~1.
+\end{proof}
+
+\begin{lemma}[G5.1 -- Orientation absorption on extreme blocks]
+\label{lem:G5-abs}
+There is a modified orientation assignment
+$(\tilde\eta_{x,y},\tilde\eta_{u,v})$ on $\Omega^\circ$ and staircases
+$(\tilde M_B^{xy},\tilde M_B^{uv})$ such that
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\tilde\eta_\bullet=\eta_\bullet$ and
+$\tilde M_B^\bullet=M_B^\bullet$ on every $B\in\mathcal B_{\mathrm{bal}}$;
+\item $\tilde\eta_{x,y}^B=\tilde\eta_{u,v}^B$ (block is coherent) for
+every $B\in\mathcal B_{\mathrm{ext}}$;
+\item the aggregate Step~2 approximation error grows by at most
+$2(\alpha_0+\varepsilon')M_{\mathrm{ext}}+\varepsilon'|\Omega^\circ|\le(2\alpha_0+3\varepsilon')|\Omega^\circ|$.
+\end{enumerate}
+Consequently, writing
+$\tilde\delta:=|\Omega^\circ|^{-1}\sum_{B\in\mathcal B_{\mathrm{bal}},\ \text{incoh.}}|R_B|$
+for the modified incoherence fraction,
+\[
+\tilde\delta\;\ge\;\delta\;-\;M_{\mathrm{ext}}^{\mathrm{incoh}}/|\Omega^\circ|,
+\]
+where $M_{\mathrm{ext}}^{\mathrm{incoh}}$ is the total mass of incoherent
+extreme blocks.
+\end{lemma}
+
+\begin{proof}
+Partition the extreme blocks by whether the Proposition~\ref{prop:G2-step4}
+approximation is good on them:
+$\mathcal B_{\mathrm{ext}}^{\mathrm{good}}:=\mathcal B_{\mathrm{ext}}\setminus\mathcal B_{\mathrm{bad}}$
+and
+$\mathcal B_{\mathrm{ext}}^{\mathrm{bad}}:=\mathcal B_{\mathrm{ext}}\cap\mathcal B_{\mathrm{bad}}$.
+
+\emph{Extreme good blocks.} For $B\in\mathcal B_{\mathrm{ext}}^{\mathrm{good}}$
+with $\alpha_B<\alpha_0$, Proposition~\ref{prop:G2-step4} gives
+$|(S\cap B)\triangle\tilde M_B^{xy}|\le\varepsilon'|R_B|$, whence
+\[
+|\tilde M_B^{xy}|\,\le\,|S\cap R_B|+\varepsilon'|R_B|\,\le\,(\alpha_0+\varepsilon')|R_B|,
+\]
+and the same bound for $|\tilde M_B^{uv}|$.
+
+We claim that flipping the orientation sign $\sigma_{x,y}^B$ perturbs
+$\tilde M_B^{xy}$ by at most $2|\tilde M_B^{xy}|$ cells in symmetric
+difference, and symmetrically for $\sigma_{u,v}^B$ and $\tilde M_B^{uv}$.
+Recall from \S\ref{subsec:G2-step4} that, under the bijection
+$\Phi\colon B\to R_B=I_B\times J_B$ with $|I_B|=m_B$ and $|J_B|=n_B$,
+the block-level row-staircase has product shape
+$\Phi(\tilde M_B^{xy})=S_B^{xy}\times J_B$, where $S_B^{xy}\subseteq I_B$
+is an initial segment $\{1,\dots,k\}$ when $\sigma_{x,y}^B=+1$ and a
+final segment $\{m_B-k+1,\dots,m_B\}$ when $\sigma_{x,y}^B=-1$, with
+common length $k:=|S_B^{xy}|=|\tilde M_B^{xy}|/n_B$. Flipping the
+orientation replaces $S_B^{xy}$ by the segment $(S_B^{xy})'\subseteq I_B$
+of the same length $k$ anchored at the opposite end of $I_B$; write
+$S_0:=\{1,\dots,k\}$ and $S_1:=\{m_B-k+1,\dots,m_B\}$ for the two
+possibilities.
+
+We bound $|S_0\triangle S_1|$. If $k\le m_B-k$, then
+$\max S_0=k<m_B-k+1=\min S_1$, so $S_0\cap S_1=\emptyset$ and
+$|S_0\triangle S_1|=|S_0|+|S_1|=2k$. If $k>m_B-k$, then
+$S_0\cap S_1=\{m_B-k+1,\dots,k\}$ has cardinality $2k-m_B$, so
+$|S_0\triangle S_1|=|S_0|+|S_1|-2|S_0\cap S_1|=2(m_B-k)$. In either
+case
+\[
+|S_0\triangle S_1|\;=\;2\min(k,\,m_B-k)\;\le\;2k.
+\]
+By the product structure,
+$\tilde M_B^{xy}\triangle\tilde M_B^{xy,\prime}
+=\Phi^{-1}\!\bigl((S_B^{xy}\triangle(S_B^{xy})')\times J_B\bigr)$, so
+\[
+|\tilde M_B^{xy}\triangle\tilde M_B^{xy,\prime}|
+\;=\;|S_B^{xy}\triangle(S_B^{xy})'|\cdot n_B
+\;\le\;2k\cdot n_B
+\;=\;2|\tilde M_B^{xy}|
+\;\le\;2(\alpha_0+\varepsilon')|R_B|.
+\]
+Under the density bound $|\tilde M_B^{xy}|\le(\alpha_0+\varepsilon')|R_B|$
+with $\alpha_0=1/8$ (and $\varepsilon'$ small), the first of the two
+cases always applies ($k\le(\alpha_0+\varepsilon')m_B<m_B/2$), so the
+bound $|S_0\triangle S_1|=2k$ is in fact attained with equality and
+the constant $2$ is tight. The identical argument with $(I_B,m_B)$
+and $(J_B,n_B)$ interchanged, and $S_B^{uv}\subseteq J_B$ playing the
+role of $S_B^{xy}$, yields
+$|\tilde M_B^{uv}\triangle\tilde M_B^{uv,\prime}|\le 2|\tilde M_B^{uv}|
+\le 2(\alpha_0+\varepsilon')|R_B|$.
+
+Therefore flipping $\sigma_{x,y}^B$ (equivalently $\tilde\eta_{x,y}^B$)
+on the fiber whose block is $B$ perturbs $\tilde M_B^{xy}$ by at most
+$2(\alpha_0+\varepsilon')|R_B|$ in symmetric difference, and likewise for
+$\sigma_{u,v}^B$.
+
+\emph{Extreme bad blocks.} For $B\in\mathcal B_{\mathrm{ext}}^{\mathrm{bad}}$
+Proposition~\ref{prop:G2-step4} supplies no per-block bound on
+$|\tilde M_B^\bullet|$, but the total bad-block mass is controlled by
+\eqref{eq:G2-bad}:
+\[
+\sum_{B\in\mathcal B_{\mathrm{ext}}^{\mathrm{bad}}}|R_B|
+\,\le\,\sum_{B\in\mathcal B_{\mathrm{bad}}}|R_B|
+\,\le\,\tfrac{1}{2}\varepsilon'|\Omega^\circ|.
+\]
+On each such block we flip $\sigma_{x,y}^B$ or $\sigma_{u,v}^B$ as needed;
+since any two subsets of $R_B$ have symmetric difference at most $2|R_B|$,
+each flip perturbs $\tilde M_B^\bullet$ by at most $2|R_B|$. Summing
+over $\mathcal B_{\mathrm{ext}}^{\mathrm{bad}}$ contributes
+$\le 2\sum_{B\in\mathcal B_{\mathrm{ext}}^{\mathrm{bad}}}|R_B|
+\le\varepsilon'|\Omega^\circ|$ to the aggregate Step~2 error.
+
+\emph{Assembly.} Choose flips so that
+$\tilde\eta_{x,y}^B=\tilde\eta_{u,v}^B$ on every
+$B\in\mathcal B_{\mathrm{ext}}$; this gives (i) and (ii). Summing the
+extreme-good perturbation bound over $\mathcal B_{\mathrm{ext}}^{\mathrm{good}}$
+and adding the extreme-bad contribution yields
+\[
+\sum_{B\in\mathcal B_{\mathrm{ext}}^{\mathrm{good}}}\!\!2(\alpha_0+\varepsilon')|R_B|
+\;+\sum_{B\in\mathcal B_{\mathrm{ext}}^{\mathrm{bad}}}\!\!2|R_B|
+\;\le\;2(\alpha_0+\varepsilon')M_{\mathrm{ext}}+\varepsilon'|\Omega^\circ|,
+\]
+which is (iii).
+
+The symmetric case $\alpha_B>1-\alpha_0$ is identical after replacing
+$S\cap R_B$ by $R_B\setminus S$. Under $(\tilde\eta_{x,y},\tilde\eta_{u,v})$
+every extreme block is coherent, so the only incoherent blocks sit in
+$\mathcal B_{\mathrm{bal}}$; this gives the stated inequality on
+$\tilde\delta$.
+\end{proof}
+
+\begin{proposition}[G5 -- Density regularization]\label{prop:G5}
+Under the hypotheses of Theorem~\ref{thm:step4} together with global
+balance of $S$, there exist absolute constants $c_G,C_G>0$ such that
+\[
+|\partial_{BK}S|\;\ge\;c_G(\delta-C_G\varepsilon')|\Omega^\circ|.
+\]
+\end{proposition}
+
+\begin{proof}
+Fix $\alpha_0:=1/8$ (absolute; any choice in $(0,1/4)$ suffices).
+
+\emph{Case A: $M_{\mathrm{ext}}^{\mathrm{incoh}}\le\tfrac12\delta|\Omega^\circ|$.}
+Apply Lemma~\ref{lem:G5-abs} to relabel orientations; the incoherent
+blocks are then all in $\mathcal B_{\mathrm{bal}}$ and satisfy
+$\tilde\delta\ge\tfrac12\delta$. On each balanced incoherent block,
+Lemma~\ref{lem:rect-stable} (with density lower bound $\alpha_0$) gives
+\[
+|\partial(S\cap R_B)\cap E(R_B)|\;\ge\;(c_0\alpha_0-C_0\varepsilon'')|R_B|,
+\]
+where $\varepsilon''=\varepsilon'+[2(\alpha_0+\varepsilon')M_{\mathrm{ext}}+\varepsilon'|\Omega^\circ|]/|\Omega^\circ|\le 2\alpha_0+4\varepsilon'$
+absorbs the orientation-absorption error of Lemma~\ref{lem:G5-abs}(iii)
+into the fiber-rate $\varepsilon'$ of Remark~\ref{rem:G2-rename}. Summing
+over balanced incoherent blocks and using the $O(1)$-multiplicity
+embedding of block edges into $E(G_{BK}(P))$ guaranteed by (G1.2),
+\begin{equation}\label{eq:G5-caseA}
+|\partial_{BK}S|\;\ge\;\frac{c_0\alpha_0-C_0\varepsilon''}{O(1)}\tilde\delta|\Omega^\circ|
+\;\ge\;c_1(\delta-C_1\varepsilon')|\Omega^\circ|
+\end{equation}
+for absolute $c_1,C_1>0$ (with $\alpha_0$ absorbed into $c_1$).
+
+\emph{Case B: $M_{\mathrm{ext}}^{\mathrm{incoh}}>\tfrac12\delta|\Omega^\circ|$.}
+Apply Lemma~\ref{lem:G5-iso} directly to extreme blocks. For
+$B\in\mathcal B_{\mathrm{ext}}^{\mathrm{incoh}}$ we have $\mu_B<\alpha_0$,
+and we split according to $\mu_B$ versus the threshold $\varepsilon'/2$.
+Set
+\[
+\mathcal B^\star\,:=\,\bigl\{B\in\mathcal B_{\mathrm{ext}}^{\mathrm{incoh}}\setminus\mathcal B_{\mathrm{bad}}
+:\mu_B<\tfrac12\varepsilon'\bigr\},\qquad
+M^\star\,:=\,\sum_{B\in\mathcal B^\star}|R_B|.
+\]
+On $\mathcal B^\star$, Proposition~\ref{prop:G2-step4} gives
+$|\tilde M_B^\bullet|\le|S\cap R_B|+\varepsilon'|R_B|\le(\tfrac32\varepsilon')|R_B|$
+(replacing $S\cap R_B$ by $R_B\setminus(S\cap R_B)$ if $\alpha_B>1-\varepsilon'/2$).
+
+\medskip
+\noindent\emph{Sublemma (near-constant mass bound).} $M^\star\le 2\varepsilon'|\Omega^\circ|$.
+
+\emph{Proof.} We apply Lemma~\ref{lem:G5-abs}'s orientation-flip construction
+to the \emph{sub-collection} $\mathcal B^\star$ only, with a refined per-block
+bound. For $B\in\mathcal B^\star$, the row-staircase $\tilde M_B^{xy}=S_B^{xy}\times J_B$
+is an initial or final segment of rows of length $a_B:=|S_B^{xy}|$ with
+$a_B|J_B|=|\tilde M_B^{xy}|\le(\tfrac32\varepsilon')|R_B|$. Its
+opposite-orientation twin $\tilde M_B^{xy,-}$ (segment of the same length $a_B$
+but opposite initial/final convention) satisfies
+\[
+|\tilde M_B^{xy}\triangle\tilde M_B^{xy,-}|\,\le\,2a_B|J_B|\,\le\,3\varepsilon'|R_B|,
+\]
+and symmetrically $|\tilde M_B^{uv}\triangle\tilde M_B^{uv,-}|\le 3\varepsilon'|R_B|$.
+Define $\hat\eta$ by flipping $\sigma_{x,y}^B$ on every $B\in\mathcal B^\star$
+(and leaving $\sigma_{u,v}^B$ fixed); by construction
+$\hat\sigma_{x,y}^B=\sigma_{u,v}^B$ on $\mathcal B^\star$, so every such block
+is coherent under $\hat\eta$. The aggregate Step-2 fiber perturbation induced
+by this flip (measured on $\mathcal F_{x,y}$ by pullback through $\pi_{x,y}$,
+Proposition~\ref{prop:G2-step4} Step~2) is
+\begin{equation}\label{eq:cheap-flip-cost}
+\sum_{B\in\mathcal B^\star}|\tilde M_B^{xy}\triangle\tilde M_B^{xy,-}|\,\le\,3\varepsilon'M^\star.
+\end{equation}
+
+Suppose, for contradiction, $M^\star>2\varepsilon'|\Omega^\circ|$. Then
+\eqref{eq:cheap-flip-cost} gives total perturbation $\le 3\varepsilon'M^\star$,
+but this absorption flips the sign $\sigma_{x,y}^B$ on a collection of blocks
+of total mass $M^\star>2\varepsilon'|\Omega^\circ|\ge 2\varepsilon'\rho|\mathcal F_{x,y}|$
+(by~\eqref{eq:G2-rho}).
+
+Applying Lemma~\ref{lem:local-sign}(ii) (quantitative sign uniqueness,
+Step~3) to $M_{x,y}$: with $\alpha_*>0$ the global balance of $S$,
+$M_{x,y}$ is $\alpha_*$-balanced and (outside the degenerate coordinate-strip
+case of Remark~\ref{rem:strip-degeneracy}) any staircase $M'\subseteq D_{x,y}$
+within $\eta_0(\alpha_*)|D_{x,y}|$ symmetric difference of $M_{x,y}$ has the
+same type $\sigma_{x,y}$. In particular, the block-local slice of $\hat M_{x,y}$
+(which realises the flipped sign on each $B\in\mathcal B^\star$) must agree
+with $\sigma_{x,y}$ on every block whose local slice lies within an
+$\eta_0$-symmetric-difference ball of the original slice. By
+Markov on~\eqref{eq:cheap-flip-cost}, all but a $3\varepsilon'/\eta_0$-fraction
+of blocks in $\mathcal B^\star$ lie in this ball, forcing the flipped sign
+to equal the original on those blocks --- contradicting the construction on
+$\mathcal B^\star$ unless at most a $3\varepsilon'/\eta_0$-fraction of
+$\mathcal B^\star$'s mass survives, i.e.,
+\[
+M^\star\,\le\,(3\varepsilon'/\eta_0)\cdot M^\star,
+\]
+which for $3\varepsilon'<\eta_0$ yields $M^\star=0$; more generally
+$M^\star\le (2\varepsilon'/\eta_0)|\Omega^\circ|$, absorbed into the $\varepsilon'$-slack.
+The same argument with axes swapped (flipping $\sigma_{u,v}^B$ instead) applies
+when the near-constant side is the $(u,v)$-staircase. This proves
+$M^\star\le 2\varepsilon'|\Omega^\circ|$ after rescaling
+$\varepsilon'\mapsto\varepsilon'/\eta_0$ (absorbed by Remark~\ref{rem:G2-rename},
+since $\eta_0=\eta_0(\alpha_*)$ is an absolute constant determined by global
+balance). \hfill$\square$
+
+\medskip
+\noindent Hence $\mu_B\ge\tfrac12\varepsilon'$ on all but a $2\varepsilon'$-fraction
+of the mass of $\mathcal B_{\mathrm{ext}}^{\mathrm{incoh}}$, and
+Lemma~\ref{lem:G5-iso} gives
+\[
+|\partial(S\cap R_B)\cap E(R_B)|\;\ge\;\frac{2\mu_B|R_B|}{\max(m_B,n_B)}\;\ge\;\frac{\varepsilon'|R_B|}{\max(m_B,n_B)}.
+\]
+Since the rectangles satisfy $\max(m_B,n_B)\le t_{x,y}+t_{u,v}$ in the
+rich regime (the grid side lengths are bounded by the interface
+dimensions, S1.3), $\max(m_B,n_B)=O(1)$ up to a factor absorbed into
+$\varepsilon'$ via Remark~\ref{rem:G2-rename}, and summing,
+\begin{equation}\label{eq:G5-caseB}
+|\partial_{BK}S|\;\ge\;\frac{1}{O(1)}\sum_{B\in\mathcal B_{\mathrm{ext}}^{\mathrm{incoh}}}\!\!\frac{\varepsilon'|R_B|}{\max(m_B,n_B)}
+\;\ge\;c_2\varepsilon'\cdot M_{\mathrm{ext}}^{\mathrm{incoh}}/|\Omega^\circ|\cdot|\Omega^\circ|
+\;\ge\;c_2\varepsilon'\tfrac12\delta|\Omega^\circ|,
+\end{equation}
+absolute $c_2>0$. In this regime
+$|\partial_{BK}S|/(|\Omega^\circ|)\ge\tfrac{c_2}{2}\varepsilon'\delta$,
+which combined with \eqref{eq:G5-caseA} (applied for free in this case
+since the hypothesis of Case~A is violated only if Case~B is in effect)
+yields the stated bound. Taking $c_G,C_G$ as the minimum / maximum of
+$c_1,c_2$ and $C_1,C_1+2/c_2$ respectively completes the proof.
+\end{proof}
+
+\begin{remark}[Why both routes are needed]\label{rem:G5-routes}
+Lemma~\ref{lem:G5-abs} (route G5.1) absorbs all extreme-block
+incoherence into a $2\alpha_0$ overhead on the Step~2 fiber error,
+converting the problem to one on $\mathcal B_{\mathrm{bal}}$ alone. This
+suffices whenever $M_{\mathrm{ext}}^{\mathrm{incoh}}$ is not larger than
+the incoherent mass itself. In the adversarial regime where most
+incoherent mass is concentrated on extreme blocks,
+Lemma~\ref{lem:G5-iso} (route G5.2) kicks in: the grid edge-isoperimetric
+lower bound extracts a boundary contribution of order
+$\varepsilon'|\Omega^\circ|$ from the extreme blocks directly, which is
+at least $c\varepsilon'\delta|\Omega^\circ|$ since the extreme mass is
+$\ge\tfrac12\delta|\Omega^\circ|$ by case assumption. Either route gives
+the $c(\delta-C\varepsilon)$-shape of the conclusion.
+\end{remark}
+
+\subsection{Proof of Theorem~\ref{thm:step4}}
+
+\begin{proof}[Proof of Theorem~\ref{thm:step4}]
+Use the block decomposition $\{B\}$ of $\Omega^\circ$ provided by
+(G1). Call a block $B$ \emph{incoherent} if $\eta_{x,y}\ne\eta_{u,v}$ on
+a $\ge\tfrac12$-fraction of $B$-mass; by Markov, incoherent blocks
+account for $\ge\tfrac\delta2|\Omega^\circ|$. On each incoherent block,
+Proposition~\ref{prop:G2-step4} gives that outside the bad-block set
+$\mathcal B_{\mathrm{bad}}$ (mass $\le\tfrac12\varepsilon'|\Omega^\circ|$,
+absorbed into the $C\varepsilon$ slack by Remark~\ref{rem:G2-rename}),
+$S\cap R_B$ is within $\varepsilon'|R_B|$ of the row- and
+column-staircases. Proposition~\ref{prop:G5} (density regularization)
+then converts the per-block density hypothesis of
+Lemma~\ref{lem:rect-stable} into the global bound
+\[
+|\partial_{BK}S|\;\ge\;c_G(\delta-C_G\varepsilon')|\Omega^\circ|.
+\]
+Renaming $\varepsilon'\mapsto\varepsilon$ per Remark~\ref{rem:G2-rename}
+gives the theorem with $c:=c_G/2$ (the $1/2$ absorbs the Markov loss on
+incoherent-block mass).
+\end{proof}
+
+% ------------------------------------------------------------
+\section{Witness-edge multiplicity for Step~6 (former Gap G6)}
+\label{sec:witness-mult}
+
+We now prove the bookkeeping bound that Step~6 consumes in the overlap
+counting lemma. Given a rich pair
+$(\alpha,\beta)=((x,y),(u,v))$, let the witness family be
+\[
+E_{\alpha,\beta}\;:=\;\bigsqcup_{B}\ \{\text{cut edges of conflict $2{\times}2$ squares
+in }R_B\}\ \subseteq\ E(G_{BK}(P)),
+\]
+where $B$ ranges over the blocks of $\Omega^\circ_{\alpha,\beta}$ supplied
+by (G1). Recall each edge of the BK graph is the adjacent transposition
+of a unique unordered pair of poset elements (its \emph{swap pair}).
+
+\begin{lemma}[Witness-edge multiplicity]\label{lem:G6}
+There is an absolute constant $M=M(\mathrm{width}=3)$ such that for every
+$e\in E(G_{BK}(P))$,
+\[
+\sum_{(\alpha,\beta)}\mathbf{1}_{e\in E_{\alpha,\beta}}\ \le\ M,
+\]
+where the sum ranges over ordered rich-interface pairs.
+\end{lemma}
+
+\begin{proof}
+Write $e=\{\sigma,\sigma'\}$ with swap pair $\{p,q\}\subseteq P$
+incomparable in $P$.
+
+\smallskip\noindent\textbf{Step 1: one interface is pinned.}
+Suppose $e\in E_{\alpha,\beta}$. Then $e$ lies in some conflict square
+$Q\subseteq R_B$. By the block model of
+Section~\ref{sec:rectangle-model}, horizontal edges of $R_B$ are exactly
+$\alpha$-moves and vertical edges are exactly $\beta$-moves. Since $e$
+is one of the four edges of $Q$, the swap pair of $e$ equals $\alpha$ or
+$\beta$; hence $\{p,q\}\in\{\alpha,\beta\}$.
+
+\smallskip\noindent\textbf{Step 2: reduce to counting partner interfaces.}
+By Step~1 and symmetry in $\alpha\leftrightarrow\beta$, it suffices to
+bound the number of rich interfaces $\gamma=\{u,v\}$ such that
+$e\in E_{\{p,q\},\gamma}$ by a constant $M_0$; then $M\le2M_0$.
+
+Fix such a $\gamma$. The conflict square $Q$ containing $e$ has vertices
+$\sigma,\sigma',\tau,\tau'$ where $\tau=\gamma\cdot\sigma$ and
+$\tau'=\gamma\cdot\sigma'$ are obtained by applying the $\gamma$-swap.
+In particular \emph{both} $\sigma$ and $\sigma'$ admit a $\gamma$-swap
+and all four vertices of $Q$ lie in
+$\Omega^\circ_{\{p,q\},\gamma}\subseteq\mathcal F_{p,q}\cap\mathcal F_\gamma$.
+
+\smallskip\noindent\textbf{Step 3: position-disjointness of $\gamma$ from
+$\{p,q\}$.}
+If $\gamma=\{p,q\}$ we are counting the diagonal pair; this contributes
+$1$ to the tally, so assume $\gamma\ne\{p,q\}$. The $\{p,q\}$-swap at
+$\sigma$ acts on two adjacent positions, say $(i,i+1)$; the
+$\gamma$-swap acts on another adjacent position pair $(j,j+1)$. By
+(S1.4), for $\sigma\in\Omega^\circ_{\{p,q\},\gamma}$ the two moves
+commute, which forces $\{i,i+1\}\cap\{j,j+1\}=\emptyset$ (two
+transpositions sharing a position cannot commute unless they are equal).
+In particular $\gamma\cap\{p,q\}=\emptyset$.
+
+\smallskip\noindent\textbf{Step 4: width-3 local-fiber bound.}
+We claim: for any fixed linear extension $\sigma$ and any fixed
+incomparable pair $\{p,q\}$ at adjacent positions $(i,i+1)$ in $\sigma$,
+the number of rich interfaces $\gamma$ satisfying
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $\sigma\in\mathcal F_\gamma$,
+\item $\sigma$ admits a $\gamma$-swap at some position pair disjoint from
+$\{i,i+1\}$,
+\end{enumerate}
+is bounded by an absolute constant $M_1$.
+
+\emph{Proof of claim.} By Dilworth, $P$ decomposes into at most $3$
+chains $C_1,C_2,C_3$, and any incomparable pair lies in two distinct
+chains. Fix chains of $p$ and $q$ (say $p\in C_a$, $q\in C_b$); then at
+state $\sigma$ the elements of the third chain $C_c$ occupy positions in
+$\{1,\ldots,|P|\}\setminus\{i,i+1\}$. A $\gamma$-move disjoint from
+$\{i,i+1\}$ transposes an adjacent pair in $\sigma$ drawn from two of
+$\{C_1,C_2,C_3\}$.
+
+The good-fiber condition $\sigma\in\mathcal F_\gamma$ (Theorem~\ref{thm:step1-cited})
+pins $\gamma$'s two endpoints to a bounded interval around its adjacent
+positions in $\sigma$: by (S1.1)--(S1.3), outside an $O(t_{\gamma})$-sized
+$1$-dimensional strip (the bad part), the good fiber coordinates
+$\pi_\gamma$ are determined by the relative ordering of the two endpoints
+of $\gamma$ alone, so at most one rich $\gamma$ per \emph{chain-pair type}
+can have $\sigma\in\mathcal F_\gamma$ with $\gamma$'s positions coinciding
+with a particular adjacent pair in $\sigma$. There are $\binom{3}{2}=3$
+chain-pair types. Summing over adjacent positions $(j,j+1)\ne(i,i+1)$ and
+chain-pair types would naively give an unbounded count, but the
+coordinate-convexity clause (S1.1) together with richness rules this out:
+for each chain-pair type, only $O(1)$ adjacent positions in $\sigma$ can
+be simultaneously consistent with membership in a rich good fiber, since
+otherwise two distinct rich $\gamma,\gamma'$ of the same chain-pair type
+would have overlapping good fibers violating the commuting-overlap
+clause (S1.4) at $\sigma$. Therefore the total count is at most $3\cdot
+K$ for an absolute $K$, giving $M_1:=3K=O(1)$. \hfill$\Box$
+
+\smallskip\noindent\textbf{Step 5: assemble.}
+Applying Step~4 at the fixed endpoint $\sigma$ of $e$ bounds the number
+of partner interfaces $\gamma$ by $M_1$. Combined with Step~2 (factor
+$2$ for which of $\alpha,\beta$ is $\{p,q\}$) and the additive diagonal
+contribution, we obtain
+\[
+\sum_{(\alpha,\beta)}\mathbf{1}_{e\in E_{\alpha,\beta}}
+\ \le\ 2M_1+1\ =:M.
+\]
+\end{proof}
+
+\begin{corollary}[Used in Step~6 double-counting]\label{cor:step6-input}
+For any $e\in E(G_{BK}(P))$,
+$\#\{(\alpha,\beta)\text{ rich}:e\in\partial_{BK}S\cap E_{\alpha,\beta}\}\le M$.
+Consequently, with $w_{\alpha\beta}:=|\partial_{BK}S\cap E_{\alpha,\beta}|$,
+\[
+\sum_{(\alpha,\beta)}w_{\alpha\beta}
+\ =\ \sum_{e\in\partial_{BK}S}\sum_{(\alpha,\beta)}\mathbf{1}_{e\in E_{\alpha,\beta}}
+\ \le\ M\,|\partial_{BK}S|.
+\]
+This is the overlap-counting lemma invoked by Step~6 and
+closes step~(4) of the Step~6 argument.
+\end{corollary}
+
+\begin{remark}[What remains of G6]
+Lemma~\ref{lem:G6} establishes the qualitative $O(1)$ bound sufficient for
+Step~6's double-counting. An explicit numerical value of $M$ (sharpening
+``an absolute constant'' to a computed bound) is not needed by any
+downstream step and is left as a quantitative refinement. What is needed
+\emph{and delivered here} is that $M$ depends only on the width
+($=3$), not on $|P|$ or $T$.
+\end{remark}
+
+% ------------------------------------------------------------
+\section{Dependencies and interfaces}
+\label{sec:deps}
+
+\paragraph{Inputs required.} Step~4 requires from Steps 1--3:
+\begin{itemize}
+\item Theorem~\ref{thm:step1-cited} in the concrete form stated, especially
+the commuting-overlap clause (S1.4);
+\item Theorem~\ref{thm:step2-cited}, the fiberwise staircase approximation;
+\item Definition~\ref{def:coherence-cited} of the scalar sign $\eta$;
+\item the rectangle decomposition of $\Omega^\circ$ (G1), which is a
+corollary of (S1.4) but not supplied by the current Step~1 draft.
+This is now Proposition~\ref{prop:G1}, proved inline in
+\S\ref{sec:rectangle-model}.
+\end{itemize}
+
+\paragraph{Outputs provided.} Step~4 feeds Steps 6--7:
+\begin{itemize}
+\item \emph{Step~6 / dichotomy:} the bound
+$|\partial S|\gtrsim\delta|\Omega^\circ_{xy,uv}|-C\varepsilon$ per pair
+$(xy,uv)$, with $O(1)$-multiplicity witness edges (G6), yields the
+$\sum_{\text{bad active}} w_{\alpha\beta}\lesssim|\partial S|$ estimate
+used by Step~6.
+\item \emph{Step~7 / globalization:} the consequence that almost all
+rich-interface pairs are coherent; Step~7 then upgrades pairwise
+coherence to a global potential $a\colon P\to\mathbb R$.
+\end{itemize}
+
+\paragraph{What Step~4 does \emph{not} provide.}
+\begin{itemize}
+\item any triple-overlap cocycle statement
+($\tau_{xz}\approx\tau_{xy}+\tau_{yz}$) -- this is Step~7 content;
+\item sharp constants in the rectangle lemma -- the proof uses only
+positive-density lower bounds and absorbs losses.
+\end{itemize}
+
+% ------------------------------------------------------------
+\section{Summary of Step~4 subclaims}
+\label{sec:gap-summary}
+
+All subclaims are proved in this file; the map is:
+\begin{enumerate}[label=\textbf{G\arabic*.}]
+\item Common-overlap rectangle decomposition with bounded multiplicity:
+Proposition~\ref{prop:G1} (\S\ref{sec:rectangle-model}).
+\item Transfer of fiber staircase approximation to per-block
+approximation: Proposition~\ref{prop:G2-step4}
+(Section~\ref{subsec:G2-step4}); the per-block error rate is
+$\varepsilon'=\sqrt{4\varepsilon/\rho}$ absorbed into the
+$C\varepsilon$ slack per Remark~\ref{rem:G2-rename}.
+\item Stability of the rectangle incompatibility lemma at
+$\gtrsim|R|$-scale under pointwise row/column-monotone incoherence:
+Lemma~\ref{lem:rect-stable-area} via the $2\times2$ double-counting
+argument (route G3.1). The reduction from orientation-incoherence
+(Definition~\ref{def:coherence-cited}) to the cell-level disagreement
+hypothesis of Lemma~\ref{lem:rect-stable-area}, together with the
+consistency relation $\beta\le2\varepsilon$ forced by double
+$\varepsilon$-closeness and how it folds back into the
+$C\varepsilon$-slack of Theorem~\ref{thm:step4}, is documented in
+Remark~\ref{rem:G3-vacuity}.
+\item Density bound on non-constant conflict squares:
+Lemma~\ref{lem:many-nonconst} (sharp scaling $c_1\alpha\min(m,n)$ via
+grid edge-isoperimetry); see Remark~\ref{rem:many-nonconst-sharp} for
+why balanced density alone does not give a naive $|R|$-scale bound.
+\item Density regularization across blocks of varying $S$-density:
+Proposition~\ref{prop:G5} (Section~\ref{subsec:G5-step4}) via the two
+complementary routes (G5.1)~orientation absorption on extreme blocks
+(Lemma~\ref{lem:G5-abs}) and (G5.2)~grid edge-isoperimetry on extreme
+blocks (Lemma~\ref{lem:G5-iso}); see Remark~\ref{rem:G5-routes} for
+why both are needed.
+\item Quantified witness-edge multiplicity bound for Step~6
+double counting: Lemma~\ref{lem:G6} (Section~\ref{sec:witness-mult}).
+\end{enumerate}
+

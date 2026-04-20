@@ -1,0 +1,71 @@
+/-
+Copyright (c) 2026 The OneThird Authors. All rights reserved.
+Released under the MIT License.
+-/
+
+import OneThird.Basic
+import OneThird.Poset
+import OneThird.Mathlib.LinearExtension.Fintype
+import OneThird.Mathlib.BKGraph
+import OneThird.LinearExtension
+import OneThird.Mathlib.SimpleGraph.EdgeBoundary
+import OneThird.Step1.LocalCoords
+import OneThird.RichPair
+import OneThird.MainTheorem
+import OneThird.Mathlib.Poset.Width
+import OneThird.Mathlib.Poset.Indecomposable
+import OneThird.Mathlib.Poset.Dilworth
+import OneThird.Mathlib.Grid2D
+import OneThird.Mathlib.DirichletForm
+import OneThird.Step1.CommonChain
+import OneThird.Step1.Corollaries
+import OneThird.Step2.OneD
+import OneThird.Step2.RowDecomp
+import OneThird.Step2.FiberAvg
+import OneThird.Step2.WeakGrid
+import OneThird.Step2.PerFiber
+import OneThird.Step2.Conclusion
+import OneThird.Step3.LocalSign
+import OneThird.Step3.CommonAxes
+import OneThird.Step3.Step3Theorem
+import OneThird.Step4.RectangleModel
+import OneThird.Step4.DensityRegularization
+import OneThird.Step4.Step4Theorem
+import OneThird.Step5.EndpointMono
+import OneThird.Step5.ConvexOverlap
+import OneThird.Step5.FiberMass
+import OneThird.Step5.Layering
+import OneThird.Step5.SecondMoment
+import OneThird.Step5.Dichotomy
+import OneThird.Step6.ErrorControl
+import OneThird.Step6.CommutingSquare
+import OneThird.Step6.RichnessBound
+import OneThird.Step6.Incoherence
+import OneThird.Step6.OverlapCounting
+import OneThird.Step6.Assembly
+import OneThird.Step7.SignedThreshold
+import OneThird.Step7.SignConsistency
+import OneThird.Step7.Cocycle
+import OneThird.Step7.Potential
+import OneThird.Step7.SingleThreshold
+import OneThird.Step7.Bandwidth
+import OneThird.Step8.FrozenPair
+import OneThird.Step8.TheoremE
+import OneThird.Step8.G2Constants
+import OneThird.Step8.LayeredReduction
+import OneThird.Step8.LayeredBalanced
+import OneThird.Step8.Window
+import OneThird.Step8.SmallN
+import OneThird.Step7.Assembly
+import OneThird.Step8.MainAssembly
+import OneThird.Bridge
+
+/-!
+# OneThird: the width-3 1/3–2/3 theorem
+
+Root library for the Lean formalization of the width-3 case of the
+1/3–2/3 conjecture. The main theorem is
+`OneThird.width3_one_third_two_thirds` in
+`OneThird/MainTheorem.lean` (discharged via the Step 8 assembly
+in `OneThird/Step8/MainAssembly.lean`).
+-/

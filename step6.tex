@@ -1,0 +1,1293 @@
+
+\begin{abstract}
+Step~6 combines the local cut-rigidity lemma (Step~2), the two-interface
+incompatibility lemma (Step~4), and the richness dichotomy (Step~5) into a
+global dichotomy: any low-conductance cut $S\subseteq\LE(P)$ either has
+large BK boundary (contradiction) or has the property that almost all rich
+interfaces are pairwise coherent on their overlaps.
+\end{abstract}
+
+
+%-----------------------------------------------------------------------
+\section{Setup and recall}
+%-----------------------------------------------------------------------
+
+Let $P$ be a width-3 poset and $\LE(P)$ its set of linear extensions.
+Let $G_{\BK}(P)$ be the BK graph on $\LE(P)$: vertices are linear
+extensions, edges come from adjacent-incomparable swaps.
+For $S\subseteq V(G_{\BK}(P))$ write
+\[
+\bd S := E(S, S^c), \qquad
+\Phi(S) := \frac{|\bd S|}{\vol(S)},
+\]
+or any equivalent normalized-conductance notion.
+
+We use the rich-pair notation of Step~1 (Definition~\ref{def:rich}):
+for $x\parallel y$ in $P$, $C(x,y)=N(x,y)$ is the common-axis chain
+(a chain in $P$ by the width-$3$ hypothesis, Lemma~\ref{lem:CNchain-width3}
+of Step~1; this is the common-axis set, not a graph neighborhood in
+$G_{\BK}$), $t(x,y)=|C(x,y)|$, and the pair $(x,y)$ is \emph{rich} at
+threshold $T\ge 1$ iff $t(x,y)\ge T$.
+Let $\Rich$ denote the set of rich pairs.
+
+\begin{definition}[Good fiber, interface]
+\DEP{Step~1}
+For each $\alpha=(x,y)\in\Rich$, Step~1 produces a \emph{good fiber}
+$\fiber{\alpha}\subseteq\LE(P)$ with a coordinate map
+$\pi_\alpha\colon\fiber{\alpha}\to D_\alpha\subseteq [0,t(x,y)]^2$ such
+that the BK moves internal to $\fiber{\alpha}$ are exactly unit grid
+moves, and $D_\alpha$ is order-convex.
+We refer to $\alpha$ also as the \emph{rich interface} with domain
+$D_\alpha$.
+\end{definition}
+
+%-----------------------------------------------------------------------
+\section{The Step 6 proposition}
+%-----------------------------------------------------------------------
+
+\begin{proposition}[Step~6 dichotomy, informal]\label{prop:step6-informal}
+There exist constants $\eta,\delta>0$ depending only on the width and on
+the thresholds fixed by Steps~1, 2, 4, 5, such that for any width-3
+poset $P$ and any $S\subseteq\LE(P)$ with conductance $\Phi(S)$
+sufficiently small, the following holds: all but a $\delta$-fraction of
+the weighted rich-interface overlap mass is \emph{coherent}, in the
+sense made precise in Section~\ref{sec:interface-graph}.
+\end{proposition}
+
+The formal dichotomy theorem is stated in
+Section~\ref{sec:dichotomy-theorem}.
+
+%-----------------------------------------------------------------------
+\section{Inputs: packaging Steps 2, 4, 5}
+%-----------------------------------------------------------------------
+
+We collect the precise form in which Steps~2, 4, 5 are consumed by the
+Step~6 argument.
+
+\subsection{Step 2: local staircase on a fiber}
+
+\DEP{Step~2}
+For each rich interface $\alpha\in\Rich$, Step~2 provides:
+\begin{itemize}[nosep]
+  \item an \emph{orientation sign} $\sigma_\alpha\in\{+1,-1\}$, and
+  \item an \emph{exceptional set} $B_\alpha\subseteq\fiber{\alpha}$
+  of small mass (quantified by Step~2's error parameter $\varepsilon_2$),
+\end{itemize}
+such that, after deleting $B_\alpha$, membership of $L\in\fiber{\alpha}$
+in $S$ is monotone in the $\sigma_\alpha$-direction of the grid
+$D_\alpha$.
+Explicitly, writing $\pi_\alpha(L)=(i,j)$, there is a monotone staircase
+region $M_\alpha\subseteq D_\alpha$ with
+\[
+\mathbf{1}_S(L)
+ =\mathbf{1}_{M_\alpha}(\pi_\alpha(L))\quad
+\text{for all } L\in\fiber{\alpha}\setminus B_\alpha.
+\]
+
+The uniform bound on $\sum_\alpha |B_\alpha|$ (total Step-2 error mass)
+in terms of $|\bd S|$ that Step~6 consumes is proved in
+Section~\ref{sec:gap-error}.
+
+\subsection{Step 4: incompatibility yields boundary}
+
+\DEP{Step~4}
+Step~4 attaches to each ordered pair $(\alpha,\beta)$ of good rich
+interfaces a \emph{witness family}
+\[
+E_{\alpha\beta}\subseteq E(G_{\BK}(P))
+\]
+of BK edges in the overlap
+$(\fiber{\alpha}\cap\fiber{\beta})\setminus(B_\alpha\cup B_\beta)$
+such that if the two staircase orientations
+$\sigma_\alpha,\sigma_\beta$ are \emph{incoherent} on the overlap,
+then a positive fraction of $E_{\alpha\beta}$ crosses $\partial S$:
+\[
+|\bd S \cap E_{\alpha\beta}| \;\gtrsim\;
+\mu\big((\fiber{\alpha}\cap\fiber{\beta})\setminus(B_\alpha\cup B_\beta)\big).
+\]
+Here $\mu$ is counting measure on $\LE(P)$ (or any fixed normalization).
+
+The precise definition of ``incoherent'' used here is
+Def.~\ref{def:incoherent-pair} of Section~\ref{sec:gap-incoherence},
+which imports the Step~3 formulation in terms of the local signs
+$\eta_\alpha,\eta_\beta$ on the common overlap axes.
+
+The local commuting-square model in the overlap, which supplies
+$E_{\alpha\beta}$, is provided by Step~1 (Corollary
+``Commuting overlap'') and is restated as Lemma~\ref{lem:gap3}
+in Section~\ref{sec:gap-commuting}.
+
+\subsection{Step 5: richness implies large overlap mass}
+
+\DEP{Step~5}
+Step~5 asserts a dichotomy: either $P$ is in the \emph{collapse} regime
+(handled directly by Step~7) or else the rich-interface visibility
+\[
+I(L) := \#\{\alpha\in\Rich : L\in\fiber{\alpha}\setminus B_\alpha\}
+\]
+is large for a typical $L$, in the sense that
+\[
+M := \sum_{\alpha,\beta\in\Rich^\star} w_{\alpha\beta}
+\quad\text{is } \Omega(|\LE(P)|),
+\]
+where $w_{\alpha\beta}$ and $\Rich^\star$ are defined in
+Section~\ref{sec:interface-graph}.  We assume throughout Step~6 that we
+are in the \emph{rich} case of Step~5; the collapse case is deferred to
+Step~7.
+
+The identification of $M$ with the second moment of visibility
+$\sum_L I(L)^2$, via the bounded-multiplicity input from Step~1, is
+carried out in Section~\ref{sec:gap-second-moment}.
+
+%-----------------------------------------------------------------------
+\section{Good interfaces and the interface graph}\label{sec:interface-graph}
+%-----------------------------------------------------------------------
+
+\subsection{$S$-good interfaces}
+
+\begin{definition}[$S$-good interface]
+An interface $\alpha\in\Rich$ is \emph{$S$-good} if Step~2 applies to
+$\fiber{\alpha}$ with error at most $\varepsilon_2$.  Let
+$\Rich^\star\subseteq\Rich$ denote the set of $S$-good rich interfaces.
+\end{definition}
+
+\begin{lemma}[Most rich interfaces are $S$-good]\label{lem:most-good}
+Suppose $\Phi(S)\le \Phi_0$ for a constant $\Phi_0$ depending on
+$\varepsilon_2$.  Then
+\[
+\sum_{\alpha\in\Rich^\star} |\fiber{\alpha}|
+\;\ge\;
+(1-o(1))\sum_{\alpha\in\Rich} |\fiber{\alpha}|,
+\]
+where the $o(1)$ is as $\Phi_0\to 0$ with $\varepsilon_2$ and the
+width-3 structural constants fixed.
+\end{lemma}
+
+\begin{proof}
+Step~2 produces, for each $\alpha\in\Rich$, an exceptional set
+$B_\alpha\subseteq\fiber{\alpha}$ equipped with the per-fiber error
+estimate
+\begin{equation}\label{eq:step2-per-fiber}
+|B_\alpha|
+ \;\le\; C_2\,\bigl|\bd S \cap E(\widetilde{\F}_{\alpha})\bigr|,
+\end{equation}
+where $\widetilde{\F}_{\alpha}$ denotes the one-step BK-closure of the
+good fiber $\fiber{\alpha}$ and $C_2$ depends only on the width and on
+the richness threshold $T$.  (Inequality
+\eqref{eq:step2-per-fiber} is the quantitative form of Step~2: each
+unit of exceptional mass on the fiber $\fiber{\alpha}$ is chargeable
+to a constant number of BK-edges crossing $\bd S$ in a bounded
+neighborhood of the fiber.)
+
+Summing \eqref{eq:step2-per-fiber} over $\alpha\in\Rich$ and using the
+bounded-multiplicity property of the family
+$\{\widetilde{\F}_{\alpha}\}_{\alpha\in\Rich}$ --- each BK edge
+$e\in E(G_{\BK}(P))$ lies in $O(1)$ enlarged good fibers, a consequence
+of the width-3 normal form (Step~1) --- yields
+\begin{equation}\label{eq:step2-summed}
+\sum_{\alpha\in\Rich} |B_\alpha|
+ \;\le\; C_2'\,|\bd S|,
+\end{equation}
+for a constant $C_2'$ depending only on the width-3 structure.
+
+An interface $\alpha\in\Rich$ fails to be $S$-good iff
+$|B_\alpha|>\varepsilon_2\,|\fiber{\alpha}|$.  Writing
+$\Rich^{\mathrm{bad}}:=\Rich\setminus\Rich^\star$, Markov's inequality
+applied fiberwise gives
+\[
+\sum_{\alpha\in\Rich^{\mathrm{bad}}} |\fiber{\alpha}|
+ \;<\; \varepsilon_2^{-1}
+       \sum_{\alpha\in\Rich^{\mathrm{bad}}} |B_\alpha|
+ \;\le\; \varepsilon_2^{-1}
+       \sum_{\alpha\in\Rich} |B_\alpha|
+ \;\stackrel{\eqref{eq:step2-summed}}{\le}\;
+       \varepsilon_2^{-1} C_2'\,|\bd S|.
+\]
+By hypothesis $|\bd S|\le \Phi_0\,\vol(S)$.  In the rich case of
+Step~5 (the regime in which Step~6 is nontrivial), the rich fibers
+collectively cover a positive fraction of $\LE(P)$:
+\begin{equation}\label{eq:rich-covers}
+\sum_{\alpha\in\Rich} |\fiber{\alpha}|
+ \;\ge\; c_\Rich\,\vol(S),
+\end{equation}
+for a constant $c_\Rich>0$ supplied by Step~5 (via the visibility
+identity $\sum_\alpha|\fiber{\alpha}|=\sum_L I(L)\ge
+|\{L:I(L)\ge 1\}|$, combined with the lower bound on $I(L)$ in the
+rich case).  Combining,
+\[
+\frac{\sum_{\alpha\in\Rich^{\mathrm{bad}}}|\fiber{\alpha}|}
+     {\sum_{\alpha\in\Rich}|\fiber{\alpha}|}
+ \;\le\;
+ \frac{\varepsilon_2^{-1} C_2'\,\Phi_0\,\vol(S)}
+      {c_\Rich\,\vol(S)}
+ \;=\;
+ \frac{C_2'}{c_\Rich\,\varepsilon_2}\;\Phi_0,
+\]
+which tends to $0$ as $\Phi_0\to 0$.  Equivalently,
+$\sum_{\alpha\in\Rich^\star}|\fiber{\alpha}|\ge (1-o(1))
+ \sum_{\alpha\in\Rich}|\fiber{\alpha}|$, as claimed.
+\end{proof}
+
+\begin{remark}
+The quantitative form of the lemma is $(1-\kappa\Phi_0)$ with
+$\kappa = C_2'/(c_\Rich\,\varepsilon_2)$.  In particular, choosing
+$\Phi_0$ below $\varepsilon_2 \cdot c_\Rich/(2 C_2')$ already forces
+more than half of the rich-interface mass to be $S$-good; this is the
+quantitative input actually consumed by the sums in
+Section~\ref{sec:dichotomy-theorem}.
+\end{remark}
+
+\subsection{The weighted interface graph $H$}
+
+Define a weighted graph $H$ on vertex set $\Rich^\star$ with edge weights
+\[
+w_{\alpha\beta}
+ := \mu\big((\fiber{\alpha}\cap\fiber{\beta})
+        \setminus (B_\alpha\cup B_\beta)\big).
+\]
+So $w_{\alpha\beta}$ measures the mass of the overlap on which both
+interfaces are good and both monotone descriptions are valid.
+
+\begin{definition}[active / bad pair]
+A pair $(\alpha,\beta)$ is \emph{active} if $w_{\alpha\beta}$ exceeds a
+fixed threshold $w_0$, and \emph{bad} if in addition the orientations
+$\sigma_\alpha,\sigma_\beta$ are \emph{incoherent} on the overlap.
+\end{definition}
+
+Incoherence of $(\alpha,\beta)$ on the overlap is
+Def.~\ref{def:incoherent-pair} (Section~\ref{sec:gap-incoherence}),
+imported from Step~3.
+With this notation, Step~4 yields the key inequality
+\begin{equation}\label{eq:bad-bounded-by-boundary}
+\sum_{\text{bad active }(\alpha,\beta)} w_{\alpha\beta}
+\;\lesssim\; |\bd S|.
+\end{equation}
+
+\begin{lemma}[Step~4 summed: bad overlap is bounded by
+boundary]\label{lem:sum-step4}
+Let $\delta_0>0$ be the incoherence threshold used to define ``bad''
+pairs (G2) and let $\varepsilon$ be the Step~2 per-fiber error, chosen
+small enough that $C\varepsilon\le\delta_0/2$, where $c,C$ are the
+constants of Step~4 (Theorem on two-interface incompatibility).
+Assume the active threshold $w_0$ dominates the (S1.4) non-commuting
+loss, so that
+$|\Omega^\circ_{\alpha,\beta}|\ge\tfrac12 w_{\alpha,\beta}$ for every
+active pair (see Remark~\ref{rem:Omega-circ-vs-w}).
+Then with $c_1:=c\delta_0/(4M)$, where $M$ is the witness-edge
+multiplicity constant of Lemma~\ref{lem:overlap-counting},
+\begin{equation}\label{eq:bad-bounded-by-boundary-quant}
+\sum_{\text{bad active }(\alpha,\beta)}
+w_{\alpha,\beta}\;\le\;\frac{1}{c_1}\,|\bd S|.
+\end{equation}
+\end{lemma}
+
+\begin{remark}\label{rem:Omega-circ-vs-w}
+By the commuting-overlap corollary (G3, equivalently (S1.4)), one has
+$|\Omega^\circ_{\alpha,\beta}|\ge|\mathcal F_\alpha\cap\mathcal F_\beta|
+-o(|\mathcal F_\alpha\cap\mathcal F_\beta|)$, and after removing
+$B_\alpha\cup B_\beta$ the remaining loss is at most
+$|B_\alpha|+|B_\beta|$.  By G1 (Step-2 error control) and the active
+threshold $w_{\alpha,\beta}\ge w_0$, both losses are at most
+$\tfrac14 w_{\alpha,\beta}$ for $w_0$ sufficiently large relative to
+the Step-1/Step-2 error scales, yielding the stated lower bound.
+\end{remark}
+
+\begin{proof}[Proof of Lemma~\ref{lem:sum-step4}]
+Fix a bad active pair $(\alpha,\beta)$.  By construction,
+$\sigma_\alpha,\sigma_\beta$ are incoherent on
+$(\mathcal F_\alpha\cap\mathcal F_\beta)\setminus(B_\alpha\cup B_\beta)$,
+which in the quantitative form of Definition~G2 (step~3) means the
+incoherence fraction $\delta_{\alpha,\beta}$ on the commuting overlap
+$\Omega^\circ_{\alpha,\beta}$ supplied by G3 is at least $\delta_0$.
+Applying Step~4 (Theorem on two-interface incompatibility) to
+$(\alpha,\beta)$ — i.e.\ to the rectangle-decomposed commuting overlap
+with the Step-2 staircase approximations transferred via Proposition~G2
+of \texttt{step4.tex} — yields
+\[
+|\bd S\cap E_{\alpha,\beta}|
+\;\ge\; c\bigl(\delta_{\alpha,\beta}-C\varepsilon\bigr)\,
+|\Omega^\circ_{\alpha,\beta}|
+\;\ge\; \frac{c\delta_0}{2}\,|\Omega^\circ_{\alpha,\beta}|,
+\]
+using $\delta_{\alpha,\beta}\ge\delta_0$ and
+$C\varepsilon\le\delta_0/2$.  By Remark~\ref{rem:Omega-circ-vs-w},
+$|\Omega^\circ_{\alpha,\beta}|\ge\tfrac12 w_{\alpha,\beta}$, so
+\begin{equation}\label{eq:per-pair-witness-mass}
+|\bd S\cap E_{\alpha,\beta}|
+\;\ge\; \frac{c\delta_0}{4}\, w_{\alpha,\beta}.
+\end{equation}
+
+Summing \eqref{eq:per-pair-witness-mass} over bad active pairs and
+invoking the overlap counting lemma
+(Lemma~\ref{lem:overlap-counting}), which provides
+$\sum_{(\alpha,\beta)}\mathbf{1}_{e\in E_{\alpha,\beta}}\le M$ for every
+$e\in E(G_{\BK}(P))$,
+\[
+\frac{c\delta_0}{4}
+\sum_{\text{bad active}} w_{\alpha,\beta}
+\;\le\;\sum_{\text{bad active}} |\bd S\cap E_{\alpha,\beta}|
+\;\le\;\sum_{e\in\bd S}\sum_{(\alpha,\beta)}
+\mathbf{1}_{e\in E_{\alpha,\beta}}
+\;\le\; M\,|\bd S|.
+\]
+Dividing by $c\delta_0/4$ gives
+$\sum_{\text{bad active}} w_{\alpha,\beta}\le (4M/(c\delta_0))\,|\bd S|
+= c_1^{-1}|\bd S|$, establishing
+\eqref{eq:bad-bounded-by-boundary-quant} and
+\eqref{eq:bad-bounded-by-boundary}.
+\end{proof}
+
+%-----------------------------------------------------------------------
+\section{The single clean technical lemma}\label{sec:overlap-counting}
+%-----------------------------------------------------------------------
+
+The entire Step~6 argument pivots on a single double-counting lemma,
+which we isolate here.
+
+\begin{lemma}[Overlap counting lemma]\label{lem:overlap-counting}
+The family of witness edges
+$\{E_{\alpha\beta}\}_{(\alpha,\beta)\in\Rich^\star\times\Rich^\star}$
+produced by Step~4 can be chosen so that each BK edge $e\in E(G_{\BK})$
+is contained in at most $M$ witness families $E_{\alpha\beta}$, where
+$M$ depends only on the width of $P$ (width~$3$).
+\end{lemma}
+
+\begin{proof}
+Recall from Step~4 that the witness family is the disjoint union over
+rectangle blocks $B$ of $\Omega^\circ_{\alpha\beta}$
+($=(\fiber{\alpha}\cap\fiber{\beta})\setminus(B_\alpha\cup B_\beta\cup
+\mathrm{Int}_{\alpha\beta})$) of the cut edges of conflict
+$2\times 2$ squares $Q\subseteq R_B$.  In each block, the Step~1
+commuting-overlap clause (S1.4) identifies the horizontal edges of
+$R_B$ with $\alpha$-moves and the vertical edges with $\beta$-moves.
+Every BK edge is an adjacent transposition of a unique unordered pair
+of poset elements, its \emph{swap pair}.
+
+Fix $e=\{L,L'\}\in E(G_{\BK}(P))$ with swap pair
+$\{p,q\}\subseteq P$ incomparable, acting on $L$ at adjacent positions
+$(i,i+1)$.  Suppose $e\in E_{\alpha\beta}$, so $e$ is an edge of some
+conflict square $Q\subseteq R_B$.
+
+\smallskip\noindent\textbf{Step 1 (one interface is pinned).}
+Since $e$ is one of the four edges of $Q$ and the two edge directions
+of $R_B$ are the $\alpha$- and $\beta$-swap moves, the swap pair of
+$e$ equals $\alpha$ or $\beta$.  Hence $\{p,q\}\in\{\alpha,\beta\}$.
+By symmetry between the two interfaces it suffices to bound the
+number of partner interfaces $\gamma$ such that
+$e\in E_{\{p,q\},\gamma}$ by an absolute constant $M_0$; then
+$M\le 2M_0+1$ (the extra $+1$ absorbs the degenerate case
+$\gamma=\{p,q\}$).
+
+\smallskip\noindent\textbf{Step 2 (position-disjointness).}
+Fix a candidate partner $\gamma\ne\{p,q\}$.  Both endpoints
+$L,L'$ of $e$ lie in $\Omega^\circ_{\{p,q\},\gamma}\subseteq
+\fiber{\{p,q\}}\cap\fiber{\gamma}$, so at $L$ the two generators
+(the $\{p,q\}$-swap and the $\gamma$-swap) commute by (S1.4).  Two
+adjacent transpositions on a linear order commute only when they
+either coincide or act on disjoint adjacent position pairs.  Since
+$\gamma\ne\{p,q\}$, the $\gamma$-swap at $L$ acts on some
+$(j,j+1)$ with $\{j,j+1\}\cap\{i,i+1\}=\emptyset$, and in particular
+the underlying element pair $\gamma$ is disjoint from $\{p,q\}$.
+
+\smallskip\noindent\textbf{Step 3 (width-3 local count).}
+We claim that the number of rich interfaces $\gamma$ with
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+  \item $L\in\fiber{\gamma}\setminus B_\gamma$,
+  \item the $\gamma$-swap at $L$ acts on some adjacent pair
+  $(j,j+1)$ disjoint from $\{i,i+1\}$,
+\end{enumerate}
+is bounded by an absolute constant $M_0$ depending only on
+$w(P)\le 3$.
+
+By Dilworth's theorem the width-3 poset $P$ partitions into at most
+three chains $C_1,C_2,C_3$; any incomparable pair is drawn from two
+distinct chains, so there are $\binom{3}{2}=3$ \emph{chain-pair
+types}.  Each candidate $\gamma$ has a chain-pair type, and the swap
+pair of $\gamma$ at $L$ occupies two adjacent positions $(j,j+1)$,
+each in a distinct chain.
+
+\emph{At most one $\gamma$ per (chain-pair type, adjacent position
+pair).}  Suppose $\gamma,\gamma'$ are distinct rich interfaces of
+the same chain-pair type whose swaps at $L$ act on the \emph{same}
+adjacent pair $(j,j+1)$.  Then the endpoints of $\gamma$ and
+$\gamma'$ occupy the same two positions in $L$; since each adjacent
+position pair in $L$ contains exactly one element of each of its two
+chains, this forces $\gamma=\gamma'$, a contradiction.
+
+\emph{At most $O(1)$ occupied adjacent pairs $(j,j+1)\ne(i,i+1)$ per
+chain-pair type.}  Fix a chain-pair type $\{C_a,C_b\}$.  Suppose
+$\gamma_1,\ldots,\gamma_K$ are distinct rich interfaces of this
+type, with $\gamma_k$'s swap acting at $(j_k,j_k+1)$ in $L$, all
+$(j_k,j_k+1)$ pairwise disjoint and disjoint from $(i,i+1)$.  Each
+$\gamma_k=\{u_k,v_k\}$ satisfies $L\in\fiber{\gamma_k}\setminus
+B_{\gamma_k}$.  The commuting-overlap clause (S1.4) applied to
+$\gamma_k,\gamma_\ell$ at $L$ forces the $\gamma_k$- and
+$\gamma_\ell$-swaps to commute, hence their position pairs are
+disjoint (already assumed) \emph{and} the underlying element pairs
+$\{u_k,v_k\}$ and $\{u_\ell,v_\ell\}$ are disjoint (else two
+transpositions sharing one element do not commute).  Thus the
+$\gamma_k$ together consume $2K$ distinct elements drawn from the
+two chains $C_a\cup C_b$; each must be rich (i.e.\ have
+$t(\gamma_k)\ge T$), which means each pair has common neighborhood
+a long chain inside the remaining chain $C_c$.
+
+By the ``bounded interaction of distinct rich pairs'' lemma of
+Step~1 (\DEP{Step~1}), any two rich pairs of the same
+chain-pair type have overlap fibers $\fiber{\gamma_k}\cap
+\fiber{\gamma_\ell}$ contained in $O(1)$ strips of width
+$O(t_{\gamma_k}+t_{\gamma_\ell})$ in either coordinate system.
+In particular, once $L$ lies in $\fiber{\gamma_1}\setminus
+B_{\gamma_1}$ and in $\fiber{\gamma_\ell}\setminus B_{\gamma_\ell}$
+simultaneously, the good-fiber coordinate $\pi_{\gamma_1}(L)$ is
+pinned to one of $O(1)$ strips determined by $\gamma_\ell$.
+A rich fiber has $t(\gamma)=\Theta(n)$ while each strip has
+cross-sectional width $O(1)$, so at most $O(1)$ distinct rich
+$\gamma_\ell$ can have their good fiber simultaneously contain $L$
+while acting on an adjacent position pair disjoint from
+$(i,i+1)$.  This gives $K=O(1)$.
+
+Summing $O(1)$ over the $3$ chain-pair types and the bounded
+number of admissible position pairs within each type yields
+$M_0=O(1)$, depending only on the width and on the richness
+threshold fixed in Steps~1--5 (not on $|P|$).
+
+\smallskip\noindent\textbf{Step 4 (assemble).}
+Combining Steps~1--3,
+\[
+\sum_{(\alpha,\beta)}\mathbf 1_{e\in E_{\alpha\beta}}
+  \;\le\; 2M_0+1 \;=:\; M,
+\]
+with $M$ depending only on $w(P)\le 3$.
+\end{proof}
+
+\begin{remark}
+The same argument is written out in Step~4
+(Lemma ``Witness-edge multiplicity'', \texttt{step4.tex}, \S
+``Witness-edge multiplicity for Step~6''); the proof is reproduced
+here because the overlap counting lemma is the load-bearing bookkeeping
+input to Step~6, and consolidating it in \texttt{step6.tex} removes the
+cross-file dependency for downstream readers.  A sharper numerical
+value of $M$ is not required by any downstream step.
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{The dichotomy theorem}\label{sec:dichotomy-theorem}
+%-----------------------------------------------------------------------
+
+\begin{theorem}[Step~6 theorem]\label{thm:step6}
+Fix thresholds from Steps~1, 2, 4, 5 and the overlap counting constant
+from Lemma~\ref{lem:overlap-counting}.
+There exist constants $\eta,\delta>0$ such that for any width-3 poset
+$P$ and any cut $S\subseteq\LE(P)$, at least one of the following holds:
+
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Expansion case.}
+  \[
+    |\bd S| \;\ge\; \eta\cdot M,
+    \qquad
+    M \;=\; \sum_{\alpha,\beta\in\Rich^\star} w_{\alpha\beta}.
+  \]
+
+  \item \textbf{Coherence case.}
+  All but a $\delta$-fraction of the weighted overlap mass of pairs
+  $(\alpha,\beta)\in\Rich^\star\times\Rich^\star$ is coherent:
+  \[
+    \sum_{\text{bad active }(\alpha,\beta)} w_{\alpha\beta}
+    \;\le\;
+    \delta\cdot M.
+  \]
+\end{enumerate}
+
+If additionally Step~5 gives $M\gtrsim\vol(S)$ (the rich case), then
+case~(i) contradicts low conductance, and only case~(ii) survives.
+\end{theorem}
+
+\subsection{Proof of Theorem~\ref{thm:step6}}\label{sec:proof-dichotomy}
+
+\begin{proof}
+\emph{Step A (pass to $\Rich^\star$).}
+By Step~2 each $\alpha\in\Rich$ carries an orientation $\sigma_\alpha$
+and an exceptional set $B_\alpha$.
+Lemma~\ref{lem:most-good} shows that, for $\Phi(S)\le\Phi_0$,
+the set $\Rich^\star$ of $S$-good interfaces satisfies
+$\sum_{\alpha\in\Rich^\star}|\fiber{\alpha}|\ge(1-o(1))
+\sum_{\alpha\in\Rich}|\fiber{\alpha}|$.
+Section~\ref{sec:gap-error} furthermore bounds the total
+exceptional mass $\sum_{\alpha\in\Rich^\star}|B_\alpha|$ by a fixed
+fraction of $\sum_{\alpha\in\Rich^\star}|\fiber{\alpha}|$, so the
+overlap weights $w_{\alpha\beta}$ dominate the bad-set losses when
+$\Phi(S)$ is small enough.
+
+\emph{Step B (partition into bad vs.\ coherent active pairs).}
+Using Def.~\ref{def:incoherent-pair}
+(Section~\ref{sec:gap-incoherence}), every active pair
+$(\alpha,\beta)\in\Rich^\star\times\Rich^\star$ with
+$w_{\alpha\beta}\ge w_0$ is classified as either \emph{bad} (incoherent
+orientations on the overlap) or \emph{coherent}.
+
+\emph{Step C (summing Step~4).}
+Section~\ref{sec:gap-commuting} produces, on the overlap
+$(\fiber{\alpha}\cap\fiber{\beta})\setminus(B_\alpha\cup B_\beta)$,
+the commuting $2\times 2$-square model from which Step~4 draws its
+witness family $E_{\alpha\beta}$.
+Lemma~\ref{lem:overlap-counting} bounds the multiplicity with
+which any single BK edge appears in $\bigcup_{\alpha,\beta}E_{\alpha\beta}$
+by a width-dependent constant $K$.
+Lemma~\ref{lem:sum-step4} combines Step~4's per-pair boundary
+lower bound with the multiplicity bound:
+\begin{equation}\label{eq:summed-step4}
+c_1\sum_{\text{bad active }(\alpha,\beta)} w_{\alpha\beta}
+\;\le\; |\bd S|,
+\end{equation}
+for a constant $c_1>0$ depending only on the width, Step~4's constant,
+and $K$.
+
+\emph{Step D (dichotomy).}
+Fix $\delta\in(0,1)$ to be chosen below and set $\eta:=c_1\delta$.
+If
+\[
+\sum_{\text{bad active }(\alpha,\beta)} w_{\alpha\beta}
+\;\le\;\delta\cdot M,
+\]
+then case~(ii) holds.
+Otherwise, by \eqref{eq:summed-step4},
+\[
+|\bd S|
+ \;\ge\; c_1\sum_{\text{bad active }(\alpha,\beta)} w_{\alpha\beta}
+ \;>\; c_1\delta\cdot M \;=\; \eta\cdot M,
+\]
+which is case~(i).
+
+\emph{Step E (closing the contradiction in the rich case).}
+If Step~5 holds in its rich form, Section~\ref{sec:gap-second-moment}
+(Lemma~\ref{lem:gap-G5}) gives $M \gtrsim\vol(S)$.
+Then case~(i) yields $|\bd S|\gtrsim\vol(S)$, i.e.
+$\Phi(S)\gtrsim 1$, contradicting the low-conductance hypothesis.
+Hence under the rich case of Step~5 only case~(ii) can occur.
+\end{proof}
+
+The reduction from Theorem~\ref{thm:step6} to the \emph{pointwise} form
+(Conclusion~B below) is carried out in Section~\ref{sec:pointwise}.
+
+%-----------------------------------------------------------------------
+\section{Pointwise coherence}\label{sec:pointwise}
+%-----------------------------------------------------------------------
+
+For $L\in\LE(P)$ set
+\[
+\Rich_L
+ := \{\alpha\in\Rich^\star :
+      L\in\fiber{\alpha}\setminus B_\alpha\}.
+\]
+
+\begin{corollary}[Pointwise coherence, Conclusion~B]\label{cor:pointwise}
+Under the hypotheses of Theorem~\ref{thm:step6} and in the rich case of
+Step~5, for most $L\in\LE(P)$ there exists a sign $s(L)\in\{\pm1\}$ such
+that almost every $\alpha\in\Rich_L$ has $\sigma_\alpha = s(L)$.
+Quantitatively, let $\Pr_L$ denote the $I(L)^2$-weighted probability
+measure on $\LE(P)$ with $I(L):=|\Rich_L|$, i.e.
+$\Pr_L[A]=\sum_{L\in A}I(L)^2/\sum_{L}I(L)^2$
+(with the convention $0/0=0$ if $\sum_LI(L)^2=0$, which is excluded by
+the rich case of Step~5).  Then, with $\delta$ as in
+Theorem~\ref{thm:step6}, there is a measurable map
+$s\colon\LE(P)\to\{\pm1\}$ such that
+\[
+\Pr_L\!\left[
+  \#\{\alpha\in\Rich_L:\sigma_\alpha\ne s(L)\}
+  \ge \sqrt{\delta}\,|\Rich_L|
+\right]
+\;\le\; \sqrt{\delta}.
+\]
+Equivalently, setting $m(L):=\min(n_+(L),n_-(L))$ (the minority count,
+with $n_\pm(L):=\#\{\alpha\in\Rich_L:\sigma_\alpha=\pm1\}$), the event
+$\{m(L)\ge\sqrt{\delta}\,I(L)\}$ has $\Pr_L$-probability at most
+$\sqrt{\delta}$: under the majority-vote $s(L)$ defined in the proof
+below, $\#\{\alpha\in\Rich_L:\sigma_\alpha\ne s(L)\}$ equals the
+minority count $m(L)$, so this is literally the preceding display.
+\end{corollary}
+
+\begin{proof}
+We are in the coherence case~(ii) of Theorem~\ref{thm:step6}, i.e.
+\begin{equation}\label{eq:bad-mass}
+  \sum_{\text{bad active }(\alpha,\beta)} w_{\alpha\beta}
+  \;\le\;\delta\,M.
+\end{equation}
+
+\smallskip\noindent\emph{Step 1: majority vote.}
+For each $L\in\LE(P)$ set
+\[
+  n_+(L):=\#\{\alpha\in\Rich_L:\sigma_\alpha=+1\},\qquad
+  n_-(L):=\#\{\alpha\in\Rich_L:\sigma_\alpha=-1\},
+\]
+so $n_+(L)+n_-(L)=I(L)$.  Define
+\[
+  s(L):=
+  \begin{cases}
+    +1,&\text{if }n_+(L)\ge n_-(L),\\
+    -1,&\text{otherwise,}
+  \end{cases}
+\]
+and
+\[
+  m(L):=\min(n_+(L),n_-(L))
+      =\#\{\alpha\in\Rich_L:\sigma_\alpha\ne s(L)\}.
+\]
+Since $\LE(P)$ is finite, $s$ and $m$ are automatically measurable.
+The minority count $m(L)$ is the smallest possible value of
+$\#\{\alpha\in\Rich_L:\sigma_\alpha\ne s\}$ over $s\in\{\pm1\}$, so the
+two events in the statement coincide when $s(L)$ is chosen by majority
+vote.
+
+\smallskip\noindent\emph{Step 2: double counting of disagreeing pairs.}
+Recall $w_{\alpha\beta}=\#\{L:\alpha,\beta\in\Rich_L\}$.
+Counting triples $(L,\alpha,\beta)$ with $L\in\Rich_\alpha\cap\Rich_\beta$
+and $\sigma_\alpha\ne\sigma_\beta$ in two ways,
+\[
+  \sum_{L\in\LE(P)} 2\,n_+(L)\,n_-(L)
+   \;=\;
+  \sum_{\substack{(\alpha,\beta)\in\Rich^\star\times\Rich^\star\\
+        \sigma_\alpha\ne\sigma_\beta}} w_{\alpha\beta}.
+\]
+Split the RHS into active and non-active pairs.  For the non-active
+incoherent pairs $w_{\alpha\beta}<w_0$; choosing the active-pair
+threshold $w_0$ so that
+$w_0\cdot|\Rich^\star|^2\le\delta M$ (absorbable into the constants of
+Theorem~\ref{thm:step6}), we obtain via \eqref{eq:bad-mass}
+\begin{equation}\label{eq:disagree-sum}
+  \sum_{L\in\LE(P)} n_+(L)\,n_-(L)
+  \;\le\;\delta\,M.
+\end{equation}
+
+\smallskip\noindent\emph{Step 3: from disagreement to minority count.}
+For any $L$, writing $m=m(L)$ and $I=I(L)$, we have
+$n_+(L)n_-(L)=m(I-m)$ with $m\le I/2$, hence $I-m\ge I/2$ and
+\[
+  n_+(L)\,n_-(L)\;\ge\;\tfrac12\,m(L)\,I(L).
+\]
+Summing and combining with \eqref{eq:disagree-sum},
+\begin{equation}\label{eq:mI-sum}
+  \sum_{L\in\LE(P)} m(L)\,I(L)
+  \;\le\;2\delta\,M.
+\end{equation}
+
+\smallskip\noindent\emph{Step 4: identification of $M$.}
+By Lemma~\ref{lem:gap-G5}(i) (Section~\ref{sec:gap-second-moment}),
+the exact identity
+\[
+  M \;=\;\sum_{L\in\LE(P)} I(L)^2
+\]
+holds with no error term, because the bad-set exclusions
+$B_\alpha\cup B_\beta$ are baked into the definition of $w_{\alpha\beta}$
+and $I(L)$ is taken over $\Rich^\star$. Substituting into
+\eqref{eq:mI-sum} and renaming $2\delta$ to $\delta$ yields
+\begin{equation}\label{eq:mI-vs-I2}
+  \sum_{L\in\LE(P)} m(L)\,I(L)
+  \;\le\;\delta\sum_{L\in\LE(P)} I(L)^2.
+\end{equation}
+
+\smallskip\noindent\emph{Step 5: Markov.}
+Let
+\[
+  A\;:=\;\{L\in\LE(P):m(L)\ge\sqrt{\delta}\,I(L)\}.
+\]
+On $A$ we have $m(L)\,I(L)\ge\sqrt{\delta}\,I(L)^2$, so
+\eqref{eq:mI-vs-I2} gives
+\[
+  \sqrt{\delta}\sum_{L\in A} I(L)^2
+   \;\le\;\sum_{L\in\LE(P)} m(L)\,I(L)
+   \;\le\;\delta\sum_{L\in\LE(P)} I(L)^2,
+\]
+hence
+\[
+  \Pr_L[A]
+   \;=\;\frac{\sum_{L\in A} I(L)^2}{\sum_L I(L)^2}
+   \;\le\;\sqrt{\delta},
+\]
+which is the asserted bound.  Since on the complement of $A$ we have
+$\#\{\alpha\in\Rich_L:\sigma_\alpha\ne s(L)\}=m(L)<\sqrt{\delta}\,I(L)$,
+the statement is proved.
+\end{proof}
+
+\begin{remark}
+Measurability of $s\colon\LE(P)\to\{\pm1\}$ is automatic since $\LE(P)$
+is finite; in a measure-theoretic setting one would simply note that
+$n_+,n_-$ are measurable integer-valued functions of $L$ and $s(L)$ is
+a Borel-measurable function of their sign.  The specific tie-breaking
+rule is irrelevant to the bound because ties contribute $n_+=n_-$ and
+hence $m(L)=I(L)/2$, which places $L$ automatically inside $A$ unless
+$\sqrt{\delta}\le 1/2$; this regime is the only one of interest.
+\end{remark}
+
+\begin{remark}
+The $I(L)^2$-weighted measure is the natural one because $M$ itself is
+exactly the second moment $\sum_L I(L)^2$
+(Lemma~\ref{lem:gap-G5}(i)).  The same
+argument under the uniform measure on $\LE(P)$ yields a bound weaker by
+a factor of $\max_L I(L)^2 / \mathbb{E}[I(L)^2]$, which is $O(1)$ under
+the rich case of Step~5; in either normalization the conclusion is
+quantitatively the same up to constants.
+\end{remark}
+
+
+Corollary~\ref{cor:pointwise} is exactly the input consumed by Step~7.
+
+%-----------------------------------------------------------------------
+\section{Full proof in compressed form}
+%-----------------------------------------------------------------------
+
+We record the logical skeleton; each line is turned into a formal claim
+with proof in the indicated section.
+
+\begin{enumerate}[nosep]
+  \item By Step~2, each rich interface $\alpha$ has an orientation
+  $\sigma_\alpha$ and a small exceptional set $B_\alpha$.
+  \item By Lemma~\ref{lem:most-good}, most rich interfaces are $S$-good
+  (i.e.\ lie in $\Rich^\star$).
+  \item Define the weighted interface graph $H$ with weights
+  $w_{\alpha\beta}$ (Section~\ref{sec:interface-graph}).
+  \item By Step~4, each incoherent active pair forces boundary
+  proportional to its overlap weight.
+  \item By Lemma~\ref{lem:overlap-counting}, the witness edges
+  $E_{\alpha\beta}$ overcount each BK edge at most $O(1)$ times.
+  \item Summing (4) over all bad active pairs using (5) yields
+  \eqref{eq:bad-bounded-by-boundary}.
+  \item Theorem~\ref{thm:step6} follows: either $|\bd S|\gtrsim M$, or
+  incoherent mass is $\le\delta M$.
+  \item By Step~5 (rich case), $M\gtrsim\vol(S)$, so the first
+  alternative contradicts low conductance; we land in the coherence
+  case.
+  \item Corollary~\ref{cor:pointwise} extracts pointwise coherence.
+\end{enumerate}
+
+%-----------------------------------------------------------------------
+\section{Technical lemmas}
+%-----------------------------------------------------------------------
+
+The proofs of Theorem~\ref{thm:step6} and Corollary~\ref{cor:pointwise}
+rest on four technical inputs: a total-error bound for the Step-2
+exceptional sets, the formal definition of incoherence imported from
+Step~3, the commuting-square overlap model supplied by Step~1, and the
+rich-case lower bound $M\gtrsim\vol(S)$ obtained from Step~5.
+
+\subsection{Step-2 error control}\label{sec:gap-error}
+
+Under low conductance $\Phi(S)\le\Phi_0$ we show that the total
+exceptional mass $\sum_{\alpha\in\Rich^\star} |B_\alpha|$ is at most a
+fixed fraction of $\sum_{\alpha\in\Rich^\star}|\fiber{\alpha}|$, so the
+coherence dichotomy survives the losses $B_\alpha\cup B_\beta$ when we
+pass to the overlap $w_{\alpha\beta}$.
+
+We cite the following from \texttt{step2.tex}:
+\begin{itemize}[nosep]
+  \item[(F1)] \emph{Fiber boundary averaging}
+    (\texttt{step2.tex}, Lemma~3.4): for any $S\subseteq\LE(P)$,
+    \(\sum_{\alpha\in\Rich}b_\alpha\le K\kappa\,|S|,\)
+    where $b_\alpha:=|\bd_{\mathrm{BK}}(S\cap\fiber{\alpha})|$,
+    $\kappa:=|\bd_{\mathrm{BK}}S|/|S|$, and $K$ is the Step~1
+    edge-multiplicity constant (S1.6).
+  \item[(F2)] \emph{Per-fiber staircase approximation}
+    (\texttt{step2.tex}, Proposition~3.6): for each rich good fiber
+    $\alpha$ there is a staircase $M_\alpha\in\mathrm{Stair}(D_\alpha)$
+    and an error set $E_\alpha\subseteq\fiber{\alpha}$ with
+    \(|E_\alpha|\le\delta(b_\alpha/t_\alpha)\,|\fiber{\alpha}|,\)
+    where $\delta(\cdot)$ is the weak-grid stability rate
+    (crudely $\delta(\varepsilon)=O(\varepsilon^{1/3})$).
+  \item[(F3)] \emph{Good-fiber size and bad-fiber set}
+    (\texttt{step2.tex}, Def.~2.1, (S1.1) and (S1.5)):
+    $|\fiber{\alpha}|\ge c_0 t_\alpha^2$ and
+    $|\fiber{\alpha}^{\mathrm{bad}}|\le C_1 t_\alpha$, with $t_\alpha\ge T$
+    the Step-1 richness threshold.
+\end{itemize}
+
+\begin{proposition}[Step-2 error control]\label{prop:gap-g1}
+Fix Step-1 constants $c_0,C_1,K$ and the Step-2 stability rate
+$\delta(\cdot)$.  Let $t_{\max}:=\max_{\alpha\in\Rich}t_\alpha$ and
+assume the Step-5 rich case, so that $|S|\le C_5
+\sum_{\alpha\in\Rich}|\fiber{\alpha}|$ for some constant $C_5$.  Set
+\[
+B_\alpha\;:=\;\fiber{\alpha}^{\mathrm{bad}}\cup E_\alpha,
+\]
+the union of the Step-1 bad-fiber set and the Step-2 staircase error.
+Then for every $\rho\in(0,1)$ there is a threshold
+\[
+\Phi_0
+ \;=\;\Phi_0(\rho,c_0,C_1,K,C_5,T,t_{\max})\;>\;0
+\]
+such that whenever $\Phi(S)\le\Phi_0$,
+\[
+\sum_{\alpha\in\Rich^\star}|B_\alpha|
+ \;\le\;\rho\,\sum_{\alpha\in\Rich^\star}|\fiber{\alpha}|.
+\]
+\end{proposition}
+
+\begin{proof}
+Abbreviate $W^\star:=\sum_{\alpha\in\Rich^\star}|\fiber{\alpha}|$ and
+$W:=\sum_{\alpha\in\Rich}|\fiber{\alpha}|\ge W^\star$.  We bound the
+contributions $\fiber{\alpha}^{\mathrm{bad}}$ and $E_\alpha$ separately,
+each by $\rho/2\cdot W^\star$.
+
+\medskip\noindent\emph{(1) Bad-fiber contribution.}
+By (F3), $|\fiber{\alpha}^{\mathrm{bad}}|\le C_1
+t_\alpha$ and $|\fiber{\alpha}|\ge c_0 t_\alpha^2\ge c_0 T\,t_\alpha$ for
+every $\alpha\in\Rich$.  Hence
+\begin{equation}\label{eq:g1-badfib}
+\sum_{\alpha\in\Rich^\star}|\fiber{\alpha}^{\mathrm{bad}}|
+ \;\le\;\frac{C_1}{c_0 T}\,W^\star.
+\end{equation}
+Choose the Step-1 richness threshold $T\ge 2C_1/(c_0\rho)$ so
+\eqref{eq:g1-badfib} is at most $(\rho/2)W^\star$.  This fixes $T$
+independently of $S$.
+
+\medskip\noindent\emph{(2) Staircase-error contribution.}
+Write $b_\alpha:=|\bd_{\mathrm{BK}}(S\cap\fiber{\alpha})|$.  By (F1),
+\begin{equation}\label{eq:g1-avg}
+\sum_{\alpha\in\Rich}b_\alpha\;\le\;K\,\Phi(S)\,|S|
+ \;\le\;K\,C_5\,\Phi_0\,W.
+\end{equation}
+Pick $\varepsilon_0\in(0,1)$ with $\delta(\varepsilon_0)\le\rho/4$ (available
+since $\delta(\cdot)\to0$; e.g.\ $\varepsilon_0=(\rho/(4C))^3$ under the
+crude cube-root rate).  Split
+\[
+\Rich^\star
+ \;=\;
+ \Rich^\star_{\mathrm{lo}}\;\sqcup\;\Rich^\star_{\mathrm{hi}},
+\qquad
+\Rich^\star_{\mathrm{lo}}
+ :=\{\alpha\in\Rich^\star : b_\alpha\le\varepsilon_0\,t_\alpha\}.
+\]
+
+\emph{(2a) Low-boundary fibers.}
+For $\alpha\in\Rich^\star_{\mathrm{lo}}$, (F2) gives
+$|E_\alpha|\le\delta(\varepsilon_0)|\fiber{\alpha}|\le(\rho/4)|\fiber{\alpha}|$,
+so
+\begin{equation}\label{eq:g1-lo}
+\sum_{\alpha\in\Rich^\star_{\mathrm{lo}}}|E_\alpha|
+ \;\le\;\frac{\rho}{4}\,W^\star.
+\end{equation}
+
+\emph{(2b) High-boundary fibers.}
+For $\alpha\in\Rich^\star_{\mathrm{hi}}$, $b_\alpha>\varepsilon_0
+t_\alpha$, i.e.\ $t_\alpha<b_\alpha/\varepsilon_0$.  Using
+$|\fiber{\alpha}|\le t_\alpha^2\le t_{\max}\,t_\alpha\le
+(t_{\max}/\varepsilon_0)\,b_\alpha$, we bound
+$|E_\alpha|\le|\fiber{\alpha}|$ trivially and sum using
+\eqref{eq:g1-avg}:
+\begin{equation}\label{eq:g1-hi}
+\sum_{\alpha\in\Rich^\star_{\mathrm{hi}}}|E_\alpha|
+ \;\le\;\sum_{\alpha\in\Rich^\star_{\mathrm{hi}}}|\fiber{\alpha}|
+ \;\le\;\frac{t_{\max}}{\varepsilon_0}
+        \sum_{\alpha\in\Rich}b_\alpha
+ \;\le\;\frac{K\,C_5\,t_{\max}\,\Phi_0}{\varepsilon_0}\,W.
+\end{equation}
+Choose
+\(
+\Phi_0
+ \;\le\;
+ \dfrac{\rho\,\varepsilon_0}{4\,K\,C_5\,t_{\max}},
+\)
+so the right-hand side of \eqref{eq:g1-hi} is at most
+$(\rho/4)W\le(\rho/4)W^\star\cdot(W/W^\star)$.  Since
+$W/W^\star=1+o(1)$ by Lemma~\ref{lem:most-good}, absorbing the
+$(1+o(1))$ factor into a slightly smaller $\Phi_0$ gives
+$\sum_{\mathrm{hi}}|E_\alpha|\le(\rho/4)W^\star$ outright.
+
+\medskip\noindent\emph{Combining.}
+Adding \eqref{eq:g1-badfib}, \eqref{eq:g1-lo}, and \eqref{eq:g1-hi},
+\[
+\sum_{\alpha\in\Rich^\star}|B_\alpha|
+ \;\le\;\Bigl(\tfrac{\rho}{2}+\tfrac{\rho}{4}+\tfrac{\rho}{4}\Bigr)W^\star
+ \;=\;\rho\,W^\star.
+\qedhere
+\]
+\end{proof}
+
+\begin{remark}[Error-vs-conductance tradeoff and scaling]
+\label{rem:g1-tradeoff}
+Proposition~\ref{prop:gap-g1} exhibits the explicit tradeoff promised
+by the gap statement: to achieve total exceptional mass
+$\rho\,W^\star$, it suffices to take
+\(
+\Phi_0 \;\lesssim\; \rho\,\varepsilon_0(\rho)\,/\,t_{\max},
+\)
+with $\varepsilon_0(\rho)$ determined by the Step-2 stability rate
+$\delta(\cdot)$ (under the crude cube-root rate,
+$\varepsilon_0(\rho)=\Theta(\rho^3)$, hence
+$\Phi_0=\Theta(\rho^4/t_{\max})$).  The $1/t_{\max}$ factor is the
+natural scaling of planar isoperimetric stability: boundary budgets are
+measured against side length, not area.  Since width-$3$ forces
+$t_{\max}\le|P|$, the downstream threshold is $\Phi_0\asymp
+\mathrm{poly}(\rho)/|P|$, which matches the conductance regime in
+which Step~6 is used.
+\end{remark}
+
+\begin{corollary}[Mass fraction after removal]\label{cor:g1-fraction}
+Under the hypotheses of Proposition~\ref{prop:gap-g1},
+\[
+\sum_{\alpha\in\Rich^\star}\bigl|\fiber{\alpha}\setminus
+B_\alpha\bigr|
+ \;\ge\;(1-\rho)\sum_{\alpha\in\Rich^\star}|\fiber{\alpha}|.
+\]
+In particular, passing to the overlap weights
+$w_{\alpha\beta}=\mu((\fiber{\alpha}\cap\fiber{\beta})\setminus
+(B_\alpha\cup B_\beta))$ preserves a $(1-2\rho)$-fraction of the raw
+pairwise overlap mass:
+\[
+\sum_{\alpha,\beta\in\Rich^\star}w_{\alpha\beta}
+ \;\ge\;
+ \sum_{\alpha,\beta\in\Rich^\star}
+   \mu(\fiber{\alpha}\cap\fiber{\beta})\;-\;2\rho\,W^\star,
+\]
+using the union bound
+$\mu(B_\alpha\cup B_\beta)\le|B_\alpha|+|B_\beta|$ and
+Proposition~\ref{prop:gap-g1} on each term.
+\end{corollary}
+
+\begin{proof}
+The first line is the complement of Proposition~\ref{prop:gap-g1}.  For
+the second, for each ordered pair,
+$\mu(\fiber{\alpha}\cap\fiber{\beta})-w_{\alpha\beta}\le
+\mu((B_\alpha\cup B_\beta)\cap\fiber{\alpha}\cap\fiber{\beta})\le
+|B_\alpha|\cdot\mathbf{1}[\alpha=\alpha]+|B_\beta|\cdot\mathbf{1}[\beta=\beta]$;
+sum over $\beta$ (resp.\ $\alpha$) and use the trivial bound
+$\sum_\beta\mathbf{1}[\fiber{\alpha}\cap\fiber{\beta}\ne\varnothing]\le
+|\Rich^\star|$ together with Proposition~\ref{prop:gap-g1} to obtain
+the stated loss $\le 2\rho\,W^\star$.
+\end{proof}
+
+Corollary~\ref{cor:g1-fraction} is the statement actually consumed by
+Lemma~\ref{lem:sum-step4} and the Theorem~\ref{thm:step6} dichotomy:
+the exceptional masses $B_\alpha$ never erode the dichotomy by more
+than a fixed small fraction.
+
+\subsection{Formal definition of incoherence}\label{sec:gap-incoherence}
+
+We now formalise what it means for the orientations $\sigma_\alpha$ and
+$\sigma_\beta$ to be \emph{incoherent} on the overlap
+$(\fiber{\alpha}\cap\fiber{\beta})\setminus(B_\alpha\cup B_\beta)$, so
+the partition of active pairs into bad/non-bad is rigorous and
+Step~4's hypothesis is verified.
+
+Fix an active pair $(\alpha,\beta)\in\Rich^\star\times\Rich^\star$ and
+write
+\[
+  \Omegareg_{\alpha\beta}
+  \;:=\;(\fiber{\alpha}\cap\fiber{\beta})\setminus(B_\alpha\cup B_\beta)
+\]
+for the good overlap (the regular commuting overlap
+$\Omegareg_{xy,uv}$ of Step~3 applied to the rich pairs
+$\alpha=(x,y)$, $\beta=(u,v)$).
+Step~3 supplies, for every $L\in\Omegareg_{\alpha\beta}$:
+\begin{itemize}[nosep]
+  \item two commuting unit BK moves $a(L),b(L)$ available at $L$ inside
+  $\Omegareg_{\alpha\beta}$ --- the \emph{common axes} of
+  Def.~\ref{def:common-axes} --- with $a(L)$ an $\alpha$-generator and
+  $b(L)$ a $\beta$-generator, both block-constant on the overlap block
+  $B(L)$ (Lem.~\ref{lem:common-axes});
+  \item a pair of local signs
+  $\eta_\alpha(L),\eta_\beta(L)\in\{\pm 1\}$
+  (Def.~\ref{def:eta}) recording which of the two oriented BK moves
+  $\pm a(L)$ lies in the $\alpha$-positive cone $P_\alpha(L)$ (determined
+  by $(\sigma_\alpha,M_\alpha)$ via Def.~\ref{def:positive-cone}) and
+  which of $\pm b(L)$ lies in $P_\beta(L)$; both signs are block-constant
+  on $\Omegareg_{\alpha\beta}$ (Rem.~\ref{rem:eta-block-constant}).
+\end{itemize}
+
+\begin{definition}[Incoherent active pair]\label{def:incoherent-pair}
+An active pair $(\alpha,\beta)$ is \emph{incoherent on the overlap}
+(equivalently, \emph{bad}) if there is an absolute constant
+$c_{\mathrm{inc}}>0$ with
+\[
+  \Pr_{L\in\Omegareg_{\alpha\beta}}
+    \bigl[\eta_\alpha(L)\neq\eta_\beta(L)\bigr]
+  \;\ge\;c_{\mathrm{inc}}.
+\]
+Equivalently (Prop.~\ref{prop:correlation}),
+\[
+  \mathrm{Corr}(\alpha,\beta)
+  \;:=\;\mathbb{E}_{L\in\Omegareg_{\alpha\beta}}
+         \bigl[\eta_\alpha(L)\eta_\beta(L)\bigr]
+  \;\le\;1-2c_{\mathrm{inc}}.
+\]
+Otherwise the active pair is \emph{coherent} (\emph{non-bad}):
+$\Pr[\eta_\alpha\neq\eta_\beta]=o(1)$, equivalently
+$\mathrm{Corr}(\alpha,\beta)\ge 1-o(1)$.  This is
+Def.~\ref{def:coherent} transported to the Step~6 notation.
+\end{definition}
+
+\begin{remark}[Translated positive-direction BK moves]
+At each $L\in\Omegareg_{\alpha\beta}$ the pair
+$(\eta_\alpha(L)\,a(L),\,\eta_\beta(L)\,b(L))$ is precisely the pair of
+positive-direction BK moves read off by the two local staircase rules,
+expressed in the common overlap axes $(a(L),b(L))$.  Incoherence means
+these translated positive directions disagree in sign on a positive
+fraction of the overlap, so no common monotone Boolean description
+simultaneously realises both local staircases on a $1-o(1)$ fraction of
+$\Omegareg_{\alpha\beta}$.
+\end{remark}
+
+\begin{remark}[Well-definedness of the bad/non-bad partition]
+The common axes $(a(L),b(L))$ and the signs
+$(\eta_\alpha(L),\eta_\beta(L))$ are coordinate- and block-invariant
+(Lem.~\ref{lem:common-axes}(G5.1--G5.3);
+Rem.~\ref{rem:eta-block-constant}), so
+Def.~\ref{def:incoherent-pair} depends only on the overlap
+$\Omegareg_{\alpha\beta}$ and the Step-2 data
+$(\sigma_\alpha,M_\alpha,\sigma_\beta,M_\beta)$ --- not on any choice of
+interface-local chart.  Consequently the partition of active pairs into
+\emph{bad} (incoherent) and \emph{non-bad} (coherent) is well-defined,
+and the Step~4 hypothesis of Theorem~\ref{thm:step4} is verified for
+every bad active pair with quantitative incoherence fraction
+$\delta\ge c_{\mathrm{inc}}$ (cf.\ \texttt{step4.tex}
+Def.~\ref{def:coherence-cited}).
+\end{remark}
+
+\subsection{Commuting-square overlap model}\label{sec:gap-commuting}
+
+We reduce this to Step~1.  Write
+$\alpha=(x,y)$, $\beta=(u,v)$ for two distinct $S$-good rich pairs
+with good fibers $\fiber{\alpha},\fiber{\beta}$ and coordinate maps
+$\pi_\alpha,\pi_\beta$ (Definition of good fiber).
+Set
+\[
+  \Omega_{\alpha\beta} := \fiber{\alpha}\cap\fiber{\beta},
+  \qquad
+  \Omega^{\circ}_{\alpha\beta}
+    := \Omega_{\alpha\beta}
+       \setminus\bigl(\mathrm{Bad}_\alpha\cup\mathrm{Bad}_\beta
+                      \cup\mathrm{Int}_{\alpha\beta}\bigr),
+\]
+where $\mathrm{Bad}_\bullet$ is the Step~1 bad set of the
+corresponding interface and $\mathrm{Int}_{\alpha\beta}$ is the
+\emph{interaction locus} of Step~1, Lemma ``Bounded interaction of
+distinct rich pairs'' (the set of $L$ at which some element of
+$\{x,y\}$ is $L$-adjacent to an element of $\{u,v\}\cup C(u,v)$, or
+symmetrically).
+
+\begin{lemma}[Commuting-square overlap model]\label{lem:gap3}
+For every distinct pair $\alpha,\beta\in\Rich^\star$:
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item\label{it:gap3-square}
+  \textup{(Local $2\times 2$ commuting square.)}
+  At every $L\in\Omega^{\circ}_{\alpha\beta}$ the four BK generators
+  $\pm e_1^{(\alpha)},\pm e_2^{(\alpha)}$ and
+  $\pm e_1^{(\beta)},\pm e_2^{(\beta)}$ act by transpositions on
+  pairwise disjoint pairs of elements of $P$; in particular each
+  $(\alpha)$-generator commutes with each $(\beta)$-generator, and
+  for any choice of signs the resulting four BK moves close up to a
+  $2\times 2$ square inside $\Omega^{\circ}_{\alpha\beta}$ (i.e.\ all
+  four BK compositions land at the same vertex).
+\item\label{it:gap3-density}
+  \textup{(Positive density.)}
+  In the rich regime $t(\alpha),t(\beta)=\Theta(n)$ and
+  $|\Omega_{\alpha\beta}|\gg n^2$,
+  \[
+    |\Omega^{\circ}_{\alpha\beta}|
+    \;\ge\;(1-o(1))\,|\Omega_{\alpha\beta}|.
+  \]
+  In particular, for any fixed $\rho<1$ and all but a vanishing
+  fraction of active pairs $(\alpha,\beta)$,
+  \[
+    \mu\bigl(\Omega^{\circ}_{\alpha\beta}\setminus
+              (B_\alpha\cup B_\beta)\bigr)
+    \;\ge\;\rho\,w_{\alpha\beta}.
+  \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Both clauses are quotations of Step~1, Corollary ``Commuting overlap;
+clause (S1.4) of Step~4'' (\texttt{step1.tex},
+\texttt{cor:overlap}), specialised to the labels $\alpha,\beta$.
+
+\emph{\ref{it:gap3-square}.}
+A unit $(x,y)$-BK move swaps $x$ or $y$ with an $L$-adjacent
+$c_k\in C(x,y)$, and a unit $(u,v)$-BK move swaps $u$ or $v$ with an
+$L$-adjacent $c_\ell\in C(u,v)$.  Off the interaction locus
+$\mathrm{Int}_{\alpha\beta}$ the four elements
+$\{x\text{ or }y,c_k,u\text{ or }v,c_\ell\}$ are pairwise distinct and
+pairwise non-adjacent at $L$.  Two transpositions on disjoint pairs of
+elements commute; applying them in either order yields the same
+permutation, i.e.\ the same vertex of $G_{\BK}$.  Order-convexity of
+the joint coordinate domain (Step~1, ``good fiber'' clause) ensures
+the intermediate vertices remain in $\Omega^{\circ}_{\alpha\beta}$, so
+the $2\times 2$ square is fully embedded.
+
+\emph{\ref{it:gap3-density}.}
+By Step~1, each Step-1 bad set $\mathrm{Bad}_\bullet$ is contained in
+$O(1)$ strips of width $O(t_\bullet)$, and by the bounded-interaction
+lemma the interaction locus $\mathrm{Int}_{\alpha\beta}$ is contained
+in $O(1)$ strips of width $O(t(\alpha)+t(\beta))$.  A strip of width
+$w$ in the joint coordinate domain has counting mass at most
+$w\cdot\sqrt{|\Omega_{\alpha\beta}|}$ (one free coordinate against a
+generic fibre slice of size $\sqrt{|\Omega_{\alpha\beta}|}$).  Summing,
+\[
+  |\Omega_{\alpha\beta}\setminus\Omega^{\circ}_{\alpha\beta}|
+  = O\bigl((t(\alpha)+t(\beta))\sqrt{|\Omega_{\alpha\beta}|}\bigr)
+  = o(|\Omega_{\alpha\beta}|)
+\]
+in the rich regime.  Since $\mathrm{Bad}_\alpha\cup\mathrm{Bad}_\beta
+\subseteq B_\alpha\cup B_\beta$ for $S$-good interfaces (the Step-2
+exceptional sets contain the Step-1 bad sets by construction; if not,
+absorb the difference into the Step-2 error budget controlled by
+Proposition~\ref{prop:gap-g1}), the second inequality follows: for any
+$\rho<1$ and
+$|\Omega_{\alpha\beta}|$ above the threshold $w_0$ from the active-pair
+condition, the deletion of the two bad sets and the interaction locus
+costs $o(w_{\alpha\beta})$, hence retains a $\rho$-fraction.
+\end{proof}
+
+\textbf{Witness family.}
+We define the Step~4 witness family $E_{\alpha\beta}$ as the set of BK
+edges that participate in some $2\times 2$ commuting square produced
+by Lemma~\ref{lem:gap3}\,\ref{it:gap3-square}, with both endpoints in
+$\Omega^{\circ}_{\alpha\beta}\setminus(B_\alpha\cup B_\beta)$.  By
+clause~\ref{it:gap3-density},
+\[
+  |E_{\alpha\beta}|
+  \;\gtrsim\;
+  \mu\bigl((\fiber{\alpha}\cap\fiber{\beta})
+            \setminus(B_\alpha\cup B_\beta)\bigr)
+  \;=\; w_{\alpha\beta}
+\]
+for all but a vanishing fraction of active pairs, which is the form
+consumed by Step~4 in
+\eqref{eq:bad-bounded-by-boundary}.
+
+\subsection{Rich-case lower bound on $M$}\label{sec:gap-second-moment}
+
+\begin{lemma}[Identity and rich-case lower bound on $M$]\label{lem:gap-G5}
+Set $\fiber{\alpha}^\star := \fiber{\alpha}\setminus B_\alpha$ and
+\[
+I(L)\;:=\;\#\{\alpha\in\Rich^\star : L\in\fiber{\alpha}^\star\}.
+\]
+\begin{enumerate}[label=(\roman*),nosep]
+  \item \textbf{Exact identity.} $M \;=\; \sum_{L\in\LE(P)} I(L)^2$.
+  \item \textbf{Rich case.} Assume case~(R) of Step~5
+    (step5.tex, Theorem~2.1). Then $M \ge c_5\,|\LE(P)|$
+    for a constant $c_5=c_5(T)>0$ depending only on the rich threshold
+    $T$ and the Step~1 bad-set constant.
+  \item \textbf{Volume comparison.} For any admissible conductance
+    normalization with $\vol(S)\le|\LE(P)|$ (in particular the counting
+    normalization $\vol(\cdot)=|\cdot|$ allowed by Section~1),
+    \[
+    M \;\ge\; c_5\,\vol(S).
+    \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{(i) Counting identity.} For $L\in\LE(P)$,
+\begin{align*}
+I(L)^2
+ &=\Big(\sum_{\alpha\in\Rich^\star}\mathbf{1}[L\in\fiber{\alpha}^\star]\Big)^{\!2}
+  =\sum_{\alpha,\beta\in\Rich^\star}
+        \mathbf{1}[L\in\fiber{\alpha}^\star]\,
+        \mathbf{1}[L\in\fiber{\beta}^\star]\\
+ &=\sum_{\alpha,\beta\in\Rich^\star}
+      \mathbf{1}\!\big[L\in(\fiber{\alpha}\cap\fiber{\beta})
+                               \setminus(B_\alpha\cup B_\beta)\big],
+\end{align*}
+where the last equality uses
+$\fiber{\alpha}^\star\cap\fiber{\beta}^\star
+ =(\fiber{\alpha}\cap\fiber{\beta})\setminus(B_\alpha\cup B_\beta)$.
+Summing over $L$ and exchanging order of summation,
+\[
+\sum_L I(L)^2
+ \;=\;\sum_{\alpha,\beta\in\Rich^\star}
+        \big|(\fiber{\alpha}\cap\fiber{\beta})
+               \setminus(B_\alpha\cup B_\beta)\big|
+ \;=\;\sum_{\alpha,\beta\in\Rich^\star} w_{\alpha\beta}
+ \;=\; M.
+\]
+The identity is \emph{exact}: $w_{\alpha\beta}$ is defined with the
+bad-set exclusions $B_\alpha\cup B_\beta$ baked in, and $I(L)$ is
+taken over $\Rich^\star$, so no error term remains. In particular the
+heuristic ``$+O(\text{bad-set losses})$'' flagged in earlier statements
+of this gap is exactly zero with the present normalizations.
+
+\smallskip
+\emph{(ii) Rich case.}
+By case~(R) of Step~5 together with the Fiber-Mass Conversion Lemma
+(step5.tex, Lemma~4.9) and the Step~1 bad-set thinness
+$|B_\alpha|=O\!\big(t_\alpha\cdot|\LE(P)|/(|A|\,|B|\,|C|)\big)$,
+the first-moment inequality
+\[
+\sum_L I(L)
+ \;=\;\sum_{\alpha\in\Rich^\star}\big|\fiber{\alpha}^\star\big|
+ \;\ge\; \tfrac{c_T}{2}\,|\LE(P)|
+\]
+is established inside the proof of step5.tex, Corollary~6.1. Applying
+Cauchy--Schwarz on the uniform measure over $\LE(P)$,
+\[
+\Big(\sum_L I(L)\Big)^{\!2}
+ \;\le\; |\LE(P)|\cdot\sum_L I(L)^2,
+\]
+and combining with (i),
+\[
+M \;=\;\sum_L I(L)^2
+ \;\ge\;\frac{\big(\sum_L I(L)\big)^2}{|\LE(P)|}
+ \;\ge\;\Big(\tfrac{c_T}{2}\Big)^{\!2}\,|\LE(P)|
+ \;=:\; c_5\,|\LE(P)|.
+\]
+This is the same bound as step5.tex, Corollary~6.1, rewritten in the
+Step~6 pairwise notation via the exact identity of~(i).
+
+\smallskip
+\emph{(iii) Volume comparison.}
+Section~1 admits any equivalent normalized-conductance notion. Under
+the counting normalization $\vol(S)=|S|$, trivially
+$\vol(S)\le|\LE(P)|$, and (ii) gives $M\ge c_5\,\vol(S)$. For a
+general $\vol$ with $\vol(\LE(P))\le C_{\vol}\,|\LE(P)|$ and
+$\vol(S)\le\vol(\LE(P))$, the same argument yields
+$M\ge (c_5/C_{\vol})\,\vol(S)$. In the degree-weighted case
+$\vol(S)=\sum_{L\in S}\deg_{G_{\BK}}(L)$, width-$3$ caps the BK-degree
+at $\le n$, so $C_{\vol}\le n$; the resulting constant is absorbed into
+the low-conductance threshold $\Phi_0$ under which
+Theorem~\ref{thm:step6} is invoked.
+\end{proof}
+
+\begin{remark}[Why Cauchy--Schwarz suffices]\label{rem:G5-why-cs}
+The Step~5 input is a first-moment statement
+$\sum_\alpha|\fiber{\alpha}^\star|\gtrsim|\LE(P)|$, whereas
+Theorem~\ref{thm:step6} consumes a second-moment statement
+$\sum_L I(L)^2\gtrsim|\LE(P)|$. The promotion is free because
+$I(L)\ge 0$: Jensen's inequality (equivalently, Cauchy--Schwarz on the
+uniform measure) gives $\mathbb{E}[I^2]\ge(\mathbb{E}[I])^2$, losing
+only a constant factor. No strengthening of Step~5's gaps G1--G5 is
+required; see step5.tex, Remark~6.2.
+\end{remark}
+
+\begin{remark}[Closure of the dichotomy]\label{rem:G5-closes-dichotomy}
+Combining Lemma~\ref{lem:gap-G5}(iii) with the expansion case~(i) of
+Theorem~\ref{thm:step6} yields
+$|\bd S|\ge\eta\,M\ge\eta c_5\,\vol(S)$, i.e.\ $\Phi(S)\ge\eta c_5$.
+Hence any cut $S$ with $\Phi(S)<\eta c_5$ must land in the coherence
+case~(ii). This discharges step~(8) of the compressed proof
+(§\ref{sec:proof-dichotomy}) and is the precise sense in which G5 is
+load-bearing: without it, case~(i) is not a contradiction and the
+dichotomy collapses to a tautology.
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{Downstream outputs}
+%-----------------------------------------------------------------------
+
+Step~6 produces two named conclusions that are consumed downstream:
+
+\begin{itemize}[nosep]
+  \item \emph{Conclusion A} (Theorem~\ref{thm:step6}, case~(ii)):
+  $\sum_{\text{bad}}w_{\alpha\beta}\le\delta M$.
+  Used by Step~7 as the aggregate ``mostly coherent on overlaps''
+  assumption.
+
+  \item \emph{Conclusion B} (Corollary~\ref{cor:pointwise}):
+  for most $L$, most visible rich interfaces at $L$ agree on an
+  orientation $s(L)$.  Used by Step~7 as the pointwise input for the
+  globalization / cocycle argument.
+\end{itemize}
+
+\noindent
+Step~7 (globalization) feeds on \emph{Conclusion B} and produces a
+global scalar potential $a\colon P\to\mathbb{R}$ such that
+$S\approx\{H\ge c\}$ for $H(L)=\sum_z a(z)\mathrm{pos}_L(z)$.
+

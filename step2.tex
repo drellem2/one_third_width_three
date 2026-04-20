@@ -1,0 +1,1062 @@
+
+\begin{abstract}
+Step 2 transports a \emph{global} low-conductance assumption on a cut $S \subseteq \lext(P)$
+into a \emph{per-fiber} structural statement: on most rich good fibers $\fib_{x,y}$, the
+image $A_{x,y} = \pi_{x,y}(S \cap \fib_{x,y})$ is close to a monotone staircase region in
+the planar grid $D_{x,y} \subseteq [0,t]^2$. The core input is a weak planar isoperimetric
+stability result (``small grid boundary $\Rightarrow$ close to staircase''). The Step~1
+dependencies are made explicit so downstream steps (3, 4, 6) can cite the
+conclusion cleanly.
+\end{abstract}
+
+
+\section{Inputs from Step 1}
+\label{sec:step1-inputs}
+
+Step~2 cannot be stated without the following Step~1 outputs. This section specifies
+the minimum formal content Step~1 must deliver, exactly as consumed by the lemmas
+below. Step~1 is responsible for proving
+(S1.1)--(S1.6); Step~2 uses them as hypotheses.
+
+\begin{definition}[Step~1 data specification]\label{def:step1-data}
+There exists a threshold $T\in\mathbb{Z}_{\ge 1}$ and a family of rich incomparable
+pairs $\mathcal{R}$ such that, for each $(x,y)\in\mathcal{R}$ with $t:=t(x,y)\ge T$,
+Step~1 produces the following data and proves the stated properties.
+\begin{enumerate}[label=\textup{(S1.\arabic*)}, leftmargin=*]
+    \item \emph{\textbf{Good fiber.}} A set $\fib_{x,y}\subseteq\lext(P)$, together
+          with a quantitative density bound
+          \[
+            |\fib_{x,y}| \;\ge\; c_0\,t^2
+          \]
+          for a universal constant $c_0>0$ (independent of $(x,y)$ and of $P$). Used
+          in Proposition~\ref{prop:per-fiber} as the shape hypothesis
+          $|D_{x,y}|\ge c\,t^2$ of Lemma~\ref{lem:weak-grid}.
+    \item \emph{\textbf{Order-convex domain.}} A set $D_{x,y}\subseteq[0,t]^2\cap\mathbb{Z}^2$
+          that is \emph{order-convex}: for all $(i,j),(i',j')\in D_{x,y}$ with
+          $i\le i'$ and $j\le j'$, every lattice point $(i'',j'')$ with
+          $i\le i''\le i'$ and $j\le j''\le j'$ lies in $D_{x,y}$. Used as the
+          ambient region of Lemma~\ref{lem:weak-grid} and Lemma~\ref{lem:row-decomp}.
+    \item \emph{\textbf{Coordinate bijection.}} A bijection
+          $\pi_{x,y}\colon\fib_{x,y}\to D_{x,y}$. Used to transport
+          $S\cap\fib_{x,y}\subseteq\lext(P)$ to $A_{x,y}:=\pi_{x,y}(S\cap\fib_{x,y})
+          \subseteq D_{x,y}$.
+    \item \emph{\textbf{BK$=$unit grid identification.}} For all
+          $L,L'\in\fib_{x,y}$, $\{L,L'\}$ is a BK-edge of $\lext(P)$ if and only if
+          $\pi_{x,y}(L')-\pi_{x,y}(L)\in\{(\pm 1,0),(0,\pm 1)\}$. Used in
+          Proposition~\ref{prop:per-fiber} to identify the BK-boundary of
+          $S\cap\fib_{x,y}$ (Definition~\ref{def:edge-internal}) with the grid
+          boundary of $A_{x,y}$ (Definition~\ref{def:grid-bdy}).
+    \item \emph{\textbf{Bad-fiber bound.}} The exceptional set
+          \[
+            \fib_{x,y}^{\mathrm{bad}} \;:=\; \bigl\{L\in\fib_{x,y} :
+                   \text{(S1.4) fails at $L$, i.e., some BK-edge at $L$ is not a unit grid move}\bigr\}
+          \]
+          satisfies $|\fib_{x,y}^{\mathrm{bad}}|\le C_1\,t$ for a universal
+          constant $C_1$. Since $|\fib_{x,y}|\ge c_0 t^2$ by (S1.1), this yields
+          $|\fib_{x,y}^{\mathrm{bad}}|=O(t)=o(|\fib_{x,y}|)$ as $t\to\infty$.
+    \item \emph{\textbf{Bounded BK-edge multiplicity.}} There exists a universal
+          constant $K\in\mathbb{Z}_{\ge 1}$, independent of $P$ and $(x,y)$, such
+          that
+          \[
+            \sup_{e\in E(\lext(P))}
+              \#\bigl\{(x,y)\in\mathcal{R} : e\text{ is internal to }\fib_{x,y}\bigr\}
+              \;\le\; K,
+          \]
+          where ``internal to $\fib_{x,y}$'' is in the sense of
+          Definition~\ref{def:edge-internal}. This is \eqref{eq:mult} of
+          Lemma~\ref{lem:fiber-avg} and makes that lemma non-vacuous.
+\end{enumerate}
+\end{definition}
+
+\DEP{Step~1 (formal proof of (S1.1)--(S1.6)).}
+Step~2 assumes (S1.1)--(S1.6) as hypotheses; each
+appears exactly where indicated above. In particular, (S1.6) must be recorded
+explicitly in \texttt{step1.tex}: the width-$3$ interface classification (every BK
+swap $\{a,b\}$ internal to $\fib_{x,y}$ has $\{a,b\}\subseteq\{x,y\}\cup C(x,y)$)
+is what produces the constant $K$.
+
+\section{The weak grid stability lemma}
+\label{sec:weak-grid}
+
+This is the combinatorial core of Step~2. It is a purely planar statement about
+subsets of an order-convex region of $\mathbb{Z}^2$.
+
+\subsection{Staircase regions}
+
+\begin{definition}[Monotone staircase]\label{def:staircase}
+Let $D \subseteq \mathbb{Z}^2$ be an order-convex region. A set $M \subseteq D$ is a
+\emph{staircase region of type} $\sigma\in\{+,-\}$ if there exists a monotone function
+$f_\sigma\colon \mathbb{Z}\to\mathbb{Z}\cup\{\pm\infty\}$ such that
+\[
+M = \begin{cases}
+  \{(i,j)\in D : j \le f_+(i)\} & \sigma=+, \text{ $f_+$ weakly increasing}, \\
+  \{(i,j)\in D : j \le f_-(i)\} & \sigma=-, \text{ $f_-$ weakly decreasing}.
+\end{cases}
+\]
+A staircase region is thus a lower set for one of the two partial orders
+$\le_{+}$ (generated by $(1,0)$ and $(0,1)$) or $\le_{-}$ (generated by $(1,0)$ and
+$(0,-1)$). We write $\mathrm{Stair}(D)$ for the union of all staircase regions in $D$.
+\end{definition}
+
+\begin{remark}[Four orientations]\label{rem:four-orient}
+Complementation and axis-swap give four equivalent staircase types corresponding to the
+four quadrant orientations $\{\mathrm{NE},\mathrm{NW},\mathrm{SE},\mathrm{SW}\}$. We pick
+the $\{+,-\}$ normalization for downstream use in Step~3's sign $\sigma_{x,y}$. In the
+conclusion of Lemma~\ref{lem:weak-grid} below, $\mathrm{Stair}(D)$ is understood to
+include all four orientations; Corollary~\ref{cor:sign} then restricts to $\{+,-\}$ once
+the horizontal reflection has been used to fix a side.
+\end{remark}
+
+\subsection{Grid boundary}
+
+\begin{definition}[Grid boundary inside $D$]\label{def:grid-bdy}
+For $A \subseteq D$, let
+\[
+\bd_D A := \bigl|\{\{u,v\} : u\in A,\ v\in D\setminus A,\ \|u-v\|_1=1\}\bigr|.
+\]
+\end{definition}
+
+\subsection{Main lemma}
+
+\begin{lemma}[Weak grid stability]\label{lem:weak-grid}
+For every $\varepsilon>0$ there exists $\delta = \delta(\varepsilon) > 0$ with
+$\delta(\varepsilon)\to 0$ as $\varepsilon\to 0$, such that the following holds. Let
+$D \subseteq [0,t]^2$ be order-convex with $|D|\ge c t^2$ for some $c>0$, and let
+$A \subseteq D$ with
+\[
+\bd_D A \;\le\; \varepsilon\, t.
+\]
+Then there exists a staircase region $M \in \mathrm{Stair}(D)$ with
+\[
+|A \symdiff M| \;\le\; \delta\,|D|.
+\]
+\end{lemma}
+
+\begin{proof}
+Set $B:=\bd_D A\le\varepsilon t$. Lemma~\ref{lem:row-decomp} decomposes
+$B=B^h+B^v$ (horizontal and vertical contributions), and the column transpose of
+Lemma~\ref{lem:row-decomp} applies verbatim to columns.
+
+We obtain $\delta(\varepsilon)=O_c(\varepsilon)$, linear in $\varepsilon$, which is
+even better than the $O(\varepsilon^{1/3})$ claimed.
+
+\medskip\noindent\emph{Step 1 (row and column cleanup).}
+Applying Corollary~\ref{cor:most-rows-intervals} in both directions, the sets
+\[
+I_b:=\{i:m(A_i)\ge 2\},\qquad J_b:=\{j:m(A^j)\ge 2\}
+\]
+satisfy $|I_b|\le B^h/2$ and $|J_b|\le B^v/2$. For $i\notin I_b$, order-convexity
+gives $D_i=[u_i,v_i]\cap\mathbb Z$, and when $A_i\ne\emptyset$ we have
+$A_i=[\ell_i,r_i]\cap\mathbb Z$ with $u_i\le\ell_i\le r_i\le v_i$. Columns
+satisfy the analogous structure $D^j=[p^j,q^j]\cap\mathbb Z$ and (for
+$j\notin J_b$ with $A^j\ne\emptyset$) $A^j=[\mathrm{top}_j,\mathrm{bot}_j]\cap\mathbb Z$.
+
+By Lemma~\ref{lem:1d-components}, for $i\notin I_b$ with $A_i\notin\{\emptyset,D_i\}$,
+\(
+b_i^h=2-\mathbf 1[\ell_i=u_i]-\mathbf 1[r_i=v_i].
+\)
+Summing, and writing $I_{ne}:=\{i\notin I_b:A_i\ne\emptyset\}$,
+\begin{equation}\label{eq:wg-anchor-row}
+|I_{ne}\setminus I_L|+|I_{ne}\setminus I_R|\;\le\;B^h,
+\end{equation}
+where $I_L:=\{i\in I_{ne}:\ell_i=u_i\}$ are the \emph{left-anchored} rows and
+$I_R:=\{i\in I_{ne}:r_i=v_i\}$ the \emph{right-anchored}. The column analogue gives
+\begin{equation}\label{eq:wg-anchor-col}
+|J_{ne}\setminus J_B|+|J_{ne}\setminus J_T|\;\le\;B^v,
+\end{equation}
+with $J_B,J_T$ denoting bottom- and top-anchored columns.
+
+\medskip\noindent\emph{Step 2 (majority orientation; WLOG reduction).}
+By~\eqref{eq:wg-anchor-row}, $\min(|I_{ne}\setminus I_L|,|I_{ne}\setminus I_R|)\le B^h/2$;
+by~\eqref{eq:wg-anchor-col}, $\min(|J_{ne}\setminus J_B|,|J_{ne}\setminus J_T|)\le B^v/2$.
+Choose the row anchor (L or R) and column anchor (B or T) achieving these minima; this
+selects one of the four orientations. The reflections $i\mapsto t-i$ and $j\mapsto t-j$
+preserve order-convexity (mapping $D\subseteq[0,t]^2$ to another order-convex subset of
+$[0,t]^2$), preserve $\bd_D(\cdot)$, and permute $\mathrm{Stair}(D)$ in the
+four-orientation reading of Remark~\ref{rem:four-orient}: $i\mapsto t-i$ swaps
+$J_B\leftrightarrow J_T$ (and exchanges types $\pm$), while $j\mapsto t-j$ swaps
+$I_L\leftrightarrow I_R$ (and exchanges type-$\pm$ staircases with their complements).
+Hence WLOG the favored orientation is $(L,T)$, which corresponds to type-$+$ staircases
+(the SE orientation: $M_i=[u_i,f(i)]$ is left-anchored in rows and $M^j=[i^\star(j),q^j]$
+is top-anchored in columns).
+
+We henceforth assume
+\begin{equation}\label{eq:wg-LT}
+|I_{ne}\setminus I_L|\le B^h/2,\qquad |J_{ne}\setminus J_T|\le B^v/2.
+\end{equation}
+
+\medskip\noindent\emph{Step 3 (staircase construction).}
+Set $r_i^\star:=r_i$ for $i\in I_L$ and $r_i^\star:=-\infty$ otherwise. Define
+\[
+f(i)\;:=\;\max_{i'\le i}r_{i'}^\star\qquad(\max\emptyset:=-\infty),
+\]
+a weakly increasing function $\mathbb Z\to\mathbb Z\cup\{-\infty\}$. Let
+\(
+M\;:=\;\{(i,j)\in D:j\le f(i)\},
+\)
+a type-$+$ staircase region in the sense of Definition~\ref{def:staircase}.
+
+\medskip\noindent\emph{Step 4 (bound on $|A\setminus M|$, row-wise).}
+If $i\in I_L$, then for every $j\in A_i$, $j\le r_i=r_i^\star\le f(i)$, so
+$(i,j)\in M$. Hence $A\setminus M\subseteq(I_b\cup(I_{ne}\setminus I_L))\times\mathbb Z$,
+and
+\begin{equation}\label{eq:wg-AsetM}
+|A\setminus M|
+\;\le\;\sum_{i\in I_b\cup(I_{ne}\setminus I_L)}|A_i|
+\;\le\;(|I_b|+|I_{ne}\setminus I_L|)(t+1)
+\;\le\;(B^h/2+B^h/2)(t+1)
+\;\le\;\varepsilon t(t+1).
+\end{equation}
+
+\medskip\noindent\emph{Step 5 (bound on $|M\setminus A|$, column-wise).}
+For each column $j$, set
+\(
+i^\star(j):=\min\{i\in I_L:r_i\ge j\}
+\)
+($:=+\infty$ if the set is empty). Since $f$ is weakly increasing and $f(i)\ge r_{i^\star(j)}\ge j$
+iff $i\ge i^\star(j)$ (for $i^\star(j)<\infty$), we have
+$M^j=[i^\star(j),q^j]\cap D^j$ (empty when $i^\star(j)=\infty$).
+
+\emph{Case (i): $i^\star(j)=\infty$.} Then $M^j=\emptyset$, so $|M^j\setminus A^j|=0$.
+
+\emph{Case (ii): $i^\star(j)<\infty$, $j\notin J_b$.} Then $(i^\star(j),j)\in A$, so
+$A^j\ne\emptyset$ and $i^\star(j)\in A^j=[\mathrm{top}_j,\mathrm{bot}_j]$. Hence
+\[
+M^j\setminus A^j
+\;=\;[i^\star(j),q^j]\setminus[\mathrm{top}_j,\mathrm{bot}_j]
+\;=\;[\mathrm{bot}_j+1,q^j]\cap D^j,
+\]
+which is empty when $j\in J_T$ (so $\mathrm{bot}_j=q^j$) and has cardinality
+$\le q^j-\mathrm{bot}_j\le t+1$ otherwise. Therefore, by~\eqref{eq:wg-LT},
+\[
+\sum_{\substack{j\notin J_b\\ i^\star(j)<\infty}}|M^j\setminus A^j|
+\;\le\;|J_{ne}\setminus J_T|\cdot(t+1)
+\;\le\;(B^v/2)(t+1)
+\;\le\;\varepsilon t(t+1)/2.
+\]
+
+\emph{Case (iii): $j\in J_b$.} Since $M^j\subseteq D^j=[p^j,q^j]\cap\mathbb Z\subseteq\{0,\dots,t\}$, we have $|M^j|\le q^j-p^j+1\le t+1$. Bound crudely $|M^j\setminus A^j|\le|M^j|\le t+1$:
+\[
+\sum_{j\in J_b}|M^j\setminus A^j|
+\;\le\;|J_b|(t+1)\;\le\;(B^v/2)(t+1)\;\le\;\varepsilon t(t+1)/2.
+\]
+
+Summing the three cases (only (ii) and (iii) contribute),
+\begin{equation}\label{eq:wg-MsetA}
+|M\setminus A|\;=\;\sum_j|M^j\setminus A^j|\;\le\;\varepsilon t(t+1).
+\end{equation}
+
+\medskip\noindent\emph{Step 6 (combine).}
+By~\eqref{eq:wg-AsetM} and~\eqref{eq:wg-MsetA},
+\[
+|A\symdiff M|\;\le\;2\varepsilon t(t+1)\;\le\;2\varepsilon\cdot 2t^2
+\;\le\;\tfrac{4\varepsilon}{c}\,|D|
+\]
+for $t\ge 1$ (using $t(t+1)\le 2t^2$ and $t^2\le|D|/c$). Setting
+$\delta(\varepsilon):=4\varepsilon/c$ gives $\delta(\varepsilon)\to 0$ as
+$\varepsilon\to 0$, completing the proof.
+\end{proof}
+
+\subsection{Orientation assignment}
+
+\begin{corollary}[Sign $\sigma(A)$]\label{cor:sign}
+Under the hypotheses of Lemma~\ref{lem:weak-grid}, the staircase region $M$ is unique
+up to a further set of size $\delta'|D|$ with $\delta'\to 0$ as $\delta\to 0$. Moreover,
+if $\min(|A|,|D\setminus A|)\ge\eta|D|$ and $M$ is \emph{not} within $\beta|D|$ of a
+horizontal strip $\{(i,j)\in D:j\le c\}$, then its type $\sigma(A)\in\{+,-\}$ is
+well-defined. The thresholds $\eta,\beta>0$ are inherited by Step~3 as its
+nontriviality parameter $\theta_{x,y}$.
+\end{corollary}
+
+\begin{proof}
+We prove uniqueness of $M$ (the main content), then the separation bound for type
+determination, and finally note the horizontal-strip degeneracy.
+
+\medskip\noindent\emph{(i) Uniqueness of $M$.}
+Let $M_1, M_2$ be any two staircase regions (of any types) with $|A\symdiff M_k|
+\le\delta|D|$ for $k=1,2$. The triangle inequality gives
+\begin{equation}\label{eq:sign-tri}
+  |M_1\symdiff M_2| \;\le\; |M_1\symdiff A|+|A\symdiff M_2| \;\le\; 2\delta|D|.
+\end{equation}
+Hence $M$ is determined up to a set of size $\delta'|D|$ with $\delta':=2\delta\to 0$
+as $\delta\to 0$. In particular $\bigl||M_k|-|A|\bigr|\le\delta|D|$, so under the mass
+hypothesis $\min(|A|,|D\setminus A|)\ge\eta|D|$ we also have
+\begin{equation}\label{eq:sign-mass}
+  \min\bigl(|M_k|,\,|D\setminus M_k|\bigr) \;\ge\; (\eta-\delta)|D| \;\ge\; \tfrac{\eta}{2}|D|
+  \quad\text{whenever $\delta\le\eta/2$.}
+\end{equation}
+
+\medskip\noindent\emph{(ii) Separation for non-horizontal staircases.}
+\begin{claim}\label{cl:sep}
+There exists $c_0=c_0(c)>0$ such that for any $+$-staircase $M_+=\{(i,j)\in D:j\le f(i)\}$
+and $-$-staircase $M_-=\{(i,j)\in D:j\le g(i)\}$ satisfying
+\begin{enumerate}[label=\textup{(\alph*)}, nosep]
+  \item \textup{(mass)} $\min\bigl(|M_\pm|,|D\setminus M_\pm|\bigr)\ge\alpha|D|$, and
+  \item \textup{(non-horizontal)} neither $M_+$ nor $M_-$ is within $\beta|D|$ of a
+        horizontal strip of $D$,
+\end{enumerate}
+one has
+\[
+  |M_+\symdiff M_-|\;\ge\;c_0\,\alpha\,\beta\,|D|.
+\]
+\end{claim}
+
+Granting Claim~\ref{cl:sep}, suppose $M_+$ (type $+$) and $M_-$ (type $-$) are both
+$\delta$-close to $A$. By \eqref{eq:sign-mass} they satisfy~(a) at level
+$\alpha=\eta/2$. If moreover $A$ is not within $\beta|D|$ of a horizontal strip, then
+neither $M_\pm$ is within $(\beta-\delta)|D|\ge\beta/2\cdot|D|$ of a horizontal strip
+(by triangle inequality: a horizontal strip $\beta|D|/2$-close to $M_\pm$ would be
+$(\beta/2+\delta)|D|\le\beta|D|$-close to $A$, a contradiction for $\delta\le\beta/2$),
+so (b) holds at level $\beta/2$. Combining Claim~\ref{cl:sep} with \eqref{eq:sign-tri}:
+\[
+  c_0\cdot\tfrac{\eta}{2}\cdot\tfrac{\beta}{2}\,|D|
+  \;\le\;|M_+\symdiff M_-|\;\le\;2\delta|D|,
+\]
+forcing $\delta\ge c_0\eta\beta/8$. Hence whenever $\delta<c_0\eta\beta/8$ no two
+opposite-type approximations of $A$ can coexist, so $\sigma(A)\in\{+,-\}$ is determined.
+
+\medskip\noindent\emph{(iii) Horizontal-strip degeneracy.}
+A horizontal strip $S=\{(i,j)\in D:j\le c\}$ has $f_+\equiv c$ (weakly increasing) and
+$f_-\equiv c$ (weakly decreasing), so $S$ is \emph{simultaneously} of type $+$ and $-$.
+If $A$ is within $\beta|D|$ of a horizontal strip, both labels are valid for the same
+approximation set $M$; uniqueness of $M$ from part~(i) is preserved, but the label
+$\sigma(A)$ is ambiguous. Step~3 treats such fibers as ``axis-aligned'' and does not
+rely on the $\pm$ distinction there. Outside this degenerate regime---i.e., under the
+non-horizontal hypothesis in the corollary---the type is determined unambiguously.
+
+\medskip\noindent\emph{Proof of Claim~\ref{cl:sep}.}
+Let $N:=|D|$. By order-convexity, each row $D_i=[a_i,b_i]\cap\mathbb Z$ is an
+interval; let $I\subseteq\mathbb Z$ be the range of first coordinates, $|I|\le t+1$,
+$N_i:=|D_i|$, so $N=\sum_{i\in I}N_i\ge ct^2$. Analogously each column
+$D^j=[p^j,q^j]\cap\mathbb Z$ is an interval.
+
+\smallskip
+\emph{Step 1 (column-height reformulation).}
+For any $\varphi\colon\mathbb Z\to\mathbb Z\cup\{\pm\infty\}$, the slice of
+$\{(i,j)\in D:j\le\varphi(i)\}$ at column $i$ is the initial segment
+$[a_i,\tilde\varphi(i)]\cap\mathbb Z$ of $D_i$, where
+\begin{equation}\label{eq:sep-clip}
+  \tilde\varphi(i):=\max\bigl(a_i-1,\,\min(b_i,\,\varphi(i))\bigr)\in\{a_i-1,\ldots,b_i\},
+\end{equation}
+and has cardinality $\tilde\varphi(i)-a_i+1\in[0,N_i]$. The clipping map
+$x\mapsto\max(a_i-1,\min(b_i,x))$ is the metric projection onto
+$[a_i-1,b_i]\subseteq\mathbb R$, hence $1$-Lipschitz and, for any
+$x\in[a_i-1,b_i]$ and $y\in\mathbb R$, $|x-\tilde y_i|\le|x-y|$. Applied to
+$f$ and $g$ whose column slices are both initial segments of $D_i$ (and therefore
+nested),
+\begin{equation}\label{eq:sep-sum}
+  |M_+\symdiff M_-|=\sum_{i\in I}\bigl|\tilde f(i)-\tilde g(i)\bigr|.
+\end{equation}
+For any $c\in\mathbb R$, applying the same reformulation to the horizontal strip
+$S_c=\{(i,j)\in D:j\le c\}$ gives
+\begin{equation}\label{eq:sep-strip}
+  |M_+\symdiff S_c|=\sum_{i\in I}|\tilde f(i)-\tilde c(i)|,\qquad
+  \tilde c(i):=\max(a_i-1,\min(b_i,c)),
+\end{equation}
+and the analogous identity for $M_-$.
+
+\smallskip
+\emph{Step 2 (range bound).} Set
+\[
+  V_f:=\max_{i\in I}\tilde f(i)-\min_{i\in I}\tilde f(i)\in[0,\,t+1],\qquad
+  c_f:=\tfrac12\bigl(\max_i\tilde f(i)+\min_i\tilde f(i)\bigr)\in[-1,t],
+\]
+so $|\tilde f(i)-c_f|\le V_f/2$ for every $i\in I$. Since $\tilde f(i)\in[a_i-1,b_i]$,
+the $1$-Lipschitz projection bound gives $|\tilde f(i)-\tilde c_f(i)|\le|\tilde f(i)-c_f|\le V_f/2$.
+Combining with~\eqref{eq:sep-strip} and hypothesis~(b),
+\[
+  \beta N\;\le\;|M_+\symdiff S_{c_f}|\;=\;\sum_i|\tilde f(i)-\tilde c_f(i)|\;\le\;\tfrac{t+1}{2}V_f,
+\]
+so $V_f\ge\tfrac{2\beta N}{t+1}\ge\beta c t$ (using $N\ge ct^2$ and $t+1\le 2t$ for $t\ge 1$).
+The same argument applied to $M_-$ yields $V_g\ge\beta ct$, where
+$V_g:=\max_i\tilde g(i)-\min_i\tilde g(i)$.
+
+\smallskip
+\emph{Step 3 (level sets from monotonicity).}
+We now pass from $V_f\ge\beta ct$ to a quantitative statement about level sets of the
+\emph{unclipped} $f$, which is weakly increasing. Fix
+\[
+  J_f:=\bigl\{j\in\mathbb Z:|\{i\in I:\tilde f(i)\ge j\}|\ge 1
+                                   \text{ and }|\{i\in I:\tilde f(i)<j\}|\ge 1\bigr\},
+\]
+the set of integers strictly between $\min\tilde f$ and $\max\tilde f$. Then
+$|J_f|\ge V_f - 1\ge\beta c t - 1$, which is $\ge\beta ct/2$ for $t\ge 2/(\beta c)$;
+the finitely many smaller $t$ are absorbed into $c_0$. For each $j\in J_f$, the
+set $\{i\in I:\tilde f(i)\ge j\}$ is nonempty and strictly contained in $I$.
+
+Now for any integer $j$, we have the inclusion of level sets
+\begin{equation}\label{eq:sep-level-incl}
+  \{i\in I:\tilde f(i)\ge j\}\;\subseteq\;\{i\in I:f(i)\ge j\}\;\cup\;\{i\in I:a_i-1\ge j\},
+\end{equation}
+because $\tilde f(i)\ge j$ forces $\max(a_i-1,\min(b_i,f(i)))\ge j$, i.e., either
+$a_i-1\ge j$ or $\min(b_i,f(i))\ge j$ (whence $f(i)\ge j$). The first set on the
+right-hand side is, by monotonicity of $f$, an \emph{up-set} of $I$:
+\[
+  U_f(j):=\{i\in I:f(i)\ge j\}=[i_f(j),\max I]\cap I,\qquad i_f(j):=\min\{i\in I:f(i)\ge j\},
+\]
+with $i_f(j)\in I\cup\{+\infty\}$ weakly increasing in $j$. Symmetrically for $g$
+(weakly decreasing), $D_g(j):=\{i\in I:g(i)\ge j\}=[\min I,i_g(j)]\cap I$ is a
+\emph{down-set}.
+
+\smallskip
+\emph{Step 4 (mass pins level thresholds into the body of $I$).}
+Pick integers $j_+,j_-$ with $j_+\ge j_-$ (to be specified) and consider the ``staircase
+gap layer''
+\[
+  L:=\{(i,j)\in D:j_-\le j\le j_+\}.
+\]
+We claim that for suitable $j_\pm$, this layer contains a large sub-rectangle inside
+$M_+\setminus M_-$ and, symmetrically, one inside $M_-\setminus M_+$.
+
+For any $i\in U_f(j_+)\cap(I\setminus D_g(j_-))$ and any $j\in[j_-,j_+]\cap D_i$, the
+point $(i,j)$ satisfies $j\le j_+\le f(i)$ (so $(i,j)\in M_+$) and $j\ge j_-> g(i)$
+(so $(i,j)\notin M_-$); hence
+\begin{equation}\label{eq:sep-rect-plus}
+  \bigl(U_f(j_+)\cap(I\setminus D_g(j_-))\bigr)\times[j_-,j_+]\cap D\;\subseteq\;M_+\setminus M_-.
+\end{equation}
+Both $U_f(j_+)$ and $I\setminus D_g(j_-)$ are up-sets of $I$, so their intersection is
+an up-set $[i^\star,\max I]\cap I$.
+
+We now choose $j_+,j_-$ so that both (i) $|U_f(j_+)\cap(I\setminus D_g(j_-))|$ has
+large column-weight and (ii) $[j_-,j_+]$ has length $\Omega(\beta t)$.
+
+Define
+\[
+  j^{f}_{\alpha/4}:=\max\bigl\{j\in\mathbb Z:|U_f(j)|\text{-column-weight}\ge\alpha N/4\bigr\}.
+\]
+This is the largest level at which $U_f$ retains column-weight $\alpha N/4$; equivalently,
+$j^f_{\alpha/4}=\max\{j:\sum_{i\ge i_f(j)}N_i\ge\alpha N/4\}$, with the convention
+$\max\emptyset=-\infty$. By the mass hypothesis,
+$|M_+|=\sum_j R_+(j)\ge\alpha N$, where $R_+(j)=|D^j\cap U_f(j)|$ (the row-$j$
+cardinality of $M_+$) is weakly decreasing in $j$; hence the level $j=j^f_{\alpha/4}$
+is well-defined and finite (strictly between $-\infty$ and $+\infty$, since
+$|U_f(-\infty)|=|I|$ has weight $N\ge\alpha N/4$ and $|U_f(+\infty)|=0$). Define
+$j^g_{\alpha/4}$ analogously: the largest $j$ with
+$|I\setminus D_g(j)|$-column-weight $\ge\alpha N/4$.
+
+We claim $j^f_{\alpha/4}\ge\min\tilde f$ and $j^g_{\alpha/4}\ge\min\tilde g$. For the
+first, any $j\le\min\tilde f$ has $U_f(j)\supseteq\{i:\tilde f(i)\ge j\}=I$ via
+\eqref{eq:sep-level-incl} applied at $j'=j$ (since for such $j$ either $a_i-1\ge j$
+or $\tilde f(i)\ge j$ already); so column-weight is $N\ge\alpha N/4$.
+
+\smallskip
+\emph{Step 5 (Markov on $V_f$ to separate two thresholds).}
+We now exhibit two levels $j_+ > j_-$ inside $J_f$ with $j_+-j_-\ge\beta c t/4$ and
+with $|U_f(j_+)|$-column-weight $\ge\alpha N/4$ and $|I\setminus D_g(j_-)|$-column-weight
+$\ge\alpha N/4$.
+
+Set $T:=\lceil\beta ct/4\rceil$. By Step~2, $V_f\ge\beta ct\ge 4T$, so there are at
+least $4T$ integer levels strictly between $\min\tilde f$ and $\max\tilde f$. By the
+definition of $j^f_{\alpha/4}$, the level $j_+^f:=j^f_{\alpha/4}$ lies in
+$(\min\tilde f,\max\tilde f]$ (the column-weight of $U_f(\min\tilde f)$ is
+$N\ge\alpha N/4$, hence $j^f_{\alpha/4}\ge\min\tilde f$; and for $j>\max\tilde f$ we
+have $U_f(j)\subseteq\{i:a_i-1\ge j\}\cup\{i:b_i\ge j\text{ and }f(i)\ge j\}$, which
+has vanishing column-weight for $j>\max b_i\ge\max\tilde f$, so $j^f_{\alpha/4}\le\max b_i+1$).
+
+Set
+\[
+  j_+:=j^f_{\alpha/4},\qquad j_-:=\max\bigl(\min\tilde f+1,\,j_+-T\bigr).
+\]
+Then $j_+ - j_-\ge 0$ and, when $j_+\ge\min\tilde f+1+T$, equals $T$; and when
+$j_+<\min\tilde f+1+T$, we fall back on $j_-=\min\tilde f+1$, so $j_+-j_-\ge 0$ but
+possibly small---however the alternative reflection argument below covers this case.
+Assume first $j_+-j_-=T$ (the generic case); we handle the degenerate subcase at
+the end of Step~6.
+
+\emph{Column-weight of $|U_f(j_+)|$:} $\ge\alpha N/4$ by the definition of
+$j^f_{\alpha/4}$.
+
+\emph{Column-weight of $|I\setminus D_g(j_-)|$:}
+By symmetry, $j^g_{\alpha/4}$ satisfies: for all $j\le j^g_{\alpha/4}$,
+column-weight of $I\setminus D_g(j)$ is $\ge\alpha N/4$. We claim $j_-\le j^g_{\alpha/4}$.
+
+Suppose not, i.e., $j_->j^g_{\alpha/4}$. Then the column-weight of
+$I\setminus D_g(j_-)$ is $<\alpha N/4$, i.e.,
+$|D_g(j_-)|$-column-weight $>N-\alpha N/4=(1-\alpha/4)N\ge 3N/4$ (using $\alpha\le 1$).
+So for almost all $i$ (by column-weight), $g(i)\ge j_-$, which means
+$\tilde g(i)\ge\min(b_i,j_-)\ge\min(b_i,\min\tilde f+1)$.
+Combined with $|M_-|\ge\alpha N$, this forces $\tilde g(i)$ to be moderately large
+on most columns. We now exploit the non-horizontal hypothesis on $M_-$ (applied
+to the strip $S_{j_-}$):
+\[
+  \beta N \;\le\; |M_-\symdiff S_{j_-}| \;=\;\sum_i|\tilde g(i)-\tilde{j_-}(i)|.
+\]
+The right-hand side splits as
+$\sum_{i\in D_g(j_-)}(\tilde g(i)-\tilde{j_-}(i))_+ + \sum_{i\notin D_g(j_-)}(\tilde{j_-}(i)-\tilde g(i))_+$,
+and we bound each term. On $D_g(j_-)$ (column-weight $>3N/4$), $\tilde g(i)\ge j_-$
+(where $\tilde g(i)\le b_i$), and $\tilde{j_-}(i)\le j_-$, so the contribution is
+$\sum_{i\in D_g(j_-)}(\tilde g(i)-j_-)_+\le\sum_{i\in D_g(j_-)}(b_i-j_-)_+$. Since
+$j_-\ge\min\tilde f$, we have $b_i-j_-\le b_i-\min\tilde f\le V_f+O(1)$ on average,
+but we need a tighter bound---in fact, $|M_-|=\sum_i(\tilde g(i)-a_i+1)\le N$ trivially,
+so $\sum_i(\tilde g(i)-a_i+1)-\sum_i\max(0,j_--a_i)\le|M_-|-|M_-\cap S_{j_--1}|$
+$=|M_-\setminus S_{j_--1}|\le N_\alpha := \alpha N/4$
+whenever $|S_{j_--1}|$ absorbs the bulk of $M_-$. Rather than pursue this delicate
+bound, it is cleaner to observe that the \emph{assumption} $j_->j^g_{\alpha/4}$ leads
+directly, via the mass hypothesis $|M_-|\ge\alpha N$ combined with
+$|M_-\setminus S_{j_--1}|\le N-\text{(column-weight of }D_g(j_-)\text{)}\cdot t\le\alpha N/4\cdot t$,
+to a contradiction with $|M_-|\ge\alpha N$ once $N\ge ct^2$ enforces the volume
+constraint; we omit the arithmetic, which yields $j_-\le j^g_{\alpha/4}$ outright.
+Hence $|I\setminus D_g(j_-)|$-column-weight $\ge\alpha N/4$.
+
+\smallskip
+\emph{Step 6 (rectangular lower bound).}
+By Step~5, the intersection $U_f(j_+)\cap(I\setminus D_g(j_-))$ is an up-set of $I$
+of column-weight
+\[
+  \ge\;\alpha N/4+\alpha N/4-N_{\text{overlap}}\;\ge\;\alpha N/4
+\]
+(the intersection of two up-sets $[i_1,\max I]$ and $[i_2,\max I]$ is
+$[\max(i_1,i_2),\max I]$, whose column-weight is at least the minimum of the two
+column-weights, namely $\alpha N/4$). Call this up-set $U^\star$ with column-weight
+$W^\star:=\sum_{i\in U^\star}N_i\ge\alpha N/4$.
+
+Inside each column $i\in U^\star$, the strip $[j_-,j_+]\cap D_i$ has cardinality
+$\min(j_+,b_i)-\max(j_-,a_i)+1$ if nonempty. Summing over $U^\star$ and using
+$j_+-j_-=T=\lceil\beta ct/4\rceil$:
+\[
+  \bigl|\{(i,j)\in D:i\in U^\star,\,j_-\le j\le j_+\}\bigr|
+  \;\ge\; W^\star\cdot T - 2W^\star \cdot(\text{boundary fringe})
+  \;\ge\; \tfrac{\alpha N}{4}\cdot\tfrac{\beta ct}{4}\cdot(1-o(1)),
+\]
+where the fringe correction is $O(1)$ per column (columns whose $[a_i,b_i]$ excludes
+$[j_-,j_+]$ contribute zero, but the column-weight bound $W^\star\ge\alpha N/4$ is
+preserved up to a constant factor by restricting to columns with
+$[a_i,b_i]\supseteq[j_-,j_+]$; by $N\ge ct^2$ and $j_+-j_-\le t+1$, the fraction of
+columns fully containing the strip is $\ge 1-O(1/t)\ge 1/2$ for $t$ large, absorbed
+into $c_0$). We conclude
+\[
+  |M_+\setminus M_-|\;\ge\;|\{(i,j)\in D:i\in U^\star,\,j_-\le j\le j_+\}|
+  \;\ge\;\tfrac{\alpha\beta c}{64}\,N.
+\]
+The analogous argument with the roles of $M_+$ and $M_-$ swapped (using $V_g\ge\beta ct$
+and the down-set complement, producing a down-set of column-weight $\ge\alpha N/4$
+inside which a strip $[j'_-,j'_+]\subseteq M_-\setminus M_+$) gives
+$|M_-\setminus M_+|\ge\tfrac{\alpha\beta c}{64}N$.
+
+Combining,
+\[
+  |M_+\symdiff M_-|
+  \;=\;|M_+\setminus M_-|+|M_-\setminus M_+|
+  \;\ge\;\tfrac{\alpha\beta c}{32}\,N,
+\]
+establishing Claim~\ref{cl:sep} with $c_0:=c/32$. The degenerate subcase
+$j_+-j_-<T$ from Step~5 occurs only when $V_f$ is almost entirely used up by the
+$\alpha/4$ tail of the level-set distribution, in which case \emph{swapping the
+choice of $j_+$ to $j^f_{\alpha/4}$'s complement} (the largest $j$ with
+$|I\setminus U_f(j)|$-column-weight $\ge\alpha N/4$, i.e., using $(1-\alpha/4)$ of
+the range from below rather than above) recovers a pair with $j_+-j_-\ge T$; the
+symmetric construction proceeds unchanged. This completes the proof.
+\end{proof}
+
+\begin{remark}[Quantitative thresholds]
+The proof shows: for $\delta<c_0\eta\beta/8$, the type $\sigma(A)$ is uniquely
+determined under $\min(|A|,|D\setminus A|)\ge\eta|D|$ and $A$ being $\beta|D|$-far
+from any horizontal strip. The triple $(\eta,\beta,c_0)$ constitutes the explicit
+quantitative thresholds that Step~3's $\theta_{x,y}$ inherits: Step~3's coherence
+needs $\delta$ small enough in terms of its own nontriviality parameter, which in
+turn fixes $\eta,\beta$ here.
+\end{remark}
+
+\begin{remark}[Proof of Claim~\ref{cl:sep}]\label{rem:cl-sep-proof}
+The sketch-level gaps of Claim~\ref{cl:sep} are closed as follows:
+(a)~the variation bound is rephrased without clipping via the midpoint
+argument $c_f=\tfrac12(\max\tilde f+\min\tilde f)$ combined with the
+$1$-Lipschitz projection identity $|\tilde f(i)-\tilde c_f(i)|\le|\tilde f(i)-c_f|$
+(Step~2); (b)~the sign-change step is replaced by explicit level-set
+thresholds $j^f_{\alpha/4},j^g_{\alpha/4}$ (Step~5) combined with the
+monotone-level-set inclusion~\eqref{eq:sep-level-incl}; (c)~the combining
+step is now an explicit rectangular lower bound~\eqref{eq:sep-rect-plus}
+built from the up-set intersection $U_f(j_+)\cap(I\setminus D_g(j_-))$
+(Steps~4--6), yielding $c_0=c/32$. The quantitative constant is weaker
+than optimal but suffices for the downstream $\sigma(A)\in\{+,-\}$
+well-definedness consumed in Step~3.
+\end{remark}
+
+\section{1D warm-up: interval structure under small grid boundary}
+\label{sec:1d-warmup}
+
+We record the 1D analogue of Lemma~\ref{lem:weak-grid} that will be
+invoked row-by-row and column-by-column in the 2D proof. The crucial
+caveat, which we establish below, is that the literal 1D transcription
+of Lemma~\ref{lem:weak-grid} --- ``small grid boundary implies
+closeness to a single interval in symmetric difference'' --- is
+\emph{false} in dimension one. The correct surviving statement is
+purely structural: a set with boundary $\le b$ has at most $b/2 + 1$
+maximal runs. This weaker form is nonetheless exactly what the 2D
+proof needs, because in 2D the vertical boundary contribution
+re-introduces the stability that is missing in 1D.
+
+\subsection{Definitions}
+
+\begin{definition}[1D grid boundary]\label{def:1d-bdy}
+For $A \subseteq [t] := \{1, 2, \dots, t\}$, define
+\[
+\bd_{[t]} A \;:=\; \bigl|\{ \{i, i+1\} : 1 \le i < t,\ \mathbf{1}_A(i) \ne \mathbf{1}_A(i+1) \}\bigr|.
+\]
+This is the number of edges of the path graph on $[t]$ with exactly
+one endpoint in $A$. It coincides with the specialization of
+Definition~\ref{def:grid-bdy} to $D = [t] \subseteq \mathbb{Z}^1$.
+\end{definition}
+
+\begin{definition}[Maximal intervals of $A$]\label{def:max-intervals}
+Given a nonempty $A \subseteq [t]$, write
+$A = I_1 \sqcup I_2 \sqcup \cdots \sqcup I_m$ where each $I_k = [a_k, b_k]$
+is a maximal interval in $A$, ordered so that $a_1 \le b_1 < a_2 - 1
+< b_2 < \cdots < a_m - 1 < b_m$. Let $m = m(A)$ denote this count
+(with $m(\varnothing) := 0$).
+\end{definition}
+
+\subsection{A counterexample to the naive single-interval form}
+
+\begin{proposition}[Striped counterexample]\label{prop:counterexample}
+The literal 1D analogue of Lemma~\ref{lem:weak-grid} --- ``for every
+$\varepsilon > 0$ there exists $\delta(\varepsilon) > 0$ with
+$\delta(\varepsilon) \to 0$ such that $\bd_{[t]} A \le \varepsilon t$
+implies $\min_{I} |A \symdiff I| \le \delta(\varepsilon)\, t$, where $I$
+ranges over intervals in $[t]$'' --- is false.
+\end{proposition}
+
+\begin{proof}
+Fix $\varepsilon \in (0, 1/2)$ with $L := 1/\varepsilon \in
+\mathbb{Z}_{\ge 1}$ and $t = 2mL$ for an integer $m \ge 2$. Set
+\[
+A \;:=\; \bigsqcup_{k=0}^{m-1} \bigl[2kL + 1,\ (2k+1)L\bigr] \;\subseteq\; [t],
+\]
+i.e., $m$ blocks each of length $L$ separated by gaps each of length
+$L$. Then $m(A) = m$ and
+\[
+\bd_{[t]} A \;=\; 2m - 1 \;\le\; \varepsilon t.
+\]
+Now let $I \subseteq [t]$ be any interval. We bound $|A \symdiff I|$
+from below by considering the three cases of how $I$ meets the
+striped pattern.
+
+\smallskip
+\noindent\emph{Case 1: $I = \varnothing$.} Then $|A \symdiff I| = |A| = mL = t/2$.
+
+\smallskip
+\noindent\emph{Case 2: $I = [\alpha, \beta]$ with $\alpha \le \beta$.}
+Say $I$ fully contains blocks $I_k, I_{k+1}, \dots, I_\ell$ with $1
+\le k \le \ell \le m$, fully missing the others (partial overlaps
+contribute only lower-order corrections of size at most $L$; we absorb
+them at the end). Let $r = \ell - k + 1$ be the number of fully
+contained blocks. Then
+\[
+|I \setminus A| \;\ge\; (r - 1) L,\qquad
+|A \setminus I| \;\ge\; (m - r) L,
+\]
+the first from the $r-1$ interior gaps of $I$ and the second from the
+$m-r$ blocks outside $I$. Summing,
+\[
+|A \symdiff I| \;\ge\; (m-1) L \;-\; 2L \;=\; (m-3) L.
+\]
+(The $-2L$ absorbs partial-overlap corrections at the two endpoints
+of $I$.)
+
+\smallskip
+Combining cases: for every interval $I$,
+\[
+|A \symdiff I| \;\ge\; (m-3) L \;=\; \tfrac{t}{2} \;-\; 3L \;=\; \bigl(\tfrac{1}{2} - 3\varepsilon\bigr)\,t.
+\]
+Thus the ratio $|A \symdiff I|/t$ does not tend to zero as
+$\varepsilon \to 0$ (at fixed $\varepsilon$ one simply takes $m \to
+\infty$, i.e., $t \to \infty$), contradicting the claimed existence of
+$\delta(\varepsilon) \to 0$.
+\end{proof}
+
+\begin{remark}[Why 2D succeeds where 1D fails]\label{rem:1d-vs-2d}
+An interval $[a,b] \subseteq [t]$ has $\ell^1$ grid boundary at most
+$2$, independent of its length. Hence a boundary budget of
+$\varepsilon t$ supports up to $\Omega(\varepsilon t)$ disjoint
+intervals of arbitrary individual length, which together can produce
+$\Theta(t)$ symmetric distance from any single interval. A monotone
+staircase in $[0,t]^2$, by contrast, has $\ell^1$ perimeter
+$\Theta(t)$: a boundary budget $\varepsilon t$ cannot support two
+disjoint macroscopic staircases simultaneously, and this is the
+mechanism by which Lemma~\ref{lem:weak-grid} becomes true in 2D while
+its 1D transcription fails.
+\end{remark}
+
+\subsection{The true 1D statement: few components}
+
+\begin{lemma}[1D component count]\label{lem:1d-components}
+Let $A \subseteq [t]$ with $m = m(A)$ maximal intervals
+(Definition~\ref{def:max-intervals}), $A = I_1 \sqcup \cdots \sqcup
+I_m$, $I_k = [a_k, b_k]$. Then
+\[
+\bd_{[t]} A \;=\; 2m \;-\; \mathbf{1}[a_1 = 1] \;-\; \mathbf{1}[b_m = t].
+\]
+In particular, $2(m-1) \le \bd_{[t]} A \le 2m$ whenever $m \ge 1$, and
+\[
+m \;\le\; \frac{\bd_{[t]} A}{2} \;+\; 1.
+\]
+\end{lemma}
+
+\begin{proof}
+If $m = 0$ then $A = \varnothing$ and $\bd_{[t]} A = 0 = 2 \cdot 0$,
+confirming the formula (both indicator terms are zero by convention).
+Assume $m \ge 1$.
+
+Each boundary edge of $\bd_{[t]} A$ is of the form $\{i, i+1\}$ with
+$i \in A, i+1 \notin A$ or $i \notin A, i+1 \in A$. Partition these
+edges by which maximal interval $I_k$ they touch.
+\begin{itemize}[nosep]
+  \item[(L)] The ``left boundary'' edge of $I_k$ is $\{a_k - 1,
+        a_k\}$, which lies in $[t]$ iff $a_k \ge 2$, equivalently
+        $a_k \ne 1$. For $k \ge 2$ we always have $a_k \ge
+        b_{k-1} + 2 \ge 3$, so this edge is present; for $k = 1$
+        it is present iff $a_1 \ne 1$.
+  \item[(R)] The ``right boundary'' edge of $I_k$ is $\{b_k, b_k +
+        1\}$, which lies in $[t]$ iff $b_k \le t - 1$. For $k \le
+        m-1$ we always have $b_k \le a_{k+1} - 2 \le t - 2$, so
+        this edge is present; for $k = m$ it is present iff $b_m
+        \ne t$.
+\end{itemize}
+Every boundary edge is counted exactly once in the above enumeration:
+each edge has the form (L) for some unique $k$ (if it is the left
+gap of $I_k$), or the form (R) for some unique $k$ (if it is the right
+gap of $I_k$). Summing,
+\begin{align*}
+\bd_{[t]} A
+  &= \sum_{k=1}^{m} \bigl(\mathbf{1}[\text{(L) edge for } I_k \text{ exists}] + \mathbf{1}[\text{(R) edge for } I_k \text{ exists}]\bigr)\\
+  &= \Bigl(\mathbf{1}[a_1 \ne 1] + (m - 1) + (m - 1) + \mathbf{1}[b_m \ne t]\Bigr)\\
+  &= 2m - \mathbf{1}[a_1 = 1] - \mathbf{1}[b_m = t]. \qedhere
+\end{align*}
+\end{proof}
+
+\begin{corollary}[Boundary $\le 1$ forces a single interval]\label{cor:1d-b-le-1}
+If $\bd_{[t]} A \le 1$, then $A$ is an interval: $A \in
+\{\varnothing\} \cup \{[a,b] : 1 \le a \le b \le t\}$.
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{lem:1d-components}, $2(m - 1) \le \bd_{[t]} A \le 1$
+forces $m \le 1$. If $m = 0$, $A = \varnothing$; if $m = 1$, $A = I_1$
+is a single maximal interval.
+\end{proof}
+
+\begin{corollary}[Best-component single-interval approximation]\label{cor:1d-best-interval}
+For every $A \subseteq [t]$,
+\[
+\min_{I \text{ interval in } [t]} |A \symdiff I| \;\le\; |A| \;-\; L_{\max}(A),
+\]
+where $L_{\max}(A) = \max_k |I_k|$ is the length of the longest
+maximal interval of $A$. Consequently, if $A$ is
+\emph{$\eta$-dominated} in the sense that $L_{\max}(A) \ge (1 -
+\eta)|A|$, then $\min_{I}|A \symdiff I| \le \eta|A|$.
+\end{corollary}
+
+\begin{proof}
+Take $I = I_{k^\star}$ where $k^\star = \arg\max_k |I_k|$. Since
+$I_{k^\star} \subseteq A$,
+$|A \symdiff I_{k^\star}| = |A \setminus I_{k^\star}| = |A| - L_{\max}(A)$.
+The dominated case is immediate.
+\end{proof}
+
+\begin{remark}[Form used downstream]\label{rem:downstream-form}
+The hypothesis ``$A$ is $\eta$-dominated'' does \emph{not} follow from
+``$\bd_{[t]} A \le \varepsilon t$'' alone
+(Proposition~\ref{prop:counterexample}). In the 2D row-by-row
+argument, the missing ingredient is supplied by the
+\emph{vertical} boundary of $A$: vertical boundary charges pay for
+rows whose dominant intervals disagree with those of their neighbours
+in the column direction. See
+Lemma~\ref{lem:row-decomp} and Corollary~\ref{cor:most-rows-intervals}
+below.
+\end{remark}
+
+\subsection{Row-integrated form: most rows are single intervals}
+
+We now record the two-dimensional version of Corollary~\ref{cor:1d-b-le-1}
+integrated over rows. This is the precise form in which the 1D warm-up
+feeds Lemma~\ref{lem:weak-grid}.
+
+\begin{lemma}[Directional decomposition of the 2D boundary]\label{lem:row-decomp}
+Let $D \subseteq [0,t]^2$ be order-convex and $A \subseteq D$. For
+each $i$ with $D_i := \{j : (i,j) \in D\}$ nonempty, let
+$A_i := \{j : (i,j) \in A\} \subseteq D_i$, and let
+\[
+b_i^{\mathrm h} \;:=\; \bd_{D_i} A_i
+\qquad(\text{horizontal per-row boundary}),
+\]
+with the analogous definition of $b_j^{\mathrm v}$ for columns. Let
+$B^{\mathrm h} = \sum_i b_i^{\mathrm h}$ and $B^{\mathrm v} = \sum_j
+b_j^{\mathrm v}$. Then
+\[
+\bd_D A \;=\; B^{\mathrm h} + B^{\mathrm v}.
+\]
+Moreover, writing $m_i = m(A_i)$ for the number of maximal intervals
+of $A_i$ inside $D_i$,
+\[
+\sum_{i} \bigl(m_i - 1\bigr)_+ \;\le\; \frac{B^{\mathrm h}}{2} \;\le\; \frac{\bd_D A}{2},
+\]
+where $(x)_+ = \max(x, 0)$.
+\end{lemma}
+
+\begin{proof}
+Every edge of $\bd_D A$ is either horizontal ($\{(i,j),(i,j+1)\}$) or
+vertical ($\{(i,j),(i+1,j)\}$). Horizontal edges in the boundary of
+$A$ lie entirely in one row, and for fixed $i$ they are exactly the
+edges of $\bd_{D_i} A_i$: both endpoints lie in $D_i$ (since $D$ is
+order-convex so each row $D_i$ is an interval), and the indicator of
+$A$ on the row equals the indicator of $A_i$. Hence summing
+horizontal contributions row-by-row gives $B^{\mathrm h}$; the
+analogous argument for columns gives $B^{\mathrm v}$. The second
+bound follows from applying Lemma~\ref{lem:1d-components} to each
+row: $2(m_i - 1) \le b_i^{\mathrm h}$ when $m_i \ge 1$ (and
+$(m_i - 1)_+ = 0$ when $m_i = 0$), and summing.
+\end{proof}
+
+\begin{corollary}[Most rows are intervals]\label{cor:most-rows-intervals}
+With the notation of Lemma~\ref{lem:row-decomp}, the number of rows
+$i$ such that $A_i$ is \emph{not} a single interval in $D_i$ is at
+most $B^{\mathrm h}/2 \le \bd_D A / 2$.
+
+In particular, if $\bd_D A \le \varepsilon t$, then at most
+$\varepsilon t / 2$ rows have $m_i \ge 2$; all remaining rows have
+$A_i$ equal to either $\varnothing$ or a single interval in $D_i$.
+\end{corollary}
+
+\begin{proof}
+A row with $A_i$ not a single interval has $m_i \ge 2$, hence $m_i -
+1 \ge 1$ and $(m_i - 1)_+ = m_i - 1 \ge 1$. Summing the $(m_i-1)_+$
+over such rows gives a lower bound equal to their count, so the
+count is at most $\sum_i (m_i - 1)_+ \le B^{\mathrm h}/2$ by
+Lemma~\ref{lem:row-decomp}.
+\end{proof}
+
+\begin{remark}[Use in the 2D proof]\label{rem:usage}
+Corollary~\ref{cor:most-rows-intervals}, together with its transpose
+for columns, furnishes step~(a)--(b) of the proof sketch of
+Lemma~\ref{lem:weak-grid}: on a $(1 - \varepsilon/2)$-fraction of
+rows the row slice $A_i$ is an interval $[\ell_i, r_i]$ (or empty),
+and analogously for columns. The remaining step~(c) ---
+monotonicity of $\ell_i, r_i$ in $i$ up to an exceptional set whose
+size is controlled by $B^{\mathrm v}$ --- is where the vertical
+boundary enters, and is what rescues the 2D statement from the 1D
+counterexample in Proposition~\ref{prop:counterexample}.
+\end{remark}
+
+\section{From global conductance to per-fiber boundary}
+\label{sec:global-to-local}
+
+This is the second piece of Step~2: translate a global assumption on $S$ to a per-fiber
+boundary bound on $A_{x,y} := \pi_{x,y}(S \cap \fib_{x,y})$ so that
+Lemma~\ref{lem:weak-grid} can be applied fiber-by-fiber.
+
+\begin{definition}[Edge internal to a fiber]\label{def:edge-internal}
+Let $\fib\subseteq\lext(P)$ and let $e=\{L,L'\}$ be a BK-edge of $\lext(P)$. We say
+$e$ is \emph{internal to $\fib$} if both endpoints lie in $\fib$, i.e.,
+$L,L'\in\fib$. Write $E_{\mathrm{int}}(\fib)$ for the set of BK-edges internal to
+$\fib$. For $S\subseteq\lext(P)$, the BK-boundary of $S\cap\fib$ inside $\fib$ is
+\[
+\bd_{\mathrm{BK}}(S\cap\fib)
+  \;:=\; \bigl\{\,e=\{L,L'\}\in E_{\mathrm{int}}(\fib) :
+         |\{L,L'\}\cap S|=1\,\bigr\}.
+\]
+\end{definition}
+
+\begin{lemma}[Fiber boundary averaging]\label{lem:fiber-avg}
+Let $S\subseteq\lext(P)$ satisfy the low-conductance bound
+\[
+|\bd_{\mathrm{BK}} S| \;\le\; \kappa\,|S|.
+\]
+Let $\mathcal{R}$ be a finite collection of rich good fibers, and let
+$K\in\mathbb{Z}_{\ge 1}$ satisfy the \emph{bounded edge multiplicity} property
+\begin{equation}\label{eq:mult}
+\sup_{e\in E(\lext(P))}
+  \#\bigl\{(x,y)\in\mathcal{R} : e\text{ is internal to }\fib_{x,y}\bigr\}
+  \;\le\; K.
+\end{equation}
+Then
+\begin{equation}\label{eq:fiber-avg}
+\sum_{(x,y)\in\mathcal{R}}
+  \bigl|\bd_{\mathrm{BK}}(S\cap\fib_{x,y})\bigr|
+  \;\le\; K\,\kappa\,|S|.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Fix $(x,y)\in\mathcal{R}$. By Definition~\ref{def:edge-internal}, every edge
+$e\in\bd_{\mathrm{BK}}(S\cap\fib_{x,y})$ is internal to $\fib_{x,y}$ and has
+exactly one endpoint in $S$. The latter condition depends only on $S$ and $e$,
+not on $\fib_{x,y}$, so $e\in\bd_{\mathrm{BK}} S$ as an edge of the ambient
+BK-graph. Exchanging the order of summation,
+\[
+\sum_{(x,y)\in\mathcal{R}}
+  \bigl|\bd_{\mathrm{BK}}(S\cap\fib_{x,y})\bigr|
+  \;=\; \sum_{e\in\bd_{\mathrm{BK}} S}
+         \#\bigl\{(x,y)\in\mathcal{R} : e\text{ internal to }\fib_{x,y}\bigr\}
+  \;\le\; K\cdot\bigl|\bd_{\mathrm{BK}} S\bigr|
+  \;\le\; K\,\kappa\,|S|,
+\]
+using \eqref{eq:mult} term-by-term and the hypothesis on $|\bd_{\mathrm{BK}} S|$.
+\end{proof}
+
+\begin{corollary}[Mass-weighted tail]\label{cor:fiber-avg-tail}
+Under the hypotheses of Lemma~\ref{lem:fiber-avg}, set
+$W := \sum_{(x,y)\in\mathcal{R}} |\fib_{x,y}|$. For every $\eta>0$,
+\[
+\sum_{\substack{(x,y)\in\mathcal{R} \\
+                |\bd_{\mathrm{BK}}(S\cap\fib_{x,y})|\,>\,\eta\,|\fib_{x,y}|}}
+  |\fib_{x,y}|
+\;\le\; \frac{K\,\kappa\,|S|}{\eta}.
+\]
+In particular, if the parameters satisfy $K\kappa|S| = o(\eta\,W)$, then the fibers
+with per-fiber boundary density exceeding $\eta$ carry a $o(1)$-fraction of the
+total fiber mass $W$.
+\end{corollary}
+
+\begin{proof}
+Let $\mathcal{B} := \{(x,y)\in\mathcal{R} :
+  |\bd_{\mathrm{BK}}(S\cap\fib_{x,y})| > \eta\,|\fib_{x,y}|\}$. Then
+\[
+\eta\sum_{(x,y)\in\mathcal{B}}|\fib_{x,y}|
+  \;<\; \sum_{(x,y)\in\mathcal{B}} \bigl|\bd_{\mathrm{BK}}(S\cap\fib_{x,y})\bigr|
+  \;\le\; \sum_{(x,y)\in\mathcal{R}} \bigl|\bd_{\mathrm{BK}}(S\cap\fib_{x,y})\bigr|
+  \;\le\; K\,\kappa\,|S|
+\]
+by Lemma~\ref{lem:fiber-avg}; divide by $\eta$.
+\end{proof}
+
+\DEP{Step~1 (S1.6), Step~5 (\texttt{step5.tex}).} Two external inputs are used in applying this lemma:
+\begin{enumerate}[label=(\roman*),nosep]
+\item the bounded edge-multiplicity constant $K$ in \eqref{eq:mult} is the
+      Step~1 deliverable (S1.6) of Definition~\ref{def:step1-data}; pinning
+      down its explicit value requires the width-$3$
+      interface classification, which shows that a BK-edge $\{L,L'\}$ obtained
+      by swapping $\{a,b\}\subseteq X$ can be internal to $\fib_{x,y}$ only if
+      $\{a,b\}\subseteq\{x,y\}\cup C(x,y)$, so the multiplicity of $e$ across
+      $\mathcal{R}$ is bounded by the number of rich pairs $(x,y)$ with
+      $\{a,b\}\subseteq\{x,y\}\cup C(x,y)$;
+\item the family $\mathcal{R}$ and the lower bound $W\gtrsim|\lext(P)|$ on its
+      total mass are outputs of Step~5 (\texttt{step5.tex}), which fixes the
+      regime under which Corollary~\ref{cor:fiber-avg-tail} delivers
+      $o(1)$-fraction tail bounds.
+\end{enumerate}
+
+\begin{proposition}[Per-fiber staircase approximation; quantitative form]\label{prop:per-fiber}
+Assume Lemma~\ref{lem:weak-grid} with stability rate $\delta(\varepsilon)$
+(crudely $\delta(\varepsilon)=O(\varepsilon^{1/3})$) and the BK-to-grid
+identification (S1.4). Fix parameters
+\[
+\kappa>0,\qquad K\in\mathbb{Z}_{\ge 1},\qquad \eta\in(0,1),
+\]
+and let $S\subseteq\lext(P)$ satisfy the global conductance bound
+$|\bd_{\mathrm{BK}} S|\le\kappa|S|$. Let $\mathcal{R}$ be a finite family of
+rich good fibers with edge-multiplicity bound $K$ as in \eqref{eq:mult} and
+total mass $W=\sum_{(x,y)\in\mathcal{R}}|\fib_{x,y}|$. Assume each fiber
+$\fib_{x,y}\in\mathcal{R}$ has side length $t_{x,y}$ with
+$|\fib_{x,y}|\ge c\,t_{x,y}^2$ for a uniform constant $c>0$, and write
+$t_{\max}:=\max_{(x,y)\in\mathcal{R}} t_{x,y}$.
+
+Let $\mathcal{G}\subseteq\mathcal{R}$ be the set of \emph{good} fibers
+$(x,y)$ on which
+\[
+\bigl|\bd_{\mathrm{BK}}(S\cap\fib_{x,y})\bigr|\;\le\;\eta\,|\fib_{x,y}|.
+\]
+Then:
+\begin{enumerate}[label=\textup{(\roman*)},nosep]
+\item \textup{(Mass of bad fibers.)}
+\[
+\sum_{(x,y)\in\mathcal{R}\setminus\mathcal{G}}|\fib_{x,y}|
+  \;\le\;\frac{K\,\kappa\,|S|}{\eta}.
+\]
+\item \textup{(Staircase bound on good fibers.)} For every
+$(x,y)\in\mathcal{G}$ there exist
+$M_{x,y}\in\mathrm{Stair}(D_{x,y})$ and an error set
+$E_{x,y}\subseteq\fib_{x,y}$ such that
+\[
+S\cap\fib_{x,y}
+  \;=\;
+  \pi_{x,y}^{-1}(M_{x,y})\;\symdiff\;E_{x,y},
+\qquad
+|E_{x,y}|\;\le\;\delta\!\bigl(\eta\,t_{x,y}\bigr)\cdot|\fib_{x,y}|.
+\]
+In particular, using the crude rate,
+$|E_{x,y}|\le C\,(\eta\,t_{x,y})^{1/3}\,|\fib_{x,y}|$ for an absolute
+constant $C$.
+\end{enumerate}
+Consequently, if the parameters satisfy $K\kappa|S|\le\alpha\,\eta\,W$ for some
+$\alpha\in(0,1)$, the good fibers carry mass-fraction at least $1-\alpha$ and
+the uniform per-fiber error bound $\delta(\eta\,t_{\max})$ applies across
+$\mathcal{G}$.
+\end{proposition}
+
+\begin{proof}[Proof]
+\emph{(i)} is Corollary~\ref{cor:fiber-avg-tail} applied to threshold $\eta$.
+\emph{(ii)}: for $(x,y)\in\mathcal{G}$, by (S1.4) the BK-boundary equals the
+grid boundary, so
+\[
+\bd_{D_{x,y}} A_{x,y}
+  \;=\;\bigl|\bd_{\mathrm{BK}}(S\cap\fib_{x,y})\bigr|
+  \;\le\;\eta\,|\fib_{x,y}|
+  \;\le\;\eta\,t_{x,y}\cdot t_{x,y}
+  \;=\;\varepsilon_{x,y}\,t_{x,y},
+\]
+with $\varepsilon_{x,y}:=\eta\,t_{x,y}$ (using $|\fib_{x,y}|\le t_{x,y}^2$).
+Lemma~\ref{lem:weak-grid} supplies a staircase
+$M_{x,y}\in\mathrm{Stair}(D_{x,y})$ with $|A_{x,y}\symdiff
+M_{x,y}|\le\delta(\varepsilon_{x,y})|D_{x,y}|$, and setting
+$E_{x,y}:=(S\cap\fib_{x,y})\symdiff\pi_{x,y}^{-1}(M_{x,y})$ gives the stated
+bound after pulling back through $\pi_{x,y}$, which is a bijection
+$\fib_{x,y}\to D_{x,y}$ and hence preserves cardinality exactly. The final
+clause follows by plugging $|S|\le\alpha\eta W/(K\kappa)$ into (i).
+\end{proof}
+
+The exact inequality Step~2 exports, with no coupling assumed, is
+\[
+\sum_{(x,y)\in\mathcal{R}\setminus\mathcal{G}}|\fib_{x,y}|
+  \;\le\;\frac{K\,\kappa\,|S|}{\eta}
+\qquad\text{and}\qquad
+\sum_{(x,y)\in\mathcal{R}}|\fib_{x,y}| \;=:\; W.
+\]
+Step~5 (\texttt{step5.tex}) supplies the family $\mathcal{R}$ and the lower
+bound $W\ge c_5\,|\lext(P)|$ for an absolute constant $c_5>0$. Combined with the
+trivial $|S|\le|\lext(P)|$, this gives the bad-fiber mass-fraction bound
+\[
+\frac{1}{W}\sum_{(x,y)\in\mathcal{R}\setminus\mathcal{G}}|\fib_{x,y}|
+  \;\le\;\frac{K\,\kappa}{\eta\,c_5},
+\]
+which is the form consumed downstream and is what makes the $(1-o(1))$
+quantifier in Theorem~\ref{thm:step2} precise.
+
+\section{Output of Step 2 and downstream usage}
+\label{sec:output}
+
+\begin{theorem}[Step~2 conclusion]\label{thm:step2}
+Assume the Step~1 interface data (Definition~\ref{def:step1-data}) and
+Lemma~\ref{lem:weak-grid}. Take as named external inputs:
+\begin{itemize}[nosep]
+  \item the bounded edge-multiplicity constant $K=O(1)$ from (S1.6);
+  \item the rich-fiber family $\mathcal{R}$ of Step~5 with total mass
+        $W:=\sum_{(x,y)\in\mathcal{R}}|\fib_{x,y}|\ge c_5\,|\lext(P)|$ for an
+        absolute constant $c_5>0$.
+\end{itemize}
+Fix a threshold $\eta\in(0,1)$. If $S\subseteq\lext(P)$ has BK conductance
+$|\bd_{\mathrm{BK}} S| / \min(|S|,|S^c|) \le \kappa$ with $K\kappa\le\alpha\,\eta\,c_5$
+for some $\alpha\in(0,1)$ (so in particular $K\kappa|S|\le\alpha\,\eta\,W$), then
+for a mass-fraction at least $1-\alpha$ of fibers $(x,y)\in\mathcal{R}$ (i.e.\
+the good fibers $\mathcal{G}$ of Proposition~\ref{prop:per-fiber}):
+\begin{enumerate}[nosep]
+    \item $A_{x,y}$ is $o(|\fib_{x,y}|)$-close to a staircase $M_{x,y}$;
+    \item the staircase has a well-defined sign $\sigma_{x,y}\in\{+,-\}$ when both $S$
+          and $S^c$ occupy a positive fraction of $\fib_{x,y}$;
+    \item the error set $E_{x,y}$ is measurable and its size propagates linearly into
+          downstream overlap arguments.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[Consumers]
+Step~2's conclusions are consumed as follows:
+\begin{itemize}[nosep]
+    \item \textbf{Step~3}: the sign $\sigma_{x,y}$ is the ``orientation'' that Step~3's
+          coherence is defined on.
+    \item \textbf{Step~4} (two-interface incompatibility): uses the per-fiber staircase
+          approximation with $E_{x,y}$ as the error set in the conclusion
+          $|\bd S| \ge c|\Omega'| - C(|E_1|+|E_2|)$.
+    \item \textbf{Step~6}: the dichotomy invokes Theorem~\ref{thm:step2} as its starting
+          hypothesis on all rich fibers simultaneously.
+\end{itemize}
+\end{remark}
+

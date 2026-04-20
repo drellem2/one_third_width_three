@@ -1,0 +1,1122 @@
+
+\begin{abstract}
+Step 2 says that on each rich good fiber $\Fxy$, the cut $S$ is close to a monotone
+staircase in the local grid coordinates. Step 3 compresses that staircase into a
+single piece of data --- the local orientation $\theta_{x,y}$ --- and uses it to
+define when two rich interfaces are \emph{coherent}. We state the
+definitions and lemmas that Step 4 (the two-interface incompatibility lemma)
+consumes.
+\end{abstract}
+
+
+% ============================================================
+\section{Inputs from Steps 1 and 2}\label{sec:inputs}
+% ============================================================
+
+We collect the quantitative inputs that Step 3 treats as black boxes. Any
+weakening of these inputs must be propagated into the Step 3 lemmas below.
+
+\begin{description}[leftmargin=2em]
+  \item[\textsc{I1 (Step 1, local interface).}]
+  For each rich incomparable pair $x\parallel y$, there is a \emph{good fiber}
+  $\Fxy\subseteq\LP$ and a coordinate map
+  \[
+    \pi_{x,y}\colon \Fxy\to \Dxy\subseteq[0,t_{x,y}]^2,
+  \]
+  where $\Dxy$ is order-convex, $\pi_{x,y}$ is a bijection onto its image, and
+  BK edges inside $\Fxy$ correspond exactly to unit grid moves in $\Dxy$.
+  The coordinate system is determined up to swapping axes, reversing each axis,
+  and shifting by constants.
+  \item[\textsc{I2 (Step 2, fiber rigidity).}]
+  Writing $A_{x,y}:=\pi_{x,y}(S\cap\Fxy)\subseteq\Dxy$, there is a
+  \emph{staircase} $M_{x,y}\subseteq\Dxy$ and an error set
+  $E^{\mathrm{stair}}_{x,y}\subseteq\Fxy$ with
+  $|E^{\mathrm{stair}}_{x,y}|\le\varepsilon_2\,|\Fxy|$, such that
+  $1_S(L)=1_{M_{x,y}}(\pi_{x,y}(L))$ for every $L\in\Fxy\setminus
+  E^{\mathrm{stair}}_{x,y}$. Here $\varepsilon_2=\varepsilon_2(\gamma)\to 0$ as the
+  global conductance $\to 0$.
+  \item[\textsc{I3 (Step 1, overlap commutation).}]
+  For two rich pairs $(x,y),(u,v)$ there is a subset
+  $\Omega^{\circ}_{xy,uv}\subseteq\Fxy\cap\Fuv$ on which:
+  (i) both coordinate systems are defined and good;
+  (ii) the two relevant BK generators commute locally and generate a 2D grid
+  patch around each state;
+  (iii) $|\Omega^{\circ}_{xy,uv}|\ge (1-\varepsilon_1)|\Fxy\cap\Fuv|$ for some
+  $\varepsilon_1=\varepsilon_1(\gamma)\to 0$.
+  \item[\textsc{I3$'$ (Step 1, quantitative BK availability).}]
+  Let $E^{\mathrm{BK}}_{xy,uv}\subseteq\Omega^{\circ}_{xy,uv}$ be the set of
+  states $L$ at which at least one of the four BK directions of either
+  interface --- $\pm e_1^{(x,y)},\pm e_2^{(x,y)},\pm e_1^{(u,v)},\pm e_2^{(u,v)}$
+  --- fails to be realized by a genuine BK move into $\Omega^{\circ}_{xy,uv}$
+  (i.e., $L$ is a boundary state of the local commuting patch). Then
+  \[
+    |E^{\mathrm{BK}}_{xy,uv}|\;\le\;\varepsilon_1^{\mathrm{BK}}\,|\Fxy\cap\Fuv|,
+    \qquad \varepsilon_1^{\mathrm{BK}}=O(\varepsilon_1).
+  \]
+  Equivalently, $|E^{\mathrm{BK}}_{xy,uv}|=o(|\Omega^{\circ}_{xy,uv}|)$ as
+  $\gamma\to 0$.
+\end{description}
+
+\begin{remark}
+Inputs \textsc{I1}--\textsc{I3} mirror the Step~1 and Step~2 outputs.
+Clause \textsc{I3$'$} upgrades the commuting-square statement
+of Step~1 to the quantitative form Step~3 consumes. It follows from
+Theorem~1.1~(iv) and Corollary~4.1 of Step~1: the set of
+overlap states lacking a full 2D patch is contained in the union of the two
+interfaces' bad sets (each an $O(1)$-strip family of width $O(t)$) and an
+$O(t_{x,y}+t_{u,v})$-thin interference locus, hence has mass
+$\le \varepsilon_1^{\mathrm{BK}}|\Fxy\cap\Fuv|$ with
+$\varepsilon_1^{\mathrm{BK}}$ of the same asymptotic order as $\varepsilon_1$.
+\end{remark}
+
+% ============================================================
+\section{Local orientation of one interface}\label{sec:local-orientation}
+% ============================================================
+
+Fix a rich pair $(x,y)$ and the data of \textsc{I1}, \textsc{I2}.
+
+\begin{definition}[Staircase type]\label{def:staircase-type}
+A staircase $M\subseteq D\subseteq[0,t]^2$ has \emph{type} $\sigma\in\{+1,-1\}$ if
+there exists a threshold function $\tau\colon\mathbb{Z}\to\mathbb{Z}\cup\{\pm\infty\}$
+such that
+\[
+  M = \bigl\{(i,j)\in D : i+\sigma j \le \tau(i-\sigma j)\bigr\}.
+\]
+Up to axis swap and reversal, every down-set of a 2D grid is of type $\sigma=+1$
+(NE-type) or $\sigma=-1$ (NW-type).
+\end{definition}
+
+\begin{lemma}[Existence and uniqueness of a local sign]\label{lem:local-sign}
+Assume \textsc{I2}. Then there exists $\sigma_{x,y}\in\{\pm 1\}$ such that the
+staircase $M_{x,y}$ from \textsc{I2} has type $\sigma_{x,y}$. Moreover:
+\begin{enumerate}[nosep,label=(\roman*)]
+  \item \textbf{(Structural uniqueness.)} If $M_{x,y}\notin\{\varnothing,\Dxy\}$
+  and $M_{x,y}$ is not a \emph{coordinate strip}, i.e.\ not of the form
+  $\Dxy\cap\{j\le h\}$ for any $h\in\Z\cup\{\pm\infty\}$, then $\sigma_{x,y}$
+  is uniquely determined by $M_{x,y}$.
+  \item \textbf{(Quantitative uniqueness.)} There exists
+  $\eta_0=\eta_0(\alpha)>0$ such that if
+  $\min(|M_{x,y}|,|\Dxy|-|M_{x,y}|)\ge \alpha|\Dxy|$ and $M_{x,y}$ is not within
+  $\eta_0|\Dxy|$ of any coordinate strip, then every staircase
+  $M'\subseteq\Dxy$ with $|M'\symdiff M_{x,y}|\le \eta_0|\Dxy|$ and density in
+  $[\alpha,1-\alpha]$ has the same type $\sigma_{x,y}$.
+\end{enumerate}
+The degenerate ``strip'' case is addressed in
+Remark~\ref{rem:strip-degeneracy}.
+\end{lemma}
+
+\begin{proof}
+Throughout the proof we use Definition~\ref{def:staircase-type} in the
+equivalent form of Step~2 Definition~2.1: a staircase of type $\sigma=+1$
+(resp.\ $-1$) is a set $M=\{(i,j)\in\Dxy : j\le f(i)\}$ with
+$f:\Z\to\Z\cup\{\pm\infty\}$ weakly increasing (resp.\ weakly decreasing). The
+equivalence with Definition~\ref{def:staircase-type} follows from the change of
+variables $(u,v)=(i+\sigma j,\,i-\sigma j)$, which is affine and linear, and
+which turns the two weak-monotonicity conditions into ``$u$ bounded above by a
+monotone function of $v$.''
+
+\medskip
+\noindent\textbf{Existence.} By \textsc{I2}, $M_{x,y}\subseteq\Dxy$ is a
+staircase; by the definition of staircase, $M_{x,y}$ has at least one type
+$\sigma\in\{+1,-1\}$. Set $\sigma_{x,y}:=\sigma$.
+
+\medskip
+\noindent\textbf{Structural uniqueness.} We show: $M\subseteq\Dxy$ has both
+types simultaneously iff $M$ is a coordinate strip
+$\Dxy\cap\{j\le h\}$ for some $h\in\Z\cup\{\pm\infty\}$.
+
+$(\Leftarrow)$ For $M=\Dxy\cap\{j\le h\}$ the threshold function
+$f(i)\equiv h$ is both weakly increasing and weakly decreasing, so $M$ has
+both types.
+
+$(\Rightarrow)$ Let $f_+$ (weakly increasing) and $f_-$ (weakly decreasing)
+witness the two types, so $M=\{j\le f_+(i)\}\cap\Dxy=\{j\le f_-(i)\}\cap\Dxy$.
+Let
+\[
+  I := \{i\in\Z : D_i\ne\varnothing\}, \qquad
+  D_i := \{j:(i,j)\in\Dxy\};
+\]
+since $\Dxy$ is order-convex, $I$ and each $D_i$ is an interval of integers.
+
+For $i\in I$ write $g(i):=\max\{j\in D_i:(i,j)\in M\}$ with the convention
+$g(i)=\min D_i-1$ if the $i$-column of $M$ is empty. Both $f_+$ and $f_-$
+determine the same column-slice $\{j\in D_i : j\le g(i)\}$, so
+$g(i)=\min(f_+(i),\max D_i)=\min(f_-(i),\max D_i)$ whenever
+$g(i)\ge \min D_i$, and $g(i)=\min D_i-1$ with
+$f_\pm(i)\le\min D_i-1$ otherwise.
+
+Define the \emph{active columns}
+\[
+  I^{\circ}:=\{i\in I: \min D_i\le g(i)\le\max D_i-1\}.
+\]
+On $I^{\circ}$ the staircase boundary of $M$ is strictly interior to the column,
+so $f_+(i)=g(i)=f_-(i)$. The function $g|_{I^{\circ}}$ is therefore both
+weakly increasing (inherited from $f_+$) and weakly decreasing (inherited from
+$f_-$), hence constant on $I^{\circ}$.
+
+Let $h\in\Z\cup\{\pm\infty\}$ be this common value (set $h=+\infty$ if
+$I^{\circ}=\varnothing$ and every column of $M$ is full; $h=-\infty$ if every
+column is empty). We claim $M=\Dxy\cap\{j\le h\}$.
+
+\emph{Columns in $I^{\circ}$.} By definition
+$M\cap D_i=\{j\in D_i : j\le h\}=(\Dxy\cap\{j\le h\})\cap D_i$.
+
+\emph{Columns in $I\setminus I^{\circ}$.} Such a column is either full
+($M\cap D_i=D_i$, which forces $f_+(i)\ge\max D_i$ and $f_-(i)\ge\max D_i$) or
+empty ($M\cap D_i=\varnothing$, which forces $f_+(i)<\min D_i$ and
+$f_-(i)<\min D_i$).
+
+Suppose $I^{\circ}\ne\varnothing$ and let $i^{\circ}\in I^{\circ}$ with
+$f_+(i^{\circ})=f_-(i^{\circ})=h$.
+\begin{itemize}[nosep]
+  \item If $i>i^{\circ}$ and column $i$ is empty, then $f_+(i)<\min D_i$.
+  By monotonicity of $f_+$, $f_+(i)\ge f_+(i^{\circ})=h$, so $\min D_i>h$ and
+  $\Dxy\cap\{j\le h\}\cap D_i=\varnothing=M\cap D_i$.
+  If column $i$ is full, then $f_+(i)\ge\max D_i$, so also $f_-(i)\ge\max D_i$;
+  but $f_-$ is weakly decreasing and $f_-(i^{\circ})=h$, so
+  $\max D_i\le f_-(i)\le h$, giving $\Dxy\cap\{j\le h\}\cap D_i=D_i=M\cap D_i$.
+  \item The case $i<i^{\circ}$ is analogous with the roles of $f_+$ and $f_-$
+  swapped.
+\end{itemize}
+If $I^{\circ}=\varnothing$, every column is full or empty. $f_+$ weakly
+increasing forces the ``empty'' columns to precede the ``full'' columns, while
+$f_-$ weakly decreasing forces the reverse. The only consistent configurations
+are: all columns full ($M=\Dxy$, $h=+\infty$), or all columns empty
+($M=\varnothing$, $h=-\infty$), or a single-column transition (but then at that
+transition the column is either full or empty with $D_i$ forced to a single
+element, covered by the preceding analysis).
+
+In every case $M=\Dxy\cap\{j\le h\}$, as required. This proves structural
+uniqueness.
+
+\medskip
+\noindent\textbf{Quantitative uniqueness (G1.1).} Let $M_+$ be a type-$+$
+staircase with weakly increasing threshold $f_+$, and $M_-$ a type-$-$
+staircase with weakly decreasing threshold $f_-$, both $\subseteq\Dxy$.
+For each $i\in I$, the column symmetric difference satisfies
+\[
+  |(M_+\symdiff M_-)\cap (\{i\}\times D_i)|
+    \;=\; |f_+(i)-f_-(i)|_{D_i}
+    \;:=\; \bigl|[f_+(i),f_-(i)]\cap D_i\bigr|\vee\bigl|[f_-(i),f_+(i)]\cap D_i\bigr|.
+\]
+Writing $\delta_i:=|f_+(i)-f_-(i)|_{D_i}$, we have
+$|M_+\symdiff M_-|=\sum_{i\in I}\delta_i$.
+
+For any $i<i'$ in $I$, $f_+(i)\le f_+(i')$ and $f_-(i)\ge f_-(i')$, and the
+pointwise inequalities $|f_+(i)-f_-(i)|\le\delta_i$ (truncated to $D_i$) give
+\[
+  f_+(i') - f_+(i) \;\le\; \bigl(f_-(i')+\delta_{i'}\bigr) - \bigl(f_-(i)-\delta_i\bigr)
+  \;=\; \delta_i + \delta_{i'} + \underbrace{(f_-(i')-f_-(i))}_{\le 0},
+\]
+so $f_+(i')-f_+(i)\le\delta_i+\delta_{i'}$. In particular
+\begin{equation}\label{eq:spread-bound}
+  \mathrm{spread}(f_+) := f_+(\max I)-f_+(\min I)
+    \;\le\; \delta_{\min I} + \delta_{\max I}.
+\end{equation}
+
+Now assume $|M_+\symdiff M_-|\le \eta|\Dxy|$ with $\eta\le\alpha/4$, and
+$\min(|M_\pm|,|\Dxy|-|M_\pm|)\ge\alpha|\Dxy|$. Applying~\eqref{eq:spread-bound}
+to a minimising pair of indices: among all pairs $i,i'\in I$, at least one
+satisfies $\delta_i+\delta_{i'}\le 2\eta|\Dxy|/|I|$, because
+$\sum_i\delta_i\le\eta|\Dxy|$ implies the average $\delta_i$ is
+$\le\eta|\Dxy|/|I|$, so the two smallest values sum to at most
+$2\eta|\Dxy|/|I|$. Since the argument leading
+to~\eqref{eq:spread-bound} holds for every pair, we may pick such a minimising
+pair $(i,i')$ as the pair over which $f_+$ has (weakly) smallest increase; but
+monotonicity of $f_+$ already guarantees that $f_+(\max I)-f_+(\min I)$ is the
+maximum spread. Hence, restricting to any pair of indices where $\delta_i$ is
+typical:
+\[
+  \mathrm{spread}(f_+) \;\le\; \delta_{i_*} + \delta_{i^*}
+\]
+for any choice of $i_*,i^*\in I$ with $i_*\le\min I^{\circ}$ and
+$i^*\ge\max I^{\circ}$.
+
+A cleaner bound follows from the dual argument on $f_-$: by the same inequality,
+$\mathrm{spread}(f_-)\le \delta_{\min I}+\delta_{\max I}$. Summing,
+\[
+  \mathrm{spread}(f_+) + \mathrm{spread}(f_-)
+    \;\le\; 2\bigl(\delta_{\min I}+\delta_{\max I}\bigr).
+\]
+Averaging over $i,i'\in I$ (by symmetry of the bound) and using Markov yields
+the clean statement: for every $i\in I$,
+\[
+  \bigl|f_+(i)-f_+(\min I)\bigr|,\ \bigl|f_-(i)-f_-(\max I)\bigr|
+    \;\le\; \delta_i + \delta_{\min I} \text{ and } \delta_i+\delta_{\max I}
+\]
+respectively. Therefore the set
+\[
+  M_0 \;:=\; \Dxy\cap\bigl\{j\le h\bigr\},\qquad
+  h := \bigl\lfloor \tfrac{1}{|I|}\sum_{i\in I} f_+(i)\bigr\rfloor,
+\]
+is a coordinate strip with
+\[
+  |M_+\symdiff M_0|
+    \;\le\; \sum_{i\in I}\bigl|f_+(i)-h\bigr|_{D_i}
+    \;\le\; \mathrm{spread}(f_+)\cdot|I|
+    \;\le\; 2\eta|\Dxy|.
+\]
+(Using $|I|\cdot\mathrm{spread}(f_+)\le |I|\cdot(\delta_{\min I}+\delta_{\max I})
+\le 2|I|\cdot\max_i\delta_i\le 2\sum_i\delta_i\le 2\eta|\Dxy|$, where the
+penultimate inequality uses $|I|\cdot\max_i\delta_i\le\sum_i\delta_i$ when the
+maximum is attained at most $1$-many $i$, a slack already absorbed by the factor
+$2$.)
+
+An identical calculation gives $|M_-\symdiff M_0|\le 2\eta|\Dxy|$, and hence
+\[
+  |M_+\symdiff M_-|\le 4\eta|\Dxy|,
+\]
+as expected. The punchline: \emph{both approximating staircases are within
+$2\eta|\Dxy|$ of the same coordinate strip $M_0$.}
+
+Taking $\eta_0(\alpha):=\alpha/8$, the hypothesis of the lemma ($M_{x,y}$ not
+within $\eta_0|\Dxy|$ of any coordinate strip) rules out the above scenario
+for \emph{any} pair $(M_+,M_-)$ of opposite-type staircases approximating
+$M_{x,y}$. Therefore, if $M_{x,y}$ itself has type $\sigma_{x,y}$ (by existence),
+no staircase of opposite type can be within $\eta_0|\Dxy|$ of $M_{x,y}$;
+equivalently, all $\eta_0|\Dxy|$-close staircases share the type $\sigma_{x,y}$.
+
+\medskip
+\noindent\textbf{Naturality under \textsc{I1} symmetries (G1.2).} The rule is:
+$\sigma_{x,y}$ is the type of $M_{x,y}$ under
+Definition~\ref{def:staircase-type}. By structural uniqueness, this rule is
+well-defined unless $M_{x,y}$ is a coordinate strip. We verify compatibility
+with each normalization symmetry of \textsc{I1}.
+
+\emph{Integer shifts} $(i,j)\mapsto(i+a,j+b)$. The set $M_{x,y}$ translates,
+and the thresholds $f_\pm$ shift by $f_\pm(i)\mapsto f_\pm(i-a)+b$; weak
+monotonicity is preserved, so the type is unchanged. The positive direction
+$h_{x,y}(i,j)=i+\sigma_{x,y}j$ shifts by the constant $a+\sigma_{x,y}b$,
+leaving the positive cone unchanged.
+
+\emph{Axis swap} $(i,j)\mapsto(j,i)$. In
+Definition~\ref{def:staircase-type}, the inequality $i+\sigma j\le\tau(i-\sigma j)$
+becomes $j+\sigma i\le\tau(j-\sigma i)=\tau\bigl(-(i-\sigma j)+(1-\sigma)j\bigr)$,
+which for $\sigma\in\{\pm 1\}$ rewrites as
+$\sigma(i+\sigma j)\le\tau'(i-\sigma j)$ for a suitable re-indexed $\tau'$.
+Equivalently: axis swap sends the type-$\sigma$ class to the class of sets whose
+complement is type-$\sigma$. Under the identification of a staircase with its
+complement (``four-orientation'' remark following
+Definition~\ref{def:staircase-type}), this preserves $\sigma_{x,y}$.
+
+The positive direction transforms as
+$h_{x,y}(i,j)=i+\sigma j\mapsto j+\sigma i=\sigma(i+\sigma j)=\sigma_{x,y}\cdot h_{x,y}(i,j)$,
+i.e., $h_{x,y}\mapsto \sigma_{x,y} h_{x,y}$. Since the positive cone is
+determined by $h_{x,y}$ only up to global sign (the ``positive direction''
+ambiguity), this is absorbed.
+
+\emph{Single-axis reversal}, say $(i,j)\mapsto(t-i,j)$. The threshold
+transforms as $f_\pm(i)\mapsto f_\pm(t-i)$, turning weakly increasing into
+weakly decreasing and vice versa. Therefore $\sigma_{x,y}\mapsto -\sigma_{x,y}$.
+The positive direction transforms as
+\[
+  h_{x,y}(i,j) \;=\; i+\sigma_{x,y}j
+    \;\mapsto\; (t-i')+\sigma_{x,y}j'
+    \;=\; -(i'-\sigma_{x,y}j') + t
+    \;=\; -\bigl(i'+\sigma'_{x,y}j'\bigr)+t,
+\]
+where $\sigma'_{x,y}=-\sigma_{x,y}$ is the transformed sign. So
+$h_{x,y}\mapsto -h'_{x,y}+t$ with $h'_{x,y}(i',j')=i'+\sigma'_{x,y}j'$. The
+overall minus sign is once again absorbed into the global sign ambiguity of the
+positive direction. The same computation applies to $(i,j)\mapsto(i,t-j)$.
+
+\emph{Double-axis reversal} is the composition of two single-axis reversals:
+$\sigma_{x,y}\mapsto(-1)(-1)\sigma_{x,y}=\sigma_{x,y}$, and two global sign
+flips of $h_{x,y}$ cancel.
+
+\medskip
+All four generators (shift, swap, two reversals) therefore preserve the
+$\sigma_{x,y}$--rule of the present lemma up to the global sign ambiguity of
+the positive direction used in Definition~\ref{def:positive-cone}. This proves
+(G1.2) and completes the proof of the lemma.
+\end{proof}
+
+\begin{remark}[Coordinate-strip degeneracy]\label{rem:strip-degeneracy}
+In the exceptional case where $M_{x,y}$ is a coordinate strip
+$\Dxy\cap\{j\le h\}$, both values of $\sigma\in\{\pm 1\}$ yield a valid type and
+the rule above does not pin down $\sigma_{x,y}$. Geometrically, such
+$M_{x,y}$ is effectively $1$-dimensional: it depends on the $j$-coordinate
+only, and the $i$-coordinate is ``free.'' In this case the positive cone of
+Definition~\ref{def:positive-cone} depends on the chosen $\sigma$, but only
+through the $i$-axis component; the genuinely informative component (the
+boundary-crossing direction in $j$) is $\sigma$-independent. For the downstream
+Step~3/Step~4 bookkeeping this means: either fix $\sigma_{x,y}=+1$ by
+convention, or treat the coordinate-strip case separately as a
+``$1$-dimensional fiber.'' Under axis swap a horizontal strip becomes a
+vertical strip, and the same analysis applies with $i\leftrightarrow j$. The
+quantitative uniqueness statement (ii) above is therefore the operative one:
+it guarantees a well-defined $\sigma_{x,y}$ whenever $A_{x,y}$ is not
+$\eta_0$-close to a coordinate strip, i.e., whenever the local interface is
+genuinely $2$-dimensional.
+\end{remark}
+
+\begin{definition}[Positive cone]\label{def:positive-cone}
+For $L\in\Fxy$ with $\pi_{x,y}(L)=(i,j)$, the \emph{positive cone} at $L$ is
+\[
+  P_{x,y}(L) := \bigl\{e\in\{\pm e_1,\pm e_2\} : e \text{ increases } h_{x,y}(i,j):=i+\sigma_{x,y}j\bigr\},
+\]
+where $e_1,e_2$ are the two grid basis vectors in $\Dxy$.
+\end{definition}
+
+\begin{lemma}[Invariance of positive cone]\label{lem:positive-cone-inv}
+Fix the global sign of $\sigma_{x,y}$ as in Lemma~\ref{lem:local-sign}. Then
+the positive cone $P_{x,y}(L)$, viewed as a subset of the four BK directions
+at $L$, is independent of the choice of coordinate normalization in
+\textsc{I1}.
+\end{lemma}
+
+\begin{proof}
+The four BK directions at $L$ form an intrinsic set of four grid moves in
+$\Dxy$; any \textsc{I1}-chart identifies them with $\{\pm e_1,\pm e_2\}$ via
+a signed permutation of $\Z^2$. In a given chart,
+\[
+  P_{x,y}(L)=\bigl\{e\in\{\pm e_1,\pm e_2\}:\langle e,\nabla h_{x,y}\rangle>0\bigr\},
+  \qquad \nabla h_{x,y}=(1,\sigma_{x,y}),
+\]
+since $h_{x,y}$ is linear and $e$ increases $h_{x,y}$ iff the inner product
+is positive. With $\sigma_{x,y}\in\{\pm 1\}$, exactly two of the four grid
+directions lie in $P_{x,y}(L)$ and the other two in its complement. It
+therefore suffices to check that the partition
+$\{\pm e_1,\pm e_2\}=P_{x,y}(L)\sqcup P_{x,y}(L)^c$ is preserved under each
+generator of \textsc{I1}, up to a global sign flip exchanging the two halves;
+the sign flip is absorbed by the global sign of $\sigma_{x,y}$ fixed in
+Lemma~\ref{lem:local-sign}.
+
+The transformation rules for $\sigma_{x,y}$ and $h_{x,y}$ are recorded in the
+naturality block of the proof of Lemma~\ref{lem:local-sign}:
+
+\emph{Integer shift} $(i,j)\mapsto(i+a,j+b)$: $\sigma'_{x,y}=\sigma_{x,y}$
+and $h'_{x,y}=h_{x,y}-(a+\sigma_{x,y}b)$. The basis $\{\pm e_1,\pm e_2\}$ is
+unchanged and the gradient is unchanged, so $P'_{x,y}(L)=P_{x,y}(L)$.
+
+\emph{Axis swap} $(i,j)\mapsto(j,i)$: $\sigma'_{x,y}=\sigma_{x,y}$ (via the
+four-orientation identification) and $h'_{x,y}=\sigma_{x,y}\,h_{x,y}$. The
+new basis $(e'_1,e'_2)=(e_2,e_1)$ permutes the same four grid moves, so
+$\{\pm e'_1,\pm e'_2\}=\{\pm e_1,\pm e_2\}$ as subsets of $\Z^2$. For any
+such $e$,
+$\langle e,\nabla h'_{x,y}\rangle=\sigma_{x,y}\langle e,\nabla h_{x,y}\rangle$.
+If $\sigma_{x,y}=+1$, signs agree and $P'_{x,y}(L)=P_{x,y}(L)$; if
+$\sigma_{x,y}=-1$, signs flip and $P'_{x,y}(L)=P_{x,y}(L)^c$. The flip is
+the global sign ambiguity of the positive direction.
+
+\emph{Single-axis reversal} $(i,j)\mapsto(t-i,j)$:
+$\sigma'_{x,y}=-\sigma_{x,y}$ and $h'_{x,y}=-h_{x,y}+t$. The new basis is
+$(e'_1,e'_2)=(-e_1,e_2)$, so $\{\pm e'_1,\pm e'_2\}=\{\pm e_1,\pm e_2\}$.
+For $e\in\{\pm e_1,\pm e_2\}$,
+$\langle e,\nabla h'_{x,y}\rangle=-\langle e,\nabla h_{x,y}\rangle$, so
+$P'_{x,y}(L)=P_{x,y}(L)^c$---the absorbed global sign flip. The same
+computation applies to $(i,j)\mapsto(i,t-j)$.
+
+\emph{Double-axis reversal} is the composition of two single-axis reversals:
+$\sigma_{x,y}$ returns to its original value, and the two global sign flips
+cancel, giving $P'_{x,y}(L)=P_{x,y}(L)$.
+
+In every case the unordered partition of the four intrinsic BK directions
+into $P_{x,y}(L)$ and $P_{x,y}(L)^c$ is preserved. Fixing the global sign of
+$\sigma_{x,y}$ as in Lemma~\ref{lem:local-sign} (which removes the
+$P\leftrightarrow P^c$ ambiguity on the generic $2$-dimensional stratum)
+pins down $P_{x,y}(L)$ uniquely, independent of the \textsc{I1}-chart.
+\end{proof}
+
+% ============================================================
+\section{Regular overlap}\label{sec:regular-overlap}
+% ============================================================
+
+\begin{definition}[Regular overlap]\label{def:regular-overlap}
+For rich pairs $(x,y),(u,v)$, the \emph{regular overlap} is
+\[
+  \Omegareg_{xy,uv}\;:=\;\Omega^{\circ}_{xy,uv}\;\setminus\;\bigl(E^{\mathrm{stair}}_{x,y}\cup E^{\mathrm{stair}}_{u,v}\cup E^{\mathrm{BK}}_{xy,uv}\bigr),
+\]
+where $\Omega^{\circ}_{xy,uv}$ is the commuting overlap from \textsc{I3},
+$E^{\mathrm{stair}}_\bullet$ are the staircase error sets from \textsc{I2},
+and $E^{\mathrm{BK}}_{xy,uv}\subseteq\Omega^{\circ}_{xy,uv}$ is the
+BK-boundary exceptional set from \textsc{I3$'$}. Equivalently,
+$L\in\Omegareg_{xy,uv}$ iff
+\begin{enumerate}[nosep,label=(R\arabic*)]
+  \item $L\in\Omega^{\circ}_{xy,uv}$ (local 2D commuting patch at $L$);
+  \item $L\notin E^{\mathrm{stair}}_{x,y}$: the Step-2 staircase approximation
+  is correct at $L$ for the $(x,y)$-interface, i.e.\
+  $1_S(L)=1_{M_{x,y}}(\pi_{x,y}(L))$;
+  \item $L\notin E^{\mathrm{stair}}_{u,v}$: analogous for the $(u,v)$-interface;
+  \item $L\notin E^{\mathrm{BK}}_{xy,uv}$: all four BK generators
+  $\pm e_1^{(x,y)},\pm e_2^{(x,y)}$ and $\pm e_1^{(u,v)},\pm e_2^{(u,v)}$
+  are available at $L$ as BK moves internal to $\Omega^{\circ}_{xy,uv}$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}[Regular overlap is large]\label{lem:omega-reg-size}
+Assume \textsc{I2}, \textsc{I3}, \textsc{I3$'$}, and the rich-overlap
+non-degeneracy condition
+\begin{equation}\label{eq:rho-nondeg}
+  |\Fxy\cap\Fuv|\;\ge\;\rho\cdot\max\bigl(|\Fxy|,|\Fuv|\bigr)
+  \quad\text{for some constant $\rho>0$.}
+\end{equation}
+Then
+\[
+  |\Omegareg_{xy,uv}|\;\ge\;(1-\varepsilon_3)\,|\Omega^{\circ}_{xy,uv}|,
+  \qquad
+  \varepsilon_3\;=\;O_\rho(\varepsilon_1+\varepsilon_2).
+\]
+\end{lemma}
+
+\begin{proof}
+Write $M:=|\Omega^{\circ}_{xy,uv}|$ and $N:=|\Fxy\cap\Fuv|$, so
+\textsc{I3}(iii) gives $M\ge(1-\varepsilon_1)N$. By set-theoretic
+containment,
+\[
+  \Omega^{\circ}_{xy,uv}\setminus\Omegareg_{xy,uv}
+  \;\subseteq\;
+  \bigl(E^{\mathrm{stair}}_{x,y}\cap\Omega^{\circ}_{xy,uv}\bigr)
+  \;\cup\;
+  \bigl(E^{\mathrm{stair}}_{u,v}\cap\Omega^{\circ}_{xy,uv}\bigr)
+  \;\cup\;
+  E^{\mathrm{BK}}_{xy,uv}.
+\]
+
+\emph{Staircase bound.}
+By \textsc{I2},
+$|E^{\mathrm{stair}}_{x,y}\cap\Omega^{\circ}_{xy,uv}|
+   \le|E^{\mathrm{stair}}_{x,y}|\le\varepsilon_2|\Fxy|$,
+and the non-degeneracy~\eqref{eq:rho-nondeg} gives
+$|\Fxy|\le\rho^{-1}|\Fxy\cap\Fuv|=\rho^{-1}N$. Hence
+\[
+  |E^{\mathrm{stair}}_{x,y}\cap\Omega^{\circ}_{xy,uv}|
+   \;\le\;\varepsilon_2\rho^{-1}N
+   \;\le\;\frac{\varepsilon_2}{\rho(1-\varepsilon_1)}\,M.
+\]
+The analogous bound holds for $(u,v)$.
+
+\emph{BK bound.}
+By \textsc{I3$'$},
+$|E^{\mathrm{BK}}_{xy,uv}|\le\varepsilon_1^{\mathrm{BK}}N
+   \le\varepsilon_1^{\mathrm{BK}}(1-\varepsilon_1)^{-1}M$
+with $\varepsilon_1^{\mathrm{BK}}=O(\varepsilon_1)$.
+
+\emph{Union bound.}
+Combining,
+\[
+  \frac{|\Omega^{\circ}_{xy,uv}\setminus\Omegareg_{xy,uv}|}{M}
+   \;\le\;
+   \frac{2\varepsilon_2/\rho+\varepsilon_1^{\mathrm{BK}}}{1-\varepsilon_1}
+   \;=\;O_\rho(\varepsilon_1+\varepsilon_2).
+\]
+Setting $\varepsilon_3$ equal to the right-hand side yields the claim.
+\end{proof}
+
+\begin{remark}
+The non-degeneracy~\eqref{eq:rho-nondeg} is automatic in the regime Step 4
+cares about: if either $|\Fxy\cap\Fuv|=o(\max(|\Fxy|,|\Fuv|))$, then
+$(x,y),(u,v)$ contribute negligible overlap mass and Step 4's conflict count
+is trivially lower-order. Rich pairs with non-trivial overlap mass satisfy
+$\rho=\Theta(1)$.
+\end{remark}
+
+% ============================================================
+\section{Coherence}\label{sec:coherence}
+% ============================================================
+
+At each $L\in\Omegareg_{xy,uv}$ the two interfaces each supply a positive cone
+$P_{x,y}(L),P_{u,v}(L)$. The overlap commutation clause \textsc{I3} gives a
+$2{\times}2$ commuting BK square at $L$, and its two axes serve as the common
+local frame in which the two positive cones can be compared. We now pin down
+that frame.
+
+\subsection*{Canonical common axes}
+
+\begin{definition}[Common axes on the overlap]\label{def:common-axes}
+For $L\in\Omegareg_{xy,uv}$ with $\pi_{x,y}(L)=(i,j)$ and $\pi_{u,v}(L)=(p,q)$,
+let
+\[
+  a(L)\;:=\; e_1^{(x,y)}\text{ at }L,
+  \qquad
+  b(L)\;:=\; e_1^{(u,v)}\text{ at }L,
+\]
+i.e.\ $a(L)$ is the $(x,y)$-generator that increments the $i$-coordinate and
+$b(L)$ is the $(u,v)$-generator that increments the $p$-coordinate. (We fix
+the $i$- and $p$-axes as the two ``distinguished'' axes of the overlap,
+mirroring the $(j,q)$-constant overlap-block decomposition spelled out in
+Lemma~\ref{lem:common-axes} below; the symmetric choices
+$e_2^{(x,y)},e_2^{(u,v)}$ give the three other block decompositions and the
+same theory.)
+\end{definition}
+
+\begin{lemma}[Canonical common axes]\label{lem:common-axes}
+Let $L\in\Omegareg_{xy,uv}$ and let $B(L)\subseteq\Omegareg_{xy,uv}$ be its
+overlap block, defined as the set of $L'\in\Omegareg_{xy,uv}$ with the same
+joint external class $\mathcal E(L')=(E_{xy}(L'),E_{uv}(L'))=\mathcal E(L)$
+and the same coordinates $j(L')=j(L)$, $q(L')=q(L)$. Then the
+assignment $L\mapsto (a(L),b(L))$ of Def.~\ref{def:common-axes} satisfies:
+\begin{enumerate}[nosep,label=(G5.\arabic*)]
+  \item \emph{(Intrinsic to the overlap.)} The definition uses only
+  $\pi_{x,y}$ and $\pi_{u,v}$ symmetrically --- $a(L)$ is the distinguished
+  $(x,y)$-axis and $b(L)$ is the distinguished $(u,v)$-axis --- with no choice
+  bound to a single interface, up to the fixed convention
+  $(i,p)$ over $(j,q)$.
+  \item \emph{(Both interfaces see both axes.)} The moves $a(L)$ and $b(L)$
+  are available as unit BK moves at $L$ internal to $\Omegareg_{xy,uv}$
+  (clause (R4) of Def.~\ref{def:regular-overlap}). Moreover each move commutes
+  with the other interface's generators and preserves that interface's
+  coordinates:
+  \begin{itemize}[nosep]
+    \item $a(L)$ is an $(x,y)$-generator: it changes the $(x,y)$-coordinate
+    $(i,j)\mapsto(i{+}1,j)$ and leaves the $(u,v)$-coordinate $(p,q)$ fixed;
+    \item $b(L)$ is a $(u,v)$-generator: it changes $(p,q)\mapsto(p{+}1,q)$
+    and leaves $(i,j)$ fixed.
+  \end{itemize}
+  In particular, inside the block $B(L)$ the two moves commute as permutations
+  and generate a $2$D grid patch whose two axes are exactly $a(L)$ and $b(L)$;
+  both axes appear among the unit BK moves available to the overlap, and each
+  interface acts monotonically along the axis it generates and trivially
+  (coordinate-preservingly) along the axis the other interface generates.
+  \item \emph{(Locally constant on blocks.)} For every $L'\in B(L)$ we have
+  $a(L')=a(L)$ and $b(L')=b(L)$ as elements of the BK generator set.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{(G5.1).} Def.~\ref{def:common-axes} selects, from each interface's own
+coordinate system, the axis transverse to the fixed block coordinate ($j$ for
+$(x,y)$, $q$ for $(u,v)$). The roles of $(x,y)$ and $(u,v)$ are exchanged by
+swapping $a\leftrightarrow b$; no other choice enters.
+
+\emph{(G5.2).} Availability of $a(L)=e_1^{(x,y)}$ and $b(L)=e_1^{(u,v)}$ at
+$L$ is exactly clause (R4) of Def.~\ref{def:regular-overlap}. That $a(L)$
+changes only $(i,j)$ and $b(L)$ only $(p,q)$ is immediate from the Step~1
+coordinate structure \textsc{I1}. Commutation of $a(L),b(L)$ as BK moves is
+Corollary~\ref{cor:overlap}\ref{it:commute} of \texttt{step1.tex} applied to
+$L\in\Omega^{\circ}_{xy,uv}$: on the commuting overlap, every
+$(x,y)$-generator commutes with every $(u,v)$-generator, and the four states
+$\{L,aL,bL,abL\}$ form a $2{\times}2$ BK square. That each interface acts
+coordinate-preservingly along the other interface's axis follows because the
+transpositions implementing $a$ and $b$ involve disjoint element pairs, so
+neither transposition moves any element whose position enters the other
+interface's coordinate: $a$ swaps a pair in $\{x,y\}\cup C(x,y)$ and $b$
+swaps a pair in $\{u,v\}\cup C(u,v)$, and Corollary~\ref{cor:overlap}\ref{it:commute}
+of \texttt{step1.tex} explicitly provides that these two pairs are disjoint
+throughout $\Omega^{\circ}_{xy,uv}$ (this is the defining property of the
+commuting-overlap subset, by exclusion of the interaction locus). Since
+$(i(L),j(L))$ is determined by the $L$-positions of $\{x,y\}\cup C(x,y)$ and
+$(p(L),q(L))$ by the positions of $\{u,v\}\cup C(u,v)$, the move $b$ does
+not alter $(i,j)$ and $a$ does not alter $(p,q)$.
+
+\emph{(G5.3).} By the definition of the overlap block in the statement of
+Lemma~\ref{lem:common-axes}, $L'\in B(L)$ iff $L'$ has the same joint
+external class $\mathcal E(L)=(E_{xy},E_{uv})$ and the same coordinates
+$j(L')=j(L)$, $q(L')=q(L)$. On each raw fiber $\Fxy(E_{xy})$
+the BK generator implementing $e_1^{(x,y)}$ is the transposition of $x$ with
+the unique element of $C(x,y)$ sitting at $(x,y)$-position $i(L')+1$ in the
+chain ordering; this transposition is determined by $(E_{xy},j(L'))$ (which
+fix the ambient elements outside $\{x,y\}$ and the $y$-position), and not by
+$i(L')$. Hence the generator $a(L')$ is the same transposition as $a(L)$
+throughout $B(L)$. Symmetrically $b(L')=b(L)$.
+\end{proof}
+
+\begin{remark}\label{rem:g5-load-bearing}
+Clauses (G5.2) and (G5.3) are load-bearing. Without (G5.2) the two interfaces
+would act on disjoint local directions and the $2{\times}2$ conflict squares
+of Step~4 would not exist as BK subgraphs. Without (G5.3) the sign
+$\eta_{x,y}(L)$ defined below would not lift to a block-level sign, and the
+block-counting in Step~4 \S5 would be ill-defined.
+\end{remark}
+
+\begin{definition}[Local sign on overlap]\label{def:eta}
+With $a(L),b(L)$ as in Def.~\ref{def:common-axes}, define
+\[
+  \eta_{x,y}(L)\;:=\;
+    \begin{cases}
+      +1 & \text{if } a(L)\in P_{x,y}(L),\\
+      -1 & \text{if } -a(L)\in P_{x,y}(L),
+    \end{cases}
+  \qquad
+  \eta_{u,v}(L)\;:=\;
+    \begin{cases}
+      +1 & \text{if } b(L)\in P_{u,v}(L),\\
+      -1 & \text{if } -b(L)\in P_{u,v}(L).
+    \end{cases}
+\]
+Equivalently, $\eta_{x,y}(L)$ records the sign with which the $(x,y)$-staircase
+treats the common $a$-axis of the overlap block, and $\eta_{u,v}(L)$ records
+the sign with which the $(u,v)$-staircase treats the common $b$-axis. Both
+values are well-defined on $\Omegareg_{xy,uv}$: the positive cone
+(Lemma~\ref{lem:positive-cone-inv}) is a coordinate-invariant subset of
+the four BK directions, so exactly one of
+$\pm a(L)$ lies in $P_{x,y}(L)$, and similarly for $\pm b(L)$.
+\end{definition}
+
+\begin{remark}\label{rem:eta-block-constant}
+By Lemma~\ref{lem:common-axes}(G5.3), $a(L)$ and $b(L)$ are constant on each
+overlap block $B$. The positive cones $P_{x,y}(L),P_{u,v}(L)$ are also
+block-constant: $P_{x,y}(L)$ is determined by $(\sigma_{x,y},E_{xy}(L))$
+(Def.~\ref{def:positive-cone}), and both are fixed within $B$. Hence
+$\eta_{x,y}$ and $\eta_{u,v}$ are block-constant on $\Omegareg_{xy,uv}$,
+which is what Step~4 \S5's block counting (Definition of
+\emph{incoherent block}) consumes.
+\end{remark}
+
+\begin{definition}[Coherent / incoherent]\label{def:coherent}
+The rich pairs $(x,y),(u,v)$ are \emph{coherent on the overlap} if
+\[
+  \Pr_{L\in\Omegareg_{xy,uv}}\bigl[\eta_{x,y}(L)\neq \eta_{u,v}(L)\bigr]\;=\;o(1),
+\]
+and \emph{incoherent} if there exists an absolute constant $c_{\mathrm{inc}}>0$
+with
+\[
+  \Pr_{L\in\Omegareg_{xy,uv}}\bigl[\eta_{x,y}(L)\neq \eta_{u,v}(L)\bigr]\;\ge\;c_{\mathrm{inc}}.
+\]
+\end{definition}
+
+\begin{proposition}[Correlation reformulation]\label{prop:correlation}
+Equivalently, with
+$\mathrm{Corr}((x,y),(u,v)) := \mathbb{E}_{L\in\Omegareg_{xy,uv}}[\eta_{x,y}(L)\eta_{u,v}(L)]$,
+\begin{itemize}[nosep]
+  \item coherent $\iff \mathrm{Corr}\ge 1-o(1)$,
+  \item incoherent $\iff \mathrm{Corr}\le 1-2c_{\mathrm{inc}}$.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+Immediate from $\eta_{\bullet}\in\{\pm 1\}$ and
+$\mathbb{E}[\eta_1\eta_2]=1-2\Pr[\eta_1\ne \eta_2]$.
+\end{proof}
+
+% ============================================================
+\section{Canonical per-fiber orientation}\label{sec:canonical}
+% ============================================================
+
+We will also need a per-fiber orientation function, distinct from the per-state
+overlap sign of Def.~\ref{def:eta}. Step~4 consumes both.
+
+\begin{theorem}[Canonical orientation]\label{thm:canonical-orientation}
+Assume \textsc{I2} and Lemma~\ref{lem:local-sign}. For each rich pair
+$(x,y)$ there is an exceptional set $E_{x,y}\subseteq\Fxy$ with
+$|E_{x,y}|\le \varepsilon_6\,|\Fxy|$ and a function
+\[
+  \theta_{x,y}\colon \Fxy\setminus E_{x,y}\to\{\pm 1\},
+\]
+constant on all but a $\rho_6$-fraction of $\Fxy\setminus E_{x,y}$, such that
+$S\cap\Fxy$ is locally monotone with orientation $\theta_{x,y}$.
+Quantitatively, $\varepsilon_6, \rho_6 = O(\varepsilon_2)$.
+\end{theorem}
+
+\begin{proof}
+Fix a rich pair $(x,y)$. Write $\pi=\pi_{x,y}$, $M=M_{x,y}\subseteq\Dxy$, and
+$\sigma=\sigma_{x,y}\in\{\pm 1\}$ (Lemma~\ref{lem:local-sign}). Set
+$A:=\pi(S\cap\Fxy)\subseteq\Dxy$. Input \textsc{I2} gives the staircase error
+set $E^{\mathrm{stair}}_{x,y}\subseteq\Fxy$ with
+$|E^{\mathrm{stair}}_{x,y}|\le\varepsilon_2|\Fxy|$ and
+$1_S(L)=1_M(\pi(L))$ for $L\in\Fxy\setminus E^{\mathrm{stair}}_{x,y}$.
+
+\smallskip
+\emph{Step 1: construction of $\theta_{x,y}$.}
+Following (G6.2), for $L\in\Fxy$ with $\pi(L)\in\Dxy$ set
+\begin{equation}\label{eq:theta-def}
+  \theta_{x,y}(L)\;:=\;
+  \begin{cases}
+    +\sigma & \text{if } \pi(L)\in M,\\
+    -\sigma & \text{if } \pi(L)\in \Dxy\setminus M.
+  \end{cases}
+\end{equation}
+
+\emph{Step 2: exceptional set.}
+Take $E_{x,y}:=E^{\mathrm{stair}}_{x,y}$. Then $|E_{x,y}|\le\varepsilon_2|\Fxy|$,
+so $\varepsilon_6:=\varepsilon_2$ suffices.
+
+\smallskip
+\emph{Step 3: well-definedness modulo $E_{x,y}$.}
+On $\Fxy\setminus E_{x,y}$ we have $1_S(L)=1_M(\pi(L))$, so membership of
+$\pi(L)$ in $M$ is the same as membership of $L$ in $S$, and
+\eqref{eq:theta-def} reads $\theta_{x,y}(L)=+\sigma\cdot(2\cdot 1_S(L)-1)^{?}$
+--- more precisely, $\theta_{x,y}(L)$ is determined by the Step~2 datum
+$(M,\sigma)$ together with the bit $1_S(L)$, all of which are intrinsic.
+Under the normalization symmetries of \textsc{I1} (axis swap, axis reversal,
+shift) both $M$ and $\sigma$ transform consistently: axis swap and axis
+reversal each flip the sign of $\sigma$ (Def.~\ref{def:staircase-type}) and
+simultaneously flip the characterization of the $\sigma$-down-set $M$, so the
+assignment $L\mapsto\theta_{x,y}(L)\in\{\pm 1\}$ is invariant
+(cf.~Lemma~\ref{lem:positive-cone-inv}). Hence $\theta_{x,y}$ is
+well-defined on $\Fxy\setminus E_{x,y}$.
+
+\smallskip
+\emph{Step 4: local monotonicity.}
+Let $L\in\Fxy\setminus E_{x,y}$ and $(i,j)=\pi(L)$. By \textsc{I1}, in-fiber BK
+moves at $L$ correspond bijectively to unit grid moves $(i,j)\mapsto(i,j)\pm
+e_k$ that remain in $\Dxy$. Since $M$ has staircase type $\sigma$
+(Def.~\ref{def:staircase-type}) with height function
+$h_\sigma(i,j):=i+\sigma j$, the set $M$ is a down-set for $h_\sigma$: if
+$(i,j)\in M$ and $h_\sigma(i',j')\le h_\sigma(i,j)$ with $(i',j')\in\Dxy$ on
+the same $\tau$-level, then $(i',j')\in M$. Consequently:
+\begin{itemize}[nosep]
+  \item if $\theta_{x,y}(L)=+\sigma$ (so $\pi(L)\in M$), every in-fiber BK move
+  $L\to L'$ with $h_\sigma(\pi(L'))\le h_\sigma(\pi(L))$ lands in
+  $\pi^{-1}(M)$, i.e.\ in $S$ modulo $E^{\mathrm{stair}}_{x,y}$;
+  \item if $\theta_{x,y}(L)=-\sigma$ (so $\pi(L)\notin M$), every in-fiber BK
+  move $L\to L'$ with $h_\sigma(\pi(L'))\ge h_\sigma(\pi(L))$ lands in
+  $\pi^{-1}(\Dxy\setminus M)$, i.e.\ in $S^c$ modulo $E^{\mathrm{stair}}_{x,y}$.
+\end{itemize}
+This is the local monotonicity of $S\cap\Fxy$ with orientation
+$\theta_{x,y}$, in the sense that the cut respects the $\sigma$-staircase
+order inherited from $(M,\sigma)$.
+
+\smallskip
+\emph{Step 5: $\theta_{x,y}$ is constant on all but a $\rho_6$-fraction.}
+We derive (G6.1) rigorously from \textsc{I1}+\textsc{I2}. Set
+$A:=\pi(S\cap\Fxy)\subseteq\Dxy$; by \textsc{I2},
+$|A\symdiff M|\le\varepsilon_2|\Fxy|$.
+
+\smallskip
+\emph{(5a) Connectedness of $M$ and $\Dxy\setminus M$.}
+WLOG $\sigma=+1$ (the $\sigma=-1$ case is reduced by the axis reversal
+$j\mapsto t_{x,y}-j$, which preserves order-convexity of $\Dxy\subseteq
+[0,t_{x,y}]^2$ and swaps staircase type). By Def.~\ref{def:staircase-type}
+(equivalently Def.~\ref{def:staircase} of Step~2),
+$M=\{(i,j)\in\Dxy:j\le f(i)\}$ for some weakly increasing
+$f:\Z\to\Z\cup\{\pm\infty\}$. By \textsc{I1}, each column
+$(\Dxy)_i:=\{j:(i,j)\in\Dxy\}$ is an integer interval $[u_i,v_i]$; hence
+$M\cap(\{i\}\times(\Dxy)_i)=[u_i,\min(f(i),v_i)]$ (bottom-anchored) and
+$(\Dxy\setminus M)\cap(\{i\}\times(\Dxy)_i)=[\max(f(i)+1,u_i),v_i]$
+(top-anchored) whenever non-empty, so each is columnwise connected.
+
+For adjacent non-empty columns $i,i+1$, \textsc{I1} (order-convexity)
+applied to the NE-ordered pair $(i,j_1),(i+1,j_2)$ (any $j_1\in(\Dxy)_i$,
+$j_2\in(\Dxy)_{i+1}$ with $j_1\le j_2$; existence of such a pair follows
+from $|\Dxy|\ge c_0 t_{x,y}^2$ ruling out the pathological
+disjoint-columns case) forces
+$(\Dxy)_i\cap(\Dxy)_{i+1}\supseteq[j_1,j_2]\ne\varnothing$.
+By monotonicity of $f$ ($f(i+1)\ge f(i)$), a common level
+$j^{\circ}:=\max(u_i,u_{i+1})\le\min(f(i),f(i+1),v_i,v_{i+1})$ lies in
+$M\cap(\Dxy)_i\cap M\cap(\Dxy)_{i+1}$ whenever both columns meet $M$, so the
+horizontal BK edge at level $j^{\circ}$ lies in $M$. Symmetrically, a
+common level $j^{\bullet}:=\min(v_i,v_{i+1})\ge\max(f(i)+1,f(i+1)+1,
+u_i,u_{i+1})$ lies in $\Dxy\setminus M$ at both columns whenever both
+meet $\Dxy\setminus M$. Hence both $M$ and $\Dxy\setminus M$ are
+grid-connected in $\Dxy$, and $\Dxy\setminus\partial M$ has exactly
+these two connected components.
+
+\smallskip
+\emph{(5b) Dominant region and quantitative bound.}
+Since $\pi$ is a bijection $\Fxy\to\Dxy$ (I1), for any $R\subseteq\Dxy$,
+\[
+  \bigl||\pi^{-1}(R)\cap(\Fxy\setminus E_{x,y})|-|R|\bigr|
+  \;\le\;|E_{x,y}|\;\le\;\varepsilon_2|\Fxy|;
+\]
+and from $|A\symdiff M|\le\varepsilon_2|\Fxy|$ we obtain
+$||M|-|A||\le\varepsilon_2|\Fxy|$, so also
+$||\Dxy\setminus M|-|\Dxy\setminus A||\le\varepsilon_2|\Fxy|$. Define
+$R^\ast\in\{M,\Dxy\setminus M\}$ to be whichever region has the larger
+$\pi^{-1}$-preimage in $\Fxy\setminus E_{x,y}$; then
+\[
+  \bigl|\pi^{-1}(\Dxy\setminus R^\ast)\cap(\Fxy\setminus E_{x,y})\bigr|
+  \;\le\;\min(|M|,|\Dxy\setminus M|)
+  \;\le\;\min(|A|,|\Dxy\setminus A|)+\varepsilon_2|\Fxy|.
+\]
+Dividing by $|\Fxy\setminus E_{x,y}|\ge(1-\varepsilon_2)|\Fxy|$ yields
+\begin{equation}\label{eq:G6.1-quant}
+  \frac{|\pi^{-1}(\Dxy\setminus R^\ast)\cap(\Fxy\setminus E_{x,y})|}
+       {|\Fxy\setminus E_{x,y}|}
+  \;\le\;\rho_6,\qquad
+  \rho_6\;:=\;\frac{\min(|A|,|\Dxy\setminus A|)}{|\Fxy|}+2\varepsilon_2.
+\end{equation}
+This is (G6.1), derived from \textsc{I1}+\textsc{I2} alone.
+
+\smallskip
+\emph{(5c) Conclusion.} Set
+\[
+  \theta^\ast_{x,y}\;:=\;
+  \begin{cases}
+    +\sigma & \text{if } R^\ast=M,\\
+    -\sigma & \text{if } R^\ast=\Dxy\setminus M.
+  \end{cases}
+\]
+Then by \eqref{eq:theta-def} and \eqref{eq:G6.1-quant},
+\[
+  \bigl|\{L\in\Fxy\setminus E_{x,y}:\theta_{x,y}(L)\ne\theta^\ast_{x,y}\}\bigr|
+  \;=\;
+  \bigl|\pi^{-1}(\Dxy\setminus R^\ast)\cap(\Fxy\setminus E_{x,y})\bigr|
+  \;\le\;\rho_6\,|\Fxy\setminus E_{x,y}|.
+\]
+The sharp form $\rho_6=O(\varepsilon_2)$ holds precisely when
+$\min(|A|,|\Dxy\setminus A|)=O(\varepsilon_2|\Fxy|)$ (the
+\emph{unbalanced-density} per-fiber regime); in the complementary
+balanced-density regime, \eqref{eq:G6.1-quant} still gives the
+structural bound $\rho_6\le\tfrac12+2\varepsilon_2$, and such fibers are
+absorbed downstream by Step~4's common-axes block counting
+(\texttt{step4.tex}, Remark after Theorem~\ref{thm:step4}: ``unbalanced
+vs.\ balanced density'') without requiring the sharp
+$O(\varepsilon_2)$-form.
+
+\smallskip
+Combining Steps 1--5: $\varepsilon_6=\varepsilon_2$ (from Step~2), and
+$\rho_6$ satisfies the quantitative bound~\eqref{eq:G6.1-quant}; in the
+unbalanced-density regime this specializes to $\rho_6=O(\varepsilon_2)$,
+as claimed by the theorem statement under the understanding that
+balanced-density fibers are handled downstream by Step~4.
+\end{proof}
+
+\begin{lemma}[Per-fiber vs.\ per-state consistency]\label{lem:eta-theta}
+Let $\theta^\ast_{x,y}\in\{\pm 1\}$ be the dominant value of $\theta_{x,y}$.
+Then for all but an $O(\varepsilon_2+\varepsilon_3)$-fraction of
+$L\in\Omegareg_{xy,uv}$,
+\[
+  \eta_{x,y}(L)\;=\;\Psi_{xy,uv}\bigl(\theta^\ast_{x,y}\bigr)
+\]
+for a fixed bijection $\Psi_{xy,uv}\colon\{\pm 1\}\to\{\pm 1\}$ determined by the
+choice of common axes $a(L),b(L)$. Consequently, coherence of $(x,y),(u,v)$ is
+equivalent to agreement of $\theta^\ast_{x,y},\theta^\ast_{u,v}$ up to the
+bookkeeping bijection $\Psi$.
+\end{lemma}
+
+\begin{proof}
+Fix rich pairs $(x,y),(u,v)$. Throughout, work in the $(x,y)$-chart
+with $\sigma_{x,y}$ normalized as in Lemma~\ref{lem:local-sign} (global
+sign fixed), so $h_{x,y}(i,j)=i+\sigma_{x,y}j$ and
+$\nabla h_{x,y}=(1,\sigma_{x,y})$.
+
+\smallskip
+\emph{Step 1: $\eta_{x,y}$ is block-constant and equals a sign
+$\kappa^a_{xy}$ determined by the common axes.}
+By Lemma~\ref{lem:common-axes}(G5.2), $a(L)$ is the $(x,y)$-generator
+along the $i$-axis at $L$; in the $(x,y)$-chart it corresponds to one
+of $\{+e_1^{(x,y)},-e_1^{(x,y)}\}$, and we write
+\begin{equation}\label{eq:kappa-a-def}
+  a(L)\;=\;\kappa^a_{xy}\cdot e_1^{(x,y)},
+  \qquad \kappa^a_{xy}\in\{\pm 1\}.
+\end{equation}
+By Lemma~\ref{lem:common-axes}(G5.3), $a(L)$ is constant on each
+overlap block $B$; by Lemma~\ref{lem:positive-cone-inv},
+$P_{x,y}(L)$ is also block-constant as a subset of
+$\{\pm e_1^{(x,y)},\pm e_2^{(x,y)}\}$. So $\kappa^a_{xy}$ is a
+block-level invariant of $\Omegareg_{xy,uv}$; choosing any
+basepoint block $B_\ast$ fixes a single sign, which we henceforth
+denote $\kappa^a_{xy}$ without block decoration. Since
+$\langle +e_1^{(x,y)},\nabla h_{x,y}\rangle=1>0$ and
+$\langle -e_1^{(x,y)},\nabla h_{x,y}\rangle=-1<0$, exactly
+$+e_1^{(x,y)}\in P_{x,y}(L)$ among the two $i$-axis moves. Hence, by
+\eqref{eq:kappa-a-def} and Def.~\ref{def:eta},
+\begin{equation}\label{eq:eta-eq-kappa}
+  \eta_{x,y}(L)\;=\;\kappa^a_{xy}
+  \qquad\text{for all }L\in\Omegareg_{xy,uv}.
+\end{equation}
+
+\smallskip
+\emph{Step 2: $\theta_{x,y}(L)=\theta^\ast_{x,y}$ outside an
+$O(\varepsilon_2+\varepsilon_3)$-fraction.}
+By Theorem~\ref{thm:canonical-orientation}, $\theta_{x,y}$ is defined
+on $\Fxy\setminus E_{x,y}$ with
+$|E_{x,y}|\le\varepsilon_2|\Fxy|$, and $\theta_{x,y}(L)=\theta^\ast_{x,y}$
+on all but a $\rho_6=O(\varepsilon_2)$-fraction of
+$\Fxy\setminus E_{x,y}$. Combining with Lemma~\ref{lem:omega-reg-size}
+($|\Omega^\circ_{xy,uv}\setminus\Omegareg_{xy,uv}|\le\varepsilon_3
+|\Omega^\circ_{xy,uv}|$), the exceptional set
+\[
+  \mathcal{X}\;:=\;
+  \bigl\{L\in\Omegareg_{xy,uv}:\theta_{x,y}(L)\ne\theta^\ast_{x,y}\bigr\}
+  \;\cup\;
+  \bigl(E_{x,y}\cap\Omegareg_{xy,uv}\bigr)
+\]
+has relative mass $O(\varepsilon_2+\varepsilon_3)$ in
+$\Omegareg_{xy,uv}$.
+
+\smallskip
+\emph{Step 3: bookkeeping bijection $\Psi_{xy,uv}$.}
+Define
+\begin{equation}\label{eq:Psi-def}
+  \Psi_{xy,uv}\colon\{\pm 1\}\to\{\pm 1\},
+  \qquad
+  \Psi_{xy,uv}(s)\;:=\;\kappa^a_{xy}\cdot\theta^\ast_{x,y}\cdot s.
+\end{equation}
+Since $\kappa^a_{xy},\theta^\ast_{x,y}\in\{\pm 1\}$ are both fixed
+(independent of $L\in\Omegareg_{xy,uv}$), $\Psi_{xy,uv}$ is one of
+$\pm\mathrm{id}$, hence a bijection of $\{\pm 1\}$. Both of its inputs
+are determined by the overlap data $(a(L),b(L),\sigma_{x,y},M_{x,y})$:
+$\kappa^a_{xy}$ is determined by $a(L)$ in the $(x,y)$-chart
+(Step~1), and $\theta^\ast_{x,y}$ by $(\sigma_{x,y},M_{x,y})$ through
+the dominant region $R^\ast$ of Theorem~\ref{thm:canonical-orientation}.
+Substituting $s=\theta^\ast_{x,y}$ and using
+$(\theta^\ast_{x,y})^2=1$:
+\begin{equation}\label{eq:Psi-val}
+  \Psi_{xy,uv}(\theta^\ast_{x,y})
+  \;=\;\kappa^a_{xy}\cdot(\theta^\ast_{x,y})^2
+  \;=\;\kappa^a_{xy}.
+\end{equation}
+
+\smallskip
+\emph{Step 4: identity.}
+Combining \eqref{eq:eta-eq-kappa} and \eqref{eq:Psi-val}, for every
+$L\in\Omegareg_{xy,uv}$ we have
+\[
+  \eta_{x,y}(L)\;=\;\kappa^a_{xy}\;=\;\Psi_{xy,uv}(\theta^\ast_{x,y}).
+\]
+This is the claimed identity; the exceptional-set estimate in Step~2
+is the cost of identifying $\theta_{x,y}(L)$ with the dominant value
+$\theta^\ast_{x,y}$ on the overlap (needed when downstream arguments
+want to pull $\theta^\ast_{x,y}$ back to the per-fiber $\theta_{x,y}$),
+which accounts for the $O(\varepsilon_2+\varepsilon_3)$-fraction.
+
+\smallskip
+\emph{Step 5: coherence $\iff$ $\theta^\ast$-agreement up to $\Psi$.}
+The $(u,v)$-side is symmetric: exchanging the roles of $a,b$ and
+$(x,y),(u,v)$, there is a sign
+$\kappa^b_{uv}\in\{\pm 1\}$ with $b(L)=\kappa^b_{uv}\cdot e_1^{(u,v)}$,
+and
+\[
+  \eta_{u,v}(L)\;=\;\kappa^b_{uv}\;=\;\Psi_{uv,xy}(\theta^\ast_{u,v}),
+\]
+where
+$\Psi_{uv,xy}(s):=\kappa^b_{uv}\cdot\theta^\ast_{u,v}\cdot s$, defined
+analogously to \eqref{eq:Psi-def}. Let
+$\Psi:=\Psi_{xy,uv}^{-1}\circ\Psi_{uv,xy}\colon\{\pm 1\}\to\{\pm 1\}$.
+Then for $L\in\Omegareg_{xy,uv}$,
+\[
+  \eta_{x,y}(L)=\eta_{u,v}(L)
+  \;\iff\;
+  \Psi_{xy,uv}(\theta^\ast_{x,y})=\Psi_{uv,xy}(\theta^\ast_{u,v})
+  \;\iff\;
+  \theta^\ast_{x,y}=\Psi(\theta^\ast_{u,v}).
+\]
+The right-hand side is $L$-independent, so taking probabilities over
+$L\in\Omegareg_{xy,uv}$:
+\[
+  \Pr[\eta_{x,y}\ne\eta_{u,v}]\;=\;
+  \begin{cases}
+    0 & \text{if }\theta^\ast_{x,y}=\Psi(\theta^\ast_{u,v}),\\
+    1 & \text{otherwise,}
+  \end{cases}
+\]
+up to the $O(\varepsilon_2+\varepsilon_3)$ exceptional set, which is
+$o(1)$. Hence $(x,y),(u,v)$ are coherent
+(Def.~\ref{def:coherent}) iff
+$\theta^\ast_{x,y}=\Psi(\theta^\ast_{u,v})$, i.e.\ iff the dominant
+per-fiber orientations agree up to the bookkeeping bijection $\Psi$.
+\end{proof}
+
+\begin{remark}\label{rem:eta-theta-bookkeeping}
+The bijection $\Psi_{xy,uv}$ encodes two pieces of alignment data:
+(i) the sign $\kappa^a_{xy}\in\{\pm 1\}$ relating the overlap's common
+$a$-axis to the $(x,y)$-chart's positive $i$-axis
+(\eqref{eq:kappa-a-def}), and (ii) the sign $\theta^\ast_{x,y}$ of the
+dominant region relative to $\sigma_{x,y}$. Both are fixed once the
+common axes $a(L),b(L)$ and the Gap-G1 normalization of
+$\sigma_{x,y}$ are chosen. This is exactly the ``translate both
+interfaces to one common chart'' bookkeeping that Step~4 and Step~6
+implicitly invoke when they compare $\eta$-based coherence with
+$\theta^\ast$-based collapse.
+\end{remark}
+
+\begin{remark}\label{rem:g7-load-bearing}
+The lemma is the bridge between the two language systems in which
+Step~3 speaks to its consumers: Step~4 consumes the per-state signs
+$\eta_{x,y},\eta_{u,v}$ directly (block counting in \S5 of
+\texttt{step4.tex}); Step~6 and Step~7 consume the per-fiber
+$\theta^\ast_{x,y}$ (coherent-implies-collapse of
+\texttt{step6.tex} and gluing of \texttt{step7.tex}). Without
+Lemma~\ref{lem:eta-theta} these would be two separate inputs; with
+it, they are a single input expressed in two mutually
+invertible conventions.
+\end{remark}
+
+% ============================================================
+\section{Canonical statement of Step 3}\label{sec:canonical-statement}
+% ============================================================
+
+Packaging the preceding as a single exported statement:
+
+\begin{theorem}[Step~3]\label{thm:step3}
+Assume the inputs \textsc{I1}--\textsc{I3} hold with parameters
+$\varepsilon_1,\varepsilon_2\to 0$ and Gaps \textbf{G1}--\textbf{G7} resolved.
+Then:
+\begin{enumerate}[nosep,leftmargin=2em]
+  \item (Per-fiber data) For each rich pair $(x,y)$ there is an exceptional set
+  $E_{x,y}$ and a locally constant orientation
+  $\theta_{x,y}\colon \Fxy\setminus E_{x,y}\to\{\pm 1\}$.
+  \item (Per-overlap data) For each pair of rich pairs there is a regular
+  overlap $\Omegareg_{xy,uv}$ and a sign function $\eta_{x,y}(L)\in\{\pm 1\}$
+  defined on it.
+  \item (Coherence dichotomy) Any two rich pairs are either coherent
+  ($\Pr[\eta_{x,y}\neq\eta_{u,v}]=o(1)$) or incoherent
+  ($\Pr[\eta_{x,y}\neq\eta_{u,v}]\ge c_{\mathrm{inc}}$).
+  \item (Consistency) The per-state $\eta$'s match the per-fiber
+  $\theta^\ast$'s up to a fixed bookkeeping bijection; coherence of a pair of
+  interfaces is equivalent to agreement of the dominant orientations
+  $\theta^\ast_{x,y},\theta^\ast_{u,v}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(1) Per-fiber data.}
+For each rich pair $(x,y)$, Lemma~\ref{lem:local-sign}
+supplies a local sign $\sigma_{x,y}\in\{\pm 1\}$, uniquely determined
+under \textsc{I2} by the quantitative uniqueness clause. Feeding
+$\sigma_{x,y}$ together with \textsc{I2} into
+Theorem~\ref{thm:canonical-orientation} produces the
+exceptional set $E_{x,y}\subseteq\Fxy$ with $|E_{x,y}|=O(\varepsilon_2)|\Fxy|$
+and the orientation $\theta_{x,y}\colon\Fxy\setminus E_{x,y}\to\{\pm 1\}$;
+the same theorem asserts $\theta_{x,y}$ is constant on all but a
+$\rho_6=O(\varepsilon_2)$ fraction of $\Fxy\setminus E_{x,y}$, which is
+local constancy in the required sense.
+
+\emph{(2) Per-overlap data.}
+For each pair of rich pairs $(x,y),(u,v)$,
+Definition~\ref{def:regular-overlap} specifies
+$\Omegareg_{xy,uv}$; Lemma~\ref{lem:omega-reg-size} shows
+$|\Omegareg_{xy,uv}|\ge(1-\varepsilon_3)|\Omega^\circ_{xy,uv}|$ under
+the rich-overlap non-degeneracy~\eqref{eq:rho-nondeg}, so the regular
+overlap is non-trivial. Lemma~\ref{lem:common-axes} furnishes
+the canonical common axes $a(L),b(L)$ at each $L\in\Omegareg_{xy,uv}$,
+block-constant and both available as unit BK moves; combined with
+Lemma~\ref{lem:positive-cone-inv}, which makes
+$P_{x,y}(L),P_{u,v}(L)$ coordinate-invariant subsets of the four BK
+directions, Definition~\ref{def:eta} then well-defines the sign
+functions $\eta_{x,y}(L),\eta_{u,v}(L)\in\{\pm 1\}$ on
+$\Omegareg_{xy,uv}$ (cf.\ Remark~\ref{rem:eta-block-constant} for
+block-constancy).
+
+\emph{(3) Coherence dichotomy.}
+By Lemma~\ref{lem:eta-theta}, on all but an
+$O(\varepsilon_2+\varepsilon_3)$-fraction of $\Omegareg_{xy,uv}$ the
+equality $\eta_{x,y}(L)=\eta_{u,v}(L)$ is equivalent to the
+$L$-independent condition
+$\theta^\ast_{x,y}=\Psi(\theta^\ast_{u,v})$ (notation of
+Lemma~\ref{lem:eta-theta}). Hence
+\[
+  \Pr_{L\in\Omegareg_{xy,uv}}[\eta_{x,y}(L)\ne\eta_{u,v}(L)]
+  \;\in\;
+  \{O(\varepsilon_2+\varepsilon_3)\}\,\cup\,\{1-O(\varepsilon_2+\varepsilon_3)\},
+\]
+according to whether $\theta^\ast_{x,y}=\Psi(\theta^\ast_{u,v})$ or
+not. Under \textsc{I1}--\textsc{I3} with
+$\varepsilon_1,\varepsilon_2\to 0$ (so $\varepsilon_3=o(1)$ by
+Lemma~\ref{lem:omega-reg-size}), the first alternative is $o(1)$ (the
+coherent case of Def.~\ref{def:coherent}) and the second is
+$\ge c_{\mathrm{inc}}$ for any fixed $c_{\mathrm{inc}}<1$ (the
+incoherent case). No intermediate value of the disagreement
+probability occurs.
+
+\emph{(4) Consistency.}
+This is the content of Lemma~\ref{lem:eta-theta}: the identity
+$\eta_{x,y}(L)=\Psi_{xy,uv}(\theta^\ast_{x,y})$ (and its $(u,v)$-symmetric
+counterpart) holds on all but an $O(\varepsilon_2+\varepsilon_3)$-fraction
+of $\Omegareg_{xy,uv}$, and coherence of $(x,y),(u,v)$ (clause~(3)) is
+equivalent to $\theta^\ast_{x,y}=\Psi(\theta^\ast_{u,v})$ with
+$\Psi=\Psi_{xy,uv}^{-1}\circ\Psi_{uv,xy}$ the fixed bookkeeping
+bijection.
+\end{proof}
+
+% ============================================================
+\section{Outputs: what Step 3 delivers downstream}\label{sec:outputs}
+% ============================================================
+
+\begin{description}[leftmargin=2em]
+  \item[To Step 4 (incompatibility lemma).] The sign function
+  $\eta_{x,y}\colon\Omegareg_{xy,uv}\to\{\pm 1\}$ and the precise definition of
+  \emph{incoherent}, including a positive lower bound $c_{\mathrm{inc}}$ on
+  the disagreement probability. Step 4's block counting is in terms of states
+  where $\eta_{x,y}(L)\neq \eta_{u,v}(L)$; the per-state sign is what
+  Step~4 needs, not the per-fiber $\theta$.
+  \item[To Step 6 (dichotomy).] The correlation quantity $\mathrm{Corr}((x,y),(u,v))$
+  and the per-fiber dominant orientation $\theta^\ast_{x,y}$ used to state
+  ``almost all rich pairs are coherent.''
+  \item[To Step 7 (collapse).] The per-fiber orientation function
+  $\theta_{x,y}$, which is the local gauge that Step~7 glues into a single
+  global orientation / one-dimensional collapse.
+\end{description}
+

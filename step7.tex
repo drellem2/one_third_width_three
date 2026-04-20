@@ -1,0 +1,1630 @@
+
+\begin{abstract}
+Step~6 leaves us with the coherent case: almost all rich interfaces
+carry pairwise-compatible local staircase rules.
+Step~7 upgrades this pairwise compatibility into a single global
+scalar rule, and then shows that the resulting global-threshold
+description forces the poset to degenerate to a layered / 1D regime,
+which in width~$3$ is directly balanced or reducible.
+The core new technical content is a cocycle-to-potential upgrade on a
+weighted interface graph; all other pieces reduce to double counting,
+gradient integration on a connected graph, or direct averaging.
+\end{abstract}
+
+
+%-----------------------------------------------------------------------
+\section{Setup and recall}
+%-----------------------------------------------------------------------
+
+Let $P$ be a width-3 poset and $\LE(P)$ its set of linear extensions.
+Let $G_{\BK}(P)$ be the BK graph on $\LE(P)$.
+For $S\subseteq\LE(P)$ let $\Phi(S)=|\bd S|/\vol(S)$ be its
+conductance.
+
+We use the rich-pair notation of Step~1 (Definition~\ref{def:rich}):
+for $x\parallel y$ in $P$, $C(x,y)$ is the common-neighbor chain (a
+chain by width~$3$), $t(x,y)=|C(x,y)|$, the richness threshold is
+$T\ge 1$, and $(x,y)$ is \emph{rich} iff $t(x,y)\ge T$.
+Denote by $\Rich$ the set of rich pairs.
+
+\begin{definition}[Good fiber, interface]\DEP{Step~1}
+For each $e=(x,y)\in\Rich$, Step~1 produces a good fiber
+$\fiber{e}\subseteq\LE(P)$ with a coordinate map
+$\pi_e\colon\fiber{e}\to D_e\subseteq[0,t(x,y)]^2$, such that BK moves
+inside $\fiber{e}$ are exactly unit grid moves and $D_e$ is
+order-convex.
+\end{definition}
+
+\begin{definition}[Local staircase, orientation and threshold]
+\DEP{Step~2}\label{def:local-staircase}
+For each $S$-good rich interface $e$, Step~2 says $S\cap\fiber{e}$,
+viewed in coordinates, is close to a monotone staircase.
+We shall require the \emph{normalized} form:
+\begin{equation}\label{eq:signed-threshold}
+  S\cap\fiber{e}
+  \;\approx\;
+  \bigl\{\,(i,j)\in D_e :\; \sigma_e\,(j-i) \ge \tau_e\,\bigr\},
+\end{equation}
+where $\sigma_e\in\{\pm1\}$ is the oriented monotone direction and
+$\tau_e\in\mathbb{Z}$ is a local threshold.
+See Section~\ref{sec:normalize} for the proof that Step~2's
+staircase admits this normalization.
+\end{definition}
+
+\begin{definition}[Interface graph $G_{\Rich}$]\label{def:G_Rich}\DEP{Step~5, Step~6}
+Let $\Rich^\star\subseteq\Rich$ be the set of $S$-good rich interfaces
+(Step~6).
+The \emph{interface graph} $G_{\Rich}$ has vertex set $\Rich^\star$,
+with an edge $e\sim f$ when
+$w_{ef}=\mu((\fiber{e}\cap\fiber{f})\setminus(B_e\cup B_f))$ is above
+a fixed positive threshold (\emph{active pair}).
+Similarly, a \emph{triple} $(e,f,g)$ is \emph{active} if the three
+pairwise overlaps and the triple overlap are each above positive
+thresholds.
+\end{definition}
+
+%-----------------------------------------------------------------------
+\section{The Step 7 proposition}
+%-----------------------------------------------------------------------
+
+\begin{proposition}[Step~7, informal]\label{prop:step7-informal}
+Assume the hypotheses of Steps~1, 2, 5, 6, and in particular assume
+$S$ is in the coherence case of Step~6 (pointwise coherence,
+Corollary~B of Step~6).
+Then for $\varepsilon$ small enough, one of the following holds:
+
+\begin{enumerate}[label=(\roman*),nosep]
+  \item \textbf{Global threshold case.}
+  There exists a function $a\colon P\to\mathbb{R}$ (an \emph{element
+  potential}) and a constant $c\in\mathbb{R}$ such that, setting
+  \[
+    H(L) := \sum_{z\in P} a(z)\,\pos_L(z),
+  \]
+  we have
+  \[
+    1_S(L) \;\approx\; 1_{\{H(L)\ge c\}}
+  \]
+  on $(1-o(1))$ of $\LE(P)$, and every rich BK move across an
+  interface $e=(x,y)$ changes $H$ with the sign predicted by $\sigma_e
+  =\sgn(a(y)-a(x))$.
+
+  \item \textbf{Collapse case.}
+  $P$ admits a layered width-$3$ decomposition
+  $P = L_1\sqcup\cdots\sqcup L_m$, with each $L_r$ an antichain of
+  size $\le 3$, such that after deleting $o(1)$ of the mass of
+  $\LE(P)$:
+  \begin{itemize}[nosep]
+    \item every rich interface is between adjacent or near-adjacent
+      levels;
+    \item BK moves move mass forward/backward across the level order;
+    \item linear extensions are determined mainly by choices internal
+      to consecutive levels.
+  \end{itemize}
+\end{enumerate}
+In either case, combined with width~$3$, $P$ admits a balanced pair
+(or reduces to a strictly smaller instance).
+\end{proposition}
+
+\noindent
+Proposition~\ref{prop:step7-informal} is the complementary case to
+Step~4: if interfaces do not generate boundary (coherence case), then
+they must all be reading the same global coordinate.
+
+The formal statement is broken into three propositions in
+Section~\ref{sec:formal}.
+
+%-----------------------------------------------------------------------
+\section{Normalizing the local staircase}\label{sec:normalize}
+%-----------------------------------------------------------------------
+
+Step~2 produces a monotone staircase region in each $S$-good fiber.
+For Step~7 we must normalize it into the explicit signed-threshold
+form~\eqref{eq:signed-threshold}.
+
+\begin{lemma}[Signed-threshold normal form]\label{lem:signed-threshold}
+\DEP{Step~2}
+For each $e\in\Rich^\star$ there is a choice of orientation
+$\sigma_e\in\{\pm1\}$ and threshold $\tau_e\in\mathbb{Z}$ such that, on
+$\fiber{e}\setminus B_e$,
+\[
+  1_S(L) \;=\; 1\!\left\{\,\sigma_e\cdot (j(L)-i(L))\ge \tau_e\,\right\}
+  + O(\varepsilon_2),
+\]
+where $(i(L),j(L))=\pi_e(L)$ and $\varepsilon_2$ is the Step~2 error
+parameter.
+\end{lemma}
+
+\begin{proof}
+By Step~2's per-fiber staircase approximation (\texttt{step2.tex}
+Prop.~3.2), there exists a staircase
+$M_e\in\mathrm{Stair}(D_e)$ of some type $\tilde\sigma_e\in\{\pm 1\}$
+(in the sense of Step~2 Def.~2.1, equivalently Step~3 Def.~3.1) with
+\[
+  |(S\cap\fiber{e})\symdiff\pi_e^{-1}(M_e)| \;\le\; \varepsilon_2\,|\fiber{e}|.
+\]
+In the affine form of Step~3 Def.~3.1, $M_e$ rewrites as
+\begin{equation}\label{eq:affine-staircase}
+  M_e = \bigl\{(i,j)\in D_e : i+\tilde\sigma_e\,j \le \varphi_e(i-\tilde\sigma_e\,j)\bigr\},
+\end{equation}
+with staircase threshold
+$\varphi_e\colon\mathbb{Z}\to\mathbb{Z}\cup\{\pm\infty\}$ weakly
+monotone on the transverse axis $v:=i-\tilde\sigma_e\,j$.
+
+\smallskip
+\noindent\emph{(1) Collapsing $\varphi_e$ to a constant.}
+The transverse range
+$V_e:=\{v\in\mathbb{Z}:\exists(i,j)\in D_e,\ i-\tilde\sigma_ej=v\}$
+is an integer interval of length $O(t_e)$ (since $D_e\subseteq
+[0,t_e]^2$), and $\varphi_e$ is finite on $V_e$ off a set of size
+$O(1)$ by order-convexity.  Let
+\[
+  \mathrm{spread}(\varphi_e) := \sup_{v\in V_e}\varphi_e(v)\;-\;\inf_{v\in V_e}\varphi_e(v).
+\]
+The staircase boundary of $M_e$ is a monotone lattice path along the
+transverse axis $v=i-\tilde\sigma_e j$: each unit of transverse spread
+in $\varphi_e$ forces at least one BK-boundary cell of $M_e$ at each
+of the $\Theta(t_e)$ positions along the longitudinal axis, so the
+BK-boundary mass of $M_e$ inside $\fiber{e}$ satisfies
+$|\bd_{BK}M_e\cap\fiber{e}|\ge c\cdot\mathrm{spread}(\varphi_e)\cdot t_e$
+for an absolute constant $c>0$.  By Step~2 Prop.~3.2 and the richness
+density bound $|\fiber{e}|\asymp t_e^2$,
+\[
+  |\bd_{BK}S\cap\fiber{e}| \;=\; O(\varepsilon_2\,|\fiber{e}|)
+  \;=\; O(\varepsilon_2\,t_e^2),
+\]
+so a staircase with transverse spread $s$ contributes
+$\Omega(s\cdot t_e)$ BK-boundary cells, giving
+$s\cdot t_e\le O(\varepsilon_2\,t_e^2)$, whence
+\[
+  \mathrm{spread}(\varphi_e) \;=\; O(\varepsilon_2\,t_e).
+\]
+Define $\bar\tau_e:=\mathrm{med}_{v\in V_e}\varphi_e(v)\in\mathbb{Z}$
+and the canonicalized half-plane
+$\hat M_e:=\{(i,j)\in D_e:i+\tilde\sigma_e\,j\le\bar\tau_e\}$.  The
+symmetric difference $M_e\symdiff\hat M_e$ is contained in the
+transverse-strip union $\bigcup_{v\in V_e}$ of intervals of length
+$|\varphi_e(v)-\bar\tau_e|$, whose total cardinality is bounded by
+$\mathrm{spread}(\varphi_e)\cdot|V_e|=O(\varepsilon_2 t_e^2)
+=O(\varepsilon_2|\fiber{e}|)$ (using $|\fiber{e}|\asymp t_e^2$ from
+the richness hypothesis).
+
+\smallskip
+\noindent\emph{(2) Writing $\hat M_e$ as a signed $(j-i)$-threshold.}
+Unfolding the linear form $h_e(i,j):=i+\tilde\sigma_e\,j$:
+\begin{itemize}[nosep,topsep=2pt]
+  \item If $\tilde\sigma_e=-1$: $\hat M_e=\{i-j\le\bar\tau_e\}=
+    \{+1\cdot(j-i)\ge-\bar\tau_e\}$.  Set $\sigma_e:=+1$,
+    $\tau_e:=-\bar\tau_e$.
+  \item If $\tilde\sigma_e=+1$: apply the single-axis reflection
+    $(i,j)\mapsto(i,t_e-j)$, an affine isomorphism of the
+    order-convex grid $[0,t_e]^2$ that preserves unit BK moves (it
+    permutes $\{\pm e_1,\pm e_2\}$) and is absorbed into the
+    coordinate chart $\pi_e$ at the cost of a sign flip of
+    $\tilde\sigma_e$ (Step~3 Lemma~3.2 discussion of coordinate
+    symmetries).  The image of $\hat M_e$ under the
+    reflection is $\{i+(t_e-j')\le\bar\tau_e\}=
+    \{+1\cdot(j'-i)\ge t_e-\bar\tau_e\}$, falling into the previous
+    case; set $\sigma_e:=+1$, $\tau_e:=t_e-\bar\tau_e$ in the
+    reflected frame.  Equivalently, in the original frame one may
+    write the half-plane as $\{-1\cdot(j-i)\ge\bar\tau_e-t_e\}$,
+    $\sigma_e:=-1$, $\tau_e:=\bar\tau_e-t_e$.
+\end{itemize}
+In either case $\sigma_e\in\{\pm 1\}$ and $\tau_e\in\mathbb{Z}$ are
+determined by $(\tilde\sigma_e,\bar\tau_e)$ and the choice of frame;
+the sign is canonical by Step~3's canonical orientation theorem
+(\texttt{step3.tex} Thm.~3.9).
+
+Combining (1) and the preceding Step~2 approximation,
+\[
+  \bigl|(S\cap\fiber{e})\symdiff
+    \pi_e^{-1}\bigl\{(i,j)\in D_e:\sigma_e(j-i)\ge\tau_e\bigr\}\bigr|
+  \;\le\; C\,\varepsilon_2\,|\fiber{e}|,
+\]
+which yields the pointwise identity
+$1_S(L)=1\{\sigma_e(j(L)-i(L))\ge\tau_e\}+O(\varepsilon_2)$ on
+$\fiber{e}\setminus B_e$ (absorbing the constant $C$ into
+$\varepsilon_2$).
+\end{proof}
+
+%-----------------------------------------------------------------------
+\section{Globalizing coherence: sign consistency}\label{sec:sign}
+%-----------------------------------------------------------------------
+
+Step~6's output is that, weighted by overlap mass, almost all pairs
+$(e,f)$ of active interfaces are coherent (equivalently,
+$\sigma_e,\sigma_f$ are compatible under the common overlap
+coordinates).
+Step~7 needs the \emph{global} version: a single consistent sign
+convention on a giant component of $G_{\Rich}$.
+
+\begin{lemma}[Lemma A: sign consistency]\label{lem:sign-consistency}
+\DEP{Step~6, Corollary~B}
+Assume the coherence case of Step~6.
+There is a set $\mathcal{E}^\star\subseteq\Rich^\star$ of rich
+interfaces carrying $(1-o(1))$ of the rich-interface incidence mass,
+and a choice of signs
+$\widetilde\sigma_e\in\{\pm1\}$ for $e\in\mathcal{E}^\star$, such that:
+\begin{enumerate}[nosep]
+  \item $\widetilde\sigma_e = \sigma_e$ for all but an $o(1)$-fraction
+    of overlap incidence; equivalently, Step~7's corrections flip at
+    most $o(1)$ of the signed interfaces.
+  \item For every active pair $(e,f)$ in $\mathcal{E}^\star\times
+    \mathcal{E}^\star$, $\widetilde\sigma_e$ and $\widetilde\sigma_f$
+    agree on the overlap under the common overlap coordinates.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lem:sign-consistency}]
+The input is Corollary~B of Step~6 (Corollary~\ref{cor:pointwise} in
+step6.tex): there exists a measurable reference sign
+$s\colon\LE(P)\to\{\pm1\}$ and a set $\Omega\subseteq\LE(P)$ with
+$\mu(\LE(P)\setminus\Omega)\le\sqrt{\delta}$ such that for every
+$L\in\Omega$,
+\begin{equation}\label{eq:ptw-coh}
+  \#\{\alpha\in\Rich_L:\sigma_\alpha\ne s(L)\}
+  \;\le\; \sqrt{\delta}\,|\Rich_L|,
+  \qquad \delta=o(1).
+\end{equation}
+
+\textbf{Definition of $\widetilde\sigma$.}
+For $\alpha\in\Rich^\star$ write $\mu_\alpha=\mu(\fiber{\alpha}\setminus
+B_\alpha)$ and
+\[
+  m_\alpha \;:=\;
+  \mu\bigl(\{L\in\fiber{\alpha}\cap\Omega : \sigma_\alpha=s(L)\}\bigr).
+\]
+Set $\epsilon_\alpha=+1$ if $m_\alpha\ge\tfrac12\mu_\alpha$ and
+$\epsilon_\alpha=-1$ otherwise, and let
+$\widetilde\sigma_\alpha:=\epsilon_\alpha\sigma_\alpha$.  Thus
+$\widetilde\sigma$ flips $\sigma$ exactly on those interfaces whose
+local orientation disagrees with the $L$-level reference $s$ on a
+majority of their incidence mass.
+
+\textbf{Flipped weight is $o(1)$.}
+Double-counting \eqref{eq:ptw-coh} as
+\[
+  \sum_{\alpha\in\Rich^\star}
+   \mu\bigl(\{L\in\fiber{\alpha}\cap\Omega:\sigma_\alpha\ne s(L)\}\bigr)
+  \;=\;
+  \int_{\Omega}\#\{\alpha\in\Rich_L:\sigma_\alpha\ne s(L)\}\,d\mu(L)
+\]
+and bounding the right side by
+$\sqrt{\delta}\int_\Omega|\Rich_L|\,d\mu(L)\le\sqrt{\delta}\,M_0$, with
+$M_0=\sum_\alpha\mu_\alpha$ the total incidence mass, we obtain
+\begin{equation}\label{eq:db-count}
+  \sum_{\alpha\in\Rich^\star}(\mu_\alpha - m_\alpha - \eta_\alpha)
+  \;\le\; \sqrt{\delta}\,M_0,
+  \qquad
+  \eta_\alpha:=\mu(\fiber{\alpha}\cap(\LE(P)\setminus\Omega)),
+\end{equation}
+and $\sum_\alpha\eta_\alpha=\int_{\Omega^c}|\Rich_L|\,d\mu\le
+\sqrt{\delta}\,M_0$ (again by Step~6 pointwise control, or trivially
+from $|\Rich_L|\le|\Rich^\star|$ combined with the second-moment
+visibility of Lemma~\ref{lem:triple-visibility}).  If
+$\epsilon_\alpha=-1$ then $\mu_\alpha-m_\alpha
+\ge\tfrac12\mu_\alpha$, so \eqref{eq:db-count} gives
+\[
+  \tfrac12\sum_{\alpha:\epsilon_\alpha=-1}\mu_\alpha
+  \;\le\; \sqrt{\delta}\,M_0 + \sum_\alpha\eta_\alpha
+  \;\le\; 2\sqrt{\delta}\,M_0,
+\]
+hence the flipped weight is $\le 4\sqrt{\delta}\,M_0 = o(M_0)$.
+This is condition~(1).
+
+\textbf{Refined set $\mathcal{E}^\star$.}
+Define
+$\mathcal{E}^\star:=\{\alpha\in\Rich^\star :
+\max(m_\alpha,\mu_\alpha-m_\alpha)\ge(1-\delta^{1/4})\mu_\alpha\}$,
+the set of interfaces whose majority alignment with~$s$ is
+$(1-\delta^{1/4})$-dominant.  By Markov on \eqref{eq:db-count},
+$\Rich^\star\setminus\mathcal{E}^\star$ has incidence weight
+$\le\delta^{1/4}\,M_0=o(M_0)$, so $\mathcal{E}^\star$ carries
+$(1-o(1))\,M_0$.
+
+\textbf{Overlap compatibility.}
+Let $(e,f)$ be an active pair in $\mathcal{E}^\star\times
+\mathcal{E}^\star$ with overlap weight
+$w_{ef}=\mu((\fiber{e}\cap\fiber{f})\setminus(B_e\cup B_f))$.
+By \eqref{eq:ptw-coh}, on every $L\in\fiber{e}\cap\fiber{f}\cap\Omega$
+except a $\sqrt{\delta}$-minority of $\Rich_L$, both $\sigma_e$ and
+$\sigma_f$ equal $s(L)$; integrating,
+\[
+  \mu\bigl(\{L\in\fiber{e}\cap\fiber{f}\cap\Omega:
+      \sigma_e=\sigma_f=s(L)\}\bigr)
+  \;\ge\; w_{ef}\,(1-o(1)).
+\]
+By the $(1-\delta^{1/4})$-dominance defining $\mathcal{E}^\star$, for
+each $\alpha\in\{e,f\}$ the set
+$\{L\in\fiber{\alpha}:\widetilde\sigma_\alpha(L)=s(L)\}$ carries
+measure at least $(1-\delta^{1/4})\mu_\alpha$; equivalently, the
+$\widetilde\sigma_\alpha$-disagreement set
+$\{L\in\fiber{\alpha}:\widetilde\sigma_\alpha(L)\ne s(L)\}$ has
+measure at most $\delta^{1/4}\mu_\alpha$.  Restricting to the overlap
+$(\fiber{e}\cap\fiber{f})\setminus(B_e\cup B_f)$ of weight
+$w_{ef}$ and using the ``active pair'' lower bound
+$w_{ef}\ge\delta^{1/4}\min(\mu_e,\mu_f)$, the union of the two
+disagreement sets intersects the overlap in measure at most
+$2\delta^{1/4}\max(\mu_e,\mu_f)=O(\delta^{1/4})\,w_{ef}$.  On the
+complementary $(1-O(\delta^{1/4}))\,w_{ef}$-fraction of the overlap,
+both $\widetilde\sigma_e(L)$ and $\widetilde\sigma_f(L)$ equal $s(L)$,
+hence $\widetilde\sigma_e=\widetilde\sigma_f$ in the common
+coordinates, establishing condition~(2).  (The $\epsilon_e\epsilon_f$
+sign bookkeeping is thus automatic: both $\widetilde\sigma_\alpha$
+track the single function $s\colon\LE(P)\to\{\pm1\}$.)
+\end{proof}
+
+\begin{remark}[Graph-theoretic route]
+The same statement can be obtained via disagreement percolation on
+$G_{\Rich}$: Step~6's pairwise compatibility says the bad-edge
+fraction is $o(1)$, and on the giant component of $G_{\Rich}$
+(Lemma~\ref{lem:giant-component}) a Cheeger-type bound converts this to
+an $o(1)$-weighted vertex set whose flipping eliminates all bad edges.
+The pointwise-coherence route above is quantitatively sharper and does
+not require connectedness: Lemma~\ref{lem:sign-consistency} holds
+component-wise.  Connectedness enters only downstream, when the
+cocycle is integrated to a single potential
+(Lemma~\ref{lem:potential}).
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{Threshold cocycle on triple overlaps}\label{sec:cocycle}
+%-----------------------------------------------------------------------
+
+This is the core new content of Step~7.
+
+Consider three rich interfaces
+$e_{xy}=(x,y),\ e_{yz}=(y,z),\ e_{xz}=(x,z)$
+whose three pairwise overlaps and the triple overlap
+$\fiber{xy}\cap\fiber{yz}\cap\fiber{xz}$ all have positive weight;
+we call such a triple an \emph{active triple}.
+
+On an active triple, the three fibers share common chain coordinates
+(because $N(x)\cap N(y),\ N(y)\cap N(z),\ N(x)\cap N(z)$ all embed in
+a common chain window, by the width-3 normal form of Step~1).
+Consequently the local coordinates $(i,j)$ on each fiber measure the
+relative placement of the three elements against the \emph{same}
+chain.
+
+\begin{lemma}[Lemma B: threshold cocycle]\label{lem:cocycle}
+\DEP{Step~1 (commuting-square/triple-overlap geometry), Step~2
+(signed-threshold normal form), Section~\ref{sec:sign} (signs chosen
+consistently).}
+After applying Lemma~\ref{lem:sign-consistency} to fix signs, for a
+$(1-o(1))$-fraction of active triples $(e_{xy},e_{yz},e_{xz})$ in
+$\mathcal{E}^\star$,
+\[
+  \tau_{xz} \;=\; \tau_{xy} + \tau_{yz} + O(1).
+\]
+\end{lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lem:cocycle}]
+Fix an active triple $T=(e_{xy},e_{yz},e_{xz})$ with triple-overlap
+weight
+$w_T:=\mu((\fiber{xy}\cap\fiber{yz}\cap\fiber{xz})\setminus
+(B_{xy}\cup B_{yz}\cup B_{xz}))\ge\eta_T|\LE(P)|$ for the active
+threshold $\eta_T>0$.  By
+Corollary~\ref{cor:triple-overlap}\ref{it:tri-coords}--\ref{it:tri-cube}
+of Step~1, there is a subset
+$\Omega^{\circ\circ\circ}\subseteq\fiber{xy}\cap\fiber{yz}\cap\fiber{xz}$
+of triple-overlap mass
+$\mu(\Omega^{\circ\circ\circ})\ge w_T-O(t\sqrt{w_T|\LE(P)|})
+=(1-o(1))w_T$ (by part~\ref{it:tri-bad}, with
+$t:=\max(t_{xy},t_{yz},t_{xz})=\Theta(n)$ in the rich regime and $w_T$
+of order $|\LE(P)|$), on which the three coordinate systems are
+simultaneously valid and the three BK move families generate a
+commuting $\Z^3$ action.
+
+\textbf{Step 1: Shared chain window and additive identity of
+differences.}
+By the width-3 common-chain structure (Step~1
+Lemma~\ref{lem:CNchain-width3}\footnote{We cite Step~1's width-3
+common-chain lemma generically; the point is that in width~$3$, the
+three pairwise common chains $C(x,y)=N(x)\cap N(y)$, $C(y,z)$,
+$C(x,z)$ each lie in a chain and their pairwise symmetric differences
+are $O(1)$-bounded by the neighbourhood endpoint structure.}), the
+three pairwise common chains $C(x,y)$, $C(y,z)$, $C(x,z)$ embed into a
+single ambient chain $W$ of length $t_W\ge t-O(1)$ with
+$|W\triangle C(\bullet)|=O(1)$ for each pairwise chain.
+Consequently, for $L\in\Omega^{\circ\circ\circ}$ the signed coordinate
+differences
+\[
+  d_{uv}(L)\;:=\;j_{uv}(L)-i_{uv}(L)
+  \;=\;\#\{c\in C(u,v): u<_L c<_L v\}\;-\;\#\{c\in C(u,v): v<_L c<_L u\}
+\]
+satisfy, writing $n_{uv}^W(L)$ for the analogous signed count against
+the ambient chain $W$,
+\[
+  d_{uv}(L)\;=\;n_{uv}^W(L)\;+\;r_{uv}(L),
+  \qquad |r_{uv}(L)|\le|W\triangle C(u,v)|=O(1).
+\]
+Additivity of signed counts in the linearly ordered window $W$ reads
+$n_{xz}^W(L)=n_{xy}^W(L)+n_{yz}^W(L)$ for every $L$ (in a total order
+on $W\cup\{x,y,z\}$, the open interval $(x,z)\cap W$ decomposes as the
+disjoint union $(x,y)\cap W\ \sqcup\ \{y\}\cap W\ \sqcup\ (y,z)\cap W$
+when $x<_L y<_L z$ --- up to the vanishing correction of at most $1$
+from the point $y$ itself --- and likewise with signs for any other
+ordering of $\{x,y,z\}$ along $W$, since each $c\in W$ is compared to
+$x,y,z$ via a single linear order).  Therefore
+\begin{equation}\label{eq:d-triple}
+  d_{xz}(L)\;=\;d_{xy}(L)+d_{yz}(L)+\Delta_0(T,L),
+  \qquad |\Delta_0(T,L)|\le 2+\sum_{uv}|W\triangle C(u,v)|=O(1),
+\end{equation}
+uniformly in $L\in\Omega^{\circ\circ\circ}$, with
+$\Delta_0(T,L):=r_{xz}(L)-r_{xy}(L)-r_{yz}(L)+\epsilon_y(L)$ and
+$|\epsilon_y(L)|\le 2$ accounting for the $y$-boundary correction in
+the $W$-additivity identity above.  The bound on $|\Delta_0(T,L)|$ is
+uniform in $L$, which is all the subsequent steps use; we write simply
+$\Delta_0$ below when $L$-dependence is irrelevant.
+
+\textbf{Step 2: Aligning signs.}
+Apply Lemma~\ref{lem:sign-consistency} to fix
+$\widetilde\sigma_{xy}=\widetilde\sigma_{yz}=\widetilde\sigma_{xz}=+1$
+on the triple (absorb any sign flip into
+$\tau_{uv}\mapsto-\tau_{uv}$; the cocycle claim is invariant under
+this absorption).  A $(1-o(1))$ fraction of active triples have all
+three interfaces in $\mathcal{E}^\star$ with pairwise-compatible signs
+in the sense of Lemma~\ref{lem:sign-consistency}(2); discard the
+remaining $o(1)$-weighted triples.
+
+\textbf{Step 3: Three-way threshold identity.}
+Lemma~\ref{lem:signed-threshold} applied to each fiber gives, on
+$\Omega^{\circ\circ\circ}\setminus(B_{xy}\cup B_{yz}\cup B_{xz})$
+(still of mass $(1-o(1))w_T$ by the bad-set bounds from Step~1),
+\begin{equation}\label{eq:three-rules}
+  1_S(L)\;=\;
+  \mathbf{1}\{d_{xy}\ge\tau_{xy}\}\;=\;
+  \mathbf{1}\{d_{yz}\ge\tau_{yz}\}\;=\;
+  \mathbf{1}\{d_{xz}\ge\tau_{xz}\}
+  \;+\;O(\varepsilon_2)
+\end{equation}
+where the $O(\varepsilon_2)$ error is the union of the three per-fiber
+Step~2 errors, integrating to a symmetric-difference mass
+$\le 3\varepsilon_2\min_\bullet|\fiber{\bullet}|$.
+Substituting~\eqref{eq:d-triple} into the $xz$-rule yields
+\begin{equation}\label{eq:combined-rule}
+  \mathbf{1}\{d_{xy}(L)+d_{yz}(L)\ge K_T(L)\}
+  \;=\;\mathbf{1}\{d_{xy}\ge\tau_{xy}\}
+  \;+\;O(\varepsilon_2),
+  \qquad K_T(L):=\tau_{xz}-\Delta_0(T,L),
+\end{equation}
+where $K_T(L)$ fluctuates by at most $O(1)$ across $L$ by the uniform
+bound on $\Delta_0$, and both sides agree with $1_S(L)$ on
+$(1-O(\varepsilon_2))$ of $\Omega^{\circ\circ\circ}$.
+
+\textbf{Step 4: Mismatch produces a disagreement rectangle.}
+Put $u:=d_{xy}-\tau_{xy}$, $v:=d_{yz}-\tau_{yz}$, and define
+$K_*:=\tau_{xz}-\tau_{xy}-\tau_{yz}$ as the cocycle defect.  Then
+$K_T(L)-\tau_{xy}-\tau_{yz}=K_*-\Delta_0(T,L)$, so \eqref{eq:combined-rule}
+reads
+$\mathbf{1}\{u+v\ge K_*-\Delta_0(T,L)\}=\mathbf{1}\{u\ge 0\}+O(\varepsilon_2)$.
+Set $K:=K_*-\sup_{L\in\Omega^{\circ\circ\circ}}\Delta_0(T,L)$ (finite
+and within $O(1)$ of $K_*$ by~\eqref{eq:d-triple}); then
+$\mathbf{1}\{u+v\ge K\}\le\mathbf{1}\{u+v\ge K_*-\Delta_0(T,L)\}$
+pointwise, and the two differ on a set of at most
+$O(1)\cdot w_T/(Ct^2)$ triple-overlap mass per unit shift, negligible
+for the rectangle argument below.
+Equation~\eqref{eq:combined-rule} combined with
+$\mathbf{1}\{v\ge 0\}=\mathbf{1}\{u\ge 0\}$ (from~\eqref{eq:three-rules})
+gives, on $(1-O(\varepsilon_2))$ of $\Omega^{\circ\circ\circ}$,
+\begin{equation}\label{eq:uv-rule}
+  \mathbf{1}\{u\ge 0\}\;=\;\mathbf{1}\{v\ge 0\}
+  \;=\;\mathbf{1}\{u+v\ge K\}.
+\end{equation}
+
+Assume for contradiction that $|K|\ge K_0$ for some large constant
+$K_0$ to be chosen; by symmetry (interchange $S\leftrightarrow S^c$,
+$u\leftrightarrow -u$) assume $K\ge K_0$.
+Consider the lattice rectangle
+\[
+  R\;:=\;\{(u,v)\in\Z^2:\ 0\le u<K/2,\ -K/2\le v<0\}.
+\]
+On $R$ both equalities in~\eqref{eq:uv-rule} fail
+simultaneously: $\mathbf{1}\{u\ge 0\}=1$ but $\mathbf{1}\{v\ge 0\}=0$,
+while $\mathbf{1}\{u+v\ge K\}=0$ since $u+v<K/2-0<K$.  Thus every
+$L\in\Omega^{\circ\circ\circ}$ with $(u(L),v(L))\in R$ contributes $1$
+to the symmetric-difference mass in~\eqref{eq:three-rules}.
+
+We derive the following dimensional pushforward bound, which is the
+quantitative content used below:
+\begin{equation}\label{eq:pushforward-lb}
+  \mu\bigl(\{L\in\Omega^{\circ\circ\circ}:(u(L),v(L))=(u_0,v_0)\}\bigr)
+  \;\ge\;\frac{w_T}{Ct^2}
+  \qquad\forall\,(u_0,v_0)\in[-ct,ct]^2\cap\Z^2,
+\end{equation}
+for absolute constants $c,C>0$, with $t:=\min(\txy,t_{y,z},t_{x,z})=\Theta(n)$.
+
+Let $g_u:=e_1^{(x,y)}$ and $g_v:=e_1^{(y,z)}$ be the unit BK-shift
+generators from Corollary~\ref{cor:triple-overlap}\ref{it:tri-cube}.
+Under the standing hypothesis $w(P)\le 3$ with $\{x,y,z\}$ a
+3-antichain, the three common chains $\Cxy,C(y,z),C(x,z)$ are
+\emph{pairwise disjoint} (any common element would form a 4-antichain
+with $\{x,y,z\}$; see the Remark following
+Corollary~\ref{cor:triple-overlap}\ref{it:tri-consistency}).  Hence a
+single application of $g_u$ swaps $x$ with an element of $\Cxy$ only,
+leaving the $y{:}z$ coordinate pair untouched; so $g_u$ shifts
+$u=d_{xy}-\tau_{xy}$ by $+1$ and fixes $v=d_{yz}-\tau_{yz}$.
+Symmetrically $g_v$ shifts $v$ by $+1$ and fixes $u$.  The two
+generators commute on $\Omega^{\circ\circ\circ}$
+(Corollary~\ref{cor:triple-overlap}\ref{it:tri-cube}) and each is an
+injective measure-preserving partial bijection (a BK permutation
+restricted to points where the move stays in $\Omega^{\circ\circ\circ}$).
+
+By Theorem~\ref{thm:interface}\ref{part:goodfiber} the images
+$\piXY(\Omega^{(3)})$ and $\pi_{y,z}(\Omega^{(3)})$ are order-convex
+domains of diameter $\Omega(t)$ in each coordinate direction, so for
+an absolute $c>0$ the iterated action $g_u^a g_v^b$ with
+$(a,b)\in[-ct,ct]^2$ keeps the image inside $\Omega^{(3)}$.  Define
+the \emph{interior}
+\[
+  \Omega^\flat\;:=\;\{L\in\Omega^{\circ\circ\circ}:
+    g_u^a g_v^b L\in\Omega^{\circ\circ\circ}\text{ for all }(a,b)\in[-ct,ct]^2\}.
+\]
+The escape region $\Omega^{\circ\circ\circ}\setminus\Omega^\flat$ is
+contained in the union of $O(t)$ translates of
+$\Omega^{(3)}\setminus\Omega^{\circ\circ\circ}$ under the $\Z^2$-action,
+which by Corollary~\ref{cor:triple-overlap}\ref{it:tri-bad} has total
+mass $O(t\cdot t\cdot\sqrt{|\Omega^{(3)}|})=o(|\Omega^{(3)}|)$ when
+$t=\Theta(n)$ and $|\Omega^{(3)}|\ge\delta|\LE(P)|\ge e^{\Omega(n)}$.
+Hence $\mu(\Omega^\flat)\ge(1-o(1))\mu(\Omega^{\circ\circ\circ})\ge(1-o(1))w_T$.
+
+On $\Omega^\flat$ the $\Z^2$-action
+$\langle g_u,g_v\rangle$ is free and measure-preserving, and its
+induced action on $(u,v)$ is by integer translation.  Consequently the
+pushforward $\nu:=(u,v)_\ast(\mu|_{\Omega^\flat})$ is
+\emph{translation-invariant} under unit shifts within $[-ct,ct]^2$:
+for every $(u_0,v_0)$ in that box,
+$\nu(u_0\pm 1,v_0)=\nu(u_0,v_0)=\nu(u_0,v_0\pm 1)$.  By connectivity
+of the box, $\nu$ is constant on $[-ct,ct]^2\cap\Z^2$.  Since
+$|u|,|v|\le O(t)$ pointwise (the $d_{\bullet\bullet}$ are fiber-coordinate
+values bounded by $t$ up to additive $O(1)$), $\nu$ is supported on at
+most $C't^2$ lattice points, so the constant value on the box satisfies
+\[
+  \nu(u_0,v_0)\;\ge\;\frac{\nu(\Z^2)}{C't^2}\;=\;\frac{\mu(\Omega^\flat)}{C't^2}
+  \;\ge\;\frac{(1-o(1))w_T}{C't^2}\;\ge\;\frac{w_T}{Ct^2},
+\]
+establishing \eqref{eq:pushforward-lb}.  Since
+$\mu(\Omega^\flat)\le\mu(\Omega^{\circ\circ\circ})$, the same lower
+bound holds for the pushforward of $\mu|_{\Omega^{\circ\circ\circ}}$
+itself.  Provided
+$K\le ct/2$ (still ``fitting'' in the box), the rectangle $R$ has
+$|R|\ge K^2/4$ lattice points, so
+\begin{equation}\label{eq:R-mass}
+  \mu\bigl(\Omega^{\circ\circ\circ}\cap\{(u,v)\in R\}\bigr)
+  \;\ge\;\frac{K^2}{4}\cdot\frac{w_T}{Ct^2}.
+\end{equation}
+Comparing with the symmetric-difference budget
+$3\varepsilon_2|\fiber{xy}|\asymp\varepsilon_2 t^2$ from Step~2,
+\[
+  \frac{K^2}{4}\cdot\frac{w_T}{Ct^2}\;\le\;3\varepsilon_2 t^2
+  \quad\Longrightarrow\quad
+  K^2\;\le\;\frac{12C\varepsilon_2\,t^4}{w_T}.
+\]
+For active triples ($w_T\ge\eta_T|\LE(P)|$) with richness
+$t=\Theta(n)$ and $|\LE(P)|\ge e^{\Omega(n)}$ (standard width-3
+bound), the right-hand side is $o(1)$; equivalently, for any fixed
+$K_0$, the inequality $K\ge K_0$ forces \eqref{eq:R-mass} to exceed
+the Step~2 budget whenever the triple is active with constant $\eta_T$.
+
+If instead $K>ct/2$ (so $R$ does not fit), replace $R$ by the
+half-strip $R':=\{0\le u<ct/4,\ -ct/4\le v<0\}$, which still lies in
+the disagreement region since $u+v<ct/4<ct/2<K$ and $\mathbf{1}\{u\ge
+0\}\ne\mathbf{1}\{v\ge 0\}$.  Its lattice mass is
+$\Omega(t^2)\cdot w_T/t^2=\Omega(w_T)$, a fixed fraction of the
+triple-overlap mass, which even more strongly exceeds the Step~2
+budget.
+
+\textbf{Step 5: Passage to $(1-o(1))$ of triples.}
+Call a triple $T$ \emph{bad} if its gap $K(T)$ satisfies
+$|K(T)|\ge K_0$ for some absolute constant $K_0$ (take e.g.\
+$K_0:=C_1$ with $C_1$ chosen so the rectangle argument applies on
+every active triple).  By the above, for each bad active triple the
+symmetric-difference budget of~\eqref{eq:three-rules} is exceeded by
+an amount $\ge c_0 w_T$ for some $c_0>0$, so
+\[
+  \sum_{\text{bad active }T}c_0 w_T
+  \;\le\;
+  \sum_{T}3\varepsilon_2\min_{\bullet}|\fiber{\bullet}(T)|
+  \;\le\;3\varepsilon_2 M^{(3)},
+\]
+where $M^{(3)}:=\sum_{T\text{ active}}w_T$ is the total active-triple
+weight (finite, $\ge c_T^{(3)}|\LE(P)|$ by
+Lemma~\ref{lem:triple-visibility}).  Rearranging,
+\[
+  \sum_{\text{bad active }T}w_T
+  \;\le\;\frac{3\varepsilon_2}{c_0}\,M^{(3)}
+  \;=\;o(M^{(3)}),
+\]
+since $\varepsilon_2=o(1)$ is the Step~2 approximation parameter.
+Hence the cocycle $\tau_{xz}=\tau_{xy}+\tau_{yz}+O(1)$ (with
+$O(1)=K_0+|\Delta_0|\le K_0+O(1)$) holds on $(1-o(1))$ of active
+triples, as required.
+\end{proof}
+
+\begin{remark}
+Lemma~\ref{lem:cocycle} is a statement on the \emph{weighted} active
+triples.  To deduce a single-vertex potential we will integrate on
+the giant component of the triple graph, which in the rich case
+inherits enough triple density from Step~5.
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{Integrating the cocycle to a vertex potential}\label{sec:potential}
+%-----------------------------------------------------------------------
+
+\begin{lemma}[Lemma C: potential representation]\label{lem:potential}
+\DEP{Lemmas~\ref{lem:sign-consistency}, \ref{lem:cocycle}.}
+Assume Lemmas~A and~B on $\mathcal{E}^\star$ with a giant component of
+the triple graph.
+There is a function $a\colon P\to\mathbb{R}$ such that, for a
+$(1-o(1))$-fraction of interfaces $e=(x,y)\in\mathcal{E}^\star$,
+\[
+  \widetilde\sigma_e \,\tau_e
+  \;=\; a(y) - a(x) + O(1).
+\]
+\end{lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lem:potential}]
+\textbf{Element graph.}
+Let $G^P$ be the weighted multigraph on vertex set $P$ with an edge
+$\{x,y\}$ for each interface $e=(x,y)\in\mathcal{E}^\star$, weighted
+by the incidence weight of $e$.  By Lemma~\ref{lem:giant-component},
+there is a connected subgraph
+$G^P_\star\subseteq G^P$ on a vertex set $P^\star\subseteq P$ whose
+edges carry $(1-o(1))$ of the rich-interface incidence mass.
+Orient each edge $e=(x,y)$ from $x$ to $y$ and set the signed weight
+\[
+  \delta_e \;:=\; \widetilde\sigma_e\,\tau_e,
+\]
+which flips sign under edge reversal (since reorienting $e$ flips
+$\widetilde\sigma_e$ and leaves $\tau_e$ unchanged).
+With this orientation, Lemma~\ref{lem:cocycle} reads: for a
+$(1-o(1))$-fraction of active triples on
+$\mathcal{E}^\star$,
+\begin{equation}\label{eq:tri-cocycle}
+  \delta_{xy} + \delta_{yz} - \delta_{xz} \;=\; O(1).
+\end{equation}
+Call a triple \emph{good} if \eqref{eq:tri-cocycle} holds; the bad
+triples carry $o(1)$ of the triple-weight by Lemma~\ref{lem:cocycle}.
+Let $\mathcal{B}\subseteq E(G^P_\star)$ be the set of edges incident
+to an $\omega(1)$-weight of bad triples; by Markov, $\mathcal{B}$
+carries $o(1)$ of the edge weight, and we discard it.  Set
+$G^P_{\star\star}:=G^P_\star\setminus\mathcal{B}$ and restrict to its
+giant component, still carrying $(1-o(1))$ of incidence by
+Lemma~\ref{lem:giant-component}.
+
+\textbf{Spanning-tree integration.}
+Fix a basepoint $z_0\in P^\star$ and a BFS spanning tree $T$ of
+$G^P_{\star\star}$ rooted at $z_0$.  Define
+\[
+  a(z) \;:=\; \sum_{e\in\mathrm{path}_T(z_0\to z)}\delta_e
+  \qquad (z\in P^\star),
+\]
+the signed sum of $\delta$ along the unique $T$-path from $z_0$ to
+$z$, and $a(z):=0$ for $z\notin P^\star$ (affecting only $o(1)$ of
+interface weight).
+By construction,
+$a(y)-a(x)=\delta_e$ \emph{exactly} on every tree edge $e=(x,y)$.
+
+\textbf{Closing non-tree edges.}
+For a non-tree edge $e=(x,y)\in G^P_{\star\star}$ let $\gamma_e$ be
+the fundamental cycle formed by $e$ and the $T$-path from $y$ back
+to $x$; write $\ell(e)$ for its length.  Then
+\[
+  \delta_e - (a(y)-a(x)) \;=\; \oint_{\gamma_e}\delta,
+\]
+the signed sum of $\delta$ around $\gamma_e$.
+Star-triangulate $\gamma_e$ from $z_0$: since $T$ is a BFS tree
+rooted at $z_0$, every vertex on $\gamma_e$ lies on a $T$-path to
+$z_0$, so $\gamma_e$ decomposes into $\ell(e)-1$ triangles
+$(v_i,v_{i+1},z_0)$ whose sides are either tree edges or the edge
+$e$ itself.  For each such triangle that is \emph{good}
+(satisfies~\eqref{eq:tri-cocycle}), the triangle contributes $O(1)$
+to $\oint_{\gamma_e}\delta$; the total contribution along $\gamma_e$
+telescopes, leaving
+\begin{equation}\label{eq:cycle-bound}
+  \Bigl|\oint_{\gamma_e}\delta\Bigr|
+  \;\le\; O(1)\cdot\#\{\text{good triangles on }\gamma_e\}
+  \;+\; O(\tau_{\max})\cdot\#\{\text{bad triangles on }\gamma_e\},
+\end{equation}
+where $\tau_{\max}$ bounds $|\tau|$ on $\mathcal{E}^\star$ (itself
+$O(t(x,y))=O(n)$, but only the bad count matters below).
+
+\textbf{Constant diameter and the BFS tree.}
+Lemma~\ref{lem:giant-component} in fact supplies diameter $\le 3$ in
+$G^P_{\star\star}$ on a
+$(1-o(1))$-incidence subset $\widetilde P\subseteq P^\star$, which
+we now make precise (this replaces an earlier ambiguous `typical
+linear extension' phrasing).  Call $u\in P^\star$ \emph{generic} if
+(i) $u$ is rich-row/rich-column in the sense of
+Lemma~\ref{lem:giant-component} Step~3 (i.e.\ $|N_{\Rich}(u)|\ge
+(c_T/2)|P|$ where $N_{\Rich}(u)$ is the rich-interface neighbourhood
+in the opposite chain), and (ii) the $\mathcal{B}$-trim deletes only
+an $o(1)$-fraction of $u$'s incident edge weight.  Step~5~(R)
+gives~(i) on a $(1-O(c_T^{-1}))$-weighted subset of $P^\star$, and
+Markov applied to the $o(1)$-weighted set $\mathcal{B}$ gives~(ii)
+on a $(1-o(1))$-weighted subset; write $\widetilde P$ for the
+intersection, with incidence mass $(1-o(1))M_0$.
+
+For same-chain generic $u,u'\in\widetilde P\cap A$, inclusion--
+exclusion (Lemma~\ref{lem:giant-component} Step~3 at the
+\emph{element} level) gives $|N_{\Rich}(u)\cap N_{\Rich}(u')|\ge
+(c_T-1)|B|$ common neighbours $w\in B$ with
+$(u,w),(u',w)\in\Rich^\star$; by~(ii) at $u$ and $u'$, at least
+$(1-o(1))$ of these also lie in $E(G^P_{\star\star})$, so a
+length-$2$ path $u{-}w{-}u'$ survives in $G^P_{\star\star}$.  For
+cross-chain generic $u\in\widetilde P\cap A$,
+$v\in\widetilde P\cap B$, pick any rich-row $u'\in A$ with
+$(u',v)\in E(G^P_{\star\star})$ ($|N_{\Rich}(v)|\ge(c_T/2)|A|$ and
+the $\mathcal{B}$-fraction is $o(1)$, so such $u'$ exists) and
+concatenate the length-$2$ path $u{-}w{-}u'$ with the edge
+$(u',v)$ to get a length-$3$ path.  (The argument is symmetric and
+covers all chain pairs.)
+
+Consequently, BFS from a reference $z_0\in\widetilde P$ reaches
+every $z\in\widetilde P$ at depth $\le 3$.  Hence every non-tree
+edge $e=(x,y)$ with $x,y\in\widetilde P$ has fundamental-cycle
+length
+\[
+  \ell(e)\;\le\;\mathrm{depth}_T(x)+\mathrm{depth}_T(y)+1\;\le\;7.
+\]
+The $o(1)$-weighted non-tree edges with an endpoint outside
+$\widetilde P$ are discarded together with $\mathcal{B}$ (adding
+only $o(1)$ to the bad-edge mass), yielding $\ell(e)=O(1)$
+deterministically on a $(1-o(1))$-weighted subset of non-tree
+edges---no expectation/Markov step on cycle length is required.
+
+For such \emph{short-cycle} non-tree edges, \eqref{eq:cycle-bound}
+combined with the fact that $\mathcal{B}$ has been removed (so almost
+all triangles through them are good in the weighted sense) yields
+\[
+  \Bigl|\oint_{\gamma_e}\delta\Bigr| \;=\; O(1).
+\]
+Removing the remaining $o(1)$-weight of long-cycle non-tree edges
+from $\mathcal{E}^\star$, we obtain a subset carrying $(1-o(1))$ of
+rich-interface incidence on which
+\[
+  \widetilde\sigma_e\,\tau_e \;=\; a(y)-a(x) + O(1),
+\]
+as required.
+\end{proof}
+
+With $a$ in hand, define the global test function
+\[
+  H(L) := \sum_{z\in P} a(z)\,\pos_L(z).
+\]
+If $L'$ is obtained from $L$ by a BK swap of incomparable $(u,v)$
+with $u$ before $v$ in $L$, then
+\[
+  H(L') - H(L) \;=\; a(v) - a(u).
+\]
+In particular, for rich interface $e=(x,y)$, a BK move across~$e$
+changes $H$ by $a(y)-a(x)$, whose sign is $\widetilde\sigma_e$ by
+Lemma~C.
+So $H$ is a global scalar that, on every rich interface, tracks the
+positive-direction sign predicted by the local staircase.
+
+%-----------------------------------------------------------------------
+\section{Synchronizing the fiber thresholds}\label{sec:global-c}
+%-----------------------------------------------------------------------
+
+Even with $H$ and the fiber thresholds $\tau_e\approx a(y)-a(x)$,
+Step~7 needs a single global threshold $c$ such that, on most rich
+fibers,
+\[
+  1_S(L)\;\approx\;1_{\{H(L)\ge c\}}.
+\]
+
+\begin{lemma}[Single global threshold]\label{lem:single-c}
+\DEP{Step~6 (low conductance), Lemma~\ref{lem:potential}.}
+There exists $c\in\mathbb{R}$ such that, for $(1-o(1))$ of
+interfaces $e\in\mathcal{E}^\star$, on $\fiber{e}\setminus B_e$:
+\[
+  1_S(L)
+  \;=\;
+  1_{\{H(L)\ge c\}} + o(1).
+\]
+Equivalently, the per-fiber thresholds $c_e$ induced by
+$\{H\ge c_e\}\cap\fiber{e}=S\cap\fiber{e}$ satisfy $c_e=c+O(1)$ on the
+giant component.
+\end{lemma}
+
+\begin{proof}[Proof of Lemma~\ref{lem:single-c}]
+Write $A:=\max_{z\in P}|a(z)|$, so that $H$ is $A$-Lipschitz on the
+BK graph: $|H(L')-H(L)|\le A$ for every BK edge $(L,L')$.
+
+\textbf{Per-fiber threshold.}
+On $\fiber{e}^\star:=\fiber{e}\setminus B_e$,
+Lemma~\ref{lem:signed-threshold} gives $S=\{\sigma_e(j-i)\ge\tau_e\}+
+o(\mu_e)$, and Lemma~\ref{lem:potential} gives
+$\widetilde\sigma_e\tau_e=a(y)-a(x)+O(1)$, whence the $(x,y)$
+interface swap (which crosses the staircase in the
+$\sigma_e$-direction) changes $H$ by $a(y)-a(x)$ with sign
+$\sigma_e$.  Thus $H$ is monotone across the staircase boundary, and
+\[
+  c_e\;:=\;\tfrac12\Bigl(
+    \inf_{L\in\fiber{e}^\star\cap S}H(L)+
+    \sup_{L\in\fiber{e}^\star\setminus S}H(L)
+  \Bigr)
+\]
+is well-defined up to an additive $O(A)=O(1)$ and satisfies
+\begin{equation}\label{eq:perfib-mg4ddb}
+  \mu\!\bigl((\{H\ge c_e\}\triangle S)\cap\fiber{e}^\star\bigr)
+  \;=\;o(\mu_e).
+\end{equation}
+
+\textbf{Pairwise closeness $|c_e-c_f|=O(1)$ on active pairs.}
+Let $(e,f)\in\mathcal{E}^\star\times\mathcal{E}^\star$ be active with
+$\Omega_{ef}:=(\fiber{e}\cap\fiber{f})\setminus(B_e\cup B_f)$ and
+$w_{ef}=\mu(\Omega_{ef})>0$; set $\Delta:=|c_e-c_f|$ and WLOG
+$c_e\le c_f$.  Applying \eqref{eq:perfib-mg4ddb} to $e$ and $f$ on
+$\Omega_{ef}$, the sets $\{H\ge c_e\}$ and $\{H\ge c_f\}$ each
+coincide with $S$ up to $o(w_{ef})$, so
+\begin{equation}\label{eq:strip-mg4ddb}
+  \mu\!\bigl(\{c_e\le H<c_f\}\cap\Omega_{ef}\bigr)\;=\;o(w_{ef}).
+\end{equation}
+
+Foliate $[c_e,c_f]$ into $N:=\lfloor\Delta/(2A)\rfloor$ levels
+$c_k:=c_e+(2k{+}1)A$ ($k=0,\dots,N{-}1$), and let
+$\partial_k:=\{(L,L')\in E(G_{\BK})\cap\Omega_{ef}:
+H(L)<c_k\le H(L')\}$.  By $A$-Lipschitzness both endpoints of an
+edge in $\partial_k$ lie in $[c_k{-}A,c_k{+}A]$, so the $\partial_k$
+are pairwise disjoint.  Since $c_k\ge c_e+A$,
+\eqref{eq:strip-mg4ddb} gives
+$\{H<c_k\}\cap\Omega_{ef}=S^c\cap\Omega_{ef}$ up to $o(w_{ef})$,
+hence $\partial_k\subseteq\partial S$ modulo $o(w_{ef})$.
+
+Restrict to the \emph{balanced} regime
+$\mu(S\cap\Omega_{ef}),\,\mu(S^c\cap\Omega_{ef})\ge\epsilon w_{ef}$
+(small universal $\epsilon$): ``unbalanced'' pairs, where $\Omega_{ef}$
+lies almost entirely in $S$ or in $S^c$, automatically satisfy
+$\Delta=O(A)$ since the $H$-range forcing $c_e,c_f$ is pinned to the
+thin side's extremum, within $O(A)$ of a common value.  For balanced
+pairs, the cut at $c_k$ splits $\Omega_{ef}$ into parts of mass
+$\ge\tfrac12\epsilon w_{ef}$ each (up to $o(w_{ef})$), and the
+Step~1 grid model makes $\Omega_{ef}$ BK-connected with edge
+expansion $\Omega(1/t_{\max})$, $t_{\max}:=\max(t_e,t_f)$, giving by
+Cheeger $|\partial_k|\ge\Omega(w_{ef}/t_{\max})$.  Summing:
+\begin{equation}\label{eq:bdry-pair-mg4ddb}
+  |\partial S\cap\Omega_{ef}|\;\ge\;
+  \sum_{k=0}^{N-1}|\partial_k|-o(w_{ef})
+  \;\gtrsim\;\frac{\Delta}{A}\cdot\frac{w_{ef}}{t_{\max}}.
+\end{equation}
+
+\emph{Low conductance forces $\Delta_{ef}=O(1)$ typically.}
+Each BK edge lies in $O(1)$ fibers (Step~1 bounded multiplicity),
+hence in $O(1)$ overlaps, so
+$\sum_{(e,f)}|\partial S\cap\Omega_{ef}|\le O(1)|\partial S|\le
+O(\Phi_0)\vol(S)=o(\vol(S))$ by Step~6.  Combining with
+\eqref{eq:bdry-pair-mg4ddb} and $\sum_{(e,f)}w_{ef}/t_{\max}\gtrsim
+\vol(\LE(P))/t_{\max}$ (Step~5 second-moment visibility),
+Markov's inequality yields
+\begin{equation}\label{eq:pair-bdd-mg4ddb}
+  \Delta_{ef}\;\le\;K_1\;=\;O(1)\quad\text{on $(1-o(1))$-fraction of
+  active-pair weight,}
+\end{equation}
+with $K_1$ depending on $A,\Phi_0$, and the richness constant.
+
+\textbf{Globalization via diameter-3 on the giant component.}
+Let $H^\star\subseteq G_{\Rich}$ be the giant component furnished by
+Lemma~\ref{lem:giant-component}, carrying $(1-o(1))$ of the
+incidence and active-pair weight.  Step~3 of that proof gives diameter
+$\le 3$ in the endpoint-sharing (hence active) edge graph of
+$H^\star$ on a $(1-O(c_T^{-1}))$-mass subset, with
+$\Omega(c_T^2|A||B|)$ alternative length-$\le 3$ paths between any
+two edges; in particular, for every $e,f\in H^\star$ there are
+$\Omega(c_T^2|A||B|)$ length-$\le 3$ walks
+$e=g_0,g_1,g_2,g_3=f$ through active edges $(g_k,g_{k+1})$.
+
+Fix any reference $e_0\in H^\star$ with $c_{e_0}=:\bar c$.  Call
+$e\in H^\star$ \emph{good} if there exists a length-$\le 3$ walk
+$e_0\leftrightarrow e$ whose every hop $(g_k,g_{k+1})$ satisfies
+$|c_{g_k}-c_{g_{k+1}}|\le K_1$.  By
+\eqref{eq:pair-bdd-mg4ddb}, the exceptional-hop weight is $o(1)$
+relative to total active-pair weight, and each of the
+$\Omega(c_T^2|A||B|)$ candidate walks uses only $3$ hops, so by
+union bound over hops and averaging over walks,
+$(1-o(1))$-fraction of $e\in H^\star$ (weighted by incidence mass)
+admits at least one good walk.  For every such good $e$, the
+triangle inequality along the walk gives
+\[
+  |c_e-\bar c|\;\le\;\sum_{k=0}^{2}|c_{g_k}-c_{g_{k+1}}|
+  \;\le\;3K_1\;=\;O(1).
+\]
+On the residual $o(1)$-weight of non-good $e$, the a priori bound
+$|c_e|\le An$ contributes only to the exceptional mass, which is
+absorbed into the $(1-o(1))$ quantifier.  Setting $c:=\bar c$, we
+conclude
+$\mathbf{1}_S=\mathbf{1}_{\{H\ge c\}}+o(1)$ on
+$\fiber{e}\setminus B_e$ for $(1-o(1))$ of interfaces
+$e\in\mathcal{E}^\star$, as claimed.
+\end{proof}
+
+%-----------------------------------------------------------------------
+\section{From low conductance to layered width-3}\label{sec:layered}
+%-----------------------------------------------------------------------
+
+This section proves Prop.~\ref{prop:72}: given the potential
+$a\colon P\to\mathbb{R}$ and threshold $c\in\mathbb{R}$ from
+Prop.~\ref{prop:71}, if $\{H\ge c\}$ has low BK conductance and
+controls $(1-o(1))$ of rich swaps, then $P$ admits a layered
+width-$3$ decomposition of interaction width $w=O_T(1)$ in the sense
+of Def.~5.1 of \texttt{step8.tex}.
+Throughout, write $\Delta_{xy}:=a(y)-a(x)$ and
+$p_{xy}:=\mu\{L\in\LE(P):(x,y)\text{ BK-adjacent in }L\}/\mu(\LE(P))$.
+
+\subsection{BK boundary bounds integrated $a$-variation}
+
+\begin{lemma}[Boundary budget]\label{lem:budget-var}
+\DEP{Prop.~\ref{prop:71}, Lemma~\ref{lem:single-c}.}
+If $\Phi(\{H\ge c\})\le\eta=o(1)$ and $\{H\ge c\}$ agrees with $S$ on
+a $(1-o(1))$ fraction of $\LE(P)$, then
+\begin{equation}\label{eq:var-budget}
+  \sum_{x\parallel_P y,\ \Delta_{xy}>0}\Delta_{xy}\cdot p_{xy}
+  \;=\; o(1).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+A BK edge on $\bd\{H\ge c\}$ is a triple $(L,L',\{x,y\})$ where $L'$
+differs from $L$ by swapping a BK-adjacent incomparable pair
+$\{x,y\}$, $L\notin\{H\ge c\}$, $L'\in\{H\ge c\}$ (or the reverse).
+Orient so $x<_Ly$ with $\Delta_{xy}>0$: the swap lifts $H$ by
+$\Delta_{xy}$, so the triple is counted iff
+$H(L)\in[c-\Delta_{xy},c)$.  Hence
+\[
+  |\bd\{H\ge c\}|
+  \;=\;\!\!\!\sum_{x\parallel y,\ \Delta_{xy}>0}\!\!\!
+  \mu\bigl\{L:(x,y)\text{ BK-adj},\,x<_Ly,\,H(L)\in[c-\Delta_{xy},c)\bigr\}
+  \;+\;\text{sym}.
+\]
+Each summand is nonnegative and, on the $(1-o(1))$-mass giant
+component identified by Lemma~\ref{lem:single-c}, the induced
+conditional distribution of $H(L)$ near $c$ has density bounded below
+by an absolute constant $\rho>0$: the cut $\{H\ge c\}$ has BK
+boundary exactly when $H$ is within one $\Delta$-unit of $c$, and the
+Step~6 low-conductance regime localizes the global $c$ to an
+$O(1)$-window of its median, so $H$ has $\Theta(1)$ density on
+$[c-O(1),c+O(1)]$ relative to $\mu$.  Consequently each summand is
+$\ge\rho\,\Delta_{xy}\,p_{xy}\cdot(1-o(1))$, and the hypothesis
+$|\bd\{H\ge c\}|\le\eta\,\vol(\{H\ge c\})\le\eta\,\mu(\LE(P))$ gives
+$\sum\Delta_{xy}p_{xy}=O(\eta/\rho)=o(1)$.
+\end{proof}
+
+Under Prop.~\ref{prop:72}'s hypotheses, $S$ and $\{H\ge c\}$ agree
+up to $o(1)$ by Prop.~\ref{prop:71}, and BK-degree bounds transfer
+low conductance from $S$ to $\{H\ge c\}$ with $o(1)$ slack; so
+\eqref{eq:var-budget} holds.
+
+\subsection{Rich interfaces concentrate on monotone synchronizations}
+
+Fix a Dilworth decomposition $P=A\sqcup B\sqcup C$ into three chains
+(width~$3$ guarantees this).  Enumerate each chain in chain order
+$A=(a_1<_Pa_2<_P\cdots)$, $B=(b_1<_Pb_2<_P\cdots)$,
+$C=(c_1<_Pc_2<_P\cdots)$.  By Prop.~\ref{prop:71}, every rich cover
+$x<_Py$ satisfies $a(y)>a(x)$; after discarding an $o(1)$ mass of
+exceptional elements where $a$ fails chain-monotonicity (absorbed
+into the final $(1-o(1))$ quantifier), $a$ is strictly increasing
+along each of $A,B,C$.  Define the synchronization maps
+\[
+  f_{AB}(i):=\arg\min_{j}|a(a_i)-a(b_j)|,\quad
+  f_{AC}(i):=\arg\min_{k}|a(a_i)-a(c_k)|,
+\]
+and $f_{BC}$ analogously; strict monotonicity of $a$ on each chain
+makes each $f$ weakly monotone.
+
+\begin{lemma}[Bandwidth of rich incomparability]\label{lem:bandwidth}
+\DEP{\eqref{eq:var-budget}, richness threshold $T$.}
+There is $K=K(T)=O_T(1)$ such that, after deleting $o(1)$ of the
+rich-interface incidence mass,
+\[
+  (a_i,b_j)\in\Rich^\star\text{ with }a_i\parallel_P b_j
+  \;\Longrightarrow\;
+  |j-f_{AB}(i)|\le K,
+\]
+and analogously for $(A,C)$ and $(B,C)$.
+\end{lemma}
+
+\begin{proof}
+For any rich pair $e=(x,y)=(a_i,b_j)$, Step~1/Step~5 place $x,y$ at
+adjacent positions in the grid coordinate $\pi_e$ of
+$\fiber{e}$, and $\mu(\fiber{e})\ge c_T\mu(\LE(P))$ by richness
+(visibility, Step~5 Cor.~(R)); hence
+$p_{xy}\ge c'_T>0$ for an absolute constant depending only on
+the richness threshold $T$.  Plugging into~\eqref{eq:var-budget},
+\[
+  \sum_{\text{rich }(a_i,b_j)}\Delta_{a_ib_j}\;\le\;(c'_T)^{-1}\cdot o(1)\;=\;o(1),
+\]
+so all but an $o(1)$ fraction of rich incidence mass satisfies
+$|a(b_j)-a(a_i)|<c_0$ for any fixed $c_0>0$.
+
+For each such pair, strict monotonicity of $a$ on $B$ forces $j$ to
+lie in the preimage interval
+$J_i(c_0):=\{j:|a(b_j)-a(a_i)|<c_0\}$, an interval around $f_{AB}(i)$
+of length
+$N_B(c_0):=\max_i|J_i(c_0)|$.  A second application
+of~\eqref{eq:var-budget} bounds $N_B(c_0)$: if $N_B(c_0)\ge M$ at
+some $i$, then every pair $(a_i,b_j)$ with $j\in J_i(c_0)$ is
+incomparable to $a_i$ with $\Delta_{a_ib_j}<c_0$, and by richness each
+contributes $p\ge c'_T$, giving $\sum\Delta p\ge c'_T\cdot M\cdot$
+(average $\Delta$).  Averaged over $i$ against rich-pair incidence
+mass, this forces $M=O_T(1/c_0)$ save on an $o(1)$ set of $i$'s.
+Taking $K:=N_B(c_0)=O_T(1)$ with $c_0$ any fixed constant gives the
+claim for $(A,B)$; the argument for $(A,C),(B,C)$ is identical.
+\end{proof}
+
+\subsection{Assembly}
+
+\begin{proof}[Proof of Prop.~\ref{prop:72}]
+With the chain enumerations and synchronizations above, define levels
+\[
+  L_k \;:=\; \{\,a_k,\ b_{f_{AB}(k)},\ c_{f_{AC}(k)}\,\}\quad (1\le k\le|A|),
+\]
+with the convention that missing chain-entries (when $B$ or $C$ has
+run out of elements) are omitted.  Extend with additional levels
+$L_{|A|+\ell}$ holding the tail of $B\cup C$ indexed by the same
+construction applied to the remaining chains.  Each $|L_k|\le 3$,
+giving the width-$3$ size bound~(L1).
+
+\textbf{Interaction width.}  Two elements $z\in L_i$, $z'\in L_j$
+belonging to distinct chains have chain-positions whose offset to the
+synchronization is $O(1)$; hence their chain-position difference is
+at most $|i-j|+O(1)$.  Conversely, any incomparable rich pair has
+chain-position difference $\le K$ by Lemma~\ref{lem:bandwidth}, so
+$|i-j|\le K+O(1)=:w=O_T(1)$.  Outside this interaction window,
+elements are forced comparable on $(1-o(1))$ of the rich incidence
+mass.  For non-rich incomparable pairs: by~\eqref{eq:var-budget} and
+Markov, all but an $o(1)$ fraction of their mass has $\Delta<c_0$, so
+the same chain-position argument places them within
+$N_\bullet(c_0)+O(1)=O_T(1)$ levels.  Absorbing all exceptional mass
+into the $(1-o(1))$ quantifier establishes (L2)--(L3) of
+Def.~5.1 of \texttt{step8.tex}.
+
+\textbf{Rich interfaces within the window.}  By
+Lemma~\ref{lem:bandwidth}, every rich $(a_i,b_j)$ has
+$|j-f_{AB}(i)|\le K$, so $a_i\in L_i$ and $b_j\in L_j$ with
+$|i-j|\le K\le w$; analogously for $(A,C)$, $(B,C)$.
+
+\textbf{BK moves along level order.}  A BK swap exchanges a
+BK-adjacent incomparable pair $(u,v)$, changing $H$ by $\Delta_{uv}$.
+By~\eqref{eq:var-budget}, all but $o(1)$ of BK swap mass has
+$|\Delta_{uv}|=o(1)$, hence by the bandwidth argument lies within
+chain-position difference $\le w$, i.e., adjacent or near-adjacent
+levels.  Equivalently, BK moves shuffle elements within the
+$w$-wide interaction window; the layered order is respected on
+$(1-o(1))$ of the mass.
+
+\textbf{Interfaces confined.}  The above says rich interfaces
+appear between levels at distance $\le w$, BK moves preserve the
+level order up to the interaction window, and linear extensions are
+thereby determined by choices internal to consecutive $w$-level
+blocks.  This matches all three bullets of Prop.~\ref{prop:step7-informal}(ii)
+and Def.~5.1 of \texttt{step8.tex} with interaction width $w=O_T(1)$
+and the $O_T(1)$-size exceptional set of
+Remark~5.2 there.
+\end{proof}
+
+%-----------------------------------------------------------------------
+\section{Formal propositions}\label{sec:formal}
+%-----------------------------------------------------------------------
+
+Combining the above pieces gives three formal propositions.
+
+\begin{proposition}[Prop.~7.1 --- coherence globalizes]\label{prop:71}
+Assume Steps~1, 2, 5, 6 and the coherence case of Step~6.
+Then there exist $\mathcal{E}^\star\subseteq\Rich^\star$ of $(1-o(1))$
+of rich-interface incidence mass, a potential $a\colon P\to\mathbb{R}$,
+and a threshold $c\in\mathbb{R}$, such that for every
+$e=(x,y)\in\mathcal{E}^\star$,
+\[
+  1_S(L) \;=\; 1_{\{H(L)\ge c\}} + o(1)
+  \quad\text{on $(1-o(1))$ of $\fiber{e}\setminus B_e$,}
+\]
+where $H(L)=\sum_z a(z)\pos_L(z)$, and the positive BK direction
+across $e$ is $\sgn(a(y)-a(x))$.
+\end{proposition}
+
+\begin{proof}[Proof of Prop.~\ref{prop:71}]
+Apply the gap lemmas in order.
+\textbf{(G1)} Lemma~\ref{lem:signed-threshold} normalizes each
+$S$-good rich interface $e\in\Rich^\star$ into the signed-threshold
+form $\sigma_e(j-i)\ge\tau_e$ with $O(\varepsilon_2)$ symmetric
+difference per fiber.
+\textbf{(G2)} Lemma~\ref{lem:sign-consistency}, fed by Step~6
+Corollary~B, replaces $\sigma_e$ with a globally consistent sign
+$\widetilde\sigma_e$ on a subset
+$\mathcal{E}^\star\subseteq\Rich^\star$ of $(1-o(1))$ rich-interface
+incidence, with overlap-compatible signs on every active pair in
+$\mathcal{E}^\star$.
+\textbf{(G3)} Lemma~\ref{lem:triple-visibility} guarantees that
+$(1-o(1))$ of the edge weight on $\mathcal{E}^\star$ extends to
+active triples, so the cocycle hypothesis of (G4) is non-vacuous.
+\textbf{(G4)} Lemma~\ref{lem:cocycle} promotes pairwise sign
+compatibility to the additive cocycle
+$\tau_{xz}=\tau_{xy}+\tau_{yz}+O(1)$ on $(1-o(1))$ of active triples
+in $\mathcal{E}^\star$.
+\textbf{(G9)} The visible interface graph carries a giant component
+of weight $(1-o(1))$, transferred to the element graph $G^P_\star$
+on $P^\star\subseteq P$.
+\textbf{(G5)} Lemma~\ref{lem:potential} integrates the signed
+thresholds $\delta_e=\widetilde\sigma_e\tau_e$ along a BFS spanning
+tree of $G^P_\star$, closing fundamental cycles via star-triangulation
+through the basepoint and (G4)-good triangles, yielding
+$a\colon P\to\mathbb{R}$ with
+$\widetilde\sigma_e\tau_e=a(y)-a(x)+O(1)$ on $(1-o(1))$ of
+$\mathcal{E}^\star$.  Define $H(L):=\sum_z a(z)\pos_L(z)$;
+across any rich BK swap on $e=(x,y)$, $H$ changes by $a(y)-a(x)$,
+so the positive BK direction agrees with $\widetilde\sigma_e$.
+\textbf{(G6)} Lemma~\ref{lem:single-c} synchronizes the per-fiber
+thresholds $c_e$ induced by $\{H\ge c_e\}\cap\fiber{e}$: pairwise
+overlap discrepancy $|c_e-c_f|$ contributes
+$\Theta(|c_e-c_f|)w_{ef}$ to BK boundary, so Step~6's
+low-conductance hypothesis forces $|c_e-c_f|=O(1)$ on every active
+pair, and connectedness on $G^P_\star$ (G9) collapses
+$\{c_e:e\in\mathcal{E}^\star\}$ into a single $O(1)$ window;
+take $c$ to be its mean.
+Combining,
+$1_S(L)=1_{\{H(L)\ge c\}}+o(1)$ on
+$(1-o(1))$ of $\fiber{e}\setminus B_e$ for every
+$e\in\mathcal{E}^\star$, with $\sgn(a(y)-a(x))=\widetilde\sigma_e$
+the positive BK direction.
+\end{proof}
+
+\begin{proposition}[Prop.~7.2 --- low-boundary threshold cut is
+1D]\label{prop:72}
+\DEP{Prop.~\ref{prop:71}.}
+If a cut of the form $\{H\ge c\}$ has low BK conductance and controls
+$(1-o(1))$ of all rich swaps, then $P$ admits a layered width-3
+decomposition on $(1-o(1))$ of its mass.
+\end{proposition}
+
+\begin{proof}[Proof of Prop.~\ref{prop:72}]
+By Prop.~\ref{prop:71}, the cut $S$ agrees with $\{H\ge c\}$ up to
+$o(1)$ mass, so $|\bd S|=|\bd\{H\ge c\}|+o(\vol(S))$ inherits the
+low conductance hypothesis.  By Section~\ref{sec:layered}, the BK
+boundary of $\{H\ge c\}$ counts adjacent pairs $(u,v)$ in a uniformly
+random $L$ with $a(u),a(v)$ straddling $c$, which under low conductance
+is $o(\vol(S))$.  The width-3 structural lemma converts this small
+variation of $a$ into a layered antichain decomposition
+$P=L_1\sqcup\cdots\sqcup L_m$ on which $a$ is approximately monotone,
+giving the claimed layered width-3 decomposition on $(1-o(1))$ of
+$\vol(\LE(P))$.
+\end{proof}
+
+\begin{proposition}[Prop.~7.3 --- layered width-3 is
+harmless]\label{prop:73}\label{sec:prop73-proof}
+\DEP{Prop.~\ref{prop:72}.}
+A layered decomposition of a width-3 poset as in
+Prop.~\ref{prop:72} cannot occur in a width-3 counterexample to
+$1/3$--$2/3$: either such a decomposition directly produces a
+balanced pair (averaging on adjacent layers) or reduces to a strictly
+smaller width-3 instance, contradicting minimality.
+\end{proposition}
+
+\begin{proof}
+Let $P$ be a minimal width-3 $\gamma$-counterexample
+(every incomparable pair $(u,v)$ satisfies
+$\Pr[u<v]\notin[\tfrac13+\gamma,\tfrac23-\gamma]$ for some fixed
+$\gamma>0$).  By Prop.~\ref{prop:72}, $P$ admits a layered
+decomposition $P=L_1\sqcup\cdots\sqcup L_m$ into antichain levels of
+size $\le 3$ that is strict on $(1-o(1))$-mass; i.e.\ on
+$(1-\delta)|\LE(P)|$ linear extensions (call these \emph{aligned}
+extensions), the relative order of any $u\in L_r$ and $v\in L_s$ with
+$r<s$ is $u<v$.  Here $\delta=o(1)$ as the Step~7 parameters shrink;
+in particular we may assume $\delta<\gamma/2$.
+
+\smallskip
+\noindent
+\emph{Step 1: width-3 forces a full layer.}
+Since $\mathrm{width}(P)=3$, the antichain cover
+$P=\bigsqcup L_r$ must use at least one level of size exactly $3$;
+otherwise $P$ itself would be a union of antichains of size $\le 2$
+with the layered order, hence of width $\le 2$.  Fix such a level
+$L_{r^\star}$ of size $3$.
+
+\smallskip
+\noindent
+\emph{Case $m=1$.}
+Then $P=L_1$ is an antichain on $3$ elements, its $\LE(P)$ is
+the full symmetric group $S_3$ with the uniform measure, and every
+incomparable pair has $\Pr[u<v]=1/2\in[1/3,2/3]$.  This contradicts
+$P$ being a $\gamma$-counterexample.
+
+\smallskip
+\noindent
+\emph{Case $m\ge 2$ (minimal-counterexample reduction).}
+Set $P':=P\setminus L_m=L_1\sqcup\cdots\sqcup L_{m-1}$.
+Then $|P'|<|P|$, and $P'$ inherits the induced partial order with
+the same layered decomposition of depth $m-1$; in particular
+$\mathrm{width}(P')\le 3$.  By minimality of $P$, the induced
+poset $P'$ is not a $\gamma$-counterexample, so either
+(a)~$\mathrm{width}(P')\le 2$, in which case $P'$ has a balanced pair
+by Linial's width-$2$ theorem~\cite{Linial1984}, or (b)~$\mathrm{width}(P')=3$ and by
+minimality some incomparable pair $(u,v)$ in $P'$ satisfies
+$\Pr_{P'}[u<v]\in[\tfrac13+\gamma,\tfrac23-\gamma]$.  Either way fix
+incomparable $(u,v)\in P'$ with
+$p':=\Pr_{P'}[u<v]\in[\tfrac13+\gamma,\tfrac23-\gamma]$.
+
+We compare $\Pr_P[u<v]$ to $p'$.
+On the $(1-\delta)$-mass of aligned extensions, all elements of $L_m$
+appear after all elements of $P'$, so restricting an aligned
+$L\in\LE(P)$ to $P'$ yields an $L'\in\LE(P')$; conversely every
+$L'\in\LE(P')$ extends to aligned $L\in\LE(P)$ by appending any
+linear extension of $L_m$.  Hence the aligned-conditional
+distribution of $L|_{P'}$ is exactly the uniform distribution on
+$\LE(P')$, and the events $\{u<v\}$ and alignment depend on this
+restriction only.  Therefore
+\[
+  \bigl|\Pr_P[u<v]-p'\bigr|
+  \;\le\; \delta
+  \;<\; \gamma/2,
+\]
+so $\Pr_P[u<v]\in[\tfrac13+\tfrac\gamma2,\tfrac23-\tfrac\gamma2]
+\subseteq[1/3,2/3]$.  The pair $(u,v)$ remains incomparable in $P$
+(incomparability is inherited), so $(u,v)$ is a balanced pair in $P$
+violating $P$'s counterexample property.  Contradiction.
+
+\smallskip
+\noindent
+(If $|L_1|=3$ instead of $|L_m|=3$ we remove $L_1$ instead; the
+symmetric argument applies, since in aligned extensions $L_1$
+occupies the initial positions.)
+\end{proof}
+
+\begin{theorem}[Step~7 assembly]\label{thm:step7}
+Assume Steps~1, 2, 5, 6 and the coherence case of Step~6.
+Then the cut $S\subseteq\LE(P)$ admits a global threshold-of-potential
+description, and consequently $P$ has a balanced pair or is reducible.
+Hence the coherent case cannot support a minimal width-3
+$\gamma$-counterexample.
+\end{theorem}
+
+\begin{proof}
+Lemmas~\ref{lem:signed-threshold}, \ref{lem:sign-consistency},
+\ref{lem:triple-visibility}, \ref{lem:cocycle},
+\ref{lem:giant-component}, \ref{lem:potential}, and
+\ref{lem:single-c} combine to give Prop.~\ref{prop:71}: the global
+threshold-of-potential description $1_S\approx 1_{\{H\ge c\}}$ holds
+on $(1-o(1))$ of $\LE(P)$, with $H(L)=\sum_z a(z)\pos_L(z)$.  Since
+$S$ was assumed to be a low-conductance cut, the threshold cut
+$\{H\ge c\}$ inherits low BK conductance; Prop.~\ref{prop:72} then
+forces $P$ into a layered width-3 regime on $(1-o(1))$ of mass.
+Prop.~\ref{prop:73} closes the loop: the layered structure yields
+either a balanced pair directly or a strictly smaller width-3
+sub-instance, contradicting the assumed minimality of the
+$\gamma$-counterexample.  Therefore no minimal width-3
+$\gamma$-counterexample lies in the coherence case of Step~6.
+\end{proof}
+
+%-----------------------------------------------------------------------
+\section{Proof in compressed form}
+%-----------------------------------------------------------------------
+
+We record the logical skeleton.
+
+\begin{enumerate}[nosep]
+  \item By Step~2 + Lemma~\ref{lem:signed-threshold}, each rich
+    interface $e$ has signed-threshold form $\sigma_e(j-i)\ge\tau_e$.
+  \item By Step~6, the signs are pairwise compatible on almost all
+    overlap weight.
+  \item Lemma~\ref{lem:sign-consistency} promotes pairwise to global
+    sign consistency on a giant component.
+  \item On active triples, Lemma~\ref{lem:cocycle} upgrades this to
+    the additive cocycle
+    $\tau_{xz}\approx \tau_{xy}+\tau_{yz}$.
+  \item Lemma~\ref{lem:potential} integrates the cocycle into an
+    element potential $a:P\to\mathbb{R}$.
+  \item Lemma~\ref{lem:single-c} synchronizes the fiber thresholds
+    into a single $c$.
+  \item Prop.~\ref{prop:71} gives the global threshold description.
+  \item Prop.~\ref{prop:72} shows low BK conductance of such a cut
+    forces a layered width-3 structure.
+  \item Prop.~\ref{prop:73} finishes via balanced-pair or minimal
+    reduction.
+\end{enumerate}
+
+%-----------------------------------------------------------------------
+\section{Technical lemmas on triples and connectivity}
+%-----------------------------------------------------------------------
+
+Two technical inputs used above are proved here: the active-triple
+visibility lemma that feeds the cocycle argument, and the
+giant-component connectedness of $G_{\Rich}$ that integrates the
+cocycle.
+
+\subsection{Active-triple visibility}\label{sec:gap-triples}
+
+A $(1-o(1))$ fraction of the interface-graph edge weight
+$M:=\sum_{\alpha\ne\beta}w_{\alpha\beta}$ participates in active
+triples, i.e.\ for $(1-o(1))$ of the weight
+$w_{\alpha\beta}$ there exists $\gamma\in\Rich^\star$ with
+$w_{\alpha\gamma},w_{\beta\gamma}$ and the triple overlap
+$w_{\alpha\beta\gamma}:=|(\fiber{\alpha}\cap\fiber{\beta}\cap\fiber{\gamma})
+\setminus(B_\alpha\cup B_\beta\cup B_\gamma)|$ simultaneously above
+fixed positive thresholds.  This is what Lemmas~\ref{lem:cocycle} and
+\ref{lem:potential} consume: without triple-density, the
+cocycle-to-gradient integration is over an empty graph.
+
+\begin{lemma}[Active-triple visibility]\label{lem:triple-visibility}
+Assume the rich case~(R) of Step~5 with richness constant~$c_T$,
+together with the bad-set bound $|B_\alpha|\le Ct_\alpha$ of
+Step~1.  Let
+\[
+  I(L) \;:=\; \#\{\alpha\in\Rich^\star:\ L\in\fiber{\alpha}\setminus B_\alpha\}
+\]
+be the visibility count.  Then:
+\begin{enumerate}[label=(\alph*),nosep]
+  \item (Third moment.)  $\displaystyle \sum_{L\in\LE(P)}I(L)^3
+     \;\ge\; c_T^{(3)}\,|\LE(P)|$ with $c_T^{(3)}:=(c_T/2)^3$.
+  \item (Triple-overlap mass.)  Writing
+    $w_{\alpha\beta\gamma}:=|(\fiber{\alpha}\cap\fiber{\beta}\cap
+    \fiber{\gamma})\setminus(B_\alpha\cup B_\beta\cup B_\gamma)|$,
+    the ordered triple mass satisfies
+    \[
+      \sum_{\alpha,\beta,\gamma\in\Rich^\star}w_{\alpha\beta\gamma}
+      \;=\; \sum_{L}I(L)^3
+      \;\ge\; c_T^{(3)}|\LE(P)|.
+    \]
+  \item (Edge fraction in triples.)  Setting
+    $M:=\sum_{\alpha\ne\beta}w_{\alpha\beta}=\sum_L I(L)(I(L){-}1)$,
+    the fraction of the edge weight $(L,\alpha,\beta)$ with
+    $L\in\fiber{\alpha}^\star\cap\fiber{\beta}^\star$ and
+    $I(L)\ge 3$ (i.e.\ $\exists\gamma\notin\{\alpha,\beta\}$ with
+    $L\in\fiber{\gamma}^\star$) is at least
+    $1-O(1/c_T')$, with $c_T':=(c_T/2)^2$ the Step~5 second-moment
+    constant.  As $c_T\to\infty$ with the richness threshold~$T$,
+    this fraction is $1-o(1)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) By Step~5 Corollary~\ref{cor:second-moment}, the first-moment bound
+$\mathbb{E}_L[I(L)]\ge c_T/2$ holds.  Since $x\mapsto x^3$ is convex
+on $[0,\infty)$ and $I(L)\ge 0$, Jensen's inequality gives
+\[
+  \mathbb{E}_L[I(L)^3] \;\ge\; \bigl(\mathbb{E}_L[I(L)]\bigr)^3
+  \;\ge\; (c_T/2)^3,
+\]
+equivalently $\sum_L I(L)^3\ge c_T^{(3)}|\LE(P)|$.
+
+(b) Expanding the cube pointwise:
+\[
+  I(L)^3
+  \;=\; \sum_{\alpha,\beta,\gamma\in\Rich^\star}
+  \mathbf{1}\bigl[\,L\in\fiber{\alpha}^\star\cap\fiber{\beta}^\star
+  \cap\fiber{\gamma}^\star\,\bigr],
+\]
+with $\fiber{\cdot}^\star:=\fiber{\cdot}\setminus B_{\cdot}$.
+Summing over~$L$ and interchanging the order of summation gives
+$\sum_L I(L)^3 = \sum_{\alpha,\beta,\gamma}w_{\alpha\beta\gamma}$,
+under the same counting-measure identification used in Steps~5 and~6.
+Combined with~(a), this yields the stated lower bound.
+
+(c) A pair $(L,\alpha,\beta)$ with $L\in\fiber{\alpha}^\star\cap
+\fiber{\beta}^\star$ (contributing $1$ to $w_{\alpha\beta}$ with
+$\alpha\ne\beta$) extends to a triple
+$(L,\alpha,\beta,\gamma)$ with $\gamma$ distinct from $\alpha,\beta$
+iff $I(L)\ge 3$.  Hence the edge weight that \emph{fails} to extend
+is
+\[
+  \sum_{L:I(L)\le 2}I(L)(I(L)-1)
+  \;\le\; 2\,|\LE(P)|,
+\]
+since $I(I-1)\le 2$ for $I\in\{0,1,2\}$.  For a lower bound on $M$,
+note that $I(I-1)\ge I^2/2$ whenever $I\ge 2$, so by Step~5
+Corollary~\ref{cor:second-moment} ($\sum_L I(L)^2\ge c_T'|\LE(P)|$),
+\[
+  M \;=\; \sum_L I(L)(I(L)-1)
+  \;\ge\; \tfrac12\!\!\sum_{L:I(L)\ge 2}\!\! I(L)^2
+  \;\ge\; \tfrac12\bigl(\textstyle\sum_L I(L)^2 - |\LE(P)|\bigr)
+  \;\ge\; \tfrac14\,c_T'\,|\LE(P)|
+\]
+once $c_T'\ge 2$ (the middle step uses
+$\sum_{I\le 1}I^2\le|\LE(P)|$).  Dividing the failure weight
+$2|\LE(P)|$ by $M\ge c_T'|\LE(P)|/4$ yields failure fraction
+$\le 8/c_T'=O(1/c_T')$.  Taking $T$ large enough that $c_T'\to\infty$
+(which is consistent with Step~5's asymptotic richness) makes the
+failure fraction $o(1)$.
+
+\textbf{Active-triple threshold.}  It remains to pass from
+``some $\gamma$ with $w_{\alpha\beta\gamma}>0$'' to ``some $\gamma$
+with $w_{\alpha\gamma},w_{\beta\gamma},w_{\alpha\beta\gamma}$ above
+fixed positive thresholds.''
+Fix a threshold parameter $\eta$ to be determined.
+Call an ordered triple $(\alpha,\beta,\gamma)$ \emph{below-threshold}
+if at least one of $w_{\alpha\gamma},w_{\beta\gamma},
+w_{\alpha\beta\gamma}$ is below $\eta\cdot c_T^{(3)}|\LE(P)|/|\Rich^\star|^3$.
+By Markov, the total mass of below-threshold triples is at most
+$3\eta\cdot c_T^{(3)}|\LE(P)|$: there are $\le|\Rich^\star|^3$ ordered
+triples, each below-threshold contributes $\le\eta\cdot
+c_T^{(3)}|\LE(P)|/|\Rich^\star|^3$ via the triple-mass bound, so the
+total is $\le\eta\cdot c_T^{(3)}|\LE(P)|$, times the factor $3$ for
+each of the three pair/triple conditions that could fail.
+Choosing $\eta$ a small absolute constant (e.g.\ $\eta=1/6$), the
+above-threshold triple mass is at least $\tfrac12 c_T^{(3)}|\LE(P)|$.
+
+Projecting to edges: each above-threshold triple supplies
+$3$ ordered pairs $(\alpha,\beta)$ whose weight extends to an active
+triple.  Hence the edge weight in active triples is at least a
+constant fraction of $M$, and the complementary ``not in any active
+triple'' edge weight is at most the sum of (i) the $2|\LE(P)|$
+deficit from $I(L)\le 2$ states and (ii) the $3\eta\cdot
+c_T^{(3)}|\LE(P)|$ threshold loss, both $o(M)$ as $c_T\to\infty$ with
+$\eta$ fixed.  This establishes the $(1-o(1))$ claim.
+\end{proof}
+
+\textbf{Triangle-structure remark.}  In the width-3 setting the
+downstream cocycle lemma (Lemma~\ref{lem:cocycle},
+Section~\ref{sec:cocycle}) is stated on \emph{triangle triples}
+$(e_{xy},e_{yz},e_{xz})$ through three distinct elements
+$x,y,z\in P$ (which must then span the three chains, since rich
+interfaces connect distinct chains).  Lemma~\ref{lem:triple-visibility}
+above is stated without the triangle restriction, matching the
+definition of active triple in Section~\ref{sec:normalize} and
+Definition~\ref{def:local-staircase}'s surrounding setup (positive
+pairwise and triple overlap).  The passage from arbitrary active
+triples to triangle triples is handled at the Step~1 level (width-3
+normal form on triple overlaps): in width~$3$, three rich interfaces
+with
+simultaneous fiber visibility must share common elements on
+overlap, because $\fiber{\alpha}\cap\fiber{\beta}$ is supported on a
+common chain window by the Step~1 commuting-square model, and three
+commuting squares through a common window close up into a
+commuting cube whose edges are the three triangle interfaces.
+Hence arbitrary-triple visibility coincides with
+triangle-triple visibility up to $o(1)$ losses absorbed in the
+Step~1 bad-set bound.
+
+\subsection{Giant-component connectedness of $G_{\Rich}$}\label{sec:gap-connected}
+
+This is the connectedness input consumed by
+Lemma~\ref{lem:sign-consistency} (disagreement percolation),
+Lemma~\ref{lem:potential} (gradient integration), and
+Lemma~\ref{lem:single-c} (threshold synchronization).
+
+\begin{lemma}[Giant component of $G_{\Rich}$]\label{lem:giant-component}
+Assume the rich case~(R) of Step~5 with richness constant $c_T$, and
+let the active-pair threshold be
+$\theta_{\rm pair}:=c_1\,T\,|\LE(P)|/(|A|\,|B|\,|C|)$ for a fixed
+small constant $c_1>0$ (matching the share-endpoint overlap
+constant of Step~1 below).  Then there is a connected component
+$\mathcal{C}\subseteq\Rich^\star$ of $G_{\Rich}$ with incidence weight
+\[
+  \sum_{\alpha\in\mathcal{C}}\mu_\alpha
+  \;\ge\; \bigl(1-O(c_T^{-1})\bigr)\,M_0,
+  \qquad M_0:=\sum_{\alpha\in\Rich^\star}\mu_\alpha.
+\]
+The same component supports $(1-o(1))$ of the active-triple incidence
+mass.
+\end{lemma}
+
+\begin{proof}
+Let $I(L):=\#\{\alpha\in\Rich^\star: L\in\fiber{\alpha}\setminus
+B_\alpha\}$ and $\mu_\alpha:=\mu(\fiber{\alpha}\setminus B_\alpha)$.
+Without loss of generality the rich case~(R) of Step~5 holds for the
+ordered triple $(A,B\mid C)$, so $|\Rich_{AB}|\ge c_T|A||B|$ and the
+total $AB$ rich-incidence mass is $M_0\ge c_T|\LE(P)|$
+(Theorem~\ref{thm:step5}); rich pairs of types $AC,BC$ either also
+satisfy~(R) (in which case the same argument applies blockwise) or
+fall into the banded case~(C) of Step~5 and contribute $o(M_0)$ to
+the rich-interface incidence after the $S$-good trim of
+Definition~\ref{def:G_Rich}.  We may therefore restrict attention to
+$\Rich^\star\subseteq\Rich_{AB}$ throughout; the argument carries
+over verbatim to additional rich types when they are present.
+
+\smallskip
+\textbf{Step~1: Edge-mass lower bound from second moment.}
+By Step~5 Corollary~\ref{cor:second-moment},
+$\sum_L I(L)^2\ge c_T'|\LE(P)|$ with $c_T':=(c_T/2)^2$.  Therefore
+\begin{equation}\label{eq:gc-edge-mass}
+  M\;:=\;\!\!\sum_{\alpha\ne\beta}\!\!w_{\alpha\beta}
+  \;=\;\sum_L I(L)(I(L)-1)
+  \;\ge\;c_T'|\LE(P)|-M_0
+  \;\ge\;\tfrac12 c_T'|\LE(P)|
+\end{equation}
+once $c_T$ is large enough that $c_T'\gg c_T$ (recall
+$c_T'\sim c_T^2/4$).
+
+\smallskip
+\textbf{Step~2: Endpoint-sharing pairs are active.}
+Let $\alpha=(x,y),\beta=(x,y')\in\Rich^\star$ share endpoint
+$x\in A$ (so $y,y'\in B$).  By Step~1
+Corollary~\ref{cor:overlap}~(b), in the rich regime
+$t(x,y),t(x,y')\ge T$ the joint fiber satisfies
+$|\Omega_{\alpha,\beta}^{\circ}|\ge(1-o(1))|\Omega_{\alpha,\beta}|$
+where $\Omega_{\alpha,\beta}=\fiber{\alpha}\cap\fiber{\beta}$.  The
+joint fiber is non-empty because the $(x,y)$- and $(x,y')$-coordinate
+projections are independent over the $C$-chain orientation: any
+$L\in\LE(P)$ that places $x$ adjacent to its $C$-window
+$C(x,y)\cup C(x,y')$ and both $y,y'$ in their respective ranges
+contributes, and the count of such $L$ is at least
+$c_1\,\min\bigl(t(x,y),t(x,y')\bigr)\,|\LE(P)|/(|A|\,|B|\,|C|)$
+for an absolute constant $c_1>0$ (Step~1
+Theorem~\ref{thm:interface}, applied to the joint
+$\mathbb{Z}^2$-grid model on $\Omega^{\circ}_{\alpha,\beta}$).  The Step~1
+interaction-locus bound $|\mathrm{Int}_{\alpha,\beta}|=O((t_\alpha+t_\beta)^2)$
+(Cor.~\ref{cor:overlap}\ref{it:density} of \texttt{step1.tex})
+removes at most a $o(1)$-fraction once the overlap is $\gg
+(t_\alpha+t_\beta)^2$, which holds for $T$ large.  Therefore
+\begin{equation}\label{eq:share-end-overlap}
+  w_{\alpha\beta}\;=\;
+  \mu\bigl((\fiber{\alpha}\cap\fiber{\beta})\setminus
+  (B_\alpha\cup B_\beta)\bigr)
+  \;\ge\; c_1\,T\,|\LE(P)|/(|A|\,|B|\,|C|)\;=\;\theta_{\rm pair},
+\end{equation}
+so every endpoint-sharing pair in $\Rich^\star$ is active in
+$G_{\Rich}$.  The symmetric case $y=y'$ (sharing the $B$-endpoint) is
+identical.
+
+\smallskip
+\textbf{Step~3: Endpoint-sharing graph on $\Rich_{AB}$ has diameter
+$\le 3$.}  For $a\in A$, write $N_B(a):=\{b\in B:(a,b)\in\Rich_{AB}\}$
+and analogously $N_A(b)$.  By Step~5~(R), $\sum_a|N_B(a)|=|\Rich_{AB}|
+\ge c_T|A||B|$, so by averaging at most a $(2/c_T)$-fraction of
+$a\in A$ have $|N_B(a)|<(c_T/2)|B|$.  Call $a$ \emph{rich-row} if
+$|N_B(a)|\ge(c_T/2)|B|$, and similarly $b$ \emph{rich-column}.
+For two rich-row endpoints $a,a'\in A$, by inclusion--exclusion
+$|N_B(a)\cap N_B(a')|\ge c_T|B|-|B|=(c_T-1)|B|>0$ for $c_T>1$, so
+there exists $b''\in B$ with $(a,b''),(a',b'')\in\Rich$.  Hence for any
+$\alpha=(a,b),\beta=(a',b')\in\Rich$ with $a,a'$ both rich-rows, the
+path
+\[
+  \alpha=(a,b)\;\longrightarrow\;(a,b'')\;\longrightarrow\;(a',b'')\;
+  \longrightarrow\;(a',b')=\beta
+\]
+is a length-$3$ walk in the endpoint-sharing graph (each consecutive
+pair shares an endpoint).  At most a $(4/c_T)$-fraction of
+$\Rich_{AB}$ involves a non-rich-row or non-rich-column endpoint, so
+the diameter-$3$ property holds on a $(1-O(c_T^{-1}))$-fraction of
+the rich-interface mass.
+
+\smallskip
+\textbf{Step~4: From endpoint-sharing connectivity to giant
+component.}  By Step~2, every endpoint-sharing pair in $\Rich^\star$
+is an active edge of $G_{\Rich}$.  Combined with Step~3, the active
+subgraph of $G_{\Rich}$ contains, on a $(1-O(c_T^{-1}))$-mass
+subset, paths of length~$\le 3$ between any two interfaces.  The
+$S$-good trim from $\Rich$ to $\Rich^\star$
+(Definition~\ref{def:G_Rich}) deletes only an $o(1)$-mass fraction
+(Step~6), and the diameter-$3$ routing tolerates such deletions
+because each step has $\Omega(c_T|B|)$ alternative choices of
+intermediate endpoint.  Specifically, fix any reference
+$\alpha_0\in\Rich^\star$ with rich-row $a_0$ and rich-column $b_0$;
+every other rich-row/rich-column $\alpha\in\Rich^\star$ admits
+$\Omega(c_T^2|A||B|)$ length-$3$ paths to $\alpha_0$, of which a
+$(1-o(1))$-fraction stay inside $\Rich^\star$.  Hence at least one
+such path survives the trim, placing $\alpha$ in the same component
+as $\alpha_0$.  The resulting connected component
+$\mathcal{C}\subseteq\Rich^\star$ contains all rich-row/rich-column
+$S$-good interfaces, hence carries incidence mass
+$\ge(1-O(c_T^{-1}))M_0$.
+
+\smallskip
+\textbf{Step~5: Triple version.}  For three rich interfaces
+$e_{xy}=(x,y),e_{yz}=(y,z),e_{xz}=(x,z)$ forming a triangle through
+a common triple $\{x,y,z\}\subseteq P$ that spans the three chains,
+Step~1 Corollary~\ref{cor:triple-overlap} applies: the triple
+overlap $\Omega^{(3)}=\fiber{e_{xy}}\cap\fiber{e_{yz}}\cap
+\fiber{e_{xz}}$ supports a commuting $\mathbb{Z}^3$-cube model on a
+positive-density subset, with mass
+$|\Omega^{(3)}|\ge c_2\,T\,|\LE(P)|/(|A|\,|B|\,|C|)$ for an absolute
+constant $c_2>0$ once $T$ is large (the
+existence of the cube model and the joint-window count from
+Theorem~\ref{thm:interface} give the lower bound by the same
+argument as Step~2).  The active-triple threshold is set
+analogously to $\theta_{\rm pair}$, and triple visibility
+$w_{e_{xy},e_{yz},e_{xz}}\ge$ threshold follows.  Each
+endpoint-sharing edge of $\mathcal{C}$ at $x$ extends to a triangle
+through any rich-column $z$ (of which there are
+$\Omega(c_T|C|)$), so the triple hypergraph induced on
+$\mathcal{C}$ is connected with the same $(1-o(1))$-mass coverage.
+\end{proof}
+
+\textbf{Compatibility with downstream uses.}  Lemmas
+\ref{lem:sign-consistency}, \ref{lem:potential}, \ref{lem:single-c}
+all condition on a single connected component of $G_{\Rich}$
+carrying $(1-o(1))$-mass; Lemma~\ref{lem:giant-component} furnishes
+exactly such a $\mathcal{C}$.  The mass-loss exponent
+$O(c_T^{-1})$ is absorbed by the $o(1)$ slack already built into
+those lemmas (since $c_T\to\infty$ as the richness threshold $T\to
+\infty$ in Step~5).
+

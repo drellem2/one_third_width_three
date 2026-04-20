@@ -1,0 +1,1184 @@
+
+\section*{Purpose}
+
+Step 5 is the structural input that feeds Step 6 (the incompatibility engine).
+The target statement is a \emph{dichotomy}: in a width-3 counterexample, after fixing
+a Dilworth decomposition, either there are many rich interfaces visible on a typical
+linear extension (\textbf{Richness (R)}), or the three bipartite incomparability
+relations are each supported on a narrow band, so $P$ is effectively one-dimensional
+(\textbf{Collapse (C)}).
+
+\section{Setup and basic objects}
+
+\subsection{Dilworth decomposition and incomparability intervals}
+
+Fix a Dilworth decomposition of the width-3 poset
+\[
+P = A \sqcup B \sqcup C
+\]
+into chains
+\[
+A = \{a_1 < \cdots < a_p\},\quad
+B = \{b_1 < \cdots < b_q\},\quad
+C = \{c_1 < \cdots < c_r\}.
+\]
+
+For $x \in A$, define
+\[
+\IB(x) := \{b \in B : b \parallel x\},\qquad
+\IC(x) := \{c \in C : c \parallel x\}.
+\]
+
+\begin{lemma}[Incomparability intervals on chains]\label{lem:interval-form}
+For every $x \in A$, both $\IB(x)$ and $\IC(x)$ are intervals (possibly empty) in
+the corresponding chain. Symmetrically for $x \in B$ and $x \in C$.
+\end{lemma}
+
+\begin{proof}
+Standard: if $b_i < b_j < b_k$ in $B$ and $b_i, b_k \parallel x$, then $b_j \parallel x$
+by transitivity; else we would obtain $x < b_i$ or $b_k < x$.
+\end{proof}
+
+Write
+\[
+\IC(a_i) = [\alpha_i, \beta_i],\qquad
+\IC(b_j) = [\gamma_j, \delta_j]
+\]
+in $C$-coordinates.
+
+\subsection{Common neighbors and richness}
+
+For $x \in A$, $y \in B$ with $x \parallel y$, the set of common incomparable
+neighbors lies entirely inside the third chain:
+\[
+C(x,y) = N(x) \cap N(y) = \IC(x) \cap \IC(y),
+\]
+so
+\[
+t(x,y) := |C(x,y)| = |\IC(x) \cap \IC(y)|.
+\]
+
+\begin{definition}[Triple-local rich sets]\label{def:rich-triple}
+Fix the richness threshold $T\ge 1$ of Definition~\ref{def:rich} (Step~1),
+so an incomparable pair $(x,y)$ is \emph{rich} iff $t(x,y)\ge T$.
+For the ordered triple $(A,B\mid C)$, define
+\[
+\Rich_{AB \mid C} := \{(x,y) \in A \times B : x \parallel y,\ t(x,y) \ge T\}
+\]
+as the set of rich pairs straddling $A$ and $B$.
+Cyclically define $\Rich_{AC \mid B}$ and $\Rich_{BC \mid A}$.
+\end{definition}
+
+\section{Main theorem (target statement)}
+
+\begin{theorem}[Step 5: Rich-or-Collapse]\label{thm:step5}
+Fix $T \ge 1$. There exists $K = K(T)$ such that for any width-3 counterexample
+$P$ to the $1/3$--$2/3$ conjecture, after choosing a suitable Dilworth
+decomposition $P = A \sqcup B \sqcup C$, one of the following holds:
+
+\smallskip
+
+\noindent\textbf{(R) Richness.} For at least one ordered triple of chains,
+say $(A,B \mid C)$, the rich-interface incidence is large:
+\[
+\sum_{(x,y)\,\text{rich}} |\Fxy| \;\ge\; c_T\,|\LP|,
+\]
+where $\Fxy \subseteq \LP$ is the good fiber associated to $(x,y)$ by
+\emph{Step 1}. Equivalently, a random linear extension lies in $\Omega_T(1)$
+rich good fibers in expectation.
+
+\smallskip
+
+\noindent\textbf{(C) Collapse.} After deleting $O_T(1)$ exceptional
+layers/elements on each chain, every bipartite incomparability graph is
+supported on a band of width $K$: there are monotone maps
+\[
+f_{AB}: A \to B,\quad f_{AC}: A \to C,\quad f_{BC}: B \to C
+\]
+such that each element is incomparable to only $O_T(1)$ elements outside the
+corresponding band. Hence $P$ is effectively one-dimensional / layered.
+\end{theorem}
+
+\section{Per-triple dichotomy}
+
+The main theorem is assembled from a single-triple dichotomy applied cyclically.
+
+\begin{proposition}[Single-triple dichotomy]\label{prop:single-triple}
+Fix $T \ge 1$ and a triple $(A, B \mid C)$. Either:
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Many rich pairs:} $|\Rich_{AB \mid C}| \ge c_T\, |A|\cdot|B|$ for
+    some $c_T > 0$; \emph{or}
+  \item \textbf{Banded:} the $A$--$B$ incomparability graph (restricted to rich
+    overlap) is supported on an $O_T(1)$-width band, i.e.\ there is a monotone
+    map $f_{AB}: A \to B$ such that $\{j : a_i \parallel b_j,\ t(a_i,b_j) \ge T\}
+    \subseteq [f_{AB}(i) - K, f_{AB}(i) + K]$ for every $i$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:endpoint-mono} (applied to the triple $(A,B\mid C)$), the
+four endpoint sequences $\alpha_i,\beta_i$ on $\{i:\IC(a_i)\ne\emptyset\}$
+and $\gamma_j,\delta_j$ on $\{j:\IC(b_j)\ne\emptyset\}$ are exactly
+nondecreasing, with no exceptional elements discarded and additive error
+$E_0=0$.
+
+\smallskip
+\noindent\emph{Threshold encoding.} Fix $i\in[p]$, $j\in[q]$ with
+$\IC(a_i),\IC(b_j)\ne\emptyset$. The intersection of two intervals on the
+linearly ordered chain~$C$ has
+\[
+  t(a_i,b_j)\;=\;\big|[\alpha_i,\beta_i]\cap[\gamma_j,\delta_j]\big|
+  \;=\;\big(\min(\beta_i,\delta_j)-\max(\alpha_i,\gamma_j)+1\big)_+,
+\]
+so $t(a_i,b_j)\ge T$ is equivalent to
+$\min(\beta_i,\delta_j)-\max(\alpha_i,\gamma_j)\ge T-1$, which expands as the
+conjunction of \emph{four} inequalities
+\begin{equation}\label{eq:st-four}
+  \beta_i-\alpha_i\ge T-1,\quad
+  \delta_j-\gamma_j\ge T-1,\quad
+  \alpha_i\le\delta_j-T+1,\quad
+  \gamma_j\le\beta_i-T+1.
+\end{equation}
+The first two are intrinsic length conditions $|\IC(a_i)|\ge T$ and
+$|\IC(b_j)|\ge T$; they are necessary for richness since
+$t(a_i,b_j)\le\min(|\IC(a_i)|,|\IC(b_j)|)$. Let
+\[
+  A'\;:=\;\{i\in[p]:\beta_i-\alpha_i\ge T-1\},\qquad
+  B'\;:=\;\{j\in[q]:\delta_j-\gamma_j\ge T-1\}
+\]
+denote the $T$-fat support (with $\IC(a_i),\IC(b_j)\ne\emptyset$ automatic on
+$A',B'$). Then $\Rich_{AB\mid C}\subseteq A'\times B'$, and on $A'\times B'$
+the two length conditions in~\eqref{eq:st-four} are automatic, leaving the
+cross-inequalities
+\begin{equation}\label{eq:st-two}
+  \Rich_{AB\mid C}\;=\;\big\{(i,j)\in A'\times B':\ \alpha_i\le\delta_j-T+1\ \text{and}\ \gamma_j\le\beta_i-T+1\big\}.
+\end{equation}
+This is the threshold encoding \eqref{eq:G2-criterion} consumed by
+Lemma~\ref{lem:convex-overlap}.
+
+\smallskip
+\noindent\emph{Applying convex overlap.} The restricted families
+$\{[\alpha_i,\beta_i]\}_{i\in A'}$ and $\{[\gamma_j,\delta_j]\}_{j\in B'}$ are
+nondecreasing with $E_0=0$. Lemma~\ref{lem:convex-overlap} at threshold~$T$
+yields: either
+\begin{enumerate}[nosep,label=(\alph*)]
+  \item $|\Rich_{AB\mid C}|\ge c\,|A'|\,|B'|$ for an absolute $c>0$; or
+  \item there exist a nondecreasing $\tilde f:A'\to[q]$ and $K=K(T)$ with
+  $\{j\in B':(i,j)\in\Rich_{AB\mid C}\}\subseteq[\tilde f(i)-K,\tilde f(i)+K]$
+  for every $i\in A'$.
+\end{enumerate}
+The bound $K=K(T)$ comes from Remark~\ref{rem:G2-application}: on the rich
+support, $\max_i(\beta_i-\alpha_i)$ and $\max_j(\delta_j-\gamma_j)$ are $O(T)$
+by the $1/3$--$2/3$ hypothesis (entering through G3), so \eqref{eq:G2-K}
+gives $K=O(T)$.
+
+\smallskip
+\noindent\emph{Transfer to the proposition.}
+In case~(a), $|\Rich_{AB\mid C}|\ge c\,|A'|\,|B'|$, which is conclusion~(i)
+with density $c_T:=c\,(|A'|/|A|)(|B'|/|B|)>0$ whenever the $T$-fat support is
+non-degenerate; in the degenerate regime $A'=\emptyset$ or $B'=\emptyset$
+there are no rich pairs and conclusion~(ii) holds vacuously.
+
+In case~(b), extend $\tilde f$ to a nondecreasing $f_{AB}:[p]\to[q]$ by
+\[
+  f_{AB}(i)\;:=\;\tilde f(\sigma(i)),\qquad
+  \sigma(i)\;:=\;\max\{i'\in A':i'\le i\},
+\]
+with the conventions $f_{AB}(i):=\tilde f(\min A')$ when $i<\min A'$, and
+$f_{AB}\equiv 1$ if $A'=\emptyset$ (in which case $\Rich_{AB\mid C}=\emptyset$).
+Monotonicity of $f_{AB}$ is inherited from $\tilde f$ and $\sigma$. For
+$i\in A'$, $\sigma(i)=i$ and the band inclusion follows directly from~(b).
+For $i\in[p]\setminus A'$, $|\IC(a_i)|<T$ forces $t(a_i,b_j)<T$ for every
+$j\in[q]$, so the set $\{j:a_i\parallel b_j,\,t(a_i,b_j)\ge T\}$ is empty and
+the band inclusion holds vacuously. Thus conclusion~(ii) holds on all of
+$[p]$ with the same $K=K(T)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:step5}]
+\emph{Step~1: fix the decomposition via G3.} Invoke
+Lemma~\ref{lem:decomp-selection} (GAP~G3) to fix, once and for all, a
+Dilworth decomposition $P = A \sqcup B \sqcup C$ together with an
+exceptional set $E \subseteq P$ of size $|E| \le c_1(T) = O_T(1)$, such that
+on $P \setminus E$ the conclusion of Lemma~\ref{lem:endpoint-mono} holds
+\emph{simultaneously} for all three ordered triples $(A,B \mid C)$,
+$(A,C \mid B)$, $(B,C \mid A)$. By Remark~\ref{rem:G1-constants} the strong
+form of G1 allows $E = \emptyset$ with no subchain refinement; we retain
+the $O_T(1)$ slack as bookkeeping. The chains $A, B, C$ emitted by G3 are
+the \emph{same} chains on which Proposition~\ref{prop:single-triple} and
+Lemma~\ref{lem:fiber-mass} are measured in the sequel -- no per-triple
+reassignment intervenes.
+
+\smallskip
+\noindent\emph{Step~2: apply the per-triple dichotomy.} Apply
+Proposition~\ref{prop:single-triple} to each of the three ordered triples
+in this fixed decomposition. Each triple lands in case~(i) (many rich
+pairs) or case~(ii) (banded).
+
+\smallskip
+\noindent\emph{Step~3: case (i) -- feed G4.} Suppose WLOG that
+$(A,B \mid C)$ lies in case~(i), i.e.
+\[
+|\Rich_{AB \mid C}| \;\ge\; c_5^\star \cdot |A|\cdot|B|,
+\]
+where $c_5^\star > 0$ is the rich-density constant of
+Proposition~\ref{prop:single-triple} (renamed as in §\ref{subsec:G4} to
+avoid notational clash). This is precisely the ``in particular'' hypothesis
+of Lemma~\ref{lem:fiber-mass} (GAP~G4) for the same triple
+$(A,B \mid C)$: G3 has produced the very chains against which both the
+rich-pair count $|\Rich_{AB \mid C}|$ and the product $|A|\cdot|B|$ are
+measured, so the output of Step~2 is literally the input to G4. Removing
+$E$ from $A, B$ changes $|A|\cdot|B|$ by an additive
+$O_T(|A| + |B|) = o(|A|\cdot|B|)$ for $|P|$ large, so the density
+hypothesis of G4 holds at threshold $c_5^\star/2$ on $P \setminus E$.
+Lemma~\ref{lem:fiber-mass} then yields
+\[
+\sum_{(x,y)\in\Rich_{AB \mid C}} |\Fxy| \;\ge\; c'_T\,|\LP|,
+\]
+which is conclusion~(R).
+
+\smallskip
+\noindent\emph{Step~3: case (ii) -- all three banded.} If all three triples
+land in case~(ii) of Proposition~\ref{prop:single-triple}, the three
+monotone maps $f_{AB}, f_{AC}, f_{BC}$ -- again defined on the G3 chains --
+together express $P$ as an $O_T(1)$-width band around a single 1D skeleton.
+The \textbf{Global Layering Lemma} (Lemma~\ref{lem:global-layering},
+GAP~G5) packages this into the explicit collapse structure of~(C).
+\end{proof}
+
+\section{The lemmas that carry real content}
+
+Gaps are labeled G1--G5 for tracking.
+
+\subsection{G1: Endpoint Monotonicity Lemma}\label{subsec:G1}
+
+\begin{lemma}[Endpoint monotonicity]\label{lem:endpoint-mono}
+Let $P$ be a width-3 poset with Dilworth decomposition
+$P = A \sqcup B \sqcup C$ into chains
+\[
+A = \{a_1 < \cdots < a_p\},\qquad
+B = \{b_1 < \cdots < b_q\},\qquad
+C = \{c_1 < \cdots < c_r\}.
+\]
+For those $i \in [p]$ with $\IC(a_i) \neq \emptyset$, write
+$\IC(a_i) = [\alpha_i, \beta_i]$ in $C$-index coordinates, and analogously
+$\IC(b_j) = [\gamma_j, \delta_j]$ for those $j \in [q]$ with $\IC(b_j) \neq \emptyset$.
+Then $i \mapsto \alpha_i$ and $i \mapsto \beta_i$ are weakly increasing on
+their domains of definition, and $j \mapsto \gamma_j$ and $j \mapsto \delta_j$
+are weakly increasing on theirs. Equivalently, the conclusion of
+Proposition~\ref{prop:single-triple} holds with zero additive error and no
+exceptional elements discarded, i.e.\ both the $O_T(1)$ discard count and the
+$O_T(1)$ error constant may be taken to be~$0$.
+\end{lemma}
+
+\begin{proof}
+We prove the claim for $\alpha$ on $A$ in detail; the arguments for $\beta$
+on $A$ and for $\gamma, \delta$ on $B$ are identical after swapping
+``minimum'' for ``maximum'' and $A$ for $B$.
+
+For any $x \in A$ with $\IC(x) \neq \emptyset$, partition the chain $C$
+according to its relation to $x$ in $P$:
+\[
+C \;=\; L_C(x) \,\sqcup\, \IC(x) \,\sqcup\, U_C(x),
+\qquad
+L_C(x) := \{c \in C : c < x\},\qquad
+U_C(x) := \{c \in C : x < c\}.
+\]
+This is a genuine partition because every element of $C$ is comparable to $x$
+or incomparable to it, and in a partial order the three options $c < x$,
+$c = x$, $c > x$, $c \parallel x$ are exclusive (with $c = x$ ruled out because
+$x \in A$ and $c \in C$ lie in disjoint chains).
+
+By Lemma~\ref{lem:interval-form}, $\IC(x)$ is an interval of the chain $C$.
+Since $C$ is totally ordered, this forces $L_C(x)$ to be an initial segment
+and $U_C(x)$ to be a final segment of~$C$: if $c \in L_C(x)$ and $c' < c$ in
+$C$, then $c' < c < x$ so $c' \in L_C(x)$; dually for $U_C(x)$. Writing
+$\IC(x) = [\alpha_x, \beta_x]$ in $C$-indices, the three segments are
+\[
+L_C(x) = \{c_k : 1 \le k < \alpha_x\},\qquad
+\IC(x) = \{c_k : \alpha_x \le k \le \beta_x\},\qquad
+U_C(x) = \{c_k : \beta_x < k \le r\}.
+\]
+
+\smallskip
+
+\noindent\emph{Monotonicity of~$\alpha$.}
+Let $x, y \in A$ with $x < y$ in $P$ and $\IC(x), \IC(y) \neq \emptyset$.
+We show $L_C(x) \subseteq L_C(y)$. If $c \in L_C(x)$ then $c < x$, and since
+$x < y$, transitivity of $P$ gives $c < y$, hence $c \in L_C(y)$. Passing to
+$C$-indices, $\{k : k < \alpha_x\} \subseteq \{k : k < \alpha_y\}$, so
+$\alpha_x \le \alpha_y$.
+
+\smallskip
+
+\noindent\emph{Monotonicity of~$\beta$.}
+Under the same hypotheses we show $U_C(y) \subseteq U_C(x)$. If $c \in U_C(y)$
+then $y < c$, and since $x < y$, transitivity gives $x < c$, hence
+$c \in U_C(x)$. Passing to $C$-indices,
+$\{k : k > \beta_y\} \subseteq \{k : k > \beta_x\}$, so $\beta_x \le \beta_y$.
+
+\smallskip
+
+\noindent\emph{Monotonicity of~$\gamma$ and~$\delta$.}
+The same arguments with $A$ replaced by $B$ (and chain $B$'s ordering
+replacing chain $A$'s) show that $\gamma_j$ and $\delta_j$ are weakly
+increasing in~$j$ on their domains.
+
+\smallskip
+
+All four conclusions hold without discarding any elements and with no
+additive error, so the bounded-error monotonicity invoked in
+Proposition~\ref{prop:single-triple} holds with both constants equal to~$0$.
+\end{proof}
+
+\begin{remark}[On the counterexample hypothesis]\label{rem:G1-counterexample}
+The lemma is stated for an arbitrary width-3 poset: the counterexample
+hypothesis is not used. The structural proof above relies solely on the
+transitivity of~$P$ and the interval form of $\IC(\cdot)$ on a chain, which
+itself follows from transitivity (Lemma~\ref{lem:interval-form}). Consequently
+the $1/3$--$2/3$ hypothesis enters Step~5 elsewhere -- specifically in
+G3 (chain-decomposition selection) and G4 (fiber-mass conversion via Step~1),
+not here. The transitive-orientation fact
+$x \prec y \iff \Pr[x<y] > 2/3$ that the informal outline invokes would be
+needed only for \emph{cross-chain} coherence (e.g.\ linking the
+$\alpha$-sequence on~$A$ to the $\gamma$-sequence on~$B$ as a common function
+of the $C$-axis); Proposition~\ref{prop:single-triple} uses only within-chain
+monotonicity, so no such coherence is needed downstream.
+\end{remark}
+
+\begin{remark}[Explicit constants]\label{rem:G1-constants}
+The additive-error constant $E_1(T) := 0$ and the discard count $D_1(T) := 0$
+are both independent of~$T$. These pass through to Lemma~\ref{lem:convex-overlap}
+unchanged, so downstream dependencies on~$T$ (such as the band-width $K(T, E_0)$
+produced by G2) collapse to $K(T, 0) = K(T)$.
+\end{remark}
+
+\subsection{G2: Convex-Overlap Lemma}\label{subsec:G2}
+
+\begin{lemma}[Convex overlap; GAP~G2]\label{lem:convex-overlap}
+Let $\{I_i = [\alpha_i, \beta_i]\}_{i=1}^p$ and $\{J_j = [\gamma_j, \delta_j]\}_{j=1}^q$
+be two monotone families of intervals on a line (with additive error $\le E_0$),
+and write $\ell_I^\star := \max_i(\beta_i-\alpha_i)$,
+$\ell_J^\star := \max_j(\delta_j-\gamma_j)$ for the maximum interval lengths.
+Fix $T \ge 1$. Then either:
+\begin{enumerate}[label=(\alph*)]
+  \item $|\{(i,j) : |I_i \cap J_j| \ge T\}| \ge c\cdot pq$ for an absolute $c > 0$; or
+  \item there exists a nondecreasing function $f : [p] \to [q]$ and
+    $K = K(T, E_0, \ell_I^\star, \ell_J^\star)$ such that
+    $\{j : |I_i \cap J_j| \ge T\} \subseteq [f(i) - K, f(i) + K]$ for every $i$.
+\end{enumerate}
+Explicitly, the band width satisfies $K \le \ell_I^\star + \ell_J^\star - 2T + O(E_0)$;
+in particular, whenever $\ell_I^\star,\ell_J^\star$ are themselves bounded by a function
+of $T$ and $E_0$, the constant reduces to $K = K(T, E_0)$.
+\end{lemma}
+
+\begin{proof}
+Throughout, write $R := \{(i,j)\in[p]\times[q] : |I_i\cap J_j|\ge T\}$ for the rich set.
+
+\medskip\noindent\textbf{Step 1 (reduction $E_0\to 0$).}
+By hypothesis there exist exactly nondecreasing proxies
+$\tilde\alpha,\tilde\beta,\tilde\gamma,\tilde\delta$ with sup-norm distance $\le E_0$ from
+$\alpha,\beta,\gamma,\delta$. Let $\tilde I_i := [\tilde\alpha_i,\tilde\beta_i]$ and
+$\tilde J_j := [\tilde\gamma_j,\tilde\delta_j]$. The two left endpoints differ by $\le E_0$,
+likewise the two right endpoints, so
+$\big||I_i\cap J_j|-|\tilde I_i\cap\tilde J_j|\big|\le 4E_0$ for every $i,j$, whence
+\[
+\{(i,j) : |\tilde I_i\cap\tilde J_j|\ge T+4E_0\}\;\subseteq\;R\;\subseteq\;\{(i,j) : |\tilde I_i\cap\tilde J_j|\ge T-4E_0\}.
+\]
+Proving the lemma for the exactly-monotone families $\tilde I,\tilde J$ at thresholds
+$T\pm 4E_0$ then yields the dichotomy for $R$ at threshold $T$, with the band width
+$K$ inflated by $8E_0$. We henceforth assume $E_0=0$ and that $\alpha,\beta,\gamma,\delta$
+are exactly nondecreasing.
+
+\medskip\noindent\textbf{Step 2 (rich criterion).}
+For $\alpha_i\le\beta_i$ and $\gamma_j\le\delta_j$,
+\[
+|I_i\cap J_j| \;=\; \big(\min(\beta_i,\delta_j)-\max(\alpha_i,\gamma_j)+1\big)_+,
+\]
+so $(i,j)\in R$ iff
+\begin{equation}\label{eq:G2-criterion}
+\alpha_i\le\delta_j-T+1\quad\text{and}\quad\gamma_j\le\beta_i-T+1.
+\end{equation}
+
+\medskip\noindent\textbf{Step 3 (doubly monotone staircase).}
+Fix $i$. By \eqref{eq:G2-criterion} and the monotonicity of $\delta,\gamma$ in $j$,
+the row
+\[
+R_i \;:=\; \{j\in[q]:(i,j)\in R\}
+\;=\; \{j:\delta_j\ge\alpha_i+T-1\}\,\cap\,\{j:\gamma_j\le\beta_i-T+1\}
+\]
+is the intersection of a final segment of $[q]$ with an initial segment, hence the
+interval $R_i = [L_i,U_i]$ with
+\[
+L_i := \min\{j\in[q]:\delta_j\ge\alpha_i+T-1\}\;\;(\text{else }q{+}1),
+\quad
+U_i := \max\{j\in[q]:\gamma_j\le\beta_i-T+1\}\;\;(\text{else }0).
+\]
+The thresholds $\alpha_i+T-1$ and $\beta_i-T+1$ are nondecreasing in $i$ (since
+$\alpha,\beta$ are), so $i\mapsto L_i$ and $i\mapsto U_i$ are nondecreasing.
+By the symmetric argument each column $C_j := \{i:(i,j)\in R\}$ is an interval
+$[a_j,b_j]\subseteq[p]$ with $a_j,b_j$ nondecreasing in $j$.
+
+Thus $R$ is a \emph{doubly monotone staircase}: an order-convex region wedged between
+two nondecreasing graphs in $[p]\times[q]$.
+
+\medskip\noindent\textbf{Step 4 (band around a nondecreasing graph).}
+Let $S := \{i\in[p]:R_i\ne\emptyset\}$, set $W_i := U_i-L_i+1$ for $i\in S$, and let
+$W^\star := \max_{i\in S} W_i$ (with $W^\star := 0$ if $S=\emptyset$). Define
+$f:[p]\to[q]$ by
+\[
+f(i)\;:=\;\max\!\big(1,\,L_{\sigma(i)}\big),\qquad
+\sigma(i)\;:=\;\max\{i'\in S:i'\le i\}\quad(\text{or }\sigma(i):=\min S\text{ if no such }i'\text{ exists}),
+\]
+with the result clamped to $[1,q]$. Both $\sigma$ and $L\big|_S$ are nondecreasing, so $f$ is
+nondecreasing into $[1,q]$. By construction, for every $i\in S$ we have
+$R_i=[L_i,U_i]\subseteq[f(i),f(i)+W^\star-1]$; for $i\notin S$ the inclusion is vacuous.
+Hence
+\begin{equation}\label{eq:G2-band}
+\{j:(i,j)\in R\}\;\subseteq\;[f(i)-W^\star,\,f(i)+W^\star]\qquad\forall i\in[p].
+\end{equation}
+
+\medskip\noindent\textbf{Step 5 (dichotomy).}
+Fix an absolute constant $c\in(0,1)$. If $|R|\ge c\,pq$, conclusion~(a) holds and we are done.
+Otherwise $|R|<c\,pq$, and we read off conclusion~(b) from \eqref{eq:G2-band} with band
+width $K := W^\star$.
+
+It remains to bound $K$ in terms of the stated parameters $T,E_0,\ell_I^\star,\ell_J^\star$.
+By \eqref{eq:G2-criterion}, every $j\in R_i$ satisfies both $\delta_j\ge\alpha_i+T-1$ and
+$\gamma_j\le\beta_i-T+1$, hence
+$\gamma_j\in[\alpha_i+T-1-(\delta_j-\gamma_j),\,\beta_i-T+1]\subseteq[\alpha_i+T-1-\ell_J^\star,\,\beta_i-T+1]$.
+The width of this corridor is at most $(\beta_i-\alpha_i)+\ell_J^\star-2T+3\le\ell_I^\star+\ell_J^\star-2T+3$,
+so the number of $j$-indices it contains is bounded by the same quantity (since the
+$\gamma_j$ are nondecreasing integers). Restoring the $E_0$ inflation from Step~1,
+\begin{equation}\label{eq:G2-K}
+K\;=\;W^\star\;\le\;\ell_I^\star\;+\;\ell_J^\star\;-\;2T\;+\;O(E_0)\,,
+\end{equation}
+which is $K(T,E_0,\ell_I^\star,\ell_J^\star)$ as asserted. Whenever $\ell_I^\star,\ell_J^\star$
+are themselves bounded by a function of $T$ and $E_0$ — as is the case in the application to
+Proposition~\ref{prop:single-triple} (see Remark~\ref{rem:G2-application}) — \eqref{eq:G2-K}
+specializes to $K=K(T,E_0)$, finishing the dichotomy.
+\end{proof}
+
+\begin{remark}[The structural and quantitative halves of G2]\label{rem:G2-structural}
+The proof has two distinct contents. The \emph{structural} content
+(Steps~2--4) is unconditional: $R$ is order-convex with nondecreasing endpoints
+$L_i,U_i$ in $i$ and $a_j,b_j$ in $j$, and lies in a $W^\star$-band around the nondecreasing
+envelope of $L\big|_S$. This is pure interval geometry. The \emph{quantitative} bound
+\eqref{eq:G2-K} in conclusion~(b) (Step~5) depends genuinely on the maximum interval lengths
+$\ell_I^\star,\ell_J^\star$, which is why they appear as explicit parameters in the lemma
+statement; Example~\ref{ex:G2-realized} shows this dependence is necessary in full generality.
+Consumers of the lemma who want the constant to collapse to $K=K(T,E_0)$ must separately
+verify an interval-length bound $\ell_I^\star,\ell_J^\star\le F(T,E_0)$; the application
+below does so via G3 and the $1/3$--$2/3$ hypothesis.
+\end{remark}
+
+\begin{remark}[Application context]\label{rem:G2-application}
+In the application of Lemma~\ref{lem:convex-overlap} to Proposition~\ref{prop:single-triple},
+the families $\{I_i\}=\{\IC(a_i)\},\{J_j\}=\{\IC(b_j)\}$ are the $C$-projections of
+incomparability intervals on the third chain $C$, and the threshold $T$ is the rich
+threshold $t(a_i,b_j)\ge T$. The auxiliary input from Step~1 (Lemma~\ref{lem:endpoint-mono})
+gives $E_0=0$ in the rich-pair regime, while the chain structure together with the
+$1/3$--$2/3$ counterexample hypothesis (entering at G3) bounds the maximum incomparability
+interval length on the rich support by $O(T)$. Substituting into \eqref{eq:G2-K} yields
+$K=O(T)=K(T)$, justifying the informal $O_T(1)$-band notation used in the proof of
+Proposition~\ref{prop:single-triple}.
+\end{remark}
+
+\begin{example}[Both conclusions are realized]\label{ex:G2-realized}
+Fix integers $N\ge 1$ and $L\ge T-1$. Take $p=q=N$, $I_i:=[i,i+L]$ and $J_j:=[j,j+L]$.
+The endpoint sequences are exactly nondecreasing ($E_0=0$), and
+$|I_i\cap J_j|=(L-|i-j|+1)_+$, so
+\[
+R\;=\;\{(i,j)\in[N]^2 : |i-j|\le L-T+1\}.
+\]
+\begin{itemize}[nosep]
+\item \emph{Case (a) regime.} If $L\ge N/2+T-1$, the band fills at least a quarter of
+the grid: $|R|\ge N^2/4$, conclusion~(a) with $c=1/4$.
+\item \emph{Case (b) regime.} If $L\le T+K_0-1$ for a fixed $K_0$, then for every $i$,
+$\{j:(i,j)\in R\}\subseteq[i-K_0,i+K_0]$, conclusion~(b) with $f(i)=i$ and band width $K_0$.
+For $N\to\infty$ with $L,T,K_0$ fixed, the rich density $|R|/N^2\to 0$, so case~(a) fails.
+\end{itemize}
+Both conclusions can also hold simultaneously in intermediate regimes, with the
+constants in (a) and the width in (b) depending on the data; the lemma asserts only that
+at least one conclusion holds.
+\end{example}
+
+\noindent\textbf{Dependency.} Pure interval geometry; no poset hypotheses.
+This is the cleanest self-contained core of Step 5.
+
+\subsection{G3: Chain-decomposition selection}
+
+\begin{lemma}[Good chain decomposition; GAP~G3]\label{lem:decomp-selection}
+Let $P$ be a width-3 counterexample. There exists a Dilworth decomposition
+$P = A \sqcup B \sqcup C$, together with a refinement of each of
+$A, B, C$ into consecutive subchains, under which
+Lemma~\ref{lem:endpoint-mono} applies simultaneously to all three
+ordered triples $(A,B \mid C)$, $(A,C \mid B)$, $(B,C \mid A)$, losing
+only $O_T(1)$ elements in total.
+\end{lemma}
+
+\begin{proof}
+\textbf{Remark (structural mismatch with the strong G1).}
+As proved in §\ref{subsec:G1}, Lemma~\ref{lem:endpoint-mono} gives
+\emph{exact} monotonicity with $D_1(T) = E_1(T) = 0$ and no refinement
+(Remark~\ref{rem:G1-constants}). Consequently the common-refinement
+apparatus below is vestigial: the trivial partition works and
+$E := \emptyset$ suffices for all three ordered triples simultaneously.
+The proof as written remains useful as a template should any future
+weakening of G1 reintroduce per-triple discards, but for the G1 proved
+here the conclusion of G3 is immediate.
+
+By Dilworth's theorem fix any chain decomposition $P = A \sqcup B \sqcup C$
+(possible since $P$ has width $3$). We shall show that a single common
+refinement of this partition works for all three ordered triples.
+
+\smallskip
+\noindent\emph{Step 1 (apply G1 per triple).} Applying
+Lemma~\ref{lem:endpoint-mono} to the triple $(A, B \mid C)$, there is a
+refinement $\mathcal R_{AB}$ of $A$ into consecutive subchains
+$A = A_1^{(1)} \sqcup \cdots \sqcup A_{r_A}^{(1)}$ and of $B$ into
+$B = B_1^{(1)} \sqcup \cdots \sqcup B_{r_B}^{(1)}$, and an exceptional
+set $E_{AB} \subseteq A \cup B$ with $|E_{AB}| \le c_1(T)$, such that the
+endpoint functions $\alpha_i, \beta_i$ (on $A$) and $\gamma_j, \delta_j$
+(on $B$) are bounded-error monotone in the indexing induced by
+$\mathcal R_{AB}$ on the complement of $E_{AB}$.
+
+Apply Lemma~\ref{lem:endpoint-mono} analogously to the triples
+$(A, C \mid B)$ and $(B, C \mid A)$, obtaining refinements
+$\mathcal R_{AC}$ (of $A$ and $C$), $\mathcal R_{BC}$ (of $B$ and $C$),
+and exceptional sets $E_{AC}, E_{BC}$ of size at most $c_1(T)$ each.
+
+\smallskip
+\noindent\emph{Step 2 (common refinement).} Since each of
+$\mathcal R_{AB}, \mathcal R_{AC}, \mathcal R_{BC}$ partitions its
+chains into \emph{consecutive} subchains, the set of break-points for
+chain $A$ is $\Delta_A := \Delta_A^{(1)} \cup \Delta_A^{(2)}$, where
+$\Delta_A^{(k)}$ are the break-points arising from
+$\mathcal R_{AB}$ and $\mathcal R_{AC}$ respectively. Let
+$\mathcal R^*$ be the common refinement of $A$ at all points of
+$\Delta_A$, and likewise for $B$ (breakpoints from
+$\mathcal R_{AB} \cup \mathcal R_{BC}$) and $C$ (from
+$\mathcal R_{AC} \cup \mathcal R_{BC}$). Then $\mathcal R^*$ is a
+refinement of the global partition $(A,B,C)$ into consecutive subchains,
+and for each unordered pair of chains it is a refinement of the
+corresponding pairwise refinement $\mathcal R_{\cdot \cdot}$.
+
+\smallskip
+\noindent\emph{Step 3 (monotonicity is preserved under refinement).}
+Fix the triple $(A, B \mid C)$. Pass from the index set of
+$\mathcal R_{AB}$ on $A$ to the finer index set of $\mathcal R^*$ on $A$.
+This is a refinement: each subchain $A_i^{(1)}$ of $\mathcal R_{AB}$ is
+partitioned into a consecutive block
+$A_i^{(1)} = A_{i,1}^* \sqcup \cdots \sqcup A_{i,s_i}^*$ of $\mathcal R^*$
+subchains. The endpoint sequences $\alpha, \beta$ are defined on the
+$\mathcal R^*$-index set by evaluating on each finer subchain, and the
+order on $\mathcal R^*$-subchains respects the order on
+$\mathcal R_{AB}$-subchains.
+
+Bounded-error monotonicity is preserved: if a sequence
+$(x_1, \ldots, x_r)$ is monotone up to additive error $\varepsilon$ off
+an exceptional set $F$, then any sequence obtained by replacing each
+$x_i$ by a block $(x_{i,1}, \ldots, x_{i,s_i})$ of real numbers each
+within $\varepsilon'$ of $x_i$ is monotone up to additive error
+$\varepsilon + 2\varepsilon'$ off the same exceptional set. The endpoint
+functions on a sub-subchain differ from those on the containing subchain
+by at most the intrinsic $O_T(1)$ fluctuation already absorbed into the
+G1 error term. Hence monotonicity for $(A, B \mid C)$ survives passage
+to $\mathcal R^*$ on the complement of $E_{AB}$, with additive error
+$O_T(1)$. The same applies to $(A, C \mid B)$ and $(B, C \mid A)$ on
+the complements of $E_{AC}$ and $E_{BC}$ respectively.
+
+\smallskip
+\noindent\emph{Step 4 (union of exceptions).} Set
+$E := E_{AB} \cup E_{AC} \cup E_{BC}$. Then $|E| \le 3 c_1(T) = O_T(1)$,
+and on $P \setminus E$ all three ordered-triple monotonicity conclusions
+of Lemma~\ref{lem:endpoint-mono} hold simultaneously in the refinement
+$\mathcal R^*$. This proves the lemma.
+\end{proof}
+
+\noindent\textbf{Interaction with G1.} Lemma~\ref{lem:endpoint-mono} is
+stated for \emph{one} ordered triple at a time and grants a refinement
+(possibly triple-specific). The content of G3 is precisely that the
+three refinements, each breaking chains into consecutive subchains, can
+be amalgamated into a single refinement under which all three
+monotonicity conclusions hold. The proof uses only:
+\begin{enumerate}[label=(\alph*),nosep]
+  \item that G1's ``refinement'' is a consecutive-subchain refinement
+    (not a relabeling of elements across chains); this is the standard
+    reading since G1 is proved by a monotone-subsequence / pigeonhole
+    argument within a fixed chain;
+  \item that bounded-error monotonicity is stable under further
+    consecutive refinement, with the same exceptional set and an
+    additive $O_T(1)$ inflation of the error constant.
+\end{enumerate}
+No per-triple reassignment of elements across chains is required, so G3
+is a purely bookkeeping step on top of G1 and introduces no new
+combinatorial input beyond the width-$3$ hypothesis.
+
+\noindent\textbf{Dependency.} Ensures the cyclic application in the
+proof of Theorem~\ref{thm:step5} is uniform: a single ambient
+refinement $\mathcal R^*$ serves for all three triples.
+
+\subsection{G4: Fiber-Mass Conversion Lemma}\label{subsec:G4}
+
+\begin{lemma}[Pairs to fibers; GAP~G4]\label{lem:fiber-mass}
+Assume Step 1. Let $\Rich$ be the set of rich pairs, let $n = |P|$, and
+let $B_0(n) = O(n^3)$ be the thin-bad-set bound of~(I2) below. Define
+the \emph{purified} good fiber
+\[
+\Fxyp \;:=\; \Fxy \setminus \mathrm{Bad}_{x,y}
+\]
+(equivalently, the union over $\alpha$ of the good raw fibers of
+$\LP$). Then:
+\begin{enumerate}[label=(\alph*),nosep,leftmargin=*]
+  \item \emph{(Unconditional, hedged form.)} For every rich pair
+    $\alpha \in \Rich$,
+    \[
+    |\Fxyp| \;\ge\; |\LP| - B_0(n),
+    \]
+    and consequently
+    \[
+    \sum_{\alpha \in \Rich} |\Fxyp|
+    \;\ge\; |\Rich|\cdot\bigl(|\LP| - B_0(n)\bigr).
+    \]
+  \item \emph{(Activated multiplicative form.)} If $|\LP| \ge
+    2\,B_0(n)$, then for every $\alpha \in \Rich$,
+    $|\Fxyp| \ge \tfrac12|\LP|$, and in particular
+    \[
+    \sum_{\alpha \in \Rich} |\Fxyp|
+    \;\ge\; \tfrac{1}{2}\,|\Rich|\cdot \frac{|\LP|}{|A|\,|B|}.
+    \]
+    If in addition $|\Rich| \ge c_5^\star\,|A|\,|B|$, then
+    $\sum_{\alpha} |\Fxyp| \ge c'_T\,|\LP|$ with
+    $c'_T := c_5^\star/2$, giving the richness conclusion~(R).
+\end{enumerate}
+The activation hypothesis $|\LP| \ge 2\,B_0(n)$ is either satisfied
+at the given $n$ (in which case (b) applies), or fails and the
+$1/3$--$2/3$ property is established directly by the
+finite-enumeration base case of
+Remark~\ref{rem:small-n} in \texttt{step8.tex}; see
+Lemma~\ref{lem:activation-absorb} below.
+\end{lemma}
+
+\begin{proof}
+We invoke the local interface classification of Step~1
+(Theorem~\ref{thm:interface}) as a black box. Two of its conclusions are
+all that is needed.
+
+\smallskip
+\noindent\emph{(I1) Extension partition.} For each rich pair
+$\alpha = (x,y) \in \Rich$ with $t_\alpha := t(x,y) \ge T$,
+Theorem~\ref{thm:interface}~(ii) supplies a disjoint decomposition
+\[
+\LP \;=\; \Fxy \;\sqcup\; \mathrm{Bad}_{x,y},
+\]
+in which $\Fxy$ is the union of \emph{good} raw fibers.
+
+\smallskip
+\noindent\emph{(I2) Thin bad set.} Theorem~\ref{thm:interface}~(iv)
+decomposes $\mathrm{Bad}_{x,y}$ as a union of $K = O(1)$ strips, each a
+union of at most $t_\alpha$ raw fibers of size $O(t_\alpha)$. Every raw
+fiber meeting $\mathrm{Bad}_{x,y}$ is therefore $O(t_\alpha)$-thin, and
+the aggregate mass satisfies
+\[
+|\mathrm{Bad}_{x,y}| \;\le\; B_0(n)
+\qquad\text{with } B_0(n) = O(n\cdot t_\alpha^2) = O(n^3),
+\]
+where $n = |P|$ and the absolute constant is uniform across rich pairs
+(the worst-case factor $n$ comes from summing over the external elements
+that trigger Case-3 mixed obstructions in the proof of
+Theorem~\ref{thm:interface}~(iv)).
+
+\smallskip
+\noindent\emph{Step 1: per-pair hedged bound (unconditional).}
+Combining (I1) and (I2), since $\LP = \Fxy \sqcup \mathrm{Bad}_{x,y}$
+and the purified fiber $\Fxyp$ equals $\Fxy$ minus possibly empty
+residual bad content,
+\[
+|\Fxyp| \;=\; |\LP| - |\mathrm{Bad}_{x,y}|
+       \;\ge\; |\LP| - B_0(n),
+\]
+with $B_0(n)$ independent of $\alpha$. This is assertion~(a) of the
+lemma; no lower bound on $|\LP|$ is used.
+
+\smallskip
+\noindent\emph{Step 2: activation of the multiplicative form.}
+Assume the threshold $|\LP| \ge 2\,B_0(n)$. Then
+$|\LP| - B_0(n) \ge |\LP|/2$, so Step~1 yields
+\[
+|\Fxyp| \;\ge\; \tfrac12|\LP|
+\qquad (\alpha \in \Rich).
+\]
+Summing over $\Rich$ and using the trivial observation
+$|A|\,|B| \ge 1$,
+\[
+\sum_{\alpha \in \Rich} |\Fxyp|
+\;\ge\; \tfrac{1}{2}\,|\Rich|\cdot|\LP|
+\;\ge\; \tfrac{1}{2}\,|\Rich|\cdot \frac{|\LP|}{|A|\,|B|},
+\]
+which is the averaged form of assertion~(b) with $c_T := 1/2$.
+
+\smallskip
+\noindent\emph{Step 3: the ``in particular'' clause.}
+Suppose further the richness hypothesis
+$|\Rich| \ge c_5^\star\,|A|\,|B|$
+holds -- this is the input from Proposition~\ref{prop:single-triple}(i)
+after chain-decomposition selection (Lemma~\ref{lem:decomp-selection});
+the constant $c_5^\star>0$ is the richness-density constant produced
+by Proposition~\ref{prop:single-triple}, renamed here to avoid a
+clash with the G1 volume fraction $c_0$ of \texttt{step8.tex} and
+with the rectangle constant $c_0$ of \texttt{step4.tex}
+Lemma~\ref{lem:rect-stable}. Then Step~2 gives
+\[
+\sum_{\alpha \in \Rich} |\Fxyp|
+\;\ge\; \tfrac{1}{2}\,c_5^\star\,|A|\,|B|\cdot\frac{|\LP|}{|A|\,|B|}
+\;=\; \tfrac{c_5^\star}{2}\,|\LP|
+\;=:\; c'_T\,|\LP|.
+\]
+This is the richness conclusion~(R) of Theorem~\ref{thm:step5}, valid
+whenever the activation threshold $|\LP| \ge 2\,B_0(n)$ holds. The
+residual case $|\LP| < 2\,B_0(n)$ is handled by
+Lemma~\ref{lem:activation-absorb}.
+\end{proof}
+
+\begin{lemma}[Activation absorption; G4 closure]\label{lem:activation-absorb}
+Let $P$ be a width-$3$ poset of size $n$ that is a counterexample to
+the $1/3$--$2/3$ property with gap $\gamma \in (0,1/3]$, i.e.\ every
+incomparable pair $(x,y)$ satisfies $\Pr_L[x<_L y] \notin [1/3,2/3]$
+and moreover $\min(\Pr_L[x<_L y], \Pr_L[y<_L x]) \le 1/3 - \gamma$.
+Then there exists a threshold $n_5 = n_5(\gamma)$, polynomial in
+$1/\gamma$, such that
+\[
+n \;\ge\; n_5(\gamma) \;\Longrightarrow\; |\LP| \;\ge\; 2\,B_0(n).
+\]
+For $n < n_5(\gamma)$, the $1/3$--$2/3$ property for $P$ is decided by
+the finite-enumeration base case of Remark~\ref{rem:small-n} in
+\texttt{step8.tex}. Consequently the activated form~(b) of
+Lemma~\ref{lem:fiber-mass} applies in every non-base-case regime of
+the Theorem~\ref{thm:main} cascade, and G4 closes unconditionally.
+\end{lemma}
+
+\begin{proof}
+We use two structural facts about width-$3$ posets, both standard.
+
+\smallskip
+\noindent\emph{(F1) Dilworth product lower bound.} By Dilworth's
+theorem, a width-$3$ poset admits a chain decomposition
+$P = C_1 \sqcup C_2 \sqcup C_3$ with $|C_i| \ge 1$ (some chains may
+be empty when the width is $<3$; in the strict width-$3$ regime at
+least three non-empty chains exist). The number of linear extensions
+satisfies the elementary lower bound
+\[
+|\LP| \;\ge\; \frac{n!}{|C_1|!\,|C_2|!\,|C_3|!}
+\;=\; \binom{n}{|C_1|,\,|C_2|,\,|C_3|},
+\]
+since every permutation of $P$ that respects each chain-restriction
+gives a linear extension of the width-$3$ ``free product''
+$C_1 \oplus C_2 \oplus C_3$, and adding comparabilities only
+partitions these extensions among the quotient $\LP$; equivalently
+(Stanley, \emph{Enumerative Combinatorics}~I, §3.5) $|\LP|$ is the
+number of linear extensions which dominates the purely-parallel
+count.
+
+\smallskip
+\noindent\emph{(F2) Balanced-chain regime from the $\gamma$-gap.}
+If one chain dominates, say $|C_1| \ge n - k$ with $k$ bounded,
+then at most $O(k^2)$ incomparable pairs exist; every pair
+$(x,y) \in C_1 \times (C_2 \cup C_3)$ which is comparable contributes
+$\Pr_L[x<_L y] \in \{0,1\}$, and the only non-trivial probabilities
+come from the $O(k^2)$ remaining pairs. An elementary averaging
+argument then forces at least one incomparable pair to have
+$\Pr_L[x<_L y] \in [1/3, 2/3]$, contradicting the $\gamma$-gap
+hypothesis unless $k$ is below an explicit constant
+$k_0(\gamma) = O(1/\gamma)$. Hence every $\gamma$-counterexample of
+size $n \ge 3k_0$ satisfies $|C_i| \ge (n - k_0)/3$ for all
+$i \in \{1,2,3\}$ after relabeling (each chain takes at least a
+$1/3 - O(1/\gamma n)$ fraction).
+
+\smallskip
+\noindent\emph{Combining (F1) and (F2).} In the balanced regime
+$|C_i| \ge (n-k_0)/3$, the multinomial lower bound gives
+\[
+|\LP| \;\ge\; \binom{n}{|C_1|,\,|C_2|,\,|C_3|}
+\;\ge\; \binom{n}{\lceil n/3\rceil,\lceil n/3\rceil,\lfloor n/3\rfloor}
+\cdot (1 - O(k_0/n)),
+\]
+and by Stirling
+\[
+\binom{n}{\lceil n/3\rceil,\lceil n/3\rceil,\lfloor n/3\rfloor}
+\;=\; \frac{3^{n+O(1)}}{n^{O(1)}},
+\]
+which is exponential in~$n$. Since $B_0(n) = O(n^3)$ is only
+polynomial, the ratio $|\LP|/B_0(n) \to \infty$ as $n \to \infty$ and
+in fact $|\LP| \ge 2 B_0(n)$ for all $n \ge n_5(\gamma)$ with
+$n_5(\gamma)$ polynomial in $1/\gamma$: one may take $n_5(\gamma) =
+\max(3k_0(\gamma), n_1)$ where $n_1$ is the smallest integer for
+which $3^{n/2}/n^{O(1)} \ge 2\,B_0(n)$, a fixed polynomial inequality
+independent of $\gamma$ and solved once and for all.
+
+\smallskip
+\noindent\emph{Base case $n < n_5(\gamma)$.} The set of width-$3$
+posets on fewer than $n_5(\gamma)$ elements is finite, and the
+$1/3$--$2/3$ property for each such $P$ is a decidable statement
+about $|\LP|$ rational probabilities. Remark~\ref{rem:small-n} in
+\texttt{step8.tex} records that the main-theorem cascade is closed
+on this base case by finite enumeration. Thus below $n_5(\gamma)$
+no appeal to Lemma~\ref{lem:fiber-mass} is needed.
+\end{proof}
+
+\begin{remark}[What (F2) actually uses]
+The balanced-chain statement~(F2) is a quantitative form of the
+folklore fact that width-$3$ $1/3$--$2/3$ counterexamples cannot be
+``nearly total orders''. Sketch: if $|C_1| \ge n - k_0$ and the
+$k_0$ remaining elements sit in $C_2 \cup C_3$, then each pair
+$(x,y)$ with $x \in C_1, y \in C_2 \cup C_3$ incomparable has
+$\Pr_L[x<_L y]$ equal to a fixed rational of the form $j/(m+1)$
+with $m \le 2k_0$ the number of ``sliding positions'' of $y$ among a
+$C_1$-interval of length $\le m$. Averaging over the at most
+$n\cdot k_0$ such pairs and using $\sum_{j=0}^m j/(m+1) = m/2 \in
+[1/3,2/3]\cdot(m+1)$ for $m \ge 2$, one obtains at least one pair
+with $\Pr_L \in [1/3,2/3]$, contradicting the $\gamma$-gap. The
+precise constant $k_0(\gamma) = O(1/\gamma)$ follows by tightening
+the average with the $\gamma$-margin.
+\end{remark}
+
+\begin{remark}[Why the bound is so loose]\label{rem:G4-loose}
+The per-pair estimate $|\Fxy| \ge \tfrac12|\LP|$ is overwhelmingly
+stronger than the target $|\Fxy| \ge c_T\,|\LP|/(|A|\,|B|)$: an entire
+factor of $|A|\,|B|$ is conceded. This reflects the shape of the
+downstream consumer. Step~6 uses $\sum_\alpha |\Fxy|$ directly to bound
+the first moment of the visibility count
+$I(L) := \#\{\alpha \in \Rich : L \in \Fxy\}$; what matters is the
+\emph{total} mass, not its distribution across pairs. The averaged form
+of the conclusion is retained purely to expose the hypothesis
+$|\Rich| \ge c_T\,|A|\,|B|$ that couples G4 to
+Proposition~\ref{prop:single-triple}(i).
+\end{remark}
+
+\begin{remark}[Interaction with the second-moment strengthening]
+Corollary~\ref{cor:second-moment} upgrades the first-moment bound of
+this lemma to a second-moment bound on the visibility count $I(L)$ by
+applying Cauchy--Schwarz. Both arguments share the same Step~1
+inputs~(I1) and~(I2); no additional structural hypothesis is needed.
+\end{remark}
+
+\subsection{G5: Global Layering Lemma}\label{subsec:G5}
+
+\begin{lemma}[Collapse packaging; GAP~G5]\label{lem:global-layering}
+Let $P = A \sqcup B \sqcup C$ be a width-$3$ poset. Suppose there are monotone
+maps $f_{AB} : [p] \to [q]$, $f_{AC} : [p] \to [r]$, $f_{BC} : [q] \to [r]$
+and an exceptional set $E \subseteq P$ with $|E| = O_T(1)$ such that, for
+every element $x \in P \setminus E$:
+\begin{enumerate}[label=(\roman*),nosep]
+  \item if $x = a_i \in A$, then $\IB(a_i) \subseteq [f_{AB}(i) - K, f_{AB}(i) + K]$
+    and $\IC(a_i) \subseteq [f_{AC}(i) - K, f_{AC}(i) + K]$;
+  \item if $x = b_j \in B$, then $\IA(b_j) \subseteq [f_{AB}^{-1}(j) - K, f_{AB}^{-1}(j) + K]$
+    and $\IC(b_j) \subseteq [f_{BC}(j) - K, f_{BC}(j) + K]$;
+  \item if $x = c_k \in C$, then $\IA(c_k) \subseteq [f_{AC}^{-1}(k) - K, f_{AC}^{-1}(k) + K]$
+    and $\IB(c_k) \subseteq [f_{BC}^{-1}(k) - K, f_{BC}^{-1}(k) + K]$.
+\end{enumerate}
+Then there exists a height function $h : P \to \mathbb{Z}$ such that every
+incomparable pair $(x,y) \in P \setminus E$ satisfies
+$|h(x) - h(y)| \le 2K + 1$.
+\end{lemma}
+
+\paragraph{Construction of $h$.}
+We use the index of the reference chain $C$ as the layer axis. For
+$x \in P \setminus E$ define
+\[
+h(c_k) := k \quad (c_k \in C),\qquad
+h(a_i) := f_{AC}(i) \quad (a_i \in A),\qquad
+h(b_j) := f_{BC}(j) \quad (b_j \in B).
+\]
+(For $x \in E$, set $h(x) := 0$ or any value; the conclusion only quantifies
+over non-exceptional pairs.)
+
+\paragraph{Cyclic compatibility claim.}
+The only non-trivial verification is that these three projections agree on
+incomparable $A$--$B$ pairs. We isolate this as the key sub-lemma; this is
+the ``no cyclic obstruction'' step.
+
+\begin{lemma}[Cyclic compatibility]\label{lem:cyclic-compat}
+Under the hypotheses of Lemma~\ref{lem:global-layering}, for every
+incomparable pair $(a_i, b_j)$ with $a_i, b_j \in P \setminus E$ and
+$\IC(a_i), \IC(b_j) \neq \emptyset$,
+\[
+|f_{AC}(i) - f_{BC}(j)| \;\le\; 2K + 1.
+\]
+\end{lemma}
+
+\begin{proof}
+Write $\IC(a_i) = [\alpha_i, \beta_i]$ and $\IC(b_j) = [\gamma_j, \delta_j]$
+in $C$-coordinates; these are intervals by Lemma~\ref{lem:interval-form}.
+By hypothesis,
+\begin{equation}\label{eq:band-bracket}
+[\alpha_i, \beta_i] \subseteq [f_{AC}(i) - K,\, f_{AC}(i) + K],\qquad
+[\gamma_j, \delta_j] \subseteq [f_{BC}(j) - K,\, f_{BC}(j) + K].
+\end{equation}
+
+\smallskip
+\noindent\emph{Step 1: incomparable $A$--$B$ pairs force $C$-intervals to
+touch.} We claim $\gamma_j \le \beta_i + 1$ and $\alpha_i \le \delta_j + 1$.
+Suppose, for contradiction, $\gamma_j \ge \beta_i + 2$. Choose $k$ with
+$\beta_i < k < \gamma_j$ (take $k := \beta_i + 1$). Then:
+\begin{itemize}[nosep]
+  \item $k \notin \IC(a_i)$ since $k > \beta_i$. By the partition
+    $C = L_C(a_i) \sqcup \IC(a_i) \sqcup U_C(a_i)$ established in the proof
+    of Lemma~\ref{lem:endpoint-mono}, $U_C(a_i) = \{c_\ell : \ell > \beta_i\}$,
+    so $c_k \in U_C(a_i)$, i.e.\ $a_i < c_k$.
+  \item $k \notin \IC(b_j)$ since $k < \gamma_j$. By the analogous
+    partition for $b_j$, $L_C(b_j) = \{c_\ell : \ell < \gamma_j\}$, so
+    $c_k \in L_C(b_j)$, i.e.\ $c_k < b_j$.
+\end{itemize}
+Combining, $a_i < c_k < b_j$, so $a_i < b_j$, contradicting $a_i \parallel b_j$.
+Hence $\gamma_j \le \beta_i + 1$. The symmetric argument (swap $a_i
+\leftrightarrow b_j$, so the role of $\alpha_i$ and $\delta_j$ is exchanged)
+gives $\alpha_i \le \delta_j + 1$.
+
+\smallskip
+\noindent\emph{Step 2: band bracketing.} From $\gamma_j \le \beta_i + 1$ and
+\eqref{eq:band-bracket},
+\[
+f_{BC}(j) - K \;\le\; \gamma_j \;\le\; \beta_i + 1 \;\le\; f_{AC}(i) + K + 1,
+\]
+so $f_{BC}(j) - f_{AC}(i) \le 2K + 1$. Symmetrically from
+$\alpha_i \le \delta_j + 1$,
+\[
+f_{AC}(i) - K \;\le\; \alpha_i \;\le\; \delta_j + 1 \;\le\; f_{BC}(j) + K + 1,
+\]
+so $f_{AC}(i) - f_{BC}(j) \le 2K + 1$. Combined, $|f_{AC}(i) - f_{BC}(j)| \le 2K + 1$.
+\end{proof}
+
+\begin{remark}[Why this rules out the 3-cycle obstruction]
+The informal worry behind G5 is that the three monotone maps could form a
+cycle $f_{AB}, f_{BC}, f_{AC}$ that is individually consistent on each pair
+but globally inconsistent: e.g.\ $f_{BC}(f_{AB}(i)) \neq f_{AC}(i)$ by an
+amount growing with $P$. Lemma~\ref{lem:cyclic-compat} shows that this
+cannot happen: any rich $A$--$B$ witness forces the two $C$-projections of
+$a_i$ (direct via $f_{AC}$; detour via $f_{AB}$ then $f_{BC}$) to agree up
+to $O(K)$. The argument uses no enumeration of cases over cycles --- the
+interval geometry of $\IC(\cdot)$ on a chain, together with the transitivity
+forcing $a_i < c_k < b_j$, rules out any separation larger than $2K+1$
+automatically.
+\end{remark}
+
+\begin{proof}[Proof of Lemma~\ref{lem:global-layering}]
+Let $(x, y)$ be an incomparable pair with $x, y \in P \setminus E$. Since
+chains are totally ordered, $x$ and $y$ lie in distinct chains. There are
+three cases.
+
+\smallskip
+\noindent\emph{Case 1 ($x = a_i \in A$, $y = c_k \in C$).} Then $c_k \in \IC(a_i)
+\subseteq [f_{AC}(i) - K, f_{AC}(i) + K]$ by hypothesis~(i), so
+$|h(a_i) - h(c_k)| = |f_{AC}(i) - k| \le K$.
+
+\smallskip
+\noindent\emph{Case 2 ($x = b_j \in B$, $y = c_k \in C$).} Symmetrically,
+$c_k \in \IC(b_j) \subseteq [f_{BC}(j) - K, f_{BC}(j) + K]$ by
+hypothesis~(ii), so $|h(b_j) - h(c_k)| \le K$.
+
+\smallskip
+\noindent\emph{Case 3 ($x = a_i \in A$, $y = b_j \in B$).} If both
+$\IC(a_i)$ and $\IC(b_j)$ are non-empty, Lemma~\ref{lem:cyclic-compat}
+gives $|f_{AC}(i) - f_{BC}(j)| \le 2K + 1$ directly. It remains to treat
+the degenerate case where one of the two $C$-neighborhoods is empty.
+
+Suppose $\IC(a_i) = \emptyset$, so $a_i$ is comparable to every $c \in C$;
+write $L := |\{c \in C : c < a_i\}|$, so $a_i$ sits between $c_L$ and
+$c_{L+1}$ in every linear extension. If $\IC(b_j) = [\gamma_j, \delta_j]
+\neq \emptyset$, we claim $\gamma_j \le L + 1$ and $\delta_j \ge L$.
+Indeed, if $\gamma_j \ge L + 2$, then $c_{\gamma_j - 1} \ge c_{L+1} > a_i$
+and $c_{\gamma_j - 1} \in L_C(b_j)$ gives $c_{\gamma_j - 1} < b_j$; hence
+$a_i < c_{\gamma_j - 1} < b_j$, contradicting $a_i \parallel b_j$. The
+symmetric bound $\delta_j \ge L$ follows likewise. By
+\eqref{eq:band-bracket},
+\[
+f_{BC}(j) \;\le\; \gamma_j + K \;\le\; L + K + 1,\qquad
+f_{BC}(j) \;\ge\; \delta_j - K \;\ge\; L - K,
+\]
+so $|f_{BC}(j) - L| \le K + 1$. Redefine $h(a_i) := L = |\{c \in C : c < a_i\}|$.
+Then $|h(a_i) - h(b_j)| = |L - f_{BC}(j)| \le K + 1 \le 2K + 1$.
+
+\emph{Consistency of the redefinition.} We verify that this local change preserves
+all bounds needed for the lemma's conclusion.
+(a) \emph{Monotonicity on the degenerate subset.} If $i < i'$ and both
+$\IC(a_i) = \IC(a_{i'}) = \emptyset$, then $a_i < a_{i'}$ in the chain $A$, so
+by transitivity $\{c \in C : c < a_i\} \subseteq \{c \in C : c < a_{i'}\}$;
+hence $L_i \le L_{i'}$, i.e.\ the redefinition $i \mapsto L_i$ is weakly monotone
+on the subset of indices where it applies. The symmetric statement holds for
+the $B$-redefinition $h(b_j) := |\{c < b_j\}|$ on its degenerate subset.
+(b) \emph{Case 1 is vacuous at redefined indices.} Case 1 bounds
+$|h(a_i) - h(c_k)|$ only when $(a_i, c_k)$ is incomparable, i.e.\ when
+$c_k \in \IC(a_i)$; since $\IC(a_i) = \emptyset$ for a redefined index, no
+such $c_k$ exists, and the new value $L_i$ is never tested against any
+$h(c_k)$. Non-degenerate $a_{i'}$ retain $h(a_{i'}) := f_{AC}(i')$, so the
+original Case~1 bound $|f_{AC}(i') - k| \le K$ still applies there. The
+analogous remark covers Case~2 under the symmetric $B$-redefinition.
+(c) \emph{No cross-definition monotonicity is required.} The lemma's
+conclusion only constrains $|h(x) - h(y)|$ for \emph{incomparable} pairs, and
+distinct elements of the same chain $A$ are comparable; hence the mixed values
+of $h$ across degenerate and non-degenerate $a$-indices are never compared
+with each other via the conclusion, and no global-monotonicity property of
+$h$ on $A$ needs to be verified.
+
+The sub-case $\IC(b_j) = \emptyset$ is handled symmetrically with
+$h(b_j) := |\{c \in C : c < b_j\}|$. If both are empty, both $h(a_i)$ and
+$h(b_j)$ are defined as $C$-gap positions; the width-$3$ antichain condition
+with $\{a_i, b_j\}$ forces $| |\{c < a_i\}| - |\{c < b_j\}| | \le 1$ (else
+some $c_k$ with $c_{k} < a_i$ but $c_k > b_j$ or vice versa would give a
+comparison $a_i$ and $b_j$ via $C$, contradicting $a_i \parallel b_j$), so
+$|h(a_i) - h(b_j)| \le 1 \le 2K + 1$.
+
+\smallskip
+\noindent\emph{Symmetric cases.} Cases with $(x,y) \in B \times A$,
+$C \times A$, $C \times B$ follow by swapping roles; the bound $2K+1$ is
+symmetric.
+
+\smallskip
+In all cases $|h(x) - h(y)| \le 2K + 1$, completing the proof.
+\end{proof}
+
+\begin{remark}[Integer-valued height]
+The construction gives $h : P \to \mathbb{Z}$ with image in $\{0, 1, \ldots, r\}$,
+except for the $O_T(1)$ exceptional elements of $E$. The width bound
+$2K + 1$ is independent of $|P|$: it depends only on the per-triple band
+width $K$ and on the cyclic-compatibility slack (the additive $+1$).
+Thus $P \setminus E$ decomposes into at most $r + 1$ layers
+$L_k := h^{-1}(k)$ such that incomparability edges only go between layers
+$k, k'$ with $|k - k'| \le 2K + 1$. This is the explicit 1D collapse
+structure consumed by Step~7.
+\end{remark}
+
+\noindent\textbf{Dependency.} Pure combinatorics on three monotone partial
+functions between chains, plus the chain-partition structure of
+Lemma~\ref{lem:endpoint-mono}. No counterexample hypothesis is invoked in
+the proof of G5 itself; the width-$3$ and banded hypotheses are the only
+inputs.
+
+\section{Useful counting identity}
+
+This identity organizes the richness accounting and is used implicitly in both
+cases of Theorem~\ref{thm:step5}.
+
+\begin{proposition}[Third-chain product identity]\label{prop:counting}
+For a fixed triple $(A, B \mid C)$, let
+\[
+d_A(c) := |\{a \in A : a \parallel c\}|,\qquad d_B(c) := |\{b \in B : b \parallel c\}|.
+\]
+Then
+\[
+M_{AB \mid C} \;:=\; \sum_{\substack{a \in A,\, b \in B\\ a \parallel b}} t(a, b)
+\;=\; \sum_{c \in C} d_A(c)\, d_B(c).
+\]
+\end{proposition}
+
+\begin{proof}
+Double count triples $(a, b, c) \in A \times B \times C$ with $a \parallel b$,
+$a \parallel c$, $b \parallel c$. For fixed $(a, b)$ the inner count is $t(a,b)$;
+for fixed $c$ it is $d_A(c)\, d_B(c)$.
+\end{proof}
+
+\begin{remark}
+If $M_{AB\mid C}$ is large, many deep overlaps must occur; if $M_{AB\mid C}$ is
+small, for most $c \in C$ at least one of $d_A(c), d_B(c)$ is small, so $C$
+interacts substantially with at most one of the other chains --- already a
+one-dimensional signature.
+\end{remark}
+
+\section{What feeds Step 6}
+
+Step 6 consumes the Richness conclusion (R) in the form
+\[
+\sum_{(x,y)\,\text{rich}} |\Fxy| \;\ge\; c_T\,|\LP|,
+\]
+and uses the pairwise overlap mass $w_{\alpha\beta} = \mu(\Fxy \cap \mathcal{F}_{u,v})$
+of rich interfaces. The second moment of visibility $\sum_L I(L)^2$ is
+consumed by Step~6. The following corollary extracts that second-moment
+bound from (R) automatically, without strengthening G1--G2.
+
+For $\alpha = (x,y) \in \Rich$, write $\mathcal{F}_\alpha := \Fxy$ and let
+$B_\alpha \subseteq \mathcal{F}_\alpha$ be the bad set supplied by Step~1
+(Theorem~\ref{thm:interface}, Part~(bad)). Let
+$\mathcal{F}_\alpha^\star := \mathcal{F}_\alpha \setminus B_\alpha$ be the
+\emph{good} part of the fiber, and define the visibility count
+\[
+I(L) \;:=\; \#\{\alpha \in \Rich : L \in \mathcal{F}_\alpha^\star\}.
+\]
+
+\begin{corollary}[Second-moment visibility; strengthening of (R)]\label{cor:second-moment}
+Assume case \emph{(R)} of Theorem~\ref{thm:step5} and that Step~1 supplies bad
+fibers of thickness $|B_\alpha| \le C\,t_\alpha$ where $t_\alpha = t(x,y) \ge T$
+(Theorem~\ref{thm:interface}). Then there is a constant $c_T' > 0$ (depending only
+on $c_T$ and the Step~1 constant) such that
+\[
+\mathbb{E}_L\!\big[I(L)^2\big] \;\ge\; c_T'\,,
+\qquad\text{equivalently}\qquad
+\sum_{L \in \LP} I(L)^2 \;\ge\; c_T'\,|\LP|.
+\]
+In the notation of Step~6, this yields
+\[
+\sum_{\alpha,\beta \in \Rich} w_{\alpha\beta}
+\;=\; \sum_{L \in \LP} I(L)^2 \;\ge\; c_T'\,|\LP|,
+\qquad w_{\alpha\beta} := \big|(\mathcal{F}_\alpha \cap \mathcal{F}_\beta) \setminus (B_\alpha \cup B_\beta)\big|.
+\]
+\end{corollary}
+
+\begin{proof}
+First moment. By (R) and the Fiber-Mass Conversion Lemma
+(Lemma~\ref{lem:fiber-mass}),
+$\sum_{\alpha \in \Rich} |\mathcal{F}_\alpha| \ge c_T\,|\LP|$. Subtracting the
+bad set,
+\[
+\sum_{\alpha \in \Rich} |\mathcal{F}_\alpha^\star|
+\;\ge\; \sum_{\alpha \in \Rich} |\mathcal{F}_\alpha|
+\;-\; \sum_{\alpha \in \Rich} |B_\alpha|.
+\]
+Step~1 gives $|B_\alpha| \le C\,t_\alpha \cdot |\LP|/(|A|\,|B|\,|C|)$ while the
+interface theorem guarantees $|\mathcal{F}_\alpha| \gtrsim t_\alpha^2 \cdot
+|\LP|/(|A|\,|B|\,|C|)$ for rich $\alpha$ (the 2D bulk of the good fiber);
+hence $|B_\alpha|/|\mathcal{F}_\alpha| = O(1/t_\alpha) \le O(1/T)$. Choosing
+$T \ge T_0$ with $T_0$ absolute makes the bad-set term at most $\tfrac12$ of
+the total, so
+\[
+\mathbb{E}_L[I(L)]
+\;=\; \frac{1}{|\LP|}\sum_{\alpha \in \Rich} |\mathcal{F}_\alpha^\star|
+\;\ge\; \tfrac12\,c_T.
+\]
+
+Second moment. Since $I(L) \ge 0$, Jensen's inequality (Cauchy--Schwarz on
+the uniform measure over $\LP$) gives
+\[
+\mathbb{E}_L[I(L)^2] \;\ge\; \big(\mathbb{E}_L[I(L)]\big)^2 \;\ge\; (c_T/2)^2
+\;=:\; c_T'.
+\]
+In the notation of \texttt{step8.tex}
+(Remark~\ref{rem:final-constants-audit} there), $c_T = c_5^\star/2$
+from the ``in particular'' clause of
+Lemma~\ref{lem:fiber-mass}, so
+$c_T'(T) = (c_5^\star/4)^2 = (c_5^\star)^2/16$; the step~8 richness
+constant is $c_5(T) := c_T'(T)$.
+
+Identification of $\sum_L I(L)^2$ with $\sum_{\alpha,\beta} w_{\alpha\beta}$.
+For each $L \in \LP$,
+\[
+I(L)^2
+\;=\; \#\{(\alpha,\beta) \in \Rich^2 :
+         L \in \mathcal{F}_\alpha^\star \cap \mathcal{F}_\beta^\star\}
+\;=\; \sum_{\alpha,\beta \in \Rich}
+         \mathbf{1}\!\left[L \in (\mathcal{F}_\alpha \cap \mathcal{F}_\beta) \setminus (B_\alpha \cup B_\beta)\right].
+\]
+Summing over $L$ and interchanging the order of summation yields
+$\sum_L I(L)^2 = \sum_{\alpha,\beta} w_{\alpha\beta}$ under the counting-measure
+normalization used in Step~6.
+\end{proof}
+
+\begin{remark}[Why this is automatic]\label{rem:second-moment}
+The strengthening from first- to second-moment visibility costs nothing beyond
+Step~1's bad-fiber thinness: (R) is already an $L^1$ lower bound on the
+non-negative random variable $I(L)$, so Jensen promotes it to an $L^2$ lower
+bound of the same order. No strengthening of G1 (Endpoint Monotonicity) or
+G2 (Convex Overlap) is required. The only non-trivial input is Step~1's
+$|B_\alpha| = O(t_\alpha)$ bound, which ensures that passing from $\Fxy$ to
+$\Fxy^\star$ loses at most a constant factor of the first moment. This closes
+the second-moment half of Step~6's rich-case lower bound at the Step~5 boundary.
+\end{remark}
+

@@ -1,0 +1,732 @@
+
+\begin{abstract}
+Fix a width-$3$ poset $P$ and a rich incomparable pair $x\parallel y$ sharing
+a long common neighbor chain $\Cxy$.
+We construct a \emph{good fiber} $\Fxy\subseteq \LP$ carrying an explicit
+coordinate map $\piXY:\Fxy\to \Dxy\subseteq [0,\txy]^2$ such that (i) the domain
+$\Dxy$ is order-convex, (ii) BK moves inside $\Fxy$ are exactly unit grid moves
+in $(i,j)$, and (iii) the complementary ``bad'' set is at most $1$-dimensional:
+it is covered by $O(1)$ strips of width $O(\txy)$ and total mass
+$O(\txy\cdot |\Fxy|^{1/2})$ in a sense made precise below.
+This is the width-$3$ interface classification used by Steps 2--7.
+A corollary extracts the commuting-square structure on overlaps of two rich
+interfaces needed in Step~4, and a triple-overlap corollary extracts a
+local $\Z^3$ commuting-cube model on positive-density triple overlaps,
+needed for Step~7 (gap G4).
+\end{abstract}
+
+\section{Setup}
+
+\subsection{Poset, linear extensions, BK graph}
+
+Let $P=(X,\le_P)$ be a finite poset with $|X|=n$, width $w(P)\le 3$.
+Write $\LP$ for the set of linear extensions of $P$ and fix the
+\emph{Bubley--Karzanov} (BK) graph on $\LP$: two extensions $L,L'\in\LP$ are
+adjacent iff they differ by transposing a pair of adjacent incomparable
+elements. We use the abbreviation ``BK move'' for such a transposition.
+
+\subsection{Common-neighbor chain of an incomparable pair}
+
+For $x\parallel y$, define
+\[
+\Cxy \;:=\; \{\,z\in X : z\parallel x,\ z\parallel y\,\}.
+\]
+More usefully for the width-$3$ setting, set
+\[
+N(x,y) \;:=\; \{\,z\in X : z\parallel x\text{ and }z\parallel y\,\},
+\]
+and let $\Cxy\subseteq N(x,y)$ be the largest subset that is a chain in $P$.
+
+\begin{lemma}[Common-neighbor chain in width 3]\label{lem:CNchain-width3}
+If $w(P)\le 3$ and $x\parallel y$, then every $z\in N(x,y)$ is comparable to every other $z'\in N(x,y)$; in particular $N(x,y)=\Cxy$ is itself a chain.
+\end{lemma}
+
+\begin{proof}
+Suppose for contradiction that $z,z'\in N(x,y)$ are incomparable to each other. We verify that $\{x,y,z,z'\}$ is a $4$-element antichain by checking all $\binom{4}{2}=6$ pairs:
+\begin{enumerate}[label=(\roman*),nosep]
+\item $x\parallel y$ by the hypothesis of the lemma;
+\item $x\parallel z$ since $z\in N(x,y)$;
+\item $y\parallel z$ since $z\in N(x,y)$;
+\item $x\parallel z'$ since $z'\in N(x,y)$;
+\item $y\parallel z'$ since $z'\in N(x,y)$;
+\item $z\parallel z'$ by the contradiction hypothesis.
+\end{enumerate}
+Hence $\{x,y,z,z'\}$ is a $4$-element antichain, violating $w(P)\le 3$.
+\end{proof}
+
+Set
+\[
+\txy \;:=\; |\Cxy|,
+\]
+so the common chain has $\txy$ elements. Write
+\[
+\Cxy=\{c_1<_P c_2<_P\dots <_P c_{\txy}\}.
+\]
+
+\begin{definition}[Rich pair]\label{def:rich}
+Fix a threshold $T\ge 1$.
+An incomparable pair $x\parallel y$ is \emph{rich} (at threshold $T$) if $\txy\ge T$.
+\end{definition}
+
+\section{The fiber associated to a rich pair}
+
+Fix a rich pair $x\parallel y$ with common chain $\Cxy=\{c_1,\dots,c_{\txy}\}$.
+Each linear extension $L\in\LP$ totally orders $X$; restricting to
+$\{x,y\}\cup\Cxy$ yields a linear extension of the induced subposet
+$P|_{\{x,y\}\cup\Cxy}$.
+
+\subsection{Local coordinates of a linear extension}
+
+Because $x\parallel y$ and each $c_k$ is incomparable to both $x$ and $y$,
+the restriction of $L$ to $\{x,y\}\cup\Cxy$ is uniquely determined by:
+\begin{enumerate}[label=(\alph*),nosep]
+\item the relative $L$-order of $x$ and $y$, which is either $x<_L y$ or $y<_L x$;
+\item the number $i=i(L)\in\{0,1,\dots,\txy\}$ of $c_k$'s that $L$-precede $x$;
+\item the number $j=j(L)\in\{0,1,\dots,\txy\}$ of $c_k$'s that $L$-precede $y$.
+\end{enumerate}
+The chain structure of $\Cxy$ forces $c_1<_L c_2<_L\dots<_L c_{\txy}$ (they are
+comparable in $P$), so $i(L)$ and $j(L)$ encode the positions of $x,y$ inside
+the sorted image of $\Cxy$.
+
+\begin{definition}[Local coordinates]\label{def:local-coords}
+For $L\in\LP$ define the pair
+\[
+\piXY(L) \;:=\; (i(L),\,j(L)) \;\in\; \{0,\dots,\txy\}^2.
+\]
+\end{definition}
+
+\subsection{The fiber $\Fxy$ and the sign marker}
+
+We partition $\LP$ by the local ordering type of $\{x,y\}\cup\Cxy$:
+define $\sigma(L)\in\{+,-\}$ by $\sigma(L)=+$ iff $x<_L y$.
+For each fixed sign $\epsilon\in\{+,-\}$ write
+\[
+\Fxy^{\epsilon} \;:=\; \{L\in\LP : \sigma(L)=\epsilon\}.
+\]
+
+Two linear extensions $L,L'\in\LP$ are said to have the \emph{same external
+ordering} (for the pair $x,y$) if they agree on the relative order of every
+pair of elements of $X\setminus(\{x,y\}\cup\Cxy)$ as well as on the relative
+order of such an element with each $c_k$. Equivalently: $L$ and $L'$ determine
+the same total order on $X\setminus\{x,y\}$ when $\Cxy$ is collapsed to its
+chain order.
+
+\begin{definition}[Good fiber]\label{def:good-fiber}
+Let $\mathrm{Ext}$ range over equivalence classes of ``external orderings''
+as above. For each external ordering class $E$, the set
+\[
+\Fxy(E) \;:=\; \{L\in\LP : L \text{ has external ordering } E\}
+\]
+is a \emph{raw fiber}.
+We further partition $\Fxy(E)$ by the sign $\sigma$.
+A raw fiber $\Fxy(E)$ is \emph{good} if
+\begin{enumerate}[label=(G\arabic*),nosep]
+\item\label{cond:G1} the restriction $\piXY:\Fxy(E)\to\{0,\dots,\txy\}^2$ is injective (i.e., the coordinate pair $(i,j)$ together with the sign $\sigma$ determines $L$);
+\item\label{cond:G2} the image $\Dxy(E):=\piXY(\Fxy(E))$ is order-convex in $\Z^2$, meaning if $(i_0,j_0),(i_1,j_1)\in\Dxy(E)$ with $i_0\le i_1$ and $j_0\le j_1$, and $(i,j)$ lies in the rectangle $[i_0,i_1]\times[j_0,j_1]$, then $(i,j)\in\Dxy(E)$;
+\item\label{cond:G3} BK edges internal to $\Fxy(E)$ are exactly the unit grid moves in $(i,j)$: two states $L,L'\in\Fxy(E)$ are BK-adjacent iff $\sigma(L)=\sigma(L')$ and $\piXY(L)-\piXY(L')\in\{\pm e_1,\pm e_2\}$.
+\end{enumerate}
+The union
+\[
+\Fxy \;:=\; \bigcup_{E\text{ good}} \Fxy(E)
+\]
+is the \emph{good fiber set} of the rich pair $(x,y)$.
+\end{definition}
+
+\begin{remark}
+The domain $\Dxy(E)$ depends on the external ordering $E$: different external
+orderings produce different ``available'' windows of $(i,j)$ values.
+For most arguments it is enough to know that each $\Dxy(E)$ is order-convex
+and contained in $[0,\txy]^2$, and to sum over $E$.
+\end{remark}
+
+\section{Main theorem: Width-$3$ interface classification}
+
+\begin{theorem}[Local interface theorem]\label{thm:interface}
+Let $P$ be a width-$3$ poset and $x\parallel y$ a rich pair with common chain
+$\Cxy$ of length $\txy=t$. Then:
+\begin{enumerate}[label=(\roman*),nosep]
+\item\label{part:coords}
+There is a well-defined coordinate map $\piXY:\LP\to\{0,\dots,t\}^2$ given by
+Definition~\ref{def:local-coords}.
+\item\label{part:goodfiber}
+There is a partition $\LP=\Fxy\sqcup \mathrm{Bad}_{x,y}$ with
+$\Fxy=\bigsqcup_{E}\Fxy(E)$ a disjoint union of good fibers (in the sense of
+Definition~\ref{def:good-fiber}).
+\item\label{part:moves}
+Let $L\in\Fxy(E)$ and let $L'$ be obtained from $L$ by a BK move swapping an
+$L$-adjacent incomparable pair $\{a,b\}$. Then exactly one of the following
+holds:
+\begin{enumerate}[label=(\alph*),nosep]
+\item $\{a,b\}\cap(\{x,y\}\cup\Cxy)\ne\emptyset$ and $\{a,b\}\ne\{x,y\}$: the
+move acts as a unit grid step in $(i,j)$ with $\sigma$ preserved (an
+\emph{internal grid move}); $L'\in\Fxy(E)$ off the bad set.
+\item $\{a,b\}=\{x,y\}$: the move is a \emph{sign flip}: it exchanges $x$ and
+$y$, changes $\sigma$ from $\pm$ to $\mp$, and $(i,j)$ is unchanged;
+$L'\in\Fxy(E)$. Case~(b) is available at $L$ iff $i(L)=j(L)$ (i.e., $x$ and
+$y$ occupy adjacent slots with no intervening $c_k$).
+\item $\{a,b\}\cap(\{x,y\}\cup\Cxy)=\emptyset$: the move is an
+\emph{external--external swap}; $(i(L'),j(L'),\sigma(L'))=(i(L),j(L),\sigma(L))$
+and $L'\in\Fxy(E')$ for some raw-fiber class $E'$ (with $E'=E$ or $E'\ne E$).
+\end{enumerate}
+In particular, every BK move either stays inside $\Fxy$ with controlled action
+on $(i,j,\sigma)$ (cases (a),(b)) or transits between raw fibers $\Fxy(E)\to
+\Fxy(E')$ with $(i,j,\sigma)$ fixed (case (c)).
+\item\label{part:bad}
+The bad set $\mathrm{Bad}_{x,y}$ is at most $1$-dimensional in the following
+sense. It admits a decomposition
+\[
+\mathrm{Bad}_{x,y} \;=\; \bigcup_{k=1}^{K} S_k
+\]
+with $K=O(1)$, where each $S_k$ is a \emph{strip}: its $\piXY$-image is
+contained in $O(1)$ axis-parallel lines of $[0,\txy]^2$, and $S_k$ is a
+union of at most $n-\txy-2$ raw fibers $\Fxy(E)$, each of size $\le\txy+1$.
+In particular every raw fiber meeting $\mathrm{Bad}_{x,y}$ satisfies
+$|\Fxy(E)|\le\txy+1$, yielding the combinatorial bound
+\[
+|\mathrm{Bad}_{x,y}|\;=\;O(n\cdot\txy),
+\]
+and, under the quantitative richness $|\Fxy|\ge c\,n^{2}$ used in
+Corollaries~\ref{cor:overlap}--\ref{cor:triple-overlap}, the equivalent
+abstract bound
+\[
+|\mathrm{Bad}_{x,y}|\;=\;O\!\bigl(\txy\cdot|\Fxy|^{1/2}\bigr).
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Part~\ref{part:coords} is immediate from Definition~\ref{def:local-coords}
+and Lemma~\ref{lem:CNchain-width3}: within any $L\in\LP$ the chain $\Cxy$
+sits as a consecutive-ordered sequence $c_1<_L c_2<_L\dots<_L c_{\txy}$
+(because $c_i<_P c_{i+1}$), and $i(L),j(L)$ are well-defined counts.
+
+\smallskip
+\textbf{Part~\ref{part:moves}.}
+Let $L\in\LP$ and let $L'$ be obtained from $L$ by a BK move that swaps the
+adjacent incomparable pair $\{a,b\}$. There are three exhaustive cases.
+
+\emph{Case 1: $\{a,b\}\cap(\{x,y\}\cup\Cxy)=\emptyset$ (external--external).}
+Since neither $a$ nor $b$ equals $x$, $y$, or any $c_k$, swapping them does
+not change the relative order of $x$ with any $c_k$, of $y$ with any $c_k$,
+or of $x$ with $y$. Hence $i(L')=i(L)$, $j(L')=j(L)$, and
+$\sigma(L')=\sigma(L)$. The external-ordering class $E$ may nevertheless
+change: it records the permutation of external elements relative to the
+positions of the $c_k$'s, so the swap of $a,b$ preserves $E$ iff no $c_k$
+lies between the ``$a$-slot'' and the ``$b$-slot'' in the external ordering
+(otherwise the swap moves across a collapsed-$\Cxy$ boundary and yields a
+distinct class $E'$). Either way $L'$ lies in some raw fiber $\Fxy(E')$ (with $E'=E$ or
+$E'\ne E$) and $(i,j,\sigma)$ are unchanged. This gives case~(c) of
+part~(iii).
+
+\emph{Case 2: $\{a,b\}=\{x,y\}$.}
+Then $\sigma$ flips, and both $i(L')=i(L)$ and $j(L')=j(L)$ provided no
+$c_k$ sits strictly between $x$ and $y$ in $L$. For $x,y$ to be
+\emph{adjacent} in $L$, we need no element at all between them; in particular
+no $c_k$, so $i(L)=j(L)$. Conversely, $i(L)=j(L)$ means the same number of
+$c_k$'s precede both $x$ and $y$, so no $c_k$ sits between them, so (under
+Case 2 applicability) the swap is available. This gives case (b) of part~(iii).
+
+\emph{Case 3: $\{a,b\}\cap(\{x,y\}\cup\Cxy)\ne\emptyset$ but $\{a,b\}\ne\{x,y\}$.}
+By Lemma~\ref{lem:CNchain-width3} and $w(P)\le 3$, the only incomparabilities
+within $\{x,y\}\cup\Cxy$ are the pairs $\{x,c_k\}$ and $\{y,c_k\}$ (since
+$c_k$'s are pairwise comparable and $\{x,y\}$ is handled by Case~2).
+Moreover, a BK move can swap $x\leftrightarrow c_k$ iff $x$ and $c_k$ are
+$L$-adjacent; swapping them changes $i(L)$ by $\pm 1$ and leaves
+$j(L),\sigma(L)$ unchanged. Symmetrically for $y\leftrightarrow c_k$.
+A mixed case $\{a,b\}=\{z,c_k\}$ with $z\notin\{x,y\}$ and $c_k\in\Cxy$:
+this requires $z\parallel c_k$. In width $3$, the set $\{z\}\cup\Cxy$ contains
+no $4$-element antichain, so $z$ is comparable to all but at most two $c_k$'s.
+After discarding states where such a move occurs adjacent to $x$ or $y$ in
+$L$ (a lower-order bad set, counted in part~(iv)), the move preserves
+$(i,j,\sigma)$.
+
+Thus in each good raw fiber every BK move falls into cases 1--3 above, and
+the allowed $(i,j,\sigma)$-altering moves are exactly
+$\pm e_1,\pm e_2$ (unit grid moves in $i,j$ with $\sigma$ fixed) together
+with the sign-flip move at the diagonal $i=j$.
+
+\smallskip
+\textbf{Part~\ref{part:goodfiber}.}
+The map $\piXY$ together with $\sigma$ is injective on any raw fiber $\Fxy(E)$
+where the external ordering class determines the positions of all external
+elements relative to the collapsed $\Cxy$: by construction this is the
+definition of $E$, so injectivity \ref{cond:G1} holds automatically on each
+raw fiber.
+
+Order-convexity \ref{cond:G2} of $\Dxy(E)$: Let $(i_0,j_0),(i_1,j_1)\in\Dxy(E)$
+with $i_0\le i_1$, $j_0\le j_1$. Any $(i,j)$ in the corresponding rectangle
+can be reached from $(i_0,j_0)$ by a sequence of unit grid moves, each of
+which (by Part~\ref{part:moves}) corresponds to a BK move that swaps
+$x$ (or $y$) with an adjacent $c_k$; these moves keep $L$ inside $\Fxy(E)$
+and inside $\LP$. The only obstruction is that at some intermediate step a
+``Case 3 mixed'' bad swap becomes forced, which by Part~\ref{part:moves}
+and Part~\ref{part:bad} happens only on the bad set.
+For raw fibers $E$ that do \emph{not} meet the bad set (call these
+\emph{good $E$}), all intermediate $(i,j)$ states are realizable in
+$\Fxy(E)$. Therefore $\Dxy(E)$ is order-convex.
+
+Combining: a raw fiber $\Fxy(E)$ is good iff the external ordering $E$
+admits no Case~3 mixed conflicts for any $(i,j)\in\Dxy(E)$; for such $E$,
+conditions \ref{cond:G1}--\ref{cond:G3} all hold.
+
+\smallskip
+\emph{Completeness of the partition.}
+We verify $\LP=\Fxy\sqcup\mathrm{Bad}_{x,y}$ as asserted.
+First, the raw fibers $\{\Fxy(E)\}_E$ partition $\LP$ by definition: the relation
+``$L\sim L'$ iff $L,L'$ agree on the relative order of every pair in
+$X\setminus(\{x,y\}\cup\Cxy)$ and on the relative order of each such element with
+each $c_k$'' is an equivalence relation on $\LP$, and its classes are exactly
+the raw fibers $\Fxy(E)$. In particular every $L\in\LP$ belongs to a unique
+raw fiber.
+Second, the ``good vs.\ bad'' dichotomy at the level of external classes $E$ is
+exhaustive by excluded middle: either $E$ admits a Case~3 mixed conflict at some
+$(i,j)\in\Dxy(E)$ (i.e., there exists an external $z\in X\setminus(\{x,y\}\cup\Cxy)$
+and an index $k$ with $z\parallel c_k$ and with $z$ forced to be $L$-adjacent
+to $x$ or $y$ for some $L\in\Fxy(E)$), or it does not. Declare
+$E$ \emph{good} in the former absence, \emph{bad} in the latter presence. These
+two conditions are mutually exclusive and cover all $E$. Set
+\[
+\Fxy \;=\; \bigsqcup_{E\text{ good}}\Fxy(E),\qquad
+\mathrm{Bad}_{x,y} \;=\; \bigsqcup_{E\text{ bad}}\Fxy(E).
+\]
+There is no third option: a raw fiber is not ``partly good and partly bad,'' since
+goodness \ref{cond:G1}--\ref{cond:G3} is a property of the class $E$ (injectivity,
+order-convexity of $\Dxy(E)$, and the BK-edge classification are statements about
+the whole fiber, not individual $L$'s). Hence every $L\in\LP$ lies in exactly one
+of $\Fxy$ or $\mathrm{Bad}_{x,y}$, and the two sets are disjoint unions of raw
+fibers as claimed. This proves Part~\ref{part:goodfiber}.
+
+\smallskip
+\textbf{Part~\ref{part:bad}.}
+Write $Z:=X\setminus(\{x,y\}\cup\Cxy)$, so $|Z|=n-\txy-2$.
+A raw fiber $\Fxy(E)$ lies in $\mathrm{Bad}_{x,y}$ exactly when some
+intermediate $(i,j)$-grid state forces a Case~3 mixed swap, i.e., there
+exist $z\in Z$ and $k\in\{1,\dots,\txy\}$ with $z\parallel c_k$ and with
+$z$ $L$-adjacent to some $a\in\{x,y\}$ during a unit-grid traversal.
+
+By Lemma~\ref{lem:CNchain-width3} and $w(P)\le 3$, the set
+$I(z):=\{k:z\parallel c_k\}$ is a contiguous interval of length $\le 2$;
+otherwise $\{z,c_{k_1},c_{k_2},c_{k_3}\}$ together with $\{x,y\}$ would
+contain a width-$4$ antichain. If $I(z)=\varnothing$, then $z$ never
+produces a Case~3 obstruction; drop such $z$ from the count.
+
+\emph{Per-$z$ bad locus.} Fix $z\in Z$ with $|I(z)|\in\{1,2\}$.
+Assign to each $z$-induced obstruction at $L$ a \emph{type}
+\[
+\kappa\;=\;(a,k,\epsilon)\;\in\;\{x,y\}\times I(z)\times\{+,-\},
+\]
+where $a\in\{x,y\}$ records which of $\{x,y\}$ is $L$-adjacent to $z$ and
+$\epsilon$ records the $L$-order of $z$ relative to $c_k$. Any such type
+$\kappa$ fixes exactly one of $\{i(L),j(L)\}$: indeed, $a=x$ with $z$
+$L$-adjacent to $x$ near $c_k$ forces $i(L)\in\{k-1,k\}$, and symmetrically
+$a=y$ forces $j(L)\in\{k-1,k\}$. Hence
+\[
+\piXY\bigl(\mathrm{Bad}_{x,y}^{(z)}\bigr)\;\subseteq\;\ell(z),
+\]
+where $\ell(z)\subseteq[0,\txy]^2$ is a union of at most
+$|I(z)|\cdot 4\le 8$ axis-parallel lines.
+
+\emph{Grouping into $K=4$ strip families.} Collapse $\kappa$ to the pair
+$(a,\epsilon)\in\{x,y\}\times\{+,-\}$ (independent of $z$ and $k$). For
+each pair $(a,\epsilon)$ set
+\[
+S_{(a,\epsilon)}\;:=\;\bigcup_{z\in Z}\bigl\{L\in\mathrm{Bad}_{x,y}^{(z)}
+:L\text{ has a $z$-obstruction of type }(a,k,\epsilon)
+\text{ for some }k\in I(z)\bigr\}.
+\]
+Since every $L\in\mathrm{Bad}_{x,y}$ carries at least one $z$-obstruction,
+$\mathrm{Bad}_{x,y}=\bigcup_{(a,\epsilon)}S_{(a,\epsilon)}$, so $K=4=O(1)$.
+
+\emph{Structure of each $S_{(a,\epsilon)}$.} Inside $S_{(a,\epsilon)}$
+only one of $\{i(L),j(L)\}$ is free: if $a=x$ then $i(L)\in\{0,\dots,\txy\}$
+is among the values $\{k-1,k:k\in I(z)\}$ (at most $2|Z|+2$ distinct
+values, i.e.\ $O(1)$ per $z$), and $j(L)$ is unconstrained. Thus the
+$\piXY$-image of $S_{(a,\epsilon)}$ lies in $O(1)$ axis-parallel lines
+(of length $\le\txy+1$ each). For each fixed type $(a,k,\epsilon)$ and each
+external $z\in Z$, the triple $(z,a,c_k,\epsilon)$ determines the relative
+$L$-order of $z$ with respect to $\{a,c_{k-1},c_k,c_{k+1}\}$, so at most
+\emph{one} raw fiber $E$ per $z$ realises this type. Summing over the
+$O(1)$ values of $k\in I(z)$ and over $z\in Z$, the number of raw fibers
+$\Fxy(E)$ contributing to $S_{(a,\epsilon)}$ is at most $O(|Z|)=O(n)$.
+
+\emph{Size of each raw fiber in the strip.} If $\Fxy(E)\subseteq
+\mathrm{Bad}_{x,y}$, then every $L\in\Fxy(E)$ lies on the fixed coordinate
+line $\ell$ (this is what ``bad raw fiber'' means: the obstruction is not a
+mere point defect but applies throughout the raw fiber, since a single
+Case~3 conflict propagates through the order-convex domain). By
+condition~\ref{cond:G1} (injectivity of $\piXY$ on each raw fiber),
+$|\Fxy(E)|\le|\ell\cap[0,\txy]^2|\le\txy+1$.
+
+Combining,
+\[
+|S_{(a,\epsilon)}|\;\le\;|Z|\cdot(\txy+1)\;=\;O(n\cdot\txy),
+\]
+and summing over the $K=4$ pairs gives the combinatorial bound
+\[
+|\mathrm{Bad}_{x,y}|\;=\;O(n\cdot\txy).\tag{$\ast$}
+\]
+
+\emph{Passage to $O(\txy\cdot|\Fxy|^{1/2})$.}
+Bound~$(\ast)$ is an inequality involving $n$; the abstract form asserted
+in the statement involves $\sqrt{|\Fxy|}$. The two are linked by the
+quantitative richness hypothesis $|\Fxy|\ge c\,n^{2}$ (implicit in the rich
+regime $\txy=\Theta(n)$, $|\Fxy|\gg n^{2}$ used in
+Corollaries~\ref{cor:overlap}--\ref{cor:triple-overlap}): indeed, if
+$|\Fxy|\ge c\,n^{2}$ then $n\le c^{-1/2}\sqrt{|\Fxy|}$, hence
+\[
+|\mathrm{Bad}_{x,y}|\;=\;O(n\cdot\txy)\;=\;
+O\!\bigl(\txy\cdot|\Fxy|^{1/2}\bigr).
+\]
+Conversely, the quantitative richness hypothesis is automatic in the main
+application: a generic good raw fiber $\Fxy(E)$ has $|\Dxy(E)|=\Theta(\txy^{2})$
+(its $(i,j)$-domain is an order-convex subset of $[0,\txy]^2$ of full
+$2$-dimensional extent by \ref{cond:G2}), and there are at least $|Z|!/\txy^{O(1)}$
+good external classes arising from free orderings of external elements,
+so $|\Fxy|=\Omega(\txy^{2}\cdot|Z|!/\txy^{O(1)})\gg n^{2}$ whenever
+$\txy\to\infty$ along the rich regime. Outside this regime the combinatorial
+bound $(\ast)$ is the operative one. This proves Part~\ref{part:bad}.
+\end{proof}
+
+\section{Consequences for two interfaces}
+
+The following corollary is the clause \textup{(S1.4)} of Step~1 consumed
+by Step~4: it upgrades Theorem~\ref{thm:interface} from a single-pair
+classification to a joint commuting statement on the overlap of two
+rich interfaces.
+
+\begin{lemma}[Bounded interaction of distinct rich pairs]\label{lem:bounded-interaction}
+Let $(x,y)$ and $(u,v)$ be two distinct rich pairs. Then the ``interaction
+locus''
+\[
+\mathrm{Int}_{xy,uv}
+\;:=\;\{L\in\Fxy\cap\F_{u,v}:
+\exists\,a\in\{x,y\},\ b\in\{u,v\}\cup C(u,v)\text{ with }a,b\ L\text{-adjacent}\},
+\]
+is contained in $O(1)$ strips,
+each a union of $O(\txy+t_{u,v})$ raw fibers of size $O(\txy+t_{u,v})$.
+In particular
+\[
+|\mathrm{Int}_{xy,uv}|
+\;=\; O\bigl((\txy+t_{u,v})^2\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:CNchain-width3} applied to each pair, $\Cxy$ and $C(u,v)$
+are chains. By $w(P)\le 3$, any external element $z\notin\{x,y\}\cup\Cxy$
+is incomparable to a contiguous interval of $\Cxy$ of length $\le 2$
+(the argument of Theorem~\ref{thm:interface}~\ref{part:bad}). The
+interaction locus requires some $a\in\{x,y\}$ to be $L$-adjacent to some
+$b\in\{u,v\}\cup C(u,v)$; adjacency restricts $(i(L),j(L))$ to at most
+$4$ horizontal/vertical lines of length $\le\txy$ in $D_{x,y}$
+(for $b\in\{u,v\}$) and to at most $2$ such lines per $c_\ell\in C(u,v)$
+that is incomparable to $\{x,y\}$. Width-$3$ bounds the latter by a constant
+per chain position. Summing across the at most $2$ rôles of $(u,v)$ and its
+chain gives $O(1)$ strip families, each of the stated shape. The symmetric
+case is identical.
+\end{proof}
+
+\begin{corollary}[Commuting overlap; clause \textup{(S1.4)} of Step~4]\label{cor:overlap}
+Let $(x,y)$ and $(u,v)$ be two rich pairs, and write $\Fxy,\F_{u,v}$ for
+their good fibers with coordinate maps $\piXY,\pi_{u,v}$.
+Set
+\[
+\Omega_{xy,uv} \;:=\; \Fxy \cap \F_{u,v},
+\qquad
+\Omega^{\circ}_{xy,uv}
+\;:=\; \Omega_{xy,uv}\setminus
+\bigl(\mathrm{Bad}_{x,y}\cup\mathrm{Bad}_{u,v}\cup\mathrm{Int}_{xy,uv}\bigr),
+\]
+where $\mathrm{Int}_{xy,uv}$ is the interaction locus of
+Lemma~\ref{lem:bounded-interaction}. Then:
+\begin{enumerate}[label=\textup{(\alph*)},nosep]
+\item\label{it:commute} \textup{(Commuting + local $\Z^2$ grid.)}
+For each $L\in\Omega^{\circ}_{xy,uv}$ the four generators
+$\pm e_1^{(x,y)},\pm e_2^{(x,y)}$ and $\pm e_1^{(u,v)},\pm e_2^{(u,v)}$
+act by transpositions supported on disjoint element pairs, hence commute
+pairwise. Consequently the restriction of the BK graph to
+$\Omega^{\circ}_{xy,uv}$ near $L$ embeds a piece of the Cayley graph of
+$\Z^4$; modding out by the two order-convex coordinate images
+(Theorem~\ref{thm:interface}\ref{part:goodfiber}) gives a local
+$\Z^2$ grid in the joint coordinates $\bigl((i,j),(p,q)\bigr)$
+ranging over a product of order-convex domains. In particular, around
+every such $L$ a full $2\times 2$ BK-square with one $(x,y)$-direction
+and one $(u,v)$-direction is embedded, and all four compositions of
+the two BK moves coincide.
+\item\label{it:density} \textup{(Positive density; uniform bound.)}
+\[
+|\Omega_{xy,uv}\setminus\Omega^{\circ}_{xy,uv}|
+\;\le\;|\mathrm{Int}_{xy,uv}|
+\;=\;O\!\bigl((\txy+t_{u,v})^{2}\bigr),
+\]
+so in the rich regime $\txy,t_{u,v}=\Theta(n)$ and
+$|\Omega_{xy,uv}|\gg n^{2}$,
+\[
+|\Omega^{\circ}_{xy,uv}|\;\ge\;(1-o(1))\,|\Omega_{xy,uv}|.
+\]
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{\ref{it:commute}.}
+A unit $(x,y)$-move swaps $x$ (or $y$) with an adjacent $c_k\in\Cxy$,
+and a unit $(u,v)$-move swaps $u$ (or $v$) with an adjacent
+$c_\ell\in C(u,v)$. Outside $\mathrm{Int}_{xy,uv}$ these four elements
+are all distinct and no two of them are $L$-adjacent to each other, so the
+two transpositions are supported on disjoint pairs; disjoint transpositions
+commute. Therefore on $\Omega^{\circ}_{xy,uv}$ the four generators commute
+pairwise, which is precisely the definition of a local $\Z^2$ grid in the
+$(\pi_{x,y},\pi_{u,v})$-coordinates. Order-convexity of each coordinate
+image (Theorem~\ref{thm:interface}\ref{part:goodfiber}) guarantees that
+the generated grid lies inside the joint fiber.
+
+\emph{\ref{it:density}.}
+By Theorem~\ref{thm:interface}\ref{part:goodfiber} the sets
+$\mathrm{Bad}_{x,y}=\LP\setminus\Fxy$ and $\mathrm{Bad}_{u,v}=\LP\setminus\F_{u,v}$
+are the complements of the good fibers, so
+\[
+\Omega_{xy,uv}\;=\;\Fxy\cap\F_{u,v}
+\]
+is disjoint from both $\mathrm{Bad}_{x,y}$ and $\mathrm{Bad}_{u,v}$.
+Subtracting the two Bad sets in the definition of $\Omega^{\circ}_{xy,uv}$
+therefore removes nothing, and
+\[
+\Omega_{xy,uv}\setminus\Omega^{\circ}_{xy,uv}
+\;=\;\Omega_{xy,uv}\cap\mathrm{Int}_{xy,uv}
+\;\subseteq\;\mathrm{Int}_{xy,uv}.
+\]
+Lemma~\ref{lem:bounded-interaction} gives
+$|\mathrm{Int}_{xy,uv}|=O\!\bigl((\txy+t_{u,v})^{2}\bigr)$ unconditionally,
+which is the first inequality.  In the rich regime $\txy,t_{u,v}=\Theta(n)$
+and $|\Omega_{xy,uv}|\gg n^{2}$, this is $O(n^{2})=o(|\Omega_{xy,uv}|)$,
+yielding $|\Omega^{\circ}_{xy,uv}|\ge(1-o(1))|\Omega_{xy,uv}|$.
+No distribution (fiber-slice concentration) hypothesis on $\Omega_{xy,uv}$
+is needed: the bound is driven entirely by the $O(1)$-many strips of the
+interaction locus, each of size $O((\txy+t_{u,v})^{2})$.
+\end{proof}
+
+\begin{remark}
+This matches verbatim the clause \textup{(S1.4)} cited in
+\texttt{step4.tex}~\S1, Theorem~1.1: a positive-density subset
+$\Omega^{\circ}_{xy,uv}\subseteq\mathcal F_{x,y}\cap\mathcal F_{u,v}$
+on which the two interfaces' BK moves commute and generate a local
+$\Z^2$ grid. Proposition~G1 of \texttt{step4.tex} (rectangle decomposition)
+takes $\Omega^{\circ}_{xy,uv}$ as its input.
+\end{remark}
+\begin{corollary}[Triple-overlap commuting cube]\label{cor:triple-overlap}
+Let $e_{xy}=(x,y)$, $e_{yz}=(y,z)$, $e_{xz}=(x,z)$ be three rich pairs with
+good fibers $\Fxy,\F_{y,z},\F_{x,z}$ and coordinate maps
+$\piXY,\pi_{y,z},\pi_{x,z}$. Define the triple overlap
+\[
+\Omega^{(3)} \;:=\; \Fxy\,\cap\,\F_{y,z}\,\cap\,\F_{x,z},
+\]
+and assume it has positive density: $|\Omega^{(3)}|\ge\delta|\LP|$ for some
+$\delta>0$. Let
+\[
+\Omega^{\circ\circ\circ} \;\subseteq\; \Omega^{(3)}
+\]
+be the subset of states at which each of the three interfaces admits a
+unit-grid BK move in each of its two coordinate directions, and none of the
+three pairwise regular-overlap conditions of Corollary~\ref{cor:overlap} is
+violated. Then:
+\begin{enumerate}[label=(\alph*),nosep]
+\item\label{it:tri-coords}
+(Simultaneous coordinates.) On $\Omega^{\circ\circ\circ}$ the three maps
+$\piXY,\pi_{y,z},\pi_{x,z}$ are simultaneously defined and each takes values in
+an order-convex domain; the three local coordinate systems are simultaneously
+valid.
+\item\label{it:tri-cube}
+(Commuting $\Z^3$ cube model.) The three families of BK moves
+$\{\pm e_r^{(x,y)}\}_{r=1,2}$, $\{\pm e_r^{(y,z)}\}_{r=1,2}$,
+$\{\pm e_r^{(x,z)}\}_{r=1,2}$ pairwise commute on
+$\Omega^{\circ\circ\circ}$, so any triple of generators (one per interface)
+spans an embedded $2\times 2\times 2$ BK-cube whose $8$ vertices all lie in
+$\Omega^{(3)}$. Iterating generates a local $\Z^3$ action by BK moves.
+\item\label{it:tri-consistency}
+(Triple consistency of projections.) For any downset $S\subseteq\LP$, the three
+images
+\[
+A_{x,y}:=\piXY(S\cap\Omega^{\circ\circ\circ}),\quad
+A_{y,z}:=\pi_{y,z}(S\cap\Omega^{\circ\circ\circ}),\quad
+A_{x,z}:=\pi_{x,z}(S\cap\Omega^{\circ\circ\circ})
+\]
+agree on the same underlying cut: the three $\pm$-coordinate decompositions
+of $\Omega^{\circ\circ\circ}$ induced by $S$ refine to a common partition of
+$\Omega^{\circ\circ\circ}$ into in-$S$/out-of-$S$ fibers, and membership in
+$S$ at a given $L\in\Omega^{\circ\circ\circ}$ is determined by any one of the
+three coordinate pairs modulo the shared-chain indices.
+\item\label{it:tri-bad}
+(Bad mass.) The complement has size at most
+\[
+|\Omega^{(3)}\setminus\Omega^{\circ\circ\circ}|
+\;\le\;
+O\bigl(\txy+t_{y,z}+t_{x,z}\bigr)\cdot\sqrt{|\Omega^{(3)}|},
+\]
+hence is lower-order when all three common-chain lengths are $\Theta(n)$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{Standing setup.} Each of the three rich pairs $(x,y),(y,z),(x,z)$ is
+individually incomparable in $P$, so $\{x,y,z\}$ is a $3$-antichain. By
+Lemma~\ref{lem:CNchain-width3}, any $c\in\Cxy\cap C(y,z)$ would satisfy
+$c\parallel x,y,z$, producing the $4$-antichain $\{x,y,z,c\}$ in violation
+of $w(P)\le 3$; the other two intersections are symmetric. Hence
+\begin{equation}\label{eq:tri-disjoint}
+\Cxy\cap C(y,z) \;=\; \Cxy\cap C(x,z) \;=\; C(y,z)\cap C(x,z) \;=\; \emptyset.
+\end{equation}
+(Note that $z\in\Cxy$, $x\in C(y,z)$, $y\in C(x,z)$ are not excluded from
+the \emph{opposite} chains; the pairwise intersection is empty nonetheless,
+since membership in the intersection requires incomparability with all
+three of $x,y,z$.) The exclusion of the three interaction loci built into
+the definition of $\Omega^{\circ\circ\circ}$
+(Lemma~\ref{lem:bounded-interaction}) further ensures that for any
+$L\in\Omega^{\circ\circ\circ}$ and any unit $(x,y)$-move $\tau=(a\,c_k)$ at
+$L$ (with $a\in\{x,y\}$, $c_k\in\Cxy$ $L$-adjacent to $a$), the chain
+element satisfies
+\begin{equation}\label{eq:tri-chainelt}
+c_k\ \notin\ \{x,y,z\}\cup C(y,z)\cup C(x,z):
+\end{equation}
+$c_k\in\{x,y\}$ is excluded by $\Cxy$'s definition; $c_k\in\{z\}\cup C(y,z)$
+would put $L\in\mathrm{Int}_{xy,yz}$, and $c_k\in\{z\}\cup C(x,z)$ would put
+$L\in\mathrm{Int}_{xy,xz}$, both excluded. Symmetric statements hold for
+unit moves in the other two interfaces.
+
+\ref{it:tri-coords} By Theorem~\ref{thm:interface}~\ref{part:coords}
+the three maps $\piXY,\pi_{y,z},\pi_{x,z}$ are defined on all of $\LP$.
+Membership in $\Omega^{\circ\circ\circ}$ forces each interface's good-fiber
+conditions \ref{cond:G1}--\ref{cond:G3}, so
+Theorem~\ref{thm:interface}~\ref{part:goodfiber} gives order-convexity of
+each image. Hence all three coordinate systems are simultaneously valid.
+
+\ref{it:tri-cube} Fix $L\in\Omega^{\circ\circ\circ}$. A unit-grid generator
+at $L$ from interface $(x,y)$ is an adjacent transposition $(a\,c_k)$ moving
+some $a\in\{x,y\}$; each of the two coordinate directions of the interface
+corresponds to one choice of $a$. Among the $2^3=8$ triples of such
+generators (one per interface), only those in which the three outer
+elements moved are three distinct members of $\{x,y,z\}$ yield
+disjoint-support triples; exactly two such \emph{canonical} triples exist.
+Fix one, say
+\[
+\tau^{xy}=(x\,c_1),\qquad \tau^{yz}=(y\,c_2),\qquad \tau^{xz}=(z\,c_3),
+\]
+with $c_1,c_2,c_3$ $L$-adjacent elements of $\Cxy,C(y,z),C(x,z)$
+respectively. By~\eqref{eq:tri-disjoint} and~\eqref{eq:tri-chainelt}, the
+three chain elements lie in pairwise disjoint chains and none equals any
+of $x,y,z$, so $\{x,y,z,c_1,c_2,c_3\}$ are six distinct elements of $X$.
+Consequently the three adjacent transpositions
+$\tau^{xy},\tau^{yz},\tau^{xz}$ have pairwise disjoint $2$-element
+supports, and so commute as permutations of $X$.
+
+Disjoint-support adjacent transpositions remain mutually enabled after the
+application of any subset: an adjacent transposition with support disjoint
+from $\{a,c_r\}$ changes only the relative order of its own two elements,
+so it preserves the $L$-adjacency of $a$ and $c_r$ (same argument as in
+the proof of Corollary~\ref{cor:overlap}~\ref{it:commute}). Hence the
+$2^3=8$ states obtained from $L$ by applying each subset of
+$\{\tau^{xy},\tau^{yz},\tau^{xz}\}$ are reachable by BK-moves along each
+of the $12$ cube edges and form an embedded $2\times 2\times 2$ BK-cube.
+Order-convexity of each coordinate image
+(Theorem~\ref{thm:interface}~\ref{part:goodfiber}) places all $8$ vertices
+in $\Omega^{(3)}$.
+
+Iterating the three commuting unit-shift directions at each cube corner
+generates a local free $\Z^3$-action by BK-moves on the BK-connected
+component of $L$ in $\Omega^{(3)}$. The action is free (rather than an
+action of a $(\Z/2)^3$-quotient) because each shift direction advances the
+corresponding coordinate pair by a unit step, and injectivity of each
+coordinate map on its good fiber \ref{cond:G1} forbids any nontrivial
+word in the three directions from returning to $L$: the word's total shift
+in each of the three coordinate pairs is a non-negative linear combination
+of unit vectors, vanishing only if every generator count is zero.
+
+\ref{it:tri-consistency} Let $L\in\Omega^{\circ\circ\circ}$ and let $L'$
+arise from $L$ by a unit $(x,y)$-move $\tau=(a\,c_k)$ with $a\in\{x,y\}$
+and $c_k\in\Cxy$ satisfying~\eqref{eq:tri-chainelt}. Being an adjacent
+transposition, $\tau$ flips only the relative $L$-order of the pair
+$\{a,c_k\}$; the relative order of every other pair in $X$ is preserved.
+We check each coordinate pair:
+\begin{enumerate}[label=(\roman*),nosep,leftmargin=*]
+\item $\piXY(L')-\piXY(L)\in\{\pm e_1,\pm e_2\}$, by construction of $\tau$
+(one of $i,j$ shifts by $\pm1$ according as $a=x$ or $a=y$).
+\item $\pi_{y,z}(L')=\pi_{y,z}(L)$. The two components of $\pi_{y,z}$ count
+$\#\{c\in C(y,z):c<_L y\}$ and $\#\{c\in C(y,z):c<_L z\}$, and so depend
+only on the relative orders of pairs $\{\alpha,\beta\}$ with
+$\alpha\in\{y,z\}$, $\beta\in C(y,z)$. For the flipped pair $\{a,c_k\}$ to
+be of this form would require (i)~$\alpha=a\in\{y,z\}$ and
+$\beta=c_k\in C(y,z)$, or (ii)~$\alpha=c_k\in\{y,z\}$ and
+$\beta=a\in C(y,z)$. In case~(i), $a\in\{x,y\}\cap\{y,z\}=\{y\}$, forcing
+$c_k\in\Cxy\cap C(y,z)=\emptyset$ by~\eqref{eq:tri-disjoint}; in case~(ii),
+$c_k\in\{y,z\}$ contradicts~\eqref{eq:tri-chainelt}. Hence no relevant
+count is affected.
+\item $\pi_{x,z}(L')=\pi_{x,z}(L)$, by the symmetric argument: case~(i) now
+forces $a\in\{x,y\}\cap\{x,z\}=\{x\}$ and $c_k\in\Cxy\cap C(x,z)=\emptyset$;
+case~(ii) forces $c_k\in\{x,z\}$, excluded by~\eqref{eq:tri-chainelt}.
+\end{enumerate}
+Thus \emph{exactly one} of the three coordinate pairs shifts by a unit
+step under any unit-grid move at $L$. The same conclusion holds, by
+symmetric arguments, for unit $(y,z)$- and $(x,z)$-moves. Iterating, within
+each BK-connected component of $\Omega^{\circ\circ\circ}$ (and each fixed
+common external ordering) the joint map
+$L\mapsto\bigl(\piXY(L),\pi_{y,z}(L),\pi_{x,z}(L)\bigr)$ is a local
+$\Z^3$-equivariant chart modulo shared-chain indices, and any one of the
+three coordinate pairs determines the other two modulo those indices.
+
+Consequently, for any downset $S\subseteq\LP$, membership $L\in S$ at
+$L\in\Omega^{\circ\circ\circ}$ is a function of any single coordinate pair,
+so the three induced level sets $A_{x,y},A_{y,z},A_{x,z}$ refine to a
+common in-$S$/out-of-$S$ partition of $\Omega^{\circ\circ\circ}$. This is
+the claimed triple consistency.
+
+\ref{it:tri-bad} By Theorem~\ref{thm:interface}~\ref{part:bad}, each
+interface's bad set is covered by $O(1)$ strips of width $O(t_\bullet)$.
+By Corollary~\ref{cor:overlap}~\ref{it:density}, each pairwise irregular
+overlap has mass $O(t_\bullet+t_\bullet)\sqrt{|\Omega^{(3)}|}$. The set
+$\Omega^{(3)}\setminus\Omega^{\circ\circ\circ}$ is contained in the union
+of the three single-interface bad sets and the three pairwise irregular
+overlaps; a union bound gives the stated total.
+\end{proof}
+
+\section{Output interface for subsequent steps}
+
+Theorem~\ref{thm:interface} is the sole input Steps~2--4 use from Step~1.
+We record the deliverables explicitly so that the next steps may cite them
+by name:
+
+\begin{description}[style=nextline]
+\item[Fiber.] For each rich $(x,y)$, a set $\Fxy\subseteq\LP$, partitioned
+into good raw fibers $\Fxy(E)$.
+\item[Coordinates.] A map $\piXY:\Fxy\to\Dxy\subseteq[0,\txy]^2$, with
+$\Dxy=\bigsqcup_E\Dxy(E)$ a disjoint union of order-convex domains.
+\item[Grid structure.] BK edges inside each good raw fiber are exactly
+unit grid moves in $(i,j)$, plus at most one sign-flip edge at $i=j$.
+\item[Bad set bound.] $|\mathrm{Bad}_{x,y}|\ll |\Fxy|$, contained in
+$O(1)$ strips of width $O(\txy)$.
+\item[Overlap structure.] Corollary~\ref{cor:overlap}: on regular overlaps
+between two rich interfaces, $2\times 2$ commuting BK squares exist on a
+set of full overlap mass up to lower-order error.
+\item[Triple-overlap cube.] Corollary~\ref{cor:triple-overlap}: on any
+positive-density triple overlap of three rich interfaces, there is a
+subset $\Omega^{\circ\circ\circ}$ on which the three coordinate systems
+are simultaneously valid, the three BK-move families generate a local
+$\Z^3$ cube model, and the three projections of any downset $S$ agree on
+a common cut. This is the input Step~7 uses to discharge gap G4.
+\end{description}
+
+These deliverables feed directly into:
+\begin{itemize}[nosep]
+\item Step~2 (cut rigidity on a fiber): applies a weak grid isoperimetric
+lemma to $A_{x,y}:=\piXY(S\cap\Fxy)\subseteq\Dxy$, using order-convexity
+of $\Dxy$ and the unit-grid BK structure.
+\item Step~3 (coherence): assigns to each rich interface a $\pm1$
+orientation based on the monotone approximation of $A_{x,y}$ in its
+coordinate grid; order-convexity makes this well-defined.
+\item Step~4 (incompatibility lemma): uses Corollary~\ref{cor:overlap}
+to realize the $2\times 2$ conflict squares; the bad-set bound ensures
+lower-order loss when summing over overlap blocks.
+\item Step~7 (gap G4, cocycle integration on triple overlaps): uses
+Corollary~\ref{cor:triple-overlap} to realize the local $\Z^3$ cube
+model on triple overlaps; the cube commutation and triple consistency
+are what makes the cocycle equation pointwise well-defined.
+\end{itemize}
+
