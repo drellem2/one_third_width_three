@@ -82,41 +82,37 @@ by [`main.tex`](main.tex).
 A discussion of what the argument does and does not generalize to is
 at [`generalization.md`](generalization.md).
 
-### The Lean 4 formalization (partial)
+### The Lean 4 formalization
 
-A Lean 4 / mathlib formalization lives in [`lean/`](lean/). It is a
-**structural scaffold, not a complete formalization**. The audit at
-[`lean/README.md`](lean/README.md) is detailed and candid. Summary:
+A Lean 4 / mathlib formalization lives in [`lean/`](lean/). As of the
+round-9 audit (see [`lean/README.md`](lean/README.md)) the status is:
 
-- `lake build` succeeds.
-- **10 `sorry`s remain**, categorized there by file and kind.
-- Two of the ten are genuine external dependencies (Dilworth's
-  theorem for finite posets; Bubley–Karzanov connectivity) that are
-  classical, accepted, and not yet in mathlib.
-- Two are "base-case" prerequisites (Kahn–Linial 1991; a finite
-  enumeration of small-`n` width-3 posets).
-- The remaining **six are load-bearing gaps in the formalization
-  itself**: Theorem E, the G4 layered-balanced lemma, the final
-  assembly's `MainTheoremInputs` construction, the window-localization
-  bound, `bipartiteBalanced`, and the high-level G4 disjunction
-  (`lem_layered_balanced`).
+- `lake build` succeeds (1333 jobs, clean).
+- **Exactly 2 `sorry`s remain, both accepted external dependencies**:
+  1. **Dilworth's theorem (finite case)** at
+     `OneThird/Mathlib/Poset/Dilworth.lean:135`. Classical result,
+     not yet in mathlib; tracked as a separate mathlib-contribution
+     effort.
+  2. **FKG / Graham–Yao–Yao output for the bipartite case analysis**
+     at `OneThird/Step8/LayeredBalanced.lean:418`. The within-layer
+     FKG inequality for the linear-extension measure is classical
+     but not currently in mathlib.
+- **Every step-level internal content (Steps 1–7 and the Step 8
+  assembly spine) compiles sorry-free.** Every paper theorem
+  statement has a Lean counterpart; every remaining `sorry` is a
+  classical-result deferral explicitly tracked outside the scope of
+  this scaffold.
 
-Concretely: the Lean `OneThird.width3_one_third_two_thirds` has the
-correct statement matching the paper's `thm:main`, but the proof
-reduces via `sorry` to an abstract `MainTheoremInputs` bundle that
-is never constructed. Steps 1–7 have theorem statements that
-discharge their *abstract numeric* hypotheses sorry-free, but the
-bridge from those abstract hypotheses to statements about an actual
-finite poset `α` is not yet formalized.
+Informally: the formalization is **complete modulo the 2-item
+accepted external-dependency list above**. It is not yet a
+"sorry-free machine-verified proof" in the strictest sense (the two
+accepted sorries are still there in the source), but the remaining
+work is classical mathlib-contribution work, not project-specific
+gap-filling.
 
-**Please do not cite the Lean directory as a "machine-verified
-proof."** It is best described as a work-in-progress formalization
-whose *statements* are faithful to the paper but whose *proofs of
-the main results are not yet complete*.
-
-See [`lean/MATHLIB_GAPS.md`](lean/MATHLIB_GAPS.md) for a catalogue
-of the mathlib coverage gaps relevant to completing the
-formalization.
+See [`lean/README.md`](lean/README.md) for the per-file audit and
+[`lean/MATHLIB_GAPS.md`](lean/MATHLIB_GAPS.md) for a catalogue of
+the mathlib coverage gaps relevant to completing the formalization.
 
 ## Building
 
@@ -157,8 +153,9 @@ lake build
 it, the first build compiles mathlib from source, which takes hours
 instead of a few minutes.
 
-Expected output: `lake build` succeeds with 10 `sorry` warnings and
-several hundred benign linter warnings (`unusedDecidableInType`,
+Expected output: `lake build` succeeds with 2 `sorry` warnings
+(the two accepted external dependencies) and several hundred
+benign linter warnings (`unusedDecidableInType`,
 `unusedSectionVars`). There should be no errors. See
 [`lean/README.md`](lean/README.md) for per-file details.
 
