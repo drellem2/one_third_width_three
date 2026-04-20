@@ -1,19 +1,65 @@
 # The 1/3–2/3 conjecture for width-3 posets
 
-This repository contains a proof of the **1/3–2/3 conjecture** of
-Kislitsyn (1968), Fredman (1976), and Linial (1984) in the special
-case of posets of **width at most 3**.
-
 > **Theorem.** Let `P` be a finite poset of width `≤ 3` that is not
 > a chain. Then `P` admits a pair of incomparable elements `x, y`
 > with `1/3 ≤ Pr[x <_L y] ≤ 2/3`, where `L` is a uniformly random
 > linear extension of `P`.
 
-For the full statement and surrounding context, see
-[`main.tex`](main.tex) (Theorem 1.1 / `thm:main`). The built PDF is
-[`main.pdf`](main.pdf).
+**📄 Paper (PDF):** **[`main.pdf`](main.pdf)** &nbsp;·&nbsp;
+**LaTeX source:** [`main.tex`](main.tex) (Theorem 1.1 / `thm:main`) &nbsp;·&nbsp;
+**Lean 4 formalization:** [`lean/`](lean/) &nbsp;·&nbsp;
+**Contact:** [gate46dmiller@gmail.com](mailto:gate46dmiller@gmail.com)
 
-## Please read this first
+[![Lean build](https://github.com/drellem2/one_third_width_three/actions/workflows/lean.yml/badge.svg)](https://github.com/drellem2/one_third_width_three/actions/workflows/lean.yml)
+![Release](https://img.shields.io/badge/release-v0.1--candidate-yellow)
+![License](https://img.shields.io/badge/paper-CC%20BY%204.0-blue)
+![License](https://img.shields.io/badge/code-MIT-blue)
+
+## Summary
+
+The **1/3–2/3 conjecture** of Kislitsyn (1968), Fredman (1976), and
+Linial (1984) asks whether every finite non-chain poset contains an
+incomparable pair `(x, y)` whose linear-extension probability
+`Pr[x <_L y]` is bounded strictly between 1/3 and 2/3. The best
+unconditional constant in place of 1/3 is currently
+`δ* ≥ 0.2764…` (Kahn–Linial), and the sharp 1/3 bound is known for
+width 2, semiorders, and 2-dimensional posets. This repository
+contains a proof of the **full width-3 case**. The argument departs
+from the correlation-inequality tradition: it operates on the
+**Bubley–Karzanov (BK) random walk** on linear extensions and shows,
+via a Cheeger-type dichotomy, that a width-3 counterexample would
+force a low-conductance cut that a **2-dimensional interface
+geometry** forbids. The width-3 hypothesis enters through that
+2D fiber picture and a three-chain Dilworth dichotomy; extending
+beyond width 3 requires genuinely new ingredients. This is a
+**proof candidate**: it has not yet been refereed or read end-to-end
+by an external expert — see the "Please read this before citing"
+section below.
+
+## What to read first
+
+Different readers want different entry points.
+
+- **Skeptical mathematician** — open [`main.pdf`](main.pdf), read §1
+  for the overview and statement, then go directly to
+  [`step7.tex`](step7.tex) (coherence ⇒ collapse), the single most
+  load-bearing step. Step 4 and Step 5 are the other two places the
+  argument could plausibly break.
+- **Curious non-specialist** — read the Summary above, skim the
+  one-line step summaries under "The mathematical proof" below, and
+  then read [`generalization.md`](generalization.md) for an honest
+  account of where the argument is specifically width-3 and what
+  would (and would not) carry over.
+- **Lean / formal-methods reader** — go straight to
+  [`lean/README.md`](lean/README.md). Build status, exact `sorry`
+  inventory, and per-file audit live there.
+- **"Is this for real?" reader** — read the disclosures in
+  "Please read this before citing" immediately below. The short
+  version: the author is unaffiliated, the work was written with
+  substantial AI assistance, and no external referee has signed
+  off yet.
+
+## Please read this before citing
 
 This README is deliberately candid about what this repository is and
 is not. Before citing, extending, or formalizing anything here, you
@@ -41,23 +87,18 @@ should know:
   submitted to a journal. External review is the next step, not a
   finished gate.
 
-With those caveats stated, the rest of this README describes what is
-in the repository.
-
-## What is actually here
-
-### The mathematical proof (LaTeX / PDF)
+## The mathematical proof (LaTeX / PDF)
 
 The built paper is [`main.pdf`](main.pdf). The LaTeX source is
-organized in eight steps, distributed across the files
-[`step1.tex`](step1.tex) through [`step8.tex`](step8.tex), assembled
-by [`main.tex`](main.tex).
+organized in eight steps across
+[`step1.tex`](step1.tex)–[`step8.tex`](step8.tex), assembled by
+[`main.tex`](main.tex).
 
 1. **Step 1 — Local interface theorem** ([`step1.tex`](step1.tex)):
    for each incomparable *rich* pair `(x, y)` (sharing many common
    neighbors), linear extensions fiber over a 2-dimensional grid
-   region, and Bubley–Karzanov (BK) moves within a fiber are unit
-   grid moves.
+   region, and Bubley–Karzanov moves within a fiber are unit grid
+   moves.
 2. **Step 2 — Weak grid stability** ([`step2.tex`](step2.tex)):
    a subset of a grid with small edge boundary is close to a
    monotone staircase; applied fiberwise.
@@ -82,13 +123,13 @@ by [`main.tex`](main.tex).
 A discussion of what the argument does and does not generalize to is
 at [`generalization.md`](generalization.md).
 
-### The Lean 4 formalization
+## The Lean 4 formalization
 
 A Lean 4 / mathlib formalization lives in [`lean/`](lean/). As of the
 round-9 audit (see [`lean/README.md`](lean/README.md)) the status is:
 
 - `lake build` succeeds (1333 jobs, clean).
-- **Exactly 2 `sorry`s remain, both accepted external dependencies**:
+- **Exactly 2 `sorry`s remain, both accepted external dependencies:**
   1. **Dilworth's theorem (finite case)** at
      `OneThird/Mathlib/Poset/Dilworth.lean:135`. Classical result,
      not yet in mathlib; tracked as a separate mathlib-contribution
@@ -98,21 +139,21 @@ round-9 audit (see [`lean/README.md`](lean/README.md)) the status is:
      FKG inequality for the linear-extension measure is classical
      but not currently in mathlib.
 - **Every step-level internal content (Steps 1–7 and the Step 8
-  assembly spine) compiles sorry-free.** Every paper theorem
+  assembly spine) compiles `sorry`-free.** Every paper theorem
   statement has a Lean counterpart; every remaining `sorry` is a
   classical-result deferral explicitly tracked outside the scope of
   this scaffold.
 
 Informally: the formalization is **complete modulo the 2-item
 accepted external-dependency list above**. It is not yet a
-"sorry-free machine-verified proof" in the strictest sense (the two
-accepted sorries are still there in the source), but the remaining
-work is classical mathlib-contribution work, not project-specific
-gap-filling.
+"`sorry`-free machine-verified proof" in the strictest sense (the
+two accepted sorries are still there in the source), but the
+remaining work is classical mathlib-contribution work, not
+project-specific gap-filling.
 
 See [`lean/README.md`](lean/README.md) for the per-file audit and
-[`lean/MATHLIB_GAPS.md`](lean/MATHLIB_GAPS.md) for a catalogue of
-the mathlib coverage gaps relevant to completing the formalization.
+[`lean/MATHLIB_GAPS.md`](lean/MATHLIB_GAPS.md) for a catalogue of the
+mathlib coverage gaps relevant to completing the formalization.
 
 ## Building
 
@@ -129,11 +170,10 @@ pdflatex main.tex   # run twice so the TOC and \ref cross-references resolve
 ```
 
 There is no bibliography processing step: `main.tex` uses an inline
-`thebibliography` environment, not BibTeX.
-
-No `latexmk` configuration or Makefile is provided; `pdflatex`
-directly on `main.tex` is the only supported workflow. A pre-built
-[`main.pdf`](main.pdf) is checked in for convenience.
+`thebibliography` environment, not BibTeX. No `latexmk` configuration
+or Makefile is provided; `pdflatex` directly on `main.tex` is the
+only supported workflow. A pre-built [`main.pdf`](main.pdf) is
+checked in for convenience.
 
 ### Lean 4
 
@@ -149,15 +189,14 @@ lake exe cache get   # fetch prebuilt mathlib .olean cache (strongly recommended
 lake build
 ```
 
-`lake exe cache get` is optional but strongly recommended — without
-it, the first build compiles mathlib from source, which takes hours
-instead of a few minutes.
+`lake exe cache get` is strongly recommended — without it, the first
+build compiles mathlib from source, which takes hours instead of a
+few minutes.
 
-Expected output: `lake build` succeeds with 2 `sorry` warnings
-(the two accepted external dependencies) and several hundred
-benign linter warnings (`unusedDecidableInType`,
-`unusedSectionVars`). There should be no errors. See
-[`lean/README.md`](lean/README.md) for per-file details.
+Expected output: `lake build` succeeds with 2 `sorry` warnings (the
+two accepted external dependencies) and several hundred benign
+linter warnings (`unusedDecidableInType`, `unusedSectionVars`).
+There should be no errors.
 
 ## Repository layout
 
@@ -166,8 +205,9 @@ main.tex                 top-level LaTeX document
 main.pdf                 pre-built PDF of the paper
 step1.tex … step8.tex    per-step proof files
 generalization.md        where width-3 is essential, and what generalizes
-lean/                    Lean 4 / mathlib formalization (partial)
+lean/                    Lean 4 / mathlib formalization
 .github/workflows/       CI (Lean build)
+LICENSE                  dual license: CC BY 4.0 (writing) + MIT (code)
 ```
 
 ## How to engage with this
@@ -177,21 +217,27 @@ skepticism, the most useful things you can do are:
 
 1. Read [`main.pdf`](main.pdf) (or [`main.tex`](main.tex)) for the
    full argument.
-2. Pick a step (Step 4, Step 5, or Step 7 are the load-bearing
-   ones) and try to break it.
-3. File issues against specific line numbers in the step files.
+2. Pick a step — **Step 4, Step 5, or Step 7** are the load-bearing
+   ones — and try to break it.
+3. File an issue against specific line numbers in the step files, or
+   open a pull request if you have a fix or reformulation.
 
 I am genuinely interested in being corrected. If the argument has a
-hole, the goal of making this public is to find out.
+hole, the point of making this public is to find out.
 
 ## License
 
-The mathematical writing (`*.tex`, `*.md`, `main.pdf`) is released
-under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The
-code (everything under `lean/` and the CI workflows) is released
-under the MIT license. See [`LICENSE`](LICENSE).
+Dual-licensed:
+
+- **Mathematical writing** (`*.tex`, `*.md`, `main.pdf`) —
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- **Code** (everything under `lean/` and the CI workflows) — MIT.
+
+See [`LICENSE`](LICENSE) for the full text.
 
 ## Contact
 
-Issues and pull requests against this repository are the preferred
-channel. Email is on my GitHub profile.
+- **Email:** [gate46dmiller@gmail.com](mailto:gate46dmiller@gmail.com)
+- **Issues and pull requests** on this repository are also welcome
+  and are the preferred channel for anything proof-specific (so the
+  discussion is public and line-number-anchored).
