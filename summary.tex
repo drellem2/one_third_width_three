@@ -1,0 +1,136 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsthm,amssymb,amsfonts}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{margin=0.9in}
+\setlength{\parskip}{2pt}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem*{conjecture*}{Conjecture (Kislitsyn--Fredman--Linial)}
+
+\newcommand{\BK}{\mathrm{BK}}
+\newcommand{\LP}{\mathcal{L}(P)}
+\newcommand{\Pp}{\mathbb{P}}
+
+\title{\vspace{-2em}The $1/3$--$2/3$ Conjecture for Width-3 Posets:\\
+       A Two-Page Summary}
+\author{D.~Miller}
+\date{\today}
+
+\begin{document}
+\maketitle
+\vspace{-2em}
+
+\paragraph{Statement.}
+Let $P$ be a finite poset (not a chain) and let $\LP$ be the set of its
+linear extensions under the uniform measure. A pair $(x,y)$ of
+incomparable elements is \emph{balanced} if
+$\Pp[x<_L y]\in[1/3,2/3]$ for $L\sim\mathrm{Unif}(\LP)$.
+
+\begin{conjecture*}
+Every non-chain finite poset has a balanced pair.
+\end{conjecture*}
+
+\noindent
+Open since 1968. The current best unconditional constant is
+$0.2764\ldots$ (Kahn--Linial 1991, refining Brightwell). It is known
+for width-2 posets (Linial 1984), $2$-dimensional posets (Kahn--Saks
+1984), semiorders (Brightwell), and symmetric posets, but
+\emph{not} previously known at width~$3$.
+
+\begin{theorem}[Main result]
+Let $P$ be a finite poset of width at most~$3$ that is not a chain.
+Then $P$ admits a pair $(x,y)$ of incomparable elements with
+$1/3\le\Pp[x<_L y]\le 2/3$.
+\end{theorem}
+
+\section*{The two ideas}
+
+The proof rests on two complementary observations. The first is a
+\emph{global} tool that turns a question about one number (the
+balance constant) into a question about the geometry of an
+exponentially large graph. The second is a \emph{local} constraint
+--- specific to width~$3$ --- that prevents that geometry from
+accommodating an imbalanced poset.
+
+\paragraph{Idea 1 — The balance constant is BK conductance.}
+The Bubley--Karzanov graph $\BK(P)$ has vertex set $\LP$, with edges
+joining extensions that differ by a single $P$-compatible adjacent
+transposition. This is the natural local move on linear extensions;
+Bubley--Karzanov (1998) showed the corresponding random walk mixes in
+polynomial time.
+
+The key reframing: suppose $(x,y)$ is the most-balanced incomparable
+pair of an unbalanced $P$, with $\Pp[x<y]<1/3$. Consider the cut
+$ S_{xy} = \{L\in\LP : x<_L y\}\subseteq\BK(P).$
+Then (i) $S_{xy}$ has volume fraction $<1/3$, and (ii) every boundary
+edge of $S_{xy}$ swaps $x$ and $y$ specifically, which is rare since
+most extensions do not place $x,y$ adjacent. So a counterexample
+produces a \emph{low-conductance cut} in $\BK(P)$. A Cheeger-type
+inequality translates the original numerical statement
+(``$\delta(P)<1/3$'') into a geometric one. Instead of arguing
+about probabilities via correlation inequalities (Kahn--Saks,
+Brightwell, Kahn--Linial), we now have an entire graph and an entire
+cut to analyse, and the full strength of expansion methods becomes
+available.
+
+\paragraph{Idea 2 — Width 3 makes the obstructions essentially 2D.}
+What could prevent a low-conductance cut from existing? The local
+geometry of $\BK(P)$ near a generic ``rich'' incomparable pair
+$(x,y)$ --- one sharing many common neighbors --- is a 2D grid:
+fixing the relative order of all elements outside $\{x,y\}$ and their
+joint neighborhood, the remaining freedom in $L$ is recorded by two
+integer coordinates (``how far has $x$ advanced?'' / ``how far has
+$y$ advanced?'') ranging over a region $D_{xy}\subseteq[0,t]^2$, and
+BK moves within this fiber are unit grid moves.
+
+This 2D coordinate system exists \emph{because} width~$\le 3$. A
+fourth uninvolved element would push the local geometry to 3D, where
+many more boundary configurations become possible; at width~$3$ the
+only ``other'' element is one of the common neighbors, whose position
+is recorded inside the grid.
+
+The 2D picture has two consequences. \emph{(a) Local cuts are nearly
+monotone.} A standard edge-isoperimetric stability theorem says: a
+subset of a 2D grid region with small edge boundary is close to a
+monotone staircase. The restriction of any low-conductance cut to a
+rich fiber thus points in a definite direction --- assigning each
+rich pair a canonical sign $\eta_{xy}\in\{+,-\}$ and axis. \emph{(b)
+Two incoherent interfaces are incompatible.} If two rich pairs have
+monotone interfaces pointing in incompatible directions, their joint
+constraint on a shared fiber is over-determined: many BK boundary
+edges are forced. This converts ``many rich pairs'' into a violation
+of the conductance lower bound.
+
+\paragraph{Putting it together.}
+A width-$3$ counterexample $P$ would force --- by Idea~1 --- a
+low-conductance cut $S$. By Idea~2(a), $S$ is locally monotone on
+each rich fiber, giving each rich pair a canonical sign. By
+Idea~2(b), if the signs are \emph{not} globally consistent, two
+incoherent rich pairs alone exceed the boundary budget. So the signs
+must be globally consistent --- which forces $P$ to admit a single
+linear potential function aligned with $S$, collapsing $P$ to a
+layered, essentially $1$-dimensional structure. But such posets are
+already balanced (Linial's width-2 result and a small-$n$ enumeration
+cover the residual cases). Contradiction.
+
+\paragraph{Why width 3 is essential.}
+Both ingredients use width~$3$. The 2D grid coordinatisation requires
+that fixing two elements leaves no further incomparable third axis;
+at width~$\ge 4$ the local geometry is at least 3D and grid
+edge-isoperimetric stability is much weaker. The Dilworth dichotomy
+producing ``enough rich interfaces'' also relies on a decomposition
+into at most $3$ chains. Beyond width~$3$, both fronts need
+genuinely new ingredients.
+
+\paragraph{Repository.}
+The full proof is in \texttt{main.tex} (assembling
+\texttt{step1.tex}--\texttt{step8.tex}); a partial Lean~4
+formalisation is in \texttt{lean/}; a self-audit and reviewer
+pointers are in \texttt{summary.md} and \texttt{reviewers.md}. The
+README is candid about authorship, AI assistance, and the absence of
+external review --- please read it before citing.
+
+\end{document}

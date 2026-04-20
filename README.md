@@ -6,6 +6,7 @@
 > linear extension of `P`.
 
 **📄 Paper (PDF):** **[`main.pdf`](main.pdf)** &nbsp;·&nbsp;
+**2-page summary:** [`summary.pdf`](summary.pdf) &nbsp;·&nbsp;
 **LaTeX source:** [`main.tex`](main.tex) (Theorem 1.1 / `thm:main`) &nbsp;·&nbsp;
 **Lean 4 formalization:** [`lean/`](lean/) &nbsp;·&nbsp;
 **Contact:** [d.miller@hey.com](mailto:d.miller@hey.com)
@@ -45,11 +46,13 @@ Different readers want different entry points.
   [`step7.tex`](step7.tex) (coherence ⇒ collapse), the single most
   load-bearing step. Step 4 and Step 5 are the other two places the
   argument could plausibly break.
-- **Curious non-specialist** — read the Summary above, skim the
-  one-line step summaries under "The mathematical proof" below, and
-  then read [`generalization.md`](generalization.md) for an honest
-  account of where the argument is specifically width-3 and what
-  would (and would not) carry over.
+- **Curious non-specialist** — read the Summary above, then the
+  [`summary.pdf`](summary.pdf) 2-page overview for the two key proof
+  ideas (BK conductance + 2D local geometry), skim the one-line step
+  summaries under "The mathematical proof" below, and then read
+  [`generalization.md`](generalization.md) for an honest account of
+  where the argument is specifically width-3 and what would (and
+  would not) carry over.
 - **Lean / formal-methods reader** — go straight to
   [`lean/README.md`](lean/README.md). Build status, exact `sorry`
   inventory, and per-file audit live there.
@@ -204,6 +207,8 @@ There should be no errors.
 main.tex                 top-level LaTeX document
 main.pdf                 pre-built PDF of the paper
 step1.tex … step8.tex    per-step proof files
+summary.tex              2-page intuitive summary (source)
+summary.pdf              2-page intuitive summary (pre-built PDF)
 generalization.md        where width-3 is essential, and what generalizes
 lean/                    Lean 4 / mathlib formalization
 .github/workflows/       CI (Lean build)
