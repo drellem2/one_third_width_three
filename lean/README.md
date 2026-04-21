@@ -153,6 +153,18 @@ Phase 3 (Lean formalisation):
 * **mg-F5** — close the sorry at `LayeredBalanced.lean:728` using
   F1..F4.
 * **mg-F6** — formalise `eq:exc-perturb` in Lean (consumes A6).
+  Split by `pc-8148` into two sub-items after paper-side scope
+  assessment (paper proof = two lemmas, Lean LoC estimate > 300):
+  * **mg-F6a** (mg-1f5e) — port `lem:one-elem-perturb`
+    (`step8.tex:911-1023`), the single-element deletion coupling
+    bound `|pxy(Q) - pxy(Q-z)| ≤ 2/m`. The fibration machinery
+    (`π : LinearExt α → LinearExt {a // a ≠ z}`) is the bulk of the
+    work. Depends on A9 (mg-17ef) landing to clean up the paper's
+    'second factor ≤ 2/(m-1)' derivation before Lean formalisation.
+  * **mg-F6b** (mg-7496) — port `lem:exc-perturb`
+    (`step8.tex:1025-1062`) as an iterated telescoping of F6a over
+    an enumeration of `X^exc`, plus the harmonic bound
+    `Σ_{i=0}^{k-1} 1/(n-i) ≤ k/(n-k+1)`. Depends on F6a.
 * **mg-F7** — replace `layeredFromBridges` with the tight bounded-`w`
   witness (consumes F6, A5).
 * **mg-F8** — final verification: sorry count = 0,
