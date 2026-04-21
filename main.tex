@@ -33,6 +33,7 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{example}[theorem]{Example}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
 
 \theoremstyle{remark}
 \newtheorem*{gap}{\textbf{Gap}}
@@ -220,22 +221,35 @@ without additional structural hypotheses.
 
 \subsection{Main result}
 
-This paper proves the $1/3$--$2/3$ conjecture at width~$3$.
+This paper establishes the $1/3$--$2/3$ conjecture at width~$3$,
+conditional on an arithmetic richness hypothesis (Hypothesis~A
+below; see Hypothesis~\ref{hyp:arith} in Step~8 for the precise
+form) that pins the intermediate regime $\gamma < 1/3 -
+\delta_{\mathrm{KL}} \approx 0.057$, $n > n_0(\gamma, T)$.
 
-\begin{theorem}[Main theorem]
+\begin{theorem}[Main theorem, conditional on Hypothesis~A]
 \label{thm:main}
-Let $P$ be a finite poset of width at most~$3$ that is not a chain.
-Then $P$ admits a pair $(x,y)$ of incomparable elements with
+Assume the arithmetic richness Hypothesis~A of Step~8
+(Hypothesis~\ref{hyp:arith}). Let $P$ be a finite poset of width at
+most~$3$ that is not a chain. Then $P$ admits a pair $(x,y)$ of
+incomparable elements with
 \[
   \tfrac{1}{3} \;\le\; \Pr[x<y] \;\le\; \tfrac{2}{3}.
 \]
 Equivalently, $\delta(P)\ge 1/3$ for every non-chain poset $P$ of
-width~$\le 3$.
+width~$\le 3$, under Hypothesis~A.
 \end{theorem}
 
 Theorem~\ref{thm:main} is established in Step~8 (Part~III below) as
 the contrapositive of a structural impossibility result, via a
-quantitative chain of constants developed across Steps~1--7.
+quantitative chain of constants developed across Steps~1--7. The
+Step~8 assembly is unconditional on $\gamma \ge 1/3 -
+\delta_{\mathrm{KL}}$ (by the Kahn--Linial
+bound~\cite{KahnLinial1991}) and on $n \le n_0(\gamma, T)$ in the
+small-$\gamma$ residual regime (by the finite-enumeration base
+case, Remark~\ref{rem:small-n}); Hypothesis~A is the additional
+input needed to close the large-$n$ tail of the small-$\gamma$
+regime via the BK-expansion cascade.
 
 \subsection{Approach: Cheeger-type expansion on the BK graph}
 
@@ -388,11 +402,11 @@ $0.276\ldots$ record is claimed beyond the width-$3$ restriction.
 Combining Steps~1--7 with the Step~8 assembly
 (Theorem~\ref{thm:main}) yields:
 
-\begin{theorem}[Width-$3$ $1/3$--$2/3$]
+\begin{theorem}[Width-$3$ $1/3$--$2/3$, conditional on Hypothesis~A]
 \label{thm:conclusion-main}
-Let $P$ be a finite poset with $w(P)\le 3$ that is not a total order.
-Then $P$ has a \emph{balanced pair}: two incomparable elements
-$x,y\in P$ with
+Assume Hypothesis~\ref{hyp:arith}. Let $P$ be a finite poset with
+$w(P)\le 3$ that is not a total order. Then $P$ has a \emph{balanced
+pair}: two incomparable elements $x,y\in P$ with
 \[
    \frac{1}{3} \;\le\; \Pr_{L\sim\mathcal{L}(P)}[x <_L y] \;\le\; \frac{2}{3}.
 \]
@@ -406,14 +420,22 @@ fixes
 $T=T(\gamma)$,
 $\delta_0=\min\!\big(\tfrac{1}{4C_7},\tfrac{1}{2wK_0}\big)$,
 $\varepsilon=\delta_0/(2K(T))$, and a finite size threshold
-$n_0(\gamma,T)$ polynomial in $1/\gamma$ and $T$. Below $n_0$ a
-direct finite-enumeration argument (Remark~\ref{rem:small-n})
-supplies the base case; above it the BK-expansion contradiction
+$n_0(\gamma,T)$ polynomial in $1/\gamma$ and $T$. For $\gamma \ge
+1/3 - \delta_{\mathrm{KL}}$, the Kahn--Linial
+bound~\cite{KahnLinial1991} excludes counter\-examples at any $n$.
+For $\gamma < 1/3 - \delta_{\mathrm{KL}}$ and $n \le n_0$, a direct
+finite-enumeration argument (Remark~\ref{rem:small-n})
+supplies the base case; for $\gamma < 1/3 - \delta_{\mathrm{KL}}$
+and $n > n_0$, the BK-expansion contradiction
 (Theorem~\ref{thm:cex-implies-low-expansion}) combined with the
 Step~5 dichotomy, Step~6 coherence, Step~7 globalization, and the
 Step~8 layered reduction (G3) and layered balanced-pair lemma (G4)
-closes both branches. The argument drives the excess $\gamma$
-across the cascade down to $0$, so the bound of
+closes both branches \emph{under Hypothesis~\ref{hyp:arith}}.
+Without Hypothesis~\ref{hyp:arith}, the argument as written leaves
+the large-$n$ tail of the small-$\gamma$ regime open (see
+Section~\ref{sec:main-thm} scope note and
+Remark~\ref{rem:final-constants-audit}). The argument drives the
+excess $\gamma$ across the cascade down to $0$, so the bound of
 Theorem~\ref{thm:conclusion-main} holds with the sharp constant
 $1/3$ in the $n\to\infty$ limit; no explicit rate is claimed.
 
