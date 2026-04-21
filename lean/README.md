@@ -138,11 +138,18 @@ surfaced:
   the paper nor linked to an external artefact. The w = 0 fragment is
   covered by the existing Lean helper `lem_layered_balanced_subtype`,
   so F5 still needs A8's output to discharge `hw_zero`.
-* **mg-A9** (low) — exposition of `lem:one-elem-perturb`'s "second
-  factor" bound `|p_{xy}(Q) - Pr(A | \bar B)| ≤ 2/(m-1)`
-  (`step8.tex:997-1013`) conflates the joint `(L', J)` sample space
-  with event-level reweighting; conclusion is correct (standard
-  deletion-coupling bound), but the derivation needs tightening.
+* **mg-A9** (discharged, 2026-04-21) — exposition of
+  `lem:one-elem-perturb`'s "second factor" bound
+  `|p_{xy}(Q) - Pr(A | \bar B)| ≤ 2/(m-1)` (`step8.tex:997-1013`)
+  rewritten with a direct computation on the weighted means
+  `F_A, |A|, \bar f`: closed form
+  `p_{xy}(Q) - Pr(A|\bar B) = (m/(m-\bar f))(p_{xy}(Q) - p_{xy}(Q-z))`
+  makes `eq:second-factor` a corollary of the main bound
+  `eq:one-elem-perturb`, and the main bound is established via the
+  $1$-Lipschitz property of $f$ on the adjacent-transposition Cayley
+  graph combined with a Brightwell-style single-element perturbation
+  argument (cited to `Brightwell1999`, `KahnSaks1984`,
+  `AhlswedeDaykin1978`/`FKG1971`).
 
 F1–F6 Lean items blocked on Q1 stay blocked on A8 (F3/F5 in
 particular); A9 is decoupled from the Lean closure.
