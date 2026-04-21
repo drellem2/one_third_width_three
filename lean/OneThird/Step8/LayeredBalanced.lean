@@ -395,22 +395,87 @@ theorem lem_layered_balanced
     (h2 : 2 ≤ Fintype.card α)
     (hNotChain : ¬ OneThird.IsChainPoset α) :
     OneThird.HasBalancedPair α := by
-  -- The paper proof (`step8.tex:1760-1796`):
-  -- 1. **`K = 1` case**: `P = L_1` is a single antichain with
-  --    `|L_1| ∈ {2, 3}`; every pair is incomparable with
-  --    `Pr = 1/2 ∈ [1/3, 2/3]`.
-  -- 2. **`K ≥ 2` case**: apply `windowLocalization` to restrict to a
-  --    bounded sub-poset `Q`; iterate ordinal-sum decomposition to
-  --    reach an irreducible piece `Q⋆`; if `depth Q⋆ = 1` use case (1),
-  --    else invoke `bipartiteBalanced` on the witnessing adjacent
-  --    band-pair.
-  -- Neither the `K = 1` involution nor the window + ordinal-sum
-  -- reduction to a bipartite sub-poset is formalised: when the
-  -- `fkg_case_output` axiom was rescoped to match
-  -- `prop:bipartite-balanced` (`step8.tex:1627`), the glue step that
-  -- produces a bipartite sub-poset became an independent gap. Left
-  -- as `sorry`.
-  sorry
+  classical
+  -- Extract an incomparable pair `(x, y)` from the non-chain
+  -- hypothesis (`step8.tex:1768-1769`).
+  unfold OneThird.IsChainPoset at hNotChain
+  push_neg at hNotChain
+  obtain ⟨x, y, hxy, hyx⟩ := hNotChain
+  have hxy_inc : x ∥ y := ⟨hxy, hyx⟩
+  have _hxne : x ≠ y := fun h => hxy (h ▸ le_refl x)
+  -- **Case split on depth** `K = 1` vs `K ≥ 2` (`step8.tex:1763`).
+  rcases Nat.lt_or_ge L.K 2 with _hK1 | _hK2
+  · -- **Case `K = 1`** (`step8.tex:1763-1766`). Since
+    -- `1 ≤ band z ≤ K ≤ 1` for every `z ∈ α`, the whole ground set
+    -- collapses to the single band `L_1`. `P = L_1` is then a pure
+    -- antichain on `≥ 2` elements, and by uniform symmetry of
+    -- linear orderings of an antichain (the involution swapping `x`
+    -- and `y` is a measure-preserving bijection on `L(P)`),
+    -- `Pr[x <_L y] = 1/2 ∈ [1/3, 2/3]`.
+    --
+    -- The `bipartiteBalanced` axiom would apply with `A := univ`,
+    -- `B := ∅` (covering `univ = univ`), but its antichain
+    -- hypothesis requires `univ` to be an antichain — a
+    -- consequence of (L1) being strengthened to "each band is an
+    -- antichain" that the current `LayeredDecomposition`
+    -- structure does not carry. The antichain-symmetry involution
+    -- of `L(P)` (F4 foundation item) is not formalised; left as
+    -- `sorry`.
+    sorry
+  · -- **Case `K ≥ 2`** (`step8.tex:1768-1795`). Paper proof:
+    --   (a) From (L2) and `x ∥ y`: `|band x − band y| ≤ w`.
+    --   (b) Let `Q := P|_{W(band x, band y)}`; `windowLocalization`
+    --       preserves the marginal of `(x, y)`.
+    --   (c) Iterate ordinal-sum decomposition of `Q` to reach an
+    --       irreducible layered sub-poset `Q^⋆`. If `K^⋆ = 1`,
+    --       reduce to Case `K = 1` inside `Q^⋆`. Otherwise
+    --       `K^⋆ ≥ 2`, and irreducibility gives adjacent bands
+    --       `(M_i, M_{i+1}) ⊆ Q^⋆` with an incomparable cross-pair.
+    --   (d) Apply `bipartiteBalanced` on `M_i ∪ M_{i+1}` to extract
+    --       the balanced pair (now requires the covering hypothesis
+    --       `A ∪ B = Finset.univ`, so the bipartite reduct must be
+    --       realised as its own Lean type — a sub-poset restriction
+    --       step not yet formalised).
+    --
+    -- (a): band-distance bound `|band x − band y| ≤ w` from (L2).
+    have h_by_bx : L.band y ≤ L.band x + L.w := by
+      by_contra h
+      exact hxy_inc.1 (L.forced_lt x y (Nat.lt_of_not_le h)).le
+    have h_bx_by : L.band x ≤ L.band y + L.w := by
+      by_contra h
+      exact hxy_inc.2 (L.forced_lt y x (Nat.lt_of_not_le h)).le
+    -- (b): `windowLocalization` on `(x, y)` at the canonical window
+    -- finset `W(band x, band y)`. The cleared-denominator identity
+    -- is existential (trivially `q := probLT x y`); the size bound
+    -- `|W| ≤ 3(3w + 1)` is delivered by `Window.card_le`.
+    let W : Finset α :=
+      (Finset.univ : Finset α).filter
+        (fun z =>
+          min (L.band x) (L.band y) ≤ L.band z + L.w ∧
+          L.band z ≤ max (L.band x) (L.band y) + L.w)
+    have hxW : x ∈ W := by
+      simp only [W, Finset.mem_filter, Finset.mem_univ, true_and]
+      exact ⟨le_trans (min_le_left _ _) (Nat.le_add_right _ _),
+             le_trans (le_max_left _ _) (Nat.le_add_right _ _)⟩
+    have hyW : y ∈ W := by
+      simp only [W, Finset.mem_filter, Finset.mem_univ, true_and]
+      exact ⟨le_trans (min_le_right _ _) (Nat.le_add_right _ _),
+             le_trans (le_max_right _ _) (Nat.le_add_right _ _)⟩
+    have hWdef : ∀ z, z ∈ W ↔
+        (min (L.band x) (L.band y)) ≤ L.band z + L.w ∧
+          L.band z ≤ (max (L.band x) (L.band y)) + L.w := by
+      intro z
+      simp only [W, Finset.mem_filter, Finset.mem_univ, true_and]
+    have hWLoc := windowLocalization L x y hxy_inc W hxW hyW hWdef
+    obtain ⟨_q, _hq, _hWcard⟩ := hWLoc
+    -- (c)–(d): apply `bipartiteBalanced` on the adjacent band-pair
+    -- of the irreducible reduct. With the rescoped (covering) form
+    -- of `bipartiteBalanced` (`mg-68af`), this requires first
+    -- realising the bipartite reduct as its own Lean type (a
+    -- sub-poset restriction step). Left as `sorry` — this is the
+    -- same external gap acknowledged in the paper-proof outline
+    -- above.
+    sorry
 
 /-! ### §5 — Combined G3+G4 conclusion (`prop:step7(iii)`) -/
 
