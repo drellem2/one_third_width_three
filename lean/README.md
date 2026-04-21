@@ -13,35 +13,69 @@ including the previously-accepted Dilworth's theorem and the
 `fkg_case_output` axiom (now `bipartite_balanced_enum`) — compile
 `sorry`- and axiom-free.
 
-**Two declarations in the project still carry `sorry`**: the G4
-reduction glue `lem_layered_balanced_subtype` (the subtype-level
-balanced-pair helper that `lem_layered_balanced` Case `K ≥ 2` routes
-through; `step8.tex:1608-1625`), and the F4-foundation marginal-invariance
-identity `OrdinalDecomp.probLT_restrict_eq` for ordinal-sum sub-poset
-restriction. `lem_layered_balanced` itself is now sorry-free in its
-body: Case `K = 1` (`step8.tex:1763-1766`) dispatches directly via
-`bipartite_balanced_enum`, and Case `K ≥ 2` (`step8.tex:1768-1795`)
-builds a trivial `OrdinalDecomp` (`Mid = Finset.univ`) and lifts via
-`hasBalancedPair_lift`, delegating the residual combinatorial
-reduction to `lem_layered_balanced_subtype`.
+**One declaration in the project still carries `sorry`**: the
+`hw_zero : L.w = 0` obligation in `lem_layered_balanced` Case
+`K ≥ 2` (`step8.tex:1768-1795`), threaded into the subtype helper
+`lem_layered_balanced_subtype`. The F4-foundation probability
+invariance `OrdinalDecomp.probLT_restrict_eq` was closed in
+`mg-ed86` (via `tripleEquiv`), and the subtype helper itself was
+closed in `mg-f292` under the tight-L hypothesis.
 
-### Remaining `sorry`s — 2 tokens, 2 declarations
+### The remaining `sorry` — structurally undischargeable as-is
 
 Line numbers below are for the `sorry` token itself.
 
 | # | File:line | In declaration | Category |
 |---|-----------|----------------|----------|
-| 1 | `OneThird/Step8/LayeredBalanced.lean:372` | `lem_layered_balanced_subtype` | Subtype-level balanced-pair helper — iterated ordinal-sum decomposition of `↥D.Mid` to reach an irreducible reduct with an incomparable cross-pair in adjacent bands, then `bipartite_balanced_enum` (`step8.tex:1608-1625`) |
-| 2 | `OneThird/Mathlib/LinearExtension/Subtype.lean:430` | `OrdinalDecomp.probLT_restrict_eq` | F4-foundation: bijection `LinearExt α ≃ LinearExt ↥Lower × LinearExt ↥Mid × LinearExt ↥Upper` for ordinal-sum decompositions (`step8.tex:1584-1598`) |
+| 1 | `OneThird/Step8/LayeredBalanced.lean:710` | `lem_layered_balanced` (K ≥ 2 branch) | `L.w = 0` tight-L obligation for a generic `LayeredDecomposition α` passed into the subtype helper |
 
-Both are *single-step* gaps: #1 is a structural reduction
-(ordinal-sum → irreducible → bipartite), #2 is the combinatorial
-concatenation/factorisation of linear extensions over an ordinal
-sum (the only missing F4 foundation item). The heavy machinery they
-feed into (`windowLocalization`, `bipartite_balanced_enum`,
-`bipartiteBalanced`, Dilworth, FKG enumeration, `OrdinalDecomp` +
-`restrictMid` + position bounds, `hasBalancedPair_lift`) is already
-`sorry`-free.
+**`mg-46a7` analysis (2026-04-21): this sorry is *not* a one-step
+plumbing gap — it is a structural divergence from the paper.** The
+previous formalization chain introduced `hw_zero : L.w = 0` as a
+simplification of the paper's `w ≥ 0` proof, reducing the subtype
+helper's residual content to a single-step band stratification
+(`mg-f292`). The caller `lem_layered_balanced` then inherits the
+obligation to supply `L.w = 0` for the decomposition it receives.
+
+For the `mainTheoremInputsOf` chain, that decomposition is
+`layeredFromBridges`, which would need to be constructed with
+`w = 0` for every finite non-chain width-≤ 3 poset. **This is
+structurally impossible.** A `LayeredDecomposition α` with `w = 0`
+forces `α` to be an ordinal sum of antichains of size ≤ 3 (by
+`(L2)` specialised to `w = 0` combined with `(L1a)`). Counterexample:
+the 2+2 poset `{a, b, c, d}` with `a < c`, `b < d`, all other pairs
+incomparable is non-chain width-2 (hence width-≤ 3) but admits no
+such decomposition.
+
+**The paper proof is fine** — `lem:layered-balanced`
+(`step8.tex:1768-1795`) handles arbitrary `w ≥ 0` via iterated
+ordinal-sum reduction inside the window `W(i, j)`. The Lean gap
+is purely formalisation plumbing:
+
+1. **Iterated ordinal-sum recursion in the subtype helper.** Replace
+   the `hw_zero` shortcut with a well-founded recursion on "number
+   of bands in the residual irreducible layered piece" that uses
+   `probLT_restrict_eq` at each split. Currently the
+   `OrdinalDecomp` API gives the single-split factorisation; the
+   iteration needs to be built on top.
+2. **Window-based `OrdinalDecomp` construction.** Fit `W(i, j)`
+   into the Lower/Mid/Upper shape of `OrdinalDecomp`, which requires
+   `w + 1`-wide buffer zones for `(L2)` to fire on the Lower<Mid
+   and Mid<Upper bands. This is not directly available from the
+   layered axioms; it needs the Step 5(C) / Step 7 band-index
+   refinement.
+3. **Tight `layeredFromBridges`.** Replace the singleton-band
+   stub with a real construction that packages Step 7's
+   `LayeredWidth3` (with its `bandwidth` field giving the paper's
+   `w`) into a ground-set `LayeredDecomposition α` where `w =
+   Lwidth3.bandwidth` (not `|α| + bandwidth`). This is the paper's
+   `rem:layered-from-step7` (`step8.tex:1349-1360`) ground-set lift,
+   which also absorbs the `O_T(1)`-size exceptional set `X^{exc}`
+   into a γ/2 slack.
+
+Pieces 1, 2, 3 are workmanlike Lean plumbing (not research), but
+together they are multi-week scope — not a single polecat. Follow-up
+mg items scoped from `mg-46a7` track the three pieces.
 
 ### Axioms
 
@@ -50,10 +84,10 @@ feed into (`windowLocalization`, `bipartite_balanced_enum`,
 -- [propext, sorryAx, Classical.choice, Quot.sound]
 ```
 
-`sorryAx` reflects the two `sorry`s above; the other three are the
-mathlib-standard classical foundations. Closing both
-`lem_layered_balanced_subtype` and `probLT_restrict_eq` would drop
-`sorryAx` and leave only `[propext, Classical.choice, Quot.sound]`.
+`sorryAx` reflects the single remaining `sorry` above; the other
+three are the mathlib-standard classical foundations. Closing the
+three plumbing pieces listed above would drop `sorryAx` and leave
+only `[propext, Classical.choice, Quot.sound]`.
 
 ### Import closure of the main theorem
 

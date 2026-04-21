@@ -258,7 +258,21 @@ and of size `≤ 3` — and `(L2)` is vacuous since
 distinction from `trivialLayered` is that `w` is now genuinely derived
 from the Step 7 bridge output (`Lwidth3.bandwidth`), making the logical
 chain of `rem:one-invocation` visible in the field values, not only in
-the surrounding `have`-bindings. -/
+the surrounding `have`-bindings.
+
+**`mg-46a7` note (2026-04-21): this is not a faithful implementation
+of `rem:layered-from-step7`.** The paper's construction would yield a
+`LayeredDecomposition` with bounded `w = O_T(1)` (using `Step7.LayeredWidth3`'s
+`bandwidth` field plus a windowing argument over the band-index map
+supplied by Prop 7.1's threshold-of-potential). The current singleton-band
+packaging satisfies the type-level obligations but doesn't implement the
+paper's decomposition — it trades small `w` for vacuous `(L2)`, producing
+a witness with `w = |α| + Lwidth3.bandwidth`. This is what forces
+`lem_layered_balanced`'s `hw_zero : L.w = 0` obligation to be undischargeable
+at the caller (see `LayeredBalanced.lean`). Producing a tight layered
+witness from Step 7's output is one of the three formalization pieces
+scoped from `mg-46a7`; the paper's proof is not at issue — only the
+Lean plumbing. -/
 noncomputable def layeredFromBridges : LayeredDecomposition α := by
   classical
   -- Step 5 dichotomy (`thm:step5`) — trivial banded inputs at `p = q = r = 0`.
