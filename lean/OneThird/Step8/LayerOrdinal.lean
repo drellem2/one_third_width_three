@@ -7,7 +7,7 @@ import OneThird.Mathlib.LinearExtension.Subtype
 import OneThird.Step8.LayeredReduction
 
 /-!
-# Step 8 — Layer-ordinal-sum reducibility (F1 foundation)
+# Step 8 — Layer-ordinal-sum reducibility (F1–F2)
 
 Formalises the paper's *layer-ordinal reducible* predicate and the
 data required by downstream Step 8 items (F2–F5 of `sec:g4-balanced-pair`).
@@ -19,6 +19,10 @@ data required by downstream Step 8 items (F2–F5 of `sec:g4-balanced-pair`).
   at band index `k`* if every cross-pair `(u, v)` with `L.band u ≤ k`
   and `k < L.band v` satisfies `u <_Q v`. Equivalently,
   `Q = (M_1 ∪ ⋯ ∪ M_k) ⊕ (M_{k+1} ∪ ⋯ ∪ M_r)` as posets.
+
+* `Step8.LayerOrdinalIrreducible L` — the paper's *irreducibility*
+  predicate (`step8.tex:2273`): `L` is not reducible at any
+  `k ∈ [1, L.K - 1]`.
 
 * `Step8.OrdinalDecompOfReducible L k h` — the *witness constructor*:
   from a reducibility hypothesis `h`, package the band-split
@@ -34,10 +38,17 @@ data required by downstream Step 8 items (F2–F5 of `sec:g4-balanced-pair`).
 * `Step8.numLinExt_factorOfReducible` — the counting corollary:
   `numLinExt α = numLinExt ↥Q_1 * numLinExt ↥Q_2`.
 
+* `Step8.exists_adjacent_not_lt_of_irreducible` — **`lem:irr-adjacent`**
+  (`step8.tex:2461-2478`): an irreducible layered decomposition with
+  all bands non-empty and depth `≥ 2` has an adjacent band index `i`
+  and a cross-pair `(u, v) ∈ M_i × M_{i+1}` with `¬ (u < v)`. This is
+  the F2 transitivity lemma.
+
 ## Reference
 
 `step8.tex` §`sec:g4-balanced-pair` (`step8.tex:1612-1625`), paper
-Definition *layer-ordinal-sum reducible* added in A1 (mg-17e1).
+Definition *layer-ordinal-sum reducible* added in A1 (mg-17e1);
+Lemma `lem:irr-adjacent` (`step8.tex:2461-2478`) added in A3.
 -/
 
 namespace OneThird
@@ -189,6 +200,89 @@ theorem numLinExt_factorOfReducible
         numLinExt ↥(OrdinalDecompOfReducible L k h).Upper := by
   unfold numLinExt
   rw [Fintype.card_congr (linExtEquivOfReducible L k h), Fintype.card_prod]
+
+/-! ### §4 — Irreducibility ⇒ adjacent incomparable cross-pair (F2) -/
+
+/-- **Layer-ordinal-sum irreducibility** (`step8.tex:2273`).
+
+A layered decomposition is *layer-ordinal-sum irreducible* if there
+is no band index `k ∈ [1, L.K − 1]` at which it is reducible in the
+sense of `LayerOrdinalReducible`. Equivalently, every "cut" of `Q`
+along a band boundary fails to be directed upward.
+
+Paper: Definition~\ref{def:layer-reducible} (`step8.tex:2261-2274`). -/
+def LayerOrdinalIrreducible (L : LayeredDecomposition α) : Prop :=
+  ∀ k : ℕ, 1 ≤ k → k < L.K → ¬ LayerOrdinalReducible L k
+
+set_option linter.unusedSectionVars false in
+set_option linter.unusedDecidableInType false in
+/-- **Lemma `lem:irr-adjacent`** (`step8.tex:2461-2478`), Lean form.
+
+If `L` is layer-ordinal-sum irreducible (not reducible at any band
+index `k ∈ [1, L.K − 1]`), has depth `L.K ≥ 2`, and every band
+`M_1, …, M_K` is non-empty, then there exists an adjacent band index
+`i ∈ [1, L.K − 1]` and a cross-pair `(u, v) ∈ M_i × M_{i+1}` with
+`¬ (u < v)`.
+
+**Relation to paper.** The paper's conclusion asks for `(u, v)`
+*incomparable* in `Q`. The Lean form `¬ (u < v)` is what
+irreducibility directly provides: the reverse-direction ruling-out
+`¬ (v < u)` is argued in the paper via "(L2)", which is a property of
+the cross-band direction in the §sec:g4 setup but not an axiom of
+`LayeredDecomposition` in Lean. Downstream callers who also have
+"cross-band comparabilities are upward" can combine this with the
+returned `¬ (u < v)` to obtain full incomparability.
+
+**Proof (paper, `step8.tex:2470-2478`).** Contradiction: assume every
+adjacent cross-pair `u ∈ M_i, v ∈ M_{i+1}` has `u <_Q v`. By
+transitivity (chaining through intermediate non-empty bands), for any
+`i < j` and any `u ∈ M_i, v ∈ M_j` we obtain `u <_Q v`. In
+particular `L` is reducible at `k = 1` (valid since `L.K ≥ 2`),
+contradicting `hIrr 1`. -/
+theorem exists_adjacent_not_lt_of_irreducible
+    (L : LayeredDecomposition α)
+    (hK : 2 ≤ L.K)
+    (hIrr : LayerOrdinalIrreducible L)
+    (hNonempty : ∀ k : ℕ, 1 ≤ k → k ≤ L.K → (L.bandSet k).Nonempty) :
+    ∃ (i : ℕ) (u v : α),
+      1 ≤ i ∧ i < L.K ∧
+      L.band u = i ∧ L.band v = i + 1 ∧ ¬ (u < v) := by
+  classical
+  -- Proof by contradiction on the existence of an adjacent obstruction.
+  by_contra hContra
+  push Not at hContra
+  -- hContra : ∀ i u v, 1 ≤ i → i < L.K → band u = i → band v = i+1 → u < v.
+  -- Derive the reducibility witness at k = 1.
+  refine hIrr 1 (le_refl 1) hK ?_
+  intro u v hu hv
+  -- From `L.band u ≤ 1` and `L.band u ≥ 1` (by `band_pos`), get `band u = 1`.
+  have hu1 : L.band u = 1 := le_antisymm hu (L.band_pos u)
+  have hvK : L.band v ≤ L.K := L.band_le v
+  -- Chain the adjacent-step hypothesis via non-empty intermediate bands.
+  -- Claim: for every `j ∈ [2, L.K]` and every `w ∈ M_j`, we have `u < w`.
+  suffices hChain :
+      ∀ j : ℕ, 2 ≤ j → j ≤ L.K →
+        ∀ w : α, L.band w = j → u < w by
+    exact hChain (L.band v) hv hvK v rfl
+  intro j hj2
+  induction j, hj2 using Nat.le_induction with
+  | base =>
+    -- j = 2: direct from `hContra` at i = 1.
+    intro _ w hbw
+    exact hContra 1 u w (le_refl 1) hK hu1 hbw
+  | succ j hj2 IH =>
+    -- j ≥ 2, step from j to j+1. Chain through M_j via hNonempty.
+    intro hj1K w hbw
+    have hjK : j ≤ L.K := by omega
+    have h1j : 1 ≤ j := by omega
+    have hjLtK : j < L.K := by omega
+    obtain ⟨w', hw'⟩ := hNonempty j h1j hjK
+    have hbw' : L.band w' = j := by
+      rw [LayeredDecomposition.mem_bandSet] at hw'
+      exact hw'
+    have h1 : u < w' := IH hjK w' hbw'
+    have h2 : w' < w := hContra j w' w h1j hjLtK hbw' hbw
+    exact lt_trans h1 h2
 
 end Step8
 end OneThird
