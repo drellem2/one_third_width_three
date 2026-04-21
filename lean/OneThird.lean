@@ -55,6 +55,7 @@ import OneThird.Step8.TheoremE
 import OneThird.Step8.G2Constants
 import OneThird.Step8.BipartiteEnum
 import OneThird.Step8.LayeredReduction
+import OneThird.Step8.LayerOrdinal
 import OneThird.Step8.LayeredBalanced
 import OneThird.Step8.Window
 import OneThird.Step8.SmallN
