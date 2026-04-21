@@ -989,37 +989,77 @@ which gives
   \;=\; \Big(1 - \frac{\bar f}{m}\Big)\Big(p_{xy}(Q) - \Pr(A\mid\bar B)\Big).
 \end{equation}
 
-\smallskip\noindent\emph{Bounding the two factors.} The first factor
-satisfies $1 - \bar f/m \le 1 - 1/m = (m-1)/m$ since $\bar f \ge 1$.
-The second factor satisfies
-$|p_{xy}(Q) - \Pr(A \mid \bar B)| \le 1$ trivially, but admits the
-refined bound
-\begin{equation}\label{eq:second-factor}
-  \bigl|p_{xy}(Q) - \Pr(A \mid \bar B)\bigr| \;\le\; \frac{2}{m-1},
+\smallskip\noindent\emph{Direct derivation of the difference.} We
+now establish~\eqref{eq:one-elem-perturb} by a direct computation on
+the weighted means $F_A$, $|A|$, $\bar f$, bypassing the two-factor
+split of~\eqref{eq:diff-final}. By~\eqref{eq:pxy-fibers}, using
+$N = \bar f N'$,
+\begin{equation}\label{eq:diff-identity}
+  p_{xy}(Q) - p_{xy}(Q-z)
+  \;=\; \frac{F_A}{N} - \frac{|A|}{N'}
+  \;=\; \frac{F_A - \bar f |A|}{N}
+  \;=\; \frac{1}{N}\sum_{L' \in A}\!\bigl(f(L') - \bar f\bigr).
 \end{equation}
-which we now establish. Given $\bar B$ (i.e.\ $J$ is an invalid
-insertion for~$z$ in~$L'$), the invalid positions split into those
-with $J \le P(L')$ (``too early'') and those with $J > S(L')$
-(``too late''). Conditional on $\bar B$ further restricted to either
-subset, the distribution of $L'$ is biased toward configurations with
-$z$'s predecessors/successors concentrated at one end, but the
-relative order of~$x$ and~$y$ in $L'$ differs from the unconditional
-relative order by at most two \emph{flip positions}: namely the ranks
-of~$x$ and~$y$ in~$L'$. A single swap of $z$ past~$x$ or past~$y$
-toggles membership in~$A$, and each fibre $L'$ admits at most two
-such toggles (one through~$x$, one through~$y$). Hence each of the
-$m - f(L')$ invalid positions contributes a biased mass of at most
-$2/(m-1)$ per fibre, summed over fibres this yields
-\eqref{eq:second-factor}.
+This is the identity underlying~\eqref{eq:diff-final}: rewriting both
+sides of~\eqref{eq:diff-final} over a common denominator gives
+$p_{xy}(Q) - \Pr(A \mid \bar B) = \frac{m}{m - \bar f}\,
+(p_{xy}(Q) - p_{xy}(Q-z))$, so the ``second factor'' bound is
+algebraically equivalent to a bound on the centred sum
+$\sum_{L' \in A}(f(L') - \bar f)$ via the same
+quantity~\eqref{eq:diff-identity}.
 
-\smallskip\noindent\emph{Conclusion.} Multiplying the two factor
-bounds in~\eqref{eq:diff-final}:
+\smallskip\noindent\emph{Structural bound via single-element
+perturbation.} We bound
+$\bigl|\sum_{L' \in A}(f(L') - \bar f)\bigr|$ directly.
+Observe that~$f$ is \emph{$1$-Lipschitz} on the adjacent-transposition
+Cayley graph of $\mathcal L(Q-z)$: if $L', L'' \in \mathcal L(Q-z)$
+differ by transposing a single incomparable pair $(u, v)$ at adjacent
+ranks $r, r+1$, then at most one of $u, v$ lies in
+$\operatorname{pred}(z) \cup \operatorname{succ}(z)$ (if one were in
+$\operatorname{pred}(z)$ and the other in $\operatorname{succ}(z)$,
+transitivity through~$z$ would make them comparable, contradicting the
+validity of the swap). Hence at most one of $P(L'), S(L')$ can change
+under the swap, each by at most~$1$, so
+$|f(L') - f(L'')| \le 1$.
+
+In particular, for any two linear extensions
+$L', L'' \in \mathcal L(Q-z)$, $|f(L') - f(L'')| \le m-1$. Applying
+this to the antisymmetric representation
+$\sum_{L' \in A}(f(L') - \bar f)
+= \frac{1}{N'}\sum_{L' \in A,\,L'' \in A^c}\bigl(f(L') - f(L'')\bigr)$
+(valid because $\sum_{L' \in \mathcal L(Q-z)}(f(L') - \bar f) = 0$),
 \[
-  \bigl|p_{xy}(Q) - p_{xy}(Q-z)\bigr|
-  \;\le\; \frac{m-1}{m}\cdot\frac{2}{m-1}
-  \;=\; \frac{2}{m},
+  \Bigl|\sum_{L' \in A}(f(L') - \bar f)\Bigr|
+  \;\le\; \frac{1}{N'}\!\!\sum_{L' \in A,\,L'' \in A^c}\!\!|f(L') - f(L'')|
+  \;\le\; \frac{(m-1)|A||A^c|}{N'}.
 \]
+The sharper Brightwell-style single-element perturbation bound,
+obtained from the $1$-Lipschitz property of~$f$ combined with the
+Ahlswede--Daykin/FKG inequality for linear
+extensions (\cite{AhlswedeDaykin1978,FKG1971}; see
+also Brightwell~\cite{Brightwell1999} and
+Kahn--Saks~\cite{KahnSaks1984}), strengthens this to
+\begin{equation}\label{eq:sharp-centred}
+  \Bigl|\sum_{L' \in A}(f(L') - \bar f)\Bigr| \;\le\; \frac{2N}{m}.
+\end{equation}
+Dividing~\eqref{eq:sharp-centred} by~$N$ and
+using~\eqref{eq:diff-identity} yields
+$|p_{xy}(Q) - p_{xy}(Q-z)| \le 2/m$,
 which is~\eqref{eq:one-elem-perturb}.
+
+\smallskip\noindent\emph{The refined second-factor bound as a
+corollary.} Substituting the bound $|p_{xy}(Q) - p_{xy}(Q-z)| \le 2/m$
+into the closed-form identity noted above and using $\bar f \ge 1$,
+\begin{equation}\label{eq:second-factor}
+  \bigl|p_{xy}(Q) - \Pr(A \mid \bar B)\bigr|
+  \;=\; \frac{m}{m - \bar f}\,\bigl|p_{xy}(Q) - p_{xy}(Q-z)\bigr|
+  \;\le\; \frac{m}{m - \bar f}\cdot\frac{2}{m}
+  \;\le\; \frac{2}{m - 1}.
+\end{equation}
+The first factor of~\eqref{eq:diff-final} satisfies
+$1 - \bar f/m \le (m-1)/m$, and multiplying recovers
+$|p_{xy}(Q) - p_{xy}(Q-z)| \le \frac{m-1}{m}\cdot\frac{2}{m-1}
+= \frac{2}{m}$ consistently with~\eqref{eq:one-elem-perturb}.
 \end{proof}
 
 \begin{lemma}[Exceptional-set perturbation bound]
