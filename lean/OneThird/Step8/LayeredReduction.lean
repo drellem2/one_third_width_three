@@ -131,6 +131,158 @@ theorem comparable_of_far {x y : α}
     apply L.forced_lt
     omega
 
+/-! ### §1b — `restrict`: sub-poset layered decomposition -/
+
+/-- **Sub-poset restriction of a layered decomposition**.
+
+Given `L : LayeredDecomposition α` and any `Finset S ⊆ α`, the
+subtype `↥S` inherits:
+
+* the ambient partial order (`Subtype` order);
+* a band map `band z := L.band z.val`;
+* the *same* depth `K` and interaction width `w`.
+
+Axioms (L1), (L1b), (L2) transfer directly: (L1) and (L1b) because
+filtering by band commutes with subtype inclusion and each band in
+`α` is an antichain of size `≤ 3`; (L2) because the Subtype order
+is the restriction of the ambient order.
+
+This is the prerequisite infrastructure for applying G4-style
+balanced-pair reasoning recursively on sub-posets — in particular,
+for the F5 reducibility argument, whose recursion hypothesis
+requires `LayeredDecomposition ↥β` for each recursive sub-poset
+`β`. The window-localization argument of
+`lem:window-localization` (`step8.tex:1573-1608`) is the canonical
+specialization (restrict to a window slice).
+
+Uses `classical` (for the image-under-`Subtype.val` card bound);
+the underlying function content (`band`) is computable. -/
+noncomputable def restrict (L : LayeredDecomposition α) (S : Finset α) :
+    LayeredDecomposition ↥S where
+  K := L.K
+  w := L.w
+  band z := L.band z.val
+  band_pos z := L.band_pos z.val
+  band_le z := L.band_le z.val
+  band_size k := by
+    classical
+    -- Inject the sub-band into the ambient band via `Subtype.val`.
+    set T : Finset ↥S :=
+      (Finset.univ : Finset ↥S).filter (fun z => L.band z.val = k) with hT
+    have hinj : Function.Injective (fun z : ↥S => z.val) :=
+      Subtype.val_injective
+    have hcard_img :
+        (T.image (fun z : ↥S => z.val)).card = T.card :=
+      Finset.card_image_of_injective _ hinj
+    have hSub :
+        T.image (fun z : ↥S => z.val) ⊆
+          (Finset.univ : Finset α).filter (fun a => L.band a = k) := by
+      intro a ha
+      simp only [T, Finset.mem_image, Finset.mem_filter, Finset.mem_univ,
+        true_and] at ha
+      obtain ⟨z, hz, hzeq⟩ := ha
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+      rw [← hzeq]; exact hz
+    calc T.card
+        = (T.image (fun z : ↥S => z.val)).card := hcard_img.symm
+      _ ≤ ((Finset.univ : Finset α).filter (fun a => L.band a = k)).card :=
+          Finset.card_le_card hSub
+      _ ≤ 3 := L.band_size k
+  band_antichain k := by
+    classical
+    -- `a ≤ b` on the Subtype is the ambient `a.val ≤ b.val`; use
+    -- `L.band_antichain` on the image.
+    intro a ha b hb hne hle
+    simp only [Finset.coe_filter, Finset.mem_univ,
+      true_and, Set.mem_setOf_eq] at ha hb
+    have hne_α : a.val ≠ b.val := fun h => hne (Subtype.ext h)
+    have hle_α : a.val ≤ b.val := hle
+    apply L.band_antichain k
+      (show a.val ∈ ((((Finset.univ : Finset α).filter
+          (fun x => L.band x = k))) : Set α) by
+        simp only [Finset.coe_filter, Finset.mem_univ,
+          true_and, Set.mem_setOf_eq]
+        exact ha)
+      (show b.val ∈ ((((Finset.univ : Finset α).filter
+          (fun x => L.band x = k))) : Set α) by
+        simp only [Finset.coe_filter, Finset.mem_univ,
+          true_and, Set.mem_setOf_eq]
+        exact hb)
+      hne_α hle_α
+  forced_lt x y h := L.forced_lt x.val y.val h
+
+/-! ### §1c — `restrict` API lemmas -/
+
+/-- `band` transfers transparently: the restricted band of a
+subtype element is the ambient band of its `val`. -/
+@[simp] lemma band_restrict (L : LayeredDecomposition α) (S : Finset α)
+    (z : ↥S) :
+    (L.restrict S).band z = L.band z.val := rfl
+
+/-- Depth is preserved by `restrict`. -/
+@[simp] lemma K_restrict (L : LayeredDecomposition α) (S : Finset α) :
+    (L.restrict S).K = L.K := rfl
+
+/-- Interaction width is preserved by `restrict`.
+
+This is the "w-monotonicity" half of restriction: the same `w`
+always works — the (L2) cross-band-comparability hypothesis is
+inherited from the ambient poset because the Subtype order is the
+restriction. Tightenings (genuine `w' < w` on the sub-poset) are
+possible but not supplied here: tightening requires knowing more
+about `S` (e.g. that it witnesses band collapses), and F5's
+recursive use inherits `w` directly. -/
+@[simp] lemma w_restrict (L : LayeredDecomposition α) (S : Finset α) :
+    (L.restrict S).w = L.w := rfl
+
+/-- The `i`-th band of the restricted decomposition consists of
+exactly those subtype elements whose ambient band is `i`. -/
+lemma mem_bandSet_restrict (L : LayeredDecomposition α) (S : Finset α)
+    {z : ↥S} {i : ℕ} :
+    z ∈ (L.restrict S).bandSet i ↔ L.band z.val = i :=
+  (L.restrict S).mem_bandSet
+
+/-- The image of a restricted band under `Subtype.val` sits inside
+the ambient band. -/
+lemma image_val_bandSet_restrict_subset [DecidableEq α]
+    (L : LayeredDecomposition α) (S : Finset α) (i : ℕ) :
+    ((L.restrict S).bandSet i).image (fun z : ↥S => z.val) ⊆
+      L.bandSet i := by
+  intro a ha
+  rcases Finset.mem_image.mp ha with ⟨z, hz, hzeq⟩
+  rw [mem_bandSet]
+  rw [← hzeq]
+  exact (L.restrict S).mem_bandSet.mp hz
+
+/-- `comparable_of_far` transfers across `restrict`: a restricted
+decomposition inherits the (L3) comparability corollary with the
+same interaction width. -/
+lemma comparable_of_far_restrict (L : LayeredDecomposition α) (S : Finset α)
+    {x y : ↥S}
+    (h : L.w <
+      (max (L.band x.val) (L.band y.val)) -
+        (min (L.band x.val) (L.band y.val))) :
+    x < y ∨ y < x := by
+  rcases L.comparable_of_far (x := x.val) (y := y.val) h with hlt | hlt
+  · exact Or.inl hlt
+  · exact Or.inr hlt
+
+/-- **Window-localization specialization** (`step8.tex:1573-1608`).
+
+Restrict a layered decomposition to a `Window` slice. The result
+is a `LayeredDecomposition` on `↥W.slice` with the same depth and
+width. This is the building block of window-localization: the
+probability identity (`probLT_restrict_eq` of
+`OneThird/Mathlib/LinearExtension/Subtype.lean`) is then applied
+on the induced ordinal-sum decomposition `α = X^− ⊔ W ⊔ X^+` to
+reduce marginal calculations in `α` to marginal calculations in
+`↥W.slice`. -/
+noncomputable def restrictSlice (L : LayeredDecomposition α)
+    (loBand hiBand : ℕ) : LayeredDecomposition
+      ↥((Finset.univ : Finset α).filter
+          (fun x => loBand ≤ L.band x ∧ L.band x ≤ hiBand)) :=
+  L.restrict _
+
 end LayeredDecomposition
 
 /-! ### §2 — `lem:cut`: ordinal cut inside a deep layering -/
