@@ -302,13 +302,48 @@ lemma probLT_three_cycle_ge_one
   rw [← add_div, ← add_div, one_le_div₀ hn]
   exact_mod_cast hsum
 
-/-- **`prop:bipartite-balanced`** (`step8.tex:1633`).
+/-- **F4 foundation axiom — `prop:bipartite-balanced`**
+(`step8.tex:1627`).
 
-Cleared-denominator structural form. For a height-2 poset
-`Q = A ⊔ B` with `A, B` antichains of size `≤ 3`, every
-comparability directed `A < B`, and at least one incomparable pair:
-`Q` has a balanced pair.
+Finite, non-circular form of the FKG / Graham–Yao–Yao output. For a
+height-2 poset `α = A ⊔ B` with `A, B` disjoint antichains of size
+`≤ 3`, every comparability directed `A < B`, and at least one
+incomparable pair, `α` has a balanced pair. The covering hypothesis
+`A ∪ B = Finset.univ` bounds `|α| ≤ 6` (so at most `1024`
+configurations modulo automorphism, `step8.tex:1751-1763`,
+`rem:Finite enumeration`).
 
+Without the covering hypothesis this axiom would collapse to the full
+1/3–2/3 conjecture for any α admitting an incomparable pair (take
+`A := ⟨x, y⟩, B := ∅`) — the form it previously had before `mg-68af`.
+
+Stated as an `axiom` pending the separate formalisation of either
+(i) the FKG / Graham–Yao–Yao inequality + rotation case analysis
+(`Case 1` symmetric-pair involution, `Case 2` via
+`rotation_contradiction`) or (ii) direct finite enumeration over the
+≤ 1024 bipartite configurations. Listed in `MATHLIB_GAPS.md` §E as
+historical FKG context. -/
+axiom fkg_case_output
+    {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
+    (A B : Finset α)
+    (_hA_anti : IsAntichain (· ≤ ·) (A : Set α))
+    (_hB_anti : IsAntichain (· ≤ ·) (B : Set α))
+    (_hA_size : A.card ≤ 3) (_hB_size : B.card ≤ 3)
+    (_hDisj : Disjoint A B)
+    (_hCover : A ∪ B = (Finset.univ : Finset α))
+    (_hAB : ∀ a ∈ A, ∀ b ∈ B, a ≤ b)
+    (_hIncomp : ∃ u v : α, u ∥ v) :
+    OneThird.HasBalancedPair α
+
+/-- **`prop:bipartite-balanced`** (`step8.tex:1627`).
+
+Structural form, with `Q` modelled as the ambient poset `α` via the
+covering hypothesis `A ∪ B = Finset.univ`. For a height-2 poset
+`Q = A ⊔ B` with `A, B` disjoint antichains of size `≤ 3`, every
+comparability directed `A < B`, and at least one incomparable pair
+in `Q`: `Q` has a balanced pair.
+
+Discharged via the `fkg_case_output` axiom (the F4 foundation item).
 The paper's proof (`step8.tex:1640-1749`) splits into two cases:
 
 * **Case 1** (symmetric pair): two elements of `A` (resp. `B`)
@@ -319,59 +354,20 @@ The paper's proof (`step8.tex:1640-1749`) splits into two cases:
   Graham–Yao–Yao inequality gives `Pr[a_i <_L a_{i+1}] ≥ 1/2` for
   the profile-ordering `a_1, …, a_m`. If any `≤ 2/3`, the pair is
   balanced. Otherwise all three within-`A` adjacent probabilities
-  exceed `2/3`, contradicting `rotation_contradiction`.
-
-In either case the output is an incomparable within-layer pair
-`(x, y)` with `probLT x y ∈ [1/2, 2/3]`. We package this as an
-abstract hypothesis `hFKGCaseOutput` here: the FKG sub-claim and
-Case-1 involution are the F4 foundation items deferred downstream
-(the constructive extraction, `≤ 1024` bipartite configurations on
-`|A|, |B| ≤ 3`, `step8.tex:1751-1763`, is the separate finite-
-enumeration item). The proof then simply witnesses the balanced pair. -/
+  exceed `2/3`, contradicting `rotation_contradiction`. -/
 theorem bipartiteBalanced
     (A B : Finset α)
-    (_hA_anti : IsAntichain (· ≤ ·) (A : Set α))
-    (_hB_anti : IsAntichain (· ≤ ·) (B : Set α))
-    (_hA_size : A.card ≤ 3) (_hB_size : B.card ≤ 3)
-    (_hAB : ∀ a ∈ A, ∀ b ∈ B, a ≤ b)
-    (_hIncomp : ∃ a ∈ A, ∃ a' ∈ A, a ≠ a' ∧ a ∥ a')
-    (hFKGCaseOutput :
-      ∃ x y : α, (x ∥ y) ∧
-        (1 : ℚ) / 2 ≤ probLT x y ∧ probLT x y ≤ 2 / 3) :
-    ∃ x y : α, (x ∥ y) ∧ IsBalanced x y := by
-  -- The FKG / rotation case analysis (`step8.tex:1640-1749`) outputs
-  -- an incomparable within-layer pair with `probLT ∈ [1/2, 2/3]`.
-  -- Since `1/3 ≤ 1/2`, the lower bound gives `IsBalanced.1` and the
-  -- upper bound is `IsBalanced.2` directly. The finite-enumeration
-  -- extraction (≤ 1024 bipartite configurations, `step8.tex:1751-1763`,
-  -- `rem:Finite enumeration`) discharges `hFKGCaseOutput` downstream.
-  obtain ⟨x, y, hxy, hLow, hHigh⟩ := hFKGCaseOutput
-  refine ⟨x, y, hxy, ?_, hHigh⟩
-  linarith
+    (hA_anti : IsAntichain (· ≤ ·) (A : Set α))
+    (hB_anti : IsAntichain (· ≤ ·) (B : Set α))
+    (hA_size : A.card ≤ 3) (hB_size : B.card ≤ 3)
+    (hDisj : Disjoint A B)
+    (hCover : A ∪ B = (Finset.univ : Finset α))
+    (hAB : ∀ a ∈ A, ∀ b ∈ B, a ≤ b)
+    (hIncomp : ∃ u v : α, u ∥ v) :
+    OneThird.HasBalancedPair α :=
+  fkg_case_output A B hA_anti hB_anti hA_size hB_size hDisj hCover hAB hIncomp
 
 /-! ### §4 — `lem:layered-balanced`: GAP G4 -/
-
-/-- **F4 foundation axiom — FKG / Graham–Yao–Yao output**
-(`step8.tex:1640-1749`).
-
-The `prop:bipartite-balanced` case analysis (symmetric-pair
-involution in Case 1, FKG inequality plus rotation lemma in Case 2)
-outputs, from any incomparable pair `(x, y)` in a finite poset, a
-within-layer incomparable pair with `probLT ∈ [1/2, 2/3]`. The
-constructive extraction (≤ 1024 bipartite configurations on
-`|A|, |B| ≤ 3`, `step8.tex:1751-1763`, `rem:Finite enumeration`) is
-the F4 foundation item; here we state it as an axiom, matching the
-`hFKGCaseOutput` hypothesis of `bipartiteBalanced`.
-
-This is the *only* externally-assumed correlation input of the
-proof (listed in `MATHLIB_GAPS.md` §E as historical FKG context),
-packaged here as a Lean `axiom` pending the separate formalization
-of the FKG/rotation case analysis. -/
-axiom fkg_case_output
-    {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
-    (x y : α) (_hxy : x ∥ y) :
-    ∃ x' y' : α, (x' ∥ y') ∧
-      (1 : ℚ) / 2 ≤ probLT x' y' ∧ probLT x' y' ≤ 2 / 3
 
 /-- **`lem:layered-balanced` — GAP G4** (`step8.tex:1554`,
 cleared-denominator form).
@@ -399,45 +395,22 @@ theorem lem_layered_balanced
     (h2 : 2 ≤ Fintype.card α)
     (hNotChain : ¬ OneThird.IsChainPoset α) :
     OneThird.HasBalancedPair α := by
-  -- Extract an incomparable pair `(x, y)` from the non-chain
-  -- hypothesis. The high-level disjunction (`K = 1` antichain
-  -- symmetry vs. `K ≥ 2` window reduction) reduces either way to
-  -- `bipartiteBalanced` on a height-2 reduct; we package the
-  -- eventual bipartite configuration as `A = {x, y}`, `B = ∅`,
-  -- whose incomparable-in-`A` hypothesis is witnessed by the pair
-  -- we just extracted.
-  unfold OneThird.IsChainPoset at hNotChain
-  push_neg at hNotChain
-  obtain ⟨x, y, hxy, hyx⟩ := hNotChain
-  have hxy_inc : x ∥ y := ⟨hxy, hyx⟩
-  have hxne : x ≠ y := fun h => hxy (h ▸ le_refl x)
-  refine bipartiteBalanced (α := α) ({x, y} : Finset α) ∅ ?_ ?_ ?_ ?_ ?_ ?_ ?_
-  · -- `{x, y}` is an antichain.
-    intro a ha b hb hab
-    simp at ha hb
-    rcases ha with rfl | rfl <;> rcases hb with rfl | rfl
-    · exact absurd rfl hab
-    · exact hxy_inc.1
-    · exact (Incomp.symm hxy_inc).1
-    · exact absurd rfl hab
-  · -- `∅` is an antichain (vacuously).
-    intro a ha
-    simp at ha
-  · -- `|{x, y}| ≤ 3`.
-    rw [Finset.card_insert_of_notMem (by simp [hxne]), Finset.card_singleton]
-    decide
-  · -- `|∅| ≤ 3`.
-    simp
-  · -- Vacuous: `∀ a ∈ {x, y}, ∀ b ∈ ∅, a ≤ b`.
-    intro a _ b hb
-    simp at hb
-  · -- Witness the in-`A` incomparable pair by `(x, y)`.
-    exact ⟨x, by simp, y, by simp, hxne, hxy_inc⟩
-  · -- `hFKGCaseOutput`: the FKG / rotation case analysis output
-    -- (`step8.tex:1640-1749`) provides a within-layer pair with
-    -- `probLT ∈ [1/2, 2/3]`. Discharged via the F4 foundation
-    -- axiom `fkg_case_output`.
-    exact fkg_case_output x y hxy_inc
+  -- The paper proof (`step8.tex:1760-1796`):
+  -- 1. **`K = 1` case**: `P = L_1` is a single antichain with
+  --    `|L_1| ∈ {2, 3}`; every pair is incomparable with
+  --    `Pr = 1/2 ∈ [1/3, 2/3]`.
+  -- 2. **`K ≥ 2` case**: apply `windowLocalization` to restrict to a
+  --    bounded sub-poset `Q`; iterate ordinal-sum decomposition to
+  --    reach an irreducible piece `Q⋆`; if `depth Q⋆ = 1` use case (1),
+  --    else invoke `bipartiteBalanced` on the witnessing adjacent
+  --    band-pair.
+  -- Neither the `K = 1` involution nor the window + ordinal-sum
+  -- reduction to a bipartite sub-poset is formalised: when the
+  -- `fkg_case_output` axiom was rescoped to match
+  -- `prop:bipartite-balanced` (`step8.tex:1627`), the glue step that
+  -- produces a bipartite sub-poset became an independent gap. Left
+  -- as `sorry`.
+  sorry
 
 /-! ### §5 — Combined G3+G4 conclusion (`prop:step7(iii)`) -/
 
