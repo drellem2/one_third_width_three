@@ -7,7 +7,7 @@ import OneThird.Mathlib.LinearExtension.Subtype
 import OneThird.Step8.LayeredReduction
 
 /-!
-# Step 8 — Layer-ordinal-sum reducibility (F1–F2)
+# Step 8 — Layer-ordinal-sum reducibility (F1–F3)
 
 Formalises the paper's *layer-ordinal reducible* predicate and the
 data required by downstream Step 8 items (F2–F5 of `sec:g4-balanced-pair`).
@@ -44,11 +44,22 @@ data required by downstream Step 8 items (F2–F5 of `sec:g4-balanced-pair`).
   and a cross-pair `(u, v) ∈ M_i × M_{i+1}` with `¬ (u < v)`. This is
   the F2 transitivity lemma.
 
+* `Step8.hasBalancedPair_of_layered_strongInduction` — **F3**: the
+  well-founded recursion framework for the iterated reduction of
+  `lem:layered-balanced` (`step8.tex:2839-2891`). Strong induction on
+  `Fintype.card α`: a step hypothesis that closes each case (A/B/C)
+  using the induction hypothesis on strictly smaller layered width-3
+  posets yields `HasBalancedPair α` unconditionally. F4 (Case B
+  ordinal-sum transfer) and F5 (Case C2 in-situ proposition) supply
+  the specific hook instances at call-site.
+
 ## Reference
 
 `step8.tex` §`sec:g4-balanced-pair` (`step8.tex:1612-1625`), paper
 Definition *layer-ordinal-sum reducible* added in A1 (mg-17e1);
-Lemma `lem:irr-adjacent` (`step8.tex:2461-2478`) added in A3.
+Lemma `lem:irr-adjacent` (`step8.tex:2461-2478`) added in A3;
+strong-induction proof of `lem:layered-balanced`
+(`step8.tex:2839-2891`) restructured in A3 / mg-ec58.
 -/
 
 namespace OneThird
@@ -283,6 +294,122 @@ theorem exists_adjacent_not_lt_of_irreducible
     have h1 : u < w' := IH hjK w' hbw'
     have h2 : w' < w := hContra j w' w h1j hjLtK hbw' hbw
     exact lt_trans h1 h2
+
+/-! ### §5 — F3: Well-founded recursion framework for iterated reduction -/
+
+set_option linter.unusedVariables false in
+/-- **F3: Strong induction on `Fintype.card α` for `HasBalancedPair`.**
+
+The well-founded recursion framework underlying the paper's strong
+induction in the proof of `lem:layered-balanced` (`step8.tex:2839-2891`,
+restructured by A3 / mg-ec58).
+
+**Shape of the hypothesis.** Given a step function `hStep` that produces
+`HasBalancedPair α` for every non-chain layered width-3 poset `α`,
+*using an induction hypothesis on strictly smaller types* (any
+`β` with `Fintype.card β < Fintype.card α` that is itself a non-chain
+layered width-3 poset also has a balanced pair), the framework delivers
+the conclusion unconditionally.
+
+**Case structure (paper, `step8.tex:2838-2891`).** The `hStep` hook is
+meant to be discharged by the case split:
+
+* **Case A (K = 1)**: direct antichain argument (no IH needed). This
+  mirrors `step8.tex:2847-2849`.
+
+* **Case B (`L` reducible at some `k`)**: apply the IH to the non-chain
+  factor `P_j` of the ordinal-sum decomposition `P = P_1 ⊕ P_2`, then
+  transfer via `L(P) ≃ L(P_1) × L(P_2)` (the F4 / OrdinalChainLift
+  infrastructure). Corresponds to `step8.tex:2851-2861`.
+
+* **Case C (`L` irreducible, K ≥ 2)**: pick an incomparable pair,
+  window-localise via `windowLocalization`. Either
+  * **C1 (`W ⊊ X`)**: IH applies to `P|_W` (strict size descent), and
+    `hasBalancedPair_lift` transfers the balanced pair back. This
+    mirrors `step8.tex:2879-2883`.
+  * **C2 (`W = X`)**: `P` itself is of bounded size, and the in-situ
+    balanced-pair proposition (`prop:in-situ-balanced`, F5) applies.
+    Corresponds to `step8.tex:2885-2888`.
+
+**Why this packaging.** Separating the recursion skeleton from the
+case-closing steps lets F4 (chained `OrdinalDecomp` lift for Case B)
+and F5 (generalised `lem_layered_balanced_subtype` for Case C2)
+evolve independently: each lands as a callable lemma that slots into
+`hStep`, without touching the recursion driver itself.
+
+**Reference.** `step8.tex:2911-2921` (`rem:old-vs-new`): "the
+`well-founded recursion framework for iterated reduction' (work item
+F3) ... [is] the Lean image of the outer induction on `|X|`."
+
+**Proof.** Strong induction on `Fintype.card α`, packaged via
+`Nat.strong_induction_on` with the type parameter generalised inside the
+inductive step. -/
+theorem hasBalancedPair_of_layered_strongInduction.{u}
+    (hStep : ∀ (α : Type u) [PartialOrder α] [Fintype α]
+        [DecidableEq α] (L : LayeredDecomposition α),
+        2 ≤ Fintype.card α →
+        ¬ OneThird.IsChainPoset α →
+        (∀ (β : Type u) [PartialOrder β] [Fintype β]
+             [DecidableEq β] (LB : LayeredDecomposition β),
+          Fintype.card β < Fintype.card α →
+          2 ≤ Fintype.card β →
+          ¬ OneThird.IsChainPoset β →
+          OneThird.HasBalancedPair β) →
+        OneThird.HasBalancedPair α) :
+    ∀ (α : Type u) [PartialOrder α] [Fintype α]
+      [DecidableEq α] (L : LayeredDecomposition α),
+      2 ≤ Fintype.card α →
+      ¬ OneThird.IsChainPoset α →
+      OneThird.HasBalancedPair α := by
+  -- Strong induction on the numeric `Fintype.card α`, generalising over α.
+  suffices h : ∀ n : ℕ, ∀ (α : Type u) [PartialOrder α] [Fintype α]
+      [DecidableEq α] (L : LayeredDecomposition α),
+      Fintype.card α = n →
+      2 ≤ Fintype.card α →
+      ¬ OneThird.IsChainPoset α →
+      OneThird.HasBalancedPair α by
+    intro α _ _ _ L h2 hNC
+    exact h (Fintype.card α) α L rfl h2 hNC
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro α _ _ _ L hcard h2 hNotChain
+    refine hStep α L h2 hNotChain ?_
+    intro β _ _ _ LB hβLt h2β hNCβ
+    -- `Fintype.card β < Fintype.card α = n`, so IH applies at `Fintype.card β`.
+    rw [hcard] at hβLt
+    exact ih (Fintype.card β) hβLt β LB rfl h2β hNCβ
+
+set_option linter.unusedVariables false in
+/-- **F3 corollary — cardinality-bounded form.**
+
+Variant of `hasBalancedPair_of_layered_strongInduction` that exposes the
+cardinality bound `n` as an explicit parameter. Useful at call-sites that
+already carry a bound on `Fintype.card α` (e.g., after window-localising
+to a window of size `≤ 3(3w + 1)`).
+
+The proof is the same strong induction, phrased with `Fintype.card α ≤ n`
+instead of implicit universal quantification. -/
+theorem hasBalancedPair_of_layered_strongInduction_le.{u}
+    (hStep : ∀ (α : Type u) [PartialOrder α] [Fintype α] [DecidableEq α]
+        (L : LayeredDecomposition α),
+        2 ≤ Fintype.card α →
+        ¬ OneThird.IsChainPoset α →
+        (∀ (β : Type u) [PartialOrder β] [Fintype β] [DecidableEq β]
+             (LB : LayeredDecomposition β),
+          Fintype.card β < Fintype.card α →
+          2 ≤ Fintype.card β →
+          ¬ OneThird.IsChainPoset β →
+          OneThird.HasBalancedPair β) →
+        OneThird.HasBalancedPair α) :
+    ∀ (n : ℕ) (α : Type u) [PartialOrder α] [Fintype α] [DecidableEq α]
+      (L : LayeredDecomposition α),
+      Fintype.card α ≤ n →
+      2 ≤ Fintype.card α →
+      ¬ OneThird.IsChainPoset α →
+      OneThird.HasBalancedPair α := by
+  intro n α _ _ _ L _hle h2 hNC
+  exact hasBalancedPair_of_layered_strongInduction hStep α L h2 hNC
 
 end Step8
 end OneThird
