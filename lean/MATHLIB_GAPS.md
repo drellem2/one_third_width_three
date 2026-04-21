@@ -136,20 +136,47 @@ D4 (the easy conductance/Dirichlet inequality for indicators), which
 is ~30 lines, plus D2 as a notational wrapper on C4. The full Cheeger
 inequality (D3, D5) is **not needed**.
 
-### E. Correlation inequalities (historical context only)
+### E. Correlation inequalities
 
-These appear in `main.tex:140–150` (history/prior-art) but are **not
-used** by the Step 1–8 proof. Included for completeness.
+The §1 audit originally classified this bucket as "historical context
+only". The 2026-04-21 A9/A10 landings
+(`mg-17ef` rewriting `lem:one-elem-perturb` + `mg-030b` flagging
+`rem:one-elem-perturb-fkg`) partially **reversed** that verdict: the
+sharp bound `eq:sharp-centred` in `lem:one-elem-perturb`
+(`step8.tex:1042`) pulls FKG / Ahlswede–Daykin for linear extensions
+back into the proof as a *load-bearing external input*. Specifically
+the proof requires a Brightwell-style single-element perturbation
+bound (see `E5` below), which is not the bare `fkg` / `four_functions`
+statement in mathlib.
 
 | # | Object / result | Status |
 |---|---|---|
-| E1 | FKG inequality | IN MATHLIB (`Mathlib.Combinatorics.SetFamily.FourFunctions`, theorem `fkg`) |
+| E1 | FKG inequality (distributive-lattice form) | IN MATHLIB (`Mathlib.Combinatorics.SetFamily.FourFunctions`, theorem `fkg`) |
 | E2 | Ahlswede–Daykin (four functions theorem) | IN MATHLIB (same file: `four_functions_theorem`, `holley`) |
 | E3 | Kahn–Saks log-concavity of rank probabilities | NOT IN MATHLIB |
 | E4 | XYZ / Fishburn–Shepp inequality | NOT IN MATHLIB |
+| E5 | **FKG/AD for the uniform measure on `L(P)`, in Brightwell's single-element perturbation form** `\|Σ_{L' ∈ A} (f(L') - \bar f)\| ≤ 2N/m` (`eq:sharp-centred`, `step8.tex:1042`) | **NOT IN MATHLIB**, and load-bearing after A9/A10. Tracked as Lean work item **`mg-3c06`** (F6-prereq). Paper-side proof itself still TBD (`mg-391c`, A10b). |
 
-**Assessment.** The present proof's methodological novelty is precisely
-that it avoids E3, E4. We do not need them formalized.
+**Assessment.** E3, E4 remain genuinely unused — the methodological
+novelty vs. Kahn–Saks / XYZ is preserved. But E5 is now required. The
+mathlib `fkg` / `four_functions_theorem` is the correct *input* to
+E5, not the output: to get E5 one needs (a) a lattice structure on
+`LinearExt α` compatible with the mathlib `fkg` shape (most naturally
+via Birkhoff correspondence with the distributive lattice of order
+ideals of a transversal chain), (b) a transfer of the FKG conclusion
+to the uniform measure on `LinearExt α` over monotone events, (c) the
+1-Lipschitz property of the fiber-size function
+`f = S - P : L(Q-z) → {1, ..., m}` on the adjacent-transposition graph
+(pure combinatorics, see `step8.tex:1014–1023`), and (d) the
+Brightwell coupling that combines (b) + (c) into the centred-sum
+bound. Item (a) is the heaviest single chunk; (c) is the one piece
+independent of FKG.
+
+The assessment in this section was revised on 2026-04-21 (pc-3c06)
+after the A10 audit exposed that the original "not needed" verdict
+depended on the old informal version of `lem:one-elem-perturb`. The
+sharpened A9 version makes the FKG/AD dependency explicit and
+load-bearing.
 
 ### F. Discrete / planar isoperimetry
 
@@ -206,8 +233,10 @@ are for a Mathlib-level writeup given the existing LaTeX source.
 - `ProbabilityTheory.variance`, `evariance`.
 - `SimpleGraph` base, `edgeFinset`, `incidenceSet`, `degree`.
 - FKG inequality, Ahlswede–Daykin four-functions theorem
-  (`Mathlib.Combinatorics.SetFamily.FourFunctions`) — *not needed* by
-  this proof but present.
+  (`Mathlib.Combinatorics.SetFamily.FourFunctions`) — needed as an
+  *input* to E5 (Brightwell single-element perturbation for
+  `LinearExt`), but not usable directly without a lattice structure
+  on `LinearExt α`. See §2.E.
 - `YoungDiagram`: finite lower sets of `ℕ²` (usable as
   staircase-region API for the 2D grid isoperimetry).
 
@@ -227,6 +256,8 @@ are for a Mathlib-level writeup given the existing LaTeX source.
 
 ### Missing and medium (1–2 months each)
 - B2 Dilworth's theorem (Mathlib-worthy lemma in its own right).
+- E5 Brightwell single-element perturbation for `LinearExt`
+  (`mg-3c06`, blocks F6a/F6b and all downstream Lean work). See §2.E.
 - F6 Step 2 weak grid stability lemma.
 - F7 Step 1 triple-overlap `Z³` cube corollary.
 - Steps 1, 3, 4, 5, 6 main propositions (each a few hundred lines of
@@ -245,6 +276,10 @@ are for a Mathlib-level writeup given the existing LaTeX source.
 - Full spectral-gap / Poincaré machinery on reversible Markov chains.
 - XYZ / Fishburn–Shepp, Kahn–Saks log-concavity. The methodological
   novelty is avoiding these.
+- **Note (2026-04-21):** FKG / Ahlswede–Daykin was originally listed
+  here but has been moved to §4 "Missing and medium" (E5) after the
+  A9/A10 landings made the Brightwell single-element perturbation
+  bound load-bearing in `lem:one-elem-perturb`.
 
 ---
 

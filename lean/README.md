@@ -159,15 +159,52 @@ Phase 3 (Lean formalisation):
   and lemmas.
 * **mg-F5** — close the sorry at `LayeredBalanced.lean:728` using
   F1..F4.
-* **mg-F6** — formalise `eq:exc-perturb` in Lean (consumes A6).
-  Split by `pc-8148` into two sub-items after paper-side scope
-  assessment (paper proof = two lemmas, Lean LoC estimate > 300):
+* **mg-F6-prereq** (mg-3c06) — port the FKG / Ahlswede–Daykin
+  inequality for `LinearExt α` into Lean, in the Brightwell
+  single-element perturbation form
+  `|Σ_{L' ∈ A}(f(L') − f̄)| ≤ 2N/m` (`eq:sharp-centred`,
+  `step8.tex:1042`). This is the external input the A9/A10 landing
+  exposes as load-bearing for `lem:one-elem-perturb`'s 2/m bound.
+  Scope-assessed by `pc-3c06` (2026-04-21) as **1500–3000 LoC** total,
+  above the 500-LoC polecat threshold. Proposed decomposition (the
+  mayor is the authority on whether this decomposition is accepted):
+  * **mg-F6-prereq-1** (lattice) — Birkhoff-style lattice structure
+    on `LinearExt α` (via the distributive lattice of order ideals
+    of a chain system, or a direct lattice operation on
+    `LinearExt α` parametrised by a fixed base extension). Enough
+    API to transport the mathlib `fkg` / `four_functions_theorem`
+    input. **~400–600 LoC.**
+  * **mg-F6-prereq-2** (FKG transport) — apply the mathlib
+    `four_functions_theorem` to establish a correlation inequality
+    for the uniform measure on `LinearExt α` over monotone events
+    in the above lattice structure. **~300–400 LoC.**
+  * **mg-F6-prereq-3** (1-Lipschitz `f`) — define the fiber-size
+    function `f : L(Q-z) → {1, ..., m}`, `f(L') = S(L') − P(L')`,
+    and prove it is 1-Lipschitz on the adjacent-transposition graph
+    of `L(Q-z)`. Pure combinatorics, **independent of FKG**, paper
+    reference `step8.tex:1014–1023`. **~150–250 LoC.** This is the
+    cleanest self-contained chunk and a natural first sub-polecat.
+  * **mg-F6-prereq-4** (sharp centred bound) — combine
+    `mg-F6-prereq-2` and `mg-F6-prereq-3` via Brightwell's coupling
+    argument to derive `eq:sharp-centred` from FKG + 1-Lipschitz.
+    **~500–800 LoC.** Substantive mathematical content; paper-side
+    counterpart is `mg-391c` (A10b), which is still TBD. Lean
+    F6-prereq-4 should not be attempted before `mg-391c` lands,
+    since the paper does not currently spell out the derivation.
+  * **mg-F6-prereq-5** (wire-up) — consume the sharp-centred bound
+    in a small "FKG black box" helper lemma with the exact form
+    `lem:one-elem-perturb` consumes it. **~50 LoC.**
+* **mg-F6** — formalise `eq:exc-perturb` in Lean (consumes A6,
+  F6-prereq-5). Split by `pc-8148` into two sub-items after
+  paper-side scope assessment:
   * **mg-F6a** (mg-1f5e) — port `lem:one-elem-perturb`
     (`step8.tex:911-1023`), the single-element deletion coupling
     bound `|pxy(Q) - pxy(Q-z)| ≤ 2/m`. The fibration machinery
     (`π : LinearExt α → LinearExt {a // a ≠ z}`) is the bulk of the
     work. Depends on A9 (mg-17ef) landing to clean up the paper's
     'second factor ≤ 2/(m-1)' derivation before Lean formalisation.
+    *Now also blocked on F6-prereq (or the F6-prereq-5 wire-up
+    lemma, at minimum) for the sharp 2/m conclusion.*
   * **mg-F6b** (mg-7496) — port `lem:exc-perturb`
     (`step8.tex:1025-1062`) as an iterated telescoping of F6a over
     an enumeration of `X^exc`, plus the harmonic bound
