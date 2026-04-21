@@ -1062,6 +1062,31 @@ $|p_{xy}(Q) - p_{xy}(Q-z)| \le \frac{m-1}{m}\cdot\frac{2}{m-1}
 = \frac{2}{m}$ consistently with~\eqref{eq:one-elem-perturb}.
 \end{proof}
 
+\begin{remark}[Scope dependency: FKG for linear extensions as an external input]\label{rem:one-elem-perturb-fkg}
+The proof above is self-contained through
+identity~\eqref{eq:diff-identity} and the $1$-Lipschitz property
+of~$f$ on the adjacent-transposition Cayley graph of
+$\mathcal L(Q-z)$, which together give only the weak bound
+$|\sum_{L' \in A}(f(L') - \bar f)| \le (m-1)|A||A^c|/N'$. The
+\emph{sharp} bound~\eqref{eq:sharp-centred},
+$|\sum_{L' \in A}(f(L') - \bar f)| \le 2N/m$, which is what actually
+yields the factor $2/m$ in~\eqref{eq:one-elem-perturb}, is invoked
+here as an \emph{external input}: it follows from combining the
+$1$-Lipschitz property of~$f$ with the Ahlswede--Daykin/FKG
+correlation inequality for the uniform measure on
+$\mathcal L(Q-z)$~\cite{AhlswedeDaykin1978,FKG1971}, via the
+single-element perturbation argument of
+Brightwell~\cite{Brightwell1999} and Kahn--Saks~\cite{KahnSaks1984}.
+We invoke FKG/Ahlswede--Daykin as a named black box rather than
+reproduce its application in full; consequently
+Lemma~\ref{lem:one-elem-perturb} carries FKG for linear extensions as
+a scope dependency, and the gap flagged in the pc-1f5e diagnosis of
+eq:diff-final as a tautology is resolved by naming this external
+input explicitly, not by an internal derivation of the $2/m$ bound.
+A separate work item (mg-391c) tracks writing the FKG/AD application
+to the centred sum $\sum_{L' \in A}(f(L') - \bar f)$ out formally.
+\end{remark}
+
 \begin{lemma}[Exceptional-set perturbation bound]
 \label{lem:exc-perturb}
 Let $P$ be a finite poset on $n$ elements, and let
