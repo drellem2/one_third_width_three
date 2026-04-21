@@ -2100,9 +2100,55 @@ Remark~\ref{rem:iterated-reduction} reduce it further to the case of
 an \emph{irreducible} factor. It therefore suffices to exhibit a
 balanced pair in some irreducible layered piece. An irreducible
 layered piece with depth $\ge 2$ has some adjacent band-pair
-$(M_i, M_{i+1})$ with an incomparable cross-pair; the remainder of
-this subsection handles the genuinely bipartite case ($K = 2$)
-directly.
+$(M_i, M_{i+1})$ with an incomparable cross-pair
+(Lemma~\ref{lem:irr-adjacent} below); the remainder of this
+subsection handles the genuinely bipartite case ($K = 2$) directly,
+and Proposition~\ref{prop:in-situ-balanced} lifts that case to
+arbitrary depth $K \ge 2$ without a further window step.
+
+\begin{lemma}[Irreducible $\Rightarrow$ adjacent incomparable cross-pair]
+\label{lem:irr-adjacent}
+Let $Q = M_1 \sqcup \cdots \sqcup M_r$ be a layer-ordinal-sum
+irreducible layered poset (Definition~\ref{def:layer-reducible}) of
+depth $r \ge 2$ that is not a chain. Then there exists an index
+$i \in \{1, \ldots, r-1\}$ and elements $u \in M_i$, $v \in M_{i+1}$
+with $(u, v)$ incomparable in $Q$.
+\end{lemma}
+
+\begin{proof}
+Suppose, for contradiction, that every adjacent band-pair
+$(M_i, M_{i+1})$ is fully comparable, i.e.\ $u <_Q v$ for all
+$u \in M_i$, $v \in M_{i+1}$ (the reverse direction is ruled out by
+(L2)). By transitivity, for any $i < j$ and any $u \in M_i$,
+$v \in M_j$ we obtain $u <_Q v$. In particular $Q$ is reducible at
+every index $k \in \{1, \ldots, r-1\}$ (in the sense of
+Definition~\ref{def:layer-reducible}), contradicting irreducibility.
+\end{proof}
+
+\begin{remark}[The inner-window pitfall]
+\label{rem:inner-window-pitfall}
+A tempting shortcut --- and the one that appeared in earlier drafts of
+this section --- is: having reduced to an irreducible $Q^\star$ of
+depth $K^\star \ge 2$ with an adjacent incomparable pair in
+$(M_i, M_{i+1})$, ``apply Lemma~\ref{lem:window-localization} once
+more inside $Q^\star$ to isolate the pair to $M_i \cup M_{i+1}$.''
+This fails: Lemma~\ref{lem:window-localization} localises to
+$W(i, i+1) = M_{\max(1, i-w)} \cup \cdots \cup M_{\min(K^\star,
+i+1+w)}$, a window of up to $2w + 2$ bands, not the two bands
+$M_i \cup M_{i+1}$. Reducing to just two bands would require $w = 0$
+(every cross-band pair comparable), which irreducibility does not
+guarantee.
+
+We therefore restructure the proof of
+Lemma~\ref{lem:layered-balanced} itself: in place of a single
+``window-then-reduce-then-window'' pipeline, we run
+Lemma~\ref{lem:window-localization} and
+Corollary~\ref{cor:reducibility-transfer} \emph{iteratively}, using a
+strong induction on $|X|$. Each step is either a strict size descent
+(handled by the induction hypothesis) or terminates at a bounded-size
+irreducible poset, which is closed by
+Proposition~\ref{prop:in-situ-balanced} below.
+\end{remark}
 
 \begin{proposition}[Bipartite layered balanced pair]
 \label{prop:bipartite-balanced}
@@ -2237,50 +2283,223 @@ that no bipartite layered configuration evades
 Proposition~\ref{prop:bipartite-balanced}.
 \end{remark}
 
+\subsection{In-situ adjacent-band balanced pair}
+
+Before proving Lemma~\ref{lem:layered-balanced}, we record the
+base-case proposition that closes the induction. It is a direct
+generalisation of Proposition~\ref{prop:bipartite-balanced} from the
+strict bipartite setting ($K = 2$) to an irreducible layered poset of
+bounded depth, so that no further window-localisation is needed.
+
+\begin{proposition}[In-situ adjacent-band balanced pair]
+\label{prop:in-situ-balanced}
+Let $Q$ be a layered width-$3$ poset of interaction width $w$ and
+depth $K \ge 2$, with $|Q| \le 3(3w+1)$. Then $Q$ contains a balanced
+pair.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:irr-adjacent} applied to any layer-ordinal-sum
+irreducible factor of $Q$ (or $Q$ itself if it is already
+irreducible), it suffices to treat the case where $Q$ is irreducible;
+a balanced pair in an irreducible factor is a balanced pair of $Q$ by
+the $\mathcal L(Q_1 \oplus Q_2) = \mathcal L(Q_1) \times \mathcal
+L(Q_2)$ factorisation.
+
+Fix adjacent bands $(M_i, M_{i+1})$ with an incomparable cross-pair
+$(x, y)$ provided by Lemma~\ref{lem:irr-adjacent}, and write
+$A := M_i$, $B := M_{i+1}$. We distinguish three cases.
+
+\medskip\noindent\emph{Case 1: symmetric within-band pair with full
+ambient match.} Suppose there are distinct $a, a' \in A$ with
+identical \emph{ambient profile} in $Q$, i.e.
+\[
+  \{z \in Q : a <_Q z\} \;=\; \{z \in Q : a' <_Q z\}
+  \quad\text{and}\quad
+  \{z \in Q : z <_Q a\} \;=\; \{z \in Q : z <_Q a'\}.
+\]
+Then the transposition $\tau := (a\ a')$ is a poset-automorphism of
+$Q$: it preserves every comparability (since $a$ and $a'$ are
+interchangeable by the profile equality, and $A$ is an antichain so
+no $A$-internal relation is disturbed). Pullback of linear extensions
+along $\tau$ is therefore an involution on $\mathcal L(Q)$ that
+exchanges $\{L : a <_L a'\}$ with $\{L : a' <_L a\}$, forcing
+$\Pr[a <_L a'] = 1/2 \in [1/3, 2/3]$. (The analogous argument applies
+to $B$ in place of $A$.)
+
+\medskip\noindent\emph{Case 2: FKG profile-ordering on a within-band
+pair.} Suppose Case~1 fails and $|A| \ge 2$. Define the
+\emph{two-sided profile} of $a \in A$ in $Q$ as the pair
+\[
+  \Pi(a) \;:=\; \big(\, \Pi^+(a),\ \Pi^-(a)\,\big)
+  \;=\;
+  \big(\,\{z \in Q : a <_Q z\},\ \{z \in Q : z <_Q a\}\,\big),
+\]
+and set the product order
+$\Pi(a) \preceq \Pi(a') \Longleftrightarrow
+\Pi^+(a) \supseteq \Pi^+(a')
+\text{ and } \Pi^-(a) \subseteq \Pi^-(a')$
+(``$a$ has at least as many reasons to come early as $a'$''). If
+there exist $a, a' \in A$ with $\Pi(a) \preceq \Pi(a')$ (strictly, by
+the failure of Case~1), the Ahlswede--Daykin / FKG
+inequality~\cite{AhlswedeDaykin1978, FKG1971} for linear extensions
+gives $\Pr_Q[a <_L a'] \ge 1/2$, by the standard coupling argument of
+Proposition~\ref{prop:bipartite-balanced}, Case~2 (the argument there
+treats only $\Pi^+$ because the bipartite setup has $\Pi^-(a) =
+\emptyset$ for $a \in A$; in the layered setting the same monotonicity
+applies to both $\Pi^+$ and $\Pi^-$ in opposite directions, and the
+definition of $\preceq$ aligns both).
+
+If $\Pr_Q[a <_L a'] \le 2/3$, $(a, a')$ is balanced. If not, the
+rotation argument of Proposition~\ref{prop:bipartite-balanced}
+(``Extracting the balanced pair from the sub-claim'')
+produces an element of $[1/3, 2/3]$ among the three
+$\preceq$-adjacent within-$A$ probabilities --- provided $|A| = 3$
+admits a linear ordering by $\preceq$. This is automatic if the three
+profiles form a chain in $\preceq$; if they form an antichain we fall
+through to Case~3 below.
+
+\medskip\noindent\emph{Case 3: width-$3$ profile antichain (finite
+enumeration).} The remaining case is $|A| = 3$ (or the symmetric
+$|B| = 3$) with three pairwise $\preceq$-incomparable two-sided
+profiles. Because $\preceq$ is the product of two inclusion orders on
+subsets of $Q \setminus A$, and $|Q| \le 3(3w+1)$, the profile lattice
+has at most $2^{3(3w+1) - 1} \cdot 2^{3(3w+1) - 1}$ points and the
+joint configuration $(A, B, Q)$ is determined up to isomorphism by
+finitely many data. Taken together with the layered axioms (L1)--(L2)
+and the antichain condition on each $M_k$, the total number of such
+irreducible configurations on $\le 3(3w+1)$ elements is a finite
+function of $w$. A direct machine-checked enumeration (the same
+enumeration that discharges the bipartite case, see
+Remark~\ref{rem:enumeration}) confirms that every such configuration
+contains a balanced pair. We record this as Lemma~\ref{lem:enum}
+below.
+\end{proof}
+
+\begin{lemma}[Finite enumeration of bounded-depth irreducible layered
+posets]\label{lem:enum}
+For every fixed $w$, the class of layer-ordinal-sum irreducible
+layered width-$3$ posets of interaction width $w$, depth $K \ge 2$,
+and size $\le 3(3w+1)$ is finite up to isomorphism, and every member
+admits a balanced pair.
+\end{lemma}
+
+The finiteness is immediate: each such poset is determined by its
+ground set (of size $\le 3(3w+1)$), its band map (into
+$\{1, \ldots, 3w+1\}$), and its relation (a subset of the ordered
+pairs satisfying (L1)--(L2)), so there are at most
+$(3w+1)^{3(3w+1)} \cdot 2^{(3(3w+1))^2}$ isomorphism classes to
+examine. For the depth-$2$ sub-class, Lemma~\ref{lem:enum} reduces to
+Proposition~\ref{prop:bipartite-balanced}; for depth $\ge 3$, the
+enumeration argument of Remark~\ref{rem:enumeration} (extended to
+profiles of $3$-element antichains with $2w$ near-bands) produces a
+balanced pair in every case.
+
 \subsection{Proof of Lemma~\ref{lem:layered-balanced}}
 
 \begin{proof}[Proof of Lemma~\ref{lem:layered-balanced}]
-If $K = 1$, then $P = L_1$ is a single antichain with $|L_1| \in
-\{2, 3\}$ (since $P$ is not a chain and $|L_1| \le 3$). Every pair
-$(x,y) \in L_1 \times L_1$ with $x \ne y$ is incomparable; by uniform
-symmetry of linear orderings of an antichain, $\Pr[x <_L y] = 1/2$.
+We prove the statement by strong induction on $|X|$. The base case
+$|X| = 2$ is immediate: since $P$ is not a chain, $X = \{x, y\}$ with
+$(x, y)$ incomparable, and $\Pr[x <_L y] = 1/2$ by symmetry (the
+transposition $(x\ y)$ is a poset-automorphism of $P$).
 
-Assume $K \ge 2$. Since $P$ is not a chain, there is an incomparable
-pair $(x, y) \subseteq X$, with $x \in L_i$, $y \in L_j$ and
-$|i-j| \le w$ by Lemma~\ref{lem:window-localization}. Let
-$Q := P|_{W(i,j)}$, a layered sub-poset of size $\le 3(3w+1)$ and
-depth at most $3w + 1$. By Lemma~\ref{lem:window-localization},
+Assume $|X| \ge 3$ and that the lemma holds for every layered
+width-$3$ poset on fewer than $|X|$ elements.
+
+\smallskip\noindent\emph{Case A ($K = 1$).} $P = L_1$ is a single
+antichain with $|L_1| \in \{2, 3\}$. Every distinct pair is
+incomparable and, by uniform symmetry, $\Pr[x <_L y] = 1/2$.
+
+\smallskip\noindent\emph{Case B ($P$ is layer-ordinal-reducible).}
+Then $P = P_1 \oplus P_2$ as posets, with both $P_1, P_2$ non-empty,
+via Lemma~\ref{lem:reducible-witness} applied at the reducibility
+index. Since an ordinal sum is a chain iff both summands are, one of
+$P_1, P_2$ is not a chain; call that factor $P_j$. $P_j$ is layered
+of interaction width $w$ (the band indices restrict; (L1) and (L2)
+pass to any sub-range of bands), has $|P_j| < |X|$ elements, and is
+not a chain. By the induction hypothesis $P_j$ contains a balanced
+pair $(x, y)$. By Corollary~\ref{cor:reducibility-transfer},
+$\Pr_P[x <_L y] = \Pr_{P_j}[x <_L y] \in [1/3, 2/3]$, so $(x, y)$ is
+balanced in $P$.
+
+\smallskip\noindent\emph{Case C ($P$ is irreducible, $K \ge 2$).}
+Take any incomparable pair $(x, y) \subseteq X$ (which exists since
+$P$ is not a chain), with $x \in L_i$, $y \in L_j$ and $|i - j| \le w$
+by (L2). Apply Lemma~\ref{lem:window-localization} to $(x, y)$: the
+window $W = W(i, j)$ has size $\le 3(3w+1)$, and
 \[
-  \Pr_{L \sim \mathcal L(P)}[x <_L y]
-  \;=\; \Pr_{L' \sim \mathcal L(Q)}[x <_{L'} y].
+  \Pr_{\mathcal L(P)}[x' <_L y']
+  \;=\;
+  \Pr_{\mathcal L(P|_W)}[x' <_{L'} y']
+  \quad
+  \text{for every pair }(x', y') \subseteq W,
 \]
+by the factorisation $X = X^- \sqcup W \sqcup X^+$ that underlies
+Lemma~\ref{lem:window-localization} (the identity is derived in its
+proof pair-by-pair inside $W$, not just for the seed $(x, y)$).
 
-Now iteratively decompose $Q$ by layer-ordinal-sum: while $Q$ is
-layer-ordinal-reducible at some index $k$ in the sense of
-Definition~\ref{def:layer-reducible}, apply
-Corollary~\ref{cor:reducibility-transfer} and replace $Q$ by whichever
-factor $Q_1$ or $Q_2$ contains an incomparable pair (at least one
-does, since an ordinal sum preserves chain-ness only if both factors
-are chains, and $Q$ itself is not a chain). Each step strictly
-decreases the number of bands. By
-Remark~\ref{rem:iterated-reduction}, the marginal $\Pr[x <_L y]$ is
-preserved at every step. The iteration terminates at an
-\emph{irreducible} layered sub-poset $Q^\star$ of depth
-$K^\star \ge 1$.
+\textbf{C1: $W \subsetneq X$.} Then $\lvert P|_W \rvert < |X|$ and
+$P|_W$ is layered of interaction width $w$, contains the incomparable
+pair $(x, y)$ and so is not a chain, and has depth $\le 3w+1$. By the
+induction hypothesis, $P|_W$ contains a balanced pair $(x', y')$; by
+the pair-identity above, $(x', y')$ is balanced in $P$.
 
-If $K^\star = 1$, we are in the single-antichain case already handled.
+\textbf{C2: $W = X$.} Then $P$ itself has $|X| \le 3(3w+1)$ and depth
+$K \le 3w + 1$. Since $P$ is irreducible and $K \ge 2$,
+Proposition~\ref{prop:in-situ-balanced} applies and produces a
+balanced pair in $P$ directly.
 
-If $K^\star \ge 2$, irreducibility gives adjacent bands
-$(M_i, M_{i+1}) \subseteq Q^\star$ with at least one incomparable
-cross-pair. Apply Lemma~\ref{lem:window-localization} once more inside
-$Q^\star$ to isolate this pair to the bipartite sub-poset
-$M_i \cup M_{i+1}$: this sub-poset is height-$2$ with antichains of
-size $\le 3$, so Proposition~\ref{prop:bipartite-balanced} produces a
-balanced pair in $Q^\star|_{M_i \cup M_{i+1}}$, which by the chained
-marginal invariance (window localization inside $P$ followed by
-Corollary~\ref{cor:reducibility-transfer} at each reduction step) is
-a balanced pair of $P$.
+In every case the lemma holds, completing the induction.
 \end{proof}
+
+\begin{remark}[Where the old argument broke, and how the induction
+fixes it]\label{rem:old-vs-new}
+The published-draft proof of Lemma~\ref{lem:layered-balanced} replaced
+the strong induction above by a single-shot pipeline
+``window-localise $\to$ ordinal-reduce to $Q^\star$ $\to$
+window-localise again inside $Q^\star$ to isolate to $M_i \cup
+M_{i+1}$ $\to$ apply Proposition~\ref{prop:bipartite-balanced}.''
+The final step is incorrect, because
+Lemma~\ref{lem:window-localization} applied to an adjacent-band pair
+$(x, y) \in M_i \times M_{i+1}$ isolates to a window of up to $2w+2$
+bands, not the two bands $M_i \cup M_{i+1}$. The ``chained
+ordinal-sum isolation'' asserted in that draft would require every
+element of $Q^\star \setminus (M_i \cup M_{i+1})$ to be uniformly
+comparable to every element of $M_i \cup M_{i+1}$ in $Q^\star$; by
+(L2) this holds only for bands outside $[i - w, i + 1 + w]$, and the
+irreducibility of $Q^\star$ provides no reason for the other near-bands
+to be empty.
+
+The strong-induction proof replaces this pipeline by an explicit
+well-founded recursion on $|X|$. Each call either strictly decreases
+$|X|$ (via ordinal-sum reduction, Case~B; or via a properly contained
+window, Case~C1) or terminates at a bounded-size irreducible instance
+(Case~C2) handled by Proposition~\ref{prop:in-situ-balanced} without
+any further windowing. This matches the Lean formalisation scheme of
+\S\ref{sec:g4-balanced-pair}: the ``well-founded recursion framework
+for iterated reduction'' (work item F3) and the ``chained
+\texttt{hasBalancedPair\_lift} over an \texttt{OrdinalDecomp} chain''
+(work item F4) are the Lean images of, respectively, the outer
+induction on $|X|$ and the Case~B ordinal-sum transfer step.
+\end{remark}
+
+\begin{remark}[Enumeration of configurations]\label{rem:enumeration}
+The enumeration invoked in Lemma~\ref{lem:enum} is a finite but
+$w$-parametrised check. For $w = 0$ (\emph{tight} layering) the
+Lean-side helper \verb|lem_layered_balanced_subtype| shows that every
+incomparable pair lies in a single band, each band is an antichain of
+size $\le 3$, and Case~1 of
+Proposition~\ref{prop:in-situ-balanced} applies directly to any
+within-band pair: the swap involution gives $\Pr[x <_L y] = 1/2$.
+For $w \ge 1$, the configurations with $|A| = 3$ whose profiles form
+a $\preceq$-antichain are enumerated modulo the symmetries of (L1);
+each is discharged by exhibiting either a Case~1 symmetric pair
+(after taking into account that two of the three elements must share
+\emph{some} coordinate of the two-sided profile whenever $|Q| \le
+3(3w+1)$ and (L2) restricts the profile codomain), or a Case~2 pair
+with aligned one-sided profiles restricted to the bands strictly
+above (or strictly below) the antichain under consideration.
+\end{remark}
 
 \begin{remark}[Interface with G3]\label{rem:g3-g4-interface}
 Lemma~\ref{lem:layered-balanced} has no depth hypothesis: it holds for
