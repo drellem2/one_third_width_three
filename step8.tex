@@ -1558,11 +1558,169 @@ pair}: an incomparable pair $(x, y)$ with
 \]
 \end{lemma}
 
-The proof has two pieces: an ordinal-sum \emph{window localization}
-that reduces the probability to a bounded sub-poset, and a direct
-averaging argument on the reduced bipartite instance.
+The proof proceeds through three ingredients. First, a general
+\emph{ordinal-sum factorisation} of linear extensions
+(\S\ref{subsec:ordinal-decomp}) shows that whenever a poset splits as a
+three-part ordinal sum, the distribution of linear extensions factors
+as a product and marginals of pair-order events within one piece are
+invariant under restriction to that piece. Specialising this
+factorisation to the slab $W(i,j)$ gives the \emph{window localization}
+of \S\ref{subsec:window-localization}, reducing the probability to a
+bounded sub-poset. A second specialisation, to the
+\emph{layer-ordinal-reducible} case (\S\ref{subsec:layer-reducible}),
+lets us isolate an irreducible factor; a \emph{direct averaging
+argument} on the reduced bipartite instance
+(\S\ref{subsec:bipartite-balanced}) then produces the balanced pair.
+
+\subsection{Ordinal-sum decompositions}
+\label{subsec:ordinal-decomp}
+
+We isolate the piece of linear-extension combinatorics used throughout
+this section: a finite poset that splits as an \emph{ordinal sum} of
+three consecutive pieces has a uniform random linear extension that
+factors as a product over those pieces. The statement below is
+phrased for a three-part split because that is the version invoked by
+window localization (where the three pieces are $X^-$, $W$, $X^+$);
+the two-part specialisation, used for layer-ordinal reducibility,
+follows by taking one piece empty.
+
+\begin{definition}[Ordinal-sum decomposition witness]
+\label{def:ordinal-decomp}
+Let $P = (X, \le_P)$ be a finite poset. An \emph{ordinal-sum
+decomposition witness} for $P$ is a triple
+$D = (X_-,\, X_0,\, X_+)$ of pairwise disjoint subsets of $X$ with
+$X_- \sqcup X_0 \sqcup X_+ = X$ satisfying the three elementwise
+comparability conditions
+\[
+  X_- \;<_P\; X_0, \qquad X_- \;<_P\; X_+, \qquad X_0 \;<_P\; X_+,
+\]
+i.e.\ $u <_P v$ whenever $u$ lies in an earlier piece than $v$. We
+write $\mathrm{OrdinalDecomp}(P)$ for the set of such witnesses and,
+given $D \in \mathrm{OrdinalDecomp}(P)$, set
+$P_- := P|_{X_-}$, $P_0 := P|_{X_0}$, $P_+ := P|_{X_+}$. We allow
+any piece to be empty, in which case the corresponding
+comparability condition is vacuous.
+\end{definition}
+
+\begin{lemma}[Ordinal-sum factorisation of linear extensions]
+\label{lem:ordinal-factorisation}
+Let $D = (X_-, X_0, X_+) \in \mathrm{OrdinalDecomp}(P)$. The
+restriction map
+\[
+  \rho_D \colon \mathcal L(P) \;\longrightarrow\;
+    \mathcal L(P_-) \times \mathcal L(P_0) \times \mathcal L(P_+),
+  \qquad
+  L \;\longmapsto\; \bigl(L|_{X_-},\,L|_{X_0},\,L|_{X_+}\bigr),
+\]
+is a bijection, under which the uniform distribution on $\mathcal
+L(P)$ corresponds to the product of the uniform distributions on the
+three factors. In particular, $|\mathcal L(P)| = |\mathcal L(P_-)|
+\cdot |\mathcal L(P_0)| \cdot |\mathcal L(P_+)|$.
+\end{lemma}
+
+\begin{proof}
+We write $n_- := |X_-|$, $n_0 := |X_0|$, $n_+ := |X_+|$, so
+$n := n_- + n_0 + n_+ = |X|$; we identify a linear extension $L$ with
+an order-preserving bijection $X \to \{1, \ldots, |X|\}$ (``positions''),
+monotone with respect to $\le_P$.
+
+\smallskip\noindent\emph{Position bands.}
+Let $L \in \mathcal L(P)$ and $x \in X_-$. Every $y \in X_0 \cup X_+$
+satisfies $x <_P y$ by the $X_-<_P X_0$ and $X_-<_P X_+$ hypotheses,
+so $\mathrm{pos}_L(x) < \mathrm{pos}_L(y)$. Hence every
+$X_-$-element occupies a strictly smaller position than every
+non-$X_-$-element, forcing $\mathrm{pos}_L(X_-)=\{1,\ldots,n_-\}$.
+The same argument applied to $X_+$ against $X_- \cup X_0$ forces
+$\mathrm{pos}_L(X_+)=\{n_-+n_0+1,\ldots,n\}$, and therefore
+$\mathrm{pos}_L(X_0)=\{n_-+1,\ldots,n_-+n_0\}$. Each of the three
+position bands is thus determined by $D$, independent of $L$.
+
+\smallskip\noindent\emph{The forward map.}
+Given $L \in \mathcal L(P)$, the restriction $L|_{X_-}$ is the
+composition of $L|_{X_-}$ (landing in $\{1,\ldots,n_-\}$) with the
+unique order-isomorphism $\{1,\ldots,n_-\} \cong \{1,\ldots,n_-\}$,
+and similarly $L|_{X_0}$ relabels positions in
+$\{n_-+1,\ldots,n_-+n_0\}$ to $\{1,\ldots,n_0\}$ by subtracting
+$n_-$, and $L|_{X_+}$ subtracts $n_-+n_0$. Each such restriction is
+monotone with respect to $\le_{P_\bullet}$ (restriction of a
+monotone map along an inclusion $X_\bullet \hookrightarrow X$
+remains monotone). So
+$\rho_D(L) \in \mathcal L(P_-) \times \mathcal L(P_0) \times
+\mathcal L(P_+)$.
+
+\smallskip\noindent\emph{The inverse map (concatenation).}
+Given $(L_-, L_0, L_+) \in \mathcal L(P_-) \times \mathcal L(P_0)
+\times \mathcal L(P_+)$, define $L \colon X \to \{1,\ldots,n\}$ by
+\[
+  L(x) \;=\;
+  \begin{cases}
+    L_-(x) & \text{if } x \in X_-,\\
+    L_0(x) + n_- & \text{if } x \in X_0,\\
+    L_+(x) + n_- + n_0 & \text{if } x \in X_+.
+  \end{cases}
+\]
+$L$ is a bijection $X \to \{1,\ldots,n\}$ since the three pieces
+partition $X$ and the three shifted images
+$\{1,\ldots,n_-\}$, $\{n_-+1,\ldots,n_-+n_0\}$,
+$\{n_-+n_0+1,\ldots,n\}$ partition $\{1,\ldots,n\}$. It is
+order-preserving with respect to $\le_P$: if $x <_P y$ then either
+(i) $x$ and $y$ lie in the same piece $X_\bullet$, in which case
+$L_\bullet(x) < L_\bullet(y)$ by monotonicity of $L_\bullet$ and the
+identical inequality transfers after the common shift, or (ii) $x$
+and $y$ lie in different pieces, say $x \in X_-$, $y \in X_0$, in
+which case $L(x) \le n_- < n_- + 1 \le L(y)$. The three cross-cases
+$(X_-, X_0)$, $(X_-, X_+)$, $(X_0, X_+)$ are all handled by the
+band structure of the codomain and do not require the hypothesis
+$x <_P y$. (There are no pairs $y <_P x$ with $x$ in an earlier
+piece than $y$, because the decomposition hypotheses only forbid
+such comparabilities; a priori one could worry about the
+\emph{absence} of $x \le_P y$ for $x \in X_-$, $y \in X_0$, but the
+concatenation still places $x$ first regardless, so monotonicity of
+$L$ is not violated. Concretely, the concatenation is always a
+\emph{linear} order; it extends $\le_P$ because every forced
+$<_P$-comparability is respected.)
+
+\smallskip\noindent\emph{The maps are mutually inverse.}
+Starting from $L$, the restriction $L|_{X_\bullet}$ lives on the
+position band $\mathrm{pos}_L(X_\bullet)$ identified above;
+concatenating the three restrictions (each shifted to start at its
+band's left endpoint) reproduces $L$ position-by-position. Starting
+from $(L_-, L_0, L_+)$, the concatenated $L$ has band $X_\bullet$
+occupying exactly the expected positions, so restricting back yields
+the original triple. Hence $\rho_D$ is a bijection.
+
+\smallskip\noindent\emph{Uniform $\leftrightarrow$ product uniform.}
+$\rho_D$ is a bijection between finite sets, so the pushforward of
+the uniform distribution on $\mathcal L(P)$ along $\rho_D$ is the
+uniform distribution on $\mathcal L(P_-) \times \mathcal L(P_0)
+\times \mathcal L(P_+)$, which coincides with the product of the
+uniform distributions on the three factors. Cardinalities follow
+from the bijection.
+\end{proof}
+
+\begin{corollary}[Marginal invariance under ordinal-sum restriction]
+\label{cor:ordinal-marginal}
+Let $D = (X_-, X_0, X_+) \in \mathrm{OrdinalDecomp}(P)$ and fix
+$x, y \in X_0$. Then
+\[
+  \Pr_{L \sim \mathcal L(P)}[x <_L y] \;=\;
+  \Pr_{L_0 \sim \mathcal L(P_0)}[x <_{L_0} y].
+\]
+The analogous identity holds for $x, y$ both in $X_-$ (resp.\ $X_+$).
+\end{corollary}
+
+\begin{proof}
+Under the bijection $\rho_D$ of Lemma~\ref{lem:ordinal-factorisation},
+the event $\{x <_L y\}$ with $x, y \in X_0$ corresponds to the event
+$\{x <_{L_0} y\}$ on the middle factor (since the relative order of
+$x$ and $y$ in $L$ equals their relative order in $L|_{X_0}$, both
+being read off the same two positions in the $X_0$-band). The
+pushforward of uniform is uniform on each factor, so marginalising
+over the $X_-$ and $X_+$ factors gives the claim.
+\end{proof}
 
 \subsection{Window localization}
+\label{subsec:window-localization}
 
 \begin{lemma}[Window localization]\label{lem:window-localization}
 Fix an incomparable pair $(x, y)$ with $x \in L_i$, $y \in L_j$, and
@@ -1585,44 +1743,142 @@ most $3(3w + 1)$ elements.
 The first statement is immediate: by~(L2), $|i-j| > w$ forces $x <_P y$
 or $y <_P x$, contradicting incomparability of $(x,y)$.
 
-For the probability identity: every $z \in X \setminus W(i,j)$ lies in
-a band $L_k$ with $|k - \min(i,j)| > w$ and $|k - \max(i,j)| > w$, so
-by~(L2) $z$ is comparable (in $P$) to every element of $W(i,j)$, and
-the direction depends only on whether $k < \min(i,j) - w$ or
-$k > \max(i,j) + w$. Thus $X$ splits as $X = X^- \sqcup W(i,j) \sqcup
-X^+$ with $X^- <_P W(i,j) <_P X^+$ (element-wise). Every linear
-extension of $P$ decomposes uniquely as a concatenation of linear
-extensions of $X^-$, $P|_{W(i,j)}$, $X^+$ chosen independently; hence
-the marginal distribution of $(x,y)$-order in a uniform extension of
-$P$ equals the corresponding marginal in a uniform extension of
-$P|_{W(i,j)}$.
+For the probability identity, we exhibit an ordinal-sum decomposition
+witness and invoke Corollary~\ref{cor:ordinal-marginal}. Every $z \in
+X \setminus W(i,j)$ lies in a band $L_k$ with $|k - \min(i,j)| > w$
+and $|k - \max(i,j)| > w$, so by~(L2) $z$ is comparable (in $P$) to
+every element of $W(i,j)$, and the direction depends only on whether
+$k < \min(i,j) - w$ or $k > \max(i,j) + w$. Set
+\[
+  X_- \;:=\; \bigcup_{k < \min(i,j) - w} L_k,
+  \qquad X_0 \;:=\; W(i,j),
+  \qquad X_+ \;:=\; \bigcup_{k > \max(i,j) + w} L_k.
+\]
+These three sets partition $X$, and by the direction of~(L2) the
+elementwise comparabilities $X_- <_P X_0 <_P X_+$ and $X_- <_P X_+$
+all hold. Hence $(X_-, X_0, X_+) \in \mathrm{OrdinalDecomp}(P)$, and
+since $x, y \in X_0 = W(i,j)$,
+Corollary~\ref{cor:ordinal-marginal} gives
+\[
+  \Pr_{L \sim \mathcal L(P)}[x <_L y] \;=\;
+  \Pr_{L_0 \sim \mathcal L(P|_{W(i,j)})}[x <_{L_0} y].
+\]
 
 The size bound follows from $|W(i,j)| \le 3(3w+1)$ using $|i-j| \le w$
-and $|L_k| \le 3$.
+and $|L_k| \le 3$, and $P|_{W(i,j)}$ inherits the layered structure
+of~$P$ with the same interaction width~$w$.
 \end{proof}
 
+\subsection{Layer-ordinal reducibility}
+\label{subsec:layer-reducible}
+
+The window localization of \S\ref{subsec:window-localization} reduces
+the balanced-pair problem to the bounded layered sub-poset
+$Q := P|_{W(i,j)}$ of depth at most $3w+1$. The next reduction
+iteratively peels off \emph{layer-ordinal-sum factorisations}
+\emph{internal} to $Q$ until no further factorisation is possible.
+
+\begin{definition}[Layer-ordinal-reducible at index $k$]
+\label{def:layer-reducible}
+A layered poset $Q = M_1 \sqcup \cdots \sqcup M_r$ (with bands
+$M_1, \ldots, M_r$ satisfying the layered axioms
+of Definition~\ref{def:layered}) is said to be
+\emph{layer-ordinal-reducible at index $k$}, for some
+$1 \le k < r$, if every cross-pair $(u, v)$ with
+$u \in M_i$, $v \in M_j$, and $i \le k < j$, satisfies $u <_Q v$.
+Equivalently, all layer-crossing comparabilities across the cut
+$k \mid k+1$ are directed upward.
+
+$Q$ is \emph{layer-ordinal-reducible} if it is reducible at some index
+$k$, and \emph{irreducible} otherwise.
+\end{definition}
+
+\begin{lemma}[Decomposition witness from reducibility]
+\label{lem:reducible-witness}
+If $Q = M_1 \sqcup \cdots \sqcup M_r$ is layer-ordinal-reducible at
+index $k$, then the triple
+\[
+  D_k \;:=\; \bigl(\,
+    \underbrace{M_1 \cup \cdots \cup M_k}_{=:\,Q_1},\;
+    \varnothing,\;
+    \underbrace{M_{k+1} \cup \cdots \cup M_r}_{=:\,Q_2}
+  \bigr)
+\]
+is an ordinal-sum decomposition witness in
+$\mathrm{OrdinalDecomp}(Q)$, with $Q|_{Q_1}$ layered of depth $k$ and
+$Q|_{Q_2}$ layered of depth $r - k$.
+\end{lemma}
+
+\begin{proof}
+The three sets partition the ground set of $Q$ by construction. The
+reducibility hypothesis is exactly the elementwise comparability
+$Q_1 <_Q Q_2$ (since every $u \in Q_1$ lies in some $M_i$ with
+$i \le k$ and every $v \in Q_2$ lies in some $M_j$ with $k < j$, so
+$u <_Q v$). The two comparabilities involving the empty middle piece
+are vacuous. Each factor $Q|_{Q_\bullet}$ inherits the layered
+structure with the obvious sub-sequence of bands.
+\end{proof}
+
+\begin{corollary}[Reducibility transfer]
+\label{cor:reducibility-transfer}
+Let $Q$ be layer-ordinal-reducible at index $k$, with factors
+$Q_1, Q_2$ as in Lemma~\ref{lem:reducible-witness}. Then the
+restriction map
+\[
+  \mathcal L(Q) \;\xrightarrow{\;\sim\;}\;
+  \mathcal L(Q|_{Q_1}) \times \mathcal L(Q|_{Q_2}),
+  \qquad L \mapsto (L|_{Q_1},\,L|_{Q_2}),
+\]
+is a bijection pushing uniform to the product uniform. For any
+$x, y$ both in $Q_1$ (resp.\ both in $Q_2$),
+\[
+  \Pr_{L \sim \mathcal L(Q)}[x <_L y]
+  \;=\;
+  \Pr_{L_1 \sim \mathcal L(Q|_{Q_1})}[x <_{L_1} y]
+  \quad\bigl(\text{resp.\ }
+  \Pr_{L_2 \sim \mathcal L(Q|_{Q_2})}[x <_{L_2} y]\bigr).
+\]
+In particular, any balanced pair of $Q|_{Q_1}$ or $Q|_{Q_2}$ is also
+a balanced pair of $Q$.
+\end{corollary}
+
+\begin{proof}
+Apply Lemma~\ref{lem:ordinal-factorisation} to the witness $D_k$ of
+Lemma~\ref{lem:reducible-witness}. The middle factor $\mathcal
+L(Q|_{\varnothing})$ is a singleton, so the three-fold product
+collapses to $\mathcal L(Q|_{Q_1}) \times \mathcal L(Q|_{Q_2})$. The
+marginal identity for $x, y$ both in $Q_1$ is
+Corollary~\ref{cor:ordinal-marginal} applied with $X_- = Q_1$ (the
+relevant ``lower'' case of the corollary); symmetrically for
+$x, y \in Q_2$. Balanced pairs transfer because the probability
+$\Pr[x <_L y]$ is literally equal in $Q$ and in the factor.
+\end{proof}
+
+\begin{remark}[Iterated reduction]
+\label{rem:iterated-reduction}
+If $Q|_{Q_1}$ is itself reducible, one can iterate
+Corollary~\ref{cor:reducibility-transfer} on $Q|_{Q_1}$; each step
+strictly decreases the number of bands, so iteration terminates at a
+pair of factors $Q^\star_1, Q^\star_2, \ldots$ each of which is
+\emph{irreducible}. The marginal identity chains: a pair $(x,y)$ both
+in some terminal irreducible factor $Q^\star_m$ satisfies
+$\Pr_{\mathcal L(Q)}[x <_L y] = \Pr_{\mathcal L(Q^\star_m)}[x <_L y]$.
+\end{remark}
+
 \subsection{Bipartite balanced pair}
+\label{subsec:bipartite-balanced}
 
 Lemma~\ref{lem:window-localization} reduces
 Lemma~\ref{lem:layered-balanced} to the finite case of a bounded
-layered sub-poset $Q = P|_{W}$. We now reduce further to the
-genuinely bipartite case ($K = 2$) by iterated ordinal decomposition,
-then prove the bipartite statement directly.
-
-\begin{definition}[Layer-ordinal-sum reducible]
-A layered poset $Q = M_1 \sqcup \cdots \sqcup M_r$ is \emph{layer-ordinal
-reducible} at index $k$ if every pair $(u,v)$ with $u \in M_i$,
-$v \in M_j$, $i \le k < j$, satisfies $u <_Q v$; equivalently,
-$Q = (M_1\cup\cdots\cup M_k) \oplus (M_{k+1}\cup\cdots\cup M_r)$ as
-posets.
-\end{definition}
-
-If $Q$ is reducible at $k$, then $\mathcal L(Q) = \mathcal L(Q_1)
-\times \mathcal L(Q_2)$ (Cartesian, concatenation), so any balanced
-pair of $Q_1$ or $Q_2$ is a balanced pair of $Q$. Therefore it suffices
-to exhibit a balanced pair in some \emph{irreducible} factor. An
-irreducible layered piece with depth $\ge 2$ has some adjacent
-band-pair $(M_i, M_{i+1})$ with an incomparable cross-pair.
+layered sub-poset $Q = P|_{W}$, and
+Corollary~\ref{cor:reducibility-transfer} together with
+Remark~\ref{rem:iterated-reduction} reduce it further to the case of
+an \emph{irreducible} factor. It therefore suffices to exhibit a
+balanced pair in some irreducible layered piece. An irreducible
+layered piece with depth $\ge 2$ has some adjacent band-pair
+$(M_i, M_{i+1})$ with an incomparable cross-pair; the remainder of
+this subsection handles the genuinely bipartite case ($K = 2$)
+directly.
 
 \begin{proposition}[Bipartite layered balanced pair]
 \label{prop:bipartite-balanced}
@@ -1775,13 +2031,18 @@ depth at most $3w + 1$. By Lemma~\ref{lem:window-localization},
   \;=\; \Pr_{L' \sim \mathcal L(Q)}[x <_{L'} y].
 \]
 
-Now iteratively decompose $Q$ by layer-ordinal-sum: while $Q$ has a
-reducibility index $k$ (Def.\ above), replace $Q$ by whichever factor
-$Q_1$ or $Q_2$ contains an incomparable pair (at least one does,
-since an ordinal sum preserves chain-ness only if both factors are
-chains, and $Q$ itself is not a chain). Each step strictly decreases
-the number of bands. The iteration terminates at an \emph{irreducible}
-layered sub-poset $Q^\star$ of depth $K^\star \ge 1$.
+Now iteratively decompose $Q$ by layer-ordinal-sum: while $Q$ is
+layer-ordinal-reducible at some index $k$ in the sense of
+Definition~\ref{def:layer-reducible}, apply
+Corollary~\ref{cor:reducibility-transfer} and replace $Q$ by whichever
+factor $Q_1$ or $Q_2$ contains an incomparable pair (at least one
+does, since an ordinal sum preserves chain-ness only if both factors
+are chains, and $Q$ itself is not a chain). Each step strictly
+decreases the number of bands. By
+Remark~\ref{rem:iterated-reduction}, the marginal $\Pr[x <_L y]$ is
+preserved at every step. The iteration terminates at an
+\emph{irreducible} layered sub-poset $Q^\star$ of depth
+$K^\star \ge 1$.
 
 If $K^\star = 1$, we are in the single-antichain case already handled.
 
@@ -1791,8 +2052,10 @@ cross-pair. Apply Lemma~\ref{lem:window-localization} once more inside
 $Q^\star$ to isolate this pair to the bipartite sub-poset
 $M_i \cup M_{i+1}$: this sub-poset is height-$2$ with antichains of
 size $\le 3$, so Proposition~\ref{prop:bipartite-balanced} produces a
-balanced pair in $Q^\star|_{M_i \cup M_{i+1}}$, which by chained
-ordinal-sum isolation is a balanced pair of $P$.
+balanced pair in $Q^\star|_{M_i \cup M_{i+1}}$, which by the chained
+marginal invariance (window localization inside $P$ followed by
+Corollary~\ref{cor:reducibility-transfer} at each reduction step) is
+a balanced pair of $P$.
 \end{proof}
 
 \begin{remark}[Interface with G3]\label{rem:g3-g4-interface}
