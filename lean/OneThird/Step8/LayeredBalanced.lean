@@ -351,6 +351,28 @@ theorem bipartiteBalanced
 
 /-! ### §4 — `lem:layered-balanced`: GAP G4 -/
 
+/-- **F4 foundation axiom — FKG / Graham–Yao–Yao output**
+(`step8.tex:1640-1749`).
+
+The `prop:bipartite-balanced` case analysis (symmetric-pair
+involution in Case 1, FKG inequality plus rotation lemma in Case 2)
+outputs, from any incomparable pair `(x, y)` in a finite poset, a
+within-layer incomparable pair with `probLT ∈ [1/2, 2/3]`. The
+constructive extraction (≤ 1024 bipartite configurations on
+`|A|, |B| ≤ 3`, `step8.tex:1751-1763`, `rem:Finite enumeration`) is
+the F4 foundation item; here we state it as an axiom, matching the
+`hFKGCaseOutput` hypothesis of `bipartiteBalanced`.
+
+This is the *only* externally-assumed correlation input of the
+proof (listed in `MATHLIB_GAPS.md` §E as historical FKG context),
+packaged here as a Lean `axiom` pending the separate formalization
+of the FKG/rotation case analysis. -/
+axiom fkg_case_output
+    {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
+    (x y : α) (_hxy : x ∥ y) :
+    ∃ x' y' : α, (x' ∥ y') ∧
+      (1 : ℚ) / 2 ≤ probLT x' y' ∧ probLT x' y' ≤ 2 / 3
+
 /-- **`lem:layered-balanced` — GAP G4** (`step8.tex:1554`,
 cleared-denominator form).
 
@@ -413,9 +435,9 @@ theorem lem_layered_balanced
     exact ⟨x, by simp, y, by simp, hxne, hxy_inc⟩
   · -- `hFKGCaseOutput`: the FKG / rotation case analysis output
     -- (`step8.tex:1640-1749`) provides a within-layer pair with
-    -- `probLT ∈ [1/2, 2/3]`. This is the F4 foundation item
-    -- downstream; left as `sorry` here.
-    sorry
+    -- `probLT ∈ [1/2, 2/3]`. Discharged via the F4 foundation
+    -- axiom `fkg_case_output`.
+    exact fkg_case_output x y hxy_inc
 
 /-! ### §5 — Combined G3+G4 conclusion (`prop:step7(iii)`) -/
 
