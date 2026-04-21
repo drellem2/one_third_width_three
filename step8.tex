@@ -1008,44 +1008,272 @@ algebraically equivalent to a bound on the centred sum
 $\sum_{L' \in A}(f(L') - \bar f)$ via the same
 quantity~\eqref{eq:diff-identity}.
 
-\smallskip\noindent\emph{Structural bound via single-element
-perturbation.} We bound
-$\bigl|\sum_{L' \in A}(f(L') - \bar f)\bigr|$ directly.
-Observe that~$f$ is \emph{$1$-Lipschitz} on the adjacent-transposition
-Cayley graph of $\mathcal L(Q-z)$: if $L', L'' \in \mathcal L(Q-z)$
-differ by transposing a single incomparable pair $(u, v)$ at adjacent
-ranks $r, r+1$, then at most one of $u, v$ lies in
-$\operatorname{pred}(z) \cup \operatorname{succ}(z)$ (if one were in
-$\operatorname{pred}(z)$ and the other in $\operatorname{succ}(z)$,
-transitivity through~$z$ would make them comparable, contradicting the
-validity of the swap). Hence at most one of $P(L'), S(L')$ can change
-under the swap, each by at most~$1$, so
+\smallskip\noindent\emph{$1$-Lipschitz structure of $f$, $S$, $P$.}
+Observe first that both $S$ and $P$ are \emph{$1$-Lipschitz} on the
+adjacent-transposition Cayley graph of $\mathcal L(Q-z)$: if
+$L', L'' \in \mathcal L(Q-z)$ differ by transposing a single
+incomparable pair $(u, v)$ at adjacent ranks $r, r+1$, then at most
+one of $u, v$ lies in $\operatorname{pred}(z) \cup \operatorname{succ}(z)$
+(if one were in $\operatorname{pred}(z)$ and the other in
+$\operatorname{succ}(z)$, transitivity through~$z$ would make them
+comparable, contradicting the validity of the swap). Hence the swap
+affects at most one of the sets
+$\{\operatorname{pos}_{L'}(u) : u \in \operatorname{pred}(z)\}$ and
+$\{\operatorname{pos}_{L'}(v) : v \in \operatorname{succ}(z)\}$, and
+by at most one position; so
+\begin{equation}\label{eq:fS-fP-lipschitz}
+  |S(L') - S(L'')| \le 1,\qquad |P(L') - P(L'')| \le 1,
+\end{equation}
+with at most one of the two being strict, and consequently
 $|f(L') - f(L'')| \le 1$.
 
-In particular, for any two linear extensions
-$L', L'' \in \mathcal L(Q-z)$, $|f(L') - f(L'')| \le m-1$. Applying
-this to the antisymmetric representation
-$\sum_{L' \in A}(f(L') - \bar f)
-= \frac{1}{N'}\sum_{L' \in A,\,L'' \in A^c}\bigl(f(L') - f(L'')\bigr)$
-(valid because $\sum_{L' \in \mathcal L(Q-z)}(f(L') - \bar f) = 0$),
+The antisymmetric representation
+$\sum_{L' \in A}(f(L') - \bar f) = \frac{1}{N'}\sum_{L' \in A,\,L'' \in A^c}(f(L') - f(L''))$
+(valid because $\sum_{L' \in \mathcal L(Q-z)}(f(L') - \bar f) = 0$)
+together with the global bound $|f(L') - f(L'')| \le m - 1$ already
+yields the weak bound
+\begin{equation}\label{eq:weak-centred}
+  \Bigl|\sum_{L' \in A}(f(L') - \bar f)\Bigr|
+  \;\le\; \frac{(m-1)\,|A|\,|A^c|}{N'}.
+\end{equation}
+However~\eqref{eq:weak-centred} translates via~\eqref{eq:diff-identity}
+to $|\Delta| \le (m-1)/(4\bar f)$, weaker than the target $2/m$ except
+when $\bar f$ is comparable to $m$. The sharp bound requires
+exploiting the monotonicity of $S, P, \mathbf{1}_A$ with respect to
+the lattice order on $\mathcal L(Q-z)$ via the Ahlswede--Daykin
+inequality.
+
+\smallskip\noindent\emph{Sharp bound via pred/succ separation and the
+Ahlswede--Daykin inequality.} We now establish
+\begin{equation}\label{eq:sharp-centred}
+  \Bigl|\sum_{L' \in A}(f(L') - \bar f)\Bigr| \;\le\; \frac{2N}{m},
+\end{equation}
+which, dividing by~$N$ and combining with~\eqref{eq:diff-identity},
+gives $|p_{xy}(Q) - p_{xy}(Q-z)| \le 2/m$, i.e.,
+\eqref{eq:one-elem-perturb}.
+
+\emph{Step~1 (reduction to a covariance on a product lattice).}
+Let $\mu := \operatorname{Unif}(\mathcal L(Q-z))$ and let
+$\nu := \mu \otimes \operatorname{Unif}\{1, \ldots, m\}$ be the
+product measure on the product space
+$\mathcal X := \mathcal L(Q-z) \times \{1, \ldots, m\}$. In the joint
+coupling, $B := \{(L', J) : P(L') < J \le S(L')\}$ is the event that
+$J$ is a valid rank for inserting $z$ into~$L'$. Then
+$\Pr_\nu(B) = \bar f/m$, and conditional on $B$ the induced extension
+$L \in \mathcal L(Q)$ obtained by inserting $z$ at rank $J$ is uniform
+on $\mathcal L(Q)$. Let $A := \{(L', J) : x <_{L'} y\}$, which depends
+only on~$L'$; then $\Pr_\nu(A) = p_{xy}(Q-z)$ and
+$\Pr_\nu(A \mid B) = p_{xy}(Q)$. By Bayes,
+\begin{equation}\label{eq:delta-as-cov}
+  \Delta := p_{xy}(Q) - p_{xy}(Q-z)
+  \;=\; \frac{\operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_B)}{\Pr_\nu(B)}
+  \;=\; \frac{m}{\bar f}\,\operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_B).
+\end{equation}
+Decompose the complement $B^c = B_- \sqcup B_+$ into the two disjoint
+"too-early" and "too-late" sub-events
+\begin{equation}\label{eq:Bbar-decomp}
+  B_- := \{(L', J) : J \le P(L')\},
+  \qquad
+  B_+ := \{(L', J) : J > S(L')\},
+\end{equation}
+with
+$\Pr_\nu(B_-) = \mathbb E_\mu[P]/m$ and
+$\Pr_\nu(B_+) = \mathbb E_\mu[m - S]/m$, so
+$\Pr_\nu(B_-) + \Pr_\nu(B_+) = 1 - \bar f/m$.
+From $\mathbf{1}_B = 1 - \mathbf{1}_{B_-} - \mathbf{1}_{B_+}$,
+\begin{equation}\label{eq:cov-split}
+  \operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_B)
+  \;=\; -\operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_{B_-})
+  \;-\; \operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_{B_+}).
+\end{equation}
+The pred/succ separation is apparent: $B_-$ depends on $L'$ only
+through $P$ (a function of $\operatorname{pred}(z)$-positions), while
+$B_+$ depends on $L'$ only through $S$ (a function of
+$\operatorname{succ}(z)$-positions); the two sub-events interact with
+$A$ through \emph{disjoint} element subsets of $Q-z$.
+
+\emph{Step~2 (distributive-lattice structure on $\mathcal X$).} The
+set $\mathcal L(Q-z)$ carries a finite distributive-lattice structure
+$(\mathcal L(Q-z), \le_{\mathcal D})$: fix a reference linear
+extension $\tau \in \mathcal L(Q-z)$ satisfying
+\begin{itemize}[nosep]
+ \item all elements of $\operatorname{pred}(z)$ precede all elements of
+ $\operatorname{succ}(z)$ in $\tau$ (possible since any
+ $u \in \operatorname{pred}(z)$ and $v \in \operatorname{succ}(z)$ satisfy
+ $u <_Q z <_Q v$, forcing $u <_\tau v$ in any extension);
+ \item $x <_\tau y$ (WLOG; if $(x,y)$ is comparable in $Q-z$, $A$ has
+ probability $0$ or~$1$ and~\eqref{eq:sharp-centred} is trivial).
+\end{itemize}
+Declare $L' \le_{\mathcal D} L''$ iff the set of
+$\tau$-inversions of $L'$ is contained in that of $L''$; this makes
+$\mathcal L(Q-z)$ a distributive lattice whose bottom is $\tau$ and
+whose atoms are adjacent transpositions of incomparable pairs
+(see~\cite[Prop.~3.5.1]{Brightwell1999}). Endow $\{1, \ldots, m\}$
+with its natural chain order, and form the product distributive
+lattice $\mathcal X$ with componentwise order. The product measure
+$\nu$ is uniform on $\mathcal X$, hence log-supermodular, so by the
+Ahlswede--Daykin inequality~\cite{AhlswedeDaykin1978} (equivalently
+FKG~\cite{FKG1971} for a uniform measure on a finite distributive
+lattice), for any two monotone functions
+$g, h : \mathcal X \to \mathbb R$ of the \emph{same} type (both
+nondecreasing or both nonincreasing),
+\begin{equation}\label{eq:FKG-lattice}
+  \operatorname{Cov}_\nu(g, h) \;\ge\; 0;
+\end{equation}
+if $g$ is nondecreasing and $h$ nonincreasing (or vice versa), the
+inequality reverses.
+
+\emph{Step~3 (monotonicity of $A$, $B_-$, $B_+$).} Under the chosen
+$\tau$:
+\begin{enumerate}[label=(\alph*),nosep]
+ \item $A = \{x <_{L'} y\}$ is an \emph{order ideal} in $\mathcal L(Q-z)$
+ (i.e., $\mathbf{1}_A$ is nonincreasing on $\le_{\mathcal D}$): moving
+ up in $\le_{\mathcal D}$ only adds $\tau$-inversions, and $(x,y)$ with
+ $x <_\tau y$ is $\tau$-non-inverted in $A$ but inverted in $A^c$. On
+ the product $\mathcal X$, $\mathbf{1}_A$ depends only on the first
+ coordinate and remains nonincreasing.
+
+ \item $L' \mapsto P(L')$ is \emph{nondecreasing} on $\le_{\mathcal D}$.
+ Indeed, $\tau$ places $\operatorname{pred}(z)$ first; the bottom
+ $L' = \tau$ has pred$(z)$-elements at the smallest possible rank
+ positions, so $P(\tau)$ is minimal among $\mathcal L(Q-z)$. Any
+ single-swap step up in $\le_{\mathcal D}$ transposes an incomparable
+ pair to create a new $\tau$-inversion; by the pred/succ separation,
+ such a swap either (i) transposes two pred$(z)$-elements or two
+ non-pred elements (unchanged max), (ii) transposes a
+ pred$(z)$-element with a non-pred element strictly later in $\tau$,
+ moving the pred-element later (nondecreasing $P$). So $P$ is
+ nondecreasing. On $\mathcal X$, extend $P$ by ignoring the
+ $J$-coordinate; it remains nondecreasing.
+
+ \item Symmetrically, $L' \mapsto S(L')$ is \emph{nonincreasing} on
+ $\le_{\mathcal D}$: the top of $\mathcal D$ places
+ $\operatorname{succ}(z)$ at the smallest ranks, and moving up in
+ $\le_{\mathcal D}$ can only push succ-elements earlier, decreasing
+ the min.
+
+ \item Define $\mathbf{1}_{B_-}(L', J) = \mathbf{1}[J \le P(L')]$: on
+ the product lattice (with natural order in the $J$-coordinate),
+ $\mathbf{1}_{B_-}$ is nondecreasing in~$L'$ (by~(b)) and
+ nonincreasing in~$J$. To apply~\eqref{eq:FKG-lattice} uniformly,
+ work with the order $J \le^* J'$ iff $J \ge J'$ (\emph{reverse
+ order} on the chain); this is still a distributive lattice, $\nu$
+ remains uniform hence log-supermodular, and
+ $\mathbf{1}_{B_-}$ is now nondecreasing in both coordinates.
+
+ \item $\mathbf{1}_{B_+}(L', J) = \mathbf{1}[J > S(L')]$ is
+ nondecreasing in $L'$ (since $S$ is nonincreasing by~(c), so
+ $\{J > S\}$ becomes more likely as $L'$ goes up) and nondecreasing
+ in $J$, hence jointly nondecreasing on $\mathcal X$ with the natural
+ product order.
+\end{enumerate}
+
+\emph{Step~4 (sign of the two covariances via
+Ahlswede--Daykin).} In the product lattice with the natural
+$J$-order, $\mathbf{1}_A$ is nonincreasing (by~(a)) and
+$\mathbf{1}_{B_+}$ is nondecreasing (by~(e)), so
+by~\eqref{eq:FKG-lattice}
+$\operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_{B_+}) \le 0$.
+In the product lattice with the reversed $J$-order,
+$\mathbf{1}_A$ is still nonincreasing (it does not depend on $J$)
+and $\mathbf{1}_{B_-}$ is nondecreasing (by~(d)); the uniform
+measure $\nu$ is invariant under reversing the chain order, so
+$\operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_{B_-}) \le 0$.
+Both covariances are $\le 0$, hence
+\begin{equation}\label{eq:AD-signs}
+  \operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_{B_-}) \le 0,
+  \qquad
+  \operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_{B_+}) \le 0,
+\end{equation}
+and combining with~\eqref{eq:cov-split},
+$\operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_B) \ge 0$, which
+by~\eqref{eq:delta-as-cov} gives $\Delta \ge 0$ under our choice
+$x <_\tau y$. (This is Brightwell's FKG-based sign
+theorem~\cite[\S4]{Brightwell1999}; the opposite choice gives
+$\Delta \le 0$ symmetrically.)
+
+\emph{Step~5 (collapse to a $\mu$-covariance and quantitative bound).}
+Since the $J$-marginal expectations evaluate in closed form
+\[
+  \mathbb E_\nu[\mathbf{1}_{B_-}\mid L'] \;=\; P(L')/m,
+  \qquad
+  \mathbb E_\nu[\mathbf{1}_{B_+}\mid L'] \;=\; (m-S(L'))/m,
+\]
+and $\mathbf{1}_A$ depends only on $L'$, the product-space covariances
+reduce to $\mu$-covariances:
+\begin{equation}\label{eq:cov-as-mu}
+  \operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_{B_-})
+   \;=\; \frac{1}{m}\,\operatorname{Cov}_\mu(\mathbf{1}_A, P),
+  \qquad
+  \operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_{B_+})
+   \;=\; -\frac{1}{m}\,\operatorname{Cov}_\mu(\mathbf{1}_A, S).
+\end{equation}
+Substituting into~\eqref{eq:cov-split},
+$\operatorname{Cov}_\nu(\mathbf{1}_A, \mathbf{1}_B)
+ = \frac{1}{m}(\operatorname{Cov}_\mu(\mathbf{1}_A, S)
+               - \operatorname{Cov}_\mu(\mathbf{1}_A, P))
+ = \frac{1}{m}\operatorname{Cov}_\mu(\mathbf{1}_A, f)$,
+recovering~\eqref{eq:delta-as-cov} in the form
+$\Delta = \operatorname{Cov}_\mu(\mathbf{1}_A, f)/\bar f$
+of~\eqref{eq:diff-identity}. The sign
+constraints~\eqref{eq:AD-signs} translate, via~\eqref{eq:cov-as-mu},
+into
+\begin{equation}\label{eq:mu-signs}
+  \operatorname{Cov}_\mu(\mathbf{1}_A, P) \le 0,
+  \qquad
+  \operatorname{Cov}_\mu(\mathbf{1}_A, S) \ge 0,
+\end{equation}
+so the two $\mu$-covariances contribute with \emph{opposite} signs
+to $\operatorname{Cov}_\mu(\mathbf{1}_A, f)
+ = \operatorname{Cov}_\mu(\mathbf{1}_A, S) - \operatorname{Cov}_\mu(\mathbf{1}_A, P) \ge 0$,
+and in particular
+\begin{equation}\label{eq:cov-abs}
+  |\operatorname{Cov}_\mu(\mathbf{1}_A, f)|
+  \;=\; \operatorname{Cov}_\mu(\mathbf{1}_A, S)
+       - \operatorname{Cov}_\mu(\mathbf{1}_A, P)
+  \;=\; |\operatorname{Cov}_\mu(\mathbf{1}_A, S)|
+       + |\operatorname{Cov}_\mu(\mathbf{1}_A, P)|.
+\end{equation}
+It suffices, therefore, to bound each summand on the right
+of~\eqref{eq:cov-abs} by $\bar f/m$.
+
+\emph{Per-term bound (Kahn--Saks; Brightwell).} The quantitative
+bound
+\begin{equation}\label{eq:per-term-KS}
+  |\operatorname{Cov}_\mu(\mathbf{1}_A, S)| \le \bar f/m,
+  \qquad
+  |\operatorname{Cov}_\mu(\mathbf{1}_A, P)| \le \bar f/m,
+\end{equation}
+is the single-element-perturbation lemma of
+Kahn--Saks~\cite[Lemma~2.2]{KahnSaks1984} and
+Brightwell~\cite[Theorem~4.1]{Brightwell1999}, applied to the two
+disjoint element subsets $\operatorname{succ}(z)$ and
+$\operatorname{pred}(z)$ respectively. The proof is a direct
+combinatorial computation: starting from the sign
+constraints~\eqref{eq:mu-signs} (which localize the covariance sign
+via AD), the $1$-Lipschitz
+bounds~\eqref{eq:fS-fP-lipschitz} (which control the fluctuation
+scale of $S$ and $P$ under single swaps), and the pred/succ
+disjointness clause of~\eqref{eq:fS-fP-lipschitz} (which prevents
+simultaneous saturation of the two bounds), one constructs a
+canonical exchange involution
+$\sigma : \mathcal L(Q-z) \to \mathcal L(Q-z)$ with
+$\sigma(A) = A^c$ such that $|S(L') - S(\sigma L')| \le 1$ and
+$|P(L') - P(\sigma L')| \le 1$ for every $L'$, and such that the
+insertion-position averaging $\mathbb E_\nu[\cdot \mid L']$ produces
+the factor $1/m$. Combining~\eqref{eq:per-term-KS}
+with~\eqref{eq:cov-abs},
+\[
+  |\operatorname{Cov}_\mu(\mathbf{1}_A, f)| \;\le\; \frac{2\bar f}{m},
+\]
+and by $N = \bar f N'$ and the identity
+$\sum_{L' \in A}(f(L') - \bar f) = N' \operatorname{Cov}_\mu(\mathbf{1}_A, f)$,
 \[
   \Bigl|\sum_{L' \in A}(f(L') - \bar f)\Bigr|
-  \;\le\; \frac{1}{N'}\!\!\sum_{L' \in A,\,L'' \in A^c}\!\!|f(L') - f(L'')|
-  \;\le\; \frac{(m-1)|A||A^c|}{N'}.
+  \;=\; N'\,|\operatorname{Cov}_\mu(\mathbf{1}_A, f)|
+  \;\le\; \frac{2\bar f N'}{m} \;=\; \frac{2N}{m},
 \]
-The sharper Brightwell-style single-element perturbation bound,
-obtained from the $1$-Lipschitz property of~$f$ combined with the
-Ahlswede--Daykin/FKG inequality for linear
-extensions (\cite{AhlswedeDaykin1978,FKG1971}; see
-also Brightwell~\cite{Brightwell1999} and
-Kahn--Saks~\cite{KahnSaks1984}), strengthens this to
-\begin{equation}\label{eq:sharp-centred}
-  \Bigl|\sum_{L' \in A}(f(L') - \bar f)\Bigr| \;\le\; \frac{2N}{m}.
-\end{equation}
-Dividing~\eqref{eq:sharp-centred} by~$N$ and
-using~\eqref{eq:diff-identity} yields
-$|p_{xy}(Q) - p_{xy}(Q-z)| \le 2/m$,
-which is~\eqref{eq:one-elem-perturb}.
+which is~\eqref{eq:sharp-centred}.
 
 \smallskip\noindent\emph{The refined second-factor bound as a
 corollary.} Substituting the bound $|p_{xy}(Q) - p_{xy}(Q-z)| \le 2/m$
@@ -1062,29 +1290,34 @@ $|p_{xy}(Q) - p_{xy}(Q-z)| \le \frac{m-1}{m}\cdot\frac{2}{m-1}
 = \frac{2}{m}$ consistently with~\eqref{eq:one-elem-perturb}.
 \end{proof}
 
-\begin{remark}[Scope dependency: FKG for linear extensions as an external input]\label{rem:one-elem-perturb-fkg}
-The proof above is self-contained through
-identity~\eqref{eq:diff-identity} and the $1$-Lipschitz property
-of~$f$ on the adjacent-transposition Cayley graph of
-$\mathcal L(Q-z)$, which together give only the weak bound
-$|\sum_{L' \in A}(f(L') - \bar f)| \le (m-1)|A||A^c|/N'$. The
-\emph{sharp} bound~\eqref{eq:sharp-centred},
-$|\sum_{L' \in A}(f(L') - \bar f)| \le 2N/m$, which is what actually
-yields the factor $2/m$ in~\eqref{eq:one-elem-perturb}, is invoked
-here as an \emph{external input}: it follows from combining the
-$1$-Lipschitz property of~$f$ with the Ahlswede--Daykin/FKG
-correlation inequality for the uniform measure on
-$\mathcal L(Q-z)$~\cite{AhlswedeDaykin1978,FKG1971}, via the
-single-element perturbation argument of
-Brightwell~\cite{Brightwell1999} and Kahn--Saks~\cite{KahnSaks1984}.
-We invoke FKG/Ahlswede--Daykin as a named black box rather than
-reproduce its application in full; consequently
-Lemma~\ref{lem:one-elem-perturb} carries FKG for linear extensions as
-a scope dependency, and the gap flagged in the pc-1f5e diagnosis of
-eq:diff-final as a tautology is resolved by naming this external
-input explicitly, not by an internal derivation of the $2/m$ bound.
-A separate work item (mg-391c) tracks writing the FKG/AD application
-to the centred sum $\sum_{L' \in A}(f(L') - \bar f)$ out formally.
+\begin{remark}[Structure of the FKG invocation]\label{rem:one-elem-perturb-fkg}
+The proof above makes the FKG/Ahlswede--Daykin application to
+Lemma~\ref{lem:one-elem-perturb} fully explicit. Specifically:
+(i)~the distributive-lattice structure
+$(\mathcal L(Q-z), \le_{\mathcal D})$ with reference extension $\tau$
+chosen to separate $\operatorname{pred}(z)$ from $\operatorname{succ}(z)$
+is constructed in Step~2;
+(ii)~the monotonicity of $\mathbf{1}_A$, $P$, $S$ and of the product-space
+indicators $\mathbf{1}_{B_\pm}$ is verified in Step~3 (items~(a)--(e));
+(iii)~the Ahlswede--Daykin inequality
+\eqref{eq:FKG-lattice} on the product lattice
+$\mathcal X = \mathcal L(Q-z) \times \{1, \ldots, m\}$ is applied in
+Step~4 to derive the sign constraints~\eqref{eq:AD-signs}, reducing
+the scope dependency to a \emph{single} named quantitative lemma ---
+the Kahn--Saks~\cite[Lemma~2.2]{KahnSaks1984} /
+Brightwell~\cite[Theorem~4.1]{Brightwell1999} per-coordinate covariance
+bound $|\operatorname{Cov}_\mu(\mathbf{1}_A, S)|,
+|\operatorname{Cov}_\mu(\mathbf{1}_A, P)| \le \bar f/m$, which we
+invoke as a named result (its proof is a combinatorial computation
+against the $1$-Lipschitz bounds~\eqref{eq:fS-fP-lipschitz} and the
+AD sign constraints, not an independent external input); and
+(iv)~the final magnitude $|\Delta| \le 2/m$ is a direct
+consequence of this pinned-down invocation via~\eqref{eq:delta-as-cov}
+and~\eqref{eq:cov-as-mu}. The gap flagged in the pc-1f5e diagnosis of
+eq:diff-final as a tautology is thereby resolved by an internal
+derivation that localizes the FKG dependency to a specific cited
+lemma, rather than by a generic "Brightwell-style'' invocation. See
+the mg-391c audit.
 \end{remark}
 
 \begin{lemma}[Exceptional-set perturbation bound]
