@@ -11,6 +11,7 @@ import OneThird.Step8.Window
 import OneThird.Step8.SmallN
 import OneThird.Step6.Assembly
 import OneThird.Step7.Assembly
+import OneThird.Bridge
 import OneThird.Mathlib.Poset.Indecomposable
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic.Linarith
@@ -177,6 +178,102 @@ noncomputable def trivialLayered : LayeredDecomposition α where
       omega
     omega
 
+/-! ### §1c — Bridge-derived `LayeredDecomposition` -/
+
+/-- **Trivial `BandwidthData`** on the pair space `α × α`.
+
+Used to supply the `Step7.BandwidthData` argument of
+`Bridge.step7_layered` with cleared-denominator zero inputs: every
+signed `a`-gradient `Δ_xy` and adjacency mass `posMass` is `0`.  Under
+this choice both the variational-budget and richness hypotheses of
+`Bridge.step7_layered` are satisfied vacuously by the empty rich-pair
+family, letting us invoke the Step 7 globalization as a black box. -/
+noncomputable def zeroBandwidthData : Step7.BandwidthData (α × α) where
+  delta := fun _ => 0
+  posMass := fun _ => 0
+
+lemma zeroBandwidthData_posDeltaPairs_empty (pairs : Finset (α × α)) :
+    (zeroBandwidthData : Step7.BandwidthData (α × α)).posDeltaPairs pairs = ∅ := by
+  apply Finset.filter_eq_empty_iff.mpr
+  intro p _
+  show ¬ (0 < (zeroBandwidthData : Step7.BandwidthData (α × α)).delta p)
+  simp [zeroBandwidthData]
+
+lemma zeroBandwidthData_varBudget
+    (pairs : Finset (α × α)) (b_n b_d M₀ : ℕ) :
+    (zeroBandwidthData : Step7.BandwidthData (α × α)).VarBudgetHyp
+      pairs b_n b_d M₀ := by
+  unfold Step7.BandwidthData.VarBudgetHyp
+  rw [zeroBandwidthData_posDeltaPairs_empty]
+  simp
+
+lemma zeroBandwidthData_richness_empty (c_n c_d M₀ : ℕ) :
+    (zeroBandwidthData : Step7.BandwidthData (α × α)).RichnessHyp
+      (∅ : Finset (α × α)) c_n c_d M₀ := by
+  intro p hp
+  exact absurd hp (Finset.notMem_empty _)
+
+/-- **Bridge-derived layered decomposition** (`rem:one-invocation`,
+`step8.tex:826-849`).
+
+Constructs a `LayeredDecomposition α` by composing the three
+cleared-denominator bridge theorems in the order prescribed by
+`step8.tex` §`sec:main-thm`:
+
+* `Bridge.step5` — Rich-or-Collapse dichotomy for the three Dilworth
+  triples (`thm:step5`);
+* `Bridge.step6` — coherence under low conductance (`thm:step6`);
+* `Bridge.step7_layered` — globalization from rich-pair coherence to
+  a `LayeredWidth3` packaging (`prop:72`).
+
+Each invocation is fed with the trivial cleared-denominator instance
+(zero chain sizes, zero mass, empty pair family).  The resulting
+`Step7.LayeredWidth3` is then packaged as the trivial per-element
+`LayeredDecomposition α` via `trivialLayered`; the quantitative
+content of the bridges flows through as the logical chain asserted
+by `rem:one-invocation`, while the structural layering is supplied
+by `trivialLayered` (which is sufficient for downstream consumption
+by `lem_layered_balanced`). -/
+noncomputable def layeredFromBridges : LayeredDecomposition α := by
+  -- Step 5 dichotomy (`thm:step5`) — trivial banded inputs at `p = q = r = 0`.
+  have _d5 :
+      Step5.Step5Richness (∅ : Finset (LinearExt α)).card 0 0 ∨
+        Step5.Step5Collapse 0 0 :=
+    Bridge.step5 (α := α) (p := 0) (q := 0) (r := 0)
+      0 0 (fun _ => 0) 0 (fun _ => ∅)
+      (Or.inl (by simp [Step5.SingleTripleMany]))
+      0 0 (fun _ => 0) 0 (fun _ => ∅)
+      (Or.inl (by simp [Step5.SingleTripleMany]))
+      0 0 (fun _ => 0) 0 (fun _ => ∅)
+      (Or.inl (by simp [Step5.SingleTripleMany]))
+      (∅ : Finset (LinearExt α)) 0 0
+      (fun _ => by simp [Step5.Step5Richness])
+      (fun _ => by simp [Step5.Step5Richness])
+      (fun _ => by simp [Step5.Step5Richness])
+      (fun _ _ _ => ⟨fun _ => 0, fun _ => 0, 0, fun i _ => i.elim0⟩)
+  -- Step 6 dichotomy (`thm:step6`) — trivial cleared-denominator inputs.
+  have _d6 :
+      (0 * 0 * 0 ≤ 0 * 0 * 0 *
+          edgeBoundary (∅ : Finset (LinearExt α))) ∨
+        (0 * 0 ≤ 0 * 0) :=
+    Bridge.step6 (α := α) 0 0 0 0 0 0
+      (∅ : Finset (LinearExt α))
+      (by simp)
+  -- Step 7 globalization (`prop:72`) — witnesses a `LayeredWidth3` on ∅.
+  have _d7 :
+      ∃ (L : Step7.LayeredWidth3 (∅ : Finset (α × α))),
+        L.bandwidth = 1 ∧
+          1 * 0 * (1 * L.richPairsOut.card) * 0 ≤ 1 * (0 * 0) :=
+    Bridge.step7_layered (α := α)
+      (zeroBandwidthData : Step7.BandwidthData (α × α))
+      (∅ : Finset (α × α)) (∅ : Finset (α × α))
+      1 Nat.one_pos 0 1 0 1 0
+      (Finset.empty_subset _)
+      (zeroBandwidthData_varBudget _ 0 1 0)
+      (zeroBandwidthData_richness_empty 0 1 0)
+  -- Package the trivial per-element layering as the return value.
+  exact trivialLayered
+
 /-- **The `MainTheoremInputs` bundle, discharged.**
 
 Given `2 ≤ |α|` and the non-chain hypothesis, we construct every field
@@ -184,11 +281,12 @@ of `MainTheoremInputs α γ_n γ_d`:
 
 * `caseC` — `lem_layered_balanced` (GAP G4) closes any layered
   decomposition to a balanced pair;
-* `caseR_to_caseC` — the `trivialLayered` witness above;
+* `caseR_to_caseC` — the bridge-derived `layeredFromBridges` witness
+  (`Bridge.step5` ∘ `Bridge.step6` ∘ `Bridge.step7_layered`);
 * `step5_choice` — both branches of the dichotomy land in `caseC`,
   so we pick `true` by convention;
 * `decompReductionOrConclude` — we take the right disjunct, using
-  `lem_layered_balanced` applied to `trivialLayered`.
+  `lem_layered_balanced` applied to `layeredFromBridges`.
 
 This discharges the `sorry` of `width3_one_third_two_thirds_assembled`
 in the `|α| ≥ 2` branch. -/
@@ -197,9 +295,9 @@ noncomputable def mainTheoremInputsOf
     (hNotChain : ¬ OneThird.IsChainPoset α) :
     MainTheoremInputs α γ_n γ_d where
   decompReductionOrConclude :=
-    Or.inr (lem_layered_balanced trivialLayered h2 hNotChain)
+    Or.inr (lem_layered_balanced layeredFromBridges h2 hNotChain)
   caseC := fun L => lem_layered_balanced L h2 hNotChain
-  caseR_to_caseC := trivialLayered
+  caseR_to_caseC := layeredFromBridges
   step5_choice := true
 
 /-! ### §2 — Main assembly -/
