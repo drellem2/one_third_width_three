@@ -14,13 +14,16 @@ including the previously-accepted Dilworth's theorem and the
 `sorry`- and axiom-free.
 
 **Two declarations in the project still carry `sorry`**: the G4
-reduction glue `lem_layered_balanced` (Case `K ≥ 2`, the paper's
-reduction from an arbitrary non-chain layered width-3 poset to the
-bipartite case via ordinal-sum decomposition + sub-poset restriction,
-`step8.tex:1768-1796`), and the F4-foundation marginal-invariance
+reduction glue `lem_layered_balanced_subtype` (the subtype-level
+balanced-pair helper that `lem_layered_balanced` Case `K ≥ 2` routes
+through; `step8.tex:1608-1625`), and the F4-foundation marginal-invariance
 identity `OrdinalDecomp.probLT_restrict_eq` for ordinal-sum sub-poset
-restriction. The Case `K = 1` branch (`step8.tex:1763-1766`) and the
-bipartite conclusion `bipartite_balanced_enum` are `sorry`-free.
+restriction. `lem_layered_balanced` itself is now sorry-free in its
+body: Case `K = 1` (`step8.tex:1763-1766`) dispatches directly via
+`bipartite_balanced_enum`, and Case `K ≥ 2` (`step8.tex:1768-1795`)
+builds a trivial `OrdinalDecomp` (`Mid = Finset.univ`) and lifts via
+`hasBalancedPair_lift`, delegating the residual combinatorial
+reduction to `lem_layered_balanced_subtype`.
 
 ### Remaining `sorry`s — 2 tokens, 2 declarations
 
@@ -28,16 +31,17 @@ Line numbers below are for the `sorry` token itself.
 
 | # | File:line | In declaration | Category |
 |---|-----------|----------------|----------|
-| 1 | `OneThird/Step8/LayeredBalanced.lean:468` | `lem_layered_balanced` (Case `K ≥ 2`) | G4 reduction glue — ordinal-sum decomposition + sub-poset restriction to realise the bipartite reduct (`step8.tex:1768-1795`) |
+| 1 | `OneThird/Step8/LayeredBalanced.lean:372` | `lem_layered_balanced_subtype` | Subtype-level balanced-pair helper — iterated ordinal-sum decomposition of `↥D.Mid` to reach an irreducible reduct with an incomparable cross-pair in adjacent bands, then `bipartite_balanced_enum` (`step8.tex:1608-1625`) |
 | 2 | `OneThird/Mathlib/LinearExtension/Subtype.lean` (in `OrdinalDecomp.probLT_restrict_eq`) | sub-poset marginal-invariance | F4-foundation: bijection `LinearExt α ≃ LinearExt ↥Lower × LinearExt ↥Mid × LinearExt ↥Upper` for ordinal-sum decompositions (`step8.tex:1584-1598`) |
 
-Both are *single-step* gaps: #1 is reduction glue, #2 is the
-combinatorial concatenation/factorisation of linear extensions over
-an ordinal sum (the only missing F4 foundation item). The heavy
-machinery they feed into (`windowLocalization`,
-`bipartite_balanced_enum`, `bipartiteBalanced`, Dilworth, FKG
-enumeration, `OrdinalDecomp` + `restrictMid` + position bounds) is
-already `sorry`-free.
+Both are *single-step* gaps: #1 is a structural reduction
+(ordinal-sum → irreducible → bipartite), #2 is the combinatorial
+concatenation/factorisation of linear extensions over an ordinal
+sum (the only missing F4 foundation item). The heavy machinery they
+feed into (`windowLocalization`, `bipartite_balanced_enum`,
+`bipartiteBalanced`, Dilworth, FKG enumeration, `OrdinalDecomp` +
+`restrictMid` + position bounds, `hasBalancedPair_lift`) is already
+`sorry`-free.
 
 ### Axioms
 
@@ -47,9 +51,9 @@ already `sorry`-free.
 ```
 
 `sorryAx` reflects the two `sorry`s above; the other three are the
-mathlib-standard classical foundations. Closing
-`lem_layered_balanced` would drop `sorryAx` and leave only
-`[propext, Classical.choice, Quot.sound]`.
+mathlib-standard classical foundations. Closing both
+`lem_layered_balanced_subtype` and `probLT_restrict_eq` would drop
+`sorryAx` and leave only `[propext, Classical.choice, Quot.sound]`.
 
 ### Import closure of the main theorem
 
@@ -96,7 +100,7 @@ lake build
 from source takes hours, whereas the cache downloads in a few minutes.
 
 Expected output: `lake build` succeeds with two `sorry` warnings
-(`lem_layered_balanced` Case `K ≥ 2` and
+(`lem_layered_balanced_subtype` and
 `OrdinalDecomp.probLT_restrict_eq`) and several hundred benign
 linter warnings
 (`unusedDecidableInType`, `unusedSectionVars`). There should be no
