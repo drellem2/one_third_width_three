@@ -728,7 +728,97 @@ theorem lem_layered_balanced
       (lem_layered_balanced_subtype L (by sorry) h2 D hxy_inc
         ⟨Finset.mem_univ x, Finset.mem_univ y⟩)
 
-/-! ### §5 — Combined G3+G4 conclusion (`prop:step7(iii)`) -/
+/-! ### §5 — Chained balanced-pair lift (`lem:chained-lift`) -/
+
+/-- **Chained `HasBalancedPair` lift bundle** (`step8.tex` §sec:g4,
+`lem:chained-lift`, `step8.tex:2091-2187`).
+
+Encodes a chain of nested ordinal-sum decompositions
+    `α = β₀ → β₁ → … → βₙ`
+where each `β_{k+1}` is the `Mid` sub-poset of an `OrdinalDecomp` of
+`β_k`, together with the composite lift
+`HasBalancedPair βₙ → HasBalancedPair α` obtained by iterating
+`OrdinalDecomp.hasBalancedPair_lift` along the chain.
+
+Constructed via `OrdinalChainLift.nil` (length-0 chain, endpoint is
+`α` itself, lift is the identity) and `OrdinalChainLift.cons`, which
+prepends one `OrdinalDecomp α` step by composing with
+`OrdinalDecomp.hasBalancedPair_lift` (the Lean base case of the
+induction, `step8.tex:rem:chained-lift-lean`).
+
+The `nil`/`cons` builders realize the induction of `lem:chained-lift`
+(`step8.tex:2112-2187`): `nil` is the tautological length-0 case, and
+each `cons` step is one application of the single-step lift. Iterating
+`cons` along a chain of `OrdinalDecomp`s produces the composite
+lift — equivalently, an `n`-fold iteration of
+`OrdinalDecomp.hasBalancedPair_lift`. -/
+structure OrdinalChainLift (α : Type*) [PartialOrder α] [Fintype α]
+    [DecidableEq α] : Type _ where
+  /-- The endpoint type `βₙ` of the chain. -/
+  Endpoint : Type*
+  /-- Partial-order instance on the endpoint. -/
+  endpointPO : PartialOrder Endpoint
+  /-- `Fintype` instance on the endpoint. -/
+  endpointFT : Fintype Endpoint
+  /-- `DecidableEq` instance on the endpoint. -/
+  endpointDE : DecidableEq Endpoint
+  /-- Composite lift: transports a balanced pair from the endpoint to `α`. -/
+  lift : @OneThird.HasBalancedPair Endpoint endpointPO endpointFT endpointDE →
+    OneThird.HasBalancedPair α
+
+namespace OrdinalChainLift
+
+/-- **Base case of `lem:chained-lift`** (length-0 chain): endpoint is
+`α` itself and the composite lift is the identity. Realizes
+`step8.tex:2119-2121`. -/
+def nil (α : Type*) [PartialOrder α] [Fintype α] [DecidableEq α] :
+    OrdinalChainLift α where
+  Endpoint := α
+  endpointPO := inferInstance
+  endpointFT := inferInstance
+  endpointDE := inferInstance
+  lift := id
+
+/-- **Inductive step of `lem:chained-lift`** (`step8.tex:2123-2144`):
+extend a chain starting at `↥D.Mid` by prepending one `OrdinalDecomp α`
+step. The resulting composite lift first applies the tail's lift (from
+the chain endpoint to `↥D.Mid`), then `OrdinalDecomp.hasBalancedPair_lift`
+(from `↥D.Mid` to `α`). -/
+def cons {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
+    (D : OneThird.OrdinalDecomp α) (tail : OrdinalChainLift ↥D.Mid) :
+    OrdinalChainLift α where
+  Endpoint := tail.Endpoint
+  endpointPO := tail.endpointPO
+  endpointFT := tail.endpointFT
+  endpointDE := tail.endpointDE
+  lift := fun h =>
+    letI : PartialOrder tail.Endpoint := tail.endpointPO
+    letI : Fintype tail.Endpoint := tail.endpointFT
+    letI : DecidableEq tail.Endpoint := tail.endpointDE
+    D.hasBalancedPair_lift (tail.lift h)
+
+end OrdinalChainLift
+
+/-- **`lem:chained-lift`** (`step8.tex:2106-2112`): the chained
+balanced-pair lift along any `OrdinalChainLift`.
+
+Given a chain-lift bundle `C : OrdinalChainLift α`, a balanced pair at
+`C.Endpoint` transports to a balanced pair at `α`. This is just the
+`lift` field of `C`, but phrased as a theorem to match the paper's
+statement.
+
+The bundle `C` is built from actual `OrdinalDecomp`s via
+`OrdinalChainLift.nil` and `OrdinalChainLift.cons`; the induction on
+chain length (`step8.tex:2119-2144`) is realized by the iteration of
+`cons`. -/
+theorem OrdinalChainLift.hasBalancedPair_lift_chain
+    (C : OrdinalChainLift α)
+    (h : @OneThird.HasBalancedPair C.Endpoint C.endpointPO C.endpointFT
+      C.endpointDE) :
+    OneThird.HasBalancedPair α :=
+  C.lift h
+
+/-! ### §6 — Combined G3+G4 conclusion (`prop:step7(iii)`) -/
 
 /-- **Combined G3+G4 conclusion** (`step8.tex:1804-1816`,
 `rem:g3-g4-interface`).
