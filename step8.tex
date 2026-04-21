@@ -303,15 +303,27 @@ reduces to the $n$-independent arithmetic condition
 \[
   \gamma^2\, c_5(T)\, c_6\, (\delta - K(T)\varepsilon) \;\ge\; 2,
 \]
-which bypasses any choice of $n_0(\gamma, T)$: either the
-constants satisfy it (in which case the cascade closes at every
-$n \ge 2$) or they do not (in which case the finite-enumeration
-base case of Remark~\ref{rem:small-n} handles the $1/3$--$2/3$
-property directly). No $n \to \infty$ limit is taken: the cascade
-produces a contradiction at the single value of $n$ at hand,
-provided the constant condition holds. Verification of
-$\gamma^2 c_5 c_6 (\delta - K(T)\varepsilon) \ge 2$ is a final
-constants audit, outside the scope of G1/G2.
+which is $n$-independent but \emph{not unconditional}: the cascade
+closes at every $n \ge 2$ if it holds (which is the content of
+Hypothesis~\ref{hyp:arith}); if it fails for every admissible $T$,
+the small-$n$ base case of Remark~\ref{rem:small-n} still discharges
+the $1/3$--$2/3$ property for $n \le n_0(\gamma, T)$, but the
+large-$n$ tail $n > n_0$ is not closed by the present argument.
+That tail is the only remaining portion of the argument
+not-unconditionally-covered: for $\gamma \ge 1/3 -
+\delta_{\mathrm{KL}}$ the Kahn--Linial bound excludes
+counter\-examples outright, and for $n \le n_0(\gamma, T)$
+Lemma~\ref{lem:small-n} applies, so it is exactly the regime
+$\gamma < 1/3 - \delta_{\mathrm{KL}}$, $n > n_0(\gamma, T)$, and
+``$\gamma^2 c_5(T) c_6 \delta \ge 2$ fails for every admissible
+$T$'' that Hypothesis~\ref{hyp:arith} is introduced to exclude.
+No $n \to \infty$ limit is taken: the cascade produces a
+contradiction at the single value of $n$ at hand, provided the
+constant condition holds. Verification of $\gamma^2 c_5 c_6 (\delta
+- K(T)\varepsilon) \ge 2$ for some $T = T(\gamma)$ at every $\gamma
+\in (0, 1/3 - \delta_{\mathrm{KL}})$ is the final
+constants audit, outside the scope of G1/G2 and recorded as
+Hypothesis~\ref{hyp:arith}.
 \end{remark}
 
 \subsection{Proof of Theorem~\ref{thm:cex-implies-low-expansion}}
@@ -396,9 +408,11 @@ $\sum_{x \parallel y} \mathcal E(f_{xy}) \le 1/2$ and the
 indecomposability-based count $I(P) \ge n/2$ yields
 $\lambda(\gamma, n) \le 2/(\gamma n)$, at the cost of introducing
 $n$-dependence in $\eta$. The dependence is absorbed by the small-$n$
-base case (Remarks~\ref{rem:n-dependence-g1}, \ref{rem:small-n}),
-which together close the cascade at every $n$. G1 is therefore
-\emph{fully discharged}.
+base case (Remarks~\ref{rem:n-dependence-g1}, \ref{rem:small-n})
+for $n \le n_0(\gamma, T)$; for $n > n_0(\gamma, T)$ it is absorbed
+through the $n$-independent arithmetic inequality of
+Hypothesis~\ref{hyp:arith}. G1 itself is \emph{fully discharged}
+(the $n$-dependence is not a G1-internal gap).
 
 \section{The pieces from Steps 1--7}
 
@@ -488,18 +502,53 @@ argument. Then:
 \section{The main theorem}
 \label{sec:main-thm}
 
-\begin{theorem}[Width-$3$ 1/3--2/3, conditional on Steps 1--7]
+\begin{hypothesis}[Arithmetic richness]\label{hyp:arith}
+For every $\gamma \in (0,\, 1/3 - \delta_{\mathrm{KL}})$, there exists
+$T = T(\gamma) \ge T_0$ (with $T_0$ the absolute Step~5 richness
+threshold) such that the $n$-independent arithmetic inequality
+\[
+  \gamma^2\, c_5(T)\, c_6\, \delta_0(\gamma) \;\ge\; 8
+\]
+holds, where $\delta_0(\gamma) :=
+\min\!\big(\tfrac{1}{4C_7},\tfrac{1}{2wK_0}\big)$ is the cascade
+target and $c_5(T), c_6, C_7, w, K_0$ are the Step~5/6/7
+constants fixed by Remark~\ref{rem:G2-order}.
+\end{hypothesis}
+
+\noindent
+Hypothesis~\ref{hyp:arith} is an arithmetic condition on the
+sealed Step~5/6 richness densities: it is not derived from
+Steps~1--7, and its verification is external to the structural
+argument here (see Remark~\ref{rem:final-constants-audit} and the
+scope discussion below).
+
+\begin{theorem}[Width-$3$ 1/3--2/3, conditional on Steps 1--7 and on Hypothesis~\ref{hyp:arith}]
 \label{thm:main-step8}
-Every finite width-$3$ poset that is not a total order has a balanced pair.
+Assume Hypothesis~\ref{hyp:arith}. Then every finite width-$3$ poset
+that is not a total order has a balanced pair.
 \end{theorem}
 
 \noindent
-(Conditional only on the sealed outputs of Steps 1--7; the Step~8
+(Conditional on the sealed outputs of Steps 1--7 and on the
+arithmetic-richness Hypothesis~\ref{hyp:arith}; the Step~8
 items G1--G5 are all discharged inside this file, see
 Section~\ref{sec:G1} for G1, Section~\ref{sec:G2-constants} for G2,
 Section~\ref{sec:layered-reduction} for G3, and
 Section~\ref{sec:g4-balanced-pair} for G4. G5 is the present proof
 itself.)
+
+\medskip\noindent\emph{Scope note.} Without
+Hypothesis~\ref{hyp:arith}, the structural argument of this file
+covers (a)~the Kahn--Linial regime $\gamma \ge 1/3 -
+\delta_{\mathrm{KL}}$, where no $\gamma$-counter\-example exists at
+any $n$ or width~\cite{KahnLinial1991}, and (b)~the finite-$n$
+regime $n \le n_0(\gamma, T)$ via the small-$n$ base case
+(Remark~\ref{rem:small-n}, Lemma~\ref{lem:small-n}). The
+arithmetic-richness Hypothesis~\ref{hyp:arith} is what pins down
+the intermediate regime ($\gamma < 1/3 - \delta_{\mathrm{KL}}$ and
+$n > n_0(\gamma, T)$) via the BK-expansion cascade; a failure of
+Hypothesis~\ref{hyp:arith} at some small $\gamma$ would leave that
+large-$n$ tail uncovered by the present argument.
 
 \begin{proof}
 Fix $\gamma > 0$ and a minimal (by $|X|$) width-$3$
@@ -551,10 +600,13 @@ arithmetic inequality
 \begin{equation}\label{eq:arith-cond}
   \gamma^2\, c_5(T)\, c_6\, \delta_0 \;\ge\; 8.
 \end{equation}
-If~\eqref{eq:arith-cond} fails, the small-$n$ base
-case~(Remark~\ref{rem:small-n}) closes the 1/3--2/3 property
-directly, bypassing the cascade; otherwise (a) holds at every
-$n \ge 2$.
+By Hypothesis~\ref{hyp:arith}, $T = T(\gamma)$ may be chosen so
+that~\eqref{eq:arith-cond} holds; hence (a) holds at every $n \ge
+2$. (If~\eqref{eq:arith-cond} fails for every admissible $T$, the
+small-$n$ base case Remark~\ref{rem:small-n} still closes the
+1/3--2/3 property at $n \le n_0(\gamma, T)$, but the large-$n$ tail
+$n > n_0$ is not covered by the present argument; see the scope
+note preceding Theorem~\ref{thm:main-step8}.)
 
 For~(b), Theorem~\ref{thm:step2} states $\varepsilon(\phi) = o(1)$
 as $\phi \downarrow 0$. Unpacked, this means that for every target
@@ -817,9 +869,11 @@ work~\cite{Peczarski2008} concerns the related gold-partition
 conjecture rather than $1/3$--$2/3$ directly. The decisive
 width-$3$ input at $n \le n_0$ is therefore the finite enumeration
 of Lemma~\ref{lem:small-n}: a mechanical prerequisite, orthogonal to
-the structural argument of Steps~1--7, closing the cascade of
-Theorem~\ref{thm:main} on every~$n$ (above $n_0$ by the BK-expansion
-argument, below $n_0$ by Lemma~\ref{lem:small-n}).
+the structural argument of Steps~1--7. Combined with the BK-expansion
+argument for $n > n_0$ \emph{under Hypothesis~\ref{hyp:arith}}, this
+closes Theorem~\ref{thm:main} on every $n$; the large-$n$ tail in
+the small-$\gamma$ regime depends on Hypothesis~\ref{hyp:arith}
+rather than on Lemma~\ref{lem:small-n} alone.
 \end{remark}
 
 \begin{remark}[One named invocation per step]\label{rem:one-invocation}
@@ -869,8 +923,12 @@ separate work item.
  Cost of the elementary route: the conductance bound carries
  $n$-dependence, $\eta(\gamma, n) = 2/(\gamma n)$, which is absorbed
  by the small-$n$ base case (Remarks~\ref{rem:n-dependence-g1} and
- \ref{rem:small-n}); the cascade of Theorem~\ref{thm:main} closes
- for every~$n$ without relying on any omitted spectral argument.
+ \ref{rem:small-n}) below $n_0(\gamma, T)$ and by the
+ $n$-independent arithmetic inequality of
+ Hypothesis~\ref{hyp:arith} above $n_0$; the cascade of
+ Theorem~\ref{thm:main} closes for every~$n$ under
+ Hypothesis~\ref{hyp:arith} without relying on any omitted spectral
+ argument.
 
  \item[\textbf{G2}] \emph{Constants coherence.} Verified in
  Section~\ref{sec:G2-constants}: the quantitative compatibility
@@ -892,9 +950,13 @@ separate work item.
  cascade of Remark~\ref{rem:G2-order} is realizable under the
  $n$-independent arithmetic condition
  $\gamma^2 c_5(T) c_6 (\delta - K(T)\varepsilon) \ge 2$ on the
- Step~5/6 constants: either this holds (cascade closes at every
- $n \ge 2$) or it fails (small-$n$ base case
- Remark~\ref{rem:small-n} handles the $1/3$--$2/3$ property directly).
+ Step~5/6 constants, which is the content of
+ Hypothesis~\ref{hyp:arith}: under this hypothesis the cascade
+ closes at every $n \ge 2$; if the hypothesis fails at some
+ $\gamma < 1/3 - \delta_{\mathrm{KL}}$, the small-$n$ base case
+ Remark~\ref{rem:small-n} still handles $n \le n_0(\gamma, T)$
+ but the large-$n$ tail is not covered (see
+ Theorem~\ref{thm:main-step8}'s scope note).
  The form $K(T) = C_4/c_4 + C_2(T)$
  matches the definition in Section~\ref{sec:G2-constants}; the Step~4
  aggregation paragraph below (``Step~4 aggregation: constant
@@ -1097,9 +1159,15 @@ $\gamma \to T \to \delta \to \varepsilon \to n$:
  by the $n$-independent constant $2/\gamma$, this step is a condition
  on the richness-second-moment constants $c_5(T) c_6 \delta$ rather
  than on $n$: once $\gamma^2 c_5(T) c_6 \delta \ge 4$, every
- $n \ge 2$ satisfies the inequality; otherwise the inequality fails
- for all large $n$ and one falls back to the small-$n$ base case
- (Remark~\ref{rem:small-n}). The present $c_5(T) = c_T'(T)$ comes
+ $n \ge 2$ satisfies the inequality; this is the content of the
+ arithmetic-richness Hypothesis~\ref{hyp:arith}. If
+ $\gamma^2 c_5(T) c_6 \delta < 4$ for every admissible choice of
+ $T$, the inequality fails for all large $n$ and the small-$n$ base
+ case (Remark~\ref{rem:small-n}) only discharges
+ $n \le n_0(\gamma, T)$; the large-$n$ tail
+ $n > n_0(\gamma, T)$ is then \emph{not} covered by the present
+ argument (see Theorem~\ref{thm:main-step8}'s scope note).
+ The present $c_5(T) = c_T'(T)$ comes
  from Corollary~\ref{cor:second-moment} of \texttt{step5.tex}; its
  quantitative size relative to $1/\gamma^2$ is an arithmetic check
  left to the final constants audit. The condition also ensures that the
@@ -1111,9 +1179,12 @@ $\gamma \to T \to \delta \to \varepsilon \to n$:
 This chain is realizable because Theorem~\ref{thm:cex-implies-low-expansion}
 asserts $\eta(\gamma, n) \to 0$ as $n \to \infty$ and
 Theorem~\ref{thm:step2} asserts $\varepsilon(\phi) \to 0$ as $\phi
-\downarrow 0$, independently of $T, \delta$. For $n < n_0(\gamma,
-T)$, the finite-enumeration base case (Remark~\ref{rem:small-n})
-handles the 1/3--2/3 property directly.
+\downarrow 0$, independently of $T, \delta$; the
+$n$-independent arithmetic step is realizable under
+Hypothesis~\ref{hyp:arith}. For $n < n_0(\gamma, T)$, the
+finite-enumeration base case (Remark~\ref{rem:small-n}) handles
+the 1/3--2/3 property directly, independently of
+Hypothesis~\ref{hyp:arith}.
 \end{remark}
 
 \begin{remark}[Notation clashes]
@@ -1194,16 +1265,21 @@ proof inlined in the ``Realizability of the cascade (quantitative)''
 paragraph of Theorem~\ref{thm:main} (Section~\ref{sec:main-thm}). The
 two $n$-conditions split cleanly: (i) the conductance/volume
 inequality reduces to the $n$-independent arithmetic condition
-$\gamma^2 c_5(T) c_6 \delta_0 \ge 8$, which either holds (cascade
-closes at every $n \ge 2$) or fails (small-$n$ base case
-Remark~\ref{rem:small-n} handles 1/3--2/3 directly); (ii) the Step~2
+$\gamma^2 c_5(T) c_6 \delta_0 \ge 8$, which is taken as input via
+Hypothesis~\ref{hyp:arith}; if it fails at some $\gamma < 1/3 -
+\delta_{\mathrm{KL}}$, the small-$n$ base case
+Remark~\ref{rem:small-n} handles 1/3--2/3 for $n \le n_0(\gamma, T)$
+but the large-$n$ tail falls outside the scope of the present
+argument (see Theorem~\ref{thm:main-step8}); (ii) the Step~2
 fiber error condition $\varepsilon(\eta(\gamma, n)) \le
 \delta_0/(2K(T))$ reduces, via the inverse modulus of
 Theorem~\ref{thm:step2}'s $o(1)$ error, to the explicit
 $n$-threshold
 $n_0(\gamma, T) = \lceil 2/(\gamma\, \phi^\star_0)\rceil$ with
 $\phi^\star_0 = \phi^\star(\delta_0/(2K(T)))$. Both conditions
-depend only on $\gamma$ and $T$, so no external audit is required.
+depend only on $\gamma$ and $T$; (i) is what
+Hypothesis~\ref{hyp:arith} externalizes as a final
+constants-audit input.
 
 \begin{remark}[Final constants audit: parameter cascade]
 \label{rem:final-constants-audit}
@@ -1289,19 +1365,30 @@ $c_5(T) = (c_5^\star(T,\gamma)/4)^2 > 0$ and $K(T) = C_4/c_4 + C_2(T)$
 are fixed positive constants independent of $n$. Take
 $\delta_0 := \min(1/(4C_7),\,1/(2wK_0))\in(0,1)$ and
 $\varepsilon := \delta_0/(2K(T))$. Then inequality~(iii) reads
-\[
+\begin{equation}\label{eq:arith-explicit}
  \gamma^2\,(c_5^\star/4)^2\,c_6\,\delta_0 \;\ge\; 8
  \quad\Longleftrightarrow\quad
  c_5^\star(T,\gamma)^2 \;\ge\; \frac{128}{\gamma^2\,c_6\,\delta_0},
-\]
+\end{equation}
 which is a \emph{purely arithmetic} condition on the richness density
-$c_5^\star$ produced by Proposition~\ref{prop:single-triple}: for any
-particular $\gamma$, either this holds for some choice of $T$ (in
-which case the cascade closes and the case~(R) contradiction fires
-at every $n\ge2$), or it does not, in which case
-Remark~\ref{rem:small-n} discharges the 1/3--2/3 property by finite
-enumeration without invoking the cascade. In either branch, the main
-theorem follows.
+$c_5^\star$ produced by Proposition~\ref{prop:single-triple}.
+\emph{Whether~\eqref{eq:arith-explicit} is satisfiable at every
+$\gamma \in (0, 1/3 - \delta_{\mathrm{KL}})$ is the content of
+Hypothesis~\ref{hyp:arith}}; it is not derived from the sealed
+outputs of Steps~1--7 and constitutes the sole external
+numerical input the present argument requires. If the hypothesis
+holds for a given $\gamma$ (some $T = T(\gamma)$
+satisfies~\eqref{eq:arith-explicit}), the cascade closes and the
+case~(R) contradiction fires at every $n\ge2$. If the hypothesis
+fails at some $\gamma < 1/3 - \delta_{\mathrm{KL}}$ --- i.e.\ no
+admissible $T$ satisfies~\eqref{eq:arith-explicit} ---
+Remark~\ref{rem:small-n} still discharges the 1/3--2/3 property by
+finite enumeration for $n \le n_0(\gamma, T)$, but the large-$n$
+tail $n > n_0(\gamma, T)$ is outside the scope of the present
+argument (see Theorem~\ref{thm:main-step8}). The main theorem as
+stated therefore takes Hypothesis~\ref{hyp:arith} as input; its
+verification is deferred to an external constants audit of
+$c_5^\star, c_6, C_7, w, K_0$.
 
 \paragraph{No circular or impossible constraint.} Each constant is
 either (a)~an absolute positive constant from a sealed upstream lemma
