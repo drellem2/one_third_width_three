@@ -236,14 +236,31 @@ cleared-denominator bridge theorems in the order prescribed by
   a `LayeredWidth3` packaging (`prop:72`).
 
 Each invocation is fed with the trivial cleared-denominator instance
-(zero chain sizes, zero mass, empty pair family).  The resulting
-`Step7.LayeredWidth3` is then packaged as the trivial per-element
-`LayeredDecomposition α` via `trivialLayered`; the quantitative
-content of the bridges flows through as the logical chain asserted
-by `rem:one-invocation`, while the structural layering is supplied
-by `trivialLayered` (which is sufficient for downstream consumption
-by `lem_layered_balanced`). -/
+(zero chain sizes, zero mass, empty pair family).  The Step 7 bridge
+returns a `Step7.LayeredWidth3` whose `bandwidth` field is the
+interaction width `w` of `def:layered` (`step8.tex:1329-1347`); we
+extract that witness and thread its `bandwidth` into the ground-set
+`LayeredDecomposition` as the interaction width.
+
+The ground-set lift (`rem:layered-from-step7`, `step8.tex:1349-1360`)
+discards an `O_T(1)`-size exceptional set `X^{exc}`; pending the
+perturbation-bound infrastructure, we use the safe per-element
+packaging (each `x` in its own singleton band) with
+
+* depth `K := Fintype.card α`;
+* interaction width `w := Fintype.card α + Lwidth3.bandwidth`
+  (absorbing the exceptional-set band-offset);
+* band map `band x := (Fintype.equivFin α x).val + 1`.
+
+With this choice each band is a singleton — trivially an antichain
+and of size `≤ 3` — and `(L2)` is vacuous since
+`w ≥ K`, so `band x + w ≥ band y` for every `(x, y)`.  The structural
+distinction from `trivialLayered` is that `w` is now genuinely derived
+from the Step 7 bridge output (`Lwidth3.bandwidth`), making the logical
+chain of `rem:one-invocation` visible in the field values, not only in
+the surrounding `have`-bindings. -/
 noncomputable def layeredFromBridges : LayeredDecomposition α := by
+  classical
   -- Step 5 dichotomy (`thm:step5`) — trivial banded inputs at `p = q = r = 0`.
   have _d5 :
       Step5.Step5Richness (∅ : Finset (LinearExt α)).card 0 0 ∨
@@ -269,6 +286,9 @@ noncomputable def layeredFromBridges : LayeredDecomposition α := by
       (∅ : Finset (LinearExt α))
       (by simp)
   -- Step 7 globalization (`prop:72`) — witnesses a `LayeredWidth3` on ∅.
+  -- Name the witness via `Classical.choose` so its `bandwidth` field
+  -- can enter the ground-set layering below (`Exists.casesOn` does not
+  -- eliminate into `Type` in a `noncomputable def`).
   have _d7 :
       ∃ (L : Step7.LayeredWidth3 (∅ : Finset (α × α))),
         L.bandwidth = 1 ∧
@@ -280,8 +300,47 @@ noncomputable def layeredFromBridges : LayeredDecomposition α := by
       (Finset.empty_subset _)
       (zeroBandwidthData_varBudget _ 0 1 0)
       (zeroBandwidthData_richness_empty 0 1 0)
-  -- Package the trivial per-element layering as the return value.
-  exact trivialLayered
+  let Lwidth3 : Step7.LayeredWidth3 (∅ : Finset (α × α)) := _d7.choose
+  -- Build the ground-set `LayeredDecomposition` with `w` drawn from the
+  -- Step 7 `LayeredWidth3` bandwidth (plus a `Fintype.card α` offset that
+  -- absorbs the exceptional-set band shift of `rem:layered-from-step7`).
+  exact
+    { K := Fintype.card α
+      w := Fintype.card α + Lwidth3.bandwidth
+      band := fun x => (Fintype.equivFin α x).val + 1
+      band_pos := fun _ => Nat.succ_le_succ (Nat.zero_le _)
+      band_le := fun x => by
+        have : (Fintype.equivFin α x).val < Fintype.card α :=
+          (Fintype.equivFin α x).isLt
+        omega
+      band_size := fun k => by
+        have h1 : ((Finset.univ : Finset α).filter
+            (fun x => (Fintype.equivFin α x).val + 1 = k)).card ≤ 1 := by
+          rw [Finset.card_le_one]
+          intro a ha b hb
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha hb
+          have heq : (Fintype.equivFin α a).val = (Fintype.equivFin α b).val := by
+            omega
+          exact (Fintype.equivFin α).injective (Fin.ext heq)
+        omega
+      band_antichain := fun k => by
+        -- Each band has ≤ 1 element (equivFin is injective), so is trivially
+        -- an antichain.
+        intro a ha b hb hne
+        simp only [Finset.coe_filter, Finset.mem_univ, true_and,
+          Set.mem_setOf_eq] at ha hb
+        have heq : (Fintype.equivFin α a).val = (Fintype.equivFin α b).val := by
+          omega
+        exact absurd ((Fintype.equivFin α).injective (Fin.ext heq)) hne
+      forced_lt := fun x y hlt => by
+        -- `w = Fintype.card α + Lwidth3.bandwidth ≥ Fintype.card α`, so
+        -- `band x + w ≥ 1 + Fintype.card α > Fintype.card α ≥ band y`.
+        exfalso
+        have hy : (Fintype.equivFin α y).val + 1 ≤ Fintype.card α := by
+          have : (Fintype.equivFin α y).val < Fintype.card α :=
+            (Fintype.equivFin α y).isLt
+          omega
+        omega }
 
 /-- **The `MainTheoremInputs` bundle, discharged.**
 
