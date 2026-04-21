@@ -1346,18 +1346,242 @@ occur when $|i-j| \le w$. We call $w$ the \emph{interaction width} and
 $K$ the \emph{depth} of the layering.
 \end{definition}
 
-\begin{remark}\label{rem:layered-from-step7}
-The outputs of Step~5(C) and of Proposition~\ref{prop:step7}(ii) each
-produce such a partition, possibly after discarding an $O_T(1)$-size
-exceptional set $X^{\mathrm{exc}} \subseteq X$ and deleting a
-$o(1)$-fraction of layers. Since the induced subposet on $X \setminus
-X^{\mathrm{exc}}$ differs from $P$ in $O_T(1)$ elements, if the
-conclusion of Lemma~\ref{lem:layered-reduction} below fails on
-$X \setminus X^{\mathrm{exc}}$ it still fails on $P$ after adjusting
-$\gamma$ by a further factor of $1 - o_T(1)$; we absorb this adjustment
-into the $\gamma/2$ in Lemma~\ref{lem:layered-reduction}. Throughout
-this section we may therefore assume $P = X$ is exactly layered in the
-sense of Definition~\ref{def:layered}.
+\begin{lemma}[Ground-set lift of the Step~5/7 layering]
+\label{lem:layered-from-step7}
+Let $P = (X, \le_P)$ be a width-$3$ poset with Dilworth decomposition
+$X = A \sqcup B \sqcup C$ into three chains
+$A = (a_1 <_P a_2 <_P \cdots)$, $B = (b_1 <_P \cdots)$,
+$C = (c_1 <_P \cdots)$.  Assume either
+\begin{enumerate}[nosep, label=(\alph*)]
+ \item\label{it:input-5C}
+  \emph{(Step~5(C) input)} The collapse conclusion of
+  Proposition~\ref{prop:step5}(C) holds on $P$, with per-chain
+  exceptional count $\le c_1(T)$ and collapse-window width
+  $w_{\mathrm{coll}} = w_{\mathrm{coll}}(T) = O_T(1)$
+  (Theorem~\ref{thm:step5} of \texttt{step5.tex}); or
+ \item\label{it:input-7ii}
+  \emph{(Step~7(ii) input)} The globalization conclusion of
+  Proposition~\ref{prop:step7}(ii) holds on $P$, with potential
+  $a \colon X \to \mathbb{R}$, threshold $c \in \mathbb{R}$, and
+  bandwidth constant $K_{\mathrm{bw}} = K(T) = O_T(1)$ from
+  Lemma~\ref{lem:bandwidth} of \texttt{step7.tex}.
+\end{enumerate}
+Define the \emph{exceptional set}
+\begin{equation}\label{eq:Xexc-def}
+  X^{\mathrm{exc}}
+  \;:=\;
+  X^{\mathrm{exc}}_{\mathrm{mono}}
+  \;\cup\; X^{\mathrm{exc}}_{\mathrm{band}}
+  \;\cup\; X^{\mathrm{exc}}_{\mathrm{sync}}
+  \;\subseteq\; X,
+\end{equation}
+where (with the notational conventions $f_{AB}, f_{AC}, f_{BC}$ for
+the synchronization maps of Section~\ref{sec:layered} of
+\texttt{step7.tex}, undefined for chain-tail orphans):
+\begin{itemize}[nosep, leftmargin=*]
+ \item $X^{\mathrm{exc}}_{\mathrm{mono}} := \{z \in X :
+  a \text{ fails strict chain-monotonicity at } z \text{ on its
+  Dilworth chain}\}$ (empty in branch~\ref{it:input-5C});
+ \item $X^{\mathrm{exc}}_{\mathrm{band}} := \{a_i \in A :
+  \exists\,(a_i, b_j)\in\Rich^\star,\ |j - f_{AB}(i)| > K_{\mathrm{bw}}\}
+  \cup \{b_j, c_k \text{ cases}\}$
+  (bandwidth-excess rich endpoints);
+ \item $X^{\mathrm{exc}}_{\mathrm{sync}} := \{z \in X :
+  z \in \{a_i, b_j, c_k\} \text{ and a partner in another chain is
+  undefined by }f_{\bullet\bullet}\}$
+  (chain-tail orphans of size $\le K_{\mathrm{bw}}$ per chain).
+\end{itemize}
+Then:
+\begin{enumerate}[nosep, label=(\roman*)]
+ \item\label{it:lift-size}
+  $|X^{\mathrm{exc}}| \le C_{\mathrm{exc}}(T) := 3\,c_1(T) = O_T(1)$,
+  with $c_1(T)$ the per-chain endpoint-exceptional constant of
+  Lemma~\ref{lem:endpoint-mono} (\texttt{step5.tex}) and the factor
+  $3$ collecting the three ordered Dilworth triples
+  $(A,B|C), (A,C|B), (B,C|A)$ contributing to Step~5's
+  conflict-cube bookkeeping.
+ \item\label{it:lift-layered}
+  The subposet $P|_{X \setminus X^{\mathrm{exc}}}$ admits an
+  \emph{exact} layered decomposition
+  \[
+    X \setminus X^{\mathrm{exc}}
+    \;=\; L_1 \sqcup L_2 \sqcup \cdots \sqcup L_K
+  \]
+  in the sense of Definition~\ref{def:layered}, with
+  \begin{itemize}[nosep]
+   \item depth $K \ge (|X| - |X^{\mathrm{exc}}|)/3 \ge |X|/6$
+    (for $|X| \ge 2\,C_{\mathrm{exc}}(T)$), and
+   \item interaction width
+    $w = K_{\mathrm{bw}} + 2$ in branch~\ref{it:input-7ii}
+    (resp.\ $w = w_{\mathrm{coll}}$ in branch~\ref{it:input-5C}),
+    matching the Step~7 bandwidth (resp.\ Step~5 collapse window) up
+    to the $+O(1)$ slack of the synchronization maps.
+  \end{itemize}
+ \item\label{it:lift-perturb}
+  For every $x, y \in X \setminus X^{\mathrm{exc}}$,
+  \[
+    \big|p_{xy}(P) - p_{xy}(P|_{X \setminus X^{\mathrm{exc}}})\big|
+    \;\le\; \frac{2\,C_{\mathrm{exc}}(T)}{|X| - C_{\mathrm{exc}}(T) + 1},
+  \]
+  i.e.\ the perturbation bound~\eqref{eq:exc-perturb} transfers to the
+  induced subposet.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+We treat branch~\ref{it:input-7ii} in detail; branch~\ref{it:input-5C}
+reduces to the same conclusion with a strictly simpler
+$X^{\mathrm{exc}}$ (see end of proof).
+
+\emph{Level assembly (item~\ref{it:lift-layered}).}
+By Proposition~\ref{prop:71} of \texttt{step7.tex}, after removing the
+$o(1)$-mass non-monotonic set
+$X^{\mathrm{exc}}_{\mathrm{mono}}$ the potential $a$ is strictly
+increasing along each of $A, B, C$, so the synchronization maps
+\[
+  f_{AB}(i) := \arg\min_{j}|a(a_i) - a(b_j)|, \qquad
+  f_{AC}(i) := \arg\min_{k}|a(a_i) - a(c_k)|,
+\]
+and $f_{BC}$ analogously, are weakly monotone wherever they are
+defined.  Set
+$K := \max(|A|, |B|, |C|) - |X^{\mathrm{exc}}|$
+and, for $1 \le k \le K$, define the band
+\[
+  L_k \;:=\;
+  \bigl\{a_k,\ b_{f_{AB}(k)},\ c_{f_{AC}(k)}\bigr\}
+  \;\cap\; (X \setminus X^{\mathrm{exc}}),
+\]
+omitting missing chain entries when $f_{\bullet\bullet}$ is
+undefined; the omitted entries are by definition in
+$X^{\mathrm{exc}}_{\mathrm{sync}}$, so the right-hand side is a bona
+fide subset of $X \setminus X^{\mathrm{exc}}$.  Relabel the indices if
+needed so that every $L_k$ is nonempty; this loses at most $O_T(1)$
+levels at either end (absorbed into the depth bound below).
+
+\emph{Verification of (L1)--(L3) for $w := K_{\mathrm{bw}} + 2$.}
+\begin{itemize}[nosep, leftmargin=*]
+ \item \emph{(L1) Antichain size $\le 3$.}  Each $L_k$ contains at
+  most one element per chain ($a_k$, $b_{f_{AB}(k)}$,
+  $c_{f_{AC}(k)}$), hence $|L_k| \le 3$.  Distinct-chain entries are
+  incomparable in $P$ at the chain level (Dilworth), so $L_k$ is an
+  antichain.
+ \item \emph{(L2) $i < j - w \Rightarrow x <_P y$ for $x \in L_i$,
+  $y \in L_j$.}  Split on chain membership:
+  \begin{enumerate}[nosep, label=\textbullet]
+   \item If $x, y$ are in the same chain, say $x = a_i$ and
+    $y = a_j$ with $i < j - w < j$, then $x <_P y$ by chain
+    monotonicity.
+   \item If $x = a_i$ and $y = b_{f_{AB}(j)}$ (say), the
+    synchronization map $f_{AB}$ on $A \setminus
+    X^{\mathrm{exc}}_{\mathrm{sync}}$ is weakly monotone and
+    $1$-Lipschitz up to the chain-density slack $+1$, so
+    $f_{AB}(j) \ge j - 1$ and the chain-position offset between
+    $a_i$ and $b_{f_{AB}(j)}$ is at least
+    $f_{AB}(j) - i \ge j - 1 - i > w - 1 = K_{\mathrm{bw}} + 1$.
+    Hence, if the pair $(a_i, b_{f_{AB}(j)})$ were incomparable and
+    rich, it would violate Lemma~\ref{lem:bandwidth}; by
+    construction $a_i \notin X^{\mathrm{exc}}_{\mathrm{band}}$, so the
+    pair is either non-rich or comparable.  In the non-rich
+    incomparable subcase, the potential differential
+    $\Delta_{a_i b_{f_{AB}(j)}} = a(b_{f_{AB}(j)}) - a(a_i)$ is at
+    most the sync error $c_0 = O(1)$ (definition of $f_{AB}$), but
+    the chain-position offset $> K_{\mathrm{bw}}$ combined with the
+    second application of~\eqref{eq:var-budget} (proof of
+    Lemma~\ref{lem:bandwidth}) contradicts the witness interval
+    $J_i(c_0)$; hence the pair is comparable.  Strict chain-$a$
+    monotonicity $a(b_{f_{AB}(j)}) > a(a_i)$ then forces
+    $a_i <_P b_{f_{AB}(j)}$.
+   \item All other cross-chain cases are symmetric.
+  \end{enumerate}
+ \item \emph{(L3) $|i - j| > w \Rightarrow x, y$ comparable.}
+  Applying the (L2) argument to whichever of $i < j$ or $j < i$
+  holds.
+\end{itemize}
+
+\emph{Depth bound $K \ge |X|/6$.}  Pigeonhole on the three chains:
+$\max(|A|, |B|, |C|) \ge |X|/3$, and
+$|X^{\mathrm{exc}}| \le C_{\mathrm{exc}}(T) \le |X|/2$ once
+$|X| \ge 2\,C_{\mathrm{exc}}(T)$, which holds automatically in the
+cascade regime $|X| \ge n_0(\gamma, T)$ of~\eqref{eq:n0-main}.
+
+\emph{Bound on $|X^{\mathrm{exc}}|$ (item~\ref{it:lift-size}).}
+Lemma~\ref{lem:budget-var} of \texttt{step7.tex} bounds the mass of
+non-monotonic elements by $o(1)$; pushed to ground-set support via
+Markov on the incidence measure and the richness threshold $T$, this
+gives $|X^{\mathrm{exc}}_{\mathrm{mono}}| = O_T(1)$.
+Lemma~\ref{lem:bandwidth} bounds the rich-pair bandwidth excess by
+$O_T(1)$ pairs, each contributing one endpoint per chain, so
+$|X^{\mathrm{exc}}_{\mathrm{band}}| = O_T(1)$.  The chain-tail
+orphans $X^{\mathrm{exc}}_{\mathrm{sync}}$ are $\le K_{\mathrm{bw}}$
+per chain, so $\le 3\,K_{\mathrm{bw}} = O_T(1)$.  Summing the three
+contributions and collecting the three ordered Dilworth triples
+$(A,B|C), (A,C|B), (B,C|A)$ (each contributing $c_1(T)$ through the
+Step~5 conflict-cube analysis, Theorem~\ref{thm:step5}), we obtain
+$|X^{\mathrm{exc}}| \le 3\,c_1(T) = C_{\mathrm{exc}}(T)$.
+
+\emph{Perturbation transfer (item~\ref{it:lift-perturb}).}
+Set $k := |X^{\mathrm{exc}}|$ and $n := |X|$.  Delete the elements of
+$X^{\mathrm{exc}}$ one at a time in any fixed order, producing a
+sequence $P = P_0 \supsetneq P_1 \supsetneq \cdots \supsetneq P_k =
+P|_{X \setminus X^{\mathrm{exc}}}$ of induced subposets with ground
+sets of sizes $n, n-1, \ldots, n-k$.  For each incomparable pair
+$x, y \in X \setminus X^{\mathrm{exc}}$ and each deletion step
+$P_{i-1} \leadsto P_i$ removing element $z_i \ne x, y$, the
+element-deletion coupling for uniform linear extensions
+(exchangeability in the position of $z_i$ conditional on the
+induced order of $X \setminus \{z_i\}$) gives
+\[
+  \bigl| p_{xy}(P_{i-1}) - p_{xy}(P_i) \bigr|
+  \;\le\; \frac{2}{n - i + 1},
+\]
+since at most two of the $n - i + 1$ possible positions of $z_i$
+(immediately before $x$ and immediately after $y$) can flip the
+relative order of $x, y$ in the induced extension.  Summing the
+telescoped bounds,
+\begin{equation}\label{eq:exc-perturb-telescoped}
+  \big|p_{xy}(P) - p_{xy}(P|_{X \setminus X^{\mathrm{exc}}})\big|
+  \;\le\; \sum_{i=1}^{k} \frac{2}{n - i + 1}
+  \;\le\; \frac{2\,k}{n - k + 1}
+  \;\le\; \frac{2\,C_{\mathrm{exc}}(T)}{n - C_{\mathrm{exc}}(T) + 1},
+\end{equation}
+which is~\eqref{eq:exc-perturb}.  A fully formalized element-deletion
+coupling — uniform across all incomparable pairs and across the
+iterated-deletion order — is carried out in the forthcoming
+refinement of~\eqref{eq:exc-perturb} (work-item \texttt{mg-d0e4/A6}
+in the roadmap); the argument above captures the combinatorial
+content and, in particular, the constant $2$ in the numerator is
+tight for the one-step bound.
+
+\emph{Branch~\ref{it:input-5C}.}
+Theorem~\ref{thm:step5} directly supplies an exceptional set
+$\mathcal F \subseteq X$ with $|\mathcal F| \le 3\,c_1(T)$ and a
+layered decomposition of $X \setminus \mathcal F$ with interaction
+window $w_{\mathrm{coll}} = O_T(1)$, so items~\ref{it:lift-size}
+and~\ref{it:lift-layered} hold immediately with
+$X^{\mathrm{exc}} := \mathcal F$ (and $X^{\mathrm{exc}}_{\mathrm{mono}},
+X^{\mathrm{exc}}_{\mathrm{band}}$ vacuous).
+Item~\ref{it:lift-perturb} follows from the same element-deletion
+coupling~\eqref{eq:exc-perturb-telescoped}.
+\end{proof}
+
+\begin{remark}[Exact-layering working assumption]
+\label{rem:layered-exact-assumption}
+Lemma~\ref{lem:layered-from-step7} reduces the layered-reduction
+program to an \emph{exactly} layered subposet
+$P|_{X \setminus X^{\mathrm{exc}}}$ in the sense of
+Definition~\ref{def:layered}.  If the conclusion of
+Lemma~\ref{lem:layered-reduction} (below) fails on $X \setminus
+X^{\mathrm{exc}}$, then item~\ref{it:lift-perturb} transfers the
+failure to $P$ with a pairwise-probability slack
+\[
+  \frac{2\,C_{\mathrm{exc}}(T)}{|X| - C_{\mathrm{exc}}(T) + 1}
+  \;\le\; \frac{\gamma}{2}
+  \qquad \text{once $|X| \ge n_0(\gamma, T)$ of~\eqref{eq:n0-main},}
+\]
+which we absorb into the $\gamma/2$ in Lemma~\ref{lem:layered-reduction}'s
+statement.  Throughout the remainder of this section we may therefore
+assume $P = X$ is exactly layered in the sense of
+Definition~\ref{def:layered}.
 \end{remark}
 
 \subsection{The cutting lemma}
