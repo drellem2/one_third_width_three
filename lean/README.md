@@ -6,6 +6,49 @@ of the width-3 case of the 1/3–2/3 conjecture developed in the LaTeX sources
 `../roadmap.md` for the mathematical outline; see `../summary.md` for the
 "mathematical completeness" status of the LaTeX proof itself.
 
+## Audit (2026-04-21, round 12 — `mg-4e7f`)
+
+**Headline:** `lake build` succeeds. **1 `sorry` + 0 axioms remain** in
+the project code. `mg-4e7f` discharged the rescoped
+`fkg_case_output` axiom of round 11 via a finite symmetry argument
+(`OneThird/Step8/BipartiteEnum.lean`): every bipartite height-2
+configuration with `|A|, |B| ≤ 3` carries a nontrivial same-layer
+swap automorphism, so each within-layer pair has
+`probLT = 1/2 ∈ [1/3, 2/3]`. This is the Case 1 symmetric-pair
+involution of `prop:bipartite-balanced` (`step8.tex:1640-1700`)
+applied uniformly over the ≤ 1024 configurations.
+
+With the axiom discharged,
+`#print axioms OneThird.Step8.bipartiteBalanced`
+now reports only `[propext, Classical.choice, Quot.sound]`.
+
+### Round-11 → round-12 delta
+
+The rescoped axiom of `mg-68af`
+
+```lean
+axiom fkg_case_output
+    {α} (A B : Finset α)
+    (hA_anti hB_anti : IsAntichain (·≤·) …)
+    (hA_size hB_size : … ≤ 3)
+    (hDisj : Disjoint A B)
+    (hCover : A ∪ B = Finset.univ)
+    (hAB : ∀ a ∈ A, ∀ b ∈ B, a ≤ b)
+    (hIncomp : ∃ u v, u ∥ v) : HasBalancedPair α
+```
+
+is replaced by the theorem `bipartite_balanced_enum` with the
+identical signature, proved in `OneThird/Step8/BipartiteEnum.lean`.
+`bipartiteBalanced` is rewired to call the new theorem.
+
+### All non-classical leaves — 1 total (1 sorry + 0 axioms)
+
+Line numbers below are for the `sorry` token itself.
+
+| # | File:line | Declaration | Category |
+|---|-----------|-------------|----------|
+| 1 | `OneThird/Step8/LayeredBalanced.lean` (inside `lem_layered_balanced`) | `lem_layered_balanced` | G4 reduction glue (window + ordinal-sum + K-dichotomy, `step8.tex:1760-1796`) |
+
 ## Audit (2026-04-21, round 11 — `mg-68af`)
 
 **Headline:** `lake build` succeeds. **1 `sorry` + 1 axiom remain** in
