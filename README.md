@@ -128,35 +128,29 @@ at [`generalization.md`](generalization.md).
 
 ## The Lean 4 formalization
 
-A Lean 4 / mathlib formalization lives in [`lean/`](lean/). As of the
-round-9 audit (see [`lean/README.md`](lean/README.md)) the status is:
+A Lean 4 / mathlib formalization lives in [`lean/`](lean/). See
+[`lean/README.md`](lean/README.md) for the full per-file audit. The
+status is:
 
-- `lake build` succeeds (1333 jobs, clean).
-- **Exactly 2 `sorry`s remain, both accepted external dependencies:**
-  1. **Dilworth's theorem, splice step** at
-     `OneThird/Mathlib/Poset/Dilworth.lean:171` (`dilworth_splice`).
-     The main theorem `hasChainCover_of_hasWidth` is structurally
-     complete (strong induction on `|β|`, base case, antichain case,
-     non-antichain Case A, and Case B setup); only the final align +
-     splice step of the Galvin proof is deferred. Classical result,
-     not yet in mathlib; tracked as a separate mathlib-contribution
-     effort.
-  2. **FKG / Graham–Yao–Yao output for the bipartite case analysis**
-     at `OneThird/Step8/LayeredBalanced.lean:418`. The within-layer
-     FKG inequality for the linear-extension measure is classical
-     but not currently in mathlib.
-- **Every step-level internal content (Steps 1–7 and the Step 8
-  assembly spine) compiles `sorry`-free.** Every paper theorem
-  statement has a Lean counterpart; every remaining `sorry` is a
-  classical-result deferral explicitly tracked outside the scope of
-  this scaffold.
+- `lake build` succeeds (1334 jobs, clean).
+- **Every paper theorem statement has a Lean counterpart.** Steps 1–7
+  and the Step 8 spine — including Dilworth's theorem and the finite
+  bipartite enumeration (`bipartite_balanced_enum`) — compile
+  `sorry`- and axiom-free.
+- **One declaration still carries `sorry`:** the G4 reduction glue
+  `lem_layered_balanced` at `OneThird/Step8/LayeredBalanced.lean`,
+  whose two `sorry` tokens (Case `K = 1` antichain symmetry and
+  Case `K ≥ 2` sub-poset restriction) implement the paper's
+  reduction from an arbitrary non-chain layered width-3 poset to
+  the bipartite case that `bipartite_balanced_enum` discharges
+  (`step8.tex:1760-1796`). Both are scaffolding glue, not
+  foundation items; the heavy machinery they feed into is
+  `sorry`-free.
 
-Informally: the formalization is **complete modulo the 2-item
-accepted external-dependency list above**. It is not yet a
-"`sorry`-free machine-verified proof" in the strictest sense (the
-two accepted sorries are still there in the source), but the
-remaining work is classical mathlib-contribution work, not
-project-specific gap-filling.
+`#print axioms OneThird.width3_one_third_two_thirds` reports
+`[propext, sorryAx, Classical.choice, Quot.sound]`; closing
+`lem_layered_balanced` would drop `sorryAx` and leave only
+the mathlib-standard classical foundations.
 
 See [`lean/README.md`](lean/README.md) for the per-file audit and
 [`lean/MATHLIB_GAPS.md`](lean/MATHLIB_GAPS.md) for a catalogue of the
@@ -200,8 +194,8 @@ lake build
 build compiles mathlib from source, which takes hours instead of a
 few minutes.
 
-Expected output: `lake build` succeeds with 2 `sorry` warnings (the
-two accepted external dependencies) and several hundred benign
+Expected output: `lake build` succeeds with a single `sorry`
+warning (from `lem_layered_balanced`) and several hundred benign
 linter warnings (`unusedDecidableInType`, `unusedSectionVars`).
 There should be no errors.
 
