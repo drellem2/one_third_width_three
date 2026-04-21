@@ -140,15 +140,16 @@ private lemma isAntichain_image_val {β : Type*} [PartialOrder β] [DecidableEq 
   subst hxv; subst hyv
   exact hs hx' hy' (fun heq => hxy (congrArg Subtype.val heq)) hle
 
-/-- **Splicing lemma (axiomatized for split).** Given two chain covers
-`fD : D → Fin k` and `fU : U → Fin k` of the down-set and up-set of an
-antichain `A`, if `D ∩ U = A` (as subsets of `β`), `D ∪ U = β`, and the
-covers are "aligned" to `A` (each `a ∈ A` lies in a canonical fiber in
-both covers), the combined function is a chain cover of `β`.
+/-- **Splicing lemma.** Given two chain covers `fD : D → Fin k` and
+`fU : U → Fin k` of the down-set and up-set of an antichain `A`, if
+`D ∩ U = A` (as subsets of `β`) and `D ∪ U = β`, the combined function
+is a chain cover of `β`.
 
-*Follow-up work:* the alignment step (permuting fiber labels so `a ∈ A`
-lands in a canonical fiber) and the splicing proof are mechanically
-routine but long; they are being completed in work-item `mg-ca21b`. -/
+The key step is to *align* the two covers along `A`: because `Aβ` is an
+antichain of size `k`, the restrictions of `fD` and `fU` to `Aβ` are
+bijections to `Fin k`. Composing `fU` with the permutation
+`σ = fD|A ∘ (fU|A)⁻¹` yields a second chain cover of `U` that agrees
+with `fD` on every `a ∈ Aβ`, and the two covers then splice cleanly. -/
 private theorem dilworth_splice {β : Type*} [PartialOrder β] [Fintype β]
     {PD PU : β → Prop} {k : ℕ} (Aβ : Finset β) (hAcard : Aβ.card = k)
     (hAanti : IsAntichain (· ≤ ·) (Aβ : Set β))
@@ -163,12 +164,216 @@ private theorem dilworth_splice {β : Type*} [PartialOrder β] [Fintype β]
   classical
   obtain ⟨fD, hfD⟩ := hcovD
   obtain ⟨fU, hfU⟩ := hcovU
-  -- For each `a ∈ Aβ`, its index in `fD` (and `fU`).  Because `Aβ` is
-  -- an antichain of size `k`, `fD|A` and `fU|A` are bijections to `Fin k`.
-  -- We then realign `fU` so that it agrees with `fD` on `Aβ`.
-  -- The remaining argument is standard but mechanical; the split at the
-  -- current cut-line defers this to follow-up `mg-ca21b`.
-  sorry
+  -- Restrictions of `fD`, `fU` to `Aβ`.
+  let idxD : {x // x ∈ Aβ} → Fin k := fun a => fD ⟨a.1, hAD a.1 a.2⟩
+  let idxU : {x // x ∈ Aβ} → Fin k := fun a => fU ⟨a.1, hAU a.1 a.2⟩
+  -- `idxD` is injective: two elements of the antichain `Aβ` cannot lie
+  -- in a common `fD`-fiber (which is a chain).
+  have idxD_inj : Function.Injective idxD := by
+    intro x y hxy
+    by_contra hne
+    have hne_val : x.1 ≠ y.1 := fun h => hne (Subtype.ext h)
+    have hxy_eq : fD ⟨x.1, hAD x.1 x.2⟩ = fD ⟨y.1, hAD y.1 y.2⟩ := hxy
+    have hchain := hfD (fD ⟨x.1, hAD x.1 x.2⟩)
+    have hxmem : (⟨x.1, hAD x.1 x.2⟩ : {z // PD z}) ∈
+        ({z | fD z = fD ⟨x.1, hAD x.1 x.2⟩} : Set _) := rfl
+    have hymem : (⟨y.1, hAD y.1 y.2⟩ : {z // PD z}) ∈
+        ({z | fD z = fD ⟨x.1, hAD x.1 x.2⟩} : Set _) := hxy_eq.symm
+    have hne_sub : (⟨x.1, hAD x.1 x.2⟩ : {z // PD z}) ≠ ⟨y.1, hAD y.1 y.2⟩ :=
+      fun h => hne_val (congrArg (fun (z : {z // PD z}) => z.val) h)
+    rcases hchain hxmem hymem hne_sub with hle | hle
+    · exact hAanti x.2 y.2 hne_val hle
+    · exact hAanti y.2 x.2 (Ne.symm hne_val) hle
+  -- `idxU` is injective by the same argument.
+  have idxU_inj : Function.Injective idxU := by
+    intro x y hxy
+    by_contra hne
+    have hne_val : x.1 ≠ y.1 := fun h => hne (Subtype.ext h)
+    have hxy_eq : fU ⟨x.1, hAU x.1 x.2⟩ = fU ⟨y.1, hAU y.1 y.2⟩ := hxy
+    have hchain := hfU (fU ⟨x.1, hAU x.1 x.2⟩)
+    have hxmem : (⟨x.1, hAU x.1 x.2⟩ : {z // PU z}) ∈
+        ({z | fU z = fU ⟨x.1, hAU x.1 x.2⟩} : Set _) := rfl
+    have hymem : (⟨y.1, hAU y.1 y.2⟩ : {z // PU z}) ∈
+        ({z | fU z = fU ⟨x.1, hAU x.1 x.2⟩} : Set _) := hxy_eq.symm
+    have hne_sub : (⟨x.1, hAU x.1 x.2⟩ : {z // PU z}) ≠ ⟨y.1, hAU y.1 y.2⟩ :=
+      fun h => hne_val (congrArg (fun (z : {z // PU z}) => z.val) h)
+    rcases hchain hxmem hymem hne_sub with hle | hle
+    · exact hAanti x.2 y.2 hne_val hle
+    · exact hAanti y.2 x.2 (Ne.symm hne_val) hle
+  -- Same cardinality `k`, so injectivity promotes to bijectivity.
+  have hcard_A : Fintype.card {x // x ∈ Aβ} = k := by
+    rw [Fintype.card_coe]; exact hAcard
+  have idxD_bij : Function.Bijective idxD := by
+    refine (Fintype.bijective_iff_injective_and_card idxD).mpr ⟨idxD_inj, ?_⟩
+    rw [hcard_A, Fintype.card_fin]
+  have idxU_bij : Function.Bijective idxU := by
+    refine (Fintype.bijective_iff_injective_and_card idxU).mpr ⟨idxU_inj, ?_⟩
+    rw [hcard_A, Fintype.card_fin]
+  let eD : {x // x ∈ Aβ} ≃ Fin k := Equiv.ofBijective idxD idxD_bij
+  let eU : {x // x ∈ Aβ} ≃ Fin k := Equiv.ofBijective idxU idxU_bij
+  -- The alignment permutation on `Fin k`: `σ (idxU a) = idxD a`.
+  let σ : Fin k ≃ Fin k := eU.symm.trans eD
+  have hσ_align : ∀ a : {x // x ∈ Aβ}, σ (idxU a) = idxD a := by
+    intro a
+    show eD (eU.symm (idxU a)) = idxD a
+    have hEa : eU a = idxU a := rfl
+    have hEsa : eU.symm (idxU a) = a := by
+      rw [← hEa]; exact eU.symm_apply_apply a
+    rw [hEsa]
+    rfl
+  -- Aligned cover of `U`: replace `fU` by `σ ∘ fU`. Fibers are permuted,
+  -- not changed, so the chain property is preserved.
+  let gU : {x // PU x} → Fin k := fun x => σ (fU x)
+  have hgU_chain : ∀ i : Fin k, IsChain (· ≤ ·) ({x | gU x = i} : Set _) := by
+    intro i
+    have hset : ({x | gU x = i} : Set {x // PU x}) =
+        ({x | fU x = σ.symm i} : Set _) := by
+      ext x
+      change σ (fU x) = i ↔ fU x = σ.symm i
+      exact σ.eq_symm_apply.symm
+    rw [hset]
+    exact hfU (σ.symm i)
+  -- Alignment: `gU` agrees with `fD` on `Aβ`.
+  have hgU_align : ∀ a : {x // x ∈ Aβ},
+      gU ⟨a.1, hAU a.1 a.2⟩ = fD ⟨a.1, hAD a.1 a.2⟩ := by
+    intro a
+    show σ (fU ⟨a.1, hAU a.1 a.2⟩) = fD ⟨a.1, hAD a.1 a.2⟩
+    exact hσ_align a
+  -- Splice: use `fD` on `D`, and `gU` on `β \ D` (which lies in `U`).
+  haveI : DecidablePred PD := fun _ => Classical.dec _
+  let f : β → Fin k := fun x =>
+    if hx : PD x then fD ⟨x, hx⟩
+    else gU ⟨x, (hDU_union x).resolve_left hx⟩
+  refine ⟨f, ?_⟩
+  intro i x hx y hy hxy
+  simp only [Set.mem_setOf_eq] at hx hy
+  by_cases hxD : PD x
+  · by_cases hyD : PD y
+    · -- Both in `D`: chain property of `fD`.
+      have hfx : f x = fD ⟨x, hxD⟩ := dif_pos hxD
+      have hfy : f y = fD ⟨y, hyD⟩ := dif_pos hyD
+      rw [hfx] at hx
+      rw [hfy] at hy
+      have heq : fD ⟨x, hxD⟩ = fD ⟨y, hyD⟩ := hx.trans hy.symm
+      have hchain := hfD (fD ⟨x, hxD⟩)
+      have hxmem : (⟨x, hxD⟩ : {z // PD z}) ∈
+          ({z | fD z = fD ⟨x, hxD⟩} : Set _) := rfl
+      have hymem : (⟨y, hyD⟩ : {z // PD z}) ∈
+          ({z | fD z = fD ⟨x, hxD⟩} : Set _) := heq.symm
+      have hne : (⟨x, hxD⟩ : {z // PD z}) ≠ ⟨y, hyD⟩ :=
+        fun h => hxy (congrArg Subtype.val h)
+      exact hchain hxmem hymem hne
+    · -- `x ∈ D`, `y ∈ U \ D`: splice via the canonical `a ∈ Aβ` in fiber `i`.
+      have hyU : PU y := (hDU_union y).resolve_left hyD
+      have hfx : f x = fD ⟨x, hxD⟩ := dif_pos hxD
+      have hfy : f y = gU ⟨y, hyU⟩ := dif_neg hyD
+      rw [hfx] at hx
+      rw [hfy] at hy
+      obtain ⟨aA, haA⟩ := idxD_bij.2 i
+      have ha_in : aA.1 ∈ Aβ := aA.2
+      have ha_PD : PD aA.1 := hAD aA.1 aA.2
+      have ha_PU : PU aA.1 := hAU aA.1 aA.2
+      have hai_D : fD ⟨aA.1, ha_PD⟩ = i := haA
+      have hai_U : gU ⟨aA.1, ha_PU⟩ = i := (hgU_align aA).trans hai_D
+      have hchainD := hfD i
+      have hx_memD : (⟨x, hxD⟩ : {z // PD z}) ∈
+          ({z | fD z = i} : Set _) := hx
+      have ha_memD : (⟨aA.1, ha_PD⟩ : {z // PD z}) ∈
+          ({z | fD z = i} : Set _) := hai_D
+      have hchainU := hgU_chain i
+      have hy_memU : (⟨y, hyU⟩ : {z // PU z}) ∈
+          ({z | gU z = i} : Set _) := hy
+      have ha_memU : (⟨aA.1, ha_PU⟩ : {z // PU z}) ∈
+          ({z | gU z = i} : Set _) := hai_U
+      by_cases hxa : x = aA.1
+      · by_cases hya : y = aA.1
+        · exact absurd (hxa.trans hya.symm) hxy
+        · have hya_sub : (⟨y, hyU⟩ : {z // PU z}) ≠ ⟨aA.1, ha_PU⟩ :=
+            fun h => hya (congrArg Subtype.val h)
+          rcases hchainU hy_memU ha_memU hya_sub with hle | hle
+          · exact absurd ((hPD_down y).mpr ⟨aA.1, ha_in, hle⟩) hyD
+          · exact Or.inl (hxa.symm ▸ hle)
+      · have hxa_sub : (⟨x, hxD⟩ : {z // PD z}) ≠ ⟨aA.1, ha_PD⟩ :=
+          fun h => hxa (congrArg Subtype.val h)
+        rcases hchainD hx_memD ha_memD hxa_sub with hxle | hxle
+        · by_cases hya : y = aA.1
+          · exact Or.inl (hya.symm ▸ hxle)
+          · have hya_sub : (⟨y, hyU⟩ : {z // PU z}) ≠ ⟨aA.1, ha_PU⟩ :=
+              fun h => hya (congrArg Subtype.val h)
+            rcases hchainU hy_memU ha_memU hya_sub with hle | hle
+            · have hle' : y ≤ aA.1 := hle
+              exact absurd ((hPD_down y).mpr ⟨aA.1, ha_in, hle'⟩) hyD
+            · have hxle' : x ≤ aA.1 := hxle
+              have hle' : aA.1 ≤ y := hle
+              exact Or.inl (hxle'.trans hle')
+        · -- `aA.1 ≤ x` and `aA.1 ∈ Aβ` force `x ∈ Aβ` by the antichain property.
+          have hxle' : aA.1 ≤ x := hxle
+          have hx_PU : PU x := (hPU_up x).mpr ⟨aA.1, ha_in, hxle'⟩
+          have hx_A : x ∈ Aβ := hDU_inter x hxD hx_PU
+          exact absurd hxle' (hAanti ha_in hx_A (Ne.symm hxa))
+  · have hxU : PU x := (hDU_union x).resolve_left hxD
+    by_cases hyD : PD y
+    · -- Symmetric to the previous case: `y ∈ D`, `x ∈ U \ D`.
+      have hfx : f x = gU ⟨x, hxU⟩ := dif_neg hxD
+      have hfy : f y = fD ⟨y, hyD⟩ := dif_pos hyD
+      rw [hfx] at hx
+      rw [hfy] at hy
+      obtain ⟨aA, haA⟩ := idxD_bij.2 i
+      have ha_in : aA.1 ∈ Aβ := aA.2
+      have ha_PD : PD aA.1 := hAD aA.1 aA.2
+      have ha_PU : PU aA.1 := hAU aA.1 aA.2
+      have hai_D : fD ⟨aA.1, ha_PD⟩ = i := haA
+      have hai_U : gU ⟨aA.1, ha_PU⟩ = i := (hgU_align aA).trans hai_D
+      have hchainD := hfD i
+      have hy_memD : (⟨y, hyD⟩ : {z // PD z}) ∈
+          ({z | fD z = i} : Set _) := hy
+      have ha_memD : (⟨aA.1, ha_PD⟩ : {z // PD z}) ∈
+          ({z | fD z = i} : Set _) := hai_D
+      have hchainU := hgU_chain i
+      have hx_memU : (⟨x, hxU⟩ : {z // PU z}) ∈
+          ({z | gU z = i} : Set _) := hx
+      have ha_memU : (⟨aA.1, ha_PU⟩ : {z // PU z}) ∈
+          ({z | gU z = i} : Set _) := hai_U
+      by_cases hya : y = aA.1
+      · by_cases hxa : x = aA.1
+        · exact absurd (hxa.trans hya.symm) hxy
+        · have hxa_sub : (⟨x, hxU⟩ : {z // PU z}) ≠ ⟨aA.1, ha_PU⟩ :=
+            fun h => hxa (congrArg Subtype.val h)
+          rcases hchainU hx_memU ha_memU hxa_sub with hle | hle
+          · exact Or.inl (hya.symm ▸ hle)
+          · exact Or.inr (hya.symm ▸ hle)
+      · have hya_sub : (⟨y, hyD⟩ : {z // PD z}) ≠ ⟨aA.1, ha_PD⟩ :=
+          fun h => hya (congrArg Subtype.val h)
+        rcases hchainD hy_memD ha_memD hya_sub with hyle | hyle
+        · by_cases hxa : x = aA.1
+          · exact Or.inr (hxa.symm ▸ hyle)
+          · have hxa_sub : (⟨x, hxU⟩ : {z // PU z}) ≠ ⟨aA.1, ha_PU⟩ :=
+              fun h => hxa (congrArg Subtype.val h)
+            rcases hchainU hx_memU ha_memU hxa_sub with hle | hle
+            · have hle' : x ≤ aA.1 := hle
+              exact absurd ((hPD_down x).mpr ⟨aA.1, ha_in, hle'⟩) hxD
+            · have hyle' : y ≤ aA.1 := hyle
+              have hle' : aA.1 ≤ x := hle
+              exact Or.inr (hyle'.trans hle')
+        · have hyle' : aA.1 ≤ y := hyle
+          have hy_PU : PU y := (hPU_up y).mpr ⟨aA.1, ha_in, hyle'⟩
+          have hy_A : y ∈ Aβ := hDU_inter y hyD hy_PU
+          exact absurd hyle' (hAanti ha_in hy_A (Ne.symm hya))
+    · -- Both in `U`: chain property of `gU`.
+      have hyU : PU y := (hDU_union y).resolve_left hyD
+      have hfx : f x = gU ⟨x, hxU⟩ := dif_neg hxD
+      have hfy : f y = gU ⟨y, hyU⟩ := dif_neg hyD
+      rw [hfx] at hx
+      rw [hfy] at hy
+      have heq : gU ⟨x, hxU⟩ = gU ⟨y, hyU⟩ := hx.trans hy.symm
+      have hchain := hgU_chain (gU ⟨x, hxU⟩)
+      have hxmem : (⟨x, hxU⟩ : {z // PU z}) ∈
+          ({z | gU z = gU ⟨x, hxU⟩} : Set _) := rfl
+      have hymem : (⟨y, hyU⟩ : {z // PU z}) ∈
+          ({z | gU z = gU ⟨x, hxU⟩} : Set _) := heq.symm
+      have hne : (⟨x, hxU⟩ : {z // PU z}) ≠ ⟨y, hyU⟩ :=
+        fun h => hxy (congrArg Subtype.val h)
+      exact hchain hxmem hymem hne
 
 /-- Auxiliary: Dilworth's theorem by strong induction on `Fintype.card β`.
 Generalized over `β` so that the induction hypothesis applies to the
