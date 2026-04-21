@@ -7,7 +7,7 @@ for the mathematical outline and `../main.pdf` for the full paper.
 
 ## Status
 
-**`lake build` succeeds (1334 jobs, clean).** Every paper theorem
+**`lake build` succeeds (1347 jobs, clean).** Every paper theorem
 statement has a Lean counterpart; Steps 1–7 and the Step 8 spine —
 including the previously-accepted Dilworth's theorem and the
 `fkg_case_output` axiom (now `bipartite_balanced_enum`) — compile
@@ -32,7 +32,7 @@ Line numbers below are for the `sorry` token itself.
 | # | File:line | In declaration | Category |
 |---|-----------|----------------|----------|
 | 1 | `OneThird/Step8/LayeredBalanced.lean:372` | `lem_layered_balanced_subtype` | Subtype-level balanced-pair helper — iterated ordinal-sum decomposition of `↥D.Mid` to reach an irreducible reduct with an incomparable cross-pair in adjacent bands, then `bipartite_balanced_enum` (`step8.tex:1608-1625`) |
-| 2 | `OneThird/Mathlib/LinearExtension/Subtype.lean` (in `OrdinalDecomp.probLT_restrict_eq`) | sub-poset marginal-invariance | F4-foundation: bijection `LinearExt α ≃ LinearExt ↥Lower × LinearExt ↥Mid × LinearExt ↥Upper` for ordinal-sum decompositions (`step8.tex:1584-1598`) |
+| 2 | `OneThird/Mathlib/LinearExtension/Subtype.lean:430` | `OrdinalDecomp.probLT_restrict_eq` | F4-foundation: bijection `LinearExt α ≃ LinearExt ↥Lower × LinearExt ↥Mid × LinearExt ↥Upper` for ordinal-sum decompositions (`step8.tex:1584-1598`) |
 
 Both are *single-step* gaps: #1 is a structural reduction
 (ordinal-sum → irreducible → bipartite), #2 is the combinatorial
