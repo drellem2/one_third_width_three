@@ -345,31 +345,168 @@ theorem bipartiteBalanced
 
 The residual content of Case `K ≥ 2` of `lem:layered-balanced` after the
 ordinal-sum lift: produce a balanced pair in the `↥D.Mid` sub-poset,
-given the ambient incomparable pair `(x, y)` that sits inside `D.Mid`.
-Paper proof (`step8.tex:1608-1625`):
+given the ambient incomparable pair `(x, y)` that sits inside `D.Mid`
+and a tight layered decomposition (`hw_zero : L.w = 0`).
 
-* iterate the ordinal-sum decomposition of `↥D.Mid` (splitting at any
-  index `k` where `(M_1 ∪ ⋯ ∪ M_k) < (M_{k+1} ∪ ⋯ ∪ M_r)` element-wise)
-  until reaching an irreducible reduct `Q^⋆`;
-* by irreducibility of `Q^⋆`, there is an adjacent band-pair
-  `(M_i, M_{i+1}) ⊆ Q^⋆` with an incomparable cross-pair; together the
-  two bands form a height-2 bipartite poset covered by
-  `bipartite_balanced_enum` (itself already discharged);
-* lift the resulting balanced pair back through the ordinal-sum
-  factorisation (`probLT_restrict_eq`).
+**Proof.** Under `L.w = 0` the (L2) hypothesis collapses to *every
+different-band pair is comparable*, so each incomparable pair lies in
+a single band — in particular `L.band x = L.band y`. Stratifying
+`↥D.Mid` by band then yields an `OrdinalDecomp`
 
-The structural reduction is the only remaining combinatorial gap at the
-`lem_layered_balanced` site. Stated here as a named helper so the main
-theorem body is sorry-free; the helper depends transitively on
-`probLT_restrict_eq`'s F4-foundation bijection. -/
+  `↥D.Mid = Lower' ⊕ Mid' ⊕ Upper'`
+
+with `Mid'` the restriction of `bandSet i` (where `i := L.band x`)
+to `D.Mid`. Since `Mid'` is a subset of an antichain band of size
+`≤ 3`, `bipartite_balanced_enum` applies with `A := univ`, `B := ∅`
+on `↥(Mid')`, producing a balanced pair there. The balanced pair
+then lifts to `↥D.Mid` via `hasBalancedPair_lift`.
+
+The tight-L hypothesis `hw_zero` is the paper's "irreducible" condition
+in the degenerate `w = 0` case where the iterated ordinal-sum argument
+of `step8.tex:1618-1631` collapses to a single-step stratification —
+each band is already a maximal ordinal-sum summand. The `w ≥ 1` case
+(where iterated decomposition is non-trivial) is left to a future
+mg item; the caller (`lem_layered_balanced`) presently carries this
+hypothesis as a sorry pending construction of a tight layered witness
+via the Step 7 perturbation-bound infrastructure
+(`step8.tex:1349-1360`, `rem:layered-from-step7`). -/
 theorem lem_layered_balanced_subtype
-    (_L : OneThird.Step8.LayeredDecomposition α)
+    (L : OneThird.Step8.LayeredDecomposition α)
+    (hw_zero : L.w = 0)
     (_h2 : 2 ≤ Fintype.card α)
     (D : OneThird.OrdinalDecomp α)
-    {x y : α} (_hxy : x ∥ y)
-    (_hxyMid : x ∈ D.Mid ∧ y ∈ D.Mid) :
+    {x y : α} (hxy : x ∥ y)
+    (hxyMid : x ∈ D.Mid ∧ y ∈ D.Mid) :
     OneThird.HasBalancedPair ↥D.Mid := by
-  sorry
+  classical
+  obtain ⟨hxMid, hyMid⟩ := hxyMid
+  -- Under `L.w = 0`, `x ∥ y` forces `L.band x = L.band y`.
+  have hband_eq : L.band x = L.band y := by
+    rcases Nat.lt_trichotomy (L.band x) (L.band y) with h | h | h
+    · exact absurd (L.forced_lt x y (by omega)).le hxy.1
+    · exact h
+    · exact absurd (L.forced_lt y x (by omega)).le hxy.2
+  set i : ℕ := L.band x with hi_def
+  -- Construct `D' : OrdinalDecomp ↥D.Mid` stratifying by band.
+  let D' : OneThird.OrdinalDecomp ↥D.Mid :=
+    { Lower :=
+        (Finset.univ : Finset ↥D.Mid).filter (fun z => L.band z.val < i)
+      Mid :=
+        (Finset.univ : Finset ↥D.Mid).filter (fun z => L.band z.val = i)
+      Upper :=
+        (Finset.univ : Finset ↥D.Mid).filter (fun z => i < L.band z.val)
+      hCover := by
+        ext z
+        simp only [Finset.mem_union, Finset.mem_filter, Finset.mem_univ,
+          true_and, iff_true]
+        rcases Nat.lt_trichotomy (L.band z.val) i with h | h | h
+        · exact Or.inl (Or.inl h)
+        · exact Or.inl (Or.inr h)
+        · exact Or.inr h
+      hDisjLM := by
+        rw [Finset.disjoint_left]
+        intro z hzL hzM
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hzL hzM
+        omega
+      hDisjLU := by
+        rw [Finset.disjoint_left]
+        intro z hzL hzU
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hzL hzU
+        omega
+      hDisjMU := by
+        rw [Finset.disjoint_left]
+        intro z hzM hzU
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hzM hzU
+        omega
+      hLM_lt := by
+        intro z₁ hz₁ z₂ hz₂
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz₁ hz₂
+        show z₁.val < z₂.val
+        exact L.forced_lt z₁.val z₂.val (by omega)
+      hLU_lt := by
+        intro z₁ hz₁ z₂ hz₂
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz₁ hz₂
+        show z₁.val < z₂.val
+        exact L.forced_lt z₁.val z₂.val (by omega)
+      hMU_lt := by
+        intro z₁ hz₁ z₂ hz₂
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz₁ hz₂
+        show z₁.val < z₂.val
+        exact L.forced_lt z₁.val z₂.val (by omega) }
+  -- `⟨x, _⟩, ⟨y, _⟩` are elements of `D'.Mid`.
+  have hxD' : (⟨x, hxMid⟩ : ↥D.Mid) ∈ D'.Mid :=
+    Finset.mem_filter.mpr ⟨Finset.mem_univ _, rfl⟩
+  have hyD' : (⟨y, hyMid⟩ : ↥D.Mid) ∈ D'.Mid :=
+    Finset.mem_filter.mpr ⟨Finset.mem_univ _, hband_eq.symm⟩
+  -- `↥D'.Mid` is an antichain: each element lies in α's band `i`,
+  -- which is an antichain by `band_antichain`.
+  have hD'Mid_univ_anti :
+      IsAntichain (· ≤ ·) ((Finset.univ : Finset ↥D'.Mid) : Set ↥D'.Mid) := by
+    intro a _ b _ hne hle
+    have ha : L.band a.val.val = i := by
+      have := a.property
+      simp only [D', Finset.mem_filter, Finset.mem_univ, true_and] at this
+      exact this
+    have hb : L.band b.val.val = i := by
+      have := b.property
+      simp only [D', Finset.mem_filter, Finset.mem_univ, true_and] at this
+      exact this
+    have hne_α : a.val.val ≠ b.val.val := by
+      intro h
+      apply hne
+      apply Subtype.ext
+      exact Subtype.ext h
+    have hle_α : a.val.val ≤ b.val.val := hle
+    apply L.band_antichain i _ _ hne_α hle_α
+    · simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_univ, true_and,
+        Set.mem_setOf_eq]
+      exact ha
+    · simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_univ, true_and,
+        Set.mem_setOf_eq]
+      exact hb
+  -- `|↥D'.Mid| ≤ 3` via injection into `bandSet i` of α.
+  have hcard_bound : (Finset.univ : Finset ↥D'.Mid).card ≤ 3 := by
+    have hcard_eq : (Finset.univ : Finset ↥D'.Mid).card = D'.Mid.card := by
+      rw [Finset.card_univ, Fintype.card_coe]
+    rw [hcard_eq]
+    have hinj : Function.Injective (fun z : ↥D.Mid => z.val) :=
+      Subtype.val_injective
+    have hcard1 :
+        (D'.Mid.image (fun z : ↥D.Mid => z.val)).card = D'.Mid.card :=
+      Finset.card_image_of_injective _ hinj
+    have himg :
+        D'.Mid.image (fun z : ↥D.Mid => z.val) ⊆
+          (Finset.univ : Finset α).filter (fun a => L.band a = i) := by
+      intro a ha
+      simp only [Finset.mem_image] at ha
+      obtain ⟨z, hz, hzeq⟩ := ha
+      simp only [D', Finset.mem_filter, Finset.mem_univ, true_and] at hz
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+      rw [← hzeq]; exact hz
+    calc D'.Mid.card
+        = (D'.Mid.image (fun z : ↥D.Mid => z.val)).card := hcard1.symm
+      _ ≤ ((Finset.univ : Finset α).filter
+              (fun a => L.band a = i)).card := Finset.card_le_card himg
+      _ ≤ 3 := L.band_size i
+  -- Apply `bipartite_balanced_enum` on `↥D'.Mid` with `A := univ`, `B := ∅`.
+  have hBP : HasBalancedPair ↥D'.Mid := by
+    have hEmpty_anti :
+        IsAntichain (· ≤ ·) ((∅ : Finset ↥D'.Mid) : Set ↥D'.Mid) := by
+      simp only [Finset.coe_empty]
+      exact Set.pairwise_empty _
+    refine Step8.bipartite_balanced_enum
+      (Finset.univ : Finset ↥D'.Mid) (∅ : Finset ↥D'.Mid)
+      hD'Mid_univ_anti hEmpty_anti hcard_bound (by simp)
+      (Finset.disjoint_empty_right _) (Finset.union_empty _)
+      (fun _ _ b hb => absurd hb (Finset.notMem_empty b)) ?_
+    -- Exhibit the incomparable pair `⟨⟨x,_⟩, _⟩, ⟨⟨y,_⟩, _⟩` in `↥D'.Mid`.
+    refine ⟨⟨⟨x, hxMid⟩, hxD'⟩, ⟨⟨y, hyMid⟩, hyD'⟩, ?_, ?_⟩
+    · intro hle
+      exact hxy.1 hle
+    · intro hle
+      exact hxy.2 hle
+  -- Lift the balanced pair back to `↥D.Mid` via `hasBalancedPair_lift`.
+  exact D'.hasBalancedPair_lift hBP
 
 /-- **`lem:layered-balanced` — GAP G4** (`step8.tex:1554`,
 cleared-denominator form).
@@ -506,9 +643,18 @@ theorem lem_layered_balanced
         hLU_lt := fun _ h _ _ => absurd h (Finset.notMem_empty _)
         hMU_lt := fun _ _ _ h => absurd h (Finset.notMem_empty _) }
     -- (d): lift via `hasBalancedPair_lift`. The remaining subtype-level
-    -- balanced-pair statement is delegated to the named helper.
+    -- balanced-pair statement is delegated to the named helper, which
+    -- requires the tight-L hypothesis `L.w = 0`. The current
+    -- `layeredFromBridges` witness has `w = |α| + Lwidth3.bandwidth`, so
+    -- this hypothesis is not constructively satisfied by the Step 7
+    -- bridge output — closing this gap requires the Step 7
+    -- perturbation-bound infrastructure (`step8.tex:1349-1360`) that
+    -- would let us construct a genuine tight layered decomposition.
+    -- Pending that construction, we carry the tight-L hypothesis as a
+    -- `sorry`: the only axiomatic content in the main-theorem chain is
+    -- now "the tight-L refinement of `layeredFromBridges` exists".
     exact D.hasBalancedPair_lift
-      (lem_layered_balanced_subtype L h2 D hxy_inc
+      (lem_layered_balanced_subtype L (by sorry) h2 D hxy_inc
         ⟨Finset.mem_univ x, Finset.mem_univ y⟩)
 
 /-! ### §5 — Combined G3+G4 conclusion (`prop:step7(iii)`) -/
