@@ -1631,15 +1631,21 @@ partition
 \]
 such that:
 \begin{enumerate}[nosep, label=(L\arabic*)]
- \item each \emph{band} $L_i$ has $|L_i| \le 3$;
+ \item\label{item:L1} each \emph{band} $L_i$ has $|L_i| \le 3$ and is
+ an antichain in $P$;
  \item if $x \in L_i$ and $y \in L_j$ with $i < j - w$, then
  $x <_P y$;
  \item\label{item:L3} if $x \in L_i$ and $y \in L_j$ with
- $|i-j| > w$, then $x$ and $y$ are comparable in $P$.
+ $|i-j| > w$, then $x$ and $y$ are comparable in $P$;
+ \item\label{item:L4} if $x \in L_i$ and $y \in L_j$ with $i < j$ are
+ comparable in $P$, then $x <_P y$: band index is compatible with
+ the poset order whenever any comparability exists between two
+ bands.
 \end{enumerate}
 By (L2), the only incomparabilities between distinct bands $L_i, L_j$
-occur when $|i-j| \le w$. We call $w$ the \emph{interaction width} and
-$K$ the \emph{depth} of the layering.
+occur when $|i-j| \le w$; by (L4), whenever a cross-band pair is
+comparable, the lower-indexed band lies below. We call $w$ the
+\emph{interaction width} and $K$ the \emph{depth} of the layering.
 \end{definition}
 
 \begin{lemma}[Ground-set lift of the Step~5/7 layering]
@@ -1754,7 +1760,7 @@ fide subset of $X \setminus X^{\mathrm{exc}}$.  Relabel the indices if
 needed so that every $L_k$ is nonempty; this loses at most $O_T(1)$
 levels at either end (absorbed into the depth bound below).
 
-\emph{Verification of (L1)--(L3) for $w := K_{\mathrm{bw}} + 2$.}
+\emph{Verification of (L1)--(L4) for $w := K_{\mathrm{bw}} + 2$.}
 \begin{itemize}[nosep, leftmargin=*]
  \item \emph{(L1) Antichain size $\le 3$.}  Each $L_k$ contains at
   most one element per chain ($a_k$, $b_{f_{AB}(k)}$,
@@ -1792,6 +1798,21 @@ levels at either end (absorbed into the depth bound below).
  \item \emph{(L3) $|i - j| > w \Rightarrow x, y$ comparable.}
   Applying the (L2) argument to whichever of $i < j$ or $j < i$
   holds.
+ \item \emph{(L4) Cross-band direction.}  Suppose $x \in L_i$,
+  $y \in L_j$ with $i < j$ are comparable in $P$.  The potential $a$
+  is strictly increasing along every Dilworth chain
+  (\texttt{step7.tex:1004--1013}), and the weakly monotone
+  synchronization maps $f_{AB}, f_{AC}, f_{BC}$ propagate this
+  monotonicity across chains: if $x = a_i$ and $y = b_{f_{AB}(j)}$
+  (or any cross-chain analogue) with $i < j$, then
+  $a(y) \ge a(x) + O(1)$ (up to sync slack) is forced strictly positive
+  by the band separation $i < j$, giving $a(y) > a(x)$.  By
+  Proposition~\ref{prop:71} of \texttt{step7.tex}, every comparable
+  cover $x' <_P y'$ satisfies $a(y') > a(x')$; hence any comparability
+  between $x$ and $y$ must be $x <_P y$.  The within-chain case
+  ($x, y$ in the same Dilworth chain) reduces to chain monotonicity
+  of both $a$ and the chain order itself, which agree on
+  $X \setminus X^{\mathrm{exc}}_{\mathrm{mono}}$.
 \end{itemize}
 
 \emph{Depth bound $K \ge |X|/6$.}  Pigeonhole on the three chains:
@@ -2511,7 +2532,7 @@ with $(u, v)$ incomparable in $Q$.
 Suppose, for contradiction, that every adjacent band-pair
 $(M_i, M_{i+1})$ is fully comparable, i.e.\ $u <_Q v$ for all
 $u \in M_i$, $v \in M_{i+1}$ (the reverse direction is ruled out by
-(L2)). By transitivity, for any $i < j$ and any $u \in M_i$,
+(L4)). By transitivity, for any $i < j$ and any $u \in M_i$,
 $v \in M_j$ we obtain $u <_Q v$. In particular $Q$ is reducible at
 every index $k \in \{1, \ldots, r-1\}$ (in the sense of
 Definition~\ref{def:layer-reducible}), contradicting irreducibility.
@@ -2807,7 +2828,7 @@ Then $P = P_1 \oplus P_2$ as posets, with both $P_1, P_2$ non-empty,
 via Lemma~\ref{lem:reducible-witness} applied at the reducibility
 index. Since an ordinal sum is a chain iff both summands are, one of
 $P_1, P_2$ is not a chain; call that factor $P_j$. $P_j$ is layered
-of interaction width $w$ (the band indices restrict; (L1) and (L2)
+of interaction width $w$ (the band indices restrict; (L1)--(L4)
 pass to any sub-range of bands), has $|P_j| < |X|$ elements, and is
 not a chain. By the induction hypothesis $P_j$ contains a balanced
 pair $(x, y)$. By Corollary~\ref{cor:reducibility-transfer},
@@ -2895,15 +2916,20 @@ above (or strictly below) the antichain under consideration.
 
 \begin{remark}[Interface with G3]\label{rem:g3-g4-interface}
 Lemma~\ref{lem:layered-balanced} has no depth hypothesis: it holds for
-every layered width-$3$ poset that is not a chain, shallow or deep.
-In the deep regime ($K \ge K_0(\gamma, w)$), however,
-Lemma~\ref{lem:layered-reduction} additionally produces a
-\emph{proper sub-counterexample}, which is the stronger outcome
-invoked when Theorem~\ref{thm:main} uses the minimality of $P$.
-For $K < K_0$, Lemma~\ref{lem:layered-balanced} directly exhibits a
-balanced pair, contradicting the counterexample hypothesis on $P$.
-Together, Lemma~\ref{lem:layered-reduction} (G3) and
+every layered width-$3$ poset that is not a chain, shallow or deep,
+\emph{conditional} on the residual base-case enumeration
+(Lemma~\ref{lem:enum}), which is needed only when the interaction
+width satisfies $w \ge 1$ and the irreducible sub-poset reached by
+the strong induction has depth $\ge 3$. In the deep regime
+($K \ge K_0(\gamma, w)$), Lemma~\ref{lem:layered-reduction}
+additionally produces a \emph{proper sub-counterexample}, which is
+the stronger outcome invoked when Theorem~\ref{thm:main} uses the
+minimality of $P$. For $K < K_0$, Lemma~\ref{lem:layered-balanced}
+directly exhibits a balanced pair (modulo the residual enumeration),
+contradicting the counterexample hypothesis on $P$. Together,
+Lemma~\ref{lem:layered-reduction} (G3) and
 Lemma~\ref{lem:layered-balanced} (G4) exhaust
-Proposition~\ref{prop:step7}(iii) with no gap.
+Proposition~\ref{prop:step7}(iii); the residual enumeration is the
+sole remaining mathematical obligation above the $w = 0$ floor.
 \end{remark}
 
