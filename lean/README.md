@@ -6,6 +6,59 @@ of the width-3 case of the 1/3–2/3 conjecture developed in the LaTeX sources
 `../roadmap.md` for the mathematical outline; see `../summary.md` for the
 "mathematical completeness" status of the LaTeX proof itself.
 
+## Audit (2026-04-21, round 11 — `mg-68af`)
+
+**Headline:** `lake build` succeeds. **1 `sorry` + 1 axiom remain** in
+the project code. The previously circular `fkg_case_output` axiom has
+been rescoped to match `prop:bipartite-balanced` (`step8.tex:1627`),
+and the `lem_layered_balanced` reduction step is now its own
+explicit `sorry`.
+
+### Round-10 → round-11 delta
+
+`mg-68af` rescoped the `fkg_case_output` axiom introduced by
+`mg-aab8` at round 8.5/9.
+
+Previously:
+
+```lean
+axiom fkg_case_output
+    {α} … (x y : α) (_hxy : x ∥ y) :
+    ∃ x' y' : α, (x' ∥ y') ∧ 1/2 ≤ probLT x' y' ∧ probLT x' y' ≤ 2/3
+```
+
+This is circular: for any α with an incomparable pair `(x, y)`, the
+axiom output is (modulo `1/2 ≥ 1/3`) a balanced pair — i.e., the full
+1/3–2/3 conjecture for arbitrary width-3 α.
+
+After rescoping, `fkg_case_output` matches `prop:bipartite-balanced`
+(`step8.tex:1627`): `A ∪ B = Finset.univ`, `A ⊔ B` disjoint antichains
+of size `≤ 3`, `A < B`, one incomparable pair ⇒ balanced pair. Finite
+(`|α| ≤ 6`, at most `1024` configurations modulo automorphism) and
+non-circular.
+
+`bipartiteBalanced` is now proved by direct application of the
+rescoped axiom. `lem_layered_balanced` can no longer invoke
+`bipartiteBalanced` from an arbitrary non-chain poset (the covering
+hypothesis fails for `|α| > 6`), so the paper's reduction step
+(`windowLocalization` + iterated ordinal-sum decomposition + K=1/K≥2
+dichotomy, `step8.tex:1760-1796`) is exposed as its own `sorry`.
+
+Net: the one foundation-item axiom + `lem_layered_balanced` body
+together replace the previously hidden circularity with two
+independent, bounded gaps.
+
+### All non-classical leaves — 2 total (1 sorry + 1 axiom)
+
+Line numbers below are for the `sorry` / `axiom` token itself.
+
+| # | File:line | Declaration | Category |
+|---|-----------|-------------|----------|
+| 1 | `OneThird/Step8/LayeredBalanced.lean:326` | `fkg_case_output` | **F4 foundation axiom** — finite bipartite form of `prop:bipartite-balanced` |
+| 2 | `OneThird/Step8/LayeredBalanced.lean:413` | `lem_layered_balanced` | G4 reduction glue (window + ordinal-sum + K-dichotomy, `step8.tex:1760-1796`) |
+
+Dilworth's theorem is now fully discharged as of `mg-6010` (round 10.5).
+
 ## Audit (2026-04-21, round 10 — `mg-ca21`)
 
 **Headline:** `lake build` succeeds. **2 `sorry`s remain** — the Dilworth
