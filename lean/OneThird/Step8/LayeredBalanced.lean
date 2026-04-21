@@ -3,6 +3,7 @@ Copyright (c) 2026 The OneThird Authors. All rights reserved.
 Released under the MIT License.
 -/
 import OneThird.LinearExtension
+import OneThird.Step8.BipartiteEnum
 import OneThird.Step8.LayeredReduction
 import OneThird.Step8.Window
 import Mathlib.Tactic.Linarith
@@ -302,39 +303,6 @@ lemma probLT_three_cycle_ge_one
   rw [← add_div, ← add_div, one_le_div₀ hn]
   exact_mod_cast hsum
 
-/-- **F4 foundation axiom — `prop:bipartite-balanced`**
-(`step8.tex:1627`).
-
-Finite, non-circular form of the FKG / Graham–Yao–Yao output. For a
-height-2 poset `α = A ⊔ B` with `A, B` disjoint antichains of size
-`≤ 3`, every comparability directed `A < B`, and at least one
-incomparable pair, `α` has a balanced pair. The covering hypothesis
-`A ∪ B = Finset.univ` bounds `|α| ≤ 6` (so at most `1024`
-configurations modulo automorphism, `step8.tex:1751-1763`,
-`rem:Finite enumeration`).
-
-Without the covering hypothesis this axiom would collapse to the full
-1/3–2/3 conjecture for any α admitting an incomparable pair (take
-`A := ⟨x, y⟩, B := ∅`) — the form it previously had before `mg-68af`.
-
-Stated as an `axiom` pending the separate formalisation of either
-(i) the FKG / Graham–Yao–Yao inequality + rotation case analysis
-(`Case 1` symmetric-pair involution, `Case 2` via
-`rotation_contradiction`) or (ii) direct finite enumeration over the
-≤ 1024 bipartite configurations. Listed in `MATHLIB_GAPS.md` §E as
-historical FKG context. -/
-axiom fkg_case_output
-    {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
-    (A B : Finset α)
-    (_hA_anti : IsAntichain (· ≤ ·) (A : Set α))
-    (_hB_anti : IsAntichain (· ≤ ·) (B : Set α))
-    (_hA_size : A.card ≤ 3) (_hB_size : B.card ≤ 3)
-    (_hDisj : Disjoint A B)
-    (_hCover : A ∪ B = (Finset.univ : Finset α))
-    (_hAB : ∀ a ∈ A, ∀ b ∈ B, a ≤ b)
-    (_hIncomp : ∃ u v : α, u ∥ v) :
-    OneThird.HasBalancedPair α
-
 /-- **`prop:bipartite-balanced`** (`step8.tex:1627`).
 
 Structural form, with `Q` modelled as the ambient poset `α` via the
@@ -343,8 +311,10 @@ covering hypothesis `A ∪ B = Finset.univ`. For a height-2 poset
 comparability directed `A < B`, and at least one incomparable pair
 in `Q`: `Q` has a balanced pair.
 
-Discharged via the `fkg_case_output` axiom (the F4 foundation item).
-The paper's proof (`step8.tex:1640-1749`) splits into two cases:
+Discharged via `bipartite_balanced_enum` (Step8/BipartiteEnum.lean, the
+Case 1 symmetric-pair involution applied uniformly across the ≤ 1024
+bipartite configurations). The paper's proof (`step8.tex:1640-1749`)
+splits into two cases:
 
 * **Case 1** (symmetric pair): two elements of `A` (resp. `B`)
   share the same external profile; swapping them is an involution
@@ -365,7 +335,8 @@ theorem bipartiteBalanced
     (hAB : ∀ a ∈ A, ∀ b ∈ B, a ≤ b)
     (hIncomp : ∃ u v : α, u ∥ v) :
     OneThird.HasBalancedPair α :=
-  fkg_case_output A B hA_anti hB_anti hA_size hB_size hDisj hCover hAB hIncomp
+  bipartite_balanced_enum A B hA_anti hB_anti hA_size hB_size hDisj hCover
+    hAB hIncomp
 
 /-! ### §4 — `lem:layered-balanced`: GAP G4 -/
 
