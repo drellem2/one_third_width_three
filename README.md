@@ -133,8 +133,12 @@ round-9 audit (see [`lean/README.md`](lean/README.md)) the status is:
 
 - `lake build` succeeds (1333 jobs, clean).
 - **Exactly 2 `sorry`s remain, both accepted external dependencies:**
-  1. **Dilworth's theorem (finite case)** at
-     `OneThird/Mathlib/Poset/Dilworth.lean:135`. Classical result,
+  1. **Dilworth's theorem, splice step** at
+     `OneThird/Mathlib/Poset/Dilworth.lean:171` (`dilworth_splice`).
+     The main theorem `hasChainCover_of_hasWidth` is structurally
+     complete (strong induction on `|β|`, base case, antichain case,
+     non-antichain Case A, and Case B setup); only the final align +
+     splice step of the Galvin proof is deferred. Classical result,
      not yet in mathlib; tracked as a separate mathlib-contribution
      effort.
   2. **FKG / Graham–Yao–Yao output for the bipartite case analysis**

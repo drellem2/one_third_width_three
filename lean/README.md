@@ -6,6 +6,34 @@ of the width-3 case of the 1/3–2/3 conjecture developed in the LaTeX sources
 `../roadmap.md` for the mathematical outline; see `../summary.md` for the
 "mathematical completeness" status of the LaTeX proof itself.
 
+## Audit (2026-04-21, round 10 — `mg-ca21`)
+
+**Headline:** `lake build` succeeds. **2 `sorry`s remain** — the Dilworth
+sorry has moved from the main theorem body to a single helper
+(`dilworth_splice`), and the FKG / rotation case-analysis output is
+unchanged. The main Galvin induction is now fully scaffolded.
+
+### Round-9 → round-10 delta
+
+This round landed `mg-ca21`, which replaced the monolithic
+`hasChainCover_of_hasWidth` sorry with a structural Galvin proof:
+strong induction on `Fintype.card β`, empty base case, antichain case,
+non-antichain Case A (`width β' < k`, extend by `{b, t}`), and Case B
+setup (`width β' = k`, construct `D`, `U`, apply IH to get chain
+covers). The remaining sorry is in the helper `dilworth_splice`
+(the align + splice step), scheduled as `mg-6010`. The sorry count in
+the source is unchanged (2), but the residual Dilworth work shrinks
+from ≈500–1000 lines to ≈200 lines.
+
+### All `sorry`s — 2 total
+
+Line numbers below are the line of the `sorry` token itself.
+
+| # | File:line | Declaration | Accepted as |
+|---|-----------|-------------|-------------|
+| 1 | `OneThird/Step8/LayeredBalanced.lean:418` | `lem_layered_balanced` (inside proof) — `hFKGCaseOutput` argument to `bipartiteBalanced` | **FKG / Graham–Yao–Yao foundation item** (F4 of `step8.tex:1640-1749`) |
+| 2 | `OneThird/Mathlib/Poset/Dilworth.lean:171` | `dilworth_splice` (align + splice step) | **Dilworth's theorem** (classical finite case) — residual splice tracked as `mg-6010` |
+
 ## Audit (2026-04-20, round 9 — `mg-46d1`)
 
 **Headline:** `lake build` succeeds (1333 jobs, clean). **2 `sorry`s
