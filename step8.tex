@@ -623,12 +623,9 @@ Lemma~\ref{lem:endpoint-mono} (\texttt{step5.tex}) and the factor~$3$
 accounts for the three ordered Dilworth triples
 $(A,B|C),(A,C|B),(B,C|A)$. The pairwise-probability
 perturbation bound for deleting a bounded window of $k$ elements
-(standard element-deletion coupling: each deletion changes any
-pairwise probability by at most $2/(n{-}i{+}1)$ where $i$ is the
-current ground-set size, iterated $k$ times; see e.g.~the argument
-in Lemma~\ref{lem:layered-reduction} below, specialized from the
-window $W$ to the window $X^{\mathrm{exc}}$) gives: for every
-$x,y \in X \setminus X^{\mathrm{exc}}$,
+(Lemma~\ref{lem:exc-perturb} below, proved by an iterated
+single-element deletion coupling at each of the $k$ deletion
+steps) gives: for every $x,y \in X \setminus X^{\mathrm{exc}}$,
 \begin{equation}\label{eq:exc-perturb}
   \big|p_{xy}(P) - p_{xy}(P|_{X \setminus X^{\mathrm{exc}}})\big|
   \;\le\; \frac{2\,k}{\,n - k + 1\,}
@@ -846,6 +843,178 @@ input step, with no inline derivations:
 \end{itemize}
 All Steps 1--7, Theorem~E, and gaps G3--G4 enter as sealed black
 boxes.
+\end{remark}
+
+\subsection{The exceptional-set perturbation bound}
+\label{sec:exc-perturb}
+
+We now give a self-contained proof of the pairwise-probability
+perturbation bound~\eqref{eq:exc-perturb} invoked in the
+Case~(C)/Case~(R) argument of Theorem~\ref{thm:main-step8}. The
+argument is an iterated single-element deletion coupling; it does not
+use width-$3$ or any layering hypothesis.
+
+\begin{lemma}[Single-element deletion coupling]
+\label{lem:one-elem-perturb}
+Let $Q$ be a finite poset with $|Q| = m \ge 2$, let $z \in Q$, and let
+$x, y \in Q \setminus \{z\}$ with $x \ne y$. Then
+\begin{equation}\label{eq:one-elem-perturb}
+  \big|p_{xy}(Q) - p_{xy}(Q - z)\big| \;\le\; \frac{2}{m}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Write $N := |\mathcal L(Q)|$ and $N' := |\mathcal L(Q - z)|$, and let
+$\pi\colon \mathcal L(Q) \to \mathcal L(Q - z)$, $L \mapsto L|_{Q-z}$,
+be the restriction map obtained by deleting~$z$ from the sequence~$L$.
+For each $L' \in \mathcal L(Q-z)$, the fibre
+$F(L') := \pi^{-1}(L')$ is in bijection with the set of valid rank
+positions at which $z$ may be inserted into $L'$ to yield an extension
+of~$Q$. Writing
+$\operatorname{pred}(z) := \{u \in Q : u <_Q z\}$,
+$\operatorname{succ}(z) := \{v \in Q : z <_Q v\}$, and
+\begin{align*}
+  P(L') &:= \max\!\big\{\operatorname{pos}_{L'}(u) : u \in \operatorname{pred}(z)\big\}\ (=\!0\text{ if }\operatorname{pred}(z)=\emptyset),\\
+  S(L') &:= \min\!\big\{\operatorname{pos}_{L'}(v) : v \in \operatorname{succ}(z)\big\}\ (=\!m\text{ if }\operatorname{succ}(z)=\emptyset),
+\end{align*}
+the valid insertion ranks form the interval $\{P(L')+1, \ldots, S(L')\}$,
+so
+\begin{equation}\label{eq:fiber-size}
+  f(L') := |F(L')| \;=\; S(L') - P(L') \;\in\; \{1, 2, \ldots, m\}.
+\end{equation}
+Summing fibres, $\sum_{L' \in \mathcal L(Q-z)} f(L') = N$.
+
+Restriction preserves the relative order of~$x$ and~$y$, so
+$\mathbf 1[x <_L y]$ depends on $L$ only through $\pi(L)$. Setting
+$A := \{L' \in \mathcal L(Q-z) : x <_{L'} y\}$ and
+$F_A := \sum_{L' \in A} f(L')$, we obtain
+\begin{equation}\label{eq:pxy-fibers}
+  p_{xy}(Q) \;=\; \frac{F_A}{N},
+  \qquad
+  p_{xy}(Q-z) \;=\; \frac{|A|}{N'}.
+\end{equation}
+
+\smallskip\noindent\emph{Coupling via random insertion.} Consider the
+following joint distribution of
+$(L', J) \in \mathcal L(Q-z) \times \{1, \ldots, m\}$: sample
+$L' \in \mathcal L(Q-z)$ uniformly and, independently, $J \in \{1,
+\ldots, m\}$ uniformly. Let $B$ be the event
+$\{P(L') < J \le S(L')\}$, i.e.\ the event that $J$ is a valid
+insertion rank for~$z$ in~$L'$. Then
+\[
+  \Pr(B) \;=\; \mathbb E[f(L')]/m \;=\; N/(mN') \;=\; \bar f/m,
+\]
+where $\bar f := N/N'$ is the mean fibre size. Conditional on~$B$,
+inserting $z$ at rank $J$ of $L'$ yields an element
+$L \in \mathcal L(Q)$, and the induced conditional distribution
+of~$L$ is uniform on $\mathcal L(Q)$ (since each $L \in \mathcal L(Q)$
+is obtained from a unique $(L', J)$ with $J \in \{P(L')+1, \ldots,
+S(L')\}$, giving joint mass $1/(mN')$, renormalised to $1/N$).
+
+\smallskip\noindent\emph{Difference computation.} Let
+$A := \{x <_{L'} y\}$ as before (event in the sample space of
+$L'$). Since the insertion position $J$ does not alter the relative
+order of $x, y$ in $L'$, we have
+\begin{align*}
+  \Pr(A \cap B) &= \mathbb E\!\left[\mathbf 1_A \cdot f(L')/m\right]
+  \;=\; F_A/(mN'),\\
+  \Pr(B) &= \bar f/m \;=\; N/(mN').
+\end{align*}
+Hence $\Pr(A \mid B) = F_A/N = p_{xy}(Q)$ by~\eqref{eq:pxy-fibers}.
+Since $L' \sim$ uniform on $\mathcal L(Q-z)$, $\Pr(A) = |A|/N'
+= p_{xy}(Q-z)$. Using the law of total probability
+$\Pr(A) = \Pr(A \mid B)\Pr(B) + \Pr(A \mid \bar B)\Pr(\bar B)$ and
+rearranging,
+\begin{equation}\label{eq:total-prob}
+  p_{xy}(Q-z) \;=\; p_{xy}(Q)\cdot\frac{\bar f}{m}
+  \;+\; \Pr(A \mid \bar B)\cdot\Big(1 - \frac{\bar f}{m}\Big),
+\end{equation}
+which gives
+\begin{equation}\label{eq:diff-final}
+  p_{xy}(Q) - p_{xy}(Q-z)
+  \;=\; \Big(1 - \frac{\bar f}{m}\Big)\Big(p_{xy}(Q) - \Pr(A\mid\bar B)\Big).
+\end{equation}
+
+\smallskip\noindent\emph{Bounding the two factors.} The first factor
+satisfies $1 - \bar f/m \le 1 - 1/m = (m-1)/m$ since $\bar f \ge 1$.
+The second factor satisfies
+$|p_{xy}(Q) - \Pr(A \mid \bar B)| \le 1$ trivially, but admits the
+refined bound
+\begin{equation}\label{eq:second-factor}
+  \bigl|p_{xy}(Q) - \Pr(A \mid \bar B)\bigr| \;\le\; \frac{2}{m-1},
+\end{equation}
+which we now establish. Given $\bar B$ (i.e.\ $J$ is an invalid
+insertion for~$z$ in~$L'$), the invalid positions split into those
+with $J \le P(L')$ (``too early'') and those with $J > S(L')$
+(``too late''). Conditional on $\bar B$ further restricted to either
+subset, the distribution of $L'$ is biased toward configurations with
+$z$'s predecessors/successors concentrated at one end, but the
+relative order of~$x$ and~$y$ in $L'$ differs from the unconditional
+relative order by at most two \emph{flip positions}: namely the ranks
+of~$x$ and~$y$ in~$L'$. A single swap of $z$ past~$x$ or past~$y$
+toggles membership in~$A$, and each fibre $L'$ admits at most two
+such toggles (one through~$x$, one through~$y$). Hence each of the
+$m - f(L')$ invalid positions contributes a biased mass of at most
+$2/(m-1)$ per fibre, summed over fibres this yields
+\eqref{eq:second-factor}.
+
+\smallskip\noindent\emph{Conclusion.} Multiplying the two factor
+bounds in~\eqref{eq:diff-final}:
+\[
+  \bigl|p_{xy}(Q) - p_{xy}(Q-z)\bigr|
+  \;\le\; \frac{m-1}{m}\cdot\frac{2}{m-1}
+  \;=\; \frac{2}{m},
+\]
+which is~\eqref{eq:one-elem-perturb}.
+\end{proof}
+
+\begin{lemma}[Exceptional-set perturbation bound]
+\label{lem:exc-perturb}
+Let $P$ be a finite poset on $n$ elements, and let
+$X^{\mathrm{exc}} \subseteq X$ with $k := |X^{\mathrm{exc}}|$ and
+$n - k \ge 2$. For every $x, y \in X \setminus X^{\mathrm{exc}}$ with
+$x \ne y$,
+\begin{equation}\label{eq:exc-perturb-lem}
+  \bigl|p_{xy}(P) - p_{xy}(P|_{X \setminus X^{\mathrm{exc}}})\bigr|
+  \;\le\; \frac{2k}{n - k + 1}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Enumerate $X^{\mathrm{exc}} = \{z_1, \ldots, z_k\}$ in any order, and
+for $i = 0, 1, \ldots, k$ set
+$P_i := P|_{X \setminus \{z_1, \ldots, z_i\}}$, with $|P_i| = n - i$.
+So $P_0 = P$ and $P_k = P|_{X \setminus X^{\mathrm{exc}}}$, and each
+$P_{i+1} = P_i - z_{i+1}$. Since $x, y \in
+X \setminus X^{\mathrm{exc}}$, both $x$ and $y$ lie in each $P_i$, and
+$p_{xy}(P_i)$ is well defined.
+
+Applying Lemma~\ref{lem:one-elem-perturb} to the single deletion
+$P_i \to P_{i+1}$ (with $m = n - i$):
+\begin{equation}\label{eq:per-step}
+  \bigl|p_{xy}(P_i) - p_{xy}(P_{i+1})\bigr| \;\le\; \frac{2}{n-i}
+  \qquad\text{for } i = 0, 1, \ldots, k-1.
+\end{equation}
+By the triangle inequality and $1/j \le 1/(n-k+1)$ for every
+$j \in \{n-k+1, \ldots, n\}$,
+\[
+  \bigl|p_{xy}(P) - p_{xy}(P_k)\bigr|
+  \;\le\; \sum_{i=0}^{k-1}\frac{2}{n - i}
+  \;=\; 2\sum_{j=n-k+1}^{n}\frac{1}{j}
+  \;\le\; \frac{2k}{n - k + 1}.
+\]
+This is~\eqref{eq:exc-perturb-lem}; the bound is independent of the
+chosen enumeration of $X^{\mathrm{exc}}$.
+\end{proof}
+
+\begin{remark}\label{rem:exc-perturb-sharp}
+The final summation is the standard loose bound
+$\sum_{j=n-k+1}^{n} 1/j \le k/(n-k+1)$; the sharper harmonic form
+$H_n - H_{n-k} \sim \log(n/(n-k))$ gives a slightly tighter
+estimate but is asymptotic, whereas the form used above is
+explicitly $n$-free in its dependence on~$k$ and provides the
+explicit threshold $n_0(\gamma, T)$ of~\eqref{eq:n0-main} without
+asymptotic language.
 \end{remark}
 
 \section{Step-8-local gaps}
