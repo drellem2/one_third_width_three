@@ -11,71 +11,77 @@ for the mathematical outline and `../main.pdf` for the full paper.
 statement has a Lean counterpart; Steps 1–7 and the Step 8 spine —
 including the previously-accepted Dilworth's theorem and the
 `fkg_case_output` axiom (now `bipartite_balanced_enum`) — compile
-`sorry`- and axiom-free.
+without adding new axioms.
 
 **One declaration in the project still carries `sorry`**: the
-`hw_zero : L.w = 0` obligation in `lem_layered_balanced` Case
-`K ≥ 2` (`step8.tex:1768-1795`), threaded into the subtype helper
-`lem_layered_balanced_subtype`. The F4-foundation probability
-invariance `OrdinalDecomp.probLT_restrict_eq` was closed in
-`mg-ed86` (via `tripleEquiv`), and the subtype helper itself was
-closed in `mg-f292` under the tight-L hypothesis.
+single-token `(by sorry)` inside `lem_layered_balanced` (Case
+`K ≥ 2`) that supplies the `hw_zero : L.w = 0` hypothesis to
+`lem_layered_balanced_subtype`.  The previously-listed sorry in
+`OrdinalDecomp.probLT_restrict_eq` was closed in mg-ed86 (commit
+`f3e1a32`).
 
-### The remaining `sorry` — structurally undischargeable as-is
-
-Line numbers below are for the `sorry` token itself.
+### Remaining `sorry` — 1 token, 1 declaration
 
 | # | File:line | In declaration | Category |
 |---|-----------|----------------|----------|
-| 1 | `OneThird/Step8/LayeredBalanced.lean:710` | `lem_layered_balanced` (K ≥ 2 branch) | `L.w = 0` tight-L obligation for a generic `LayeredDecomposition α` passed into the subtype helper |
+| 1 | `OneThird/Step8/LayeredBalanced.lean:728` | `lem_layered_balanced` (Case `K ≥ 2`) | Iterated ordinal-sum reduction of the window `W(i, j)` (`step8.tex:1618-1631, 1768-1795`). See §"Gap analysis" below. |
 
-**`mg-46a7` analysis (2026-04-21): this sorry is *not* a one-step
-plumbing gap — it is a structural divergence from the paper.** The
-previous formalization chain introduced `hw_zero : L.w = 0` as a
-simplification of the paper's `w ≥ 0` proof, reducing the subtype
-helper's residual content to a single-step band stratification
-(`mg-f292`). The caller `lem_layered_balanced` then inherits the
-obligation to supply `L.w = 0` for the decomposition it receives.
+### Gap analysis: what closing the sorry requires
 
-For the `mainTheoremInputsOf` chain, that decomposition is
-`layeredFromBridges`, which would need to be constructed with
-`w = 0` for every finite non-chain width-≤ 3 poset. **This is
-structurally impossible.** A `LayeredDecomposition α` with `w = 0`
-forces `α` to be an ordinal sum of antichains of size ≤ 3 (by
-`(L2)` specialised to `w = 0` combined with `(L1a)`). Counterexample:
-the 2+2 poset `{a, b, c, d}` with `a < c`, `b < d`, all other pairs
-incomparable is non-chain width-2 (hence width-≤ 3) but admits no
-such decomposition.
+Closing this one token is **not** a single-step formalisation.
+Three items the paper asserts but does not fully prove (**M**), two
+items of Lean infrastructure that do not exist yet (**L**), and
+one sibling issue that makes the G4 lemma vacuously invoked on the
+main theorem path even when closed (**M-c**). Together these
+define Option A — the paper-faithful iterated ordinal-sum.
 
-**The paper proof is fine** — `lem:layered-balanced`
-(`step8.tex:1768-1795`) handles arbitrary `w ≥ 0` via iterated
-ordinal-sum reduction inside the window `W(i, j)`. The Lean gap
-is purely formalisation plumbing:
+**M-a — Transitivity lemma.** The paper says "irreducibility gives
+adjacent bands `(M_i, M_{i+1})` with incomparable cross-pair"
+(`step8.tex:1624`). Not immediate; irreducibility at index `k`
+only gives *some* cross-pair `(u ∈ M_i, v ∈ M_j, i ≤ k < j)`, not
+`j = i+1`. Provable by transitivity (if every adjacent pair
+`M_i < M_{i+1}` were fully comparable, every non-adjacent pair
+would be too), but the lemma is missing from the paper and needs
+explicit statement and proof.
 
-1. **Iterated ordinal-sum recursion in the subtype helper.** Replace
-   the `hw_zero` shortcut with a well-founded recursion on "number
-   of bands in the residual irreducible layered piece" that uses
-   `probLT_restrict_eq` at each split. Currently the
-   `OrdinalDecomp` API gives the single-split factorisation; the
-   iteration needs to be built on top.
-2. **Window-based `OrdinalDecomp` construction.** Fit `W(i, j)`
-   into the Lower/Mid/Upper shape of `OrdinalDecomp`, which requires
-   `w + 1`-wide buffer zones for `(L2)` to fire on the Lower<Mid
-   and Mid<Upper bands. This is not directly available from the
-   layered axioms; it needs the Step 5(C) / Step 7 band-index
-   refinement.
-3. **Tight `layeredFromBridges`.** Replace the singleton-band
-   stub with a real construction that packages Step 7's
-   `LayeredWidth3` (with its `bandwidth` field giving the paper's
-   `w`) into a ground-set `LayeredDecomposition α` where `w =
-   Lwidth3.bandwidth` (not `|α| + bandwidth`). This is the paper's
-   `rem:layered-from-step7` (`step8.tex:1349-1360`) ground-set lift,
-   which also absorbs the `O_T(1)`-size exceptional set `X^{exc}`
-   into a γ/2 slack.
+**M-b — Inner window localisation does not isolate.** The paper
+says "apply `windowLocalization` once more inside `Q^⋆` to isolate
+to `M_i ∪ M_{i+1}`" (`step8.tex:1626`). The inner window for an
+adjacent pair in `Q^⋆` of interaction width `w' ≥ 1` is actually
+`2w' + 2` bands wide. The paper does not resolve whether the
+iteration terminates at `K^⋆ = 2`, whether the iteration is nested
+with a termination measure on `(K, w)`, or whether a different
+argument replaces the inner step. *This is the hardest math item.*
 
-Pieces 1, 2, 3 are workmanlike Lean plumbing (not research), but
-together they are multi-week scope — not a single polecat. Follow-up
-mg items scoped from `mg-46a7` track the three pieces.
+**M-c — `layeredFromBridges` is a sham witness.** The ground-set
+layered decomposition fed into `caseC` on the main theorem path
+has `w = |α| + bandwidth`, making (L2) vacuous
+(`band x + w > |α| ≥ band y` always). Even full closure of M-a
+and M-b yields a G4 lemma whose invocation is vacuous on input
+on the main path. Closing this requires the Step 8 perturbation
+bound `eq:exc-perturb` (`step8.tex:632`) for deleting the bounded
+exceptional set `X^exc` — currently the missing F4-foundation
+item at the probability-transfer level.
+
+**L-γ — Well-founded recursion framework.** Once M-b resolves,
+Lean needs a recursion over band count (or band count +
+interaction width) capturing the iteration. Not set up.
+
+**L-δ — Chained balanced-pair lift.** Each iteration step produces
+an `OrdinalDecomp`; the balanced pair in the terminal irreducible
+piece must lift through the entire chain via
+`OrdinalDecomp.hasBalancedPair_lift` (base case exists). The
+chain induction does not.
+
+**L-ε — Perturbation-bound formalisation.** Consumer of M-c in
+Lean.
+
+The partial helper `lem_layered_balanced_subtype`
+(`LayeredBalanced.lean:376`, proven under `hw_zero : L.w = 0`) is
+**not a base case** of the general argument. Under `w = 0`, α is
+forced to be an ordinal sum of antichains of size ≤ 3 — a strict
+subset of width-3 non-chain posets. The `2 + 2` poset is a concrete
+width-3 non-chain that admits no layered decomposition with `w = 0`.
 
 ### Axioms
 
@@ -84,10 +90,42 @@ mg items scoped from `mg-46a7` track the three pieces.
 -- [propext, sorryAx, Classical.choice, Quot.sound]
 ```
 
-`sorryAx` reflects the single remaining `sorry` above; the other
-three are the mathlib-standard classical foundations. Closing the
-three plumbing pieces listed above would drop `sorryAx` and leave
-only `[propext, Classical.choice, Quot.sound]`.
+`sorryAx` reflects the single remaining sorry at
+`LayeredBalanced.lean:728`; the other three are the mathlib-standard
+classical foundations. Closing the sorry requires items M-a, M-b,
+L-γ, L-δ (math + Lean infrastructure) together, not a single local
+edit.
+
+### Closing the sorry — phased mg plan
+
+Phase 1 (math, rewrite `step8.tex`):
+* **mg-A1** — formalise "layer-ordinal reducible" Definition +
+  factorisation Lemma.
+* **mg-A2** — prove M-a (transitivity → adjacent incomparable).
+* **mg-A3** — resolve M-b (nested iteration or `K^⋆ = 2` or
+  alternative argument).
+* **mg-A4** — chained balanced-pair lift Lemma statement + proof.
+* **mg-A5** — flesh out `rem:layered-from-step7` into an explicit
+  proof sketch.
+* **mg-A6** — fully formalise `eq:exc-perturb` proof.
+
+Phase 2 (QA):
+* **mg-Q1** — independent review of A1–A6.
+* **mg-Q2** — audit every `rem:*` in `step8.tex` for similar
+  under-spelled claims.
+* **mg-Q3** — cross-reference paper vs. Lean signatures.
+
+Phase 3 (Lean formalisation):
+* **mg-F1/F2/F3/F4** — consume A1/A2/A3/A4 into Lean definitions
+  and lemmas.
+* **mg-F5** — close the sorry at `LayeredBalanced.lean:728` using
+  F1..F4.
+* **mg-F6** — formalise `eq:exc-perturb` in Lean (consumes A6).
+* **mg-F7** — replace `layeredFromBridges` with the tight bounded-`w`
+  witness (consumes F6, A5).
+* **mg-F8** — final verification: sorry count = 0,
+  `#print axioms` = `[propext, Classical.choice, Quot.sound]`,
+  `caseC layeredFromBridges` is non-vacuous on input.
 
 ### Import closure of the main theorem
 

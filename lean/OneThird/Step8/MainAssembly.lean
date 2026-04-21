@@ -254,25 +254,21 @@ packaging (each `x` in its own singleton band) with
 
 With this choice each band is a singleton — trivially an antichain
 and of size `≤ 3` — and `(L2)` is vacuous since
-`w ≥ K`, so `band x + w ≥ band y` for every `(x, y)`.  The structural
-distinction from `trivialLayered` is that `w` is now genuinely derived
-from the Step 7 bridge output (`Lwidth3.bandwidth`), making the logical
-chain of `rem:one-invocation` visible in the field values, not only in
-the surrounding `have`-bindings.
+`w ≥ K`, so `band x + w ≥ band y` for every `(x, y)`.
 
-**`mg-46a7` note (2026-04-21): this is not a faithful implementation
-of `rem:layered-from-step7`.** The paper's construction would yield a
-`LayeredDecomposition` with bounded `w = O_T(1)` (using `Step7.LayeredWidth3`'s
-`bandwidth` field plus a windowing argument over the band-index map
-supplied by Prop 7.1's threshold-of-potential). The current singleton-band
-packaging satisfies the type-level obligations but doesn't implement the
-paper's decomposition — it trades small `w` for vacuous `(L2)`, producing
-a witness with `w = |α| + Lwidth3.bandwidth`. This is what forces
-`lem_layered_balanced`'s `hw_zero : L.w = 0` obligation to be undischargeable
-at the caller (see `LayeredBalanced.lean`). Producing a tight layered
-witness from Step 7's output is one of the three formalization pieces
-scoped from `mg-46a7`; the paper's proof is not at issue — only the
-Lean plumbing. -/
+**Sham-witness caveat (gap M-c).** `L2` being vacuous means this
+decomposition contributes *no* structural comparability information
+to the G4 lemma it is fed into. Even if the G4 lemma
+(`lem_layered_balanced`) were closed in full generality, the call
+`caseC layeredFromBridges` on the main theorem path would be
+vacuous-on-input: the lemma would have to produce a balanced pair
+of α from the width-3 non-chain hypotheses alone, with no help
+from the layered structure. Restoring meaningful content requires
+replacing this witness with a genuine bounded-`w` lift built on
+the Step 8 perturbation-bound infrastructure `eq:exc-perturb`
+(`step8.tex:632`, currently an F4-foundation gap). See the gap
+analysis in `LayeredBalanced.lem_layered_balanced` and
+`lean/README.md`. -/
 noncomputable def layeredFromBridges : LayeredDecomposition α := by
   classical
   -- Step 5 dichotomy (`thm:step5`) — trivial banded inputs at `p = q = r = 0`.

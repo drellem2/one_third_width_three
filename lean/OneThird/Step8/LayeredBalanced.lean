@@ -341,12 +341,12 @@ theorem bipartiteBalanced
 
 /-! ### §4 — `lem:layered-balanced`: GAP G4 -/
 
-/-- **Subtype-level balanced-pair helper** (`step8.tex:1608-1625`).
+/-- **Subtype-level balanced-pair helper — tight-L shortcut**
+(`step8.tex:1608-1625`).
 
-The residual content of Case `K ≥ 2` of `lem:layered-balanced` after the
-ordinal-sum lift: produce a balanced pair in the `↥D.Mid` sub-poset,
-given the ambient incomparable pair `(x, y)` that sits inside `D.Mid`
-and a tight layered decomposition (`hw_zero : L.w = 0`).
+Produce a balanced pair in the `↥D.Mid` sub-poset, given an ambient
+incomparable pair `(x, y)` that sits inside `D.Mid` and a tight
+layered decomposition (`hw_zero : L.w = 0`).
 
 **Proof.** Under `L.w = 0` the (L2) hypothesis collapses to *every
 different-band pair is comparable*, so each incomparable pair lies in
@@ -361,36 +361,18 @@ to `D.Mid`. Since `Mid'` is a subset of an antichain band of size
 on `↥(Mid')`, producing a balanced pair there. The balanced pair
 then lifts to `↥D.Mid` via `hasBalancedPair_lift`.
 
-**Divergence from the paper — important.** The `hw_zero : L.w = 0`
-hypothesis is a **simplification**, not a faithful formalization of
-`lem:layered-balanced` (`step8.tex:1548-1816`). The paper's lemma
-works for arbitrary `w ≥ 0` via iterated ordinal-sum decomposition
-inside the window `W(i,j)` (`step8.tex:1610-1631`): repeatedly split
-`Q := P|_{W(i,j)}` as `Q₁ ⊕ Q₂` whenever a reducibility index exists,
-descend into the factor containing an incomparable pair, and terminate
-at an irreducible layered piece of depth `K⋆`. Under `hw_zero`, this
-iteration collapses to zero steps because every band is already
-irreducible — `(L2)` at `w = 0` forces pointwise comparability across
-distinct bands.
-
-**Why the caller's `hw_zero` obligation cannot be discharged.** The
-caller `lem_layered_balanced` receives a generic `L : LayeredDecomposition α`
-and must supply `L.w = 0`. For a *chosen* `L` (the Step 7 bridge output
-`layeredFromBridges`), this amounts to constructing a `LayeredDecomposition α`
-with `w = 0` for every finite non-chain width-≤ 3 poset. **This is
-structurally impossible.** With `w = 0`, axiom `(L2)` specialises to
-`band x < band y → x < y` in the poset, and axiom `(L1a)` caps each
-band at 3 elements. Together these force the poset to be an ordinal
-sum of antichains of size ≤ 3. Counterexample: the 2+2 poset
-`{a, b, c, d}` with `a < c`, `b < d`, and `a ∥ b`, `a ∥ d`, `b ∥ c`,
-`c ∥ d` is non-chain width-2 (hence width-≤ 3) but admits no such
-decomposition — any banding that keeps incomparable pairs same-band
-and comparable pairs inter-band contradicts the cross-band
-comparability forced by `(L2)` at `w = 0`.
-
-**Resolution requires the paper's iterated ordinal-sum proof**
-(Option A in `mg-46a7`'s analysis). See `README.md` §"Remaining `sorry`s"
-and the follow-up mg items scoped from `mg-46a7` for the work items. -/
+**This is a shortcut, not a base case.** Under `hw_zero : L.w = 0`,
+the ground set α is forced to be an ordinal sum of antichains of
+size `≤ 3`. Many width-3 posets are not of this form — e.g. the
+`2 + 2` poset (two disjoint 2-chains) admits no layered
+decomposition with `w = 0`. The paper's general argument
+(`step8.tex:1618-1631`) does *not* specialise to this case at
+`w = 0`; it uses iterated ordinal-sum reduction inside a window
+`W(i, j)`, which collapses trivially only when every band is
+already a maximal ordinal-sum summand. The `w ≥ 1` case therefore
+needs a genuinely different formalisation (see the gap analysis in
+`lem_layered_balanced` and `lean/README.md`), not a generalisation
+of this helper. -/
 theorem lem_layered_balanced_subtype
     (L : OneThird.Step8.LayeredDecomposition α)
     (hw_zero : L.w = 0)
@@ -535,40 +517,88 @@ cleared-denominator form).
 Every layered width-3 poset `P = (α, ≤)` with `|α| ≥ 2` that is
 not a chain contains a balanced pair.
 
-The proof (`step8.tex:1768-1802`):
+The paper proof (`step8.tex:1768-1802`):
 1. **`K = 1` case**: `P = L_1` is a single antichain on `2` or
    `3` elements; every pair is incomparable with `Pr = 1/2 ∈
-   [1/3, 2/3]`.
-2. **`K ≥ 2` case**: take any incomparable pair `(x, y)` (exists
-   since `P` is not a chain) with `|band x − band y| ≤ w` (forced
-   by Window localization), restrict to the window
-   `Q := P|_{W(i, j)}`. Iterate ordinal-sum decomposition
-   (`step8.tex:1618-1631`) to extract an irreducible layered piece
-   `Q^⋆`; if `Q^⋆` has depth `1`, we are in case (1); else apply
-   `bipartiteBalanced` on the witnessing adjacent band-pair.
+   [1/3, 2/3]`. Closed in the `K = 1` branch below via
+   `bipartite_balanced_enum`.
+2. **`K ≥ 2` case**: take any incomparable pair `(x, y)` with
+   `|band x − band y| ≤ w` (forced by Window localization),
+   restrict to the window `Q := P|_{W(i, j)}`. Iterate ordinal-sum
+   decomposition (`step8.tex:1618-1631`) to extract an irreducible
+   layered piece `Q^⋆`; if `Q^⋆` has depth `1`, we are in case (1);
+   else apply `bipartiteBalanced` on the witnessing adjacent
+   band-pair.
 
-In abstract form, the statement is the existential conclusion;
-the inputs (incomparable pair existence, window restriction, FKG
-inequality) are tracked separately.
+**Status (K ≥ 2)**. Not closed — sorry below at the
+`lem_layered_balanced_subtype` call.  The content of the sorry is
+described in §`Gap analysis` of this docstring.
 
-**Current formalization gap** (`mg-46a7`, 2026-04-21). Case `K ≥ 2`
-below threads a `sorry` for `L.w = 0` into `lem_layered_balanced_subtype`.
-This is **not** a one-step plumbing gap but a structural divergence
-from the paper:
+## Gap analysis
 
-* The paper's proof (`step8.tex:1768-1795`) works for any `w ≥ 0` via
-  iterated ordinal-sum reduction inside the window `W(i, j)`.
-* The Lean helper requires `L.w = 0`, which collapses the iteration.
-* For the caller to supply `L.w = 0` generically, one would need to
-  construct a tight layered decomposition for every non-chain
-  width-≤ 3 poset — **impossible** in general (e.g. 2+2 poset, see
-  `lem_layered_balanced_subtype`'s docstring).
+Closing the `K ≥ 2` branch requires three mathematical items that
+the paper asserts but does not fully prove, and two items of
+Lean-side infrastructure:
 
-Closing this requires formalizing the iterated ordinal-sum argument;
-the existing `OrdinalDecomp` / `restrictMid` / `probLT_restrict_eq`
-infrastructure supplies the per-step factorisation, but recursing on
-"depth of the residual irreducible piece" and threading probability
-invariance through every split is its own multi-week work item. -/
+**M-a (transitivity lemma).** The paper says "irreducibility gives
+adjacent bands `(M_i, M_{i+1})` with incomparable cross-pair"
+(`step8.tex:1624`). This is not immediate: irreducibility at index
+`k` only produces *some* cross-pair `(u ∈ M_i, v ∈ M_j, i ≤ k < j)`,
+not `j = i+1`. The claim is provable (if every adjacent-band pair
+were fully comparable `M_i < M_{i+1}`, transitivity would force
+every non-adjacent pair too, contradicting irreducibility), but the
+explicit lemma is missing.
+
+**M-b (inner window localization).** The paper says "apply
+`windowLocalization` once more inside `Q^⋆` to isolate to
+`M_i ∪ M_{i+1}`" (`step8.tex:1626`). But the inner window for an
+adjacent pair in `Q^⋆` of interaction width `w' ≥ 1` is
+`2w' + 2` bands wide — *not* the bipartite pair. Isolating to
+`M_i ∪ M_{i+1}` alone requires `w' = 0`, which irreducibility does
+not guarantee. The paper does not resolve whether (i) the iteration
+terminates at `K^⋆ = 2` exactly, (ii) the iteration is nested with
+a termination measure on `(K, w)`, or (iii) a different argument
+replaces the inner step.
+
+**M-c (sham `layeredFromBridges`).** The ground-set layered witness
+used on the main theorem path (`MainAssembly.layeredFromBridges`)
+has `w = |α| + bandwidth`, making (L2) vacuous
+(`band x + w ≥ |α| + 1 > |α| ≥ band y` always). Even a full
+closure of M-a and M-b would produce a G4 lemma whose invocation on
+the main theorem path consumes no structural comparability
+information — `caseC` becomes vacuous on input. Closing G4
+mathematically without also replacing `layeredFromBridges` via the
+Step-7 perturbation-bound infrastructure
+(`step8.tex:1349-1360`, `rem:layered-from-step7`,
+`step8.tex:632`, `eq:exc-perturb`) yields a Pyrrhic closure.
+
+**L-γ (Lean well-founded recursion).** Once M-b is resolved, Lean
+needs a well-founded recursion framework on band count (or band
+count + interaction width) capturing the iteration in the paper.
+
+**L-δ (chained balanced-pair lift).** Each iteration step produces
+an `OrdinalDecomp`; the balanced pair in the terminal irreducible
+piece must lift through the entire chain of decompositions. Base
+case `OrdinalDecomp.hasBalancedPair_lift` exists; the chain
+induction does not.
+
+**L-ε (perturbation bound).** The Step 8 probability identity
+`|p_xy(P) − p_xy(P|_{X ∖ X^exc})| ≤ 2k/(n − k + 1)` for bounded
+exceptional-set deletion (`eq:exc-perturb`, not an ordinal sum
+deletion) is the missing F4-foundation item needed for M-c.
+
+The partial helper `lem_layered_balanced_subtype` (proven
+above under `hw_zero : L.w = 0`) is *not* a base case of the
+general argument — it is a shortcut that happens to work when α
+is an ordinal sum of antichains, which does not always hold. See
+its docstring for the counterexample (`2 + 2`).
+
+**Current closure**. The K ≥ 2 branch currently provides
+`(by sorry)` for `hw_zero` on the trivial-`Mid` `OrdinalDecomp`.
+This sorry is the single token blocking the main theorem chain
+from being sorry-free; its closure requires items M-a, M-b (math),
+L-γ, L-δ (Lean), and independently M-c, L-ε for the invocation on
+the main path to be non-vacuous. -/
 theorem lem_layered_balanced
     (L : LayeredDecomposition α)
     (h2 : 2 ≤ Fintype.card α)
@@ -622,19 +652,26 @@ theorem lem_layered_balanced
       ⟨x, y, hxy_inc⟩
   · -- **Case `K ≥ 2`** (`step8.tex:1768-1795`).
     --
-    -- We route through the `OrdinalDecomp` sub-poset restriction
-    -- infrastructure of `OneThird/Mathlib/LinearExtension/Subtype.lean`
-    -- (mg-435b). The trivial decomposition (`Mid = univ`, `Lower = Upper
-    -- = ∅`) lets `hasBalancedPair_lift` reduce the goal to
-    -- `HasBalancedPair ↥univ`. The remaining reduction — iterating
-    -- ordinal-sum decomposition inside `W` to reach an irreducible
-    -- reduct and applying `bipartiteBalanced` on its adjacent
-    -- band-pair (`step8.tex:1608-1625`) — is factored into the named
-    -- helper `lem_layered_balanced_subtype` below, which carries the
-    -- remaining structural sorry. The lift itself and the trivial
-    -- decomposition are sorry-free, and the probability invariance
-    -- enters via `probLT_restrict_eq` (whose construction is the
-    -- only surviving F4-foundation gap).
+    -- See the *Gap analysis* section of the docstring above for the
+    -- full breakdown of what blocks closure (items M-a, M-b, M-c,
+    -- L-γ, L-δ, L-ε). Briefly:
+    --
+    --   * The paper's iterated ordinal-sum reduction inside `W(i, j)`
+    --     needs an explicit transitivity lemma (M-a) and a
+    --     resolution of the inner-window-localization issue (M-b)
+    --     that the paper glosses.
+    --   * Lean-side, the chained `hasBalancedPair_lift` and a
+    --     well-founded recursion framework are missing (L-γ, L-δ).
+    --
+    -- The code below threads the *shape* of the paper's reduction —
+    -- derive the band-distance bound, invoke `windowLocalization`,
+    -- build an `OrdinalDecomp` — but bottoms out at
+    -- `lem_layered_balanced_subtype`, a tight-L shortcut that only
+    -- fires for `L.w = 0`. The `layeredFromBridges` witness has
+    -- `w = |α| + bandwidth`, so the shortcut's hypothesis is
+    -- unsatisfiable on the main theorem path. We carry `(by sorry)`
+    -- for `hw_zero` as a placeholder pending the Option A
+    -- formalisation (see `lean/README.md`).
     -- (a): band-distance bound `|band x − band y| ≤ w` from (L2).
     have h_by_bx : L.band y ≤ L.band x + L.w := by
       by_contra h
@@ -664,26 +701,14 @@ theorem lem_layered_balanced
       simp only [W, Finset.mem_filter, Finset.mem_univ, true_and]
     have hWLoc := windowLocalization L x y hxy_inc W hxW hyW hWdef
     obtain ⟨_q, _hq, _hWcard⟩ := hWLoc
-    -- (c): build the trivial `OrdinalDecomp` (`Mid = univ`).
-    -- The non-trivial window-based decomposition — with buffer zones
-    -- of `w + 1` empty bands between Lower and Mid required for L2
-    -- to fire — is not available for arbitrary layered decompositions
-    -- (in particular not for the current `layeredFromBridges` witness,
-    -- which uses singleton bands). The trivial decomposition suffices
-    -- to thread the lift.
-    --
-    -- NOTE (`mg-46a7`, 2026-04-21): The residual `sorry` below at
-    -- `hw_zero : L.w = 0` is *not* a one-step plumbing gap — it is
-    -- structurally undischargeable in the current framework. Any
-    -- `L : LayeredDecomposition α` with `L.w = 0` forces `α` to be
-    -- an ordinal sum of antichains of size ≤ 3 (by L2 + L1a), which
-    -- fails on generic width-3 non-chain posets (e.g. the 2+2 poset
-    -- `{a, b, c, d}` with `a < c`, `b < d`, `a ∥ b`, …). The paper's
-    -- `lem:layered-balanced` (`step8.tex:1768-1795`) covers the
-    -- `w ≥ 1` case via iterated ordinal-sum reduction inside
-    -- `W(i, j)`; formalizing that reduction is the real work item.
-    -- See `lem_layered_balanced_subtype`'s docstring and the
-    -- follow-up mg items spawned from `mg-46a7` for the scope.
+    -- (c): build a trivial `OrdinalDecomp` (`Mid = univ`).
+    -- A non-trivial window-based decomposition — with buffer zones
+    -- of `w + 1` empty bands between Lower and Mid that would make
+    -- L2 fire on the cut — is not available for the concrete
+    -- `layeredFromBridges` witness (whose bands are all singletons
+    -- and whose `w` saturates). The trivial decomposition merely
+    -- threads the lift machinery; it contributes no comparability
+    -- structure.
     let D : OneThird.OrdinalDecomp α :=
       { Lower := ∅
         Mid := (Finset.univ : Finset α)
@@ -695,25 +720,10 @@ theorem lem_layered_balanced
         hLM_lt := fun _ h _ _ => absurd h (Finset.notMem_empty _)
         hLU_lt := fun _ h _ _ => absurd h (Finset.notMem_empty _)
         hMU_lt := fun _ _ _ h => absurd h (Finset.notMem_empty _) }
-    -- (d): lift via `hasBalancedPair_lift`. The subtype helper
-    -- `lem_layered_balanced_subtype` requires the tight-L hypothesis
-    -- `L.w = 0`, which we discharge here with `sorry`.
-    --
-    -- **This is not a plumbing gap.** No `L : LayeredDecomposition α`
-    -- with `L.w = 0` exists for generic non-chain width-≤ 3 posets:
-    -- the 2+2 poset `{a, b, c, d}` with `a < c`, `b < d`, all other
-    -- pairs incomparable is non-chain width-2 but admits no w=0
-    -- layering (by L2 at w=0 + L1a). So *no* construction of
-    -- `layeredFromBridges` can satisfy the hypothesis for all inputs.
-    --
-    -- **The paper proof is fine**: `lem:layered-balanced`
-    -- (`step8.tex:1768-1795`) uses iterated ordinal-sum reduction
-    -- inside `W(i, j)`, handling all `w ≥ 0`. The Lean gap is
-    -- purely formalisation: (1) build the iterated reduction on
-    -- top of `OrdinalDecomp` + `probLT_restrict_eq`, (2) replace
-    -- this sorry with the recursive discharge. See `README.md`
-    -- §"The remaining `sorry`" and the three follow-up mg items
-    -- scoped from `mg-46a7`.
+    -- (d): delegate to the tight-L shortcut with `hw_zero := sorry`.
+    -- Gap analysis above explains why this `sorry` cannot be closed
+    -- by strengthening the shortcut (the `w = 0` case does not
+    -- generalise to `w ≥ 1`).
     exact D.hasBalancedPair_lift
       (lem_layered_balanced_subtype L (by sorry) h2 D hxy_inc
         ⟨Finset.mem_univ x, Finset.mem_univ y⟩)
