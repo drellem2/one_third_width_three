@@ -168,6 +168,15 @@ noncomputable def trivialLayered : LayeredDecomposition α where
         omega
       exact (Fintype.equivFin α).injective (Fin.ext heq)
     omega
+  band_antichain := fun k => by
+    -- Each band has ≤ 1 element (equivFin is injective), so is trivially
+    -- an antichain.
+    intro a ha b hb hne
+    simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_univ, true_and,
+      Set.mem_setOf_eq] at ha hb
+    have heq : (Fintype.equivFin α a).val = (Fintype.equivFin α b).val := by
+      omega
+    exact absurd ((Fintype.equivFin α).injective (Fin.ext heq)) hne
   forced_lt := fun x y hlt => by
     exfalso
     have hx : 1 ≤ (Fintype.equivFin α x).val + 1 :=

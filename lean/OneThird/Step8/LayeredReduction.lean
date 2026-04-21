@@ -91,10 +91,16 @@ structure LayeredDecomposition (α : Type*)
   band_pos : ∀ x : α, 1 ≤ band x
   /-- Band index does not exceed `K`. -/
   band_le : ∀ x : α, band x ≤ K
-  /-- (L1) Each band has size `≤ 3` (`step8.tex:1344`). -/
+  /-- (L1a) Each band has size `≤ 3` (`step8.tex:1344`). -/
   band_size :
     ∀ k : ℕ,
       (((Finset.univ : Finset α).filter (fun x => band x = k)).card) ≤ 3
+  /-- (L1b) Each band is an antichain (`step8.tex:1344`, matches the
+  paper's L1 stated as "each `L_i` is an antichain"). -/
+  band_antichain :
+    ∀ k : ℕ,
+      IsAntichain (· ≤ ·)
+        ((((Finset.univ : Finset α).filter (fun x => band x = k)) : Set α))
   /-- (L2) Far-apart bands force comparability `x < y`
   (`step8.tex:1345-1347`). -/
   forced_lt : ∀ x y : α, band x + w < band y → x < y

@@ -375,24 +375,43 @@ theorem lem_layered_balanced
   have hxy_inc : x ∥ y := ⟨hxy, hyx⟩
   have _hxne : x ≠ y := fun h => hxy (h ▸ le_refl x)
   -- **Case split on depth** `K = 1` vs `K ≥ 2` (`step8.tex:1763`).
-  rcases Nat.lt_or_ge L.K 2 with _hK1 | _hK2
+  rcases Nat.lt_or_ge L.K 2 with hK1 | _hK2
   · -- **Case `K = 1`** (`step8.tex:1763-1766`). Since
     -- `1 ≤ band z ≤ K ≤ 1` for every `z ∈ α`, the whole ground set
-    -- collapses to the single band `L_1`. `P = L_1` is then a pure
-    -- antichain on `≥ 2` elements, and by uniform symmetry of
-    -- linear orderings of an antichain (the involution swapping `x`
-    -- and `y` is a measure-preserving bijection on `L(P)`),
-    -- `Pr[x <_L y] = 1/2 ∈ [1/3, 2/3]`.
-    --
-    -- The `bipartiteBalanced` axiom would apply with `A := univ`,
-    -- `B := ∅` (covering `univ = univ`), but its antichain
-    -- hypothesis requires `univ` to be an antichain — a
-    -- consequence of (L1) being strengthened to "each band is an
-    -- antichain" that the current `LayeredDecomposition`
-    -- structure does not carry. The antichain-symmetry involution
-    -- of `L(P)` (F4 foundation item) is not formalised; left as
-    -- `sorry`.
-    sorry
+    -- collapses to the single band `L_1 = bandSet 1`. By (L1b), that
+    -- band is an antichain, so `univ` itself is an antichain. Apply
+    -- `bipartite_balanced_enum` with `A := Finset.univ`, `B := ∅`:
+    -- the swap involution of the Case 1 argument produces a balanced
+    -- pair directly from the incomparable pair `(x, y)`.
+    have hband_eq : ∀ z : α, L.band z = 1 := by
+      intro z
+      have h1 := L.band_pos z
+      have h2 := L.band_le z
+      omega
+    have hFilter_eq :
+        ((Finset.univ : Finset α).filter (fun z => L.band z = 1)) =
+          (Finset.univ : Finset α) := by
+      apply Finset.filter_true_of_mem
+      intro z _
+      exact hband_eq z
+    have hUniv_anti :
+        IsAntichain (· ≤ ·) ((Finset.univ : Finset α) : Set α) := by
+      have h := L.band_antichain 1
+      rw [hFilter_eq] at h
+      exact h
+    have hCard_le : (Finset.univ : Finset α).card ≤ 3 := by
+      have h := L.band_size 1
+      rw [hFilter_eq] at h
+      exact h
+    have hEmpty_anti :
+        IsAntichain (· ≤ ·) ((∅ : Finset α) : Set α) := by
+      simp only [Finset.coe_empty]
+      exact Set.pairwise_empty _
+    exact bipartite_balanced_enum (Finset.univ : Finset α) (∅ : Finset α)
+      hUniv_anti hEmpty_anti hCard_le (by simp)
+      (Finset.disjoint_empty_right _) (Finset.union_empty _)
+      (fun _ _ b hb => absurd hb (Finset.notMem_empty b))
+      ⟨x, y, hxy_inc⟩
   · -- **Case `K ≥ 2`** (`step8.tex:1768-1795`). Paper proof:
     --   (a) From (L2) and `x ∥ y`: `|band x − band y| ≤ w`.
     --   (b) Let `Q := P|_{W(band x, band y)}`; `windowLocalization`
