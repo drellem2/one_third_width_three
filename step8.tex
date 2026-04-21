@@ -1809,3 +1809,47 @@ Lemma~\ref{lem:layered-balanced} (G4) exhaust
 Proposition~\ref{prop:step7}(iii) with no gap.
 \end{remark}
 
+\begin{remark}[Residual Case-3 enumeration; mg-307c]
+\label{rem:residual-base}
+The closing step of the $K \ge 2$ case of
+Lemma~\ref{lem:layered-balanced} above invokes
+Proposition~\ref{prop:bipartite-balanced} on an adjacent band pair
+$M_i \cup M_{i+1}$ of the irreducible reduct $Q^\star$ and asserts that
+the resulting balanced pair is balanced in $P$ ``by chained ordinal-sum
+isolation''. This step is routine when $Q^\star$ itself has depth
+$K^\star = 2$ (the bipartite restriction $M_i \cup M_{i+1}$ \emph{is}
+all of $Q^\star$) and when the interaction width $w = 0$ (each band is
+an ordinal-sum summand on its own, so restriction to a single band
+preserves the $\Pr[x <_L y]$ marginal). The remaining regime --
+$w \ge 1$ and $K^\star \ge 3$ -- is not a direct restriction argument
+because elements in near bands $M_{i-w},\dots,M_{i-1}$ and
+$M_{i+2},\dots,M_{i+1+w}$ may be comparable to $M_i \cup M_{i+1}$ in
+a direction-variable way, so the marginal distribution on a
+within-layer pair $(x,y) \subseteq M_i$ in $Q^\star$ can differ from
+its marginal in $Q^\star|_{M_i \cup M_{i+1}}$.
+
+For this residual regime we appeal to a bounded finite enumeration:
+window localization (Lemma~\ref{lem:window-localization}) caps the
+size of $Q^\star$ at $|Q^\star| \le 3(3w+1)$ and the depth at
+$K^\star \le 2w+2$. With $w \in \{1,2,3,4\}$ from
+Lemma~\ref{lem:bandwidth} of Step 7, the residual parameter range is
+finite and admits direct machine-verified enumeration. The script
+\texttt{lean/scripts/enum\_case3.py} enumerates every
+layer-ordinal-sum irreducible layered width-3 poset $Q$ satisfying
+(L1)--(L4) and containing an adjacent-band incomparable cross-pair
+across the residual parameter range, and for each verifies that
+some incomparable pair $(x,y) \in Q$ has
+$\Pr_{L \sim \mathcal L(Q)}[x <_L y] \in [1/3, 2/3]$. The verification
+succeeds uniformly: a fast $O(|Q|^2)$ symmetric-pair check discharges
+the overwhelming majority of configurations via the swap-involution
+argument of prop:bipartite-balanced Case 1, with a full
+linear-extension enumeration as fallback for the asymmetric remainder.
+The accompanying certificate \texttt{enum\_case3\_certificate.json}
+records the parameter range covered and the number of configurations
+verified. No counterexample is found; a counterexample would halt the
+enumeration and be reported. See
+\texttt{lean/scripts/README.md} for the scope covered and
+instructions to extend to larger (w, K) regimes (same algorithm,
+larger compute budget).
+\end{remark}
+
