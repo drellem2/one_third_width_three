@@ -2087,6 +2087,102 @@ pair of factors $Q^\star_1, Q^\star_2, \ldots$ each of which is
 \emph{irreducible}. The marginal identity chains: a pair $(x,y)$ both
 in some terminal irreducible factor $Q^\star_m$ satisfies
 $\Pr_{\mathcal L(Q)}[x <_L y] = \Pr_{\mathcal L(Q^\star_m)}[x <_L y]$.
+Lemma~\ref{lem:chained-lift} below records this chained transfer in a
+form that does not presuppose layered structure.
+\end{remark}
+
+\begin{definition}[Ordinal-sum decomposition chain]
+\label{def:ordinal-chain}
+Let $P$ be a finite poset. An \emph{ordinal-sum decomposition chain}
+of length $n \ge 0$ starting from $P$ is a sequence of finite posets
+$P = P_0, P_1, \ldots, P_n$ such that for each $k = 1, \ldots, n$
+there is an ordinal-sum decomposition witness
+$D_k = (X^{(k)}_-, X^{(k)}_0, X^{(k)}_+) \in
+\mathrm{OrdinalDecomp}(P_{k-1})$
+(Definition~\ref{def:ordinal-decomp}) and a choice of piece
+$S_k \in \{X^{(k)}_-, X^{(k)}_0, X^{(k)}_+\}$ with
+$P_k = P_{k-1}|_{S_k}$. In particular the ground set of $P_k$ is a
+subset of the ground set of $P_{k-1}$, so by iterated inclusion the
+ground set of $P_n$ is a subset of $X = P_0$.
+\end{definition}
+
+\begin{lemma}[Chained balanced-pair lift]
+\label{lem:chained-lift}
+Let $P = P_0, P_1, \ldots, P_n$ be an ordinal-sum decomposition chain
+(Definition~\ref{def:ordinal-chain}). If $(x, y)$ is a balanced pair
+of $P_n$, then, viewed through the iterated inclusion of ground sets,
+$(x, y)$ is a balanced pair of $P = P_0$.
+\end{lemma}
+
+\begin{proof}
+We prove by induction on $n$ the following pair of statements, for
+every ordinal-sum decomposition chain $P_0, P_1, \ldots, P_n$ and
+every $x, y$ in the ground set of $P_n$:
+\begin{enumerate}[label=\textnormal{(\alph*)},nosep]
+  \item $(x, y)$ is incomparable in $P_n$ if and only if $(x, y)$ is
+        incomparable in $P_0$; and
+  \item $\Pr_{L_n \sim \mathcal L(P_n)}\!\big[x <_{L_n} y\big]
+        \;=\;
+        \Pr_{L \sim \mathcal L(P_0)}\!\big[x <_L y\big]$.
+\end{enumerate}
+Granting (a) and (b), the conclusion is immediate: if $(x, y)$ is a
+balanced pair of $P_n$, then (a) upgrades incomparability to $P_0$
+and (b) shows the $\mathcal L(P_0)$-order probability equals the
+$\mathcal L(P_n)$-order probability, hence lies in $[1/3, 2/3]$.
+
+\emph{Base case $n = 0$.} The chain is the trivial singleton
+$P_0 = P$; both (a) and (b) are tautological.
+
+\emph{Inductive step $n \mapsto n+1$.} Let
+$P_0, P_1, \ldots, P_n, P_{n+1}$ be a chain of length $n+1$, with
+$P_{n+1} = P_n|_{S_{n+1}}$ for some piece $S_{n+1}$ of an ordinal-sum
+decomposition $D_{n+1}=(X_-^{(n+1)},X_0^{(n+1)},X_+^{(n+1)}) \in
+\mathrm{OrdinalDecomp}(P_n)$. Fix $x, y$ in the ground set of
+$P_{n+1}$, i.e.\ $x, y \in S_{n+1}$.
+
+For (a): the sub-poset order on $P_{n+1} = P_n|_{S_{n+1}}$ is, by
+definition, the restriction of $\le_{P_n}$ to $S_{n+1}$, so
+$x \le_{P_{n+1}} y$ iff $x \le_{P_n} y$; hence $(x, y)$ is
+incomparable in $P_{n+1}$ iff it is incomparable in $P_n$. By the
+induction hypothesis applied to the length-$n$ chain
+$P_0, \ldots, P_n$ and the same pair $(x, y) \in P_n$,
+incomparability in $P_n$ coincides with incomparability in $P_0$,
+which closes (a) for the extended chain.
+
+For (b): since $x, y$ both lie in the piece $S_{n+1}$ of
+$D_{n+1} \in \mathrm{OrdinalDecomp}(P_n)$,
+Corollary~\ref{cor:ordinal-marginal} applied to $P_n$ and $D_{n+1}$
+(in the $X_-$, $X_0$, or $X_+$ variant according to which piece
+$S_{n+1}$ is) gives
+\[
+  \Pr_{L_n \sim \mathcal L(P_n)}\!\big[x <_{L_n} y\big]
+  \;=\;
+  \Pr_{L_{n+1} \sim \mathcal L(P_{n+1})}\!\big[x <_{L_{n+1}} y\big].
+\]
+By the induction hypothesis, the left-hand side equals
+$\Pr_{L \sim \mathcal L(P_0)}[x <_L y]$, and composing the two
+equalities yields (b) for the length-$(n+1)$ chain.
+
+This completes the induction and hence the proof.
+\end{proof}
+
+\begin{remark}[Lean image of Lemma~\ref{lem:chained-lift}]
+\label{rem:chained-lift-lean}
+The length-one case is formalised as the Lean theorem
+\texttt{OrdinalDecomp.}\allowbreak\texttt{has\-Balanced\-Pair\_lift}
+in \texttt{lean/OneThird/Mathlib/}\allowbreak\texttt{LinearExtension/Subtype.lean}:
+a \texttt{HasBalancedPair} on the middle piece \texttt{D.Mid} lifts
+to a \texttt{HasBalancedPair} on the ambient $\alpha$, using
+\texttt{probLT\_restrict\_eq} for part~(b) and the
+\texttt{Subtype}-order coincidence for part~(a). The chained
+statement of Lemma~\ref{lem:chained-lift} is the paper-level image
+of Lean work item F4 (see Remark~\ref{rem:old-vs-new}): iterate
+\texttt{has\-Balanced\-Pair\_lift} along an
+\texttt{OrdinalDecomp}-chain, with each step an application of
+\texttt{probLT\_restrict\_eq} and sub-poset order transfer. The
+induction on chain length in the proof of
+Lemma~\ref{lem:chained-lift} is the mathematical content of that
+iteration.
 \end{remark}
 
 \subsection{Bipartite balanced pair}
