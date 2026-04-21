@@ -6,6 +6,7 @@ Released under the MIT License.
 import OneThird.Basic
 import OneThird.Poset
 import OneThird.Mathlib.LinearExtension.Fintype
+import OneThird.Mathlib.LinearExtension.Subtype
 import OneThird.Mathlib.BKGraph
 import OneThird.LinearExtension
 import OneThird.Mathlib.SimpleGraph.EdgeBoundary
