@@ -24,7 +24,7 @@ single-token `(by sorry)` inside `lem_layered_balanced` (Case
 
 | # | File:line | In declaration | Category |
 |---|-----------|----------------|----------|
-| 1 | `OneThird/Step8/LayeredBalanced.lean:728` | `lem_layered_balanced` (Case `K ≥ 2`) | Iterated ordinal-sum reduction of the window `W(i, j)` (`step8.tex:1618-1631, 1768-1795`). See §"Gap analysis" below. |
+| 1 | `OneThird/Step8/LayeredBalanced.lean:728` | `lem_layered_balanced` (Case `K ≥ 2`) | Iterated ordinal-sum reduction of the window `W(i, j)`; closure depends on `lem:enum` (`step8.tex:2731-2748`) for `w ≥ 1` depth ≥ 3, the base case of the strong-induction proof (`step8.tex:2752-2805`). See §"Gap analysis" below and §"Q1 re-read checkpoint" for the remaining A8 dependency. |
 
 ### Gap analysis: what closing the sorry requires
 
@@ -35,23 +35,23 @@ one sibling issue that makes the G4 lemma vacuously invoked on the
 main theorem path even when closed (**M-c**). Together these
 define Option A — the paper-faithful iterated ordinal-sum.
 
-**M-a — Transitivity lemma.** The paper says "irreducibility gives
-adjacent bands `(M_i, M_{i+1})` with incomparable cross-pair"
-(`step8.tex:1624`). Not immediate; irreducibility at index `k`
-only gives *some* cross-pair `(u ∈ M_i, v ∈ M_j, i ≤ k < j)`, not
-`j = i+1`. Provable by transitivity (if every adjacent pair
-`M_i < M_{i+1}` were fully comparable, every non-adjacent pair
-would be too), but the lemma is missing from the paper and needs
-explicit statement and proof.
+**M-a — Transitivity lemma.** *(paper-side closed by mg-ec58.)*
+Stated and proved as `lem:irr-adjacent` at `step8.tex:2461-2478`:
+if every adjacent band-pair were fully comparable, transitivity
+forces every cross-pair comparable, contradicting irreducibility.
+Lean image is F2 (mg-7946), still pending.
 
-**M-b — Inner window localisation does not isolate.** The paper
-says "apply `windowLocalization` once more inside `Q^⋆` to isolate
-to `M_i ∪ M_{i+1}`" (`step8.tex:1626`). The inner window for an
-adjacent pair in `Q^⋆` of interaction width `w' ≥ 1` is actually
-`2w' + 2` bands wide. The paper does not resolve whether the
-iteration terminates at `K^⋆ = 2`, whether the iteration is nested
-with a termination measure on `(K, w)`, or whether a different
-argument replaces the inner step. *This is the hardest math item.*
+**M-b — Inner window localisation does not isolate.**
+*(paper-side closed by mg-ec58.)* The inner-window pitfall is
+documented as `rem:inner-window-pitfall` (`step8.tex:2481-2503`);
+the fix is a strong induction on `|X|` replacing the
+"window-reduce-window" pipeline, proved at
+`step8.tex:2752-2805` with `rem:old-vs-new` at
+`step8.tex:2807-2836`. Base case is `prop:in-situ-balanced`
+(`step8.tex:2646-2729`); its `w ≥ 1`, depth ≥ 3 enumeration step
+(`prop:in-situ-balanced` Case 3 + `lem:enum`) is still
+under-spelled — tracked as **mg-A8** in the Q1 checkpoint below.
+Lean image is F3 (mg-063d), still pending.
 
 **M-c — `layeredFromBridges` is a sham witness.** The ground-set
 layered decomposition fed into `caseC` on the main theorem path
@@ -59,9 +59,10 @@ has `w = |α| + bandwidth`, making (L2) vacuous
 (`band x + w > |α| ≥ band y` always). Even full closure of M-a
 and M-b yields a G4 lemma whose invocation is vacuous on input
 on the main path. Closing this requires the Step 8 perturbation
-bound `eq:exc-perturb` (`step8.tex:632`) for deleting the bounded
-exceptional set `X^exc` — currently the missing F4-foundation
-item at the probability-transfer level.
+bound `eq:exc-perturb` (now stated and proved as `lem:exc-perturb`,
+`step8.tex:1025-1062`, landed via mg-d0e4/A6) for deleting the
+bounded exceptional set `X^exc`; the corresponding Lean Replacement
+is F7 (mg-f1b7), still pending.
 
 **L-γ — Well-founded recursion framework.** Once M-b resolves,
 Lean needs a recursion over band count (or band count +
@@ -100,20 +101,51 @@ edit.
 
 Phase 1 (math, rewrite `step8.tex`):
 * **mg-A1** — formalise "layer-ordinal reducible" Definition +
-  factorisation Lemma.
+  factorisation Lemma. *(landed)*
 * **mg-A2** — prove M-a (transitivity → adjacent incomparable).
+  *(content landed via mg-ec58 as `lem:irr-adjacent`)*
 * **mg-A3** — resolve M-b (nested iteration or `K^⋆ = 2` or
-  alternative argument).
+  alternative argument). *(landed as strong induction on `|X|`,
+  `rem:inner-window-pitfall` / `rem:old-vs-new`)*
 * **mg-A4** — chained balanced-pair lift Lemma statement + proof.
+  *(landed as `lem:chained-lift`)*
 * **mg-A5** — flesh out `rem:layered-from-step7` into an explicit
-  proof sketch.
-* **mg-A6** — fully formalise `eq:exc-perturb` proof.
+  proof sketch. *(landed as `lem:layered-from-step7`)*
+* **mg-A6** — fully formalise `eq:exc-perturb` proof. *(landed as
+  `lem:exc-perturb` + `lem:one-elem-perturb`)*
+* **mg-A7** — arithmetic-richness honesty: main theorem restricted
+  to `Hypothesis hyp:arith`; all `rem:*` reflect the restricted
+  scope. *(landed)*
 
 Phase 2 (QA):
-* **mg-Q1** — independent review of A1–A6.
+* **mg-Q1** — independent review of A1–A7 *(re-read pass pc-4a4b,
+  2026-04-21: two new items filed, see checkpoint below)*.
 * **mg-Q2** — audit every `rem:*` in `step8.tex` for similar
-  under-spelled claims.
+  under-spelled claims. *(landed; produced mg-A7)*
 * **mg-Q3** — cross-reference paper vs. Lean signatures.
+
+#### Q1 re-read checkpoint (pc-4a4b, 2026-04-21)
+
+Polecat `pc-4a4b` re-read §`sec:g4-balanced-pair` and §`sec:main-thm`
+after A1–A7 landed. A1, A2, A4, A5, A6, A7 verified consistent and
+proof-bearing at the paper level. Two new under-spelled claims
+surfaced:
+
+* **mg-A8** (high) — `prop:in-situ-balanced` Case 3 ("width-3 profile
+  antichain", `step8.tex:2714-2728`) and `lem:enum`
+  (`step8.tex:2731-2748`) defer the `w ≥ 1`, depth ≥ 3 base case
+  to a "machine-checked enumeration" that is neither carried out in
+  the paper nor linked to an external artefact. The w = 0 fragment is
+  covered by the existing Lean helper `lem_layered_balanced_subtype`,
+  so F5 still needs A8's output to discharge `hw_zero`.
+* **mg-A9** (low) — exposition of `lem:one-elem-perturb`'s "second
+  factor" bound `|p_{xy}(Q) - Pr(A | \bar B)| ≤ 2/(m-1)`
+  (`step8.tex:997-1013`) conflates the joint `(L', J)` sample space
+  with event-level reweighting; conclusion is correct (standard
+  deletion-coupling bound), but the derivation needs tightening.
+
+F1–F6 Lean items blocked on Q1 stay blocked on A8 (F3/F5 in
+particular); A9 is decoupled from the Lean closure.
 
 Phase 3 (Lean formalisation):
 * **mg-F1/F2/F3/F4** — consume A1/A2/A3/A4 into Lean definitions
