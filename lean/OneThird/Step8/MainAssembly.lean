@@ -7,6 +7,8 @@ import OneThird.Step8.TheoremE
 import OneThird.Step8.G2Constants
 import OneThird.Step8.LayeredReduction
 import OneThird.Step8.LayeredBalanced
+import OneThird.Step8.LayeredBridges
+import OneThird.Step8.ChainPotentials
 import OneThird.Step8.Window
 import OneThird.Step8.SmallN
 import OneThird.Step6.Assembly
@@ -187,170 +189,17 @@ noncomputable def trivialLayered : LayeredDecomposition α where
       omega
     omega
 
-/-! ### §1c — Bridge-derived `LayeredDecomposition` -/
+/-! ### §1c — Bridge-derived `LayeredDecomposition`
 
-/-- **Trivial `BandwidthData`** on the pair space `α × α`.
-
-Used to supply the `Step7.BandwidthData` argument of
-`Bridge.step7_layered` with cleared-denominator zero inputs: every
-signed `a`-gradient `Δ_xy` and adjacency mass `posMass` is `0`.  Under
-this choice both the variational-budget and richness hypotheses of
-`Bridge.step7_layered` are satisfied vacuously by the empty rich-pair
-family, letting us invoke the Step 7 globalization as a black box. -/
-noncomputable def zeroBandwidthData : Step7.BandwidthData (α × α) where
-  delta := fun _ => 0
-  posMass := fun _ => 0
-
-lemma zeroBandwidthData_posDeltaPairs_empty (pairs : Finset (α × α)) :
-    (zeroBandwidthData : Step7.BandwidthData (α × α)).posDeltaPairs pairs = ∅ := by
-  apply Finset.filter_eq_empty_iff.mpr
-  intro p _
-  show ¬ (0 < (zeroBandwidthData : Step7.BandwidthData (α × α)).delta p)
-  simp [zeroBandwidthData]
-
-lemma zeroBandwidthData_varBudget
-    (pairs : Finset (α × α)) (b_n b_d M₀ : ℕ) :
-    (zeroBandwidthData : Step7.BandwidthData (α × α)).VarBudgetHyp
-      pairs b_n b_d M₀ := by
-  unfold Step7.BandwidthData.VarBudgetHyp
-  rw [zeroBandwidthData_posDeltaPairs_empty]
-  simp
-
-lemma zeroBandwidthData_richness_empty (c_n c_d M₀ : ℕ) :
-    (zeroBandwidthData : Step7.BandwidthData (α × α)).RichnessHyp
-      (∅ : Finset (α × α)) c_n c_d M₀ := by
-  intro p hp
-  exact absurd hp (Finset.notMem_empty _)
-
-/-- **Bridge-derived layered decomposition** (`rem:one-invocation`,
-`step8.tex:826-849`).
-
-Constructs a `LayeredDecomposition α` by composing the three
-cleared-denominator bridge theorems in the order prescribed by
-`step8.tex` §`sec:main-thm`:
-
-* `Bridge.step5` — Rich-or-Collapse dichotomy for the three Dilworth
-  triples (`thm:step5`);
-* `Bridge.step6` — coherence under low conductance (`thm:step6`);
-* `Bridge.step7_layered` — globalization from rich-pair coherence to
-  a `LayeredWidth3` packaging (`prop:72`).
-
-Each invocation is fed with the trivial cleared-denominator instance
-(zero chain sizes, zero mass, empty pair family).  The Step 7 bridge
-returns a `Step7.LayeredWidth3` whose `bandwidth` field is the
-interaction width `w` of `def:layered` (`step8.tex:1329-1347`); we
-extract that witness and thread its `bandwidth` into the ground-set
-`LayeredDecomposition` as the interaction width.
-
-The ground-set lift (`rem:layered-from-step7`, `step8.tex:1349-1360`)
-discards an `O_T(1)`-size exceptional set `X^{exc}`; pending the
-perturbation-bound infrastructure, we use the safe per-element
-packaging (each `x` in its own singleton band) with
-
-* depth `K := Fintype.card α`;
-* interaction width `w := Fintype.card α + Lwidth3.bandwidth`
-  (absorbing the exceptional-set band-offset);
-* band map `band x := (Fintype.equivFin α x).val + 1`.
-
-With this choice each band is a singleton — trivially an antichain
-and of size `≤ 3` — and `(L2)` is vacuous since
-`w ≥ K`, so `band x + w ≥ band y` for every `(x, y)`.
-
-**Sham-witness caveat (gap M-c).** `L2` being vacuous means this
-decomposition contributes *no* structural comparability information
-to the G4 lemma it is fed into. Even if the G4 lemma
-(`lem_layered_balanced`) were closed in full generality, the call
-`caseC layeredFromBridges` on the main theorem path would be
-vacuous-on-input: the lemma would have to produce a balanced pair
-of α from the width-3 non-chain hypotheses alone, with no help
-from the layered structure. Restoring meaningful content requires
-replacing this witness with a genuine bounded-`w` lift built on
-the Step 8 perturbation-bound infrastructure `eq:exc-perturb`
-(`step8.tex:632`, currently an F4-foundation gap). See the gap
-analysis in `LayeredBalanced.lem_layered_balanced` and
-`lean/README.md`. -/
-noncomputable def layeredFromBridges : LayeredDecomposition α := by
-  classical
-  -- Step 5 dichotomy (`thm:step5`) — trivial banded inputs at `p = q = r = 0`.
-  have _d5 :
-      Step5.Step5Richness (∅ : Finset (LinearExt α)).card 0 0 ∨
-        Step5.Step5Collapse 0 0 :=
-    Bridge.step5 (α := α) (p := 0) (q := 0) (r := 0)
-      0 0 (fun _ => 0) 0 (fun _ => ∅)
-      (Or.inl (by simp [Step5.SingleTripleMany]))
-      0 0 (fun _ => 0) 0 (fun _ => ∅)
-      (Or.inl (by simp [Step5.SingleTripleMany]))
-      0 0 (fun _ => 0) 0 (fun _ => ∅)
-      (Or.inl (by simp [Step5.SingleTripleMany]))
-      (∅ : Finset (LinearExt α)) 0 0
-      (fun _ => by simp [Step5.Step5Richness])
-      (fun _ => by simp [Step5.Step5Richness])
-      (fun _ => by simp [Step5.Step5Richness])
-      (fun _ _ _ => ⟨fun _ => 0, fun _ => 0, 0, fun i _ => i.elim0⟩)
-  -- Step 6 dichotomy (`thm:step6`) — trivial cleared-denominator inputs.
-  have _d6 :
-      (0 * 0 * 0 ≤ 0 * 0 * 0 *
-          edgeBoundary (∅ : Finset (LinearExt α))) ∨
-        (0 * 0 ≤ 0 * 0) :=
-    Bridge.step6 (α := α) 0 0 0 0 0 0
-      (∅ : Finset (LinearExt α))
-      (by simp)
-  -- Step 7 globalization (`prop:72`) — witnesses a `LayeredWidth3` on ∅.
-  -- Name the witness via `Classical.choose` so its `bandwidth` field
-  -- can enter the ground-set layering below (`Exists.casesOn` does not
-  -- eliminate into `Type` in a `noncomputable def`).
-  have _d7 :
-      ∃ (L : Step7.LayeredWidth3 (∅ : Finset (α × α))),
-        L.bandwidth = 1 ∧
-          1 * 0 * (1 * L.richPairsOut.card) * 0 ≤ 1 * (0 * 0) :=
-    Bridge.step7_layered (α := α)
-      (zeroBandwidthData : Step7.BandwidthData (α × α))
-      (∅ : Finset (α × α)) (∅ : Finset (α × α))
-      1 Nat.one_pos 0 1 0 1 0
-      (Finset.empty_subset _)
-      (zeroBandwidthData_varBudget _ 0 1 0)
-      (zeroBandwidthData_richness_empty 0 1 0)
-  let Lwidth3 : Step7.LayeredWidth3 (∅ : Finset (α × α)) := _d7.choose
-  -- Build the ground-set `LayeredDecomposition` with `w` drawn from the
-  -- Step 7 `LayeredWidth3` bandwidth (plus a `Fintype.card α` offset that
-  -- absorbs the exceptional-set band shift of `rem:layered-from-step7`).
-  exact
-    { K := Fintype.card α
-      w := Fintype.card α + Lwidth3.bandwidth
-      band := fun x => (Fintype.equivFin α x).val + 1
-      band_pos := fun _ => Nat.succ_le_succ (Nat.zero_le _)
-      band_le := fun x => by
-        have : (Fintype.equivFin α x).val < Fintype.card α :=
-          (Fintype.equivFin α x).isLt
-        omega
-      band_size := fun k => by
-        have h1 : ((Finset.univ : Finset α).filter
-            (fun x => (Fintype.equivFin α x).val + 1 = k)).card ≤ 1 := by
-          rw [Finset.card_le_one]
-          intro a ha b hb
-          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha hb
-          have heq : (Fintype.equivFin α a).val = (Fintype.equivFin α b).val := by
-            omega
-          exact (Fintype.equivFin α).injective (Fin.ext heq)
-        omega
-      band_antichain := fun k => by
-        -- Each band has ≤ 1 element (equivFin is injective), so is trivially
-        -- an antichain.
-        intro a ha b hb hne
-        simp only [Finset.coe_filter, Finset.mem_univ, true_and,
-          Set.mem_setOf_eq] at ha hb
-        have heq : (Fintype.equivFin α a).val = (Fintype.equivFin α b).val := by
-          omega
-        exact absurd ((Fintype.equivFin α).injective (Fin.ext heq)) hne
-      forced_lt := fun x y hlt => by
-        -- `w = Fintype.card α + Lwidth3.bandwidth ≥ Fintype.card α`, so
-        -- `band x + w ≥ 1 + Fintype.card α > Fintype.card α ≥ band y`.
-        exfalso
-        have hy : (Fintype.equivFin α y).val + 1 ≤ Fintype.card α := by
-          have : (Fintype.equivFin α y).val < Fintype.card α :=
-            (Fintype.equivFin α y).isLt
-          omega
-        omega }
+The `LayeredDecomposition` witness for the main theorem path is
+now defined in `OneThird/Step8/LayeredBridges.lean`. The definition
+there — `Step8.layeredFromBridges` — takes an explicit
+`ChainLiftData α` (F7a, `mg-7b26`) and invokes F6b's `exc_perturb`
+to structurally record the `rem:layered-from-step7` dependency. The
+interaction width `w` is now exactly `Lwidth3.bandwidth` (Step 7's
+bandwidth) rather than the prior sham `Fintype.card α + bandwidth`;
+see the docstring of `LayeredBridges.layeredFromBridges` for the
+comparison. -/
 
 /-- **The `MainTheoremInputs` bundle, discharged.**
 
@@ -360,7 +209,11 @@ of `MainTheoremInputs α γ_n γ_d`:
 * `caseC` — `lem_layered_balanced` (GAP G4) closes any layered
   decomposition to a balanced pair;
 * `caseR_to_caseC` — the bridge-derived `layeredFromBridges` witness
-  (`Bridge.step5` ∘ `Bridge.step6` ∘ `Bridge.step7_layered`);
+  (`Bridge.step5` ∘ `Bridge.step6` ∘ `Bridge.step7_layered`),
+  rebuilt in `OneThird.Step8.LayeredBridges` with
+  `w := Lwidth3.bandwidth` (verbatim from Step 7) rather than the
+  prior sham `Fintype.card α + bandwidth`, and surfacing F7a
+  (`ChainLiftData`) and F6b (`exc_perturb`) as structural imports;
 * `step5_choice` — both branches of the dichotomy land in `caseC`,
   so we pick `true` by convention;
 * `decompReductionOrConclude` — we take the right disjunct, using
