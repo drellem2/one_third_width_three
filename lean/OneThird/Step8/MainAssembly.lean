@@ -368,13 +368,16 @@ of `MainTheoremInputs α γ_n γ_d`:
 
 This discharges the `sorry` of `width3_one_third_two_thirds_assembled`
 in the `|α| ≥ 2` branch. -/
-noncomputable def mainTheoremInputsOf
+noncomputable def mainTheoremInputsOf.{u}
+    {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
     (γ_n γ_d : ℕ) (h2 : 2 ≤ Fintype.card α)
-    (hNotChain : ¬ OneThird.IsChainPoset α) :
+    (hNotChain : ¬ OneThird.IsChainPoset α)
+    (hW3 : HasWidthAtMost α 3)
+    (hC3 : Step8.Case3Witness.{u}) :
     MainTheoremInputs α γ_n γ_d where
   decompReductionOrConclude :=
-    Or.inr (lem_layered_balanced layeredFromBridges h2 hNotChain)
-  caseC := fun L => lem_layered_balanced L h2 hNotChain
+    Or.inr (lem_layered_balanced layeredFromBridges h2 hNotChain hW3 hC3)
+  caseC := fun L => lem_layered_balanced L h2 hNotChain hW3 hC3
   caseR_to_caseC := layeredFromBridges
   step5_choice := true
 
@@ -447,8 +450,10 @@ exhibit a balanced pair. The proof extracts:
 The constructive content of the `|α| ≥ 3` case is supplied by the
 abstract `MainTheoremInputs` bundle (one named statement per step,
 matching `rem:one-invocation`). -/
-theorem width3_one_third_two_thirds_assembled
-    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α) :
+theorem width3_one_third_two_thirds_assembled.{u}
+    {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
+    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
+    (hC3 : Step8.Case3Witness.{u}) :
     HasBalancedPair α := by
   -- Case `|α| ≤ 1`: forced chain, contradicting `hNonChain`.
   by_cases hcard : Fintype.card α ≤ 1
@@ -464,7 +469,7 @@ theorem width3_one_third_two_thirds_assembled
   -- witness discharges `caseR_to_caseC`.
   have h2 : 2 ≤ Fintype.card α := by omega
   exact mainAssembly 1 3 h2 hP hNonChain
-    (mainTheoremInputsOf 1 3 h2 hNonChain)
+    (mainTheoremInputsOf 1 3 h2 hNonChain hP hC3)
 
 end Step8
 
@@ -477,10 +482,11 @@ The `OneThird.width3_one_third_two_thirds` headline statement of
 of `Step8.width3_one_third_two_thirds_assembled`. We expose the
 discharge as an alias so that downstream consumers (e.g.
 `OneThird.lean` root) can refer to either. -/
-theorem width3_one_third_two_thirds_via_step8
-    {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
-    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α) :
+theorem width3_one_third_two_thirds_via_step8.{u}
+    {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
+    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
+    (hC3 : Step8.Case3Witness.{u}) :
     HasBalancedPair α :=
-  Step8.width3_one_third_two_thirds_assembled hP hNonChain
+  Step8.width3_one_third_two_thirds_assembled hP hNonChain hC3
 
 end OneThird

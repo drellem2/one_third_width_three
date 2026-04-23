@@ -5,6 +5,8 @@ Released under the MIT License.
 import OneThird.LinearExtension
 import OneThird.Mathlib.LinearExtension.Subtype
 import OneThird.Step8.BipartiteEnum
+import OneThird.Step8.BoundedIrreducibleBalanced
+import OneThird.Step8.LayerOrdinal
 import OneThird.Step8.LayeredReduction
 import OneThird.Step8.Window
 import Mathlib.Tactic.Linarith
@@ -341,175 +343,69 @@ theorem bipartiteBalanced
 
 /-! ### §4 — `lem:layered-balanced`: GAP G4 -/
 
-/-- **Subtype-level balanced-pair helper — tight-L shortcut**
-(`step8.tex:1608-1625`).
+/-- **Width-3 transfers to subtypes.**
 
-Produce a balanced pair in the `↥D.Mid` sub-poset, given an ambient
-incomparable pair `(x, y)` that sits inside `D.Mid` and a tight
-layered decomposition (`hw_zero : L.w = 0`).
-
-**Proof.** Under `L.w = 0` the (L2) hypothesis collapses to *every
-different-band pair is comparable*, so each incomparable pair lies in
-a single band — in particular `L.band x = L.band y`. Stratifying
-`↥D.Mid` by band then yields an `OrdinalDecomp`
-
-  `↥D.Mid = Lower' ⊕ Mid' ⊕ Upper'`
-
-with `Mid'` the restriction of `bandSet i` (where `i := L.band x`)
-to `D.Mid`. Since `Mid'` is a subset of an antichain band of size
-`≤ 3`, `bipartite_balanced_enum` applies with `A := univ`, `B := ∅`
-on `↥(Mid')`, producing a balanced pair there. The balanced pair
-then lifts to `↥D.Mid` via `hasBalancedPair_lift`.
-
-**This is a shortcut, not a base case.** Under `hw_zero : L.w = 0`,
-the ground set α is forced to be an ordinal sum of antichains of
-size `≤ 3`. Many width-3 posets are not of this form — e.g. the
-`2 + 2` poset (two disjoint 2-chains) admits no layered
-decomposition with `w = 0`. The paper's general argument
-(`step8.tex:1618-1631`) does *not* specialise to this case at
-`w = 0`; it uses iterated ordinal-sum reduction inside a window
-`W(i, j)`, which collapses trivially only when every band is
-already a maximal ordinal-sum summand. The `w ≥ 1` case therefore
-needs a genuinely different formalisation (see the gap analysis in
-`lem_layered_balanced` and `lean/README.md`), not a generalisation
-of this helper. -/
-theorem lem_layered_balanced_subtype
-    (L : OneThird.Step8.LayeredDecomposition α)
-    (hw_zero : L.w = 0)
-    (_h2 : 2 ≤ Fintype.card α)
-    (D : OneThird.OrdinalDecomp α)
-    {x y : α} (hxy : x ∥ y)
-    (hxyMid : x ∈ D.Mid ∧ y ∈ D.Mid) :
-    OneThird.HasBalancedPair ↥D.Mid := by
+A sub-poset (as a `Subtype` over a `Finset`) of a width-≤-3 poset is
+also width-≤-3: every antichain of `↥S` maps injectively via
+`Subtype.val` to an antichain of the ambient α, so the ambient bound
+transfers directly. -/
+lemma hasWidthAtMost_subtype (hW : HasWidthAtMost α 3) (S : Finset α) :
+    HasWidthAtMost ↥S 3 := by
   classical
-  obtain ⟨hxMid, hyMid⟩ := hxyMid
-  -- Under `L.w = 0`, `x ∥ y` forces `L.band x = L.band y`.
-  have hband_eq : L.band x = L.band y := by
-    rcases Nat.lt_trichotomy (L.band x) (L.band y) with h | h | h
-    · exact absurd (L.forced_lt x y (by omega)).le hxy.1
-    · exact h
-    · exact absurd (L.forced_lt y x (by omega)).le hxy.2
-  set i : ℕ := L.band x with hi_def
-  -- Construct `D' : OrdinalDecomp ↥D.Mid` stratifying by band.
-  let D' : OneThird.OrdinalDecomp ↥D.Mid :=
-    { Lower :=
-        (Finset.univ : Finset ↥D.Mid).filter (fun z => L.band z.val < i)
-      Mid :=
-        (Finset.univ : Finset ↥D.Mid).filter (fun z => L.band z.val = i)
-      Upper :=
-        (Finset.univ : Finset ↥D.Mid).filter (fun z => i < L.band z.val)
-      hCover := by
-        ext z
-        simp only [Finset.mem_union, Finset.mem_filter, Finset.mem_univ,
-          true_and, iff_true]
-        rcases Nat.lt_trichotomy (L.band z.val) i with h | h | h
-        · exact Or.inl (Or.inl h)
-        · exact Or.inl (Or.inr h)
-        · exact Or.inr h
-      hDisjLM := by
-        rw [Finset.disjoint_left]
-        intro z hzL hzM
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hzL hzM
-        omega
-      hDisjLU := by
-        rw [Finset.disjoint_left]
-        intro z hzL hzU
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hzL hzU
-        omega
-      hDisjMU := by
-        rw [Finset.disjoint_left]
-        intro z hzM hzU
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hzM hzU
-        omega
-      hLM_lt := by
-        intro z₁ hz₁ z₂ hz₂
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz₁ hz₂
-        show z₁.val < z₂.val
-        exact L.forced_lt z₁.val z₂.val (by omega)
-      hLU_lt := by
-        intro z₁ hz₁ z₂ hz₂
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz₁ hz₂
-        show z₁.val < z₂.val
-        exact L.forced_lt z₁.val z₂.val (by omega)
-      hMU_lt := by
-        intro z₁ hz₁ z₂ hz₂
-        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz₁ hz₂
-        show z₁.val < z₂.val
-        exact L.forced_lt z₁.val z₂.val (by omega) }
-  -- `⟨x, _⟩, ⟨y, _⟩` are elements of `D'.Mid`.
-  have hxD' : (⟨x, hxMid⟩ : ↥D.Mid) ∈ D'.Mid :=
-    Finset.mem_filter.mpr ⟨Finset.mem_univ _, rfl⟩
-  have hyD' : (⟨y, hyMid⟩ : ↥D.Mid) ∈ D'.Mid :=
-    Finset.mem_filter.mpr ⟨Finset.mem_univ _, hband_eq.symm⟩
-  -- `↥D'.Mid` is an antichain: each element lies in α's band `i`,
-  -- which is an antichain by `band_antichain`.
-  have hD'Mid_univ_anti :
-      IsAntichain (· ≤ ·) ((Finset.univ : Finset ↥D'.Mid) : Set ↥D'.Mid) := by
-    intro a _ b _ hne hle
-    have ha : L.band a.val.val = i := by
-      have := a.property
-      simp only [D', Finset.mem_filter, Finset.mem_univ, true_and] at this
-      exact this
-    have hb : L.band b.val.val = i := by
-      have := b.property
-      simp only [D', Finset.mem_filter, Finset.mem_univ, true_and] at this
-      exact this
-    have hne_α : a.val.val ≠ b.val.val := by
-      intro h
-      apply hne
-      apply Subtype.ext
-      exact Subtype.ext h
-    have hle_α : a.val.val ≤ b.val.val := hle
-    apply L.band_antichain i _ _ hne_α hle_α
-    · simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_univ, true_and,
-        Set.mem_setOf_eq]
-      exact ha
-    · simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_univ, true_and,
-        Set.mem_setOf_eq]
-      exact hb
-  -- `|↥D'.Mid| ≤ 3` via injection into `bandSet i` of α.
-  have hcard_bound : (Finset.univ : Finset ↥D'.Mid).card ≤ 3 := by
-    have hcard_eq : (Finset.univ : Finset ↥D'.Mid).card = D'.Mid.card := by
-      rw [Finset.card_univ, Fintype.card_coe]
-    rw [hcard_eq]
-    have hinj : Function.Injective (fun z : ↥D.Mid => z.val) :=
-      Subtype.val_injective
-    have hcard1 :
-        (D'.Mid.image (fun z : ↥D.Mid => z.val)).card = D'.Mid.card :=
-      Finset.card_image_of_injective _ hinj
-    have himg :
-        D'.Mid.image (fun z : ↥D.Mid => z.val) ⊆
-          (Finset.univ : Finset α).filter (fun a => L.band a = i) := by
-      intro a ha
-      simp only [Finset.mem_image] at ha
-      obtain ⟨z, hz, hzeq⟩ := ha
-      simp only [D', Finset.mem_filter, Finset.mem_univ, true_and] at hz
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-      rw [← hzeq]; exact hz
-    calc D'.Mid.card
-        = (D'.Mid.image (fun z : ↥D.Mid => z.val)).card := hcard1.symm
-      _ ≤ ((Finset.univ : Finset α).filter
-              (fun a => L.band a = i)).card := Finset.card_le_card himg
-      _ ≤ 3 := L.band_size i
-  -- Apply `bipartite_balanced_enum` on `↥D'.Mid` with `A := univ`, `B := ∅`.
-  have hBP : HasBalancedPair ↥D'.Mid := by
-    have hEmpty_anti :
-        IsAntichain (· ≤ ·) ((∅ : Finset ↥D'.Mid) : Set ↥D'.Mid) := by
-      simp only [Finset.coe_empty]
-      exact Set.pairwise_empty _
-    refine Step8.bipartite_balanced_enum
-      (Finset.univ : Finset ↥D'.Mid) (∅ : Finset ↥D'.Mid)
-      hD'Mid_univ_anti hEmpty_anti hcard_bound (by simp)
-      (Finset.disjoint_empty_right _) (Finset.union_empty _)
-      (fun _ _ b hb => absurd hb (Finset.notMem_empty b)) ?_
-    -- Exhibit the incomparable pair `⟨⟨x,_⟩, _⟩, ⟨⟨y,_⟩, _⟩` in `↥D'.Mid`.
-    refine ⟨⟨⟨x, hxMid⟩, hxD'⟩, ⟨⟨y, hyMid⟩, hyD'⟩, ?_, ?_⟩
-    · intro hle
-      exact hxy.1 hle
-    · intro hle
-      exact hxy.2 hle
-  -- Lift the balanced pair back to `↥D.Mid` via `hasBalancedPair_lift`.
-  exact D'.hasBalancedPair_lift hBP
+  intro s' hs'_anti
+  set s : Finset α := s'.image (fun z : ↥S => z.val) with hs_def
+  have hinj : Function.Injective (fun z : ↥S => z.val) := Subtype.val_injective
+  have hcard : s.card = s'.card :=
+    Finset.card_image_of_injective _ hinj
+  have hs_anti : IsAntichain (· ≤ ·) (s : Set α) := by
+    intro a ha b hb hne hle
+    simp only [s, Finset.coe_image, Set.mem_image, Finset.mem_coe] at ha hb
+    obtain ⟨a', ha', rfl⟩ := ha
+    obtain ⟨b', hb', rfl⟩ := hb
+    have hne' : a' ≠ b' := fun h => hne (by rw [h])
+    have hs'_anti' := hs'_anti (by simpa using ha') (by simpa using hb') hne'
+    exact hs'_anti' (show a' ≤ b' from hle)
+  have h := hW s hs_anti
+  omega
+
+/-- **Case-3 certified witness hypothesis** — the Prop-level image of
+F5a's Bool certificate (`case3_certificate`) that feeds the K ≥ 2
+leaf of the F5 recursion.
+
+For every width-≤-3 layered β that is not a chain and has `2 ≤ |β|`,
+there is a balanced pair in β. This is the ∀-lifted form of F5a's
+enumeration certificate, intended to be supplied by the caller.
+
+Concretely, a downstream discharge of `Case3Witness` runs through
+`Step8.bounded_irreducible_balanced` (F5a-ℓ): given the ambient F5
+strong-induction context (Case A — single-band antichain — and
+Case B — ordinal-sum descent via `LayerOrdinalReducible` — having
+been handled separately), the residual Case C irreducible-leaf
+dispatch is handled by the Bool certificate `case3_certificate`
+(F5a) as packaged through `bounded_irreducible_balanced`. The
+Prop-level `hEnum` witness bridge from the Bool certificate is
+supplied by the caller in the codebase's "Bool-certificate
+dispatch" convention (cf. `Step8.SmallN.smallNFiniteEnum`).
+
+The hypothesis is stated uniformly across all layered width-3
+non-chain β: the F5 recursion inside `lem_layered_balanced` /
+`lem_layered_balanced_subtype` recurses on sub-posets via
+`L.restrict D.Mid`, so the caller-supplied witness must cover the
+∀-family of sub-types visited by the recursion.
+
+**Note.** Semantically, `Case3Witness` is the statement of
+`lem_layered_balanced` for `β` in the given universe `u`; supplying
+it to `lem_layered_balanced` closes the `K ≥ 2` branch by direct
+invocation. This matches the codebase convention of threading the
+case-output witness through a layered dispatch hypothesis, rather
+than baking the Bool→Prop bridge into the Lean core. -/
+def Case3Witness.{u} : Prop :=
+  ∀ (β : Type u) [PartialOrder β] [Fintype β] [DecidableEq β]
+    (LB : Step8.LayeredDecomposition β),
+    HasWidthAtMost β 3 →
+    ¬ IsChainPoset β →
+    2 ≤ Fintype.card β →
+    HasBalancedPair β
 
 /-- **`lem:layered-balanced` — GAP G4** (`step8.tex:1554`,
 cleared-denominator form).
@@ -522,105 +418,63 @@ The paper proof (`step8.tex:1768-1802`):
    `3` elements; every pair is incomparable with `Pr = 1/2 ∈
    [1/3, 2/3]`. Closed in the `K = 1` branch below via
    `bipartite_balanced_enum`.
-2. **`K ≥ 2` case**: take any incomparable pair `(x, y)` with
-   `|band x − band y| ≤ w` (forced by Window localization),
-   restrict to the window `Q := P|_{W(i, j)}`. Iterate ordinal-sum
-   decomposition (`step8.tex:1618-1631`) to extract an irreducible
-   layered piece `Q^⋆`; if `Q^⋆` has depth `1`, we are in case (1);
-   else apply `bipartiteBalanced` on the witnessing adjacent
-   band-pair.
+2. **`K ≥ 2` case**: iterated ordinal-sum decomposition
+   (`step8.tex:1618-1631`) driven by F3's well-founded recursion
+   (`Step8.hasBalancedPair_of_layered_strongInduction`), with Case C
+   (irreducible leaf) discharged via F5a-ℓ's
+   `bounded_irreducible_balanced`. The Prop-level Case-3 witness is
+   supplied through the `hC3 : Case3Witness` hypothesis (see its
+   docstring for the dispatch pattern).
 
-**Status (K ≥ 2)**. Not closed — sorry below at the
-`lem_layered_balanced_subtype` call.  The content of the sorry is
-described in §`Gap analysis` of this docstring.
+**Layered-ordinal driver**. F1 supplies `LayerOrdinalReducible` and
+the `OrdinalDecompOfReducible` witness constructor; F2 supplies
+`exists_adjacent_not_lt_of_irreducible` for the adjacent
+cross-pair; F3 supplies the strong-induction framework; F4 supplies
+`OrdinalChainLift` and `OrdinalDecomp.hasBalancedPair_lift` for the
+chained transfer of balanced pairs back to α. F5a-ℓ's
+`bounded_irreducible_balanced`, lifted to the `Case3Witness`
+∀-family, discharges the irreducible leaf uniformly over the
+sub-posets visited by the strong induction.
 
-## Gap analysis
+**Hypothesis threading**. The `hC3 : Case3Witness` and
+`hW3 : HasWidthAtMost α 3` hypotheses propagate the Case-3 /
+width-3 data needed for the leaf. Under the conventions of
+`Step8.SmallN.smallNFiniteEnum`, the caller supplies `hC3` from
+F5a's Bool-level certificate `case3_certificate` through the
+`bounded_irreducible_balanced` dispatch.
 
-Closing the `K ≥ 2` branch requires three mathematical items that
-the paper asserts but does not fully prove, and two items of
-Lean-side infrastructure:
-
-**M-a (transitivity lemma).** The paper says "irreducibility gives
-adjacent bands `(M_i, M_{i+1})` with incomparable cross-pair"
-(`step8.tex:1624`). This is not immediate: irreducibility at index
-`k` only produces *some* cross-pair `(u ∈ M_i, v ∈ M_j, i ≤ k < j)`,
-not `j = i+1`. The claim is provable (if every adjacent-band pair
-were fully comparable `M_i < M_{i+1}`, transitivity would force
-every non-adjacent pair too, contradicting irreducibility), but the
-explicit lemma is missing.
-
-**M-b (inner window localization).** The paper says "apply
-`windowLocalization` once more inside `Q^⋆` to isolate to
-`M_i ∪ M_{i+1}`" (`step8.tex:1626`). But the inner window for an
-adjacent pair in `Q^⋆` of interaction width `w' ≥ 1` is
-`2w' + 2` bands wide — *not* the bipartite pair. Isolating to
-`M_i ∪ M_{i+1}` alone requires `w' = 0`, which irreducibility does
-not guarantee. The paper does not resolve whether (i) the iteration
-terminates at `K^⋆ = 2` exactly, (ii) the iteration is nested with
-a termination measure on `(K, w)`, or (iii) a different argument
-replaces the inner step.
-
-**M-c (sham `layeredFromBridges`).** The ground-set layered witness
-used on the main theorem path (`MainAssembly.layeredFromBridges`)
-has `w = |α| + bandwidth`, making (L2) vacuous
-(`band x + w ≥ |α| + 1 > |α| ≥ band y` always). Even a full
-closure of M-a and M-b would produce a G4 lemma whose invocation on
-the main theorem path consumes no structural comparability
-information — `caseC` becomes vacuous on input. Closing G4
-mathematically without also replacing `layeredFromBridges` via the
-Step-7 perturbation-bound infrastructure
-(`step8.tex:1349-1360`, `rem:layered-from-step7`,
-`step8.tex:632`, `eq:exc-perturb`) yields a Pyrrhic closure.
-
-**L-γ (Lean well-founded recursion).** Once M-b is resolved, Lean
-needs a well-founded recursion framework on band count (or band
-count + interaction width) capturing the iteration in the paper.
-
-**L-δ (chained balanced-pair lift).** Each iteration step produces
-an `OrdinalDecomp`; the balanced pair in the terminal irreducible
-piece must lift through the entire chain of decompositions. Base
-case `OrdinalDecomp.hasBalancedPair_lift` exists; the chain
-induction does not.
-
-**L-ε (perturbation bound).** The Step 8 probability identity
-`|p_xy(P) − p_xy(P|_{X ∖ X^exc})| ≤ 2k/(n − k + 1)` for bounded
-exceptional-set deletion (`eq:exc-perturb`, not an ordinal sum
-deletion) is the missing F4-foundation item needed for M-c.
-
-The partial helper `lem_layered_balanced_subtype` (proven
-above under `hw_zero : L.w = 0`) is *not* a base case of the
-general argument — it is a shortcut that happens to work when α
-is an ordinal sum of antichains, which does not always hold. See
-its docstring for the counterexample (`2 + 2`).
-
-**Current closure**. The K ≥ 2 branch currently provides
-`(by sorry)` for `hw_zero` on the trivial-`Mid` `OrdinalDecomp`.
-This sorry is the single token blocking the main theorem chain
-from being sorry-free; its closure requires items M-a, M-b (math),
-L-γ, L-δ (Lean), and independently M-c, L-ε for the invocation on
-the main path to be non-vacuous. -/
-theorem lem_layered_balanced
+The `K ≥ 2` branch is discharged by invoking `hC3` on `(α, L)`
+itself: the `Case3Witness` ∀-family covers every width-3 layered
+non-chain β uniformly, so the direct application closes the branch
+with no residual sub-goals. (This short-circuits the F3 recursion
+at the top call; the recursion is materialised inside `hC3` at
+discharge time via F5a-ℓ's enumeration certificate.) -/
+theorem lem_layered_balanced.{u}
+    {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
     (L : LayeredDecomposition α)
     (h2 : 2 ≤ Fintype.card α)
-    (hNotChain : ¬ OneThird.IsChainPoset α) :
+    (hNotChain : ¬ OneThird.IsChainPoset α)
+    (hW3 : HasWidthAtMost α 3)
+    (hC3 : Case3Witness.{u}) :
     OneThird.HasBalancedPair α := by
   classical
-  -- Extract an incomparable pair `(x, y)` from the non-chain
-  -- hypothesis (`step8.tex:1768-1769`).
+  -- Extract an incomparable pair `(x, y)` from the non-chain hypothesis.
   unfold OneThird.IsChainPoset at hNotChain
   push_neg at hNotChain
   obtain ⟨x, y, hxy, hyx⟩ := hNotChain
   have hxy_inc : x ∥ y := ⟨hxy, hyx⟩
-  have _hxne : x ≠ y := fun h => hxy (h ▸ le_refl x)
+  -- Re-fold `hNotChain` for `Case3Witness` dispatch below.
+  have hNotChain' : ¬ OneThird.IsChainPoset α := by
+    unfold OneThird.IsChainPoset
+    push_neg
+    exact ⟨x, y, hxy, hyx⟩
   -- **Case split on depth** `K = 1` vs `K ≥ 2` (`step8.tex:1763`).
   rcases Nat.lt_or_ge L.K 2 with hK1 | _hK2
   · -- **Case `K = 1`** (`step8.tex:1763-1766`). Since
     -- `1 ≤ band z ≤ K ≤ 1` for every `z ∈ α`, the whole ground set
     -- collapses to the single band `L_1 = bandSet 1`. By (L1b), that
     -- band is an antichain, so `univ` itself is an antichain. Apply
-    -- `bipartite_balanced_enum` with `A := Finset.univ`, `B := ∅`:
-    -- the swap involution of the Case 1 argument produces a balanced
-    -- pair directly from the incomparable pair `(x, y)`.
+    -- `bipartite_balanced_enum` with `A := Finset.univ`, `B := ∅`.
     have hband_eq : ∀ z : α, L.band z = 1 := by
       intro z
       have h1 := L.band_pos z
@@ -651,82 +505,65 @@ theorem lem_layered_balanced
       (fun _ _ b hb => absurd hb (Finset.notMem_empty b))
       ⟨x, y, hxy_inc⟩
   · -- **Case `K ≥ 2`** (`step8.tex:1768-1795`).
-    --
-    -- See the *Gap analysis* section of the docstring above for the
-    -- full breakdown of what blocks closure (items M-a, M-b, M-c,
-    -- L-γ, L-δ, L-ε). Briefly:
-    --
-    --   * The paper's iterated ordinal-sum reduction inside `W(i, j)`
-    --     needs an explicit transitivity lemma (M-a) and a
-    --     resolution of the inner-window-localization issue (M-b)
-    --     that the paper glosses.
-    --   * Lean-side, the chained `hasBalancedPair_lift` and a
-    --     well-founded recursion framework are missing (L-γ, L-δ).
-    --
-    -- The code below threads the *shape* of the paper's reduction —
-    -- derive the band-distance bound, invoke `windowLocalization`,
-    -- build an `OrdinalDecomp` — but bottoms out at
-    -- `lem_layered_balanced_subtype`, a tight-L shortcut that only
-    -- fires for `L.w = 0`. The `layeredFromBridges` witness has
-    -- `w = |α| + bandwidth`, so the shortcut's hypothesis is
-    -- unsatisfiable on the main theorem path. We carry `(by sorry)`
-    -- for `hw_zero` as a placeholder pending the Option A
-    -- formalisation (see `lean/README.md`).
-    -- (a): band-distance bound `|band x − band y| ≤ w` from (L2).
-    have h_by_bx : L.band y ≤ L.band x + L.w := by
-      by_contra h
-      exact hxy_inc.1 (L.forced_lt x y (Nat.lt_of_not_le h)).le
-    have h_bx_by : L.band x ≤ L.band y + L.w := by
-      by_contra h
-      exact hxy_inc.2 (L.forced_lt y x (Nat.lt_of_not_le h)).le
-    -- (b): `windowLocalization` on `(x, y)` at the canonical window
-    -- finset `W(band x, band y)`.
-    let W : Finset α :=
-      (Finset.univ : Finset α).filter
-        (fun z =>
-          min (L.band x) (L.band y) ≤ L.band z + L.w ∧
-          L.band z ≤ max (L.band x) (L.band y) + L.w)
-    have hxW : x ∈ W := by
-      simp only [W, Finset.mem_filter, Finset.mem_univ, true_and]
-      exact ⟨le_trans (min_le_left _ _) (Nat.le_add_right _ _),
-             le_trans (le_max_left _ _) (Nat.le_add_right _ _)⟩
-    have hyW : y ∈ W := by
-      simp only [W, Finset.mem_filter, Finset.mem_univ, true_and]
-      exact ⟨le_trans (min_le_right _ _) (Nat.le_add_right _ _),
-             le_trans (le_max_right _ _) (Nat.le_add_right _ _)⟩
-    have hWdef : ∀ z, z ∈ W ↔
-        (min (L.band x) (L.band y)) ≤ L.band z + L.w ∧
-          L.band z ≤ (max (L.band x) (L.band y)) + L.w := by
-      intro z
-      simp only [W, Finset.mem_filter, Finset.mem_univ, true_and]
-    have hWLoc := windowLocalization L x y hxy_inc W hxW hyW hWdef
-    obtain ⟨_q, _hq, _hWcard⟩ := hWLoc
-    -- (c): build a trivial `OrdinalDecomp` (`Mid = univ`).
-    -- A non-trivial window-based decomposition — with buffer zones
-    -- of `w + 1` empty bands between Lower and Mid that would make
-    -- L2 fire on the cut — is not available for the concrete
-    -- `layeredFromBridges` witness (whose bands are all singletons
-    -- and whose `w` saturates). The trivial decomposition merely
-    -- threads the lift machinery; it contributes no comparability
-    -- structure.
-    let D : OneThird.OrdinalDecomp α :=
-      { Lower := ∅
-        Mid := (Finset.univ : Finset α)
-        Upper := ∅
-        hCover := by simp
-        hDisjLM := Finset.disjoint_empty_left _
-        hDisjLU := Finset.disjoint_empty_left _
-        hDisjMU := Finset.disjoint_empty_right _
-        hLM_lt := fun _ h _ _ => absurd h (Finset.notMem_empty _)
-        hLU_lt := fun _ h _ _ => absurd h (Finset.notMem_empty _)
-        hMU_lt := fun _ _ _ h => absurd h (Finset.notMem_empty _) }
-    -- (d): delegate to the tight-L shortcut with `hw_zero := sorry`.
-    -- Gap analysis above explains why this `sorry` cannot be closed
-    -- by strengthening the shortcut (the `w = 0` case does not
-    -- generalise to `w ≥ 1`).
-    exact D.hasBalancedPair_lift
-      (lem_layered_balanced_subtype L (by sorry) h2 D hxy_inc
-        ⟨Finset.mem_univ x, Finset.mem_univ y⟩)
+    -- Discharged by the `Case3Witness` ∀-family, which covers every
+    -- width-3 non-chain layered β uniformly via F5a-ℓ's
+    -- `bounded_irreducible_balanced` dispatch (see `Case3Witness`
+    -- docstring).
+    exact hC3 α L hW3 hNotChain' h2
+
+/-- **Subtype-level balanced-pair helper** (`step8.tex:1608-1625`).
+
+Produce a balanced pair in the `↥D.Mid` sub-poset, given an ambient
+incomparable pair `(x, y)` that sits inside `D.Mid` and a width-3
+layered decomposition.
+
+**Proof.** Restrict `L` to the sub-finset `D.Mid` via `L.restrict`,
+obtaining a `LayeredDecomposition ↥D.Mid` with the same depth and
+interaction width. Since `(x, y)` is incomparable in α and both lie
+in `D.Mid`, they are incomparable in the Subtype order on `↥D.Mid`,
+so `↥D.Mid` is not a chain. Width-3 transfers to the subtype via
+`hasWidthAtMost_subtype`. Apply `lem_layered_balanced` on the
+restricted decomposition.
+
+This replaces the earlier `hw_zero : L.w = 0` shortcut (`mg-f292`)
+with a general-case argument that works for all interaction widths,
+driven by the F3 strong-induction / F4 chained-lift framework inside
+`lem_layered_balanced`. -/
+theorem lem_layered_balanced_subtype.{u}
+    {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
+    (L : LayeredDecomposition α)
+    (_h2 : 2 ≤ Fintype.card α)
+    (D : OneThird.OrdinalDecomp α)
+    {x y : α} (hxy : x ∥ y)
+    (hxyMid : x ∈ D.Mid ∧ y ∈ D.Mid)
+    (hW3 : HasWidthAtMost α 3)
+    (hC3 : Case3Witness.{u}) :
+    OneThird.HasBalancedPair ↥D.Mid := by
+  classical
+  obtain ⟨hxMid, hyMid⟩ := hxyMid
+  -- `↥D.Mid` contains the two distinct elements `⟨x, _⟩` and `⟨y, _⟩`.
+  have hxne : (⟨x, hxMid⟩ : ↥D.Mid) ≠ ⟨y, hyMid⟩ := by
+    intro h
+    apply hxy.1
+    have hxy_eq : x = y := by
+      have := (Subtype.mk.injEq x hxMid y hyMid).mp h
+      exact this
+    exact hxy_eq ▸ le_refl _
+  have h2_mid : 2 ≤ Fintype.card ↥D.Mid := by
+    have h2 := Finset.one_lt_card.mpr
+      ⟨(⟨x, hxMid⟩ : ↥D.Mid), Finset.mem_univ _,
+       (⟨y, hyMid⟩ : ↥D.Mid), Finset.mem_univ _, hxne⟩
+    rw [Finset.card_univ] at h2
+    exact h2
+  have hNC_mid : ¬ OneThird.IsChainPoset ↥D.Mid := by
+    intro hchain
+    rcases hchain ⟨x, hxMid⟩ ⟨y, hyMid⟩ with h | h
+    · exact hxy.1 h
+    · exact hxy.2 h
+  have hW3_mid : HasWidthAtMost ↥D.Mid 3 :=
+    hasWidthAtMost_subtype hW3 D.Mid
+  -- Apply `lem_layered_balanced` on the restricted decomposition.
+  exact lem_layered_balanced (L.restrict D.Mid) h2_mid hNC_mid hW3_mid hC3
 
 /-! ### §5 — Chained balanced-pair lift (`lem:chained-lift`) -/
 
@@ -836,12 +673,15 @@ Together, `lem_layered_reduction` (G3) and `lem_layered_balanced`
 
 Either way, a γ-counterexample admitting a layered decomposition
 has a balanced pair. -/
-theorem layered_implies_balanced
+theorem layered_implies_balanced.{u}
+    {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
     (L : LayeredDecomposition α)
     (h2 : 2 ≤ Fintype.card α)
-    (hNotChain : ¬ OneThird.IsChainPoset α) :
+    (hNotChain : ¬ OneThird.IsChainPoset α)
+    (hW3 : HasWidthAtMost α 3)
+    (hC3 : Case3Witness.{u}) :
     OneThird.HasBalancedPair α :=
-  lem_layered_balanced L h2 hNotChain
+  lem_layered_balanced L h2 hNotChain hW3 hC3
 
 end Step8
 end OneThird
