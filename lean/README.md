@@ -24,6 +24,10 @@ Steps 1–8 compiles and discharges the main theorem
 --  OneThird.LinearExt.brightwell_sharp_centred]
 ```
 
+The raw `#print axioms` output — reproducible via
+`lake env lean scripts/PrintAxioms.lean` — is archived verbatim in
+[`PRINT_AXIOMS_OUTPUT.txt`](PRINT_AXIOMS_OUTPUT.txt).
+
 The first three are the mathlib-standard classical foundations. The
 fourth, **`OneThird.LinearExt.brightwell_sharp_centred`**, is the
 only project-specific axiom: it transcribes

@@ -1,0 +1,4 @@
+'OneThird.width3_one_third_two_thirds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ OneThird.LinearExt.brightwell_sharp_centred]
