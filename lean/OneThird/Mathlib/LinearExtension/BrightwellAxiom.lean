@@ -62,20 +62,26 @@ We phrase `(*)` in a division-free integer form: multiplying by
   m · | N' · (Σ_{L' ∈ A} f(L')) − |A| · N |   ≤   2 · N · N',
 ```
 
-where `N := Σ_{L' : L(α)} f(L')` (which agrees with `|L(Q)|` by the
-fibre-sum identity `step8.tex:939`). This form is reusable by the
-downstream F6a port without committing to a specific numeric type,
-and is trivially rearranged into rational / real forms.
+where `N := Σ_{L' : L(α)} f(L')` (which, under the fixed default
+`minSuccPos Succ L = Fintype.card α + 1` when `Succ = ∅`, agrees
+with `|L(Q)|` by the fibre-sum identity `step8.tex:939` — each
+`L ∈ L(Q)` arises from a unique `(L', r)` with `L' ∈ L(α)` and
+`r ∈ {P(L')+1, …, S(L')}`, giving `|L(Q)| = Σ_{L'} f(L')`). This
+form is reusable by the downstream F6a port without committing to
+a specific numeric type, and is trivially rearranged into rational
+/ real forms.
 
 The hypotheses pin the paper scope:
 
 * `Pred, Succ : Finset α` satisfy the disjointness and comparability
   axioms of Step 8 (so that `fiberSize Pred Succ` is consistent with
   a single-element extension of `α`);
-* `m ≥ 2` is the ambient `|Q|`;
-* `fiberSize Pred Succ L' ≤ m` for every `L' : LinearExt α` — this
-  encodes `f ∈ {1, …, m}` (the lower bound `f ≥ 1` is not used by the
-  bound);
+* `m = Fintype.card α + 1` is the ambient `|Q| = |α ⊔ {z}|`; the
+  hypothesis `hm : 2 ≤ m` (i.e., `α` is nonempty) matches the
+  paper's `m ≥ 2` constraint. Pinning `m` to `|Q|` is essential: a
+  strictly larger `m` would convert the paper bound `2N/m` into a
+  strictly stronger claim that the Brightwell argument does not
+  establish.
 * `x, y : α` are arbitrary — when `(x, y)` is comparable in `α` the
   indicator `1_A` is constant and the bound holds trivially; the
   content is for the incomparable case.
@@ -142,8 +148,7 @@ axiom brightwell_sharp_centred
     (Pred Succ : Finset α)
     (hDisj : Disjoint Pred Succ)
     (hComp : ∀ u ∈ Pred, ∀ v ∈ Succ, u ≤ v)
-    (m : ℕ) (hm : 2 ≤ m)
-    (hmbd : ∀ L : LinearExt α, fiberSize Pred Succ L ≤ m)
+    (m : ℕ) (hmQ : m = Fintype.card α + 1) (hm : 2 ≤ m)
     (x y : α) :
     (m : ℤ) *
       |(Fintype.card (LinearExt α) : ℤ) *
@@ -179,8 +184,7 @@ lemma brightwell_sharp_centred_rat
     (Pred Succ : Finset α)
     (hDisj : Disjoint Pred Succ)
     (hComp : ∀ u ∈ Pred, ∀ v ∈ Succ, u ≤ v)
-    (m : ℕ) (hm : 2 ≤ m)
-    (hmbd : ∀ L : LinearExt α, fiberSize Pred Succ L ≤ m)
+    (m : ℕ) (hmQ : m = Fintype.card α + 1) (hm : 2 ≤ m)
     (x y : α) :
     |(∑ L ∈ brightwellA (α := α) x y, (fiberSize Pred Succ L : ℚ))
        - ((brightwellA (α := α) x y).card : ℚ) *
@@ -203,7 +207,7 @@ lemma brightwell_sharp_centred_rat
       (m : ℤ) * |Nprime * sumA - (A.card : ℤ) * Ntot|
         ≤ 2 * Ntot * Nprime := by
     simpa [hNpdef, hNdef, hAdef, hsumAdef, brightwellA] using
-      brightwell_sharp_centred (α := α) Pred Succ hDisj hComp m hm hmbd x y
+      brightwell_sharp_centred (α := α) Pred Succ hDisj hComp m hmQ hm x y
   -- Cast to ℚ. The cast commutes with `|·|`, `*`, `-`.
   have hint_rat :
       (m : ℚ) * |(Nprime : ℚ) * (sumA : ℚ) - (A.card : ℚ) * (Ntot : ℚ)|

@@ -23,12 +23,16 @@ define the **fiber-size function**
 * `maxPredPos Pred L` is the maximum 1-indexed position of a `Pred`
   element, or `0` if `Pred = ∅`;
 * `minSuccPos Succ L` is the minimum 1-indexed position of a `Succ`
-  element, or `Fintype.card α` if `Succ = ∅`.
+  element, or `Fintype.card α + 1` if `Succ = ∅`.
 
 Combinatorially, `fiberSize L` counts the number of positions at
 which a new element `z` (with predecessor set `Pred` and successor
 set `Succ` in some ambient poset extending `α`) can be inserted into
-`L` to produce a linear extension of the enlarged poset.
+`L` to produce a linear extension of the enlarged poset. This matches
+`step8.tex`'s paper-side convention:
+`S(L') := m` if `succ(z) = ∅`, where `m = |Q| = |α| + 1`, so that
+`f(L') = S(L') − P(L') ∈ {1, …, m}` is the actual insertion-count
+(`step8.tex:932–937`).
 
 ## Main result
 
@@ -90,10 +94,17 @@ lemma posAux_le_card (L : LinearExt α) (x : α) :
 noncomputable def maxPredPos (Pred : Finset α) (L : LinearExt α) : ℕ :=
   Pred.sup L.posAux
 
-/-- Minimum 1-indexed position of a `Succ` element; `Fintype.card α`
-if `Succ = ∅`. -/
+/-- Minimum 1-indexed position of a `Succ` element; `Fintype.card α + 1`
+if `Succ = ∅`.
+
+The `Succ = ∅` default is `|α| + 1 = |Q|` (matching `step8.tex`'s
+`S(L') := m` when `succ(z) = ∅`) so that `fiberSize = S − P` counts
+the actual number of valid insertion positions `{P+1, …, S}` for `z`
+in an ambient `Q = α ⊔ {z}`; in particular, when both `Pred = ∅` and
+`Succ = ∅`, `fiberSize L = Fintype.card α + 1 = m`, as there are `m`
+valid insertion ranks. -/
 noncomputable def minSuccPos (Succ : Finset α) (L : LinearExt α) : ℕ :=
-  if h : Succ.Nonempty then Succ.inf' h L.posAux else Fintype.card α
+  if h : Succ.Nonempty then Succ.inf' h L.posAux else Fintype.card α + 1
 
 /-- The fiber-size function `f L = S(L) − P(L)`. -/
 noncomputable def fiberSize (Pred Succ : Finset α) (L : LinearExt α) : ℕ :=
@@ -106,7 +117,7 @@ lemma maxPredPos_empty (L : LinearExt α) :
   unfold maxPredPos; simp
 
 lemma minSuccPos_empty (L : LinearExt α) :
-    minSuccPos (∅ : Finset α) L = Fintype.card α := by
+    minSuccPos (∅ : Finset α) L = Fintype.card α + 1 := by
   unfold minSuccPos
   rw [dif_neg Finset.not_nonempty_empty]
 
@@ -117,14 +128,26 @@ lemma maxPredPos_le_card (Pred : Finset α) (L : LinearExt α) :
   intro x _
   exact L.posAux_le_card x
 
-lemma minSuccPos_le_card (Succ : Finset α) (L : LinearExt α) :
-    minSuccPos Succ L ≤ Fintype.card α := by
+lemma minSuccPos_le_card_succ (Succ : Finset α) (L : LinearExt α) :
+    minSuccPos Succ L ≤ Fintype.card α + 1 := by
   unfold minSuccPos
   split_ifs with hSne
   · obtain ⟨x, hx⟩ := hSne
     calc Succ.inf' _ L.posAux ≤ L.posAux x := Finset.inf'_le _ hx
       _ ≤ Fintype.card α := L.posAux_le_card x
+      _ ≤ Fintype.card α + 1 := Nat.le_succ _
   · exact le_refl _
+
+/-- `minSuccPos` is bounded by `Fintype.card α` when `Succ` is
+nonempty (its position values are genuine ranks `∈ {1, …, |α|}`). -/
+lemma minSuccPos_le_card_of_nonempty (Succ : Finset α) (L : LinearExt α)
+    (hSne : Succ.Nonempty) :
+    minSuccPos Succ L ≤ Fintype.card α := by
+  unfold minSuccPos
+  rw [dif_pos hSne]
+  obtain ⟨x, hx⟩ := hSne
+  calc Succ.inf' _ L.posAux ≤ L.posAux x := Finset.inf'_le _ hx
+    _ ≤ Fintype.card α := L.posAux_le_card x
 
 /-! ### §3 — Consistency: `maxPredPos L ≤ minSuccPos L` -/
 
@@ -145,7 +168,7 @@ lemma maxPredPos_le_minSuccPos
   rcases Succ.eq_empty_or_nonempty with hSE | hSne
   · subst hSE
     rw [minSuccPos_empty]
-    exact maxPredPos_le_card Pred L
+    exact Nat.le_succ_of_le (maxPredPos_le_card Pred L)
   -- Both nonempty: pointwise bound on each (x, y) ∈ Pred × Succ.
   unfold minSuccPos
   rw [dif_pos hSne]
@@ -162,13 +185,17 @@ lemma maxPredPos_le_minSuccPos
   unfold posAux
   omega
 
-/-- `fiberSize` never exceeds `Fintype.card α`. -/
-lemma fiberSize_le_card (Pred Succ : Finset α) (L : LinearExt α) :
-    fiberSize Pred Succ L ≤ Fintype.card α := by
+/-- `fiberSize` never exceeds `Fintype.card α + 1 = |Q|`.
+
+Equality holds only when `Pred = ∅` and `Succ = ∅` simultaneously, in
+which case `fiberSize = Fintype.card α + 1` corresponds to the `m`
+valid insertion ranks of an unconstrained element. -/
+lemma fiberSize_le_card_succ (Pred Succ : Finset α) (L : LinearExt α) :
+    fiberSize Pred Succ L ≤ Fintype.card α + 1 := by
   unfold fiberSize
   calc minSuccPos Succ L - maxPredPos Pred L
       ≤ minSuccPos Succ L := Nat.sub_le _ _
-    _ ≤ Fintype.card α := minSuccPos_le_card Succ L
+    _ ≤ Fintype.card α + 1 := minSuccPos_le_card_succ Succ L
 
 /-! ### §4 — `posAux` pointwise bound and invariance under BK swaps -/
 
