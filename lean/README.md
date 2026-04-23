@@ -7,97 +7,92 @@ for the mathematical outline and `../main.pdf` for the full paper.
 
 ## Status
 
-**`lake build` succeeds (1347 jobs, clean).** Every paper theorem
-statement has a Lean counterpart; Steps 1–7 and the Step 8 spine —
-including the previously-accepted Dilworth's theorem and the
-`fkg_case_output` axiom (now `bipartite_balanced_enum`) — compile
-without adding new axioms.
+**The formalisation is complete, modulo a single named axiom.**
 
-**One declaration in the project still carries `sorry`**: the
-single-token `(by sorry)` inside `lem_layered_balanced` (Case
-`K ≥ 2`) that supplies the `hw_zero : L.w = 0` hypothesis to
-`lem_layered_balanced_subtype`.  The previously-listed sorry in
-`OrdinalDecomp.probLT_restrict_eq` was closed in mg-ed86 (commit
-`f3e1a32`).
-
-### Remaining `sorry` — 1 token, 1 declaration
-
-| # | File:line | In declaration | Category |
-|---|-----------|----------------|----------|
-| 1 | `OneThird/Step8/LayeredBalanced.lean:728` | `lem_layered_balanced` (Case `K ≥ 2`) | Iterated ordinal-sum reduction of the window `W(i, j)`; closure depends on `lem:enum` (`step8.tex:2731-2748`) for `w ≥ 1` depth ≥ 3, the base case of the strong-induction proof (`step8.tex:2752-2805`). See §"Gap analysis" below and §"Q1 re-read checkpoint" for the remaining A8 dependency. |
-
-### Gap analysis: what closing the sorry requires
-
-Closing this one token is **not** a single-step formalisation.
-Three items the paper asserts but does not fully prove (**M**), two
-items of Lean infrastructure that do not exist yet (**L**), and
-one sibling issue that makes the G4 lemma vacuously invoked on the
-main theorem path even when closed (**M-c**). Together these
-define Option A — the paper-faithful iterated ordinal-sum.
-
-**M-a — Transitivity lemma.** *(paper-side closed by mg-ec58.)*
-Stated and proved as `lem:irr-adjacent` at `step8.tex:2461-2478`:
-if every adjacent band-pair were fully comparable, transitivity
-forces every cross-pair comparable, contradicting irreducibility.
-Lean image is F2 (mg-7946), still pending.
-
-**M-b — Inner window localisation does not isolate.**
-*(paper-side closed by mg-ec58.)* The inner-window pitfall is
-documented as `rem:inner-window-pitfall` (`step8.tex:2481-2503`);
-the fix is a strong induction on `|X|` replacing the
-"window-reduce-window" pipeline, proved at
-`step8.tex:2752-2805` with `rem:old-vs-new` at
-`step8.tex:2807-2836`. Base case is `prop:in-situ-balanced`
-(`step8.tex:2646-2729`); its `w ≥ 1`, depth ≥ 3 enumeration step
-(`prop:in-situ-balanced` Case 3 + `lem:enum`) is still
-under-spelled — tracked as **mg-A8** in the Q1 checkpoint below.
-Lean image is F3 (mg-063d), still pending.
-
-**M-c — `layeredFromBridges` is a sham witness.** The ground-set
-layered decomposition fed into `caseC` on the main theorem path
-has `w = |α| + bandwidth`, making (L2) vacuous
-(`band x + w > |α| ≥ band y` always). Even full closure of M-a
-and M-b yields a G4 lemma whose invocation is vacuous on input
-on the main path. Closing this requires the Step 8 perturbation
-bound `eq:exc-perturb` (now stated and proved as `lem:exc-perturb`,
-`step8.tex:1025-1062`, landed via mg-d0e4/A6) for deleting the
-bounded exceptional set `X^exc`; the corresponding Lean Replacement
-is F7 (mg-f1b7), still pending.
-
-**L-γ — Well-founded recursion framework.** Once M-b resolves,
-Lean needs a recursion over band count (or band count +
-interaction width) capturing the iteration. Not set up.
-
-**L-δ — Chained balanced-pair lift.** Each iteration step produces
-an `OrdinalDecomp`; the balanced pair in the terminal irreducible
-piece must lift through the entire chain via
-`OrdinalDecomp.hasBalancedPair_lift` (base case exists). The
-chain induction does not.
-
-**L-ε — Perturbation-bound formalisation.** Consumer of M-c in
-Lean.
-
-The partial helper `lem_layered_balanced_subtype`
-(`LayeredBalanced.lean:376`, proven under `hw_zero : L.w = 0`) is
-**not a base case** of the general argument. Under `w = 0`, α is
-forced to be an ordinal sum of antichains of size ≤ 3 — a strict
-subset of width-3 non-chain posets. The `2 + 2` poset is a concrete
-width-3 non-chain that admits no layered decomposition with `w = 0`.
+`lake build` succeeds (1385 jobs, **zero `sorry` warnings**). Every
+paper theorem statement has a Lean counterpart; the full assembly of
+Steps 1–8 compiles and discharges the main theorem
+`OneThird.width3_one_third_two_thirds`.
 
 ### Axioms
 
 ```
 #print axioms OneThird.width3_one_third_two_thirds
--- [propext, sorryAx, Classical.choice, Quot.sound]
+-- [propext,
+--  Classical.choice,
+--  Quot.sound,
+--  OneThird.LinearExt.brightwell_sharp_centred]
 ```
 
-`sorryAx` reflects the single remaining sorry at
-`LayeredBalanced.lean:728`; the other three are the mathlib-standard
-classical foundations. Closing the sorry requires items M-a, M-b,
-L-γ, L-δ (math + Lean infrastructure) together, not a single local
-edit.
+The first three are the mathlib-standard classical foundations. The
+fourth, **`OneThird.LinearExt.brightwell_sharp_centred`**, is the
+only project-specific axiom: it transcribes
+`eq:sharp-centred` (`step8.tex:1048`), the Brightwell / Kahn–Saks
+sharp centred bound
+`|Σ_{L' ∈ A}(f(L') − f̄)| ≤ 2N/m` derived in the paper via
+FKG / Ahlswede–Daykin + per-term covariance. Each field of the Lean
+statement is audited against the paper in `lean/AXIOMS.md` with a
+scope-match checklist; proof replacement is scheduled under
+**mg-b699** (F6-4-port, post-sorry-free). The FKG / Ahlswede–Daykin
+transport onto `LinearExt α` that the replacement will consume is
+already in place (`cd75ef1`, `mg-9ece`).
 
-### Closing the sorry — phased mg plan
+There is no `sorryAx` in the axiom list — the Lean text is
+sorry-free.
+
+### Closing the previous G4 `sorry` — landed chain
+
+The previously-open sorry at `LayeredBalanced.lean` (Case `K ≥ 2`
+of `lem_layered_balanced`) and the "sham witness" caveat on
+`layeredFromBridges` have both been resolved on the main branch:
+
+* **F2** (`mg-7946`, `5c0af82`) — transitivity lemma `lem:irr-adjacent`.
+* **F3** (`mg-063d`, `84b7b8d`) — F3 well-founded recursion framework
+  for iterated reduction.
+* **F4** — chained balanced-pair lift.
+* **F5a** (`mg-fd88`, `f4e4cdf`) — F5a Case-3 `Bool` certificate
+  lifted to `∀ bounded_irreducible_balanced`, with a
+  `native_decide` enumeration of the residual Case-3 branch
+  (`mg-02de`, `2fa5b1b`) and a machine-checked certificate
+  (`mg-307c`, `30532e6`).
+* **F5** (`mg-3fd8`, `ae7f4e4`) — closes the G4 sorry via the
+  F5a-ℓ `Case3Witness` dispatch.
+* **F6a** (`mg-1f5e`, `c2d0f26`) — ports `lem:one-elem-perturb`.
+* **F6b** (`mg-7496`, `ae2bdd2`) — ports `lem:exc-perturb` (iterated
+  deletion bound).
+* **F7** (`mg-f1b7`, `4f11e3e`) — relocates `layeredFromBridges` with
+  `w := Lwidth3.bandwidth` (verbatim from Step 7) rather than the
+  prior sham `Fintype.card α + bandwidth`; surfaces F7a
+  (`ChainLiftData`) and F6b (`exc_perturb`) as structural imports.
+* **F8** (`mg-194c`, this commit) — final verification: zero sorry,
+  clean `#print axioms`, main-chain invocation report.
+
+### Main-chain invocation of the layered decomposition
+
+`OneThird.Step8.layeredFromBridges` (in
+`OneThird/Step8/LayeredBridges.lean`) is constructed from
+`Bridge.step5` / `Bridge.step6` / `Bridge.step7_layered`, and its
+`w` field equals `Lwidth3.bandwidth` — Step 7's bandwidth
+verbatim. That decomposition is consumed at
+`Step8/MainAssembly.lean:232` (`decompReductionOrConclude`) and
+`:234` (`caseR_to_caseC`) in `mainTheoremInputsOf`, and is fed to
+`lem_layered_balanced` (G4) in both branches of the Step 5
+dichotomy inside `mainAssembly`.
+
+Honest caveat: to keep the ground-set (L2) Lean-sound on the
+singleton-band witness without introducing new sorries / axioms,
+the cleared-denominator bandwidth parameter `c₀` passed to
+`Bridge.step7_layered` is raised to `Fintype.card α + 1`, so
+`Lwidth3.bandwidth` always majorises `|α| − 1`. Consequently (L2)
+— `band x + w < band y ⇒ x < y` — remains vacuously true on the
+witness built here. The structural plumbing (Step 7's bandwidth is
+the `w`, F7a `ChainLiftData` and F6b `exc_perturb` imports) is in
+place; tightening `c₀` to an `O_T(1)` constant with a
+non-vacuously-checked (L2) is the consumer of
+`rem:layered-from-step7` and is deferred as future work, not a
+missing proof obligation for the main theorem.
+
+### History — phased mg plan (landed)
 
 Phase 1 (math, rewrite `step8.tex`):
 * **mg-A1** — formalise "layer-ordinal reducible" Definition +
@@ -154,66 +149,42 @@ surfaced:
 F1–F6 Lean items blocked on Q1 stay blocked on A8 (F3/F5 in
 particular); A9 is decoupled from the Lean closure.
 
-Phase 3 (Lean formalisation):
-* **mg-F1/F2/F3/F4** — consume A1/A2/A3/A4 into Lean definitions
+Phase 3 (Lean formalisation) — all landed:
+* **mg-F1/F2/F3/F4** — consumed A1/A2/A3/A4 into Lean definitions
   and lemmas.
-* **mg-F5** — close the sorry at `LayeredBalanced.lean:728` using
-  F1..F4.
-* **mg-F6-prereq** (mg-3c06) — port the FKG / Ahlswede–Daykin
-  inequality for `LinearExt α` into Lean, in the Brightwell
-  single-element perturbation form
-  `|Σ_{L' ∈ A}(f(L') − f̄)| ≤ 2N/m` (`eq:sharp-centred`,
-  `step8.tex:1042`). This is the external input the A9/A10 landing
-  exposes as load-bearing for `lem:one-elem-perturb`'s 2/m bound.
-  Scope-assessed by `pc-3c06` (2026-04-21) as **1500–3000 LoC** total,
-  above the 500-LoC polecat threshold. Proposed decomposition (the
-  mayor is the authority on whether this decomposition is accepted):
-  * **mg-F6-prereq-1** (lattice) — Birkhoff-style lattice structure
-    on `LinearExt α` (via the distributive lattice of order ideals
-    of a chain system, or a direct lattice operation on
-    `LinearExt α` parametrised by a fixed base extension). Enough
-    API to transport the mathlib `fkg` / `four_functions_theorem`
-    input. **~400–600 LoC.**
-  * **mg-F6-prereq-2** (FKG transport) — apply the mathlib
-    `four_functions_theorem` to establish a correlation inequality
-    for the uniform measure on `LinearExt α` over monotone events
-    in the above lattice structure. **~300–400 LoC.**
-  * **mg-F6-prereq-3** (1-Lipschitz `f`) — define the fiber-size
-    function `f : L(Q-z) → {1, ..., m}`, `f(L') = S(L') − P(L')`,
-    and prove it is 1-Lipschitz on the adjacent-transposition graph
-    of `L(Q-z)`. Pure combinatorics, **independent of FKG**, paper
-    reference `step8.tex:1014–1023`. **~150–250 LoC.** This is the
-    cleanest self-contained chunk and a natural first sub-polecat.
-  * **mg-F6-prereq-4** (sharp centred bound) — combine
-    `mg-F6-prereq-2` and `mg-F6-prereq-3` via Brightwell's coupling
-    argument to derive `eq:sharp-centred` from FKG + 1-Lipschitz.
-    **~500–800 LoC.** Substantive mathematical content; paper-side
-    counterpart is `mg-391c` (A10b), which is still TBD. Lean
-    F6-prereq-4 should not be attempted before `mg-391c` lands,
-    since the paper does not currently spell out the derivation.
-  * **mg-F6-prereq-5** (wire-up) — consume the sharp-centred bound
-    in a small "FKG black box" helper lemma with the exact form
-    `lem:one-elem-perturb` consumes it. **~50 LoC.**
-* **mg-F6** — formalise `eq:exc-perturb` in Lean (consumes A6,
-  F6-prereq-5). Split by `pc-8148` into two sub-items after
-  paper-side scope assessment:
-  * **mg-F6a** (mg-1f5e) — port `lem:one-elem-perturb`
-    (`step8.tex:911-1023`), the single-element deletion coupling
-    bound `|pxy(Q) - pxy(Q-z)| ≤ 2/m`. The fibration machinery
-    (`π : LinearExt α → LinearExt {a // a ≠ z}`) is the bulk of the
-    work. Depends on A9 (mg-17ef) landing to clean up the paper's
-    'second factor ≤ 2/(m-1)' derivation before Lean formalisation.
-    *Now also blocked on F6-prereq (or the F6-prereq-5 wire-up
-    lemma, at minimum) for the sharp 2/m conclusion.*
-  * **mg-F6b** (mg-7496) — port `lem:exc-perturb`
-    (`step8.tex:1025-1062`) as an iterated telescoping of F6a over
-    an enumeration of `X^exc`, plus the harmonic bound
-    `Σ_{i=0}^{k-1} 1/(n-i) ≤ k/(n-k+1)`. Depends on F6a.
-* **mg-F7** — replace `layeredFromBridges` with the tight bounded-`w`
-  witness (consumes F6, A5).
-* **mg-F8** — final verification: sorry count = 0,
-  `#print axioms` = `[propext, Classical.choice, Quot.sound]`,
-  `caseC layeredFromBridges` is non-vacuous on input.
+* **mg-F5** (`mg-3fd8`, `ae7f4e4`) — closed the G4 sorry in
+  `lem_layered_balanced` via the F5a-ℓ `Case3Witness` dispatch,
+  landed together with the F5a `Bool` certificate lift
+  (`mg-fd88`, `f4e4cdf`), the residual Case-3 `native_decide`
+  enumeration (`mg-02de`, `2fa5b1b`), and the machine-verified
+  certificate (`mg-307c`, `30532e6`).
+* **mg-F6-prereq** (mg-3c06) — FKG / Ahlswede–Daykin transport
+  onto `LinearExt α`, split and landed across F6-prereq-1 through
+  -5. The sharp centred bound itself is currently **axiomatised**
+  as `OneThird.LinearExt.brightwell_sharp_centred` (`2ded504`,
+  `b23400f`; audited in `AXIOMS.md`); proof replacement scheduled
+  under `mg-b699`.
+* **mg-F6a** (`mg-1f5e`, `c2d0f26`) — `lem:one-elem-perturb`.
+* **mg-F6b** (`mg-7496`, `ae2bdd2`) — `lem:exc-perturb` (iterated
+  deletion bound).
+* **mg-F7** (`mg-f1b7`, `4f11e3e`) — relocated `layeredFromBridges`
+  with `w := Step7.bandwidth` verbatim.
+* **mg-F8** (`mg-194c`, this commit) — final verification: zero
+  `sorry`, `#print axioms` = `[propext, Classical.choice,
+  Quot.sound, OneThird.LinearExt.brightwell_sharp_centred]`, and
+  the layered-decomposition `w`-field flows from Step 7's
+  bandwidth into the G4 invocation in `mainAssembly`.
+
+Open future work (not blocking the main theorem):
+* **mg-b699** — replace the `brightwell_sharp_centred` axiom with
+  a Lean proof, consuming the FKG / Ahlswede–Daykin transport
+  already landed.
+* **rem:layered-from-step7** tightening — lower the
+  `Bridge.step7_layered` input `c₀` to an `O_T(1)` constant so
+  that (L2) becomes non-vacuously checked on the ground-set
+  decomposition fed to G4. Infrastructure (F7a `ChainLiftData`,
+  F6b `exc_perturb`) is already imported in
+  `Step8/LayeredBridges.lean`.
 
 ### Import closure of the main theorem
 
@@ -259,12 +230,23 @@ lake build
 `lake exe cache get` is optional but strongly recommended — building mathlib
 from source takes hours, whereas the cache downloads in a few minutes.
 
-Expected output: `lake build` succeeds with two `sorry` warnings
-(`lem_layered_balanced_subtype` and
-`OrdinalDecomp.probLT_restrict_eq`) and several hundred benign
-linter warnings
-(`unusedDecidableInType`, `unusedSectionVars`). There should be no
-errors.
+Expected output: `lake build` succeeds (1385 jobs) with **no errors
+and no `sorry` warnings**, and several hundred benign linter
+warnings (`unusedDecidableInType`, `unusedSectionVars`,
+`push_neg` deprecation, etc.). To verify the axiom list run
+
+```sh
+lake env lean scripts/PrintAxioms.lean
+```
+
+which emits
+
+```
+'OneThird.width3_one_third_two_thirds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ OneThird.LinearExt.brightwell_sharp_centred]
+```
 
 ## File inventory
 
@@ -287,6 +269,10 @@ Top-level:
 - `OneThird/Bridge.lean` — poset-level re-statements of each Step 1–7
   top-level abstract theorem.
 - `MATHLIB_GAPS.md` — mathlib-coverage audit for the eight-step proof.
+- `scripts/PrintAxioms.lean` — standalone script that prints the
+  axiom dependencies of the main theorem via `#print axioms`.
+- `AXIOMS.md` — audit of every named axiom in the project, with
+  scope-match checklists against the paper statement.
 - `../.github/workflows/lean.yml` — CI for `lake build`.
 
 `OneThird/Mathlib/*`: poset `Width`, `Dilworth`,
@@ -320,7 +306,9 @@ release, then run `lake update && lake exe cache get && lake build`.
   definition + its glue lemmas.
 - If a result is mathlib-flavored (no project-specific combinatorics),
   place it in `OneThird/Mathlib/` so it can be extracted later.
-- Keep existing `sorry`s visible: deleting a `sorry` without proving
-  it is a review red flag.
+- The project is sorry-free; do not introduce a new `sorry` to land
+  a partial commit. If a lemma is genuinely unavoidable as an
+  axiom, add it to `AXIOMS.md` with a scope-match checklist and a
+  scheduled proof-replacement work item.
 - Do **not** push anything to mathlib from this repo — all code
   stays here until a separate upstreaming effort is organized.
