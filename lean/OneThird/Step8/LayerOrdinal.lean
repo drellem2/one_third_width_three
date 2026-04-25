@@ -40,14 +40,14 @@ data required by downstream Step 8 items (F2–F5 of `sec:g4-balanced-pair`).
   `cor:reducibility-transfer`: `numLinExt α = numLinExt ↥Q_1 * numLinExt ↥Q_2`.
 
 * `Step8.exists_adjacent_not_lt_of_irreducible` — **`lem:irr-adjacent`**
-  (`step8.tex:2461-2478`): an irreducible layered decomposition with
+  (`step8.tex:2780-2797`): an irreducible layered decomposition with
   all bands non-empty and depth `≥ 2` has an adjacent band index `i`
   and a cross-pair `(u, v) ∈ M_i × M_{i+1}` with `¬ (u < v)`. This is
   the F2 transitivity lemma.
 
 * `Step8.hasBalancedPair_of_layered_strongInduction` — **F3**: the
   well-founded recursion framework for the iterated reduction of
-  `lem:layered-balanced` (`step8.tex:2839-2891`). Strong induction on
+  `lem:layered-balanced` (`step8.tex:3071-3124`). Strong induction on
   `Fintype.card α`: a step hypothesis that closes each case (A/B/C)
   using the induction hypothesis on strictly smaller layered width-3
   posets yields `HasBalancedPair α` unconditionally. F4 (Case B
@@ -56,11 +56,11 @@ data required by downstream Step 8 items (F2–F5 of `sec:g4-balanced-pair`).
 
 ## Reference
 
-`step8.tex` §`sec:g4-balanced-pair` (`step8.tex:1612-1625`), paper
+`step8.tex` §`sec:g4-balanced-pair` (`step8.tex:2580-2593`), paper
 Definition *layer-ordinal-sum reducible* added in A1 (mg-17e1);
-Lemma `lem:irr-adjacent` (`step8.tex:2461-2478`) added in A3;
+Lemma `lem:irr-adjacent` (`step8.tex:2780-2797`) added in A3;
 strong-induction proof of `lem:layered-balanced`
-(`step8.tex:2839-2891`) restructured in A3 / mg-ec58.
+(`step8.tex:3071-3124`) restructured in A3 / mg-ec58.
 -/
 
 namespace OneThird
@@ -229,20 +229,20 @@ theorem numLinExt_factorOfReducible
 
 /-! ### §4 — Irreducibility ⇒ adjacent incomparable cross-pair (F2) -/
 
-/-- **Layer-ordinal-sum irreducibility** (`step8.tex:2273`).
+/-- **Layer-ordinal-sum irreducibility** (`step8.tex:2591-2592`).
 
 A layered decomposition is *layer-ordinal-sum irreducible* if there
 is no band index `k ∈ [1, L.K − 1]` at which it is reducible in the
 sense of `LayerOrdinalReducible`. Equivalently, every "cut" of `Q`
 along a band boundary fails to be directed upward.
 
-Paper: Definition~\ref{def:layer-reducible} (`step8.tex:2261-2274`). -/
+Paper: Definition~\ref{def:layer-reducible} (`step8.tex:2580-2593`). -/
 def LayerOrdinalIrreducible (L : LayeredDecomposition α) : Prop :=
   ∀ k : ℕ, 1 ≤ k → k < L.K → ¬ LayerOrdinalReducible L k
 
 set_option linter.unusedSectionVars false in
 set_option linter.unusedDecidableInType false in
-/-- **Lemma `lem:irr-adjacent`** (`step8.tex:2461-2478`), Lean form.
+/-- **Lemma `lem:irr-adjacent`** (`step8.tex:2780-2797`), Lean form.
 
 If `L` is layer-ordinal-sum irreducible (not reducible at any band
 index `k ∈ [1, L.K − 1]`), has depth `L.K ≥ 2`, and every band
@@ -259,7 +259,7 @@ the cross-band direction in the §sec:g4 setup but not an axiom of
 "cross-band comparabilities are upward" can combine this with the
 returned `¬ (u < v)` to obtain full incomparability.
 
-**Proof (paper, `step8.tex:2470-2478`).** Contradiction: assume every
+**Proof (paper, `step8.tex:2789-2797`).** Contradiction: assume every
 adjacent cross-pair `u ∈ M_i, v ∈ M_{i+1}` has `u <_Q v`. By
 transitivity (chaining through intermediate non-empty bands), for any
 `i < j` and any `u ∈ M_i, v ∈ M_j` we obtain `u <_Q v`. In
@@ -316,7 +316,7 @@ set_option linter.unusedVariables false in
 /-- **F3: Strong induction on `Fintype.card α` for `HasBalancedPair`.**
 
 The well-founded recursion framework underlying the paper's strong
-induction in the proof of `lem:layered-balanced` (`step8.tex:2839-2891`,
+induction in the proof of `lem:layered-balanced` (`step8.tex:3071-3124`,
 restructured by A3 / mg-ec58).
 
 **Shape of the hypothesis.** Given a step function `hStep` that produces
@@ -326,25 +326,25 @@ restructured by A3 / mg-ec58).
 layered width-3 poset also has a balanced pair), the framework delivers
 the conclusion unconditionally.
 
-**Case structure (paper, `step8.tex:2838-2891`).** The `hStep` hook is
+**Case structure (paper, `step8.tex:3071-3124`).** The `hStep` hook is
 meant to be discharged by the case split:
 
 * **Case A (K = 1)**: direct antichain argument (no IH needed). This
-  mirrors `step8.tex:2847-2849`.
+  mirrors `step8.tex:3080-3082`.
 
 * **Case B (`L` reducible at some `k`)**: apply the IH to the non-chain
   factor `P_j` of the ordinal-sum decomposition `P = P_1 ⊕ P_2`, then
   transfer via `L(P) ≃ L(P_1) × L(P_2)` (the F4 / OrdinalChainLift
-  infrastructure). Corresponds to `step8.tex:2851-2861`.
+  infrastructure). Corresponds to `step8.tex:3084-3094`.
 
 * **Case C (`L` irreducible, K ≥ 2)**: pick an incomparable pair,
   window-localise via `windowLocalization`. Either
   * **C1 (`W ⊊ X`)**: IH applies to `P|_W` (strict size descent), and
     `hasBalancedPair_lift` transfers the balanced pair back. This
-    mirrors `step8.tex:2879-2883`.
+    mirrors `step8.tex:3112-3116`.
   * **C2 (`W = X`)**: `P` itself is of bounded size, and the in-situ
     balanced-pair proposition (`prop:in-situ-balanced`, F5) applies.
-    Corresponds to `step8.tex:2885-2888`.
+    Corresponds to `step8.tex:3118-3121`.
 
 **Why this packaging.** Separating the recursion skeleton from the
 case-closing steps lets F4 (chained `OrdinalDecomp` lift for Case B)
@@ -352,7 +352,7 @@ and F5 (generalised `lem_layered_balanced_subtype` for Case C2)
 evolve independently: each lands as a callable lemma that slots into
 `hStep`, without touching the recursion driver itself.
 
-**Reference.** `step8.tex:2911-2921` (`rem:old-vs-new`): "the
+**Reference.** `step8.tex:3149-3154` (`rem:old-vs-new`): "the
 `well-founded recursion framework for iterated reduction' (work item
 F3) ... [is] the Lean image of the outer induction on `|X|`."
 

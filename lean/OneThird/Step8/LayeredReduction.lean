@@ -10,11 +10,11 @@ import Mathlib.Tactic.Linarith
 # Step 8 — G3: Layered reduction (`sec:layered-reduction`)
 
 Formalises the GAP G3 / `lem:layered-reduction` discharge of
-`step8.tex` §`sec:layered-reduction` (`step8.tex:1325-1530`).
+`step8.tex` §`sec:layered-reduction` (`step8.tex:1872-2335`).
 
 ## Setup
 
-A `LayeredDecomposition` (`def:layered`, `step8.tex:1335-1352`)
+A `LayeredDecomposition` (`def:layered`, `step8.tex:1883-1907`)
 of a finite width-3 poset `P = (α, ≤)` records:
 
 * the **depth** `K : ℕ` of the layering;
@@ -35,9 +35,9 @@ follows from `(L2)` by symmetry, so we do not require it as an axiom.
 
 * `LayeredDecomposition` — the layered decomposition structure.
 * `LayeredCut` — the ordinal cut data of `lem:cut`
-  (`step8.tex:1371-1393`): a cut index `k`, the lower set `A`, the
+  (`step8.tex:2164-2186`): a cut index `k`, the lower set `A`, the
   upper set `B`, the interaction window `W`.
-* `lem_cut` — **`lem:cut`** (`step8.tex:1371`). For depth
+* `lem_cut` — **`lem:cut`** (`step8.tex:2164`). For depth
   `K ≥ 2w + 2`, every index `k ∈ (w, K − w)` produces an ordinal
   cut whose only cross-comparability obstructions live inside the
   interaction window of size `≤ 6w`.
@@ -45,7 +45,7 @@ follows from `(L2)` by symmetry, so we do not require it as an axiom.
   `lem:layered-reduction`: either `P` has a balanced pair, or
   there is a strict induced sub-counterexample at parameter `γ/2`.
 * `lem_layered_reduction` — **`lem:layered-reduction`**
-  (`step8.tex:1397`, GAP G3 discharged). Cleared-denominator
+  (`step8.tex:2190`, GAP G3 discharged). Cleared-denominator
   abstract form: from a layered decomposition of depth
   `K ≥ K₀(γ, w) := max(2w + 2, ⌈2w/γ⌉ + 4)` and the witness map
   packaged in `Prop73Reduction`-style, one of the two alternatives
@@ -55,7 +55,7 @@ follows from `(L2)` by symmetry, so we do not require it as an axiom.
 
 ## References
 
-`step8.tex` §`sec:layered-reduction` (`step8.tex:1325-1530`),
+`step8.tex` §`sec:layered-reduction` (`step8.tex:1872-2335`),
 Lemmas `lem:cut`, `lem:layered-reduction`, Definition `def:layered`.
 -/
 
@@ -67,7 +67,7 @@ namespace Step8
 variable {α : Type*} [PartialOrder α] [Fintype α]
 
 /-- **Layered width-3 decomposition** (`def:layered`,
-`step8.tex:1335`).
+`step8.tex:1883`).
 
 A layered decomposition of interaction width `w` and depth `K` of
 a finite poset `P = (α, ≤)` records:
@@ -83,7 +83,7 @@ structure LayeredDecomposition (α : Type*)
     [PartialOrder α] [Fintype α] where
   /-- Depth of the layering. -/
   K : ℕ
-  /-- Interaction width (`step8.tex:1351`). -/
+  /-- Interaction width (`step8.tex:1905`). -/
   w : ℕ
   /-- Band-index map (`L_i = {x : band x = i}`). -/
   band : α → ℕ
@@ -91,18 +91,18 @@ structure LayeredDecomposition (α : Type*)
   band_pos : ∀ x : α, 1 ≤ band x
   /-- Band index does not exceed `K`. -/
   band_le : ∀ x : α, band x ≤ K
-  /-- (L1a) Each band has size `≤ 3` (`step8.tex:1344`). -/
+  /-- (L1a) Each band has size `≤ 3` (`step8.tex:1892`). -/
   band_size :
     ∀ k : ℕ,
       (((Finset.univ : Finset α).filter (fun x => band x = k)).card) ≤ 3
-  /-- (L1b) Each band is an antichain (`step8.tex:1344`, matches the
+  /-- (L1b) Each band is an antichain (`step8.tex:1892`, matches the
   paper's L1 stated as "each `L_i` is an antichain"). -/
   band_antichain :
     ∀ k : ℕ,
       IsAntichain (· ≤ ·)
         ((((Finset.univ : Finset α).filter (fun x => band x = k)) : Set α))
   /-- (L2) Far-apart bands force comparability `x < y`
-  (`step8.tex:1345-1347`). -/
+  (`step8.tex:1894-1901`). -/
   forced_lt : ∀ x y : α, band x + w < band y → x < y
 
 namespace LayeredDecomposition
@@ -118,7 +118,7 @@ noncomputable def bandSet (i : ℕ) : Finset α :=
   simp [bandSet]
 
 /-- (L3) — derived corollary of (L2): far-apart bands are
-comparable in *some* direction (`step8.tex:1347`). -/
+comparable in *some* direction (`step8.tex:1896`). -/
 theorem comparable_of_far {x y : α}
     (h : L.w < (max (L.band x) (L.band y)) - (min (L.band x) (L.band y))) :
     x < y ∨ y < x := by
@@ -152,7 +152,7 @@ balanced-pair reasoning recursively on sub-posets — in particular,
 for the F5 reducibility argument, whose recursion hypothesis
 requires `LayeredDecomposition ↥β` for each recursive sub-poset
 `β`. The window-localization argument of
-`lem:window-localization` (`step8.tex:1573-1608`) is the canonical
+`lem:window-localization` (`step8.tex:2524-2569`) is the canonical
 specialization (restrict to a window slice).
 
 Uses `classical` (for the image-under-`Subtype.val` card bound);
@@ -267,7 +267,7 @@ lemma comparable_of_far_restrict (L : LayeredDecomposition α) (S : Finset α)
   · exact Or.inl hlt
   · exact Or.inr hlt
 
-/-- **Window-localization specialization** (`step8.tex:1573-1608`).
+/-- **Window-localization specialization** (`step8.tex:2524-2569`).
 
 Restrict a layered decomposition to a `Window` slice. The result
 is a `LayeredDecomposition` on `↥W.slice` with the same depth and
@@ -287,7 +287,7 @@ end LayeredDecomposition
 
 /-! ### §2 — `lem:cut`: ordinal cut inside a deep layering -/
 
-/-- **Layered cut data** (`step8.tex:1374-1385`).
+/-- **Layered cut data** (`step8.tex:2167-2178`).
 
 The output of `lem:cut`: an index `k` with `w < k < K − w`, the
 lower set `A := L_{≤ k}`, the upper set `B := L_{> k}`, and the
@@ -314,7 +314,7 @@ structure LayeredCut (L : LayeredDecomposition α) where
   /-- `B` is the union of the bands `L_{k+1}, ⋯, L_K`. -/
   B_eq : B = (Finset.univ : Finset α).filter (fun x => k < L.band x)
 
-/-- **`lem:cut`** (`step8.tex:1371-1393`).
+/-- **`lem:cut`** (`step8.tex:2164-2186`).
 
 For a layered decomposition of depth `K ≥ 2w + 2` and any cut
 index `k ∈ (w, K − w)`, the partition `(A, B)` is *almost
@@ -370,7 +370,7 @@ theorem lem_cut (L : LayeredDecomposition α)
 
 /-! ### §3 — `lem:layered-reduction`: GAP G3 -/
 
-/-- **Layered-reduction conclusion** (`step8.tex:1402-1408`).
+/-- **Layered-reduction conclusion** (`step8.tex:2195-2201`).
 
 The disjunction conclusion of `lem:layered-reduction`:
 
@@ -384,12 +384,12 @@ caller (Step 7 assembly) supplies the concrete witnesses. -/
 def LayeredReductionConclusion (balanced strictSubCex : Prop) : Prop :=
   balanced ∨ strictSubCex
 
-/-- **Reduction-witness map** (`step8.tex:1411-1518`, paper proof).
+/-- **Reduction-witness map** (`step8.tex:2204-2311`, paper proof).
 
 The contractual content of the paper proof of
 `lem:layered-reduction`: given the cut data of `lem:cut` and the
 γ-counterexample hypothesis on `P`, the case analysis in
-`step8.tex:1414-1517` (Steps 1–6 of the proof) produces either a
+`step8.tex:2208-2310` (Steps 1–6 of the proof) produces either a
 balanced pair in `P` (case (a) of Step 5) or the heavy-side
 sub-counterexample (`A` rebadged as `P'` after `Step 2`'s heavy-side
 choice).
@@ -397,7 +397,7 @@ choice).
 This is a `Prop`-level packaging: the input is an existence
 witness for the cut + a sufficient discharge of the
 window-perturbation perturbation bound (the `o_K(1)` argument of
-`step8.tex:1497-1512`), the output is the disjunction. -/
+`step8.tex:2284-2305`), the output is the disjunction. -/
 structure ReductionWitness (L : LayeredDecomposition α)
     (balanced strictSubCex : Prop) where
   /-- Cut data from `lem:cut`. -/
@@ -408,7 +408,7 @@ structure ReductionWitness (L : LayeredDecomposition α)
   /-- Discharge: caller supplies the disjunction. -/
   conclusion : balanced ∨ strictSubCex
 
-/-- **`lem:layered-reduction` — GAP G3** (`step8.tex:1397`,
+/-- **`lem:layered-reduction` — GAP G3** (`step8.tex:2190`,
 cleared-denominator form).
 
 For a layered decomposition of depth `K ≥ K₀(γ, w)` of a width-3
@@ -417,12 +417,12 @@ balanced pair, or a strict induced subposet is a
 `(γ/2)`-counterexample.
 
 The integer threshold is `K₀(γ, w) := max(2w + 2, ⌈2w/γ⌉ + 4)`
-(`step8.tex:1412`); the cleared-denominator depth condition is
+(`step8.tex:2205`); the cleared-denominator depth condition is
 `K ≥ max(2w + 2, ⌈2w/γ⌉ + 4)`.
 
 The proof reduces to:
 * invoking `lem_cut` for the existence of the cut data;
-* a window-perturbation bound (`step8.tex:1487-1512`) bounding
+* a window-perturbation bound (`step8.tex:2280-2305`) bounding
   `|p_xy(P) − p_xy(A)| = o_K(1)`, which forces the case-(b)
   branch to be vacuous and the case-(a) branch to lift to a
   balanced pair of `P`.
@@ -434,12 +434,12 @@ theorem lem_layered_reduction (L : LayeredDecomposition α)
     LayeredReductionConclusion balanced strictSubCex :=
   W.conclusion
 
-/-- **Threshold `K₀(γ, w)`** (`step8.tex:1412`,
+/-- **Threshold `K₀(γ, w)`** (`step8.tex:2205`,
 `max(2w + 2, ⌈2w/γ⌉ + 4)`).
 
 We adopt the integer-cleared form `K₀(γ_n, γ_d, w) := max(2w + 2,
 ⌈2w · γ_d / γ_n⌉ + 4)`, and verify the two inequalities used in the
-paper proof (`step8.tex:1421-1422`):
+paper proof (`step8.tex:2213-2215`):
 
 * `K₀ ≥ 2w + 2` (so `lem_cut` applies);
 * `|W| ≤ γ · |X| / 2`, i.e. the window has small relative size
