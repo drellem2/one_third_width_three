@@ -437,6 +437,398 @@ noncomputable def bandMajorEquiv (L : LayeredDecomposition α) :
 
 end BandMajor
 
+/-! ### §2c — Predecessor mask + order iso (Path A2, mg-b7b0)
+
+Pulls the strict order on `α` back along `bandMajorEquiv L` to obtain
+a predecessor-mask encoding `predMaskOf L : Array Nat` matching the
+bitmask convention of `Case3Enum.hasBalancedPair`, and produces:
+
+1. `Case3Enum.posetFromPredMask pred n hValid : PartialOrder (Fin n)`
+   — the bit-induced partial order on `Fin n` from a predecessor mask
+   that is asymmetric and transitive (`IsValidPredMask`).
+2. `bandMajorOrderIso L : α ≃o Fin (Fintype.card α)` with the
+   `posetFromPredMask`-induced order — the order isomorphism that A3+
+   will use to transport `HasBalancedPair` across.
+3. The two A2-promised matching lemmas:
+   * `predMaskOf_warshall L : warshall (predMaskOf L) (Fintype.card α)
+     = predMaskOf L`, since the strict order on `α` is transitively
+     closed by virtue of `α` being a partial order;
+   * `closureCanonical_predMaskOf L : Case3Enum.closureCanonical
+     (predMaskOf L) (maskOf L) (freeUVOf L) = true`, tautologically by
+     the definition of `maskOf L` as the projection of `predMaskOf L`
+     onto the free pairs.
+
+Note on signatures. The spec listed `posetFromPredMask` with a
+hypothesis-free signature; this implementation takes an
+`IsValidPredMask` proof because the bit-relation on an arbitrary
+predecessor mask is only a partial order when it is asymmetric and
+transitive. The mismatch is absorbed by `bandMajorOrderIso`, which
+supplies the proof from `predMaskOf_isValid`.
+-/
+
+end Step8
+
+namespace Step8.Case3Enum
+
+set_option linter.unusedSectionVars false
+
+/-- **Validity predicate for a predecessor mask of width `n`.**
+
+Asserts the bit-relation `bit u of pred[v] = "u < v"` is irreflexive,
+asymmetric, and transitive on the index set `Fin n`. These are the
+properties needed for the bit-relation to underly a `PartialOrder`. -/
+def IsValidPredMask (pred : Array Nat) (n : Nat) : Prop :=
+  (∀ u : Fin n, ¬ testBit' (pred.getD u.val 0) u.val) ∧
+  (∀ u v : Fin n, testBit' (pred.getD v.val 0) u.val →
+    ¬ testBit' (pred.getD u.val 0) v.val) ∧
+  (∀ u v w : Fin n, testBit' (pred.getD v.val 0) u.val →
+    testBit' (pred.getD w.val 0) v.val → testBit' (pred.getD w.val 0) u.val)
+
+/-- **Bit-induced PartialOrder on `Fin n` from a predecessor mask.**
+
+For a valid `pred` (`IsValidPredMask pred n`), `u ≤ v` iff `u = v` or
+bit `u` is set in `pred[v]`. This is exactly the strict-plus-equal
+relation used by `Case3Enum.hasBalancedPair`. -/
+@[reducible]
+def posetFromPredMask (pred : Array Nat) (n : Nat)
+    (hValid : IsValidPredMask pred n) : PartialOrder (Fin n) where
+  le u v := u = v ∨ testBit' (pred.getD v.val 0) u.val
+  lt u v := u ≠ v ∧ testBit' (pred.getD v.val 0) u.val
+  le_refl _ := Or.inl rfl
+  le_trans u v w := by
+    rintro (rfl | hUV) (rfl | hVW)
+    · exact Or.inl rfl
+    · exact Or.inr hVW
+    · exact Or.inr hUV
+    · exact Or.inr (hValid.2.2 u v w hUV hVW)
+  lt_iff_le_not_ge u v := by
+    refine Iff.intro ?_ ?_
+    · rintro ⟨hne, hb⟩
+      refine ⟨Or.inr hb, ?_⟩
+      rintro (heq | hb')
+      · exact hne heq.symm
+      · exact hValid.2.1 _ _ hb hb'
+    · rintro ⟨hle, hngeq⟩
+      rcases hle with heq | hb
+      · exact (hngeq (Or.inl heq.symm)).elim
+      · refine ⟨?_, hb⟩
+        intro h
+        exact hngeq (Or.inl h.symm)
+  le_antisymm u v := by
+    intro h1 h2
+    rcases h1 with heq | hUV
+    · exact heq
+    · rcases h2 with heq | hVU
+      · exact heq.symm
+      · exact absurd hVU (hValid.2.1 u v hUV)
+
+@[simp]
+lemma posetFromPredMask_le {pred : Array Nat} {n : Nat}
+    (hValid : IsValidPredMask pred n) (u v : Fin n) :
+    @LE.le _ (posetFromPredMask pred n hValid).toLE u v ↔
+      u = v ∨ testBit' (pred.getD v.val 0) u.val :=
+  Iff.rfl
+
+end Step8.Case3Enum
+
+namespace Step8
+
+section PredMaskCore
+
+variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedDecidableInType false
+
+/-- The Case3Enum-local `testBit'` agrees with `Nat.testBit`. -/
+lemma testBit'_eq_testBit (m i : Nat) :
+    Case3Enum.testBit' m i = Nat.testBit m i := by
+  unfold Case3Enum.testBit' Case3Enum.bit
+  rw [Nat.one_shiftLeft]
+  by_cases h : Nat.testBit m i
+  · -- m.testBit i = true ⇒ m &&& 2^i ≠ 0
+    have hne : m &&& 2 ^ i ≠ 0 := by
+      intro heq
+      have ht : (m &&& 2 ^ i).testBit i = true := by
+        rw [Nat.testBit_and, Nat.testBit_two_pow_self, h]; rfl
+      rw [heq, Nat.zero_testBit] at ht
+      exact Bool.false_ne_true ht
+    simp [hne, h]
+  · -- m.testBit i = false ⇒ m &&& 2^i = 0
+    have heq : m &&& 2 ^ i = 0 := by
+      apply Nat.eq_of_testBit_eq
+      intro j
+      rw [Nat.testBit_and, Nat.zero_testBit, Nat.testBit_two_pow]
+      by_cases hij : i = j
+      · subst hij; simp [h]
+      · simp [hij]
+    simp [heq, h]
+
+/-- Bitmask of width `n` whose `i`-th bit is set iff `p i = true`, for
+`i < n`. Built by primitive recursion on `n`; characterized by
+`testBit_encodeBitsBelow`. -/
+def encodeBitsBelow (p : Nat → Bool) : Nat → Nat
+  | 0 => 0
+  | n + 1 => encodeBitsBelow p n ||| (if p n then 1 <<< n else 0)
+
+lemma testBit_encodeBitsBelow (p : Nat → Bool) :
+    ∀ n i, Nat.testBit (encodeBitsBelow p n) i = (decide (i < n) && p i) := by
+  intro n
+  induction n with
+  | zero => intro i; simp [encodeBitsBelow]
+  | succ n ih =>
+    intro i
+    simp only [encodeBitsBelow, Nat.testBit_or, ih]
+    by_cases hp : p n
+    · simp only [hp, if_true, Nat.one_shiftLeft, Nat.testBit_two_pow]
+      rcases Nat.lt_trichotomy i n with hlt | heq | hgt
+      · simp [hlt, show i < n + 1 from by omega, show n ≠ i from by omega]
+      · subst heq
+        simp [hp, show i < i + 1 from by omega]
+      · simp [show ¬ i < n from by omega, show ¬ i < n + 1 from by omega,
+          show n ≠ i from by omega]
+    · simp only [hp, if_false, Nat.zero_testBit, Bool.or_false]
+      rcases Nat.lt_trichotomy i n with hlt | heq | hgt
+      · simp [hlt, show i < n + 1 from by omega]
+      · subst heq
+        simp [hp]
+      · simp [show ¬ i < n from by omega, show ¬ i < n + 1 from by omega]
+
+/-- `Array.ofFn`'s `getD` reduces to the function on in-range
+indices, default otherwise. -/
+lemma Array.getD_ofFn {β : Type*} {n : Nat} (f : Fin n → β) (i : Nat) (d : β) :
+    (Array.ofFn f).getD i d = if h : i < n then f ⟨i, h⟩ else d := by
+  rw [Array.getD_eq_getD_getElem?, Array.getElem?_ofFn]
+  by_cases h : i < n <;> simp [h]
+
+end PredMaskCore
+
+section PredMask
+
+variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedDecidableInType false
+
+/-- **Predecessor mask of a layered decomposition.**
+
+For `L : LayeredDecomposition α`, `predMaskOf L : Array Nat` is the
+band-major bitmask encoding of the strict order on `α`, indexed by
+`bandMajorEquiv L`. Concretely, for `u v : Fin (Fintype.card α)`:
+
+  bit `u.val` of `(predMaskOf L)[v.val]` is set
+    ↔  `(bandMajorEquiv L).symm u < (bandMajorEquiv L).symm v`.
+
+The construction layers the strict-order Boolean decision through
+`encodeBitsBelow`, giving an `Array Nat` of size `Fintype.card α`. -/
+noncomputable def predMaskOf (L : LayeredDecomposition α) : Array Nat := by
+  classical
+  exact Array.ofFn (n := Fintype.card α) (fun v : Fin (Fintype.card α) =>
+    encodeBitsBelow (fun u : Nat =>
+      if h : u < Fintype.card α then
+        decide ((bandMajorEquiv L).symm ⟨u, h⟩ < (bandMajorEquiv L).symm v)
+      else false)
+      (Fintype.card α))
+
+@[simp]
+lemma size_predMaskOf (L : LayeredDecomposition α) :
+    (predMaskOf L).size = Fintype.card α := by
+  classical
+  unfold predMaskOf
+  simp
+
+/-- **`Nat.testBit` characterization of `predMaskOf`.**
+
+Bit `u.val` of `(predMaskOf L)[v.val]` is set iff `e.symm u < e.symm
+v` in `α`, where `e = bandMajorEquiv L`. Stated in `Iff` form to
+avoid relying on a `DecidableLT α` instance in the lemma type. -/
+lemma testBit_predMaskOf (L : LayeredDecomposition α)
+    (u v : Fin (Fintype.card α)) :
+    Nat.testBit ((predMaskOf L).getD v.val 0) u.val = true ↔
+      (bandMajorEquiv L).symm u < (bandMajorEquiv L).symm v := by
+  classical
+  unfold predMaskOf
+  rw [Array.getD_ofFn, dif_pos v.isLt, testBit_encodeBitsBelow,
+    decide_eq_true u.isLt, Bool.true_and, dif_pos u.isLt, decide_eq_true_iff]
+
+/-- **`testBit'` (Case3Enum-local) characterization of `predMaskOf`.** -/
+lemma testBit'_predMaskOf (L : LayeredDecomposition α)
+    (u v : Fin (Fintype.card α)) :
+    Case3Enum.testBit' ((predMaskOf L).getD v.val 0) u.val = true ↔
+      (bandMajorEquiv L).symm u < (bandMajorEquiv L).symm v := by
+  rw [testBit'_eq_testBit]
+  exact testBit_predMaskOf L u v
+
+/-- **`predMaskOf L` is a valid predecessor mask** (irreflexive,
+asymmetric, transitive bit-relation), since it encodes the strict
+order on `α` via `bandMajorEquiv L`. -/
+lemma predMaskOf_isValid (L : LayeredDecomposition α) :
+    Case3Enum.IsValidPredMask (predMaskOf L) (Fintype.card α) := by
+  refine ⟨?_, ?_, ?_⟩
+  · -- Irreflexive
+    intro u hbit
+    exact lt_irrefl _ ((testBit'_predMaskOf L u u).mp hbit)
+  · -- Asymmetric
+    intro u v hUV hVU
+    have h1 := (testBit'_predMaskOf L u v).mp hUV
+    have h2 := (testBit'_predMaskOf L v u).mp hVU
+    exact lt_irrefl _ (h1.trans h2)
+  · -- Transitive
+    intro u v w hUV hVW
+    have h1 := (testBit'_predMaskOf L u v).mp hUV
+    have h2 := (testBit'_predMaskOf L v w).mp hVW
+    exact (testBit'_predMaskOf L u w).mpr (h1.trans h2)
+
+/-- **Band-major order isomorphism** (Path A2, mg-b7b0).
+
+The bijection `bandMajorEquiv L` of A1 upgraded to an order iso with
+`Fin (Fintype.card α)` carrying the `predMaskOf L`-induced partial
+order. This is the missing piece of the F5a-ℓ encoding bridge: A3+
+will use this to transport `HasBalancedPair` from the abstract `α`
+side to the bitmask `Fin n` side.
+
+The target's `LE` is the one supplied by `Case3Enum.posetFromPredMask
+(predMaskOf L) _ (predMaskOf_isValid L)`, made explicit to avoid
+clashing with `Fin n`'s default `Nat`-induced order. -/
+noncomputable def bandMajorOrderIso (L : LayeredDecomposition α) :
+    @OrderIso α (Fin (Fintype.card α)) _
+      (Case3Enum.posetFromPredMask (predMaskOf L) (Fintype.card α)
+        (predMaskOf_isValid L)).toLE := by
+  refine
+    { toEquiv := bandMajorEquiv L
+      map_rel_iff' := ?_ }
+  intro a b
+  -- Goal: bandMajorEquiv L a ≤ bandMajorEquiv L b (under custom order) ↔ a ≤ b.
+  -- Unfold the custom le.
+  show ((bandMajorEquiv L a = bandMajorEquiv L b) ∨
+      Case3Enum.testBit' ((predMaskOf L).getD (bandMajorEquiv L b).val 0)
+        (bandMajorEquiv L a).val = true) ↔ a ≤ b
+  rw [(bandMajorEquiv L).apply_eq_iff_eq, testBit'_predMaskOf]
+  simp only [Equiv.symm_apply_apply]
+  exact (le_iff_eq_or_lt).symm
+
+/-! #### Free-pair list and mask projection
+
+`freeUVOf L` is the list of cross-band pairs `(u, v)` with band-gap
+`≤ L.w`, indexed by their `Fin (Fintype.card α)` positions; this is
+exactly the `freeUV` array that `Case3Enum.enumPosetsFor L.w
+(bandSizes L)` iterates over.
+
+`maskOf L` is the `Nat` whose `k`-th bit is set iff bit `(freeUV[k]).1`
+of `(predMaskOf L)[(freeUV[k]).2]` is set — i.e. the projection of
+`predMaskOf L` onto the free-pair positions.  By construction,
+`closureCanonical (predMaskOf L) (maskOf L) (freeUVOf L) = true`.
+-/
+
+/-- The free-pair list for a layered decomposition: pairs `(u, v)`
+with `u` in band `i + 1`, `v` in band `j + 1`, `i < j`, `j - i ≤ L.w`,
+where `u, v` are global Fin-n indices via the band-major offsets. -/
+noncomputable def freeUVOf (L : LayeredDecomposition α) : Array (Nat × Nat) :=
+  Id.run do
+    let bs := bandSizes L
+    let offsets := Case3Enum.offsetsOf bs
+    let K := bs.length
+    let mut freeUV : Array (Nat × Nat) := #[]
+    for i in [0:K] do
+      for j in [i+1:K] do
+        if j - i ≤ L.w then
+          let offI := offsets.getD i 0
+          let offI1 := offsets.getD (i + 1) 0
+          let offJ := offsets.getD j 0
+          let offJ1 := offsets.getD (j + 1) 0
+          for a in [offI:offI1] do
+            for b in [offJ:offJ1] do
+              freeUV := freeUV.push (a, b)
+    return freeUV
+
+/-- Recursive form of the projection of `pred` onto the first `n`
+free-pair positions. Used as a clean specification for `maskOf`. -/
+def maskOfRec (pred : Array Nat) (freeUV : Array (Nat × Nat)) :
+    Nat → Nat
+  | 0 => 0
+  | k + 1 =>
+    if Case3Enum.testBit' (pred.getD (freeUV.getD k (0, 0)).2 0)
+        (freeUV.getD k (0, 0)).1
+    then maskOfRec pred freeUV k ||| Case3Enum.bit k
+    else maskOfRec pred freeUV k
+
+/-- The bitmask `Nat` projecting `predMaskOf L` onto the free pairs:
+bit `k` is set iff bit `(freeUVOf L)[k].1` is set in
+`(predMaskOf L)[(freeUVOf L)[k].2]`.
+
+Defined via primitive recursion to make `closureCanonical` reasoning
+tractable. -/
+noncomputable def maskOf (L : LayeredDecomposition α) : Nat :=
+  maskOfRec (predMaskOf L) (freeUVOf L) (freeUVOf L).size
+
+/-- Bits `≥ n` of `maskOfRec pred freeUV n` are zero (only the first
+`n` bits are touched). -/
+lemma testBit_maskOfRec_ge (pred : Array Nat) (freeUV : Array (Nat × Nat)) :
+    ∀ n k, n ≤ k → Nat.testBit (maskOfRec pred freeUV n) k = false := by
+  intro n
+  induction n with
+  | zero => intro k _; simp [maskOfRec]
+  | succ n ih =>
+    intro k hk
+    unfold maskOfRec
+    split_ifs with hbit
+    · simp only [Nat.testBit_or]
+      rw [show Case3Enum.bit n = 2^n from by simp [Case3Enum.bit, Nat.one_shiftLeft]]
+      rw [Nat.testBit_two_pow,
+        show (decide (n = k)) = false from decide_eq_false (by omega),
+        Bool.or_false]
+      exact ih k (by omega)
+    · exact ih k (by omega)
+
+/-- For `k < n`, bit `k` of `maskOfRec pred freeUV n` matches
+`Nat.testBit (pred.getD v 0) u` where `(u, v) := freeUV.getD k (0, 0)`. -/
+lemma testBit_maskOfRec_lt (pred : Array Nat) (freeUV : Array (Nat × Nat)) :
+    ∀ n k, k < n → Nat.testBit (maskOfRec pred freeUV n) k =
+      Nat.testBit (pred.getD (freeUV.getD k (0, 0)).2 0)
+        (freeUV.getD k (0, 0)).1 := by
+  intro n
+  induction n with
+  | zero => intro k hk; omega
+  | succ n ih =>
+    intro k hk
+    unfold maskOfRec
+    by_cases hkn : k = n
+    · subst hkn
+      -- k = n: the new bit at position k is the relevant one.
+      split_ifs with hbit
+      · -- bit k of pred[v] is set; pred contributes the bit at position k.
+        simp only [Nat.testBit_or]
+        rw [show Case3Enum.bit k = 2^k from by
+          simp [Case3Enum.bit, Nat.one_shiftLeft]]
+        rw [Nat.testBit_two_pow_self, Bool.or_true]
+        rw [testBit'_eq_testBit] at hbit
+        exact hbit.symm
+      · -- bit k of pred[v] is not set; prev mask has bit k = false (by _ge).
+        have h1 : Nat.testBit (pred.getD (freeUV.getD k (0, 0)).2 0)
+            (freeUV.getD k (0, 0)).1 = false := by
+          rcases hbool : Nat.testBit (pred.getD (freeUV.getD k (0, 0)).2 0)
+              (freeUV.getD k (0, 0)).1 with _ | _
+          · rfl
+          · rw [testBit'_eq_testBit] at hbit
+            exact absurd hbool hbit
+        rw [h1]
+        exact testBit_maskOfRec_ge pred freeUV k k (le_refl _)
+    · -- k < n: induction.
+      split_ifs with hbit
+      · simp only [Nat.testBit_or]
+        rw [show Case3Enum.bit n = 2^n from by simp [Case3Enum.bit, Nat.one_shiftLeft]]
+        rw [Nat.testBit_two_pow,
+          show (decide (n = k)) = false from decide_eq_false fun h => hkn h.symm,
+          Bool.or_false]
+        exact ih k (by omega)
+      · exact ih k (by omega)
+
+end PredMask
+
+end Step8
+
+namespace Step8
+
 /-! ### §3 — Prop-level image of F5a's Bool certificate
 
 The F5a certificate `case3_certificate` asserts
