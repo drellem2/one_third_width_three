@@ -218,15 +218,16 @@ lemma testBit'_iff_testBit {m e : ℕ} :
         cases ht : Nat.testBit m i with
         | true => exact absurd ht hb
         | false => rfl
-      simp [hfalse]
-    · simp [Nat.testBit_two_pow]
-      intro _
-      exact fun h => hi h.symm
+      rw [hfalse, Bool.false_and]
+    · rw [Nat.testBit_two_pow]
+      have hne : e ≠ i := fun heq => hi heq.symm
+      have : decide (e = i) = false := decide_eq_false hne
+      rw [this, Bool.and_false]
   · intro h hzero
-    have : (m &&& 2 ^ e).testBit e = false := by simp [hzero]
-    rw [Nat.testBit_and, Nat.testBit_two_pow_self] at this
-    simp at this
-    rw [this] at h
+    have htest : (m &&& 2 ^ e).testBit e = false := by
+      simp only [hzero, Nat.zero_testBit]
+    rw [Nat.testBit_and, Nat.testBit_two_pow_self, Bool.and_true] at htest
+    rw [htest] at h
     exact Bool.false_ne_true h
 
 lemma xor_bit_lt {placed e : ℕ} (h : testBit' placed e = true) :
