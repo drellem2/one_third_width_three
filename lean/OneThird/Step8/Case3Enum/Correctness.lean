@@ -640,37 +640,534 @@ private noncomputable def appendLast {pred : Array Nat} {S : Finset (Fin n)}
       simp only [show j.val < (S.erase e).card from j.isLt, ↓reduceDIte]
       convert hju
 
-/-! Final assembly of the §4 bijection — connecting the private maps
-`stripLast` / `appendLast` into a `ValidPrefix S` ≃ Σ-decomposition,
-the strong induction `clERec = #ValidPrefix`, and the
-`ValidPrefix univ ≃ LinearExt (Fin n)` bijection — is deferred (mailed
-mayor 2026-04-25).
+/-! #### §4.5 — `lastOf`: the last element placed by a valid prefix
 
-The §4 deliverable in this PR lays clean infrastructure:
+We pivot away from the dependent `Σ`-Equiv approach (whose `right_inv`
+requires `HEq` across types `ValidPrefix (S.erase e)` for different
+`e`).  Instead, for each fixed DP-valid `e`, the *fibre*
+`{P : ValidPrefix S // lastOf P = e}` is in bijection with
+`ValidPrefix (S.erase e)` over a *fixed* type, so no `HEq` is needed.
+Summing fibre cardinalities recovers `#ValidPrefix S`. -/
 
-* `maskSet n placed`, the bitmask ↔ `Finset (Fin n)` translation, with
-  `maskSet_zero`, `maskSet_full`, `maskSet_xor_bit`, and
-  `card_maskSet_xor_bit` covering the three configurations the DP
-  needs.
-* `ValidPrefix pred n S`, the Subtype of injections
-  `Fin S.card → Fin n` with image in `S` and global pred-respecting
-  prefix structure (`predClosed`).  `Fintype` instance via
-  `Subtype.fintype`; `image_eq` shows the image fills `S` by
-  pigeonhole.
-* `IsDPValid pred n S e` as the predicate matching `cleStep`'s loop
-  condition (`e ∈ S` and all predecessors of `e` in `S \ {e}`).
-* `stripLast` — the forward bijection `ValidPrefix S → Σ_{e DP-valid}
-  ValidPrefix (S.erase e)`, sending a prefix to (last element,
-  restriction).  `appendLast` — the inverse, appending an element at
-  the last position.
+/-- The last element placed by `P : ValidPrefix S` (assuming `S` is
+nonempty). -/
+private noncomputable def lastOf {pred : Array Nat} {S : Finset (Fin n)}
+    (hS : 0 < S.card) (P : ValidPrefix pred n S) : Fin n :=
+  P.toFun ⟨S.card - 1, Nat.sub_lt hS Nat.one_pos⟩
 
-Both `stripLast` and `appendLast` are sorry-free; the remaining work
-to assemble these into the `clERec_eq_numLinExt` theorem is the
-non-trivial dependent-type plumbing of the `Σ`-Equiv (the second
-component requires `HEq` between `ValidPrefix(S.erase e)` for
-different `e`-values), the bitwise `IsDPValid_iff_bits` rewrite, the
-`cleStep` foldl-to-sum conversion, the strong induction itself, and
-the final `ValidPrefix univ ≃ LinearExt (Fin n)` bijection. -/
+private lemma lastOf_isDPValid {pred : Array Nat} {S : Finset (Fin n)}
+    (hS : 0 < S.card) (P : ValidPrefix pred n S) :
+    IsDPValid pred n S (lastOf hS P) := by
+  classical
+  set k : ℕ := S.card - 1 with hk_def
+  have hk_lt : k < S.card := Nat.sub_lt hS Nat.one_pos
+  refine ⟨P.mem ⟨k, hk_lt⟩, ?_⟩
+  intro u hu
+  obtain ⟨j, hjlt, hju⟩ := P.predClosed ⟨k, hk_lt⟩ u hu
+  refine Finset.mem_erase.mpr ⟨?_, by rw [← hju]; exact P.mem j⟩
+  intro hueq
+  apply Nat.ne_of_lt hjlt
+  have h1 : P.toFun j = P.toFun ⟨k, hk_lt⟩ := by
+    show _ = lastOf hS P
+    rw [hju, hueq]
+  exact congrArg Fin.val (P.inj h1)
+
+/-! #### §4.6 — `fiberEquiv`: `{P // lastOf P = e} ≃ ValidPrefix (S.erase e)` -/
+
+/-- Forward: the restriction of a valid prefix on `S` (with last
+element fixed to `e`) to its first `S.card - 1` positions, viewed as
+a valid prefix on `S.erase e`. -/
+private noncomputable def stripAt {pred : Array Nat} {S : Finset (Fin n)}
+    (hS : 0 < S.card) {e : Fin n} (he : IsDPValid pred n S e)
+    (P : ValidPrefix pred n S) (hP : lastOf hS P = e) :
+    ValidPrefix pred n (S.erase e) := by
+  classical
+  have hcard_e : (S.erase e).card = S.card - 1 :=
+    Finset.card_erase_of_mem he.1
+  have hcard_lt : S.card - 1 < S.card := Nat.sub_lt hS Nat.one_pos
+  have hP' : P.toFun ⟨S.card - 1, hcard_lt⟩ = e := hP
+  refine ⟨fun i => P.toFun ⟨i.val, ?_⟩, ?_, ?_, ?_⟩
+  · -- bound: i.val < S.card
+    have h := i.isLt.trans_eq hcard_e
+    omega
+  · -- injectivity
+    intro i j hij
+    have hi : i.val < S.card := by have := i.isLt.trans_eq hcard_e; omega
+    have hj : j.val < S.card := by have := j.isLt.trans_eq hcard_e; omega
+    have h1 : (⟨i.val, hi⟩ : Fin S.card) = ⟨j.val, hj⟩ := P.inj hij
+    rw [Fin.ext_iff] at h1
+    exact Fin.ext h1
+  · -- image in `S.erase e`
+    intro i
+    have hi : i.val < S.card := by have := i.isLt.trans_eq hcard_e; omega
+    refine Finset.mem_erase.mpr ⟨?_, P.mem ⟨i.val, hi⟩⟩
+    intro hueq
+    have h1 : P.toFun ⟨i.val, hi⟩ = P.toFun ⟨S.card - 1, hcard_lt⟩ :=
+      hueq.trans hP'.symm
+    have h2 : (⟨i.val, hi⟩ : Fin S.card) = ⟨S.card - 1, hcard_lt⟩ := P.inj h1
+    have h3 : i.val = S.card - 1 := by rw [Fin.ext_iff] at h2; exact h2
+    have hi_lt : i.val < S.card - 1 := i.isLt.trans_eq hcard_e
+    omega
+  · -- predClosed
+    intro i u hu
+    have hi : i.val < S.card := by have := i.isLt.trans_eq hcard_e; omega
+    obtain ⟨j, hjlt, hju⟩ := P.predClosed ⟨i.val, hi⟩ u hu
+    have hi_lt' : i.val < S.card - 1 := i.isLt.trans_eq hcard_e
+    have hj_lt' : j.val < S.card - 1 := lt_trans hjlt hi_lt'
+    refine ⟨⟨j.val, hj_lt'.trans_eq hcard_e.symm⟩, hjlt, ?_⟩
+    show P.toFun ⟨j.val, _⟩ = u
+    convert hju
+
+/-- Inverse: append `e` at the last position. (This is the same
+construction as `appendLast`, repackaged so its `lastOf` is visibly
+`e`.) -/
+private noncomputable def appendAt {pred : Array Nat} {S : Finset (Fin n)}
+    {e : Fin n} (he : IsDPValid pred n S e)
+    (Q : ValidPrefix pred n (S.erase e)) :
+    ValidPrefix pred n S :=
+  appendLast he Q
+
+/-- Direct extraction lemma: the underlying function of `appendLast`,
+in `.val` form so it patterns-matches the `↑` coercion that arises
+after `Subtype.ext`. -/
+private lemma appendLast_val_apply {pred : Array Nat} {S : Finset (Fin n)}
+    {e : Fin n} (he : IsDPValid pred n S e) (Q : ValidPrefix pred n (S.erase e))
+    (i : Fin S.card) :
+    (appendLast he Q).val i =
+      (if hi : i.val < (S.erase e).card then Q.val ⟨i.val, hi⟩ else e) := by
+  rfl
+
+/-- Direct extraction lemma: the underlying function of `stripAt`. -/
+private lemma stripAt_val_apply {pred : Array Nat} {S : Finset (Fin n)}
+    (hS : 0 < S.card) {e : Fin n} (he : IsDPValid pred n S e)
+    (P : ValidPrefix pred n S) (hP : lastOf hS P = e)
+    (i : Fin (S.erase e).card) :
+    ∃ hi : i.val < S.card, (stripAt hS he P hP).val i = P.val ⟨i.val, hi⟩ := by
+  classical
+  have hcard_e : (S.erase e).card = S.card - 1 :=
+    Finset.card_erase_of_mem he.1
+  have hi : i.val < S.card := by have := i.isLt.trans_eq hcard_e; omega
+  exact ⟨hi, rfl⟩
+
+private lemma lastOf_appendLast {pred : Array Nat} {S : Finset (Fin n)}
+    {e : Fin n} (he : IsDPValid pred n S e) (Q : ValidPrefix pred n (S.erase e))
+    (hS : 0 < S.card) :
+    lastOf hS (appendLast he Q) = e := by
+  classical
+  have hcard_e : (S.erase e).card = S.card - 1 :=
+    Finset.card_erase_of_mem he.1
+  show (appendLast he Q).val ⟨S.card - 1, _⟩ = e
+  rw [appendLast_val_apply]
+  have hge : ¬ (S.card - 1) < (S.erase e).card := by
+    rw [hcard_e]; exact lt_irrefl _
+  exact dif_neg hge
+
+private lemma stripAt_appendLast {pred : Array Nat} {S : Finset (Fin n)}
+    (hS : 0 < S.card) {e : Fin n} (he : IsDPValid pred n S e)
+    (Q : ValidPrefix pred n (S.erase e)) :
+    stripAt hS he (appendLast he Q) (lastOf_appendLast he Q hS) = Q := by
+  classical
+  apply Subtype.ext
+  funext i
+  -- Goal: `(stripAt ... (appendLast he Q) ...).val i = Q.val i`.
+  -- stripAt's val applied at i is `(appendLast he Q).val ⟨i.val, _⟩`.
+  show (appendLast he Q).val ⟨i.val, _⟩ = Q.val i
+  rw [appendLast_val_apply]
+  rw [dif_pos i.isLt]
+
+private lemma appendLast_stripAt {pred : Array Nat} {S : Finset (Fin n)}
+    (hS : 0 < S.card) {e : Fin n} (he : IsDPValid pred n S e)
+    (P : ValidPrefix pred n S) (hP : lastOf hS P = e) :
+    appendLast he (stripAt hS he P hP) = P := by
+  classical
+  have hcard_e : (S.erase e).card = S.card - 1 :=
+    Finset.card_erase_of_mem he.1
+  have hcard_lt : S.card - 1 < S.card := Nat.sub_lt hS Nat.one_pos
+  have hP' : P.val ⟨S.card - 1, hcard_lt⟩ = e := hP
+  apply Subtype.ext
+  funext i
+  rw [appendLast_val_apply]
+  by_cases hi : i.val < (S.erase e).card
+  · rw [dif_pos hi]
+    -- Goal: (stripAt ...).val ⟨i.val, hi⟩ = P.val i
+    show P.val ⟨i.val, _⟩ = P.val i
+    rfl
+  · rw [dif_neg hi]
+    -- i.val ≥ (S.erase e).card = S.card - 1, and i.val < S.card, so i.val = S.card - 1.
+    have hi_eq : i.val = S.card - 1 := by
+      have h1 : i.val < S.card := i.isLt
+      have h2 : (S.erase e).card ≤ i.val := Nat.le_of_not_lt hi
+      rw [hcard_e] at h2
+      omega
+    have heq : i = ⟨S.card - 1, hcard_lt⟩ := Fin.ext hi_eq
+    rw [heq]
+    exact hP'.symm
+
+/-- The fibre Equiv: avoiding the dependent `Σ`-Equiv right_inv `HEq`
+issue, since both sides have the same fixed type. -/
+private noncomputable def fiberEquiv {pred : Array Nat} {S : Finset (Fin n)}
+    (hS : 0 < S.card) {e : Fin n} (he : IsDPValid pred n S e) :
+    { P : ValidPrefix pred n S // lastOf hS P = e } ≃
+      ValidPrefix pred n (S.erase e) where
+  toFun := fun ⟨P, hP⟩ => stripAt hS he P hP
+  invFun := fun Q => ⟨appendLast he Q, lastOf_appendLast he Q hS⟩
+  left_inv := fun ⟨P, hP⟩ => by
+    apply Subtype.ext
+    exact appendLast_stripAt hS he P hP
+  right_inv := fun Q => stripAt_appendLast hS he Q
+
+/-! #### §4.7 — Cardinality decomposition
+
+`#ValidPrefix S = Σ_{e DP-valid} #ValidPrefix (S.erase e)` -/
+
+/-- The set of DP-valid elements of `S`, packaged as a `Finset`. -/
+private def dpValidSet (pred : Array Nat) (S : Finset (Fin n)) : Finset (Fin n) :=
+  (Finset.univ : Finset (Fin n)).filter (fun e => IsDPValid pred n S e)
+
+private lemma mem_dpValidSet {pred : Array Nat} {S : Finset (Fin n)} {e : Fin n} :
+    e ∈ dpValidSet pred S ↔ IsDPValid pred n S e := by
+  simp [dpValidSet]
+
+/-- Card decomposition: partitioning `ValidPrefix S` by `lastOf`,
+the fibre over each DP-valid `e` is `ValidPrefix (S.erase e)`. -/
+private lemma card_validPrefix_eq_sum (pred : Array Nat) (S : Finset (Fin n))
+    (hS : 0 < S.card) :
+    Fintype.card (ValidPrefix pred n S) =
+      ∑ e ∈ dpValidSet pred S, Fintype.card (ValidPrefix pred n (S.erase e)) := by
+  classical
+  -- Partition `ValidPrefix S` by `lastOf`, which lands in `dpValidSet pred S`.
+  have hpart :
+      Fintype.card (ValidPrefix pred n S) =
+        ∑ e ∈ dpValidSet pred S,
+          ((Finset.univ : Finset (ValidPrefix pred n S)).filter
+            (fun P => lastOf hS P = e)).card := by
+    rw [← Finset.card_univ (α := ValidPrefix pred n S)]
+    apply Finset.card_eq_sum_card_fiberwise (f := lastOf hS)
+    intro P _
+    rw [Finset.mem_coe, mem_dpValidSet]
+    exact lastOf_isDPValid hS P
+  rw [hpart]
+  apply Finset.sum_congr rfl
+  intro e he_mem
+  rw [mem_dpValidSet] at he_mem
+  -- card of the fibre = card of {P : ValidPrefix S // lastOf P = e} = #ValidPrefix (S.erase e)
+  rw [show ((Finset.univ : Finset (ValidPrefix pred n S)).filter
+        (fun P => lastOf hS P = e)).card =
+      Fintype.card { P : ValidPrefix pred n S // lastOf hS P = e } from ?_]
+  · exact Fintype.card_congr (fiberEquiv hS he_mem)
+  · rw [Fintype.card_subtype]
+
+/-! #### §4.8 — `cleStep ↔ Finset.sum`
+
+Convert `cleStep`'s `(List.range n).foldl` over conditional add into a
+`Finset.sum` indexed by `Fin n` filtered to DP-valid elements.
+Requires `predBitsBoundedBy`: `pred.getD e 0` has no bits at positions
+`≥ n` (a sanity hypothesis: callers via `predMaskOf` provide this). -/
+
+/-- Bounded-bit hypothesis on `pred`: for every `e : Fin n`, the
+predecessor mask `pred.getD e 0` has no bits set at positions `≥ n`. -/
+def predBitsBoundedBy (pred : Array Nat) (n : ℕ) : Prop :=
+  ∀ e : Fin n, ∀ b : ℕ, n ≤ b → testBit' (pred.getD e.val 0) b = false
+
+/-- Per-step contribution of `cleStep`. -/
+private def cleStepStep (pred : Array Nat) (placed : ℕ) (f : Array Nat) (e : ℕ) : ℕ :=
+  if testBit' placed e then
+    if (pred.getD e 0 &&& (placed ^^^ bit e)) == pred.getD e 0
+    then f.getD (placed ^^^ bit e) 0 else 0
+   else 0
+
+/-- `cleStep` rewritten as a `Finset.sum` over `Finset.range n`. -/
+private lemma cleStep_eq_sum_range (pred : Array Nat) (n placed : ℕ)
+    (f : Array Nat) :
+    cleStep pred n placed f = ∑ e ∈ Finset.range n, cleStepStep pred placed f e := by
+  unfold cleStep cleStepStep
+  -- Generalize: relate the foldl with arbitrary acc to an offset sum.
+  suffices H : ∀ (k acc : ℕ),
+      (List.range k).foldl
+        (fun acc e =>
+          if testBit' placed e then
+            let prev : Nat := placed ^^^ bit e
+            let pe := pred.getD e 0
+            if (pe &&& prev) == pe then acc + f.getD prev 0 else acc
+          else acc) acc =
+      acc + ∑ e ∈ Finset.range k,
+        (if testBit' placed e then
+          if (pred.getD e 0 &&& (placed ^^^ bit e)) == pred.getD e 0
+          then f.getD (placed ^^^ bit e) 0 else 0
+         else 0) by
+    have := H n 0
+    simpa using this
+  intro k
+  induction k with
+  | zero => intro acc; simp
+  | succ k ih =>
+    intro acc
+    rw [List.range_succ, List.foldl_append, ih, Finset.sum_range_succ]
+    simp only [List.foldl_cons, List.foldl_nil]
+    by_cases h_bit : testBit' placed k = true
+    · simp only [h_bit, ↓reduceIte]
+      by_cases h_clo : (pred.getD k 0 &&& (placed ^^^ bit k)) == pred.getD k 0
+      · simp only [h_clo, ↓reduceIte]; omega
+      · simp only [h_clo, Bool.false_eq_true, ↓reduceIte]; omega
+    · have h_bit' : testBit' placed k = false := by
+        cases h : testBit' placed k with
+        | true => exact absurd h h_bit
+        | false => rfl
+      simp only [h_bit', Bool.false_eq_true, ↓reduceIte]
+      omega
+
+/-- Sum reindexing: `Finset.range n` and `Fin n` give the same sum. -/
+private lemma sum_range_eq_sum_fin (n : ℕ) (g : ℕ → ℕ) :
+    ∑ e ∈ Finset.range n, g e = ∑ e : Fin n, g e.val :=
+  (Fin.sum_univ_eq_sum_range g n).symm
+
+/-- Bridge: under bit-boundedness, `IsDPValid` (defined via `predLT` on
+`Fin n`) matches the bitmask check inside `cleStep`. -/
+private lemma isDPValid_iff_bits {pred : Array Nat} {n : ℕ}
+    (h_bnd : predBitsBoundedBy pred n)
+    {placed : ℕ} (e : Fin n) :
+    IsDPValid pred n (maskSet n placed) e ↔
+      (testBit' placed e.val = true ∧
+       ((pred.getD e.val 0 &&& (placed ^^^ bit e.val)) == pred.getD e.val 0) = true) := by
+  classical
+  -- Helper: rewrite Bool == as decidable equality.
+  have h_beq_iff : ∀ a b : ℕ, (a == b) = true ↔ a = b := fun a b => beq_iff_eq
+  -- Unfold IsDPValid; the first conjunct matches via `mem_maskSet`.
+  unfold IsDPValid
+  rw [mem_maskSet]
+  apply and_congr_right
+  intro hpe
+  -- Goal: (∀ u : Fin n, predLT pred u e → u ∈ (maskSet n placed).erase e) ↔ bitmask AND check.
+  rw [h_beq_iff]
+  constructor
+  · -- LHS_2 → RHS_2
+    intro h_pred
+    apply Nat.eq_of_testBit_eq
+    intro b
+    rw [Nat.testBit_and]
+    rw [← testBit'_eq, ← testBit'_eq]
+    by_cases hbn : b < n
+    · set u : Fin n := ⟨b, hbn⟩ with hu_def
+      by_cases hube : u = e
+      · -- b = e.val: pe has no bit at e.val (else u = e ∈ erase contradicts notMem_erase).
+        have hb_eq : b = e.val := congrArg Fin.val hube
+        rw [hb_eq, testBit'_xor_self_of_set hpe]
+        have hpred_e : testBit' (pred.getD e.val 0) e.val = false := by
+          by_contra hh
+          have htest : testBit' (pred.getD e.val 0) e.val = true := by
+            cases ht : testBit' (pred.getD e.val 0) e.val with
+            | true => rfl
+            | false => exact absurd ht hh
+          have hpr : predLT pred e e := htest
+          have := h_pred e hpr
+          exact (Finset.notMem_erase e _) this
+        rw [hpred_e]; rfl
+      · -- b < n, b ≠ e.val: testBit prev b = testBit placed b. Use h_pred.
+        have hb_ne : b ≠ e.val := fun h => hube (Fin.ext h)
+        rw [testBit'_xor_eq hb_ne]
+        cases htpe : testBit' (pred.getD e.val 0) b with
+        | true =>
+          have hpr : predLT pred u e := htpe
+          have hum : u ∈ (maskSet n placed).erase e := h_pred u hpr
+          rw [Finset.mem_erase, mem_maskSet] at hum
+          rw [hum.2]; rfl
+        | false => rfl
+    · -- b ≥ n: pe has no bit there.
+      have htest : testBit' (pred.getD e.val 0) b = false :=
+        h_bnd e b (Nat.le_of_not_lt hbn)
+      rw [htest]; rfl
+  · -- RHS_2 → LHS_2
+    intro h_bit u hu
+    have hpr : testBit' (pred.getD e.val 0) u.val = true := hu
+    have htpe : Nat.testBit (pred.getD e.val 0) u.val = true := by
+      rw [← testBit'_eq]; exact hpr
+    have hub_eq : Nat.testBit (pred.getD e.val 0 &&& (placed ^^^ bit e.val)) u.val =
+                   Nat.testBit (pred.getD e.val 0) u.val := by
+      rw [h_bit]
+    rw [Nat.testBit_and] at hub_eq
+    rw [htpe, Bool.true_and] at hub_eq
+    -- hub_eq : Nat.testBit (placed ^^^ bit e.val) u.val = true
+    rw [show Nat.testBit (placed ^^^ bit e.val) u.val =
+            testBit' (placed ^^^ bit e.val) u.val from (testBit'_eq _ _).symm] at hub_eq
+    refine Finset.mem_erase.mpr ⟨?_, ?_⟩
+    · intro hue
+      rw [hue] at hub_eq
+      rw [testBit'_xor_self_of_set hpe] at hub_eq
+      exact Bool.false_ne_true hub_eq
+    · rw [mem_maskSet]
+      have hub_ne : u.val ≠ e.val := by
+        intro h
+        have hub_e : u = e := Fin.ext h
+        rw [hub_e] at hub_eq
+        rw [testBit'_xor_self_of_set hpe] at hub_eq
+        exact Bool.false_ne_true hub_eq
+      rw [testBit'_xor_eq hub_ne] at hub_eq
+      exact hub_eq
+
+/-- Per-step contribution rewritten in terms of `IsDPValid`. -/
+private lemma cleStepStep_eq_ite_isDPValid {pred : Array Nat} {n : ℕ}
+    (h_bnd : predBitsBoundedBy pred n)
+    (placed : ℕ) (f : Array Nat) (e : Fin n) :
+    cleStepStep pred placed f e.val =
+      (if IsDPValid pred n (maskSet n placed) e
+       then f.getD (placed ^^^ bit e.val) 0 else 0) := by
+  classical
+  unfold cleStepStep
+  by_cases hbit : testBit' placed e.val = true
+  · simp only [hbit, ↓reduceIte]
+    by_cases hclo : ((pred.getD e.val 0 &&& (placed ^^^ bit e.val)) == pred.getD e.val 0) = true
+    · simp only [hclo, ↓reduceIte]
+      have h_iff := (isDPValid_iff_bits h_bnd e).mpr ⟨hbit, hclo⟩
+      rw [if_pos h_iff]
+    · have hclo' : ((pred.getD e.val 0 &&& (placed ^^^ bit e.val)) == pred.getD e.val 0) =
+          false := by
+        cases h : (pred.getD e.val 0 &&& (placed ^^^ bit e.val)) == pred.getD e.val 0 with
+        | true => exact absurd h hclo
+        | false => rfl
+      simp only [hclo', Bool.false_eq_true, ↓reduceIte]
+      have h_iff : ¬ IsDPValid pred n (maskSet n placed) e := by
+        intro h_dp
+        have h_bnd' := (isDPValid_iff_bits h_bnd e).mp h_dp
+        rw [hclo'] at h_bnd'
+        exact Bool.false_ne_true h_bnd'.2
+      rw [if_neg h_iff]
+  · have hbit' : testBit' placed e.val = false := by
+      cases h : testBit' placed e.val with
+      | true => exact absurd h hbit
+      | false => rfl
+    simp only [hbit', Bool.false_eq_true, ↓reduceIte]
+    have h_iff : ¬ IsDPValid pred n (maskSet n placed) e := by
+      intro h_dp
+      have h_bnd' := (isDPValid_iff_bits h_bnd e).mp h_dp
+      rw [hbit'] at h_bnd'
+      exact Bool.false_ne_true h_bnd'.1
+    rw [if_neg h_iff]
+
+/-- Helper: `cleStepStep` is 0 for indices `e ≥ n` when `placed < (1 <<< n)`. -/
+private lemma cleStepStep_of_ge (n : ℕ) (pred : Array Nat) (f : Array Nat)
+    {placed : ℕ} (h_placed : placed < (1 <<< n))
+    {e : ℕ} (he : n ≤ e) :
+    cleStepStep pred placed f e = 0 := by
+  have hbit : testBit' placed e = false := by
+    rw [testBit'_eq]
+    apply Nat.testBit_lt_two_pow
+    rw [one_shiftLeft_eq] at h_placed
+    exact lt_of_lt_of_le h_placed (Nat.pow_le_pow_right (by omega) he)
+  unfold cleStepStep
+  simp [hbit]
+
+/-- **Main `cleStep ↔ Finset.sum` bridge.** -/
+private lemma cleStep_eq_sum_dpValidSet {pred : Array Nat} {n : ℕ}
+    (h_bnd : predBitsBoundedBy pred n)
+    (placed : ℕ) (f : Array Nat) :
+    cleStep pred n placed f =
+      ∑ e ∈ dpValidSet pred (maskSet n placed),
+        f.getD (placed ^^^ bit e.val) 0 := by
+  classical
+  rw [cleStep_eq_sum_range, sum_range_eq_sum_fin]
+  -- ∑ e : Fin n, cleStepStep pred placed f e.val
+  rw [show (∑ e : Fin n, cleStepStep pred placed f e.val) =
+      ∑ e : Fin n, (if IsDPValid pred n (maskSet n placed) e
+                    then f.getD (placed ^^^ bit e.val) 0 else 0) from ?_]
+  · -- ∑ over `Fin n` with conditional → ∑ over filtered subset
+    rw [← Finset.sum_filter]
+    rfl
+  · apply Finset.sum_congr rfl
+    intro e _
+    exact cleStepStep_eq_ite_isDPValid h_bnd placed f e
+
+/-! #### §4.9 — Strong induction: `clERec ↔ #ValidPrefix` -/
+
+@[simp] private lemma card_validPrefix_empty (pred : Array Nat) :
+    Fintype.card (ValidPrefix pred n (∅ : Finset (Fin n))) = 1 := by
+  classical
+  apply Fintype.card_eq_one_iff.mpr
+  refine ⟨⟨fun i => i.elim0, ?_, ?_, ?_⟩, ?_⟩
+  · intro i j _; exact i.elim0
+  · intro i; exact i.elim0
+  · intro i; exact i.elim0
+  · rintro ⟨f, _⟩
+    apply Subtype.ext
+    funext i
+    exact i.elim0
+
+private lemma maskSet_card_pos {n placed : ℕ}
+    (hpos : 0 < placed) (h_placed : placed < (1 <<< n)) :
+    0 < (maskSet n placed).card := by
+  classical
+  rw [Finset.card_pos]
+  by_contra h_empty
+  rw [Finset.not_nonempty_iff_eq_empty] at h_empty
+  -- All bits of placed at positions < n are zero (from emptiness),
+  -- and at positions ≥ n by `placed < 2^n`. So `placed = 0`.
+  have h_all : ∀ b, testBit' placed b = false := by
+    intro b
+    by_cases hbn : b < n
+    · have hi_notmem : (⟨b, hbn⟩ : Fin n) ∉ maskSet n placed := by
+        rw [h_empty]; exact Finset.notMem_empty _
+      rw [mem_maskSet] at hi_notmem
+      cases h : testBit' placed b with
+      | true => exact absurd h hi_notmem
+      | false => rfl
+    · push_neg at hbn
+      rw [testBit'_eq]
+      apply Nat.testBit_lt_two_pow
+      rw [one_shiftLeft_eq] at h_placed
+      exact lt_of_lt_of_le h_placed (Nat.pow_le_pow_right (by omega) hbn)
+  have hzero : placed = 0 := by
+    apply Nat.eq_of_testBit_eq
+    intro b
+    rw [Nat.zero_testBit, ← testBit'_eq]
+    exact h_all b
+  omega
+
+/-- **Strong induction**: `clERec` equals `#ValidPrefix` at every
+`placed < 2^n` (under bit-boundedness of `pred`). -/
+theorem clERec_eq_card_validPrefix {pred : Array Nat} {n : ℕ}
+    (h_bnd : predBitsBoundedBy pred n)
+    (placed : ℕ) (h_placed : placed < (1 <<< n)) :
+    clERec pred n placed = Fintype.card (ValidPrefix pred n (maskSet n placed)) := by
+  classical
+  induction placed using Nat.strong_induction_on with
+  | _ placed ih =>
+    cases placed with
+    | zero =>
+      rw [clERec_zero, maskSet_zero, card_validPrefix_empty]
+    | succ k =>
+      rw [clERec_succ]
+      rw [cleStep_eq_sum_dpValidSet h_bnd (k+1)]
+      have hcard_pos : 0 < (maskSet n (k+1)).card :=
+        maskSet_card_pos (Nat.succ_pos _) h_placed
+      rw [card_validPrefix_eq_sum pred (maskSet n (k+1)) hcard_pos]
+      apply Finset.sum_congr rfl
+      intro e he_mem
+      rw [mem_dpValidSet] at he_mem
+      have hbit : testBit' (k+1) e.val = true := mem_maskSet.mp he_mem.1
+      have h_xor_lt : (k+1) ^^^ bit e.val < k+1 := xor_bit_lt hbit
+      -- Rewrite the array lookup as `clERec` at the smaller index.
+      have h_F_get :
+          (Array.ofFn (fun i : Fin (k+1) => clERec pred n i.val)).getD
+              ((k+1) ^^^ bit e.val) 0 =
+          clERec pred n ((k+1) ^^^ bit e.val) := by
+        rw [Array.getD_eq_getD_getElem?]
+        rw [Array.getElem?_eq_getElem (by rw [Array.size_ofFn]; exact h_xor_lt)]
+        rw [Array.getElem_ofFn]
+        rfl
+      rw [h_F_get]
+      -- `maskSet (k+1).erase e = maskSet ((k+1) XOR bit e.val)`.
+      rw [← maskSet_xor_bit hbit]
+      -- Apply IH at the smaller index.
+      have h_xor_bnd : (k+1) ^^^ bit e.val < (1 <<< n) := lt_trans h_xor_lt h_placed
+      exact ih ((k+1) ^^^ bit e.val) h_xor_lt h_xor_bnd
+
+/-! #### §4.10 — `ValidPrefix univ ≃ LinearExt (Fin n) [predOrder]`
+
+The Birkhoff-style bridge from full-prefix valid orderings to linear
+extensions of `(Fin n, predOrder pred h)`.  Deferred — typeclass
+plumbing for `predOrder` vs `Fin.instPartialOrder` on `Fin n` is
+non-trivial: `Fin (Fintype.card (Fin n))` def-reduces to `Fin n`, so
+the LE on the codomain of `LinearExt.monotone` can synthesize either
+`Fin.instPartialOrder` or `predOrder pred h` depending on context. -/
 
 end Case3Enum
 end Step8
