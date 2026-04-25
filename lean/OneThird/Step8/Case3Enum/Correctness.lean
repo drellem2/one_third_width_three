@@ -356,9 +356,25 @@ theorem countLinearExtensions_eq_clERec (pred : Array Nat) (n : ℕ) :
   have hN : 0 < 1 <<< n := by rw [Nat.one_shiftLeft]; exact Nat.two_pow_pos n
   have hN' : (1 <<< n) - 1 < 1 <<< n := Nat.sub_lt hN Nat.one_pos
   unfold countLinearExtensions
-  -- Unfold to (cleArrUpTo pred n N).getD (N-1) 0.
-  show (((List.range (1 <<< n)).foldl _ ((Array.replicate (1 <<< n) 0).set! 0 1))).getD ((1 <<< n) - 1) 0 = _
+  show (((List.range (1 <<< n)).foldl _
+      ((Array.replicate (1 <<< n) 0).set! 0 1))).getD ((1 <<< n) - 1) 0 = _
   exact cleArrUpTo_getD_eq pred n (1 <<< n) ((1 <<< n) - 1) hN' hN'
+
+/-! ### §4 — Combinatorial bijection: `clERec` at the full mask equals `numLinExt`.
+
+The DP recursion `clERec pred n placed = Σ_e clERec pred n (placed XOR bit e)`
+mirrors the maximum-element decomposition for `numLinExt` of the
+sub-poset induced on the bitmask of `placed` (downward-closed).  Strong
+induction on `placed.popCount` carries through.
+
+The remaining content is the math: a `numLinExt`-side recursion identity
+matching the DP recursion.  This is the standard "remove a maximal
+element" decomposition of linear extensions and lives across roughly
+the same line-count as the `OrdinalDecomp.numLinExt_eq` proof in
+`OneThird/Mathlib/LinearExtension/Subtype.lean` (≈ 200 LoC).  It is
+deferred to a follow-up work item; the §3 bridge above provides the
+clean `clERec`-side target into which that math content will plug.
+-/
 
 end Case3Enum
 end Step8
