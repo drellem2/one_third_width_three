@@ -1109,6 +1109,512 @@ noncomputable def validPrefixPredAddEdgeEquivLinearExtLt
 
 end BridgeA4b3
 
+/-! ### §7 — `hasBalancedPairSlow` Bool→Prop lift
+
+The imperative `Case3Enum.hasBalancedPairSlow` uses two nested `for x in
+[0:n]` / `for y in [x+1:n]` loops, with an inner `return true` short-
+circuit when an incomparable pair `(x, y)` has count ratio in `[1/3,
+2/3]`. Lean elaborates this to a doubly-nested `forIn (m := Id)` whose
+accumulator type is `MProd (Option Bool) PUnit`: the `.fst` field is
+`some true` once the early return has fired. We extract the existence
+of a witness pair via a generic forIn invariant. -/
+
+section SlowPathLift
+
+open Case3Enum
+
+variable {pred : Array Nat} {n : ℕ}
+
+/-- **Generic `forIn (Id)` "yield-or-done" extraction**: a `forIn` over
+a list whose body returns either `pure (yield ⟨none, ()⟩)` or
+`pure (done ⟨some true, ()⟩)` results in `(some true, ())` iff some
+list element triggers the `done` branch. -/
+private theorem forIn_id_yield_or_done_iff
+    {α : Type} (l : List α)
+    (body : α → Id (ForInStep (MProd (Option Bool) PUnit)))
+    (h_body : ∀ a,
+      body a = pure (ForInStep.yield (⟨none, PUnit.unit⟩ :
+                                        MProd (Option Bool) PUnit)) ∨
+      body a = pure (ForInStep.done (⟨some true, PUnit.unit⟩ :
+                                        MProd (Option Bool) PUnit))) :
+    (forIn (m := Id) l (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+        (fun a _ => body a)).fst = some true ↔
+    ∃ a ∈ l, body a = pure (ForInStep.done (⟨some true, PUnit.unit⟩ :
+                                              MProd (Option Bool) PUnit)) := by
+  induction l with
+  | nil => simp [forIn]
+  | cons a as ih =>
+    rw [List.forIn_cons]
+    rcases h_body a with hy | hd
+    · rw [hy]
+      change (forIn (m := Id) as
+        (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit) _).fst = some true ↔ _
+      rw [ih]
+      constructor
+      · rintro ⟨a', hmem, hb⟩
+        exact ⟨a', List.mem_cons_of_mem _ hmem, hb⟩
+      · rintro ⟨a', hmem, hb⟩
+        rcases List.mem_cons.mp hmem with rfl | hmem'
+        · rw [hy] at hb
+          exact absurd hb (fun h => by cases h)
+        · exact ⟨a', hmem', hb⟩
+    · rw [hd]
+      change (((⟨some true, PUnit.unit⟩ : MProd (Option Bool) PUnit).fst :
+                Option Bool) = some true) ↔ _
+      refine ⟨fun _ => ⟨a, ?_, hd⟩, fun _ => rfl⟩
+      exact List.mem_cons_self
+
+/-- The inner loop body of `hasBalancedPairSlow`. Decision-style `if`
+chain over `testBit'` and the count gate. -/
+private def slowInnerBody (pred : Array Nat) (n total x : ℕ) :
+    ℕ → Id (ForInStep (MProd (Option Bool) PUnit)) :=
+  fun y =>
+    if testBit' (pred.getD y 0) x = true then
+      (pure (ForInStep.yield ⟨none, PUnit.unit⟩) : Id _)
+    else if testBit' (pred.getD x 0) y = true then
+      pure (ForInStep.yield ⟨none, PUnit.unit⟩)
+    else if (decide (3 * countLinearExtensions
+        (addEdgeClose pred n x y) n ≥ total) &&
+        decide (3 * countLinearExtensions
+          (addEdgeClose pred n x y) n ≤ 2 * total)) = true then
+      pure (ForInStep.done ⟨some true, PUnit.unit⟩)
+    else pure (ForInStep.yield ⟨none, PUnit.unit⟩)
+
+private lemma slowInnerBody_yield_or_done
+    (pred : Array Nat) (n total x y : ℕ) :
+    slowInnerBody pred n total x y =
+      pure (ForInStep.yield (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)) ∨
+    slowInnerBody pred n total x y =
+      pure (ForInStep.done (⟨some true, PUnit.unit⟩ : MProd (Option Bool) PUnit)) := by
+  unfold slowInnerBody
+  by_cases h1 : testBit' (pred.getD y 0) x = true
+  · left; rw [if_pos h1]
+  by_cases h2 : testBit' (pred.getD x 0) y = true
+  · left; rw [if_neg h1, if_pos h2]
+  by_cases h3 : (decide (3 * countLinearExtensions (addEdgeClose pred n x y) n ≥ total) &&
+                  decide (3 * countLinearExtensions (addEdgeClose pred n x y) n ≤ 2 * total)) = true
+  · right; rw [if_neg h1, if_neg h2, if_pos h3]
+  · left; rw [if_neg h1, if_neg h2, if_neg h3]
+
+private lemma slowInnerBody_done_iff (pred : Array Nat) (n total x y : ℕ) :
+    slowInnerBody pred n total x y =
+        pure (ForInStep.done (⟨some true, PUnit.unit⟩ : MProd (Option Bool) PUnit)) ↔
+      ¬ testBit' (pred.getD y 0) x = true ∧
+      ¬ testBit' (pred.getD x 0) y = true ∧
+      3 * countLinearExtensions (addEdgeClose pred n x y) n ≥ total ∧
+      3 * countLinearExtensions (addEdgeClose pred n x y) n ≤ 2 * total := by
+  unfold slowInnerBody
+  -- yield ≠ done in pure form.
+  have hYne : (pure (ForInStep.yield (⟨none, PUnit.unit⟩ :
+        MProd (Option Bool) PUnit)) : Id _) ≠
+      pure (ForInStep.done ⟨some true, PUnit.unit⟩) := fun h => by cases h
+  by_cases h1 : testBit' (pred.getD y 0) x = true
+  · rw [if_pos h1]
+    refine ⟨fun h => absurd h hYne, ?_⟩
+    rintro ⟨h, _, _, _⟩; exact absurd h1 h
+  by_cases h2 : testBit' (pred.getD x 0) y = true
+  · rw [if_neg h1, if_pos h2]
+    refine ⟨fun h => absurd h hYne, ?_⟩
+    rintro ⟨_, h, _, _⟩; exact absurd h2 h
+  by_cases h3 : (decide (3 * countLinearExtensions (addEdgeClose pred n x y) n ≥ total) &&
+                  decide (3 * countLinearExtensions (addEdgeClose pred n x y) n ≤ 2 * total)) = true
+  · rw [if_neg h1, if_neg h2, if_pos h3]
+    refine ⟨fun _ => ⟨h1, h2, ?_⟩, fun _ => rfl⟩
+    rw [Bool.and_eq_true, decide_eq_true_iff, decide_eq_true_iff] at h3
+    exact h3
+  · rw [if_neg h1, if_neg h2, if_neg h3]
+    refine ⟨fun h => absurd h hYne, ?_⟩
+    rintro ⟨_, _, ha, hb⟩
+    refine absurd ?_ h3
+    rw [Bool.and_eq_true, decide_eq_true_iff, decide_eq_true_iff]
+    exact ⟨ha, hb⟩
+
+/-- The outer loop body of `hasBalancedPairSlow`: run the inner forIn,
+then propagate `done` if the inner found a pair, else `yield`. -/
+private def slowOuterBody (pred : Array Nat) (n total : ℕ) :
+    ℕ → Id (ForInStep (MProd (Option Bool) PUnit)) :=
+  fun x => do
+    let r ← forIn (m := Id) (List.range' (x+1) (n - (x+1)))
+      (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+      (fun y _ => slowInnerBody pred n total x y)
+    match r.fst with
+    | none => pure (ForInStep.yield ⟨none, PUnit.unit⟩)
+    | some a => pure (ForInStep.done ⟨some a, PUnit.unit⟩)
+
+/-- The inner forIn's `.fst` is in `{none, some true}` (not `some false`). -/
+private lemma slow_inner_forIn_fst (pred : Array Nat) (n total x : ℕ)
+    (l : List ℕ) :
+    (forIn (m := Id) l (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+        (fun y _ => slowInnerBody pred n total x y)).fst = none ∨
+    (forIn (m := Id) l (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+        (fun y _ => slowInnerBody pred n total x y)).fst = some true := by
+  induction l with
+  | nil => left; rfl
+  | cons y ys ih =>
+    rw [List.forIn_cons]
+    rcases slowInnerBody_yield_or_done pred n total x y with hy | hd
+    · rw [hy]
+      change ((forIn (m := Id) ys
+        (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit) _ :
+        MProd (Option Bool) PUnit).fst = none) ∨ _ = some true
+      exact ih
+    · rw [hd]
+      right; rfl
+
+private lemma slowOuterBody_yield_or_done
+    (pred : Array Nat) (n total x : ℕ) :
+    slowOuterBody pred n total x =
+      pure (ForInStep.yield (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)) ∨
+    slowOuterBody pred n total x =
+      pure (ForInStep.done (⟨some true, PUnit.unit⟩ : MProd (Option Bool) PUnit)) := by
+  rcases slow_inner_forIn_fst pred n total x (List.range' (x+1) (n - (x+1)))
+    with hn | hs
+  · left
+    show (match (forIn (m := Id) (List.range' (x+1) (n - (x+1)))
+              (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+              (fun y _ => slowInnerBody pred n total x y) :
+              MProd (Option Bool) PUnit).fst with
+          | none => (pure (ForInStep.yield (⟨none, PUnit.unit⟩ :
+                      MProd (Option Bool) PUnit)) : Id _)
+          | some a => pure (ForInStep.done ⟨some a, PUnit.unit⟩)) = _
+    rw [hn]
+  · right
+    show (match (forIn (m := Id) (List.range' (x+1) (n - (x+1)))
+              (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+              (fun y _ => slowInnerBody pred n total x y) :
+              MProd (Option Bool) PUnit).fst with
+          | none => (pure (ForInStep.yield (⟨none, PUnit.unit⟩ :
+                      MProd (Option Bool) PUnit)) : Id _)
+          | some a => pure (ForInStep.done ⟨some a, PUnit.unit⟩)) = _
+    rw [hs]
+
+private lemma slowOuterBody_done_iff (pred : Array Nat) (n total x : ℕ) :
+    slowOuterBody pred n total x =
+        pure (ForInStep.done (⟨some true, PUnit.unit⟩ : MProd (Option Bool) PUnit)) ↔
+    ∃ y ∈ List.range' (x+1) (n - (x+1)),
+      ¬ testBit' (pred.getD y 0) x = true ∧
+      ¬ testBit' (pred.getD x 0) y = true ∧
+      3 * countLinearExtensions (addEdgeClose pred n x y) n ≥ total ∧
+      3 * countLinearExtensions (addEdgeClose pred n x y) n ≤ 2 * total := by
+  rcases slow_inner_forIn_fst pred n total x (List.range' (x+1) (n - (x+1)))
+    with hn | hs
+  · -- inner returned none: outer yields, never equals done
+    show (match (forIn (m := Id) (List.range' (x+1) (n - (x+1)))
+              (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+              (fun y _ => slowInnerBody pred n total x y) :
+              MProd (Option Bool) PUnit).fst with
+          | none => (pure (ForInStep.yield (⟨none, PUnit.unit⟩ :
+                      MProd (Option Bool) PUnit)) : Id _)
+          | some a => pure (ForInStep.done ⟨some a, PUnit.unit⟩)) = _ ↔ _
+    rw [hn]
+    refine ⟨fun h => absurd h (fun h => by cases h), ?_⟩
+    rintro ⟨y, hmem, hgate⟩
+    -- Inner's fst is `none`, but a witness exists — contradiction.
+    have hex : ∃ y ∈ List.range' (x+1) (n - (x+1)),
+        slowInnerBody pred n total x y =
+          pure (ForInStep.done (⟨some true, PUnit.unit⟩ : MProd (Option Bool) PUnit)) :=
+      ⟨y, hmem, (slowInnerBody_done_iff pred n total x y).mpr hgate⟩
+    have hcontra : (forIn (m := Id) (List.range' (x+1) (n - (x+1)))
+        (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+        (fun y _ => slowInnerBody pred n total x y) :
+        MProd (Option Bool) PUnit).fst = some true :=
+      (forIn_id_yield_or_done_iff (List.range' (x+1) (n - (x+1)))
+        (slowInnerBody pred n total x)
+        (slowInnerBody_yield_or_done pred n total x)).mpr hex
+    rw [hn] at hcontra; exact absurd hcontra (by intro h; cases h)
+  · -- inner returned some true: outer is done
+    show (match (forIn (m := Id) (List.range' (x+1) (n - (x+1)))
+              (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+              (fun y _ => slowInnerBody pred n total x y) :
+              MProd (Option Bool) PUnit).fst with
+          | none => (pure (ForInStep.yield (⟨none, PUnit.unit⟩ :
+                      MProd (Option Bool) PUnit)) : Id _)
+          | some a => pure (ForInStep.done ⟨some a, PUnit.unit⟩)) = _ ↔ _
+    rw [hs]
+    refine ⟨fun _ => ?_, fun _ => rfl⟩
+    -- inner forIn returned some true ⇒ a witness exists.
+    have hex : ∃ y ∈ List.range' (x+1) (n - (x+1)),
+        slowInnerBody pred n total x y =
+          pure (ForInStep.done (⟨some true, PUnit.unit⟩ : MProd (Option Bool) PUnit)) :=
+      (forIn_id_yield_or_done_iff (List.range' (x+1) (n - (x+1)))
+        (slowInnerBody pred n total x)
+        (slowInnerBody_yield_or_done pred n total x)).mp hs
+    obtain ⟨y, hmem, hbody⟩ := hex
+    exact ⟨y, hmem, (slowInnerBody_done_iff pred n total x y).mp hbody⟩
+
+/-- **Imperative→functional reduction** for `hasBalancedPairSlow`. -/
+private theorem hasBalancedPairSlow_eq_outer_fst (pred : Array Nat) (n : ℕ) :
+    Case3Enum.hasBalancedPairSlow pred n =
+      (match (forIn (m := Id) (List.range' 0 n)
+        (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+        (fun x _ => slowOuterBody pred n (countLinearExtensions pred n) x)).fst with
+       | none => false
+       | some a => a) := by
+  unfold Case3Enum.hasBalancedPairSlow slowOuterBody slowInnerBody
+  simp only [Std.Legacy.Range.forIn_eq_forIn_range', Std.Legacy.Range.size,
+    Nat.sub_zero, Nat.add_sub_cancel, Nat.div_one]
+  rfl
+
+/-- **`hasBalancedPairSlow` Bool→Prop lift, on raw `ℕ`-indices.** -/
+private theorem hasBalancedPairSlow_eq_true_iff_nat (pred : Array Nat) (n : ℕ) :
+    Case3Enum.hasBalancedPairSlow pred n = true ↔
+    ∃ x ∈ List.range' 0 n, ∃ y ∈ List.range' (x+1) (n - (x+1)),
+      ¬ testBit' (pred.getD y 0) x = true ∧
+      ¬ testBit' (pred.getD x 0) y = true ∧
+      3 * countLinearExtensions (addEdgeClose pred n x y) n ≥
+        countLinearExtensions pred n ∧
+      3 * countLinearExtensions (addEdgeClose pred n x y) n ≤
+        2 * countLinearExtensions pred n := by
+  rw [hasBalancedPairSlow_eq_outer_fst]
+  set total := countLinearExtensions pred n
+  -- Outer forIn `.fst` is in `{none, some true}` (analogous to inner).
+  have h_outer_fst :
+      (forIn (m := Id) (List.range' 0 n)
+        (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+        (fun x _ => slowOuterBody pred n total x)).fst = some true ↔
+      ∃ x ∈ List.range' 0 n,
+        slowOuterBody pred n total x =
+          pure (ForInStep.done (⟨some true, PUnit.unit⟩ :
+                                  MProd (Option Bool) PUnit)) :=
+    forIn_id_yield_or_done_iff _ _ (slowOuterBody_yield_or_done pred n total)
+  -- The match on `.fst` reduces to checking `= some true`.
+  set f := (forIn (m := Id) (List.range' 0 n)
+        (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+        (fun x _ => slowOuterBody pred n total x)).fst with hf_def
+  -- Step: f = some true ↔ match f with | none => false | some a => a = true.
+  -- We need the latter form; case analysis on f's value.
+  rcases (show f = none ∨ f = some true by
+    -- Same yield_or_done argument as for the inner.
+    rcases slow_inner_forIn_fst (n := 0) (total := 0) (pred := #[]) (x := 0) [] with _ | _
+    -- Just structural: by ih on the outer list, using slowOuterBody_yield_or_done.
+    -- Use forIn_id_yield_or_done structure inductively.
+    · clear * - pred n total
+      -- Re-prove for outer.
+      have aux : ∀ (l : List ℕ),
+          (forIn (m := Id) l (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+            (fun x _ => slowOuterBody pred n total x)).fst = none ∨
+          (forIn (m := Id) l (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+            (fun x _ => slowOuterBody pred n total x)).fst = some true := by
+        intro l
+        induction l with
+        | nil => left; rfl
+        | cons x xs ih =>
+          rw [List.forIn_cons]
+          rcases slowOuterBody_yield_or_done pred n total x with hy | hd
+          · rw [hy]
+            change ((forIn (m := Id) xs
+              (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit) _ :
+              MProd (Option Bool) PUnit).fst = none) ∨ _ = some true
+            exact ih
+          · rw [hd]; right; rfl
+      exact aux (List.range' 0 n)
+    · clear * - pred n total
+      have aux : ∀ (l : List ℕ),
+          (forIn (m := Id) l (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+            (fun x _ => slowOuterBody pred n total x)).fst = none ∨
+          (forIn (m := Id) l (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+            (fun x _ => slowOuterBody pred n total x)).fst = some true := by
+        intro l
+        induction l with
+        | nil => left; rfl
+        | cons x xs ih =>
+          rw [List.forIn_cons]
+          rcases slowOuterBody_yield_or_done pred n total x with hy | hd
+          · rw [hy]
+            change ((forIn (m := Id) xs
+              (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit) _ :
+              MProd (Option Bool) PUnit).fst = none) ∨ _ = some true
+            exact ih
+          · rw [hd]; right; rfl
+      exact aux (List.range' 0 n)) with hfn | hfs
+  · -- f = none: LHS is false; RHS must also be false.
+    rw [hfn]
+    refine ⟨fun h => absurd h Bool.false_ne_true, ?_⟩
+    rintro ⟨x, hx, y, hy, hgate⟩
+    have hex : ∃ x ∈ List.range' 0 n,
+        slowOuterBody pred n total x =
+          pure (ForInStep.done (⟨some true, PUnit.unit⟩ :
+                                  MProd (Option Bool) PUnit)) :=
+      ⟨x, hx, (slowOuterBody_done_iff pred n total x).mpr ⟨y, hy, hgate⟩⟩
+    have := h_outer_fst.mpr hex
+    rw [hfn] at this; cases this
+  · -- f = some true: LHS is true; RHS witnessed.
+    rw [hfs]
+    refine ⟨fun _ => ?_, fun _ => rfl⟩
+    obtain ⟨x, hx, hbody⟩ := h_outer_fst.mp hfs
+    obtain ⟨y, hy, hgate⟩ := (slowOuterBody_done_iff pred n total x).mp hbody
+    exact ⟨x, hx, y, hy, hgate⟩
+
+/-- **`hasBalancedPairSlow` Bool→Prop lift, with `Fin n` quantifiers.**
+A balanced-pair-slow positive result yields an explicit incomparable
+pair `(x, y) : Fin n × Fin n` with `x.val < y.val` whose count gate
+holds. -/
+theorem hasBalancedPairSlow_eq_true_iff (pred : Array Nat) (n : ℕ) :
+    Case3Enum.hasBalancedPairSlow pred n = true ↔
+    ∃ x : Fin n, ∃ y : Fin n, x.val < y.val ∧
+      ¬ testBit' (pred.getD y.val 0) x.val = true ∧
+      ¬ testBit' (pred.getD x.val 0) y.val = true ∧
+      3 * countLinearExtensions (addEdgeClose pred n x.val y.val) n ≥
+        countLinearExtensions pred n ∧
+      3 * countLinearExtensions (addEdgeClose pred n x.val y.val) n ≤
+        2 * countLinearExtensions pred n := by
+  rw [hasBalancedPairSlow_eq_true_iff_nat]
+  constructor
+  · rintro ⟨x, hx, y, hy, hgate⟩
+    rw [List.mem_range'] at hx hy
+    obtain ⟨i, hi, hxi⟩ := hx
+    obtain ⟨j, hj, hyj⟩ := hy
+    -- hxi : x = 0 + 1 * i, so x = i and x < n.
+    have hx_eq : x = i := by simp at hxi; exact hxi
+    have hy_eq : y = (x + 1) + j := by simp at hyj; exact hyj
+    have hx_lt : x < n := by rw [hx_eq]; exact hi
+    have hy_lt : y < n := by rw [hy_eq]; omega
+    refine ⟨⟨x, hx_lt⟩, ⟨y, hy_lt⟩, ?_, hgate⟩
+    show x < y
+    rw [hy_eq]; omega
+  · rintro ⟨x, y, hxy, hgate⟩
+    refine ⟨x.val, ?_, y.val, ?_, hgate⟩
+    · rw [List.mem_range']
+      exact ⟨x.val, x.isLt, by simp⟩
+    · rw [List.mem_range']
+      refine ⟨y.val - (x.val + 1), ?_, ?_⟩
+      · have := y.isLt; omega
+      · simp; omega
+
+end SlowPathLift
+
+/-! ### §8 — Final balanced-pair theorem
+
+Combine the §7 slow-path Bool→Prop lift with the §6 bridge
+(`validPrefixPredAddEdgeEquivLinearExtLt`) and the A3 main theorem
+(`countLinearExtensions_eq_numLinExt`) to identify the count gate
+`3 · cnt ≥ total ∧ 3 · cnt ≤ 2 · total` with `1/3 ≤ probLT x y ≤ 2/3`,
+giving the Prop-level conclusion `HasBalancedPair`. -/
+
+section FinalBalancedTheorem
+
+open Case3Enum
+
+variable {pred : Array Nat} {n : ℕ}
+
+/-- **Slow-path Prop lift to `HasBalancedPair`.** Given the Bool-level
+fact `hasBalancedPairSlow pred n = true`, plus structural validity of
+`pred` and the size constraint `pred.size = n`, the Prop-level
+conclusion `HasBalancedPair (Fin n) [predOrder pred h]` follows. -/
+theorem hasBalancedPair_of_hasBalancedPairSlow
+    (h : ValidPredMask pred n) (h_bnd : predBitsBoundedBy pred n)
+    (h_size : pred.size = n)
+    (h_slow : Case3Enum.hasBalancedPairSlow pred n = true) :
+    @HasBalancedPair (Fin n) (predOrder pred h) _ _ := by
+  classical
+  obtain ⟨x, y, hxy_lt, hbit_yx, hbit_xy, hgate_lo, hgate_hi⟩ :=
+    (hasBalancedPairSlow_eq_true_iff pred n).mp h_slow
+  -- x ∥ y in predOrder pred h.
+  have hne : x ≠ y := fun heq => Nat.lt_irrefl _ (heq ▸ hxy_lt)
+  -- predLT pred x y = testBit' (pred[y]) x.val. So:
+  --   hbit_yx : ¬ testBit' (pred.getD y.val 0) x.val = true ↔ ¬ predLT pred x y.
+  --   hbit_xy : ¬ testBit' (pred.getD x.val 0) y.val = true ↔ ¬ predLT pred y x.
+  have hnxy : ¬ predLT pred x y := hbit_yx
+  have hnyx : ¬ predLT pred y x := hbit_xy
+  have hinc : @Incomp (Fin n) (predOrder pred h).toLE x y := by
+    refine ⟨?_, ?_⟩
+    · rintro (rfl | hxy) <;> [exact hne rfl; exact hnxy hxy]
+    · rintro (heq | hyx) <;> [exact hne heq.symm; exact hnyx hyx]
+  -- y.val < pred.size from h_size.
+  have hsize : y.val < pred.size := h_size ▸ y.isLt
+  -- Bridge: Fintype.card { L : LinearExt // L.lt x y } = countLinearExtensions (predAddEdge ...) n.
+  have hcnt_eq :
+      Fintype.card { L : @LinearExt (Fin n) (predOrder pred h) _ //
+          @LinearExt.lt (Fin n) (predOrder pred h) _ L x y } =
+        countLinearExtensions (predAddEdge pred n x y) n := by
+    have h_bnd_add : predBitsBoundedBy (predAddEdge pred n x y) n :=
+      predBitsBoundedBy_predAddEdge h_bnd x y
+    have hN : 0 < 1 <<< n := by rw [Nat.one_shiftLeft]; exact Nat.two_pow_pos n
+    have hN' : (1 <<< n) - 1 < 1 <<< n := Nat.sub_lt hN Nat.one_pos
+    rw [show countLinearExtensions (predAddEdge pred n x y) n =
+        clERec (predAddEdge pred n x y) n ((1 <<< n) - 1) from
+      countLinearExtensions_eq_clERec _ _]
+    rw [clERec_eq_card_validPrefix h_bnd_add ((1 <<< n) - 1) hN', maskSet_full]
+    exact (Fintype.card_congr
+      (validPrefixPredAddEdgeEquivLinearExtLt h x y hsize hinc).symm)
+  -- countLinearExtensions pred n = numLinExt (Fin n).
+  have hnum_eq :
+      countLinearExtensions pred n =
+        @numLinExt (Fin n) (predOrder pred h) _ _ :=
+    countLinearExtensions_eq_numLinExt h h_bnd
+  -- Convert the count-card to filter-card.
+  have hfilter_card_eq :
+      ((Finset.univ : Finset (@LinearExt (Fin n) (predOrder pred h) _)).filter
+          (fun L => @LinearExt.lt (Fin n) (predOrder pred h) _ L x y)).card =
+        countLinearExtensions (predAddEdge pred n x y) n := by
+    rw [← hcnt_eq]
+    exact (Fintype.card_subtype _).symm
+  -- probLT x y = cnt / total in ℚ.
+  have hprob_eq :
+      @probLT (Fin n) (predOrder pred h) _ _ x y =
+        (countLinearExtensions (predAddEdge pred n x y) n : ℚ) /
+        (countLinearExtensions pred n : ℚ) := by
+    unfold probLT
+    congr 1
+    · norm_cast
+      convert hfilter_card_eq using 3
+    · norm_cast
+      exact hnum_eq.symm
+  -- Total > 0.
+  have htotal_pos : (0 : ℚ) < (countLinearExtensions pred n : ℚ) := by
+    rw [hnum_eq]
+    exact_mod_cast (@numLinExt_pos (Fin n) (predOrder pred h) _ _)
+  -- Lift the integer gate to ℚ.
+  have h_lo : (1 : ℚ) / 3 ≤ @probLT (Fin n) (predOrder pred h) _ _ x y := by
+    rw [hprob_eq]
+    rw [le_div_iff₀ htotal_pos]
+    have : (countLinearExtensions pred n : ℚ) ≤
+        3 * (countLinearExtensions (predAddEdge pred n x y) n : ℚ) := by
+      have := hgate_lo
+      rw [show (predAddEdge pred n x y) = addEdgeClose pred n x.val y.val from
+          predAddEdge_eq pred n x y] at *
+      exact_mod_cast hgate_lo
+    linarith
+  have h_hi : @probLT (Fin n) (predOrder pred h) _ _ x y ≤ (2 : ℚ) / 3 := by
+    rw [hprob_eq]
+    rw [div_le_iff₀ htotal_pos]
+    have : 3 * (countLinearExtensions (predAddEdge pred n x y) n : ℚ) ≤
+        2 * (countLinearExtensions pred n : ℚ) := by
+      rw [show (predAddEdge pred n x y) = addEdgeClose pred n x.val y.val from
+          predAddEdge_eq pred n x y] at *
+      exact_mod_cast hgate_hi
+    linarith
+  refine ⟨x, y, hinc, h_lo, h_hi⟩
+
+/-- **Final theorem**: `Case3Enum.hasBalancedPair pred n = true` lifts
+to `HasBalancedPair (Fin n) [predOrder pred h]`. The fast path
+(`findSymmetricPair`) is dispatched to §3's
+`hasBalancedPair_of_symmetric` whenever a `Symmetric` witness is
+extracted from the Bool indicator; the slow path is dispatched to
+`hasBalancedPair_of_hasBalancedPairSlow` (§8). The `findSymmetricPair`
+Bool→`Symmetric` extraction (parallel to §7) is supplied as the
+hypothesis `h_sym_lift`; A5 (`mg-ff49`) provides this together with
+the band-major Fin-n encoding when calling
+`bounded_irreducible_balanced`. -/
+theorem hasBalancedPair_of_hasBalancedPair
+    (h : ValidPredMask pred n) (h_bnd : predBitsBoundedBy pred n)
+    (h_size : pred.size = n)
+    (h_sym_lift : (Case3Enum.findSymmetricPair pred n).isSome = true →
+                  ∃ x y : Fin n, Symmetric pred n x y)
+    (h_bal : Case3Enum.hasBalancedPair pred n = true) :
+    @HasBalancedPair (Fin n) (predOrder pred h) _ _ := by
+  unfold Case3Enum.hasBalancedPair at h_bal
+  cases h_eq : Case3Enum.findSymmetricPair pred n with
+  | none =>
+    rw [h_eq] at h_bal
+    exact hasBalancedPair_of_hasBalancedPairSlow h h_bnd h_size h_bal
+  | some pair =>
+    obtain ⟨x, y, hSym⟩ :=
+      h_sym_lift (by rw [h_eq]; rfl)
+    exact hasBalancedPair_of_symmetric h hSym
+
+end FinalBalancedTheorem
+
 end Case3Enum
 end Step8
 end OneThird
