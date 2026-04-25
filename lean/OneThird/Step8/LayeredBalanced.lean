@@ -570,6 +570,12 @@ theorem lem_layered_balanced_subtype.{u}
 /-- **Chained `HasBalancedPair` lift bundle** (`step8.tex` §sec:g4,
 `lem:chained-lift`, `step8.tex:2091-2187`).
 
+Lean realisation of paper `def:ordinal-chain` (`step8.tex:2669-2682`),
+in the form needed by `lem:chained-lift` (`step8.tex:2684`): rather
+than carrying the *posets* `P_0, …, P_n` of the paper definition, the
+bundle carries the *composite lift* of `HasBalancedPair` along the
+chain — the only piece consumed by the downstream argument.
+
 Encodes a chain of nested ordinal-sum decompositions
     `α = β₀ → β₁ → … → βₙ`
 where each `β_{k+1}` is the `Mid` sub-poset of an `OrdinalDecomp` of
