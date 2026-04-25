@@ -366,15 +366,22 @@ theorem countLinearExtensions_eq_clERec (pred : Array Nat) (n : ℕ) :
 The DP recursion `clERec pred n placed = Σ_e clERec pred n (placed XOR bit e)`
 mirrors the maximum-element decomposition for `numLinExt` of the
 sub-poset induced on the bitmask of `placed` (downward-closed).  Strong
-induction on `placed.popCount` carries through.
+induction on `placed.popCount` carries through; the two ingredients
+still to be assembled are
 
-The remaining content is the math: a `numLinExt`-side recursion identity
-matching the DP recursion.  This is the standard "remove a maximal
-element" decomposition of linear extensions and lives across roughly
-the same line-count as the `OrdinalDecomp.numLinExt_eq` proof in
-`OneThird/Mathlib/LinearExtension/Subtype.lean` (≈ 200 LoC).  It is
-deferred to a follow-up work item; the §3 bridge above provides the
-clean `clERec`-side target into which that math content will plug.
+* `clERec_eq_subsetCount`: `clERec pred n (toMask S) = subsetCount pred n S`,
+  where `subsetCount pred n S` is the number of *topological sequences*
+  on `S` (injections `Fin S.card → Fin n` whose image is `S` and which
+  respect the partial order on positions); and
+* `subsetCount_univ_eq_numLinExt`: the bijection between full-image
+  topological sequences on `Fin n` and `LinearExt (Fin n)` via
+  inversion.
+
+The first runs the standard "remove a maximal element" recursion and
+sits at roughly the same line-count as the `OrdinalDecomp.numLinExt_eq`
+proof in `OneThird/Mathlib/LinearExtension/Subtype.lean` (≈ 200 LoC).
+It is deferred to a follow-up work item; the §3 bridge above provides
+the clean `clERec`-side target into which that math content will plug.
 -/
 
 end Case3Enum
