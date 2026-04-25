@@ -6,6 +6,7 @@ import OneThird.LinearExtension
 import OneThird.Step8.Case3Enum
 import Mathlib.Data.Finset.Powerset
 import Mathlib.Data.Finset.Sort
+import Mathlib.Data.Nat.Bitwise
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -184,6 +185,180 @@ lemma cleArrUpTo_size (pred : Array Nat) (n k : ℕ) :
     · exact ih
     · rw [show (cleArrUpTo pred n k).set! k _ = (cleArrUpTo pred n k).setIfInBounds k _ from rfl,
           Array.size_setIfInBounds, ih]
+
+/-! Bit-arithmetic helper for the recursion: `placed ^^^ bit e < placed`
+when bit `e` of `placed` is set. -/
+
+private lemma one_shiftLeft_eq (e : ℕ) : (1 <<< e : ℕ) = 2 ^ e := by
+  rw [Nat.shiftLeft_eq, Nat.one_mul]
+
+private lemma bit_eq_two_pow (e : ℕ) : (bit e : ℕ) = 2 ^ e := by
+  unfold bit; exact one_shiftLeft_eq e
+
+/-- `testBit'` matches `Nat.testBit`. -/
+lemma testBit'_iff_testBit {m e : ℕ} :
+    testBit' m e = true ↔ Nat.testBit m e = true := by
+  unfold testBit' bit
+  rw [one_shiftLeft_eq]
+  rw [bne_iff_ne, ne_eq]
+  -- Goal: ¬ (m &&& 2^e = 0) ↔ Nat.testBit m e = true.
+  -- Rewrite (m AND 2^e) using a testBit characterization.
+  constructor
+  · intro hne
+    -- m AND 2^e ≠ 0 ⇒ ∃ i, testBit (m AND 2^e) i = true.
+    -- The only candidate is i = e (testBit_and + testBit_two_pow filters).
+    by_contra hb
+    apply hne
+    apply Nat.eq_of_testBit_eq
+    intro i
+    rw [Nat.testBit_and, Nat.zero_testBit]
+    by_cases hi : i = e
+    · subst hi
+      have hfalse : Nat.testBit m i = false := by
+        cases ht : Nat.testBit m i with
+        | true => exact absurd ht hb
+        | false => rfl
+      simp [hfalse]
+    · simp [Nat.testBit_two_pow]
+      intro _
+      exact fun h => hi h.symm
+  · intro h hzero
+    have : (m &&& 2 ^ e).testBit e = false := by simp [hzero]
+    rw [Nat.testBit_and, Nat.testBit_two_pow_self] at this
+    simp at this
+    rw [this] at h
+    exact Bool.false_ne_true h
+
+lemma xor_bit_lt {placed e : ℕ} (h : testBit' placed e = true) :
+    placed ^^^ bit e < placed := by
+  rw [bit_eq_two_pow]
+  have hbit : Nat.testBit placed e = true := testBit'_iff_testBit.mp h
+  apply Nat.lt_of_testBit e
+  · -- testBit (placed ^^^ 2^e) e = false.
+    rw [Nat.testBit_xor, hbit, Nat.testBit_two_pow_self]; rfl
+  · exact hbit
+  · intro j hj
+    rw [Nat.testBit_xor, Nat.testBit_two_pow]
+    have hne : e ≠ j := Nat.ne_of_lt hj
+    simp [hne]
+
+/-- Congruence: `cleStep` only reads `f` at indices strictly less than
+`placed`, so any two arrays that agree on those indices yield equal
+results. -/
+lemma cleStep_congr (pred : Array Nat) (n placed : ℕ) (f g : Array Nat)
+    (h : ∀ i, i < placed → f.getD i 0 = g.getD i 0) :
+    cleStep pred n placed f = cleStep pred n placed g := by
+  unfold cleStep
+  -- Both sides are `(List.range n).foldl`.  Generalise the accumulator
+  -- and induct on the list.
+  suffices H : ∀ (L : List ℕ) (acc : ℕ),
+      L.foldl
+        (fun acc e =>
+          if testBit' placed e then
+            let prev := placed ^^^ bit e
+            let pe := pred.getD e 0
+            if (pe &&& prev) == pe then acc + f.getD prev 0
+            else acc
+          else acc) acc =
+      L.foldl
+        (fun acc e =>
+          if testBit' placed e then
+            let prev := placed ^^^ bit e
+            let pe := pred.getD e 0
+            if (pe &&& prev) == pe then acc + g.getD prev 0
+            else acc
+          else acc) acc by
+    exact H (List.range n) 0
+  intro L
+  induction L with
+  | nil => intro acc; rfl
+  | cons e L ih =>
+    intro acc
+    simp only [List.foldl_cons]
+    by_cases hbit : testBit' placed e = true
+    · simp only [hbit, ↓reduceIte]
+      by_cases hclo : ((pred.getD e 0) &&& (placed ^^^ bit e)) == (pred.getD e 0)
+      · simp only [hclo, ↓reduceIte]
+        have hlt : placed ^^^ bit e < placed := xor_bit_lt hbit
+        rw [h _ hlt]
+        exact ih _
+      · simp only [hclo, ↓reduceIte]
+        exact ih _
+    · have hbit' : testBit' placed e = false := by
+        cases h' : testBit' placed e with
+        | true => exact absurd h' hbit
+        | false => rfl
+      simp only [hbit', Bool.false_eq_true, ↓reduceIte]
+      exact ih _
+
+/-- The DP table at indices already processed agrees with `clERec`. -/
+lemma cleArrUpTo_getD_eq (pred : Array Nat) (n : ℕ) :
+    ∀ k i : ℕ, i < k → i < 1 <<< n →
+      (cleArrUpTo pred n k).getD i 0 = clERec pred n i := by
+  intro k
+  induction k with
+  | zero => intro i hi _; omega
+  | succ k ih =>
+    intro i hi hN
+    rw [cleArrUpTo_succ]
+    by_cases hk : k = 0
+    · -- k = 0: cleArrUpTo (k+1) = cleArrUpTo k.  i < k+1 = 1 forces i = 0.
+      subst hk
+      have hi0 : i = 0 := by omega
+      subst hi0
+      simp only [↓reduceIte, cleArrUpTo_zero, clERec_zero]
+      -- Show ((Array.replicate (1 <<< n) 0).set! 0 1).getD 0 0 = 1.
+      rw [Array.getD_eq_getD_getElem?]
+      have hN' : 0 < 1 <<< n := hN
+      have : ((Array.replicate (1 <<< n) 0).set! 0 1)[0]? = some 1 := by
+        rw [show ((Array.replicate (1 <<< n) 0).set! 0 1) =
+              ((Array.replicate (1 <<< n) 0).setIfInBounds 0 1) from rfl]
+        rw [Array.getElem?_setIfInBounds_self_of_lt]
+        simp [Array.size_replicate]; exact hN'
+      rw [this]; rfl
+    · -- k ≥ 1.
+      simp only [hk, ↓reduceIte]
+      rcases Nat.lt_or_eq_of_le (Nat.le_of_lt_succ hi) with hlt | heq
+      · -- i < k: index unchanged by set!.
+        have hki : k ≠ i := Nat.ne_of_gt hlt
+        rw [show ((cleArrUpTo pred n k).set! k _) =
+              ((cleArrUpTo pred n k).setIfInBounds k _) from rfl]
+        rw [Array.getD_eq_getD_getElem?, Array.getElem?_setIfInBounds_ne hki]
+        rw [← Array.getD_eq_getD_getElem?]
+        exact ih i hlt hN
+      · -- i = k: f[k] gets set to cleStep pred n k (cleArrUpTo pred n k).
+        subst heq
+        rw [show ((cleArrUpTo pred n i).set! i _) =
+              ((cleArrUpTo pred n i).setIfInBounds i _) from rfl]
+        rw [Array.getD_eq_getD_getElem?, Array.getElem?_setIfInBounds_self_of_lt
+              (by rw [cleArrUpTo_size]; exact hN)]
+        -- Goal: cleStep pred n i (cleArrUpTo pred n i) = clERec pred n i.
+        have hi_pos : 0 < i := Nat.pos_of_ne_zero hk
+        obtain ⟨pl, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hk
+        rw [clERec_succ]
+        apply cleStep_congr
+        intro j hj
+        have hjN : j < 1 <<< n := lt_of_lt_of_le hj (le_of_lt hN)
+        -- LHS: ih gives the value at j.
+        rw [ih j hj hjN]
+        -- RHS: Array.ofFn at index j < size = pl.succ.
+        have hj_size : j < (Array.ofFn (fun (i : Fin pl.succ) =>
+            clERec pred n i.val)).size := by
+          rw [Array.size_ofFn]; exact hj
+        rw [Array.getD_eq_getD_getElem?,
+            Array.getElem?_eq_getElem hj_size,
+            Array.getElem_ofFn]
+        rfl
+
+/-- **Main bridge:** the imperative DP equals `clERec` at the full mask. -/
+theorem countLinearExtensions_eq_clERec (pred : Array Nat) (n : ℕ) :
+    countLinearExtensions pred n = clERec pred n ((1 <<< n) - 1) := by
+  have hN : 0 < 1 <<< n := by rw [Nat.one_shiftLeft]; exact Nat.two_pow_pos n
+  have hN' : (1 <<< n) - 1 < 1 <<< n := Nat.sub_lt hN Nat.one_pos
+  unfold countLinearExtensions
+  -- Unfold to (cleArrUpTo pred n N).getD (N-1) 0.
+  show (((List.range (1 <<< n)).foldl _ ((Array.replicate (1 <<< n) 0).set! 0 1))).getD ((1 <<< n) - 1) 0 = _
+  exact cleArrUpTo_getD_eq pred n (1 <<< n) ((1 <<< n) - 1) hN' hN'
 
 end Case3Enum
 end Step8
