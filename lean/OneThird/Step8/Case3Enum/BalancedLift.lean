@@ -29,19 +29,35 @@ strengthened partial order `predOrderPlus`) for the slow-path lift.
   from `findSymmetricPair pred n = some (x, y)`); `swap_preserves_le`;
   `hasBalancedPair_of_symmetric`.
 
-## Slow-path lift status
+## What is delivered (this file, A4b — slow-path infrastructure)
 
-The slow-path lift of `hasBalancedPairSlow` requires:
+* §4 — Warshall properties on `addEdgeClose`-augmented pred:
+  bit-monotonicity (`warshall_bit_mono`), `predBitsBoundedBy`
+  preservation (`warshall_predBitsBoundedBy`), and SOUNDNESS
+  (`warshall_addEdge_sound`: bit-relation of the warshall output ⊆
+  `predLTPlus`). The doubly-nested for-loop is handled by reducing
+  the imperative form to a list-`foldl` via a generic
+  `Id.forIn_invariant` helper, then preserving each invariant
+  through the inner step (`innerStep`) by induction on the
+  inner/outer lists.
+* §5 — Helper lemmas for the slow-path bridge:
+  `predLT_pred_subset_predAddEdge` (warshall `bit_mono` lifted to
+  `predLT`), `predLT_predAddEdge_xy` (the `(x, y)` bit survives the
+  warshall pass), and `predBitsBoundedBy_predAddEdge`.
 
-* a `ValidPrefix (addEdgeClose pred n x.val y.val) n Finset.univ ≃
-  {L : LinearExt (predOrder pred h) // L.lt x y}` bijection (uses
-  A3's lower-level `clERec_eq_card_validPrefix`);
-* warshall properties on `addEdgeClose`: bit-monotonicity,
-  `predBitsBoundedBy` preservation, and SOUNDNESS (bit-relation of
-  the warshall output ⊆ `predLTPlus`).
+## Slow-path bridge status
 
-This infrastructure is deferred to a follow-up work item; see the
-mailbox for the split proposal.
+The full Bool→Prop lift of `hasBalancedPairSlow` has been split into
+follow-up work items (see `mg mail` history). The remaining pieces:
+
+* §6 — `ValidPrefix (addEdgeClose pred n x.val y.val) n Finset.univ ≃
+  {L : LinearExt (predOrder pred h) // L.lt x y}` bridge. Requires
+  exposing `validPrefixUnivEquivLinearExt` from
+  `Correctness.lean` (currently `private`) or duplicating the ~150 LoC
+  position-of permutation construction.
+* §7 — `hasBalancedPairSlow` `Bool → Prop` lift via `forIn`
+  unrolling and the probability-bound bridge.
+* §8 — Final `bounded_irreducible_balanced`-consumable theorem.
 
 ## References
 
@@ -381,6 +397,474 @@ theorem hasBalancedPair_of_symmetric
     rw [probLT_eq_half_of_symmetric h hSym]; norm_num
 
 end FindSymmetricPair
+
+/-! ### §4 — Warshall properties on `addEdgeClose`-augmented pred
+
+We prove three properties of `Case3Enum.warshall`, all needed for the
+slow-path bridge:
+
+* **Bit-monotonicity**: warshall does not remove bits.
+* **`predBitsBoundedBy` preservation**: bit-bounded input gives a
+  bit-bounded output.
+* **SOUNDNESS**: for any transitive `R : Nat → Nat → Prop`
+  containing the input bit-relation, the output bit-relation is also
+  contained in `R`.
+
+To make the doubly-nested for-loop tractable, we first reduce the
+imperative `Case3Enum.warshall` to a list-`foldl` recursive form
+(`warshallRec`), then induct on the list level. -/
+
+section WarshallProps
+
+open Case3Enum
+
+/-! #### §4.1 — `set!` / `getD` helpers -/
+
+/-- `(out.set! v w).getD v' 0` analyzed by case on `v' = v` and bounds. -/
+private lemma getD_set!_eq (out : Array Nat) (v : Nat) (w : Nat) (v' : Nat) :
+    (out.set! v w).getD v' 0 =
+      if v' = v ∧ v < out.size then w else out.getD v' 0 := by
+  rw [Array.set!_eq_setIfInBounds]
+  by_cases hv' : v' = v
+  · subst hv'
+    by_cases hvsize : v' < out.size
+    · simp only [Array.getD_eq_getD_getElem?,
+        Array.getElem?_setIfInBounds_self_of_lt hvsize, Option.getD_some,
+        and_self, hvsize, ↓reduceIte, true_and, if_pos hvsize]
+    · rw [Array.setIfInBounds_eq_of_size_le (Nat.not_lt.mp hvsize)]
+      simp [hvsize]
+  · have hne : v' ≠ v := hv'
+    have hne' : v ≠ v' := fun h => hne h.symm
+    simp only [Array.getD_eq_getD_getElem?,
+      Array.getElem?_setIfInBounds_ne hne', and_iff_left_of_imp]
+    rw [if_neg]
+    intro ⟨h1, _⟩; exact hne h1
+
+/-- Bits of `0` are all unset. -/
+private lemma testBit'_zero (u : ℕ) : testBit' 0 u = false := by
+  unfold testBit' bit
+  rw [Nat.zero_and]
+  rfl
+
+/-- `getD` at an out-of-bounds index returns the default. -/
+private lemma getD_out_of_bounds (out : Array Nat) (v : Nat)
+    (h : out.size ≤ v) : out.getD v 0 = 0 := by
+  rw [Array.getD_eq_getD_getElem?, Array.getElem?_eq_none h]
+  rfl
+
+/-! #### §4.2 — Generic `forIn` invariant lemma -/
+
+/-- A `forIn` over a list in the `Id` monad preserves any predicate `P`
+whose body always evaluates to `pure (yield acc')` with `P acc'`. -/
+private theorem Id.forIn_invariant {α : Type} (l : List α)
+    (init : Array Nat) (P : Array Nat → Prop) (h_init : P init)
+    (body : α → Array Nat → Id (ForInStep (Array Nat)))
+    (h_step : ∀ x ∈ l, ∀ acc : Array Nat, P acc →
+      ∃ acc', body x acc = (pure (ForInStep.yield acc') : Id _) ∧ P acc') :
+    P (forIn (m := Id) l init body) := by
+  induction l generalizing init with
+  | nil =>
+    show P (Id.run (forIn [] init body))
+    simp [forIn]; exact h_init
+  | cons x xs ih =>
+    rw [List.forIn_cons]
+    obtain ⟨acc', hbody, hPacc'⟩ := h_step x List.mem_cons_self init h_init
+    show P (Id.run (body x init >>= _))
+    rw [hbody]
+    show P (Id.run (forIn xs acc' body))
+    exact ih acc' hPacc' (fun y hy acc hacc => h_step y (List.mem_cons_of_mem _ hy) acc hacc)
+
+/-! #### §4.3 — Bit-monotonicity, bit-bounded preservation, R-soundness
+
+We package the imperative warshall's structural property: at the start
+of each outer iteration, the "k-row" `out[k]` has been frozen as `pk`,
+and the inner for-loop OR's `pk` into entries `out[v]` whose bit `k` is
+set. This means that any predicate `P` that:
+
+(a) is preserved by the inner step `out ↦ if testBit' out[v] k then
+    out.set! v (out[v] ||| pk) else out`,
+
+(b) is preserved by the outer step (which calls the inner pass),
+
+is preserved by the imperative warshall. -/
+
+/-- The inner step. -/
+private def innerStep (k pk v : Nat) (out : Array Nat) : Array Nat :=
+  if testBit' (out.getD v 0) k then out.set! v (out.getD v 0 ||| pk) else out
+
+private lemma innerStep_eq_imperative_body (k v : Nat) (pk : Nat)
+    (out : Array Nat) :
+    (if (out.getD v 0 &&& bit k != 0) = true then
+      out.set! v (out.getD v 0 ||| pk) else out) =
+    innerStep k pk v out := by
+  unfold innerStep testBit'
+  rfl
+
+/-! #### §4.4 — Inner step preserves bit-monotonicity -/
+
+private lemma innerStep_bit_mono (k pk v : Nat) (out : Array Nat)
+    {u v' : Nat} (h : testBit' (out.getD v' 0) u = true) :
+    testBit' ((innerStep k pk v out).getD v' 0) u = true := by
+  unfold innerStep
+  split_ifs with hgate
+  · rw [getD_set!_eq]
+    split_ifs with hcase
+    · obtain ⟨hv'_eq, _⟩ := hcase
+      subst hv'_eq
+      rw [testBit'_eq, Nat.testBit_or, ← testBit'_eq, h]; rfl
+    · exact h
+  · exact h
+
+private lemma innerStep_bits_bounded (k pk v : Nat) (out : Array Nat)
+    {v' u : Nat}
+    (hout : testBit' (out.getD v' 0) u = false)
+    (hpk : testBit' pk u = false) :
+    testBit' ((innerStep k pk v out).getD v' 0) u = false := by
+  unfold innerStep
+  split_ifs with hgate
+  · rw [getD_set!_eq]
+    split_ifs with hcase
+    · obtain ⟨hv'_eq, _⟩ := hcase
+      subst hv'_eq
+      rw [testBit'_eq, Nat.testBit_or, ← testBit'_eq, hout,
+          ← testBit'_eq, hpk]
+      rfl
+    · exact hout
+  · exact hout
+
+/-! #### §4.5 — Imperative inner forIn body equals `pure (yield (innerStep ...))` -/
+
+/-- The body of the imperative inner for-loop reduces, in `Id`, to
+`pure (yield (innerStep k pk v out))`. The leading `pure unit;` discards
+are absorbed by the monad laws. -/
+private lemma inner_body_eq (k pk v : Nat) (out : Array Nat) :
+    (if (out.getD v 0 &&& bit k != 0) = true then
+      (do pure PUnit.unit; pure (ForInStep.yield (out.set! v (out.getD v 0 ||| pk))) : Id _)
+    else
+      (do pure PUnit.unit; pure (ForInStep.yield out) : Id _)) =
+    (pure (ForInStep.yield (innerStep k pk v out)) : Id _) := by
+  unfold innerStep testBit'
+  split_ifs <;> rfl
+
+/-! #### §4.6 — Bit-monotonicity, the imperative version -/
+
+/-- A wrapper for the outer for-in body of the imperative warshall.
+Made explicit to factor through `Id.forIn_invariant`. -/
+private def warshallOuterBody (n : ℕ) :
+    Nat → Array Nat → Id (ForInStep (Array Nat)) :=
+  fun k acc =>
+    (do
+      pure PUnit.unit
+      let r ← (forIn (m := Id) (List.range' 0 n) acc (fun v acc' =>
+        if (acc'.getD v 0 &&& bit k != 0) = true then
+          (do pure PUnit.unit; pure (ForInStep.yield (acc'.set! v (acc'.getD v 0 ||| acc.getD k 0))) : Id _)
+        else
+          (do pure PUnit.unit; pure (ForInStep.yield acc') : Id _)) : Id _)
+      pure (ForInStep.yield r))
+
+private lemma warshall_imperative_eq (pred : Array Nat) (n : ℕ) :
+    Case3Enum.warshall pred n =
+      forIn (m := Id) (List.range' 0 n) pred (warshallOuterBody n) := by
+  classical
+  unfold Case3Enum.warshall warshallOuterBody
+  simp only [Std.Legacy.Range.forIn_eq_forIn_range', Std.Legacy.Range.size,
+    Nat.sub_zero, Nat.add_sub_cancel, Nat.div_one]
+  rfl
+
+/-- The outer-loop body, evaluated, satisfies any predicate preserved
+by the inner forIn (whose body is gated OR with `pk = acc[k]`). The
+inner-step hypothesis is given access to `v < n`. -/
+private lemma warshallOuterBody_pred (n : ℕ) (k : Nat) (acc : Array Nat)
+    (P : Array Nat → Prop) (hacc : P acc)
+    (h_inner_step : ∀ v, v < n → ∀ acc', P acc' →
+      P (innerStep k (acc.getD k 0) v acc')) :
+    ∃ acc', warshallOuterBody n k acc =
+      (pure (ForInStep.yield acc') : Id _) ∧ P acc' := by
+  have hbody_eq :
+      (fun (v : Nat) (acc' : Array Nat) =>
+        (if (acc'.getD v 0 &&& bit k != 0) = true then
+          (do pure PUnit.unit; pure (ForInStep.yield (acc'.set! v (acc'.getD v 0 ||| acc.getD k 0))) : Id _)
+        else
+          (do pure PUnit.unit; pure (ForInStep.yield acc') : Id _) :
+          Id (ForInStep (Array Nat)))) =
+      fun v acc' =>
+        (pure (ForInStep.yield (innerStep k (acc.getD k 0) v acc')) : Id _) := by
+    funext v acc'
+    exact inner_body_eq k (acc.getD k 0) v acc'
+  set inner_result : Array Nat :=
+    (forIn (m := Id) (List.range' 0 n) acc (fun v acc' =>
+      (pure (ForInStep.yield (innerStep k (acc.getD k 0) v acc')) : Id _))) with hres
+  have h_inner_pred : P inner_result := by
+    rw [hres]
+    apply Id.forIn_invariant (P := P)
+    · exact hacc
+    · intro v hv acc' hacc'
+      have hv_lt : v < n := by
+        have := List.mem_range'.mp hv
+        omega
+      exact ⟨_, rfl, h_inner_step v hv_lt acc' hacc'⟩
+  refine ⟨inner_result, ?_, h_inner_pred⟩
+  unfold warshallOuterBody
+  rw [hbody_eq]
+  rfl
+
+/-- **Bit-monotonicity of `Case3Enum.warshall`**: bits in the input are
+preserved in the output. -/
+theorem warshall_bit_mono (pred : Array Nat) (n : ℕ)
+    {u v : Nat} (h : testBit' (pred.getD v 0) u = true) :
+    testBit' ((Case3Enum.warshall pred n).getD v 0) u = true := by
+  rw [warshall_imperative_eq]
+  apply Id.forIn_invariant
+    (P := fun out => testBit' (out.getD v 0) u = true)
+  · exact h
+  · intro k _ acc hacc
+    apply warshallOuterBody_pred
+    · exact hacc
+    · intro w _ acc' hacc'
+      exact innerStep_bit_mono _ _ _ _ hacc'
+
+/-! #### §4.7 — `predBitsBoundedBy` preservation -/
+
+/-- **`predBitsBoundedBy` is preserved by `Case3Enum.warshall`.** -/
+theorem warshall_predBitsBoundedBy (pred : Array Nat) (n : ℕ)
+    (hbnd : predBitsBoundedBy pred n) :
+    predBitsBoundedBy (Case3Enum.warshall pred n) n := by
+  intro e u hu
+  rw [warshall_imperative_eq]
+  set P : Array Nat → Prop :=
+    fun out => ∀ v < n, ∀ u ≥ n, testBit' (out.getD v 0) u = false
+  have hpred_init : P pred := fun v hv u' hu' => hbnd ⟨v, hv⟩ u' hu'
+  have h_final : P
+      (forIn (m := Id) (List.range' 0 n) pred (warshallOuterBody n)) := by
+    apply Id.forIn_invariant (P := P)
+    · exact hpred_init
+    · intro k hk acc hacc
+      have hk_lt : k < n := by
+        have := List.mem_range'.mp hk
+        omega
+      apply warshallOuterBody_pred
+      · exact hacc
+      · intro w _ acc' hacc' v' hv' u' hu'
+        exact innerStep_bits_bounded _ _ _ _ (hacc' v' hv' u' hu')
+          (hacc k hk_lt u' hu')
+  exact h_final e.val e.isLt u hu
+
+/-! #### §4.8 — SOUNDNESS: bit-relation of `addEdgeClose pred n x y`
+contained in `predLTPlus pred x y`
+
+For an `x ∥ y` incomparable pair in `predOrder pred h`, we show that
+warshall applied to the augmented mask `pred + (x, y)` produces only
+bits whose pairs are in `predLTPlus pred x y`.
+
+The key facts used:
+* `predLTPlus` is *transitive* (provided by `predLTPlus_trans`).
+* Bits of `pred.set! y.val (pred[y.val] ||| bit x.val)` are either bits
+  of `pred` (so in `predLT pred ⊆ predLTPlus`) or the new bit `(x, y)`
+  (so `predLTPlus_xy`).
+* Each warshall inner step OR's `pk = out[k]` into `out[v]` gated by
+  `bit k of out[v] = true`. By `predLTPlus_trans`, the new bits stay in
+  `predLTPlus`. -/
+
+variable {n : ℕ}
+
+/-- **SOUNDNESS** of `Case3Enum.warshall (pred.set! y (pred[y] ||| bit x)) n`:
+the bit-relation of the warshall output (restricted to `Fin n`) is
+contained in `predLTPlus pred x y`. -/
+theorem warshall_addEdge_sound {pred : Array Nat}
+    (h : ValidPredMask pred n) (x y : Fin n)
+    (hxy : @Incomp (Fin n) (predOrder pred h).toLE x y)
+    (u v : Fin n)
+    (hbit : testBit'
+      ((Case3Enum.warshall (pred.set! y.val
+        (pred.getD y.val 0 ||| bit x.val)) n).getD v.val 0) u.val = true) :
+    predLTPlus pred x y u v := by
+  rw [warshall_imperative_eq] at hbit
+  set inputArr := pred.set! y.val (pred.getD y.val 0 ||| bit x.val)
+  set R : Fin n → Fin n → Prop := predLTPlus pred x y
+  set P : Array Nat → Prop :=
+    fun out => ∀ u v : Fin n,
+      testBit' (out.getD v.val 0) u.val = true → R u v with hP_def
+  -- Initial state satisfies P.
+  have hP_init : P inputArr := by
+    intro u v hbit
+    rw [show inputArr.getD v.val 0 =
+          if v.val = y.val ∧ y.val < pred.size
+          then pred.getD y.val 0 ||| bit x.val else pred.getD v.val 0 from
+        getD_set!_eq pred y.val _ v.val] at hbit
+    split_ifs at hbit with hcase
+    · obtain ⟨hvy, _⟩ := hcase
+      have hvy' : v = y := Fin.ext hvy
+      subst hvy'
+      -- bit u.val of (pred[y] | bit x.val) = true.
+      rw [testBit'_eq, Nat.testBit_or] at hbit
+      by_cases hpred_bit : Nat.testBit (pred.getD v.val 0) u.val = true
+      · have hpr : predLT pred u v := by
+          rw [show predLT pred u v ↔ testBit' (pred.getD v.val 0) u.val = true
+            from Iff.rfl, testBit'_iff_testBit]
+          exact hpred_bit
+        exact Or.inl hpr
+      · have hpred_bit_false : Nat.testBit (pred.getD v.val 0) u.val = false := by
+          cases hb : Nat.testBit (pred.getD v.val 0) u.val with
+          | true => exact absurd hb hpred_bit
+          | false => rfl
+        rw [hpred_bit_false, Bool.false_or] at hbit
+        -- bit u.val of `bit x.val = 1 <<< x.val` is true iff u.val = x.val.
+        unfold bit at hbit
+        rw [Nat.shiftLeft_eq, Nat.one_mul, Nat.testBit_two_pow] at hbit
+        have hux : x.val = u.val := by
+          rcases h_eq : decide (x.val = u.val) with _ | _
+          · rw [h_eq] at hbit; exact absurd hbit (Bool.false_ne_true)
+          · exact decide_eq_true_iff.mp h_eq
+        have hu : u = x := Fin.ext hux.symm
+        subst hu
+        -- Goal: R u y, with u = x (subst applied) and v = y (earlier subst).
+        -- After subst, the local var name may be `u` or `x`; use the lemma directly.
+        exact predLTPlus_xy _ _
+    · have hpr : predLT pred u v := hbit
+      exact Or.inl hpr
+  -- Apply outer forIn invariant.
+  have h_final : P
+      (forIn (m := Id) (List.range' 0 n) inputArr (warshallOuterBody n)) := by
+    apply Id.forIn_invariant (P := P)
+    · exact hP_init
+    · intro k hk acc hacc
+      have hk_lt : k < n := by
+        have := List.mem_range'.mp hk
+        omega
+      apply warshallOuterBody_pred
+      · exact hacc
+      · intro w hw acc' hacc' u' v' hbit'
+        -- Inner step at w: out[w] := out[w] | acc[k] (gated). v' (Fin n).
+        -- Show R u' v' from hbit' (bit u' of new out[v'] = true).
+        -- Cast w to Fin n.
+        let kFin : Fin n := ⟨k, hk_lt⟩
+        let wFin : Fin n := ⟨w, hw⟩
+        -- Analyse innerStep.
+        rw [show (innerStep k (acc.getD k 0) w acc').getD v'.val 0 =
+            if testBit' (acc'.getD w 0) k then
+              (acc'.set! w (acc'.getD w 0 ||| acc.getD k 0)).getD v'.val 0
+            else acc'.getD v'.val 0 by unfold innerStep; split_ifs <;> rfl]
+            at hbit'
+        split_ifs at hbit' with hgate
+        · -- Gate fired: out[v'.val] = if v'.val = w then ... else acc'[v'.val].
+          rw [getD_set!_eq] at hbit'
+          split_ifs at hbit' with hcase
+          · obtain ⟨hv'w, _⟩ := hcase
+            have hv'w_fin : v' = wFin := Fin.ext hv'w
+            -- bit u'.val of (acc'[w] | acc[k]) = true.
+            -- testBit' (a ||| b) i = testBit' a i || testBit' b i.
+            have h_or : testBit' (acc'.getD w 0) u'.val = true ∨
+                        testBit' (acc.getD k 0) u'.val = true := by
+              rw [testBit'_eq, Nat.testBit_or] at hbit'
+              rw [testBit'_eq, testBit'_eq]
+              cases h_a : Nat.testBit (acc'.getD w 0) u'.val with
+              | true => exact Or.inl rfl
+              | false =>
+                rw [h_a, Bool.false_or] at hbit'
+                exact Or.inr hbit'
+            rcases h_or with h1 | h2
+            · -- bit from acc'[w] true.
+              rw [hv'w_fin]
+              exact hacc' u' wFin h1
+            · -- bit from acc[k] true; need R u' kFin and R kFin wFin.
+              have hu_k : R u' kFin := hacc u' kFin h2
+              have hk_v : R kFin wFin := hacc' kFin wFin hgate
+              rw [hv'w_fin]
+              exact predLTPlus_trans h x y hxy hu_k hk_v
+          · -- v'.val ≠ w or w ≥ acc'.size: out[v'.val] unchanged.
+            exact hacc' u' v' hbit'
+        · -- Gate didn't fire: same as old out[v'.val].
+          exact hacc' u' v' hbit'
+  exact h_final u v hbit
+
+end WarshallProps
+
+/-! ### §5 — Helper lemmas for the slow-path bridge
+
+The full bridge `ValidPrefix(addEdgeClose) ↔ {L : LinearExt | L.lt x y}`
+requires access to private equivalences from `Correctness.lean`
+(`validPrefixUnivEquivLinearExt`, `ValidPrefix.toFinPerm`). The two
+helper lemmas below capture the warshall facts needed by the bridge
+and are deferred to a follow-up work item.
+
+* `predLT_pred_subset_predAddEdge` — bit-monotonicity at the
+  `predLT`-relation level.
+* `predLT_predAddEdge_xy` — the `(x, y)` bit is in the augmented
+  pred-mask. -/
+
+section SlowPathHelpers
+
+open Case3Enum
+
+variable {pred : Array Nat} {n : ℕ}
+
+/-- The augmented (closed) pred-mask for the `(x, y)` edge. -/
+def predAddEdge (pred : Array Nat) (n : ℕ) (x y : Fin n) : Array Nat :=
+  Case3Enum.warshall (pred.set! y.val (pred.getD y.val 0 ||| bit x.val)) n
+
+lemma predAddEdge_eq (pred : Array Nat) (n : ℕ) (x y : Fin n) :
+    predAddEdge pred n x y = Case3Enum.addEdgeClose pred n x.val y.val := by
+  unfold predAddEdge Case3Enum.addEdgeClose
+  rfl
+
+/-- `predLT pred ⊆ predLT (predAddEdge pred n x y)`. -/
+lemma predLT_pred_subset_predAddEdge (x y : Fin n) (u v : Fin n)
+    (hpred : predLT pred u v) :
+    predLT (predAddEdge pred n x y) u v := by
+  apply warshall_bit_mono _ n
+  rw [getD_set!_eq]
+  split_ifs with hcase
+  · obtain ⟨hvy, _⟩ := hcase
+    have hvy' : v = y := Fin.ext hvy
+    subst hvy'
+    rw [testBit'_eq, Nat.testBit_or]
+    rw [show Nat.testBit (pred.getD v.val 0) u.val = true from
+      testBit'_iff_testBit.mp hpred]
+    rfl
+  · exact hpred
+
+/-- `predLT (predAddEdge pred n x y) x y` (the `(x, y)` bit is set in
+the augmented pred-mask, provided `y.val < pred.size`). -/
+lemma predLT_predAddEdge_xy (x y : Fin n)
+    (hsize : y.val < pred.size) :
+    predLT (predAddEdge pred n x y) x y := by
+  apply warshall_bit_mono _ n
+  rw [getD_set!_eq]
+  rw [if_pos ⟨rfl, hsize⟩]
+  rw [testBit'_eq, Nat.testBit_or]
+  rw [show Nat.testBit (bit x.val) x.val = true from by
+    unfold bit
+    rw [Nat.shiftLeft_eq, Nat.one_mul, Nat.testBit_two_pow]
+    simp]
+  cases Nat.testBit (pred.getD y.val 0) x.val <;> rfl
+
+/-- `predBitsBoundedBy` of `predAddEdge`, given the same on `pred` and
+`y.val < pred.size`. -/
+lemma predBitsBoundedBy_predAddEdge (h_bnd : predBitsBoundedBy pred n)
+    (x y : Fin n) :
+    predBitsBoundedBy (predAddEdge pred n x y) n := by
+  apply warshall_predBitsBoundedBy
+  -- pred.set! y.val (pred[y.val] ||| bit x.val) is bit-bounded.
+  intro e u hu
+  rw [getD_set!_eq]
+  split_ifs with hcase
+  · obtain ⟨hey, _⟩ := hcase
+    rw [testBit'_eq, Nat.testBit_or]
+    have h1 : Nat.testBit (pred.getD e.val 0) u = false := by
+      have := h_bnd e u hu
+      rw [testBit'_eq] at this
+      exact this
+    rw [show pred.getD e.val 0 = pred.getD y.val 0 by rw [hey]] at h1
+    rw [h1, Bool.false_or]
+    -- bit u of `bit x.val = 1 <<< x.val` = false because u ≥ n > x.val.
+    unfold bit
+    rw [Nat.shiftLeft_eq, Nat.one_mul, Nat.testBit_two_pow]
+    have hx_lt : x.val < u := lt_of_lt_of_le x.isLt hu
+    have : x.val ≠ u := Nat.ne_of_lt hx_lt
+    simp [this]
+  · exact h_bnd e u hu
+
+end SlowPathHelpers
 
 end Case3Enum
 end Step8
