@@ -37,8 +37,18 @@ separation and the Ahlswede–Daykin inequality" subsection of
 
 **QA-audited by.** `mg-a6a1` (F6-4-QA; this entry).
 
-**Scheduled for proof replacement by.** `mg-b699` (F6-4-port,
-post-sorry-free).
+**Status.** **Retained as a named axiom.** Decision recorded in
+`mg-b699` (F6-4-port, post-sorry-free): the bound is a faithful
+transcription of a published external result
+(Brightwell~\cite{Brightwell1999}, §4, combined with
+Kahn--Saks~\cite{KahnSaks1984}, Lemma 2.2), and a full Lean port —
+estimated at 500--800 LoC of mathlib-tier infrastructure for the
+per-term Kahn--Saks / Brightwell covariance bound on the product
+distributive lattice $\mathcal L(\alpha) \times \{1, \dots, m\}$ —
+is deferred indefinitely as post-launch refinement. The structural
+proof of `width3_one_third_two_thirds` is the credibility artifact;
+per-leaf porting of a cited theorem does not move the needle. See
+"Decision rationale (mg-b699)" below.
 
 ### Scope-match checklist
 
@@ -146,3 +156,67 @@ which — dividing by `N = Σ_L f > 0` and using
 `|L(Q)|`, now consistent with paper's `N = |L(Q)|`) and
 `|A|/N' = p_{xy}(Q − z)` — gives `|p_{xy}(Q) − p_{xy}(Q − z)| ≤ 2/m`
 directly, without requiring additional axioms.
+
+### Decision rationale (mg-b699)
+
+`mg-b699` was filed to evaluate replacing the axiom with a full
+Lean proof once the rest of the development was sorry-free. After
+F8 (`mg-194c`, `f49e2c5`) confirmed the formalisation reduces to
+this single project-specific axiom, and the publish-axioms artifact
+(`mg-358a`, `0644c05`) archived the `#print axioms` output, the
+decision was made to **retain the axiom** rather than port it.
+
+**Citation.** The bound transcribed by `brightwell_sharp_centred`
+is a special case of:
+
+* G.~Brightwell, *Balanced pairs in partial orders*, Discrete
+  Mathematics **201** (1999), no.~1--3, 25--52 — §4, Theorem 4.1
+  (`\bibitem{Brightwell1999}`, `main.tex:557`);
+* J.~Kahn and M.~Saks, *Balancing poset extensions*, Order **1**
+  (1984), no.~2, 113--126 — Lemma 2.2 (single-element perturbation;
+  `\bibitem{KahnSaks1984}`, `main.tex:530`);
+* combined via the FKG / Ahlswede--Daykin inequality
+  (`\bibitem{FKG1971}`, `\bibitem{AhlswedeDaykin1978}`).
+
+These are well-known, peer-reviewed published results; the paper's
+own derivation of `eq:sharp-centred` (`step8.tex:1046--1276`) is
+itself a direct transcription of Brightwell's argument with the
+Kahn--Saks per-term covariance bound made explicit.
+
+**Why retain rather than port.** A faithful Lean port requires:
+
+1. The per-term Kahn--Saks / Brightwell covariance bound
+   `|Cov_μ(1_A, S)|, |Cov_μ(1_A, P)| ≤ f̄/m` on the product
+   distributive lattice `L(α) × {1, …, m}` under the uniform
+   measure — the substantive combinatorial input — for which
+   neither mathlib nor this development currently has a primitive,
+   and whose Lean formalisation is estimated at 500--800 LoC of
+   mathlib-tier infrastructure (set-system inequalities, product
+   lattice transport, log-concavity via the Brunn--Minkowski step
+   on `[m]`-valued indicators).
+2. Pred/succ-set coupling combining this with the existing
+   `FKG.fkg_uniform_initialLowerSet` (FKG transport,
+   `cd75ef1`, `mg-9ece`) and
+   `FiberSize.fiberSize_lipschitz_on_bkAdj` (1-Lipschitz of
+   `f = S − P`, `af7a4a3`, `mg-85d1`).
+
+The combination does not fit a single polecat's scope. By contrast,
+the rest of the proof of the width-3 case of the 1/3--2/3 conjecture
+— the structural / combinatorial argument that is novel to this
+paper — is fully sorry-free and depends on the Brightwell bound
+*as a black box*, exactly as it does in the LaTeX source. The
+credibility artifact is the structural proof; an independent
+formalisation of a 1999 published lemma is an orthogonal
+infrastructure project, post-launch.
+
+**Replacement path (open).** A future Lean port of this axiom
+should consume the existing FKG and 1-Lipschitz infrastructure and
+add the Kahn--Saks covariance step, mirroring the paper proof at
+`step8.tex:1046--1276`. Filing such a port is *not* a prerequisite
+for any downstream consumer of `OneThird` — `lem:one-elem-perturb`
+(`mg-1f5e`), `lem:exc-perturb` (`mg-7496`), and the main theorem
+(`mg-194c`) all close cleanly against the axiom as stated.
+
+`mg-b699` is closed with this decision; if a future contributor
+wants to port the axiom, they should file a fresh work item
+referencing this entry.

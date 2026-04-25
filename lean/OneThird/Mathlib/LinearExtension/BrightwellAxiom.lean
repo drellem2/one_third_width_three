@@ -49,9 +49,17 @@ The Lean inputs — FKG on the uniform measure on `LinearExt α`
 and the 1-Lipschitz property of `f = S − P`
 (`OneThird.Mathlib.LinearExtension.FiberSize.fiberSize_lipschitz_on_bkAdj`) —
 are already formalised. The present file declares the Brightwell
-coupling bound itself as an axiom; the full Lean port is deferred to
-work item `mg-b699` ("F6-4-port: post-sorry-free"), which will
-replace the axiom with a proof combining those inputs.
+coupling bound itself as a named axiom. Per the `mg-b699`
+(F6-4-port) decision recorded in `lean/AXIOMS.md`, the axiom is
+**retained** rather than ported: it is a faithful transcription of
+Brightwell's [*Balanced pairs in partial orders*, Discrete Math.
+**201** (1999), §4, Theorem 4.1] combined with Kahn--Saks
+[*Balancing poset extensions*, Order **1** (1984), Lemma 2.2], a
+published external result whose full Lean formalisation is
+estimated at 500--800 LoC of mathlib-tier covariance / set-system
+infrastructure orthogonal to the structural proof. A future port
+remains an open option but is not a prerequisite for any
+downstream consumer.
 
 ## Axiom signature
 
@@ -93,7 +101,8 @@ The hypotheses pin the paper scope:
   dividing by `N · N' > 0` and translating to `probLT`.
 * **`mg-a6a1` (F6-4-QA).** Verifies the axiom is a faithful
   transcription of the paper statement.
-* **`mg-b699` (F6-4-port).** Replaces the axiom with a full proof.
+* **`mg-b699` (F6-4-port).** Decision: retain as named axiom
+  rather than port (see `lean/AXIOMS.md`).
 
 ## References
 
@@ -140,9 +149,12 @@ fibre-sum identity `step8.tex:939`) and
 product lattice `L(α) × {1, …, m}` together with the per-term
 Kahn–Saks / Brightwell covariance bound
 `|Cov_μ(1_A, S)|, |Cov_μ(1_A, P)| ≤ f̄/m`. The FKG and 1-Lipschitz
-inputs are available (`FKG.lean`, `FiberSize.lean`); the Brightwell
-coupling combining them is a load-bearing external result tracked
-under `mg-b699` for post-sorry-free formalisation.
+inputs are formalised (`FKG.lean`, `FiberSize.lean`); the Brightwell
+coupling combining them is a published external result
+(Brightwell 1999, §4 Theorem 4.1; Kahn–Saks 1984 Lemma 2.2). Per
+the `mg-b699` (F6-4-port) decision recorded in `lean/AXIOMS.md`,
+this axiom is retained as a faithful transcription of that
+published bound rather than ported.
 -/
 axiom brightwell_sharp_centred
     (Pred Succ : Finset α)
