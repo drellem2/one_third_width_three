@@ -1163,11 +1163,260 @@ theorem clERec_eq_card_validPrefix {pred : Array Nat} {n : ℕ}
 /-! #### §4.10 — `ValidPrefix univ ≃ LinearExt (Fin n) [predOrder]`
 
 The Birkhoff-style bridge from full-prefix valid orderings to linear
-extensions of `(Fin n, predOrder pred h)`.  Deferred — typeclass
-plumbing for `predOrder` vs `Fin.instPartialOrder` on `Fin n` is
-non-trivial: `Fin (Fintype.card (Fin n))` def-reduces to `Fin n`, so
-the LE on the codomain of `LinearExt.monotone` can synthesize either
-`Fin.instPartialOrder` or `predOrder pred h` depending on context. -/
+extensions of `(Fin n, predOrder pred h)`.  We build a permutation
+`Fin n ≃ Fin n` from `P` directly, then compose with
+`Fin.castOrderIso (Fintype.card_fin n).symm` at the `LinearExt`
+boundary to land in `Fin n ≃ Fin (Fintype.card (Fin n))`.  Since
+`Fintype.card` is a regular (non-`@[reducible]`) `def`, the codomain
+type does not reduce to `Fin n`, keeping `LE` synthesis on the
+codomain pointed at the standard `Fin.instLE` (`val ≤ val`).
+
+The `predClosed` invariant translates exactly to monotonicity for
+`predOrder`: `x ≤_{predOrder} y` is `x = y ∨ predLT pred x y`, and in
+the latter case `predClosed` produces a position `j < i` (where
+`i = (P.toFinPerm.symm) y`) with `P i = y` and `P j = x`, giving
+`(P.toFinPerm.symm) x = j < i = (P.toFinPerm.symm) y`. -/
+
+/-- Cardinality of `Finset.univ : Finset (Fin n)` is `n`. -/
+private lemma univ_fin_card (n : ℕ) :
+    (Finset.univ : Finset (Fin n)).card = n := by
+  rw [Finset.card_univ, Fintype.card_fin]
+
+/-- Lift a `Fin n` to a `Fin (univ.card)` element with the same value. -/
+private def liftToCardUniv {n : ℕ} (i : Fin n) :
+    Fin (Finset.univ : Finset (Fin n)).card :=
+  Fin.cast (univ_fin_card n).symm i
+
+@[simp] private lemma liftToCardUniv_val {n : ℕ} (i : Fin n) :
+    (liftToCardUniv i).val = i.val := rfl
+
+/-- Lower a `Fin (univ.card)` element to `Fin n`. -/
+private def lowerFromCardUniv {n : ℕ}
+    (j : Fin (Finset.univ : Finset (Fin n)).card) : Fin n :=
+  Fin.cast (univ_fin_card n) j
+
+@[simp] private lemma lowerFromCardUniv_val {n : ℕ}
+    (j : Fin (Finset.univ : Finset (Fin n)).card) :
+    (lowerFromCardUniv j).val = j.val := rfl
+
+@[simp] private lemma lowerFromCardUniv_liftToCardUniv {n : ℕ} (i : Fin n) :
+    lowerFromCardUniv (liftToCardUniv i) = i := Fin.ext rfl
+
+@[simp] private lemma liftToCardUniv_lowerFromCardUniv {n : ℕ}
+    (j : Fin (Finset.univ : Finset (Fin n)).card) :
+    liftToCardUniv (lowerFromCardUniv j) = j := Fin.ext rfl
+
+/-- The position-of permutation derived from a full-prefix `ValidPrefix`. -/
+private noncomputable def ValidPrefix.toFinPerm {pred : Array Nat}
+    (P : ValidPrefix pred n (Finset.univ : Finset (Fin n))) :
+    Fin n ≃ Fin n := by
+  classical
+  let g : Fin n → Fin n := fun i => P.val (liftToCardUniv i)
+  have hg_inj : Function.Injective g := by
+    intro a b hab
+    have h1 : liftToCardUniv a = liftToCardUniv b := P.inj hab
+    have h2 : (liftToCardUniv a).val = (liftToCardUniv b).val := congrArg Fin.val h1
+    exact Fin.ext h2
+  exact Equiv.ofBijective g (Finite.injective_iff_bijective.mp hg_inj)
+
+private lemma ValidPrefix.toFinPerm_apply {pred : Array Nat}
+    (P : ValidPrefix pred n (Finset.univ : Finset (Fin n))) (i : Fin n) :
+    P.toFinPerm i = P.val (liftToCardUniv i) := rfl
+
+/-- The forward map: a valid prefix on `univ` defines a linear extension
+of `(Fin n, predOrder pred h)`.  Built via `@LinearExt.mk` with explicit
+typeclass arguments to keep the codomain `LE` resolution unambiguous. -/
+private noncomputable def ValidPrefix.toLinearExtUniv {pred : Array Nat}
+    (h : ValidPredMask pred n)
+    (P : ValidPrefix pred n (Finset.univ : Finset (Fin n))) :
+    @LinearExt (Fin n) (predOrder pred h) _ :=
+  @LinearExt.mk (Fin n) (predOrder pred h) _
+    (P.toFinPerm.symm.trans (Fin.castOrderIso (Fintype.card_fin n).symm).toEquiv)
+    (fun {x y} hxy => by
+      -- LHS hxy : @LE.le (Fin n) (predOrder pred h).toLE x y
+      -- which by definition is `x = y ∨ predLT pred x y`.
+      have hxy' : x = y ∨ predLT pred x y := hxy
+      -- Goal (Fin.instLE on Fin (Fintype.card (Fin n)) since `Fintype.card` is non-reducible):
+      -- (cast (P.toFinPerm.symm x)) ≤ (cast (P.toFinPerm.symm y))  ↔  val ≤ val
+      -- Reduce via `castOrderIso` preserving `.val`.
+      suffices h_val : (P.toFinPerm.symm x).val ≤ (P.toFinPerm.symm y).val by
+        exact h_val
+      rcases hxy' with rfl | hlt
+      · exact le_refl _
+      · -- Set i := P.toFinPerm.symm y. Then P.toFinPerm i = y.
+        set i := P.toFinPerm.symm y with hi_def
+        have hi_y : P.toFinPerm i = y := P.toFinPerm.apply_symm_apply y
+        have hi_y_val : P.val (liftToCardUniv i) = y := hi_y
+        have hpred : predLT pred x (P.val (liftToCardUniv i)) := by
+          rw [hi_y_val]; exact hlt
+        obtain ⟨j, hjlt, hju⟩ := P.predClosed (liftToCardUniv i) x hpred
+        -- j : Fin (univ.card), j.val < i.val, P.val j = x.
+        let j' : Fin n := lowerFromCardUniv j
+        have hg_j' : P.toFinPerm j' = x := by
+          show P.val (liftToCardUniv j') = x
+          rw [liftToCardUniv_lowerFromCardUniv]; exact hju
+        have hsymm_x : P.toFinPerm.symm x = j' := by
+          rw [← hg_j', P.toFinPerm.symm_apply_apply]
+        rw [hsymm_x]
+        show j.val ≤ i.val
+        exact le_of_lt hjlt)
+
+/-- Inverse map: a linear extension of `(Fin n, predOrder pred h)`
+defines a valid prefix on `univ`.  We invert the linear-extension's
+`toFun` (composed with `Fin.castOrderIso` for the cardinality cast)
+to obtain the position-to-element function. -/
+private noncomputable def linearExtUnivToValidPrefix {pred : Array Nat}
+    (h : ValidPredMask pred n)
+    (L : @LinearExt (Fin n) (predOrder pred h) _) :
+    ValidPrefix pred n (Finset.univ : Finset (Fin n)) := by
+  classical
+  letI inst : PartialOrder (Fin n) := predOrder pred h
+  -- The cast: Fin (Fintype.card (Fin n)) ≃ Fin n.
+  let cast_inv : Fin (Fintype.card (Fin n)) ≃ Fin n :=
+    (Fin.castOrderIso (Fintype.card_fin n)).toEquiv
+  -- L.toFun : Fin n ≃ Fin (Fintype.card (Fin n)), composed with cast_inv: Fin n ≃ Fin n.
+  let toFun_perm : Fin n ≃ Fin n := L.toFun.trans cast_inv
+  -- f i = element placed at position i.
+  let f : Fin (Finset.univ : Finset (Fin n)).card → Fin n :=
+    fun i => toFun_perm.symm (lowerFromCardUniv i)
+  have h_inj : Function.Injective f := by
+    intro a b hab
+    have h1 : lowerFromCardUniv a = lowerFromCardUniv b :=
+      toFun_perm.symm.injective hab
+    have h2 : (lowerFromCardUniv a).val = (lowerFromCardUniv b).val := congrArg Fin.val h1
+    exact Fin.ext h2
+  refine ⟨f, h_inj, ?_, ?_⟩
+  · intro _; exact Finset.mem_univ _
+  · intro i u hu
+    -- hu : predLT pred u (f i).
+    -- Need: ∃ j, j.val < i.val ∧ f j = u.
+    -- Take j := liftToCardUniv (toFun_perm u).
+    -- Need (toFun_perm u).val < i.val.
+    -- Use L.monotone applied to u <_pred f i.
+    have hule : @LE.le (Fin n) inst.toLE u (f i) := Or.inr hu
+    have hune : u ≠ f i := by
+      intro heq
+      apply h.irrefl u
+      show predLT pred u u
+      conv_rhs => rw [heq]
+      exact hu
+    -- L.monotone : @LE.le (Fin n) inst.toLE u (f i) → L.toFun u ≤ L.toFun (f i) (Fin instance).
+    have hLmono : L.toFun u ≤ L.toFun (f i) := L.monotone hule
+    have hL_inj : L.toFun u ≠ L.toFun (f i) := fun h => hune (L.toFun.injective h)
+    have hLlt : (L.toFun u).val < (L.toFun (f i)).val := by
+      have hle' : (L.toFun u).val ≤ (L.toFun (f i)).val := hLmono
+      have hne : (L.toFun u).val ≠ (L.toFun (f i)).val := fun h => hL_inj (Fin.ext h)
+      omega
+    -- toFun_perm u = cast_inv (L.toFun u); same val.
+    -- toFun_perm (f i) = lowerFromCardUniv i; val = i.val.
+    have h_tf_fi : toFun_perm (f i) = lowerFromCardUniv i := by
+      show toFun_perm (toFun_perm.symm _) = _
+      exact toFun_perm.apply_symm_apply _
+    have h_tf_u_val : (toFun_perm u).val = (L.toFun u).val := rfl
+    have h_tf_fi_val : (toFun_perm (f i)).val = (L.toFun (f i)).val := rfl
+    have hToFunLt : (toFun_perm u).val < (toFun_perm (f i)).val := by
+      rw [h_tf_u_val, h_tf_fi_val]; exact hLlt
+    have h_pos_fi : (toFun_perm (f i)).val = i.val := by
+      rw [h_tf_fi]; rfl
+    have h_pos_u_lt : (toFun_perm u).val < i.val := by
+      rw [← h_pos_fi]; exact hToFunLt
+    refine ⟨liftToCardUniv (toFun_perm u), h_pos_u_lt, ?_⟩
+    -- Goal: f (liftToCardUniv (toFun_perm u)) = u.
+    show toFun_perm.symm (lowerFromCardUniv (liftToCardUniv (toFun_perm u))) = u
+    rw [lowerFromCardUniv_liftToCardUniv]
+    exact toFun_perm.symm_apply_apply _
+
+/-- Helper: `(linearExtUnivToValidPrefix h L).toFinPerm` is the
+inverse of `L.toFun.trans cast_inv`.  Used in both `left_inv` and
+`right_inv` to convert between the `ValidPrefix` and `LinearExt`
+representations.  Uses `@LinearExt.toFun` explicitly so the statement
+elaborates with `predOrder pred h` as the partial-order instance. -/
+private lemma linearExtUnivToValidPrefix_toFinPerm {pred : Array Nat}
+    (h : ValidPredMask pred n)
+    (L : @LinearExt (Fin n) (predOrder pred h) _) :
+    (linearExtUnivToValidPrefix h L).toFinPerm =
+      ((@LinearExt.toFun (Fin n) (predOrder pred h) _ L).trans
+        (Fin.castOrderIso (Fintype.card_fin n)).toEquiv).symm := by
+  apply Equiv.ext; intro i
+  show (linearExtUnivToValidPrefix h L).val (liftToCardUniv i) = _
+  show ((@LinearExt.toFun (Fin n) (predOrder pred h) _ L).trans
+      (Fin.castOrderIso (Fintype.card_fin n)).toEquiv).symm
+      (lowerFromCardUniv (liftToCardUniv i)) = _
+  rw [lowerFromCardUniv_liftToCardUniv]
+
+/-- The bridge equivalence: full-prefix valid orderings biject with
+linear extensions of `(Fin n, predOrder pred h)`. -/
+private noncomputable def validPrefixUnivEquivLinearExt
+    (pred : Array Nat) (h : ValidPredMask pred n) :
+    ValidPrefix pred n (Finset.univ : Finset (Fin n)) ≃
+      @LinearExt (Fin n) (predOrder pred h) _ where
+  toFun := ValidPrefix.toLinearExtUniv h
+  invFun := linearExtUnivToValidPrefix h
+  left_inv := fun P => by
+    classical
+    letI inst : PartialOrder (Fin n) := predOrder pred h
+    apply Subtype.ext
+    funext i
+    -- LHS = (linearExtUnivToValidPrefix h (P.toLinearExtUniv h)).val i.
+    -- Unfolds to (L.toFun.trans cast_inv).symm (lowerFromCardUniv i)
+    -- where L = P.toLinearExtUniv h, with L.toFun = P.toFinPerm.symm.trans cast_iso.
+    -- The cast_iso composed with cast_inv simplifies: both casts cancel.
+    show (((P.toLinearExtUniv h).toFun.trans
+            (Fin.castOrderIso (Fintype.card_fin n)).toEquiv).symm)
+            (lowerFromCardUniv i) = P.val i
+    -- (P.toLinearExtUniv h).toFun = P.toFinPerm.symm.trans cast_iso_inv.
+    show ((P.toFinPerm.symm.trans
+            (Fin.castOrderIso (Fintype.card_fin n).symm).toEquiv).trans
+            (Fin.castOrderIso (Fintype.card_fin n)).toEquiv).symm
+            (lowerFromCardUniv i) = P.val i
+    -- Combine the two casts and simplify.
+    have hcasts : ((Fin.castOrderIso (Fintype.card_fin n).symm).toEquiv.trans
+        (Fin.castOrderIso (Fintype.card_fin n)).toEquiv) = Equiv.refl (Fin n) := by
+      apply Equiv.ext; intro w
+      exact Fin.ext rfl
+    rw [Equiv.trans_assoc, hcasts, Equiv.trans_refl]
+    -- Goal: P.toFinPerm.symm.symm (lowerFromCardUniv i) = P.val i
+    rw [Equiv.symm_symm]
+    show P.val (liftToCardUniv (lowerFromCardUniv i)) = P.val i
+    rw [liftToCardUniv_lowerFromCardUniv]
+  right_inv := fun L => by
+    classical
+    letI inst : PartialOrder (Fin n) := predOrder pred h
+    -- Goal: (linearExtUnivToValidPrefix h L).toLinearExtUniv h = L.
+    apply LinearExt.ext
+    apply Equiv.ext
+    intro x
+    show ((linearExtUnivToValidPrefix h L).toFinPerm.symm.trans
+      (Fin.castOrderIso (Fintype.card_fin n).symm).toEquiv) x = L.toFun x
+    rw [linearExtUnivToValidPrefix_toFinPerm h L]
+    rw [Equiv.symm_symm]
+    -- The two `castOrderIso`s cancel after rewriting `.symm.symm`.
+    show (Fin.castOrderIso (Fintype.card_fin n).symm).toEquiv
+      ((Fin.castOrderIso (Fintype.card_fin n)).toEquiv (L.toFun x)) = L.toFun x
+    exact Fin.ext rfl
+
+/-! #### §4.11 — Main A3 deliverable -/
+
+/-- `clERec` at the full mask equals `numLinExt (Fin n) [predOrder pred h]`. -/
+theorem clERec_eq_numLinExt {pred : Array Nat} {n : ℕ}
+    (h : ValidPredMask pred n) (h_bnd : predBitsBoundedBy pred n) :
+    clERec pred n ((1 <<< n) - 1) =
+      @numLinExt (Fin n) (predOrder pred h) _ _ := by
+  classical
+  have hN : 0 < 1 <<< n := by rw [Nat.one_shiftLeft]; exact Nat.two_pow_pos n
+  have hN' : (1 <<< n) - 1 < 1 <<< n := Nat.sub_lt hN Nat.one_pos
+  rw [clERec_eq_card_validPrefix h_bnd ((1 <<< n) - 1) hN', maskSet_full]
+  show Fintype.card (ValidPrefix pred n (Finset.univ : Finset (Fin n))) =
+    @Fintype.card (@LinearExt (Fin n) (predOrder pred h) _) _
+  exact Fintype.card_congr (validPrefixUnivEquivLinearExt pred h)
+
+/-- **Main A3 theorem.** The imperative DP `countLinearExtensions`
+equals the number of linear extensions of `(Fin n, predOrder pred h)`. -/
+theorem countLinearExtensions_eq_numLinExt {pred : Array Nat} {n : ℕ}
+    (h : ValidPredMask pred n) (h_bnd : predBitsBoundedBy pred n) :
+    countLinearExtensions pred n =
+      @numLinExt (Fin n) (predOrder pred h) _ _ := by
+  rw [countLinearExtensions_eq_clERec, clERec_eq_numLinExt h h_bnd]
 
 end Case3Enum
 end Step8
