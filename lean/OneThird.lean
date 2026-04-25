@@ -63,6 +63,7 @@ import OneThird.Step8.BipartiteEnum
 import OneThird.Step8.Case3Enum
 import OneThird.Step8.Case3Enum.Certificate
 import OneThird.Step8.Case3Enum.Correctness
+import OneThird.Step8.Case3Enum.BalancedLift
 import OneThird.Step8.LayeredReduction
 import OneThird.Step8.LayerOrdinal
 import OneThird.Step8.LayeredBalanced
