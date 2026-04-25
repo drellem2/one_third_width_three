@@ -36,10 +36,16 @@ sharp centred bound
 `|Σ_{L' ∈ A}(f(L') − f̄)| ≤ 2N/m` derived in the paper via
 FKG / Ahlswede–Daykin + per-term covariance. Each field of the Lean
 statement is audited against the paper in `lean/AXIOMS.md` with a
-scope-match checklist; proof replacement is scheduled under
-**mg-b699** (F6-4-port, post-sorry-free). The FKG / Ahlswede–Daykin
-transport onto `LinearExt α` that the replacement will consume is
-already in place (`cd75ef1`, `mg-9ece`).
+scope-match checklist. Per the **mg-b699** (F6-4-port) decision,
+this axiom is **retained** rather than ported: it is a faithful
+transcription of Brightwell's [*Balanced pairs in partial orders*,
+Discrete Math. **201** (1999), §4, Theorem 4.1] combined with
+Kahn–Saks [*Balancing poset extensions*, Order **1** (1984),
+Lemma 2.2], a published external result, and a full Lean port is
+estimated at 500–800 LoC of mathlib-tier covariance / set-system
+infrastructure that is orthogonal to the structural proof. See
+`lean/AXIOMS.md` for the decision rationale and the open
+replacement path.
 
 There is no `sorryAx` in the axiom list — the Lean text is
 sorry-free.
@@ -164,10 +170,11 @@ Phase 3 (Lean formalisation) — all landed:
   certificate (`mg-307c`, `30532e6`).
 * **mg-F6-prereq** (mg-3c06) — FKG / Ahlswede–Daykin transport
   onto `LinearExt α`, split and landed across F6-prereq-1 through
-  -5. The sharp centred bound itself is currently **axiomatised**
-  as `OneThird.LinearExt.brightwell_sharp_centred` (`2ded504`,
-  `b23400f`; audited in `AXIOMS.md`); proof replacement scheduled
-  under `mg-b699`.
+  -5. The sharp centred bound itself is **axiomatised** as
+  `OneThird.LinearExt.brightwell_sharp_centred` (`2ded504`,
+  `b23400f`; audited in `AXIOMS.md`). Per the **mg-b699**
+  decision, this axiom is retained as a faithful transcription of
+  the published Brightwell / Kahn–Saks bound rather than ported.
 * **mg-F6a** (`mg-1f5e`, `c2d0f26`) — `lem:one-elem-perturb`.
 * **mg-F6b** (`mg-7496`, `ae2bdd2`) — `lem:exc-perturb` (iterated
   deletion bound).
@@ -180,9 +187,13 @@ Phase 3 (Lean formalisation) — all landed:
   bandwidth into the G4 invocation in `mainAssembly`.
 
 Open future work (not blocking the main theorem):
-* **mg-b699** — replace the `brightwell_sharp_centred` axiom with
-  a Lean proof, consuming the FKG / Ahlswede–Daykin transport
-  already landed.
+* **mg-b699** — *closed* with decision to **retain** the
+  `brightwell_sharp_centred` axiom rather than port it (see
+  `AXIOMS.md` for rationale). A full Lean port — estimated at
+  500–800 LoC of mathlib-tier covariance / set-system
+  infrastructure — remains an open option for future
+  contributors, but is orthogonal to the credibility of the
+  structural proof.
 * **rem:layered-from-step7** tightening — lower the
   `Bridge.step7_layered` input `c₀` to an `O_T(1)` constant so
   that (L2) becomes non-vacuously checked on the ground-set
