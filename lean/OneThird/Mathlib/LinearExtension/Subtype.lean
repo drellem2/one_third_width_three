@@ -31,21 +31,32 @@ used in the paper proof of `lem:window-localization`
 
 ## Main results
 
-* `OrdinalDecomp α` — the ordinal-sum partition data.
+* `OrdinalDecomp α` — the ordinal-sum partition data
+  (paper `def:ordinal-decomp`, `step8.tex:2386-2402`).
 * `OrdinalDecomp.posBoundLower / posBoundMid / posBoundUpper` — the
-  forced-positioning bounds in any linear extension of `α`.
-* `OrdinalDecomp.numLinExt_eq` — cardinality identity:
-  `numLinExt α = numLinExt Lower * numLinExt Mid * numLinExt Upper`.
-* `OrdinalDecomp.probLT_restrict_eq` — **the key marginal invariance**:
+  forced-positioning bounds in any linear extension of `α` (the
+  *position bands* paragraph of `lem:ordinal-factorisation`,
+  `step8.tex:2426-2436`).
+* `OrdinalDecomp.tripleEquiv` / `numLinExt_eq` — bijection and
+  cardinality identity of paper `lem:ordinal-factorisation`
+  (`step8.tex:2404-2418`):
+  `L(P) ≃ L(P_-) × L(P_0) × L(P_+)`,
+  `|L(P)| = |L(P_-)| · |L(P_0)| · |L(P_+)|`.
+* `OrdinalDecomp.probLT_restrict_eq` — **the key marginal invariance**
+  (paper `cor:ordinal-marginal`, `step8.tex:2500-2519`):
   for `u, v ∈ Mid`, `probLT u v` (in `α`) equals `probLT ⟨u, _⟩ ⟨v, _⟩`
   (in `Subtype (· ∈ Mid)`).
 * `OrdinalDecomp.hasBalancedPair_lift` — `HasBalancedPair` lifts from
-  `Subtype (· ∈ Mid)` to `α`.
+  `Subtype (· ∈ Mid)` to `α` (the marginal-invariance corollary used
+  by `lem:window-localization` and `cor:reducibility-transfer`).
 
 ## Reference
 
-`step8.tex:1573-1608` — `lem:window-localization` (`step8.tex` of the
-companion paper).
+Paper §`subsec:ordinal-decomp` (`step8.tex:2374-2519`):
+`def:ordinal-decomp`, `lem:ordinal-factorisation`,
+`cor:ordinal-marginal`. Used downstream by `lem:window-localization`
+(`step8.tex:2524-2569`) and `cor:reducibility-transfer`
+(`step8.tex:2621-2654`).
 -/
 
 namespace OneThird
@@ -110,11 +121,16 @@ end LinearExt
 /-! ### §1 — `OrdinalDecomp`: ordinal-sum partition data -/
 
 /-- **Ordinal-sum partition data** for a finite poset `α`.
+Lean counterpart of paper `def:ordinal-decomp` (`step8.tex:2386-2402`).
 
 Records a partition `Finset.univ = Lower ⊔ Mid ⊔ Upper` with the
 element-wise comparability `Lower <_P Mid`, `Lower <_P Upper`,
 `Mid <_P Upper`. Equivalently, `α` is an ordinal sum of the three
-restricted sub-posets. -/
+restricted sub-posets.
+
+In paper notation, this is the data of a triple `D = (X_-, X_0, X_+)`
+of pairwise disjoint subsets of `X` with `X_- ⊔ X_0 ⊔ X_+ = X` and
+`X_- <_P X_0 <_P X_+`, i.e.\ a witness in `OrdinalDecomp(P)`. -/
 structure OrdinalDecomp (α : Type*) [PartialOrder α] [Fintype α]
     [DecidableEq α] where
   /-- The lower part `X^-`. -/
@@ -987,7 +1003,14 @@ lemma OrdinalDecomp.concat_restrict (D : OrdinalDecomp α) (L : LinearExt α) :
 /-! ### §6 — Bijection and cardinality factorization -/
 
 /-- **Triple Equiv**: `LinearExt α` decomposes as a product of piece-linear
-extensions. -/
+extensions.
+Lean counterpart of paper `lem:ordinal-factorisation`
+(`step8.tex:2404-2418`): the restriction map
+`ρ_D : L(P) → L(P_-) × L(P_0) × L(P_+)`,
+`L ↦ (L|_{X_-}, L|_{X_0}, L|_{X_+})`,
+is a bijection (with inverse given by `concat`). The corresponding
+"uniform ↔ product uniform" probability statement is realised in Lean
+by `OrdinalDecomp.numLinExt_eq` and `OrdinalDecomp.probLT_restrict_eq`. -/
 noncomputable def OrdinalDecomp.tripleEquiv (D : OrdinalDecomp α) :
     LinearExt α ≃ LinearExt ↥D.Lower × LinearExt ↥D.Mid × LinearExt ↥D.Upper where
   toFun L := ⟨D.restrictLower L, D.restrictMid L, D.restrictUpper L⟩
@@ -1001,7 +1024,9 @@ noncomputable def OrdinalDecomp.tripleEquiv (D : OrdinalDecomp α) :
            D.restrictUpper_concat LL LM LU⟩
 
 /-- **numLinExt factorization**: `numLinExt α = numLinExt Lower * numLinExt Mid *
-numLinExt Upper`. -/
+numLinExt Upper`.
+Cardinality conclusion of paper `lem:ordinal-factorisation`
+(`step8.tex:2416-2417`): `|L(P)| = |L(P_-)| · |L(P_0)| · |L(P_+)|`. -/
 theorem OrdinalDecomp.numLinExt_eq (D : OrdinalDecomp α) :
     numLinExt α = numLinExt ↥D.Lower * numLinExt ↥D.Mid * numLinExt ↥D.Upper := by
   unfold numLinExt
@@ -1010,15 +1035,18 @@ theorem OrdinalDecomp.numLinExt_eq (D : OrdinalDecomp α) :
 
 /-! ### §7 — The probability identity (key marginal invariance) -/
 
-/-- **`probLT_restrict_eq`** — the marginal-invariance identity of
-`lem:window-localization` (`step8.tex:1573-1608`).
+/-- **`probLT_restrict_eq`** — the marginal-invariance identity.
+Lean counterpart of paper `cor:ordinal-marginal`
+(`step8.tex:2500-2519`); it is the marginal version of
+`lem:ordinal-factorisation` invoked by `lem:window-localization`
+(`step8.tex:2524-2569`).
 
 For an ordinal decomposition `D : OrdinalDecomp α` and any pair
 `u, v ∈ D.Mid`, the probability `Pr[u <_L v]` computed in a uniformly
 random linear extension of `α` equals the same probability computed in
 a uniformly random linear extension of the middle piece `↥D.Mid`.
 
-**Proof sketch** (`step8.tex:1584-1598`).
+**Proof sketch** (`step8.tex:2511-2519`).
 
 By the ordinal-sum hypothesis, the triple Equiv
 
@@ -1109,9 +1137,12 @@ elements of `α`. The probability is preserved by
 `probLT_restrict_eq`, and incomparability transfers because the
 `Subtype` order is the restriction of the ambient order.
 
-This realizes the *reduction* step of `lem:window-localization`
-(`step8.tex:1573-1582`): a balanced pair in the window restriction
-lifts to a balanced pair of the ambient poset. -/
+Marginal-invariance corollary of paper `lem:ordinal-factorisation`
+(`step8.tex:2404-2418`) via `cor:ordinal-marginal`
+(`step8.tex:2500-2519`): a balanced pair in the middle factor
+lifts to a balanced pair of the ambient poset, the *reduction* step
+underlying `lem:window-localization` (`step8.tex:2524-2569`) and
+`cor:reducibility-transfer` (`step8.tex:2621-2654`). -/
 theorem OrdinalDecomp.hasBalancedPair_lift (D : OrdinalDecomp α)
     (h : HasBalancedPair ↥D.Mid) : HasBalancedPair α := by
   obtain ⟨u, v, huv_inc, huv_bal⟩ := h

@@ -14,29 +14,30 @@ data required by downstream Step 8 items (F2–F5 of `sec:g4-balanced-pair`).
 
 ## Main definitions
 
-* `Step8.LayerOrdinalReducible L k` — the predicate at
-  `step8.tex:1612-1618`: a layered poset `Q` is *layer-ordinal reducible
-  at band index `k`* if every cross-pair `(u, v)` with `L.band u ≤ k`
-  and `k < L.band v` satisfies `u <_Q v`. Equivalently,
+* `Step8.LayerOrdinalReducible L k` — paper `def:layer-reducible`
+  (`step8.tex:2580-2593`): a layered poset `Q` is *layer-ordinal
+  reducible at band index `k`* if every cross-pair `(u, v)` with
+  `L.band u ≤ k` and `k < L.band v` satisfies `u <_Q v`. Equivalently,
   `Q = (M_1 ∪ ⋯ ∪ M_k) ⊕ (M_{k+1} ∪ ⋯ ∪ M_r)` as posets.
 
-* `Step8.LayerOrdinalIrreducible L` — the paper's *irreducibility*
-  predicate (`step8.tex:2273`): `L` is not reducible at any
-  `k ∈ [1, L.K - 1]`.
+* `Step8.LayerOrdinalIrreducible L` — paper `def:layer-reducible`,
+  irreducibility clause (`step8.tex:2591-2592`): `L` is not reducible
+  at any `k ∈ [1, L.K - 1]`.
 
-* `Step8.OrdinalDecompOfReducible L k h` — the *witness constructor*:
-  from a reducibility hypothesis `h`, package the band-split
-  `Q_1 := L_{≤k}`, `Q_2 := L_{>k}` as an `OrdinalDecomp α` with empty
-  middle piece.
+* `Step8.OrdinalDecompOfReducible L k h` — paper `lem:reducible-witness`
+  (`step8.tex:2595-2619`): from a reducibility hypothesis `h`, package
+  the band-split `Q_1 := L_{≤k}`, `Q_2 := L_{>k}` as an
+  `OrdinalDecomp α` with empty middle piece.
 
-* `Step8.linExtEquivOfReducible` — the *factorisation transfer*
-  `LinearExt α ≃ LinearExt ↥Q_1 × LinearExt ↥Q_2` as a `Fintype`
-  bijection. Lean version of the paper's `L(Q) ≃ L(Q_1) × L(Q_2)`
-  (`step8.tex:1619-1621`), derived from
-  `OrdinalDecomp.tripleEquiv` by stripping the trivial middle factor.
+* `Step8.linExtEquivOfReducible` — paper `cor:reducibility-transfer`
+  (`step8.tex:2621-2654`), bijection statement: the *factorisation
+  transfer* `LinearExt α ≃ LinearExt ↥Q_1 × LinearExt ↥Q_2` as a
+  `Fintype` bijection. Derived from `OrdinalDecomp.tripleEquiv`
+  (`lem:ordinal-factorisation`, `step8.tex:2404-2418`) by stripping the
+  trivial middle factor.
 
-* `Step8.numLinExt_factorOfReducible` — the counting corollary:
-  `numLinExt α = numLinExt ↥Q_1 * numLinExt ↥Q_2`.
+* `Step8.numLinExt_factorOfReducible` — counting corollary of
+  `cor:reducibility-transfer`: `numLinExt α = numLinExt ↥Q_1 * numLinExt ↥Q_2`.
 
 * `Step8.exists_adjacent_not_lt_of_irreducible` — **`lem:irr-adjacent`**
   (`step8.tex:2461-2478`): an irreducible layered decomposition with
@@ -70,13 +71,17 @@ namespace Step8
 
 /-! ### §1 — The predicate -/
 
-/-- **Layer-ordinal reducible** (`step8.tex:1612-1618`).
+/-- **Layer-ordinal reducible**.
+Lean counterpart of paper `def:layer-reducible`
+(`step8.tex:2580-2593`).
 
 A layered poset `Q = M_1 ⊔ ⋯ ⊔ M_r` (presented here as a
 `LayeredDecomposition α`) is *layer-ordinal reducible at index `k`*
 if every cross-pair `(u, v)` with `u ∈ M_i, v ∈ M_j`, `i ≤ k < j`,
 satisfies `u <_Q v`. Equivalently,
-`Q = (M_1 ∪ ⋯ ∪ M_k) ⊕ (M_{k+1} ∪ ⋯ ∪ M_r)` as posets.
+`Q = (M_1 ∪ ⋯ ∪ M_k) ⊕ (M_{k+1} ∪ ⋯ ∪ M_r)` as posets — all
+layer-crossing comparabilities across the cut `k ∣ k+1` are directed
+upward.
 
 In the `LayeredDecomposition` representation, `i ≤ k < j` reads as
 `L.band u ≤ k` and `k < L.band v`. -/
@@ -85,8 +90,11 @@ def LayerOrdinalReducible (L : LayeredDecomposition α) (k : ℕ) : Prop :=
 
 /-! ### §2 — `OrdinalDecomp α` from a reducibility witness -/
 
-/-- **Reducibility witness → `OrdinalDecomp α`**
-(paper `Q = Q_1 ⊕ Q_2` factorisation, `step8.tex:1614-1618`).
+/-- **Reducibility witness → `OrdinalDecomp α`**.
+Lean counterpart of paper `lem:reducible-witness`
+(`step8.tex:2595-2619`): from a layer-ordinal-reducible decomposition
+at index `k`, build the ordinal-sum decomposition witness
+`D_k := (M_1 ∪ ⋯ ∪ M_k, ∅, M_{k+1} ∪ ⋯ ∪ M_r) ∈ OrdinalDecomp(Q)`.
 
 From a `LayerOrdinalReducible L k` witness, package the two
 band-split pieces
@@ -146,14 +154,16 @@ lemma mem_OrdinalDecompOfReducible_Upper (L : LayeredDecomposition α) (k : ℕ)
 
 /-! ### §3 — Factorisation transfer `L(Q) ≃ L(Q_1) × L(Q_2)` -/
 
-/-- **Factorisation transfer `L(Q) ≃ L(Q_1) × L(Q_2)`**
-(`step8.tex:1619-1621`).
+/-- **Factorisation transfer `L(Q) ≃ L(Q_1) × L(Q_2)`**.
+Lean counterpart of paper `cor:reducibility-transfer`
+(`step8.tex:2621-2654`), bijection statement.
 
 The `Fintype`-bijection Lean version of the paper's
 `L(Q) = L(Q_1) × L(Q_2)` identity for a layer-ordinal reducible
-layered poset `Q`. Built from `OrdinalDecomp.tripleEquiv` by
-stripping the trivial middle factor (the unique linear extension
-of the empty sub-poset).
+layered poset `Q`. Built from `OrdinalDecomp.tripleEquiv`
+(`lem:ordinal-factorisation`, `step8.tex:2404-2418`) applied to the
+witness `D_k` of `lem:reducible-witness`, by stripping the trivial
+middle factor (the unique linear extension of the empty sub-poset).
 
 The forward direction sends a linear extension `L` of `α` to the
 pair of restrictions `(L|_{Q_1}, L|_{Q_2})`; the backward direction
@@ -199,7 +209,12 @@ noncomputable def linExtEquivOfReducible
     exact ⟨D.restrictLower_concat LL eMid LU,
            D.restrictUpper_concat LL eMid LU⟩
 
-/-- **Counting factorisation** (`step8.tex:1619-1621`, corollary).
+/-- **Counting factorisation**.
+Counting corollary of paper `cor:reducibility-transfer`
+(`step8.tex:2621-2654`); two-piece specialisation of the
+`|L(P)| = |L(P_-)| · |L(P_0)| · |L(P_+)|` cardinality conclusion of
+`lem:ordinal-factorisation` (`step8.tex:2416-2417`) with the empty
+middle piece collapsed.
 
 The number of linear extensions of `α` factors as the product of
 the counts on the two pieces `Q_1` and `Q_2` of a layer-ordinal
