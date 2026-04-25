@@ -823,6 +823,247 @@ lemma testBit_maskOfRec_lt (pred : Array Nat) (freeUV : Array (Nat × Nat)) :
         exact ih k (by omega)
       · exact ih k (by omega)
 
+/-! #### Matching lemmas between `predMaskOf L` and `Case3Enum.warshall` /
+`Case3Enum.closureCanonical`.
+
+These two lemmas are the Path A2-followup deliverables (`mg-6066`),
+tying §2c's predecessor-mask encoding to `Case3Enum.enumPosetsFor`'s
+imperative bitmask scaffolding:
+
+* `predMaskOf_warshall` — Warshall's transitive-closure pass is a no-op
+  on `predMaskOf L`, since the strict order on `α` is already
+  transitively closed.
+* `closureCanonical_predMaskOf` — the projection of `predMaskOf L` onto
+  the free-pair list `freeUVOf L` is exactly `maskOf L`, by construction. -/
+
+/-- Helper: a `forIn` loop in `Id` that always yields its initial state
+returns the initial state. -/
+private lemma forIn_yield_const_init.{u_, w_} {α_ : Type u_} {β_ : Type w_}
+    (l : List α_) (init : β_)
+    (body : α_ → β_ → Id (ForInStep β_))
+    (h : ∀ x ∈ l, body x init = pure (ForInStep.yield init)) :
+    forIn l init body = init := by
+  induction l with
+  | nil => rfl
+  | cons x l ih =>
+    rw [List.forIn_cons, h x List.mem_cons_self]
+    show (forIn l init body : Id β_) = init
+    exact ih (fun x' hx' => h x' (List.mem_cons_of_mem _ hx'))
+
+/-- Helper: setting an array element to its current value (via `set!`) is a
+no-op. -/
+private lemma Array.set!_getD_self_aux {α_ : Type*} (a : Array α_) (v : Nat)
+    (d : α_) (hv : v < a.size) : a.set! v (a.getD v d) = a := by
+  apply Array.ext
+  · simp
+  · intro j _ h2
+    by_cases hjv : j = v
+    · subst hjv
+      simp only [Array.set!_eq_setIfInBounds]
+      rw [Array.getElem_setIfInBounds_self (by simpa using hv)]
+      exact (Array.getElem_eq_getD d).symm
+    · simp only [Array.set!_eq_setIfInBounds]
+      rw [Array.getElem_setIfInBounds_ne h2 (fun heq => hjv heq.symm)]
+
+/-- For a transitively-closed predecessor mask, OR'ing `pred[k]` into
+`pred[v]` is a no-op when bit `k` of `pred[v]` is set. -/
+private lemma pred_or_eq_self_of_bit_aux (pred : Array Nat) (v k : Nat)
+    (htrans : ∀ u : Nat, Case3Enum.testBit' (pred.getD v 0) k = true →
+      Case3Enum.testBit' (pred.getD k 0) u = true →
+      Case3Enum.testBit' (pred.getD v 0) u = true)
+    (hbit : Case3Enum.testBit' (pred.getD v 0) k = true) :
+    pred.getD v 0 ||| pred.getD k 0 = pred.getD v 0 := by
+  apply Nat.eq_of_testBit_eq
+  intro j
+  rw [Nat.testBit_or]
+  rcases hcase : Nat.testBit (pred.getD v 0) j with _ | _
+  · simp only [Bool.false_or]
+    rcases hkj : Nat.testBit (pred.getD k 0) j with _ | _
+    · rfl
+    · exfalso
+      have hkj' : Case3Enum.testBit' (pred.getD k 0) j = true := by
+        rw [testBit'_eq_testBit]; exact hkj
+      have := htrans j hbit hkj'
+      rw [testBit'_eq_testBit, hcase] at this
+      exact Bool.false_ne_true this
+  · simp only [Bool.true_or]
+
+/-- Bit `j` of `(predMaskOf L)[i]` is set only if both `i, j < Fintype.card α`.
+
+`getD` returns `0` for out-of-bounds indices, and `predMaskOf L` is built via
+`encodeBitsBelow … (Fintype.card α)`, which only sets bits at positions
+strictly less than the bound. -/
+lemma testBit'_predMaskOf_bound (L : LayeredDecomposition α) (i j : Nat)
+    (h : Case3Enum.testBit' ((predMaskOf L).getD i 0) j = true) :
+    i < Fintype.card α ∧ j < Fintype.card α := by
+  classical
+  rw [testBit'_eq_testBit] at h
+  refine ⟨?_, ?_⟩
+  · by_contra hi
+    have hi' : Fintype.card α ≤ i := Nat.not_lt.mp hi
+    have hzero : (predMaskOf L).getD i 0 = 0 := by
+      rw [Array.getD_eq_getD_getElem?]
+      have hnone : (predMaskOf L)[i]? = none := by
+        rw [Array.getElem?_eq_none]
+        rw [size_predMaskOf]; exact hi'
+      rw [hnone]; rfl
+    rw [hzero, Nat.zero_testBit] at h
+    exact Bool.false_ne_true h
+  · by_contra hj
+    have hj' : Fintype.card α ≤ j := Nat.not_lt.mp hj
+    unfold predMaskOf at h
+    rw [Array.getD_ofFn] at h
+    split_ifs at h with hi
+    · rw [testBit_encodeBitsBelow] at h
+      have : decide (j < Fintype.card α) = false :=
+        decide_eq_false (fun h' => Nat.not_lt.mpr hj' h')
+      rw [this, Bool.false_and] at h
+      exact Bool.false_ne_true h
+    · rw [Nat.zero_testBit] at h
+      exact Bool.false_ne_true h
+
+/-- Transitivity of the `predMaskOf L` bit-relation, lifted to `Nat` indices.
+For `Fin (Fintype.card α)` indices it follows from `predMaskOf_isValid`; for
+out-of-bounds indices the hypothesis is vacuously false. -/
+lemma predMaskOf_trans_nat (L : LayeredDecomposition α) (u v k : Nat)
+    (h1 : Case3Enum.testBit' ((predMaskOf L).getD v 0) k = true)
+    (h2 : Case3Enum.testBit' ((predMaskOf L).getD k 0) u = true) :
+    Case3Enum.testBit' ((predMaskOf L).getD v 0) u = true := by
+  obtain ⟨hv, hk⟩ := testBit'_predMaskOf_bound L v k h1
+  obtain ⟨_, hu⟩ := testBit'_predMaskOf_bound L k u h2
+  exact (predMaskOf_isValid L).2.2 ⟨u, hu⟩ ⟨k, hk⟩ ⟨v, hv⟩ h2 h1
+
+/-- **`Case3Enum.warshall` is the identity on `predMaskOf L`** (Path
+A2-followup, `mg-6066`).
+
+Since `predMaskOf L` already encodes the strict order on `α` — which is
+transitively closed by virtue of `α` being a partial order — Warshall's
+inner step `out[v] ← out[v] ||| out[k]` is a no-op whenever bit `k` of
+`out[v]` is set: by transitivity, every bit of `out[k]` is already a bit
+of `out[v]`. Hence the entire double `for`-loop returns `predMaskOf L`
+unchanged. -/
+theorem predMaskOf_warshall (L : LayeredDecomposition α) :
+    Case3Enum.warshall (predMaskOf L) (Fintype.card α) = predMaskOf L := by
+  classical
+  set pred := predMaskOf L with hpred
+  set n := Fintype.card α with hn
+  have hsize : pred.size = n := by rw [hpred, hn]; exact size_predMaskOf L
+  have htrans : ∀ u v k : Nat,
+      Case3Enum.testBit' (pred.getD v 0) k = true →
+      Case3Enum.testBit' (pred.getD k 0) u = true →
+      Case3Enum.testBit' (pred.getD v 0) u = true := fun u v k =>
+    predMaskOf_trans_nat L u v k
+  -- Reduce the imperative double for-loop.
+  change Case3Enum.warshall pred n = pred
+  unfold Case3Enum.warshall
+  simp only [Std.Legacy.Range.forIn_eq_forIn_range', Std.Legacy.Range.size,
+    Nat.sub_zero, Nat.add_sub_cancel, Nat.div_one]
+  -- Inner forIn over any sublist of `[0, n)`, started at `pred`, returns `pred`.
+  have hinner : ∀ (k : Nat) (hk : k < n) (l : List Nat), (∀ v ∈ l, v < n) →
+      (forIn l pred (fun v acc =>
+        if (acc.getD v 0 &&& Case3Enum.bit k != 0) = true then
+          (do pure PUnit.unit; pure (ForInStep.yield (acc.set! v
+            (acc.getD v 0 ||| pred.getD k 0))) : Id _)
+        else (do pure PUnit.unit; pure (ForInStep.yield acc) : Id _))) = pred := by
+    intro k _hk l hl
+    apply forIn_yield_const_init
+    intro v hv
+    have hvn : v < n := hl v hv
+    by_cases hbit : (pred.getD v 0 &&& Case3Enum.bit k != 0) = true
+    · simp only [hbit, ↓reduceIte]
+      have hbit' : Case3Enum.testBit' (pred.getD v 0) k = true := by
+        unfold Case3Enum.testBit'; exact hbit
+      have hor : pred.getD v 0 ||| pred.getD k 0 = pred.getD v 0 :=
+        pred_or_eq_self_of_bit_aux pred v k
+          (fun u h1 h2 => htrans u v k h1 h2) hbit'
+      rw [hor]
+      have hvsize : v < pred.size := by rw [hsize]; exact hvn
+      rw [Array.set!_getD_self_aux pred v 0 hvsize]
+      rfl
+    · simp only [hbit, Bool.false_eq_true, ↓reduceIte]
+      rfl
+  -- Outer body, applied to `pred`, yields `pred`.
+  set L' := List.range' 0 n with hL'
+  have hL'_bound : ∀ k ∈ L', k < n := by
+    intro k hk; rw [hL'] at hk
+    simp [List.mem_range'] at hk; omega
+  have houter :=
+    forIn_yield_const_init L' pred (fun k acc =>
+      have out := acc
+      have bitK := Case3Enum.bit k
+      have pk := out.getD k 0
+      do
+        let r ← forIn L' out (fun v acc =>
+          have out := acc
+          if (out.getD v 0 &&& bitK != 0) = true then
+            have out := out.set! v (out.getD v 0 ||| pk)
+            do pure PUnit.unit; pure (ForInStep.yield out)
+          else do pure PUnit.unit; pure (ForInStep.yield out))
+        have out : Array ℕ := r
+        pure PUnit.unit
+        pure (ForInStep.yield out))
+      (by
+        intro k hkL
+        have hk : k < n := hL'_bound k hkL
+        change (do
+          let r ← forIn L' pred (fun v acc =>
+            if (acc.getD v 0 &&& Case3Enum.bit k != 0) = true then
+              (do pure PUnit.unit; pure (ForInStep.yield (acc.set! v
+                (acc.getD v 0 ||| pred.getD k 0))) : Id _)
+            else (do pure PUnit.unit; pure (ForInStep.yield acc) : Id _))
+          (do pure PUnit.unit; pure (ForInStep.yield r) : Id _)) =
+            pure (ForInStep.yield pred)
+        rw [hinner k hk L' hL'_bound]
+        rfl)
+  change (do let r ← forIn L' pred _; pure r : Id _) = pred
+  rw [houter]
+  rfl
+
+/-- **The closure-canonical predicate is satisfied by `predMaskOf L`'s
+projection onto `freeUVOf L`** (Path A2-followup, `mg-6066`).
+
+By construction, `maskOf L` is built from `predMaskOf L` via
+`maskOfRec`, whose bit-by-bit characterization (`testBit_maskOfRec_lt`)
+exactly matches the bits queried by `Case3Enum.closureCanonical`'s
+inner loop. Hence the predicate's early-return condition `closedBit ≠
+maskBit` is never triggered, and the loop returns `true`. -/
+theorem closureCanonical_predMaskOf (L : LayeredDecomposition α) :
+    Case3Enum.closureCanonical (predMaskOf L) (maskOf L) (freeUVOf L) = true := by
+  unfold Case3Enum.closureCanonical
+  simp only [Std.Legacy.Range.forIn_eq_forIn_range', Std.Legacy.Range.size,
+    Nat.sub_zero, Nat.add_sub_cancel, Nat.div_one]
+  -- The bit-by-bit equality between maskOf and predMaskOf-projection.
+  have hbits : ∀ k < (freeUVOf L).size,
+      Case3Enum.testBit' ((predMaskOf L).getD ((freeUVOf L).getD k (0, 0)).2 0)
+          ((freeUVOf L).getD k (0, 0)).1
+        = Case3Enum.testBit' (maskOf L) k := by
+    intro k hk
+    rw [testBit'_eq_testBit, testBit'_eq_testBit]
+    unfold maskOf
+    rw [testBit_maskOfRec_lt _ _ _ _ hk]
+  -- Now induct on the for-loop list.
+  generalize hl : List.range' 0 (freeUVOf L).size = l
+  have h_bound : ∀ k ∈ l,
+      Case3Enum.testBit' ((predMaskOf L).getD
+          ((freeUVOf L).getD k (0, 0)).2 0)
+          ((freeUVOf L).getD k (0, 0)).1
+        = Case3Enum.testBit' (maskOf L) k := by
+    intro k hk
+    rw [← hl] at hk
+    simp [List.mem_range'] at hk
+    exact hbits k (by omega)
+  clear hl hbits
+  induction l with
+  | nil => rfl
+  | cons k l ih =>
+    have hbit := h_bound k List.mem_cons_self
+    have hdite : (if h : k < (freeUVOf L).size
+        then (freeUVOf L).getInternal k h else (0, 0)) = (freeUVOf L).getD k (0, 0) := rfl
+    simp only [List.forIn_cons]
+    rw [hdite, hbit]
+    simp only [bne_self_eq_false, Bool.false_eq_true, ↓reduceIte]
+    exact ih (fun k' hk' => h_bound k' (List.mem_cons_of_mem _ hk'))
+
 end PredMask
 
 end Step8
