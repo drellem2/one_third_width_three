@@ -175,22 +175,39 @@ def bitsOf (m n : Nat) : List Nat := Id.run do
     if testBit' m i then out := out ++ [i]
   return out
 
+/-- The DP transition: given the partial DP table `f` and a subset
+encoded by `placed ≥ 1`, sum `f[placed \ {e}]` over all `e ∈ placed`
+whose predecessors are already in `placed \ {e}` (the only `e`
+positions whose placement at the end of a length-`|placed|` prefix
+can extend a valid linear-extension prefix). -/
+def cleStep (pred : Array Nat) (n placed : Nat) (f : Array Nat) : Nat :=
+  (List.range n).foldl
+    (fun acc e =>
+      if testBit' placed e then
+        let prev : Nat := placed ^^^ bit e
+        let pe := pred.getD e 0
+        if (pe &&& prev) == pe then acc + f.getD prev 0
+        else acc
+      else acc) 0
+
 /-- Count linear extensions of the poset given by `pred` on `n`
 elements via subset DP: `f[∅] = 1`, `f[S] = Σ_{x ∈ S minimal in S}
-f[S \ {x}]`. -/
-def countLinearExtensions (pred : Array Nat) (n : Nat) : Nat := Id.run do
+f[S \ {x}]`.
+
+Functional form: `(List.range N).foldl` over the table-fill loop with
+the entry at index `0` initialised to `1`.  The original imperative
+formulation is recovered up to definitional equality of `Id.run do`
+(a series of `f := f.set! placed total` updates in placed-ascending
+order). -/
+def countLinearExtensions (pred : Array Nat) (n : Nat) : Nat :=
   let N : Nat := 1 <<< n
-  let mut f : Array Nat := Array.replicate N 0
-  f := f.set! 0 1
-  for placed in [1:N] do
-    let mut total : Nat := 0
-    for e in bitsOf placed n do
-      let pe := pred.getD e 0
-      let prev : Nat := placed ^^^ bit e
-      if (pe &&& prev) == pe then
-        total := total + f.getD prev 0
-    f := f.set! placed total
-  return f.getD (N - 1) 0
+  let f₀ : Array Nat := (Array.replicate N 0).set! 0 1
+  let final : Array Nat :=
+    (List.range N).foldl
+      (fun (f : Array Nat) (placed : Nat) =>
+        if placed = 0 then f
+        else f.set! placed (cleStep pred n placed f)) f₀
+  final.getD (N - 1) 0
 
 /-- Add the edge `u < v` to `pred` and take transitive closure. -/
 def addEdgeClose (pred : Array Nat) (n u v : Nat) : Array Nat :=
