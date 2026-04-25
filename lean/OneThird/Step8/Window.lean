@@ -12,7 +12,7 @@ import Mathlib.Tactic.Linarith
 # Step 8 — Window / bipartite construction (`sec:g4-balanced-pair`)
 
 Formalises the *window* and *bipartite-block* data of
-`step8.tex` §`sec:g4-balanced-pair` (`step8.tex:1571-1765`). These
+`step8.tex` §`sec:g4-balanced-pair` (`step8.tex:2336-3237`). These
 are the geometric inputs to GAP G4 (`lem:layered-balanced`) — the
 `LayeredBalanced.lean` companion file packages the conclusions; this
 file provides the concrete combinatorial constructions used to
@@ -30,7 +30,7 @@ with `a := max(1, min(i, j) − w)`, `b := min(K, max(i, j) + w)`. By
 `(L1)`, `|L_k| ≤ 3` for every `k`, and the window spans at most
 `3w + 1` bands (with `|i − j| ≤ w`), so
 
-  `|W(i, j)| ≤ 3 · (3w + 1)`     (`step8.tex:1606-1607`).
+  `|W(i, j)| ≤ 3 · (3w + 1)`     (`step8.tex:2537-2538`).
 
 For the **bipartite-block** reduct of a height-2 window, we package
 two consecutive bands `A = L_i, B = L_{i+1}` of size `≤ 3` each, with
@@ -47,7 +47,7 @@ band-distance 1.
 
 ## References
 
-`step8.tex` §`sec:g4-balanced-pair` (`step8.tex:1571-1765`),
+`step8.tex` §`sec:g4-balanced-pair` (`step8.tex:2336-3237`),
 Lemma `lem:window-localization`, Proposition
 `prop:bipartite-balanced`.
 -/
@@ -59,7 +59,7 @@ variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
 
 /-! ### §1 — Window data -/
 
-/-- **Window data** (`step8.tex:1573-1607`).
+/-- **Window data** (`step8.tex:2524-2538`).
 
 A *window* `W(i, j)` of a layered decomposition is the band slice
 between `min(i, j) − w` and `max(i, j) + w` (clamped to `[1, K]`).
@@ -89,7 +89,7 @@ namespace Window
 variable (L : LayeredDecomposition α)
 
 /-- **Concrete window construction** at a band-pair `(i, j)` with
-`|i − j| ≤ w` (`step8.tex:1576-1582`).
+`|i − j| ≤ w` (`step8.tex:2527-2530`).
 
 The window is `[max(1, min i j − w), max i j + w]`, which spans at
 most `2w + 1 + (j − i) ≤ 3w + 1` bands. -/
@@ -128,7 +128,7 @@ noncomputable def ofBandPair (i j : ℕ) (hij : max i j ≤ min i j + L.w) :
   rw [W.slice_eq]
   simp
 
-/-- **Window size bound** (`step8.tex:1606-1607`).
+/-- **Window size bound** (`step8.tex:2537-2538`).
 
 `|W(i, j)| ≤ 3 · (3w + 1)`, by `(L1)` (each band has size `≤ 3`)
 summed over the at-most-`3w + 1` bands of the window. -/
@@ -209,7 +209,7 @@ end Window
 
 /-! ### §2 — Bipartite-block reduct -/
 
-/-- **Bipartite block** (`step8.tex:1610-1632`).
+/-- **Bipartite block** (`step8.tex:2824-2829`).
 
 A *bipartite block* is the height-2 reduct extracted from two
 consecutive bands `A = L_i, B = L_{i+1}` of a layered decomposition:

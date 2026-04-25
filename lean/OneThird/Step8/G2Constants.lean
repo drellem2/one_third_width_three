@@ -10,7 +10,7 @@ import Mathlib.Tactic.Ring
 # Step 8 — G2 constants coherence (`sec:G2-constants`)
 
 Formalises the constants-coherence chain of `step8.tex`
-§`sec:G2-constants` (`step8.tex:935-1213`).
+§`sec:G2-constants` (`step8.tex:1460-1871`).
 
 The Step 8 constants are bundled in `G2Constants` (the named
 parameters `c₀, c₅, c₆, K, δ, ε, η` of the paper). The
@@ -19,32 +19,32 @@ the **G2 compatibility inequality**
 
   `η · (n − 1) < c₀ · c₅ · g(T, ε, δ)`
 
-(`step8.tex:1007`, `eq:G2`) are the central objects.
+(`step8.tex:1532`, `eq:G2`) are the central objects.
 
 ## Main results
 
 * `compatFun` — the compatibility function
-  `g(T, ε, δ) := c₆ · (δ − K ε)` (`step8.tex:991`).
+  `g(T, ε, δ) := c₆ · (δ − K ε)` (`step8.tex:1515`).
 * `G2Compat` — the cleared-denominator form of the compatibility
-  inequality `eq:G2` (`step8.tex:1007`).
-* `prop_G2` — **Proposition G2** (`step8.tex:1003`,
+  inequality `eq:G2` (`step8.tex:1532`).
+* `prop_G2` — **Proposition G2** (`step8.tex:1528`,
   `prop:G2`). Given the Step 4/5/6 aggregated lower bound, the
   Theorem E upper bound, and the G2 compatibility inequality,
   conclude the coherence statement `δ ≤ K · ε` (the
   $o(1)$-coherence of `prop:step6`).
 
 * `prop_G2_sharp` — the sharper form of `rem:G2-sharp`
-  (`step8.tex:1072-1082`): `2 c₅ c₆ (δ − K ε)` suffices on the
+  (`step8.tex:1597-1607`): `2 c₅ c₆ (δ − K ε)` suffices on the
   RHS, with `c₀` absent.
 
 * `prop_G2_realizable` — the cascade-realisability check of
-  `rem:G2-order` (`step8.tex:1084-1121`): with `c₀ = γ` and
+  `rem:G2-order` (`step8.tex:1609-1655`): with `c₀ = γ` and
   `η = 2 / (γ n)`, the compatibility reduces to the
   `n`-independent arithmetic condition `γ² c₅ c₆ (δ − K ε) ≥ 4`.
 
 ## References
 
-`step8.tex` §`sec:G2-constants` (`step8.tex:935-1213`),
+`step8.tex` §`sec:G2-constants` (`step8.tex:1460-1871`),
 Proposition `prop:G2`, Remarks `rem:G2-sharp`, `rem:G2-order`.
 -/
 
@@ -53,44 +53,44 @@ namespace Step8
 
 /-! ### §1 — Constants and the compatibility function -/
 
-/-- **Step 8 named constants** (`step8.tex:944-986`).
+/-- **Step 8 named constants** (`step8.tex:1468-1511`).
 
 The six rational constants of the G2 cascade, packaged together
 for use throughout the section:
 
-* `c₀` — Theorem E volume fraction (`step8.tex:945`); `0 < c₀ ≤ 1/2`,
+* `c₀` — Theorem E volume fraction (`step8.tex:1470`); `0 < c₀ ≤ 1/2`,
   quantitatively `c₀ = γ`.
 * `c₅` — Step 5 richness second-moment constant
-  (`step8.tex:951`); `c₅ = c_T'(T)`, independent of `n`.
+  (`step8.tex:1476`); `c₅ = c_T'(T)`, independent of `n`.
 * `c₆` — Step 6 overlap-counting constant
-  (`step8.tex:972`); independent of `T, γ, ε, δ`.
-* `K`  — `K(T) := C₄/c₄ + C₂(T)` (`step8.tex:994`); absorbs Step 4
+  (`step8.tex:1497`); independent of `T, γ, ε, δ`.
+* `K`  — `K(T) := C₄/c₄ + C₂(T)` (`step8.tex:1519`); absorbs Step 4
   rectangle noise and Step 2 block-transfer loss.
 * `δ`  — aggregate weighted incoherent-mass fraction in `M`
-  (`step8.tex:982`).
-* `ε`  — Step 2 fiber error (`step8.tex:984`); free parameter,
+  (`step8.tex:1506`).
+* `ε`  — Step 2 fiber error (`step8.tex:1508`); free parameter,
   `ε(φ) ↓ 0` as BK conductance `φ ↓ 0`. -/
 structure G2Constants where
-  /-- Theorem E volume fraction (`step8.tex:945`). -/
+  /-- Theorem E volume fraction (`step8.tex:1470`). -/
   c₀ : ℚ
-  /-- Step 5 richness second-moment (`step8.tex:951`). -/
+  /-- Step 5 richness second-moment (`step8.tex:1476`). -/
   c₅ : ℚ
-  /-- Step 6 overlap-counting (`step8.tex:972`). -/
+  /-- Step 6 overlap-counting (`step8.tex:1497`). -/
   c₆ : ℚ
-  /-- Step 4/2 absorbed noise constant (`step8.tex:994`). -/
+  /-- Step 4/2 absorbed noise constant (`step8.tex:1519`). -/
   K : ℚ
-  /-- Step 6 incoherent-mass fraction (`step8.tex:982`). -/
+  /-- Step 6 incoherent-mass fraction (`step8.tex:1506`). -/
   δ : ℚ
-  /-- Step 2 fiber error (`step8.tex:984`). -/
+  /-- Step 2 fiber error (`step8.tex:1508`). -/
   ε : ℚ
-  /-- Sign conventions (`step8.tex:945-986`). -/
+  /-- Sign conventions (`step8.tex:1468-1511`). -/
   c₀_pos : 0 < c₀
   c₀_le_half : c₀ ≤ 1 / 2
   c₅_pos : 0 < c₅
   c₆_pos : 0 < c₆
 
 /-- **Compatibility function** `g(T, ε, δ) := c₆ · (δ − K ε)`
-(`step8.tex:991-993`).
+(`step8.tex:1515-1518`).
 
 In the paper this is `c₆ · (δ − K(T) ε)_+`, but we drop the
 positive-part since the contradictory branch only triggers when
@@ -98,10 +98,10 @@ positive-part since the contradictory branch only triggers when
 def compatFun (G : G2Constants) : ℚ :=
   G.c₆ * (G.δ - G.K * G.ε)
 
-/-- **G2 compatibility inequality `eq:G2`** (`step8.tex:1007`).
+/-- **G2 compatibility inequality `eq:G2`** (`step8.tex:1532`).
 
 Cleared-denominator form: with the upper-bound input
-`η · (n − 1)` (the `step8.tex:1052` `eq:G2-upper` quantity)
+`η · (n − 1)` (the `step8.tex:1577` `eq:G2-upper` quantity)
 and the lower-bound coefficient `c₀ · c₅ · g(T, ε, δ)`, the
 inequality
 
@@ -114,18 +114,18 @@ def G2Compat (G : G2Constants) (η : ℚ) (n : ℕ) : Prop :=
 
 /-! ### §2 — Proposition G2 -/
 
-/-- **Proposition G2** (`step8.tex:1003`, `prop:G2`).
+/-- **Proposition G2** (`step8.tex:1528`, `prop:G2`).
 
 Cleared-denominator algebraic form. Given:
 * `hLower` — Step 4/5/6 aggregated lower bound
   `c₅ · c₆ · (δ − K ε) · |L(P)| ≤ |∂S|`
-  (`step8.tex:1042`, `eq:G2-lowerfinal`);
+  (`step8.tex:1567`, `eq:G2-lowerfinal`);
 * `hUpper` — Theorem E upper bound
   `|∂S| ≤ ½ · η · (n − 1) · |L(P)|`
-  (`step8.tex:1052`, `eq:G2-upper`);
+  (`step8.tex:1577`, `eq:G2-upper`);
 * `hCompat` — the compatibility inequality `eq:G2`;
 
-the proof follows by contradiction (`step8.tex:1030-1069`):
+the proof follows by contradiction (`step8.tex:1555-1595`):
 suppose `δ > K · ε`, so `δ − K ε > 0`. Combining the lower and
 upper bounds and cancelling `|L(P)| > 0` gives
 
@@ -175,7 +175,7 @@ theorem prop_G2
               G.c₅_pos, G.c₆_pos, hgap, hMpos,
               mul_pos G.c₅_pos G.c₆_pos]
 
-/-- **Proposition G2 — sharp form** (`step8.tex:1072-1082`,
+/-- **Proposition G2 — sharp form** (`step8.tex:1597-1607`,
 `rem:G2-sharp`).
 
 The contradiction in `prop_G2` actually goes through with the
@@ -183,7 +183,7 @@ weaker compatibility hypothesis `η (n−1) < 2 c₅ c₆ (δ − K ε)`, in
 which the volume fraction `c₀` is absent.
 
 This is exactly the inequality `eq:G2-combined`
-of `step8.tex:1059`, contradicted directly by the strict
+of `step8.tex:1584`, contradicted directly by the strict
 `<` form (no `c₀` factor needed). -/
 theorem prop_G2_sharp
     (G : G2Constants) (η : ℚ) (n LP boundary : ℕ)
@@ -215,7 +215,7 @@ theorem prop_G2_sharp
 /-! ### §3 — Cascade realisability (`rem:G2-order`) -/
 
 /-- **Cascade realisability — quantitative form**
-(`step8.tex:1084-1121`, `rem:G2-order`; also `step8.tex:1197-1213`,
+(`step8.tex:1609-1655`, `rem:G2-order`; also `step8.tex:1728-1749`,
 "Parameter cascade realizability", `mg-0704`).
 
 With Theorem E supplying `c₀ = γ` and `η(γ, n) = 2 / (γ n)`, the
@@ -231,7 +231,7 @@ which (using `(n−1)/n < 1` for all `n ≥ 2`) is implied by the
 i.e. once the Step 5/6 second-moment constant `c₅ c₆` dominates
 `2 / (γ² (δ − K ε))`. We state the result for `n ≥ 2` (the
 regime of `rem:G2-order`); the `n < 2` case is handled by the
-small-`n` base case (`rem:small-n`, `step8.tex:778-823`). -/
+small-`n` base case (`rem:small-n`, `step8.tex:827-874`). -/
 theorem prop_G2_realizable
     (G : G2Constants) (γ : ℚ) (n : ℕ)
     (hγ : 0 < γ)

@@ -9,8 +9,8 @@ import Mathlib.Tactic.Linarith
 # Step 8 — Small-`n` base case (`lem:small-n`, `rem:small-n`)
 
 Formalises the small-`n` base case of `step8.tex`
-§`sec:main-thm`, Lemma `lem:small-n` (`step8.tex:708-776`) and
-Remark `rem:small-n` (`step8.tex:778-823`).
+§`sec:main-thm`, Lemma `lem:small-n` (`step8.tex:757-825`) and
+Remark `rem:small-n` (`step8.tex:827-874`).
 
 ## The threshold `n₀(γ, T)`
 
@@ -19,16 +19,16 @@ theorem fails is
 
   `n₀(γ, T) = ⌈4 · C_exc(T) / γ⌉ + C_exc(T) − 1`
 
-(`step8.tex:639-644`, `step8.tex:781-786`), where
+(`step8.tex:688-693`, `step8.tex:830-834`), where
 `C_exc(T) = 3 · c₁(T)` is the explicit Step 5 exceptional-set
-cardinality bound (`step8.tex:617-624`). It is polynomial in `1/γ`
+cardinality bound (`step8.tex:668-672`). It is polynomial in `1/γ`
 and in `T`. The cleared-denominator form below avoids `⌈ ⌉` by
 parameterising on a pair `(γ_n, γ_d)` representing `γ = γ_n / γ_d`.
 
 ## Two-regime base-case argument
 
 For `n ≤ n₀(γ, T)`, the small-`n` lemma decomposes into two regimes
-(`step8.tex:794-810`, `rem:small-n`):
+(`step8.tex:843-859`, `rem:small-n`):
 
 * **Regime A: large `γ`.** If `γ ≥ 1/3 − δ_KL` with
   `δ_KL = 0.276393…` (the unconditional Kahn–Linial bound), then
@@ -61,13 +61,13 @@ packaging convention for downstream results).
 * `kahnLinialBaseCase` — Regime A: large-γ regime (statement-level).
 * `smallNFiniteEnum` — Regime B: small-γ enumeration regime
   (statement-level; the enumeration is mechanical).
-* `lem_small_n` — **`lem:small-n`** (`step8.tex:709`). The main
+* `lem_small_n` — **`lem:small-n`** (`step8.tex:757`). The main
   small-`n` base case statement: every non-chain width-≤ 3 poset on
   `n ≤ n₀(γ, T)` elements has a balanced pair.
 
 ## References
 
-`step8.tex` §`sec:main-thm` (`step8.tex:488-849`), Lemma
+`step8.tex` §`sec:main-thm` (`step8.tex:502-901`), Lemma
 `lem:small-n`, Remark `rem:small-n`.
 -/
 
@@ -78,7 +78,7 @@ variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
 
 /-! ### §1 — The threshold `n₀(γ, T)` -/
 
-/-- **Cleared-denominator small-`n` threshold** (`step8.tex:781-786`).
+/-- **Cleared-denominator small-`n` threshold** (`step8.tex:830-834`).
 
 The integer `n₀(γ_n, γ_d, c_exc)`, parametrising
 `γ = γ_n / γ_d > 0` and the Step 5 exceptional-set bound
@@ -102,8 +102,8 @@ lemma c_exc_le_nZero (γ_n γ_d c_exc : ℕ) (_hγn : 1 ≤ γ_n) :
 
 /-! ### §2 — The Kahn–Linial constant `δ_KL` -/
 
-/-- **Kahn–Linial constant** (`step8.tex:728-732`,
-`step8.tex:795-801`).
+/-- **Kahn–Linial constant** (`step8.tex:776-783`,
+`step8.tex:844-850`).
 
 Numerical value `δ_KL = 0.276393…` of the unconditional
 Kahn–Linial bound~\cite{KahnLinial1991}. The true constant is
@@ -116,7 +116,7 @@ stronger than `δ(P) ≥ δ_KL`, so the rational surrogate below
 suffices for every downstream consumer. -/
 def δ_KL : ℚ := 276393 / 1000000
 
-/-- **Kahn–Linial base-case bound** (`step8.tex:729`):
+/-- **Kahn–Linial base-case bound** (`step8.tex:778`):
 
   `δ_KL ≥ 0.276393`.
 
@@ -136,21 +136,21 @@ lemma δ_KL_lt_one_third : δ_KL < 1 / 3 := by
 
 /-- The complementary threshold `1/3 − δ_KL ≈ 0.057` is strictly
 positive; this is the extent of the small-γ residual regime
-(`step8.tex:800`). -/
+(`step8.tex:849`). -/
 lemma one_third_sub_δ_KL_pos : (0 : ℚ) < 1 / 3 - δ_KL := by
   have := δ_KL_lt_one_third
   linarith
 
 /-- Decimal upper bound on the residual threshold:
 `1/3 − δ_KL ≤ 58/1000 = 0.058`, matching
-`step8.tex:800` (`≈ 0.057`). -/
+`step8.tex:849` (`≈ 0.057`). -/
 lemma one_third_sub_δ_KL_lt : (1 : ℚ) / 3 - δ_KL ≤ 58 / 1000 := by
   unfold δ_KL; norm_num
 
 /-! ### §3 — Regime A: Kahn–Linial base case -/
 
 /-- **Kahn–Linial unconditional bound — large-γ regime**
-(`step8.tex:721-734`, `step8.tex:794-801`).
+(`step8.tex:776-783`, `step8.tex:843-850`).
 
 The statement: in the regime `γ ≥ 1/3 − δ_KL` (with
 `δ_KL = 0.276393…` the Kahn–Linial constant
@@ -179,7 +179,7 @@ theorem kahnLinialBaseCase
 /-! ### §4 — Regime B: finite enumeration -/
 
 /-- **Finite-enumeration base case — small-γ regime**
-(`step8.tex:736-765`, `step8.tex:802-810`).
+(`step8.tex:785-814`, `step8.tex:851-858`).
 
 For `γ < 1/3 − δ_KL ≈ 0.057` and `n ≤ n₀(γ, T)`, the verification
 of the 1/3–2/3 property reduces to a finite exhaustive enumeration
@@ -189,7 +189,7 @@ mechanical algorithm of bounded total running time
 
   `O( 3^{C(n,2)} · n² · n! )`
 
-(`step8.tex:761-764`).
+(`step8.tex:810-812`).
 
 The mechanical enumeration is an external computational
 prerequisite (no decision procedure has been formalised in Lean).
@@ -203,7 +203,7 @@ theorem smallNFiniteEnum
     (_hP : HasWidthAtMost α 3) (_hNonChain : ¬ IsChainPoset α)
     (_hSmall : Fintype.card α ≤ nZero γ_n γ_d c_exc)
     -- Small-γ regime output: the finite enumeration
-    -- (`step8.tex:802-810`) exhibits a balanced incomparable pair.
+    -- (`step8.tex:851-858`) exhibits a balanced incomparable pair.
     -- The enumeration itself is the external computational
     -- prerequisite; its Prop-level output is this hypothesis.
     (hEnum : HasBalancedPair α) :
@@ -212,7 +212,7 @@ theorem smallNFiniteEnum
 
 /-! ### §5 — Combined small-`n` lemma -/
 
-/-- **`lem:small-n`** (`step8.tex:709-714`, `step8.tex:778-823`).
+/-- **`lem:small-n`** (`step8.tex:757-764`, `step8.tex:827-874`).
 
 Let `γ = γ_n / γ_d ∈ (0, 1/3]` and `c_exc = C_exc(T)` be the Step 5
 exceptional-set bound. Every finite poset `P` of width ≤ 3 on

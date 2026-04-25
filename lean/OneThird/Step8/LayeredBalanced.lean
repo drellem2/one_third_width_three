@@ -16,21 +16,21 @@ import Mathlib.Tactic.Linarith
 (`sec:g4-balanced-pair`)
 
 Formalises GAP G4 / `lem:layered-balanced` of `step8.tex`
-§`sec:g4-balanced-pair` (`step8.tex:1543-1816`).
+§`sec:g4-balanced-pair` (`step8.tex:2336-3237`).
 
 ## Outline of the paper proof
 
 The paper proof has two pieces:
 
 * **Window localization** (`lem:window-localization`,
-  `step8.tex:1573-1608`): for an incomparable pair `(x, y)` with
+  `step8.tex:2524-2569`): for an incomparable pair `(x, y)` with
   `x ∈ L_i, y ∈ L_j`, the marginal probability `Pr[x <_L y]` in
   `L(P)` equals the marginal in `L(P|_{W(i,j)})`, the restriction
   to a window of size `≤ 3(3w + 1)`. Proved by ordinal-sum
   decomposition `X = X^- ⊔ W ⊔ X^+`.
 
 * **Bipartite balanced pair** (`prop:bipartite-balanced`,
-  `step8.tex:1633-1749`): in any height-2 poset `Q = A ⊔ B` with
+  `step8.tex:2824-2940`): in any height-2 poset `Q = A ⊔ B` with
   `|A|, |B| ≤ 3`, every comparability directed `A < B`, and at
   least one incomparable cross-pair, there is a balanced pair.
   The key combinatorial step is the *rotation argument*: any
@@ -39,7 +39,7 @@ The paper proof has two pieces:
 
 Together, the two pieces give: every layered width-3 poset that is
 not a chain contains a balanced pair (`lem:layered-balanced`,
-`step8.tex:1554-1565`, `prop:step7(iii)` of the assembly).
+`step8.tex:2339-2345`, `prop:step7(iii)` of the assembly).
 
 ## Main results
 
@@ -51,7 +51,7 @@ not a chain contains a balanced pair (`lem:layered-balanced`,
   non-chain layered width-3 poset.
 
 * `rotation_lower_bound` — the rotation lemma
-  (`step8.tex:1717-1723`): for any three rotations on a triple,
+  (`step8.tex:2900-2914`): for any three rotations on a triple,
   `Pr[π₁] + Pr[π₂] + Pr[π₃] ≥ 1`. **Proved** as a direct combinatorial
   statement on three pairwise-complementary events (sum of three
   rotations covers every total ordering). This is the only purely
@@ -59,7 +59,7 @@ not a chain contains a balanced pair (`lem:layered-balanced`,
 
 ## References
 
-`step8.tex` §`sec:g4-balanced-pair` (`step8.tex:1543-1816`),
+`step8.tex` §`sec:g4-balanced-pair` (`step8.tex:2336-3237`),
 Lemma `lem:layered-balanced`, Proposition `prop:bipartite-balanced`,
 Lemma `lem:window-localization`.
 -/
@@ -71,7 +71,7 @@ variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
 
 /-! ### §1 — Window localization (`lem:window-localization`) -/
 
-/-- **`lem:window-localization`** (`step8.tex:1573-1608`).
+/-- **`lem:window-localization`** (`step8.tex:2524-2569`).
 
 For an incomparable pair `(x, y)` with `x ∈ L_i, y ∈ L_j` and the
 band-distance bound `|i − j| ≤ w` (the only case allowed by
@@ -79,7 +79,7 @@ band-distance bound `|i − j| ≤ w` (the only case allowed by
 marginal in `L(P|_W)` for the window
 `W = L_{max(1, min(i,j) − w)} ∪ ⋯ ∪ L_{min(K, max(i,j) + w)}`.
 
-The proof (`step8.tex:1590-1608`):
+The proof (`step8.tex:2541-2569`):
 1. by `(L2)`, every `z ∈ X ∖ W` lies in a band more than `w` away
    from both `i` and `j`, so is comparable in `P` to every element
    of `W`, with the direction given by whether the band is below
@@ -114,7 +114,7 @@ theorem windowLocalization (L : LayeredDecomposition α)
     ∃ q : ℚ,
       probLT x y = q ∧
       -- The window has size `≤ 3 · (3w + 1)` — the
-      -- structural size bound (`step8.tex:1606-1607`).
+      -- structural size bound (`step8.tex:2537-2538`).
       W.card ≤ 3 * (3 * L.w + 1) := by
   classical
   refine ⟨probLT x y, rfl, ?_⟩
@@ -171,10 +171,10 @@ theorem windowLocalization (L : LayeredDecomposition α)
       ≤ W'.slice.card := Finset.card_le_card hsub
     _ ≤ 3 * (3 * L.w + 1) := Window.card_le L W'
 
-/-! ### §2 — Rotation lemma (`step8.tex:1717-1723`) -/
+/-! ### §2 — Rotation lemma (`step8.tex:2900-2914`) -/
 
 /-- **Rotation lemma — three rotations cover every total order**
-(`step8.tex:1717-1723`).
+(`step8.tex:2900-2914`).
 
 Three orderings on a 3-element set
 `{a₁, a₂, a₃}`:
@@ -201,7 +201,7 @@ theorem rotation_lower_bound
     (hcover : 1 ≤ p₁ + p₂ + p₃) :
     1 ≤ p₁ + p₂ + p₃ := hcover
 
-/-- **Rotation contrapositive** (`step8.tex:1717-1723`).
+/-- **Rotation contrapositive** (`step8.tex:2900-2914`).
 
 If all three of `Pr[a₂ <_L a₁]`, `Pr[a₃ <_L a₂]`, `Pr[a₁ <_L a₃]`
 strictly exceed `2/3`, their sum exceeds `2`, contradicting
@@ -236,7 +236,7 @@ theorem rotation_contradiction
 
 /-! ### §3 — Bipartite balanced pair (`prop:bipartite-balanced`) -/
 
-/-- **Rotation lemma — probability form** (`step8.tex:1717-1723`).
+/-- **Rotation lemma — probability form** (`step8.tex:2900-2914`).
 
 For any three distinct elements `x, y, z : α`, the three "rotation"
 events `{y <_L x}`, `{z <_L y}`, `{x <_L z}` cover every linear
@@ -306,7 +306,7 @@ lemma probLT_three_cycle_ge_one
   rw [← add_div, ← add_div, one_le_div₀ hn]
   exact_mod_cast hsum
 
-/-- **`prop:bipartite-balanced`** (`step8.tex:1627`).
+/-- **`prop:bipartite-balanced`** (`step8.tex:2824`).
 
 Structural form, with `Q` modelled as the ambient poset `α` via the
 covering hypothesis `A ∪ B = Finset.univ`. For a height-2 poset
@@ -316,7 +316,7 @@ in `Q`: `Q` has a balanced pair.
 
 Discharged via `bipartite_balanced_enum` (Step8/BipartiteEnum.lean, the
 Case 1 symmetric-pair involution applied uniformly across the ≤ 1024
-bipartite configurations). The paper's proof (`step8.tex:1640-1749`)
+bipartite configurations). The paper's proof (`step8.tex:2831-2940`)
 splits into two cases:
 
 * **Case 1** (symmetric pair): two elements of `A` (resp. `B`)
@@ -407,19 +407,19 @@ def Case3Witness.{u} : Prop :=
     2 ≤ Fintype.card β →
     HasBalancedPair β
 
-/-- **`lem:layered-balanced` — GAP G4** (`step8.tex:1554`,
+/-- **`lem:layered-balanced` — GAP G4** (`step8.tex:2348`,
 cleared-denominator form).
 
 Every layered width-3 poset `P = (α, ≤)` with `|α| ≥ 2` that is
 not a chain contains a balanced pair.
 
-The paper proof (`step8.tex:1768-1802`):
+The paper proof (`step8.tex:3071-3124`):
 1. **`K = 1` case**: `P = L_1` is a single antichain on `2` or
    `3` elements; every pair is incomparable with `Pr = 1/2 ∈
    [1/3, 2/3]`. Closed in the `K = 1` branch below via
    `bipartite_balanced_enum`.
 2. **`K ≥ 2` case**: iterated ordinal-sum decomposition
-   (`step8.tex:1618-1631`) driven by F3's well-founded recursion
+   (`step8.tex:2656-2667`) driven by F3's well-founded recursion
    (`Step8.hasBalancedPair_of_layered_strongInduction`), with Case C
    (irreducible leaf) discharged via F5a-ℓ's
    `bounded_irreducible_balanced`. The Prop-level Case-3 witness is
@@ -468,9 +468,9 @@ theorem lem_layered_balanced.{u}
     unfold OneThird.IsChainPoset
     push_neg
     exact ⟨x, y, hxy, hyx⟩
-  -- **Case split on depth** `K = 1` vs `K ≥ 2` (`step8.tex:1763`).
+  -- **Case split on depth** `K = 1` vs `K ≥ 2` (`step8.tex:3080`).
   rcases Nat.lt_or_ge L.K 2 with hK1 | _hK2
-  · -- **Case `K = 1`** (`step8.tex:1763-1766`). Since
+  · -- **Case `K = 1`** (`step8.tex:3080-3082`). Since
     -- `1 ≤ band z ≤ K ≤ 1` for every `z ∈ α`, the whole ground set
     -- collapses to the single band `L_1 = bandSet 1`. By (L1b), that
     -- band is an antichain, so `univ` itself is an antichain. Apply
@@ -504,14 +504,14 @@ theorem lem_layered_balanced.{u}
       (Finset.disjoint_empty_right _) (Finset.union_empty _)
       (fun _ _ b hb => absurd hb (Finset.notMem_empty b))
       ⟨x, y, hxy_inc⟩
-  · -- **Case `K ≥ 2`** (`step8.tex:1768-1795`).
+  · -- **Case `K ≥ 2`** (`step8.tex:3084-3122`).
     -- Discharged by the `Case3Witness` ∀-family, which covers every
     -- width-3 non-chain layered β uniformly via F5a-ℓ's
     -- `bounded_irreducible_balanced` dispatch (see `Case3Witness`
     -- docstring).
     exact hC3 α L hW3 hNotChain' h2
 
-/-- **Subtype-level balanced-pair helper** (`step8.tex:1608-1625`).
+/-- **Subtype-level balanced-pair helper** (`step8.tex:2571-2667`).
 
 Produce a balanced pair in the `↥D.Mid` sub-poset, given an ambient
 incomparable pair `(x, y)` that sits inside `D.Mid` and a width-3
@@ -568,7 +568,7 @@ theorem lem_layered_balanced_subtype.{u}
 /-! ### §5 — Chained balanced-pair lift (`lem:chained-lift`) -/
 
 /-- **Chained `HasBalancedPair` lift bundle** (`step8.tex` §sec:g4,
-`lem:chained-lift`, `step8.tex:2091-2187`).
+`lem:chained-lift`, `step8.tex:2684-2742`).
 
 Lean realisation of paper `def:ordinal-chain` (`step8.tex:2669-2682`),
 in the form needed by `lem:chained-lift` (`step8.tex:2684`): rather
@@ -590,7 +590,7 @@ prepends one `OrdinalDecomp α` step by composing with
 induction, `step8.tex:rem:chained-lift-lean`).
 
 The `nil`/`cons` builders realize the induction of `lem:chained-lift`
-(`step8.tex:2112-2187`): `nil` is the tautological length-0 case, and
+(`step8.tex:2692-2742`): `nil` is the tautological length-0 case, and
 each `cons` step is one application of the single-step lift. Iterating
 `cons` along a chain of `OrdinalDecomp`s produces the composite
 lift — equivalently, an `n`-fold iteration of
@@ -613,7 +613,7 @@ namespace OrdinalChainLift
 
 /-- **Base case of `lem:chained-lift`** (length-0 chain): endpoint is
 `α` itself and the composite lift is the identity. Realizes
-`step8.tex:2119-2121`. -/
+`step8.tex:2708-2709`. -/
 def nil (α : Type*) [PartialOrder α] [Fintype α] [DecidableEq α] :
     OrdinalChainLift α where
   Endpoint := α
@@ -622,7 +622,7 @@ def nil (α : Type*) [PartialOrder α] [Fintype α] [DecidableEq α] :
   endpointDE := inferInstance
   lift := id
 
-/-- **Inductive step of `lem:chained-lift`** (`step8.tex:2123-2144`):
+/-- **Inductive step of `lem:chained-lift`** (`step8.tex:2711-2741`):
 extend a chain starting at `↥D.Mid` by prepending one `OrdinalDecomp α`
 step. The resulting composite lift first applies the tail's lift (from
 the chain endpoint to `↥D.Mid`), then `OrdinalDecomp.hasBalancedPair_lift`
@@ -642,7 +642,7 @@ def cons {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
 
 end OrdinalChainLift
 
-/-- **`lem:chained-lift`** (`step8.tex:2106-2112`): the chained
+/-- **`lem:chained-lift`** (`step8.tex:2684-2690`): the chained
 balanced-pair lift along any `OrdinalChainLift`.
 
 Given a chain-lift bundle `C : OrdinalChainLift α`, a balanced pair at
@@ -652,7 +652,7 @@ statement.
 
 The bundle `C` is built from actual `OrdinalDecomp`s via
 `OrdinalChainLift.nil` and `OrdinalChainLift.cons`; the induction on
-chain length (`step8.tex:2119-2144`) is realized by the iteration of
+chain length (`step8.tex:2708-2741`) is realized by the iteration of
 `cons`. -/
 theorem OrdinalChainLift.hasBalancedPair_lift_chain
     (C : OrdinalChainLift α)
@@ -663,7 +663,7 @@ theorem OrdinalChainLift.hasBalancedPair_lift_chain
 
 /-! ### §6 — Combined G3+G4 conclusion (`prop:step7(iii)`) -/
 
-/-- **Combined G3+G4 conclusion** (`step8.tex:1804-1816`,
+/-- **Combined G3+G4 conclusion** (`step8.tex:3175-3192`,
 `rem:g3-g4-interface`).
 
 Together, `lem_layered_reduction` (G3) and `lem_layered_balanced`

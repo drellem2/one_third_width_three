@@ -23,7 +23,7 @@ import Mathlib.Tactic.Linarith
 
 Formalises the assembly of the **width-3 1/3–2/3 theorem**
 (`thm:main-step8` of `step8.tex` §`sec:main-thm`,
-`step8.tex:488-849`).
+`step8.tex:502-901`).
 
 This file is the capstone of the Lean formalisation: it combines
 
@@ -44,7 +44,7 @@ of `OneThird/MainTheorem.lean`).
 
 ## Structure
 
-The assembly follows the paper's case analysis (`step8.tex:504-706`):
+The assembly follows the paper's case analysis (`step8.tex:553-755`):
 
 1. **Parameter cascade** — `T(γ), δ₀(γ), ε(γ, T), n₀(γ, T)` are
    fixed so that the G2 compatibility inequality holds (or the
@@ -79,7 +79,7 @@ of each box are proved in their respective files.
 
 ## References
 
-`step8.tex` §`sec:main-thm` (`step8.tex:488-849`), Theorem
+`step8.tex` §`sec:main-thm` (`step8.tex:502-901`), Theorem
 `thm:main-step8`, Remark `rem:one-invocation`.
 -/
 
@@ -90,7 +90,7 @@ variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
 
 /-! ### §1 — Inputs bundle -/
 
-/-- **Inputs to the main theorem assembly** (`step8.tex:826-849`,
+/-- **Inputs to the main theorem assembly** (`step8.tex:876-900`,
 `rem:one-invocation`).
 
 Bundles the abstract hypotheses required to discharge the main
@@ -114,7 +114,7 @@ The fields:
   either it has depth `≥ K₀` (deep regime: G3 reduction yields a
   smaller counterexample, contradicting minimality) or `< K₀`
   (shallow regime: G4 directly produces a balanced pair).
-* `pertBound` — `eq:exc-perturb` (`step8.tex:632`): the pairwise
+* `pertBound` — `eq:exc-perturb` (`step8.tex:681`): the pairwise
   probability perturbation bound for deleting a bounded exceptional
   set, `|p_xy(P) − p_xy(P|_{X∖X_exc})| ≤ 2 k / (n − k + 1)`.
 
@@ -239,12 +239,12 @@ noncomputable def mainTheoremInputsOf.{u}
 /-- **Width-3 1/3–2/3 — main assembly** (`thm:main-step8`).
 
 Cleared-denominator abstract form of the Step 8 main theorem
-(`step8.tex:491-706`). Given:
+(`step8.tex:553-755`). Given:
 
 * a width-3 finite poset `P = (α, ≤)` with `n = |α| ≥ 2`;
 * `γ_n / γ_d > 0`: the counter-example threshold;
 * `MainTheoremInputs`: the abstract assembly inputs of
-  `step8.tex:826-849`;
+  `step8.tex:876-900`;
 * `Theorem E` is *not* applied directly here (it is supplied
   through the assembly inputs since the cut data feeds Step 6/7);
 
@@ -274,7 +274,7 @@ theorem mainAssembly
     -- Case (C): collapse, layered decomposition directly.
     exact I.caseC I.caseR_to_caseC
 
-/-- **Small-`n` regime branch** (`step8.tex:790-823`,
+/-- **Small-`n` regime branch** (`step8.tex:827-874`,
 `rem:small-n`).
 
 When `|α| < n₀(γ, T)`, the cascade does not apply (Step 4 error

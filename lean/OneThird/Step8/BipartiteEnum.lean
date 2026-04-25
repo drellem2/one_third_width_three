@@ -7,7 +7,7 @@ import Mathlib.Tactic.Linarith
 
 /-!
 # Step 8 — Bipartite finite enumeration: discharges the F4 axiom
-(`step8.tex:1751-1763`)
+(`step8.tex:2942-2955`)
 
 This file closes the `fkg_case_output` axiom of
 `OneThird.Step8.LayeredBalanced` by a uniform finite argument across the
@@ -21,7 +21,7 @@ bipartite reduct: the covering hypothesis `A ∪ B = Finset.univ` bounds
 ## The symmetry argument
 
 For each bipartite configuration, the proof is the *Case 1* involution
-of `prop:bipartite-balanced` (`step8.tex:1640-1700`, the
+of `prop:bipartite-balanced` (`step8.tex:2836-2845`, the
 symmetric-pair case) applied uniformly:
 
 1. An incomparable pair `(u, v)` in such a poset lies either entirely
@@ -266,7 +266,7 @@ private lemma probLT_eq_half_of_same_layer
 /-! ### §5 — Main theorem: discharges `fkg_case_output` -/
 
 /-- **`prop:bipartite-balanced` — discharged by finite enumeration**
-(`step8.tex:1627-1749`, `step8.tex:1751-1763`).
+(`step8.tex:2824-2940`, `step8.tex:2942-2955`).
 
 For a bipartite height-2 poset `α = A ⊔ B` with `A, B` disjoint
 antichains of size `≤ 3`, covering `α`, every comparability directed
