@@ -44,17 +44,17 @@ strengthened partial order `predOrderPlus`) for the slow-path lift.
   `predLT_pred_subset_predAddEdge` (warshall `bit_mono` lifted to
   `predLT`), `predLT_predAddEdge_xy` (the `(x, y)` bit survives the
   warshall pass), and `predBitsBoundedBy_predAddEdge`.
+* §6 — `validPrefixPredAddEdgeEquivLinearExtLt`:
+  `ValidPrefix (predAddEdge pred n x y) n Finset.univ ≃ {L :
+  LinearExt(predOrder pred h) // L.lt x y}`. Combines the warshall
+  facts from §4-§5 with the A3 bridge `validPrefixUnivEquivLinearExt`
+  (now public in `Correctness.lean`).
 
 ## Slow-path bridge status
 
 The full Bool→Prop lift of `hasBalancedPairSlow` has been split into
 follow-up work items (see `mg mail` history). The remaining pieces:
 
-* §6 — `ValidPrefix (addEdgeClose pred n x.val y.val) n Finset.univ ≃
-  {L : LinearExt (predOrder pred h) // L.lt x y}` bridge. Requires
-  exposing `validPrefixUnivEquivLinearExt` from
-  `Correctness.lean` (currently `private`) or duplicating the ~150 LoC
-  position-of permutation construction.
 * §7 — `hasBalancedPairSlow` `Bool → Prop` lift via `forIn`
   unrolling and the probability-bound bridge.
 * §8 — Final `bounded_irreducible_balanced`-consumable theorem.
@@ -865,6 +865,249 @@ lemma predBitsBoundedBy_predAddEdge (h_bnd : predBitsBoundedBy pred n)
   · exact h_bnd e u hu
 
 end SlowPathHelpers
+
+/-! ### §6 — Bridge: `ValidPrefix(predAddEdge) ≃ {L : LinearExt // L.lt x y}`
+
+Combines the warshall facts from §4-§5 with the A3 bridge
+`validPrefixUnivEquivLinearExt` (now public in `Correctness.lean`)
+to identify valid prefixes on the augmented mask `predAddEdge pred n
+x y` with linear extensions of `predOrder pred h` placing `x` before
+`y`.
+
+Three lemmas glue together: (a) `predLT pred ⊆ predLT (predAddEdge)`
+(`predLT_pred_subset_predAddEdge`) lets a `ValidPrefix (predAddEdge)`
+restrict to a `ValidPrefix pred`; (b) `predLT (predAddEdge) x y`
+(`predLT_predAddEdge_xy`) identifies the new `(x, y)` bit;
+(c) SOUNDNESS (`warshall_addEdge_sound`) says
+`predLT (predAddEdge) ⊆ predLTPlus pred x y`, so a `ValidPrefix pred`
+placing `x` before `y` strengthens to a `ValidPrefix (predAddEdge)`. -/
+
+section BridgeA4b3
+
+open Case3Enum
+
+variable {pred : Array Nat} {n : ℕ}
+
+/-- Restrict a `ValidPrefix (predAddEdge pred n x y)` to a
+`ValidPrefix pred` by weakening the `predClosed` invariant via
+`predLT pred ⊆ predLT (predAddEdge)` (`predLT_pred_subset_predAddEdge`). -/
+def ValidPrefix.restrictFromAddEdge
+    {S : Finset (Fin n)} (x y : Fin n)
+    (P : ValidPrefix (predAddEdge pred n x y) n S) :
+    ValidPrefix pred n S :=
+  ⟨P.val, P.inj, P.mem,
+    fun i u hu => P.predClosed i u
+      (predLT_pred_subset_predAddEdge x y u (P.val i) hu)⟩
+
+@[simp] lemma ValidPrefix.restrictFromAddEdge_val
+    {S : Finset (Fin n)} (x y : Fin n)
+    (P : ValidPrefix (predAddEdge pred n x y) n S) :
+    (P.restrictFromAddEdge x y).val = P.val := rfl
+
+/-- Position-of monotonicity for any `ValidPrefix pred`: if
+`predLT pred u v`, then `(P.toFinPerm.symm u).val < (P.toFinPerm.symm v).val`.
+Derived from `P.predClosed` at `i := P.toFinPerm.symm v`. -/
+lemma ValidPrefix.toFinPerm_symm_val_lt_of_predLT
+    (P : ValidPrefix pred n (Finset.univ : Finset (Fin n)))
+    {u v : Fin n} (hpred : predLT pred u v) :
+    (P.toFinPerm.symm u).val < (P.toFinPerm.symm v).val := by
+  classical
+  set π := P.toFinPerm with hπ_def
+  set iv := π.symm v with hiv_def
+  have hπ_iv : π iv = v := π.apply_symm_apply v
+  -- π iv = P.val (liftToCardUniv iv) by definition of toFinPerm.
+  have hPiv : P.val (liftToCardUniv iv) = v := hπ_iv
+  have hpred' : predLT pred u (P.val (liftToCardUniv iv)) := by
+    rw [hPiv]; exact hpred
+  obtain ⟨j, hjlt, hju⟩ := P.predClosed (liftToCardUniv iv) u hpred'
+  set j' : Fin n := lowerFromCardUniv j with hj'_def
+  have hπ_j' : π j' = u := by
+    show P.val (liftToCardUniv j') = u
+    rw [liftToCardUniv_lowerFromCardUniv]; exact hju
+  have hsymm_u : π.symm u = j' := by
+    rw [← hπ_j', π.symm_apply_apply]
+  rw [hsymm_u]
+  show j.val < iv.val
+  exact hjlt
+
+/-- For `P : ValidPrefix pred n univ`, `(P.toLinearExtUniv h).lt x y`
+is exactly the position-of inequality on `P.toFinPerm`. The `@LinearExt.lt`
+makes the partial-order instance explicit, since `Fin n` has a default
+`PartialOrder` that would otherwise be synthesized. -/
+lemma ValidPrefix.toLinearExtUniv_lt_iff
+    (h : ValidPredMask pred n)
+    (P : ValidPrefix pred n (Finset.univ : Finset (Fin n)))
+    (x y : Fin n) :
+    @LinearExt.lt (Fin n) (predOrder pred h) _ (P.toLinearExtUniv h) x y ↔
+      (P.toFinPerm.symm x).val < (P.toFinPerm.symm y).val := Iff.rfl
+
+/-- The `Fin.castOrderIso` cast inside `linearExtUnivToValidPrefix` is
+val-preserving; combined with `linearExtUnivToValidPrefix_toFinPerm`,
+the position of `x` under the resulting valid prefix has the same
+`.val` as `L.toFun x`. -/
+lemma linearExtUnivToValidPrefix_toFinPerm_symm_val
+    (h : ValidPredMask pred n)
+    (L : @LinearExt (Fin n) (predOrder pred h) _) (x : Fin n) :
+    ((linearExtUnivToValidPrefix h L).toFinPerm.symm x).val =
+      (@LinearExt.toFun (Fin n) (predOrder pred h) _ L x).val := by
+  rw [linearExtUnivToValidPrefix_toFinPerm h L, Equiv.symm_symm]
+  rfl
+
+/-- Forward map: a `ValidPrefix (predAddEdge pred n x y)` on `univ`
+defines a linear extension of `predOrder pred h` placing `x`
+before `y`. Requires `y.val < pred.size` (the new `(x, y)` bit is set
+only if the array slot exists). -/
+noncomputable def ValidPrefix.toLinearExtLtUniv
+    (h : ValidPredMask pred n) (x y : Fin n) (hsize : y.val < pred.size)
+    (P : ValidPrefix (predAddEdge pred n x y) n
+      (Finset.univ : Finset (Fin n))) :
+    { L : @LinearExt (Fin n) (predOrder pred h) _ //
+        @LinearExt.lt (Fin n) (predOrder pred h) _ L x y } :=
+  ⟨(P.restrictFromAddEdge x y).toLinearExtUniv h, by
+    classical
+    rw [(P.restrictFromAddEdge x y).toLinearExtUniv_lt_iff h x y]
+    -- (P.restrictFromAddEdge).toFinPerm = P.toFinPerm definitionally,
+    -- since both unfold to `Equiv.ofBijective (fun i => P.val (liftToCardUniv i)) ...`.
+    -- Apply the position-of monotonicity to predLT (predAddEdge) x y.
+    exact P.toFinPerm_symm_val_lt_of_predLT
+      (predLT_predAddEdge_xy x y hsize)⟩
+
+/-- Strengthen a `ValidPrefix pred` (with `x` placed before `y`) to a
+`ValidPrefix (predAddEdge pred n x y)`, using SOUNDNESS
+(`warshall_addEdge_sound`) to verify the strengthened `predClosed`. -/
+def ValidPrefix.strengthenToAddEdge
+    (h : ValidPredMask pred n) (x y : Fin n)
+    (hxy_inc : @Incomp (Fin n) (predOrder pred h).toLE x y)
+    (P : ValidPrefix pred n (Finset.univ : Finset (Fin n)))
+    (hxy : (P.toFinPerm.symm x).val < (P.toFinPerm.symm y).val) :
+    ValidPrefix (predAddEdge pred n x y) n
+      (Finset.univ : Finset (Fin n)) := by
+  classical
+  refine ⟨P.val, P.inj, P.mem, ?_⟩
+  intro i u hu_addEdge
+  -- u : Fin n, hu_addEdge : predLT (predAddEdge pred n x y) u (P.val i)
+  -- Convert via SOUNDNESS to predLTPlus pred x y u (P.val i).
+  have h_LTPlus : predLTPlus pred x y u (P.val i) :=
+    warshall_addEdge_sound h x y hxy_inc u (P.val i) hu_addEdge
+  rcases h_LTPlus with h_pred | ⟨h_ux, h_yvi⟩
+  · -- Standard case: predLT pred u (P.val i) — apply P.predClosed.
+    exact P.predClosed i u h_pred
+  · -- Strengthened case: u ≤ x and y ≤ P.val i in predOrder pred h.
+    -- Take j := liftToCardUniv (P.toFinPerm.symm u); position of u.
+    set π := P.toFinPerm with hπ_def
+    refine ⟨liftToCardUniv (π.symm u), ?_, ?_⟩
+    · -- (π.symm u).val < i.val: chain via π.symm x and π.symm y.
+      -- Step A: (π.symm u).val ≤ (π.symm x).val.
+      have hA : (π.symm u).val ≤ (π.symm x).val := by
+        rcases h_ux with rfl | hux
+        · exact le_refl _
+        · exact le_of_lt (P.toFinPerm_symm_val_lt_of_predLT hux)
+      -- Step B: (π.symm y).val ≤ (π.symm (P.val i)).val.
+      have hB : (π.symm y).val ≤ (π.symm (P.val i)).val := by
+        rcases h_yvi with hPvi | hyvi
+        · rw [hPvi]
+        · exact le_of_lt (P.toFinPerm_symm_val_lt_of_predLT hyvi)
+      -- Step C: (π.symm (P.val i)).val = i.val.
+      -- Let i' := lowerFromCardUniv i. Then liftToCardUniv i' = i and
+      -- π i' = P.val (liftToCardUniv i') = P.val i, so π.symm (P.val i) = i'.
+      have hC : (π.symm (P.val i)).val = i.val := by
+        set i' : Fin n := lowerFromCardUniv i with hi'_def
+        have hπ_i' : π i' = P.val i := by
+          show P.val (liftToCardUniv i') = P.val i
+          rw [liftToCardUniv_lowerFromCardUniv]
+        have hsymm_i' : π.symm (P.val i) = i' := by
+          rw [← hπ_i', π.symm_apply_apply]
+        rw [hsymm_i']; rfl
+      -- Combine A, hxy, B, C.
+      show (liftToCardUniv (π.symm u)).val < i.val
+      rw [liftToCardUniv_val]
+      omega
+    · -- P.val (liftToCardUniv (π.symm u)) = u: by definition of toFinPerm.
+      show P.val (liftToCardUniv (π.symm u)) = u
+      change π (π.symm u) = u
+      exact π.apply_symm_apply u
+
+@[simp] lemma ValidPrefix.strengthenToAddEdge_val
+    (h : ValidPredMask pred n) (x y : Fin n)
+    (hxy_inc : @Incomp (Fin n) (predOrder pred h).toLE x y)
+    (P : ValidPrefix pred n (Finset.univ : Finset (Fin n)))
+    (hxy : (P.toFinPerm.symm x).val < (P.toFinPerm.symm y).val) :
+    (P.strengthenToAddEdge h x y hxy_inc hxy).val = P.val := rfl
+
+/-- Backward map: a linear extension of `predOrder pred h` placing
+`x` before `y` defines a `ValidPrefix (predAddEdge pred n x y)`
+on `univ`. -/
+noncomputable def ValidPrefix.ofLinearExtLtUniv
+    (h : ValidPredMask pred n) (x y : Fin n)
+    (hxy_inc : @Incomp (Fin n) (predOrder pred h).toLE x y)
+    (PL : { L : @LinearExt (Fin n) (predOrder pred h) _ //
+        @LinearExt.lt (Fin n) (predOrder pred h) _ L x y }) :
+    ValidPrefix (predAddEdge pred n x y) n
+      (Finset.univ : Finset (Fin n)) :=
+  let P := linearExtUnivToValidPrefix h PL.val
+  P.strengthenToAddEdge h x y hxy_inc <| by
+    -- (P.toFinPerm.symm x).val = (PL.val.toFun x).val and similarly for y.
+    -- PL.val.lt x y means (PL.val.toFun x).val < (PL.val.toFun y).val.
+    rw [linearExtUnivToValidPrefix_toFinPerm_symm_val,
+        linearExtUnivToValidPrefix_toFinPerm_symm_val]
+    exact PL.property
+
+/-- The bridge equivalence:
+
+    `ValidPrefix (predAddEdge pred n x y) n univ ≃
+        { L : LinearExt(predOrder pred h) // L.lt x y }`. -/
+noncomputable def validPrefixPredAddEdgeEquivLinearExtLt
+    (h : ValidPredMask pred n) (x y : Fin n) (hsize : y.val < pred.size)
+    (hxy_inc : @Incomp (Fin n) (predOrder pred h).toLE x y) :
+    ValidPrefix (predAddEdge pred n x y) n
+      (Finset.univ : Finset (Fin n)) ≃
+      { L : @LinearExt (Fin n) (predOrder pred h) _ //
+          @LinearExt.lt (Fin n) (predOrder pred h) _ L x y } where
+  toFun P := P.toLinearExtLtUniv h x y hsize
+  invFun PL := ValidPrefix.ofLinearExtLtUniv h x y hxy_inc PL
+  left_inv := fun P => by
+    classical
+    -- Both ValidPrefix structures share the same .val function — Subtype.ext suffices.
+    apply Subtype.ext
+    show (ValidPrefix.ofLinearExtLtUniv h x y hxy_inc
+      (P.toLinearExtLtUniv h x y hsize)).val = P.val
+    -- LHS unfolds: strengthen (linearExtUnivToValidPrefix h ((P.restrict).toLinearExtUniv h)).
+    -- The `.val` of a `strengthen` is the `.val` of its argument:
+    show (linearExtUnivToValidPrefix h
+        ((P.restrictFromAddEdge x y).toLinearExtUniv h)).val =
+      P.val
+    -- And linearExtUnivToValidPrefix is the inverse of toLinearExtUniv (left_inv of
+    -- validPrefixUnivEquivLinearExt, applied to P.restrictFromAddEdge x y).
+    have hround :
+        linearExtUnivToValidPrefix h
+          ((P.restrictFromAddEdge x y).toLinearExtUniv h) =
+        P.restrictFromAddEdge x y :=
+      (validPrefixUnivEquivLinearExt pred h).left_inv
+        (P.restrictFromAddEdge x y)
+    rw [hround]
+    rfl
+  right_inv := fun PL => by
+    classical
+    apply Subtype.ext
+    show ((ValidPrefix.ofLinearExtLtUniv h x y hxy_inc PL).toLinearExtLtUniv
+      h x y hsize).val = PL.val
+    -- LHS = ((strengthen (linExtUnivToValidPrefix h L)).restrict).toLinearExtUniv h
+    -- = (linExtUnivToValidPrefix h L).toLinearExtUniv h
+    --   (restrict ∘ strengthen = id on .val)
+    -- = L (right_inv of validPrefixUnivEquivLinearExt)
+    show ((ValidPrefix.ofLinearExtLtUniv h x y hxy_inc PL).restrictFromAddEdge x y
+        ).toLinearExtUniv h = PL.val
+    -- The `.val` of a restrictFromAddEdge equals the original .val,
+    -- so as a ValidPrefix pred it's the same data as `linearExtUnivToValidPrefix h PL.val`.
+    have hsame : (ValidPrefix.ofLinearExtLtUniv h x y hxy_inc PL).restrictFromAddEdge
+        x y = linearExtUnivToValidPrefix h PL.val := by
+      apply Subtype.ext
+      rfl
+    rw [hsame]
+    -- Now apply right_inv of validPrefixUnivEquivLinearExt.
+    exact (validPrefixUnivEquivLinearExt pred h).right_inv PL.val
+
+end BridgeA4b3
 
 end Case3Enum
 end Step8

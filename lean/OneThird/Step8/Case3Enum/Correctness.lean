@@ -1178,36 +1178,36 @@ the latter case `predClosed` produces a position `j < i` (where
 `(P.toFinPerm.symm) x = j < i = (P.toFinPerm.symm) y`. -/
 
 /-- Cardinality of `Finset.univ : Finset (Fin n)` is `n`. -/
-private lemma univ_fin_card (n : ℕ) :
+lemma univ_fin_card (n : ℕ) :
     (Finset.univ : Finset (Fin n)).card = n := by
   rw [Finset.card_univ, Fintype.card_fin]
 
 /-- Lift a `Fin n` to a `Fin (univ.card)` element with the same value. -/
-private def liftToCardUniv {n : ℕ} (i : Fin n) :
+def liftToCardUniv {n : ℕ} (i : Fin n) :
     Fin (Finset.univ : Finset (Fin n)).card :=
   Fin.cast (univ_fin_card n).symm i
 
-@[simp] private lemma liftToCardUniv_val {n : ℕ} (i : Fin n) :
+@[simp] lemma liftToCardUniv_val {n : ℕ} (i : Fin n) :
     (liftToCardUniv i).val = i.val := rfl
 
 /-- Lower a `Fin (univ.card)` element to `Fin n`. -/
-private def lowerFromCardUniv {n : ℕ}
+def lowerFromCardUniv {n : ℕ}
     (j : Fin (Finset.univ : Finset (Fin n)).card) : Fin n :=
   Fin.cast (univ_fin_card n) j
 
-@[simp] private lemma lowerFromCardUniv_val {n : ℕ}
+@[simp] lemma lowerFromCardUniv_val {n : ℕ}
     (j : Fin (Finset.univ : Finset (Fin n)).card) :
     (lowerFromCardUniv j).val = j.val := rfl
 
-@[simp] private lemma lowerFromCardUniv_liftToCardUniv {n : ℕ} (i : Fin n) :
+@[simp] lemma lowerFromCardUniv_liftToCardUniv {n : ℕ} (i : Fin n) :
     lowerFromCardUniv (liftToCardUniv i) = i := Fin.ext rfl
 
-@[simp] private lemma liftToCardUniv_lowerFromCardUniv {n : ℕ}
+@[simp] lemma liftToCardUniv_lowerFromCardUniv {n : ℕ}
     (j : Fin (Finset.univ : Finset (Fin n)).card) :
     liftToCardUniv (lowerFromCardUniv j) = j := Fin.ext rfl
 
 /-- The position-of permutation derived from a full-prefix `ValidPrefix`. -/
-private noncomputable def ValidPrefix.toFinPerm {pred : Array Nat}
+noncomputable def ValidPrefix.toFinPerm {pred : Array Nat}
     (P : ValidPrefix pred n (Finset.univ : Finset (Fin n))) :
     Fin n ≃ Fin n := by
   classical
@@ -1219,14 +1219,14 @@ private noncomputable def ValidPrefix.toFinPerm {pred : Array Nat}
     exact Fin.ext h2
   exact Equiv.ofBijective g (Finite.injective_iff_bijective.mp hg_inj)
 
-private lemma ValidPrefix.toFinPerm_apply {pred : Array Nat}
+lemma ValidPrefix.toFinPerm_apply {pred : Array Nat}
     (P : ValidPrefix pred n (Finset.univ : Finset (Fin n))) (i : Fin n) :
     P.toFinPerm i = P.val (liftToCardUniv i) := rfl
 
 /-- The forward map: a valid prefix on `univ` defines a linear extension
 of `(Fin n, predOrder pred h)`.  Built via `@LinearExt.mk` with explicit
 typeclass arguments to keep the codomain `LE` resolution unambiguous. -/
-private noncomputable def ValidPrefix.toLinearExtUniv {pred : Array Nat}
+noncomputable def ValidPrefix.toLinearExtUniv {pred : Array Nat}
     (h : ValidPredMask pred n)
     (P : ValidPrefix pred n (Finset.univ : Finset (Fin n))) :
     @LinearExt (Fin n) (predOrder pred h) _ :=
@@ -1265,7 +1265,7 @@ private noncomputable def ValidPrefix.toLinearExtUniv {pred : Array Nat}
 defines a valid prefix on `univ`.  We invert the linear-extension's
 `toFun` (composed with `Fin.castOrderIso` for the cardinality cast)
 to obtain the position-to-element function. -/
-private noncomputable def linearExtUnivToValidPrefix {pred : Array Nat}
+noncomputable def linearExtUnivToValidPrefix {pred : Array Nat}
     (h : ValidPredMask pred n)
     (L : @LinearExt (Fin n) (predOrder pred h) _) :
     ValidPrefix pred n (Finset.univ : Finset (Fin n)) := by
@@ -1331,7 +1331,7 @@ inverse of `L.toFun.trans cast_inv`.  Used in both `left_inv` and
 `right_inv` to convert between the `ValidPrefix` and `LinearExt`
 representations.  Uses `@LinearExt.toFun` explicitly so the statement
 elaborates with `predOrder pred h` as the partial-order instance. -/
-private lemma linearExtUnivToValidPrefix_toFinPerm {pred : Array Nat}
+lemma linearExtUnivToValidPrefix_toFinPerm {pred : Array Nat}
     (h : ValidPredMask pred n)
     (L : @LinearExt (Fin n) (predOrder pred h) _) :
     (linearExtUnivToValidPrefix h L).toFinPerm =
@@ -1346,7 +1346,7 @@ private lemma linearExtUnivToValidPrefix_toFinPerm {pred : Array Nat}
 
 /-- The bridge equivalence: full-prefix valid orderings biject with
 linear extensions of `(Fin n, predOrder pred h)`. -/
-private noncomputable def validPrefixUnivEquivLinearExt
+noncomputable def validPrefixUnivEquivLinearExt
     (pred : Array Nat) (h : ValidPredMask pred n) :
     ValidPrefix pred n (Finset.univ : Finset (Fin n)) ≃
       @LinearExt (Fin n) (predOrder pred h) _ where
