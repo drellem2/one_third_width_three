@@ -7,6 +7,8 @@ import OneThird.Step8.LayeredReduction
 import OneThird.Step8.LayerOrdinal
 import OneThird.Step8.Case3Enum
 import OneThird.Step8.Case3Enum.Certificate
+import OneThird.Step8.Case3Enum.Correctness
+import Mathlib.Tactic.IntervalCases
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -323,6 +325,137 @@ lemma sum_bandSize_eq_card (L : LayeredDecomposition α) :
         exact ⟨L.band x - 1, by omega, by omega⟩
     _ = Fintype.card α := Finset.card_univ
 
+/-! #### A5-B3: `bandSizes L ∈ Case3Enum.bandSizesGen L.K sizeLimit`
+(`mg-0f0e`)
+
+The Bool certificate iterates over `bandSizesGen L.K sizeLimit`,
+the family of `K`-tuples in `{1, 2, 3}^K` with sum `≤ sizeLimit`.
+For a `LayeredDecomposition L` whose every band is non-empty
+(necessary, since `bandSizesGen` excludes the entry `0`) and whose
+ground-set cardinality is `≤ sizeLimit`, `bandSizes L` lands in
+this enumeration.
+
+The membership lemma factors via a characterization of
+`bandSizesGen`: a list `l` is in `bandSizesGen K total` iff its
+length is `K`, every entry is in `{1, 2, 3}`, and the sum is
+`≤ total`. Both directions go by induction on `K`. -/
+
+/-- Auxiliary: `((List.range m).map f).foldr (· + ·) a` equals
+`a + ∑ i ∈ Finset.range m, f i`. Used by `bandSizes_mem_bandSizesGen`
+to bridge between the imperative-loop accumulator form and the
+`Finset.sum` form. -/
+private lemma foldr_add_range_map (f : ℕ → ℕ) :
+    ∀ (m a : ℕ),
+      ((List.range m).map f).foldr (· + ·) a =
+        a + (Finset.range m).sum f := by
+  intro m
+  induction m with
+  | zero => intro a; simp
+  | succ m ih =>
+    intro a
+    rw [List.range_succ, List.map_append, List.foldr_append,
+      Finset.sum_range_succ]
+    show ((List.range m).map f).foldr (· + ·) (f m + a) = _
+    rw [ih (f m + a)]
+    ring
+
+/-- **Characterization of `bandSizesGen`** (A5-B3).
+`l ∈ bandSizesGen K sizeLimit` is equivalent to: length is `K`,
+every entry is in `{1, 2, 3}`, and the sum is `≤ sizeLimit`. -/
+lemma mem_bandSizesGen_iff (K sizeLimit : ℕ) (l : List ℕ) :
+    l ∈ Case3Enum.bandSizesGen K sizeLimit ↔
+      l.length = K ∧ (∀ x ∈ l, 1 ≤ x ∧ x ≤ 3) ∧
+        l.foldr (· + ·) 0 ≤ sizeLimit := by
+  induction K generalizing l with
+  | zero =>
+    simp only [Case3Enum.bandSizesGen, List.mem_singleton]
+    refine ⟨fun h => ?_, fun ⟨hlen, _, _⟩ => ?_⟩
+    · subst h
+      refine ⟨rfl, ?_, by simp⟩
+      intro x hx
+      exact absurd hx List.not_mem_nil
+    · exact List.length_eq_zero_iff.mp hlen
+  | succ K ih =>
+    constructor
+    · intro hmem
+      unfold Case3Enum.bandSizesGen at hmem
+      rw [List.mem_filter] at hmem
+      obtain ⟨hl, hsum_dec⟩ := hmem
+      have hsum : l.foldr (· + ·) 0 ≤ sizeLimit := of_decide_eq_true hsum_dec
+      have process : ∀ (c : ℕ), 1 ≤ c → c ≤ 3 →
+          l ∈ (Case3Enum.bandSizesGen K sizeLimit).map (fun t => c :: t) →
+          l.length = K + 1 ∧ (∀ x ∈ l, 1 ≤ x ∧ x ≤ 3) ∧
+            l.foldr (· + ·) 0 ≤ sizeLimit := by
+        intro c hc1 hc3 hmem'
+        rw [List.mem_map] at hmem'
+        obtain ⟨t, ht_mem, hlt⟩ := hmem'
+        -- Beta-reduce `hlt` to `c :: t = l`, then substitute.
+        have hlt' : c :: t = l := hlt
+        subst hlt'
+        obtain ⟨hlen_t, htlist, _⟩ := (ih t).mp ht_mem
+        refine ⟨by simp [hlen_t], ?_, hsum⟩
+        intro x hx
+        rw [List.mem_cons] at hx
+        rcases hx with rfl | hx
+        · exact ⟨hc1, hc3⟩
+        · exact htlist x hx
+      rw [List.mem_append, List.mem_append] at hl
+      rcases hl with (h1 | h2) | h3
+      · exact process 1 (by omega) (by omega) h1
+      · exact process 2 (by omega) (by omega) h2
+      · exact process 3 (by omega) (by omega) h3
+    · rintro ⟨hlen, hlist, hsum⟩
+      unfold Case3Enum.bandSizesGen
+      rw [List.mem_filter]
+      refine ⟨?_, decide_eq_true hsum⟩
+      rw [List.mem_append, List.mem_append]
+      cases l with
+      | nil => simp at hlen
+      | cons a t =>
+        have ht_len : t.length = K := by
+          have hh : t.length + 1 = K + 1 := hlen
+          omega
+        have ha : 1 ≤ a ∧ a ≤ 3 := hlist a List.mem_cons_self
+        have htlist : ∀ x ∈ t, 1 ≤ x ∧ x ≤ 3 := fun x hx =>
+          hlist x (List.mem_cons_of_mem _ hx)
+        have htsum : t.foldr (· + ·) 0 ≤ sizeLimit := by
+          have h_a_pos : 1 ≤ a := ha.1
+          have hcons : (a :: t).foldr (· + ·) 0 = a + t.foldr (· + ·) 0 := by
+            simp [List.foldr]
+          rw [hcons] at hsum
+          omega
+        have ht_mem : t ∈ Case3Enum.bandSizesGen K sizeLimit :=
+          (ih t).mpr ⟨ht_len, htlist, htsum⟩
+        obtain ⟨ha_lo, ha_hi⟩ := ha
+        interval_cases a
+        · exact Or.inl (Or.inl (List.mem_map.mpr ⟨t, ht_mem, rfl⟩))
+        · exact Or.inl (Or.inr (List.mem_map.mpr ⟨t, ht_mem, rfl⟩))
+        · exact Or.inr (List.mem_map.mpr ⟨t, ht_mem, rfl⟩)
+
+/-- **`bandSizes L ∈ Case3Enum.bandSizesGen L.K sizeLimit`** (A5-B3).
+
+Holds whenever every band is non-empty (so each entry is in
+`{1, 2, 3}` via `bandSize_le_three` and the non-emptiness
+hypothesis) and `Fintype.card α ≤ sizeLimit` (so the entry sum is
+within the cap). -/
+theorem bandSizes_mem_bandSizesGen
+    (L : LayeredDecomposition α) (sizeLimit : ℕ)
+    (hCard : Fintype.card α ≤ sizeLimit)
+    (hNonempty : ∀ k : ℕ, 1 ≤ k → k ≤ L.K → 1 ≤ bandSize L k) :
+    bandSizes L ∈ Case3Enum.bandSizesGen L.K sizeLimit := by
+  rw [mem_bandSizesGen_iff]
+  refine ⟨bandSizes_length L, ?_, ?_⟩
+  · -- Each entry of `bandSizes L` is in `{1, 2, 3}`.
+    intro x hx
+    rw [bandSizes, List.mem_map] at hx
+    obtain ⟨i, hi, rfl⟩ := hx
+    rw [List.mem_range] at hi
+    exact ⟨hNonempty (i + 1) (by omega) (by omega), bandSize_le_three L (i + 1)⟩
+  · -- The entry sum equals `Fintype.card α`, bounded by `sizeLimit`.
+    rw [bandSizes, foldr_add_range_map (fun i => bandSize L (i + 1)) L.K 0,
+      Nat.zero_add, sum_bandSize_eq_card]
+    exact hCard
+
 /-! ### §2b — Band-major Equiv `α ≃ Fin (Fintype.card α)` (Path A1, mg-449b)
 
 For a layered decomposition `L` on `α`, the *band-major Equiv* sends
@@ -528,6 +661,46 @@ lemma posetFromPredMask_le {pred : Array Nat} {n : Nat}
     @LE.le _ (posetFromPredMask pred n hValid).toLE u v ↔
       u = v ∨ testBit' (pred.getD v.val 0) u.val :=
   Iff.rfl
+
+/-! #### A5-B3 plumbing (`mg-0f0e`)
+
+Bridges between the §2c `IsValidPredMask` / `posetFromPredMask`
+flavour (used by `bandMajorOrderIso`) and the
+`Case3Enum.Correctness` flavour (`ValidPredMask` / `predOrder`,
+used by A4b's slow-path lift). The `≤` relations agree
+definitionally; the `<` differ only by an `u ≠ v` conjunct that is
+automatic for valid pred-masks (irreflexivity).
+-/
+
+/-- **`IsValidPredMask` ⇒ `ValidPredMask`** (A5-B3).
+The flat-conjunction predicate of §2c re-packages trivially as the
+structure of `Case3Enum.Correctness`: the first conjunct supplies
+`irrefl`; the third supplies `trans`. -/
+def IsValidPredMask.toValidPredMask {pred : Array Nat} {n : ℕ}
+    (h : IsValidPredMask pred n) : ValidPredMask pred n where
+  irrefl := h.1
+  trans := h.2.2
+
+/-- **`posetFromPredMask.le` ↔ `predOrder.le`** (A5-B3).
+Both PartialOrder constructors yield the same `≤` on `Fin n`,
+namely `u = v ∨ predLT pred u v`. Holds by `rfl`. -/
+lemma posetFromPredMask_le_iff_predOrder_le {pred : Array Nat} {n : ℕ}
+    (hValid : IsValidPredMask pred n) (u v : Fin n) :
+    @LE.le _ (posetFromPredMask pred n hValid).toLE u v ↔
+      @LE.le _ (predOrder pred hValid.toValidPredMask).toLE u v :=
+  Iff.rfl
+
+/-- **`posetFromPredMask.lt` ↔ `predOrder.lt`** (A5-B3).
+The two `<` relations agree under validity: `posetFromPredMask`'s
+strict relation strengthens with `u ≠ v`, redundant for valid
+pred-masks by irreflexivity. -/
+lemma posetFromPredMask_lt_iff_predOrder_lt {pred : Array Nat} {n : ℕ}
+    (hValid : IsValidPredMask pred n) (u v : Fin n) :
+    @LT.lt _ (posetFromPredMask pred n hValid).toLT u v ↔
+      @LT.lt _ (predOrder pred hValid.toValidPredMask).toLT u v := by
+  refine ⟨fun h => h.2, fun h => ⟨?_, h⟩⟩
+  intro hne
+  exact hValid.1 u (hne ▸ h)
 
 end Step8.Case3Enum
 
@@ -1063,6 +1236,108 @@ theorem closureCanonical_predMaskOf (L : LayeredDecomposition α) :
     rw [hdite, hbit]
     simp only [bne_self_eq_false, Bool.false_eq_true, ↓reduceIte]
     exact ih (fun k' hk' => h_bound k' (List.mem_cons_of_mem _ hk'))
+
+/-! #### A5-B3: bit-boundedness, iteration range, order-iso variant
+(`mg-0f0e`)
+
+Companion plumbing to §2c, providing the inputs that A4b's
+slow-path lift expects:
+
+* `predBitsBoundedBy_predMaskOf` — bits of `(predMaskOf L)[i]` past
+  `Fintype.card α` are zero, since the encoding via `encodeBitsBelow`
+  only sets bits at positions strictly less than the cardinality
+  (cf. `testBit'_predMaskOf_bound`).
+* `maskOf_lt_two_pow_size` — `maskOf L < 2 ^ (freeUVOf L).size`, so
+  the for-loop `for mask in [0:1 <<< nfree]` of `enumPosetsFor`
+  *does* visit `mask = maskOf L`.
+* `bandMajorOrderIso_predOrder` — A2's order iso re-packaged with
+  the `Case3Enum.predOrder` partial-order target (the structure
+  variant consumed by A4b's slow-path bridge).
+-/
+
+/-- **`predBitsBoundedBy (predMaskOf L) (Fintype.card α)`** (A5-B3).
+Bits of `(predMaskOf L)[e]` at positions `≥ Fintype.card α` are
+zero, because the `encodeBitsBelow … (Fintype.card α)` construction
+only sets bits at positions `< Fintype.card α`
+(cf. `testBit'_predMaskOf_bound`). -/
+theorem predBitsBoundedBy_predMaskOf (L : LayeredDecomposition α) :
+    Case3Enum.predBitsBoundedBy (predMaskOf L) (Fintype.card α) := by
+  intro e b hb
+  rcases hbool : Case3Enum.testBit' ((predMaskOf L).getD e.val 0) b with _ | _
+  · rfl
+  · exact absurd (testBit'_predMaskOf_bound L e.val b hbool).2
+      (Nat.not_lt.mpr hb)
+
+/-- **`maskOf L < 2 ^ (freeUVOf L).size`** (A5-B3).
+`maskOf L` is built by `maskOfRec` over the first `(freeUVOf L).size`
+positions, which leaves bits at positions `≥ size` zero. -/
+theorem maskOf_lt_two_pow_size (L : LayeredDecomposition α) :
+    maskOf L < 2 ^ (freeUVOf L).size := by
+  apply Nat.lt_pow_two_of_testBit
+  intro k hk
+  unfold maskOf
+  exact testBit_maskOfRec_ge _ _ _ k hk
+
+/-- **A2's band-major order iso, with the `predOrder` target**
+(A5-B3).
+The §2c `bandMajorOrderIso` targets `posetFromPredMask`-induced
+order; A4b's slow-path lift uses the `Case3Enum.predOrder` form.
+The two PartialOrder constructors agree on `≤` definitionally
+(cf. `posetFromPredMask_le_iff_predOrder_le`), so the same
+underlying `bandMajorEquiv` carries an order iso into either form. -/
+noncomputable def bandMajorOrderIso_predOrder (L : LayeredDecomposition α) :
+    @OrderIso α (Fin (Fintype.card α)) _
+      (Case3Enum.predOrder (predMaskOf L)
+        (predMaskOf_isValid L).toValidPredMask).toLE := by
+  refine
+    { toEquiv := bandMajorEquiv L
+      map_rel_iff' := ?_ }
+  intro a b
+  -- `≤` in `predOrder` agrees with `posetFromPredMask`-`≤`
+  -- definitionally; reuse `bandMajorOrderIso L`'s `map_rel_iff'`.
+  exact (bandMajorOrderIso L).map_rel_iff'
+
+/-! #### A5-B3 packaging: `enumPosetsFor` unrolling at `mask = maskOf L`
+(`mg-0f0e`)
+
+The Bool-level `enumPosetsFor` iterates `for mask in [0:1 <<< nfree]`,
+building a `pred : Array Nat` from `forcedUV ∪ {(u, v) ∈ freeUV : mask
+bit set}` and applying `Case3Enum.warshall`. For a
+`LayeredDecomposition L` in scope, the relevant iteration is the one
+at `mask = maskOf L`: the projection of `predMaskOf L` onto the
+free-pair list.
+
+The structural content of the unrolling is captured by four facts —
+all already in tree (`predMaskOf_isValid`, `predMaskOf_warshall`,
+`closureCanonical_predMaskOf`, `maskOf_lt_two_pow_size`). The
+packaging theorem below collects them in a single statement
+consumed by F5a's bridge, witnessing that `predMaskOf L` is the
+post-warshall output of the imperative loop body at `mask = maskOf L`
+under the closure-canonical and validity conditions. -/
+
+/-- **`enumPosetsFor` post-warshall summary at `mask = maskOf L`**
+(A5-B3, `mg-0f0e`).
+
+The four-component witness that `predMaskOf L` is the post-warshall
+pred-array at the iteration `mask = maskOf L` of the
+`enumPosetsFor` loop body:
+
+1. `mask = maskOf L` lies in the iteration range `[0, 2 ^ nfree)`.
+2. Validity (`Case3Enum.IsValidPredMask`) — `predMaskOf L`'s
+   bit-relation underlies a `PartialOrder (Fin n)`.
+3. Warshall stability — `Case3Enum.warshall (predMaskOf L) n =
+   predMaskOf L` (predMaskOf is already transitively closed).
+4. Closure-canonical projection — `Case3Enum.closureCanonical
+   (predMaskOf L) (maskOf L) (freeUVOf L) = true` (the
+   `closureCanonical` gate of `enumPosetsFor` is satisfied,
+   matching the iteration mask). -/
+theorem enumPosetsFor_unroll_summary (L : LayeredDecomposition α) :
+    maskOf L < 2 ^ (freeUVOf L).size ∧
+    Case3Enum.IsValidPredMask (predMaskOf L) (Fintype.card α) ∧
+    Case3Enum.warshall (predMaskOf L) (Fintype.card α) = predMaskOf L ∧
+    Case3Enum.closureCanonical (predMaskOf L) (maskOf L) (freeUVOf L) = true :=
+  ⟨maskOf_lt_two_pow_size L, predMaskOf_isValid L,
+    predMaskOf_warshall L, closureCanonical_predMaskOf L⟩
 
 end PredMask
 
