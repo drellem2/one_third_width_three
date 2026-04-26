@@ -970,24 +970,19 @@ of `(predMaskOf L)[(freeUV[k]).2]` is set — i.e. the projection of
 
 /-- The free-pair list for a layered decomposition: pairs `(u, v)`
 with `u` in band `i + 1`, `v` in band `j + 1`, `i < j`, `j - i ≤ L.w`,
-where `u, v` are global Fin-n indices via the band-major offsets. -/
+where `u, v` are global Fin-n indices via the band-major offsets.
+
+Defined as the free output of `Case3Enum.enumPartition`, which both
+freezes the band-major positional layout used by F5a's enumeration
+and lets the §7 membership characterizations of the
+`enumPartition`-followup apply directly to consumers (i.e. `maskOf`,
+`closureCanonical_predMaskOf`).
+
+A standalone `Id.run do` alternative is structurally equivalent (the
+`if j - i ≤ L.w` early-skip merely reorders the `if`/loop nesting);
+identifying with `enumFreeUVOf` directly removes that bridge. -/
 noncomputable def freeUVOf (L : LayeredDecomposition α) : Array (Nat × Nat) :=
-  Id.run do
-    let bs := bandSizes L
-    let offsets := Case3Enum.offsetsOf bs
-    let K := bs.length
-    let mut freeUV : Array (Nat × Nat) := #[]
-    for i in [0:K] do
-      for j in [i+1:K] do
-        if j - i ≤ L.w then
-          let offI := offsets.getD i 0
-          let offI1 := offsets.getD (i + 1) 0
-          let offJ := offsets.getD j 0
-          let offJ1 := offsets.getD (j + 1) 0
-          for a in [offI:offI1] do
-            for b in [offJ:offJ1] do
-              freeUV := freeUV.push (a, b)
-    return freeUV
+  Case3Enum.enumFreeUVOf L.w (bandSizes L)
 
 /-- Recursive form of the projection of `pred` onto the first `n`
 free-pair positions. Used as a clean specification for `maskOf`. -/

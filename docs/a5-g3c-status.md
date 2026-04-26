@@ -1,5 +1,23 @@
 # A5-G3c-followup status (mg-7268)
 
+**Status (2026-04-26, mg-9568):** §5 + §6 + §7 + §8 fully complete.
+Build clean, no sorry/admit, axioms unchanged.
+
+`enumPredAtMaskOf L.w (bandSizes L) (maskOf L) = predMaskOf L`
+(`OneThird.Step8.enumPredAtMaskOf_eq_predMaskOf`) is the headline
+construction-equivalence; `freeUVOf` was refactored to alias
+`Case3Enum.enumFreeUVOf L.w (bandSizes L)` so the §7 membership
+characterizations apply directly.
+
+The MProd-vs-Prod state-shape blocker pc-7268 surfaced was resolved
+by stating §7 helpers in MProd form parameterized by explicit
+`(fA, fB)` arrays (avoiding eta-expansion mismatches with the
+do-elaborator's `⟨r.fst, r.snd⟩` repacking).
+
+---
+
+## Original pc-7268 diagnosis (preserved for reference)
+
 **Status (2026-04-26):** §5 + §6 complete, §7 ~30% complete, §8 not
 started. Build is clean, no sorry/axioms.
 
