@@ -1626,21 +1626,6 @@ theorem bounded_irreducible_balanced
     HasBalancedPair α :=
   hEnum
 
-/-- **Scope-witness corollary.** When the parameter tuple
-`(L.w, Fintype.card α, L.K)` lies in `InCase3Scope`, the Case-3 Bool
-certificate directly applies. This corollary restates
-`bounded_irreducible_balanced` with the tighter scope predicate made
-explicit, for F5 call-sites that have already performed the scope
-dispatch. -/
-theorem bounded_irreducible_balanced_inScope
-    (L : LayeredDecomposition α)
-    (_hWidth3 : HasWidthAtMost α 3)
-    (_hIrr : LayerOrdinalIrreducible L)
-    (_hScope : InCase3Scope L.w (Fintype.card α) L.K)
-    (hEnum : HasBalancedPair α) :
-    HasBalancedPair α :=
-  hEnum
-
 /-- **Hybrid dispatch form** (A5-B4, `mg-43bc`).
 
 The wider hypothesis profile of `bounded_irreducible_balanced`
