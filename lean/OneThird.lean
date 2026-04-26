@@ -85,6 +85,7 @@ import OneThird.Step8.Case3Enum.PredMaskBridge
 import OneThird.Step8.Case3Enum.SymmetricLift
 import OneThird.Step8.BoundedIrreducibleBalancedInScope
 import OneThird.Step8.Window
+import OneThird.Step8.WindowDecomp
 import OneThird.Step8.SmallN
 import OneThird.Step8.ChainPotentials
 import OneThird.Step8.LayeredBridges
