@@ -1504,17 +1504,23 @@ Specifically, the caller-side discharge proceeds by:
 `OneThird.Step8.Case3Enum.case3_certificate`. F5 consumer:
 `mg-3fd8` — closes `LayeredBalanced.lean:657`.
 
-**Status (mg-ff49 polecat report).** B1-B4 (`mg-46d7`, `mg-a08f`,
-`mg-e9d6`, `mg-0f0e`, `mg-43bc`) provide the bridge infrastructure
-(positional foundations, irreducibility / hasAdjacentIncomp /
-closureCanonical / warshall-stability on `predMaskOf L`). A5-G1
-(`enumPosetsFor` Prop-level reduction, `mg-580e` partial /
-`mg-b487` completion) lands the iteration theorem
-`Case3Enum.enumPosetsFor_iter_balanced`. The remaining work
-to convert the `hEnum` placeholder body into a real
-certificate-driven proof is the in-scope glue (A5-G2) and Path C
-wiring (A5-G3); see `docs/a5-glue-status.md` for the full status
-report. -/
+**Status (mg-53ce polecat report, A5-G2 path 1).** B1-B4 (`mg-46d7`,
+`mg-a08f`, `mg-e9d6`, `mg-0f0e`, `mg-43bc`) provide the bridge
+infrastructure (positional foundations, irreducibility /
+hasAdjacentIncomp / closureCanonical / warshall-stability on
+`predMaskOf L`). A5-G1 (`enumPosetsFor` Prop-level reduction,
+`mg-580e` partial / `mg-b487` completion) lands the iteration
+theorem `Case3Enum.enumPosetsFor_iter_balanced`. A5-G2 path 1
+(`mg-53ce`, this work) adds the `cross_band_lt_upward` field to
+`LayeredDecomposition`, which makes `predMaskOf L` upper-triangular
+and so unblocks the construction-equivalence
+`enumPredAtMaskOf L.w (bandSizes L) (maskOf L) = predMaskOf L`
+that the discharge depends on; see `docs/a5-g2-status.md` for the
+full diagnosis and resolution. The remaining work to convert the
+`hEnum` placeholder body into a real certificate-driven proof
+(composing B1'-B2-B3 + G1' + symmetric extraction +
+bandMajorOrderIso transport) is now structurally unblocked and
+falls to a follow-on A5-G3 ticket. -/
 theorem bounded_irreducible_balanced
     (L : LayeredDecomposition α)
     (_hWidth3 : HasWidthAtMost α 3)

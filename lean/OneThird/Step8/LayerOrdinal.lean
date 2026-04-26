@@ -252,12 +252,20 @@ index `k ∈ [1, L.K − 1]`), has depth `L.K ≥ 2`, and every band
 
 **Relation to paper.** The paper's conclusion asks for `(u, v)`
 *incomparable* in `Q`. The Lean form `¬ (u < v)` is what
-irreducibility directly provides: the reverse-direction ruling-out
-`¬ (v < u)` is argued in the paper via "(L2)", which is a property of
-the cross-band direction in the §sec:g4 setup but not an axiom of
-`LayeredDecomposition` in Lean. Downstream callers who also have
-"cross-band comparabilities are upward" can combine this with the
-returned `¬ (u < v)` to obtain full incomparability.
+irreducibility directly provides; combining with the
+`cross_band_lt_upward` field of `LayeredDecomposition` (added in
+`mg-53ce` / A5-G2 path 1) closes the reverse direction:
+`v < u` would force `band v ≤ band u = i < i + 1 = band v`,
+contradicting `band v = i + 1`. So `¬ (u < v) ∧ ¬ (v < u)`
+is full incomparability — the full conclusion the paper states.
+
+(Historical note: prior to `mg-53ce`, the paper's "(L2)" upward
+property of cross-band comparabilities was not yet a Lean field;
+the lemma below was therefore stated in the weaker `¬ (u < v)`
+form and downstream callers were expected to combine with the
+upward property by hand. Path 1 of A5-G2 promotes that property to
+a structural field, so callers can recover full incomparability
+locally without extra hypotheses.)
 
 **Proof (paper, `step8.tex:2789-2797`).** Contradiction: assume every
 adjacent cross-pair `u ∈ M_i, v ∈ M_{i+1}` has `u <_Q v`. By
