@@ -5,105 +5,53 @@ Released under the MIT License.
 import OneThird.Step8.Case3Enum
 
 /-!
-# Step 8 — A5-G1: `enumPosetsFor` Prop-level reduction (imperative loop unrolling)
-(`mg-580e`)
+# Step 8 — A5-G1: `enumPosetsFor` Bool→Prop iteration theorem
+(`mg-580e` partial; `mg-b487` completion)
 
-`Case3Enum.enumPosetsFor` is a `Bool := Id.run do` whose body has two
-imperative phases: (i) a partition phase with **four nested for-loops**
-and **two mutable variables** (`freeUV` / `forcedUV`); (ii) a per-mask
-phase with two nested for-loops and a single mutable `pred`, gated by
-`closureCanonical`/`findSymmetricPair`/`irreducible`/`hasAdjacentIncomp`
-checks plus a `hasBalancedPairSlow`-`return-false` final test.
+`Case3Enum.enumPosetsFor` is a `Bool := Id.run do` whose for-loop
+body, after the `mg-b487` refactor of `Case3Enum.lean §5`, is a
+single-mutable per-mask check chain calling `enumPredAtMaskOf`,
+`closureCanonical`, `findSymmetricPair`, `irreducible`,
+`hasAdjacentIncomp`, `hasBalancedPairSlow`. The two-mutable-variable
+partition phase is now factored out into the standalone helper
+`Case3Enum.enumPartition` (which `enumPredAtMaskOf` consumes).
 
-This file packages the *building blocks* for the `enumPosetsFor`
-Bool→Prop bridge: per-mask body factoring, the yield-or-done case
-analysis on the body, the outer `forIn`-`.fst` characterization, and a
-trivial fast-path companion (`hasBalancedPair_of_findSymmetricPair_some`).
+This file packages the Bool↔Prop bridge:
 
-## What landed
-
-* §1 — Pure-form definitions matching the imperative pieces:
-  `enumNOf`, `enumPartition`, `enumFreeUVOf`, `enumForcedUVOf`,
-  `enumNfreeOf`, `enumPredPreWarshallOf`, `enumPredAtMaskOf`.
-* §2 — `enumOuterBody`, the per-mask body of the outer
-  `for mask in [0:1 <<< nfree]` loop, factored as `Id (ForInStep
-  (MProd (Option Bool) PUnit))`.
-* §3 — `enumOuterBody_yield_or_done` and `enumOuterBody_done_iff`:
+* §1 — `enumOuterBody`, the per-mask `MProd (Option Bool) PUnit`
+  body of the outer `for mask in [0:1 <<< nfree]` loop.
+* §2 — `enumOuterBody_yield_or_done` / `enumOuterBody_done_iff`:
   the body's two-state behaviour and the precise condition under
-  which it triggers the early `return-false` (`done ⟨some false, ()⟩`).
-* §4 — `enumOuter_forIn_fst_cases` and
+  which it triggers the early `return-false` branch.
+* §3 — `enumOuter_forIn_fst_cases` /
   `enumOuter_forIn_fst_some_false_iff`: the outer `forIn`'s `.fst`
   characterization (always in `{none, some false}`; `= some false`
   iff some `mask` triggers `done`).
-* §5 — `hasBalancedPair_of_findSymmetricPair_some`: the trivial
-  fast-path companion claim (when `findSymmetricPair = some _`,
+* §4 — `enumPosetsFor_eq_outer_fst`, the
+  imperative→functional reduction reducing `enumPosetsFor` to the
+  `forIn` over masks via the now-trivial `unfold + rfl` pattern.
+* §5 — `enumPosetsFor_iter_balanced`, the headline iteration
+  theorem (A5-G1 deliverable): for every `mask` in range satisfying
+  the four Bool gates, `hasBalancedPairSlow` is forced to `true`.
+* §6 — `hasBalancedPair_of_findSymmetricPair_some`, the trivial
+  fast-path companion (when `findSymmetricPair = some _`,
   `hasBalancedPair = true` by definition).
 
-## What did NOT land — paper vs formalization gap
+## Pattern
 
-The headline iteration theorem `enumPosetsFor_iter_balanced`
-(spec'd in `docs/a5-glue-status.md` as A5-G1's deliverable) requires
-an imperative→functional reduction of `enumPosetsFor` to a clean
-`forIn` over masks calling `enumOuterBody`.  The analogous
-reductions for `irreducible` / `hasAdjacentIncomp` / `warshall` /
-`hasBalancedPairSlow` (in
-`Case3Enum/IrreducibleBridge.lean §6`,
-`Case3Enum/AdjIncompBridge.lean §1`,
-`Case3Enum/BalancedLift.lean §4 + §7`) all use the
-`unfold + simp [Std.Legacy.Range.forIn_eq_forIn_range', …] + rfl`
-pattern.  This works for those four because their imperative bodies
-have **at most one mutable variable** in the outermost loop.
-
-`enumPosetsFor`'s body has **two mutable variables** (`freeUV` /
-`forcedUV`) carried through four nested for-loops in the partition
-phase.  Lean elaborates such multi-mut do-blocks as `forIn` over an
-`MProd`-state, with a slot ordering that depends on Lean's internal
-heuristics — *not* declaration order.  Empirically (build trace,
-`mg-580e` polecat session): the elaborated form returns
-`pure (r.snd, r.fst)` from `return (freeUV, forcedUV)`, indicating
-`r.fst = forcedUV` and `r.snd = freeUV`, despite `freeUV` being
-declared first.  When this is composed with the per-helper unfolds
-of `enumPartition` / `enumFreeUVOf` / `enumForcedUVOf` (each of
-which inlines the partition body), the resulting RHS expression has
-*multiple* copies of the partition for-loop, while the LHS (from
-`enumPosetsFor` directly) has only *one* inline copy.  The `rfl`
-between the LHS and a factored RHS therefore fails: the multi-mut
-elaboration mismatch propagates through all the unfolds.
-
-The B1' / B2 / B-§7 patterns do **not** generalize to this
-multi-mut, multi-helper setting without additional infrastructure:
-
-* Either a refactoring of `enumPosetsFor` (modify
-  `Case3Enum.lean`) to call an auxiliary that takes
-  `(freeUV, forcedUV)` as a parameter — invasive, scope-creep
-  outside `mg-580e`.
-* Or a generic `forIn`-with-`MProd`-state extraction lemma that
-  decomposes `(.fst, .snd)` projections through the multi-mut
-  do-block elaboration — does not exist in mathlib for the
-  `MProd (Array …) (Array …)` shape we need.
-* Or a manual `Id.forIn_invariant`-style invariant chain through
-  all four nested for-loops in the partition, threading the
-  partition output to the outer mask loop — feasible but
-  substantially larger LOC than the IrreducibleBridge / AdjIncompBridge
-  patterns suggested by the spec.
-
-This file therefore stops at the building blocks (§§1–5) and a
-companion fast-path form (§5).  The full iteration theorem is
-left for a follow-up work item with one of the three
-infrastructure lift options above.
+The refactor in `Case3Enum.lean` removed the multi-mutable elaboration
+mismatch identified during `mg-580e`: the per-mask body now has only
+one mutable variable (the implicit `MProd (Option Bool) PUnit` state),
+matching the same `forIn`-state shape used by `slowOuterBody`
+(`BalancedLift.lean §7`), `adjOuterBody` (`AdjIncompBridge.lean §1`),
+and `irrOuterBody` (`IrreducibleBridge.lean §6`).
 
 ## References
 
-* B1' (`mg-a08f`): `Case3Enum/IrreducibleBridge.lean §6` —
-  single-mut imperative→functional reduction of `irreducible`.
-* B2 (`mg-e9d6`): `Case3Enum/AdjIncompBridge.lean §1` —
-  single-mut reduction of `hasAdjacentIncomp`.
-* BalancedLift §4 + §7: warshall (single-mut nested) and
-  `hasBalancedPairSlow` (no muts beyond accumulator) reductions.
-* `docs/a5-glue-status.md` §3 (recommended split): the
-  ~400-600 LOC estimate assumed the single-mut pattern; the
-  multi-mut partition's elaboration mismatch is the unforeseen
-  obstacle.
+* B1' (`mg-a08f`): `Case3Enum/IrreducibleBridge.lean §6`.
+* B2 (`mg-e9d6`): `Case3Enum/AdjIncompBridge.lean §1`.
+* BalancedLift §4 + §7: warshall + `hasBalancedPairSlow` reductions.
+* `docs/a5-glue-status.md` §3 (recommended split): G1 deliverable.
 -/
 
 namespace OneThird
@@ -113,67 +61,7 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedDecidableInType false
 set_option linter.style.show false
 
-/-! ### §1 — Pure-form definitions -/
-
-/-- `enumNOf bs` = total number of poset elements at band-sizes `bs`. -/
-def enumNOf (bs : List Nat) : Nat := (offsetsOf bs).getD bs.length 0
-
-/-- Partition `(a, b)`-pairs into `freeUV` (band-gap ≤ w) and
-`forcedUV` (band-gap > w), matching `enumPosetsFor`'s partition loop. -/
-def enumPartition (w : Nat) (bs : List Nat) :
-    Array (Nat × Nat) × Array (Nat × Nat) := Id.run do
-  let offsets := offsetsOf bs
-  let K := bs.length
-  let mut freeUV : Array (Nat × Nat) := #[]
-  let mut forcedUV : Array (Nat × Nat) := #[]
-  for i in [0:K] do
-    for j in [i+1:K] do
-      let offI := offsets.getD i 0
-      let offI1 := offsets.getD (i + 1) 0
-      let offJ := offsets.getD j 0
-      let offJ1 := offsets.getD (j + 1) 0
-      for a in [offI:offI1] do
-        for b in [offJ:offJ1] do
-          if j - i > w then
-            forcedUV := forcedUV.push (a, b)
-          else
-            freeUV := freeUV.push (a, b)
-  return (freeUV, forcedUV)
-
-/-- The free `(u, v)`-pairs at `(w, bs)`. -/
-def enumFreeUVOf (w : Nat) (bs : List Nat) : Array (Nat × Nat) :=
-  (enumPartition w bs).1
-
-/-- The forced `(u, v)`-pairs at `(w, bs)`. -/
-def enumForcedUVOf (w : Nat) (bs : List Nat) : Array (Nat × Nat) :=
-  (enumPartition w bs).2
-
-/-- The number of free `(u, v)`-pairs at `(w, bs)`. -/
-def enumNfreeOf (w : Nat) (bs : List Nat) : Nat := (enumFreeUVOf w bs).size
-
-/-- Per-mask pred *before* the warshall closure: starts with all-zeros,
-applies forced-edge pushes, then mask-gated free-edge pushes. -/
-def enumPredPreWarshallOf (w : Nat) (bs : List Nat) (mask : Nat) :
-    Array Nat := Id.run do
-  let n := enumNOf bs
-  let freeUV := enumFreeUVOf w bs
-  let forcedUV := enumForcedUVOf w bs
-  let nfree := freeUV.size
-  let mut pred : Array Nat := Array.replicate n 0
-  for uv in forcedUV do
-    let (u, v) := uv
-    pred := pred.set! v ((pred.getD v 0) ||| bit u)
-  for k in [0:nfree] do
-    if testBit' mask k then
-      let (u, v) := freeUV.getD k (0, 0)
-      pred := pred.set! v ((pred.getD v 0) ||| bit u)
-  return pred
-
-/-- Per-mask pred at iteration `mask`, after warshall closure. -/
-def enumPredAtMaskOf (w : Nat) (bs : List Nat) (mask : Nat) : Array Nat :=
-  warshall (enumPredPreWarshallOf w bs mask) (enumNOf bs)
-
-/-! ### §2 — Outer-loop body factoring
+/-! ### §1 — Outer-loop body factoring
 
 The body of `for mask in [0:1 <<< nfree] do …` in `enumPosetsFor`,
 elaborated as a `MProd (Option Bool) PUnit`-state forIn body. -/
@@ -201,7 +89,7 @@ def enumOuterBody (w : Nat) (bs : List Nat) (mask : Nat)
   else
     pure (ForInStep.yield ⟨none, PUnit.unit⟩)
 
-/-! ### §3 — Yield-or-done case-split and `done`-iff -/
+/-! ### §2 — Yield-or-done case-split and `done`-iff -/
 
 /-- The outer body always either yields `none` (continue) or returns
 `done ⟨some false, ()⟩` (early `return false` after a failing
@@ -303,7 +191,7 @@ private lemma enumOuterBody_done_iff (w : Nat) (bs : List Nat)
     · intro h; cases h
     · rintro ⟨_, _, _, _, hb⟩; apply h5; rw [hb]; rfl
 
-/-! ### §4 — Outer forIn `.fst = some false` characterization -/
+/-! ### §3 — Outer forIn `.fst = some false` characterization -/
 
 /-- The outer forIn's `.fst` is in `{none, some false}` (never
 `some true`), since the body only `yield`s `none` or `done`s `some
@@ -364,7 +252,103 @@ private lemma enumOuter_forIn_fst_some_false_iff (w : Nat) (bs : List Nat)
       refine ⟨fun _ => ⟨mask, ?_, hd⟩, fun _ => rfl⟩
       exact List.mem_cons_self
 
-/-! ### §5 — Companion fast-path form -/
+/-! ### §4 — Imperative→functional reduction of `enumPosetsFor` -/
+
+/-- **Imperative→functional reduction** for `enumPosetsFor`.
+After the `mg-b487` refactor of `Case3Enum.lean §5`, the body of the
+outer `for mask in [0:1 <<< nfree]` loop matches `enumOuterBody` on
+the nose, so the reduction is just `unfold + rfl` (modulo the
+`Std.Legacy.Range.forIn_eq_forIn_range'` rewrite that converts the
+`Range`-driven `forIn` to a `List.range'`-driven one). -/
+private theorem enumPosetsFor_eq_outer_fst (w : Nat) (bs : List Nat) :
+    enumPosetsFor w bs =
+      (if enumNfreeOf w bs > 27 then false
+       else
+         match (forIn (m := Id) (List.range' 0 (1 <<< enumNfreeOf w bs))
+           (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+           (fun mask r => enumOuterBody w bs mask r)).fst with
+         | none => true
+         | some a => a) := by
+  unfold enumPosetsFor enumOuterBody
+  simp only [Std.Legacy.Range.forIn_eq_forIn_range', Std.Legacy.Range.size,
+    Nat.sub_zero, Nat.add_sub_cancel, Nat.div_one]
+  rfl
+
+/-! ### §5 — Headline iteration theorem -/
+
+/-- **A5-G1 headline (`mg-b487`)**: `enumPosetsFor`-iteration theorem
+for the slow-path branch.
+
+If `enumPosetsFor w bs = true` and at iteration `mask` the four Bool
+gates are satisfied (`closureCanonical`, no symmetric pair,
+`irreducible`, `hasAdjacentIncomp`), then `hasBalancedPairSlow`
+*must* return `true` at this iteration — otherwise the loop body
+would have triggered `return false`, contradicting the hypothesis.
+
+The hypothesis `hmask : mask < 1 <<< enumNfreeOf w bs` is the
+loop-range membership in `List.range' 0 (1 <<< enumNfreeOf w bs)`.
+The hypothesis `enumNfreeOf w bs ≤ 27` is implicit in `h` (otherwise
+the early `if nfree > 27 then return false` would have fired and `h`
+would contradict). -/
+theorem enumPosetsFor_iter_balanced
+    (w : Nat) (bs : List Nat) (h : enumPosetsFor w bs = true)
+    (mask : Nat) (hmask : mask < 1 <<< enumNfreeOf w bs)
+    (h_canon : closureCanonical (enumPredAtMaskOf w bs mask) mask
+      (enumFreeUVOf w bs) = true)
+    (h_sym : (findSymmetricPair (enumPredAtMaskOf w bs mask)
+      (enumNOf bs)).isSome = false)
+    (h_irr : irreducible (enumPredAtMaskOf w bs mask)
+      (offsetsOf bs) = true)
+    (h_adj : hasAdjacentIncomp (enumPredAtMaskOf w bs mask)
+      (offsetsOf bs) = true) :
+    hasBalancedPairSlow (enumPredAtMaskOf w bs mask) (enumNOf bs)
+      = true := by
+  -- Step 1: Reduce `enumPosetsFor` to its outer-`forIn` form.
+  rw [enumPosetsFor_eq_outer_fst] at h
+  -- Step 2: Discharge `enumNfreeOf w bs ≤ 27` from `h`.
+  by_cases hN : enumNfreeOf w bs > 27
+  · -- The early-return branch fires; `h : false = true`, contradiction.
+    rw [if_pos hN] at h; cases h
+  rw [if_neg hN] at h
+  -- `h` now says: match (forIn …).fst with | none => true | some a => a = true.
+  -- Combined with the `enumOuter_forIn_fst_cases` fact that
+  -- `.fst ∈ {none, some false}`, this forces `.fst = none`
+  -- (the only value that yields `true` from the match).
+  have hcase := enumOuter_forIn_fst_cases w bs
+    (List.range' 0 (1 <<< enumNfreeOf w bs))
+  rcases hcase with hnone | hsf
+  · -- `.fst = none`: no mask triggered `done`, which is what we need.
+    have h_no_done : ∀ m ∈ List.range' 0 (1 <<< enumNfreeOf w bs),
+        enumOuterBody w bs m
+          (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit) ≠
+        pure (ForInStep.done (⟨some false, PUnit.unit⟩ :
+                                MProd (Option Bool) PUnit)) := by
+      intro m hm hbody
+      have h_some_false :
+          (forIn (m := Id) (List.range' 0 (1 <<< enumNfreeOf w bs))
+                (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+                (fun mask r => enumOuterBody w bs mask r)).fst = some false :=
+        (enumOuter_forIn_fst_some_false_iff w bs _).mpr ⟨m, hm, hbody⟩
+      rw [hnone] at h_some_false
+      cases h_some_false
+    -- Step 3: Specialize to our `mask`.
+    have hmem : mask ∈ List.range' 0 (1 <<< enumNfreeOf w bs) := by
+      rw [List.mem_range'_1]
+      exact ⟨Nat.zero_le _, by simpa using hmask⟩
+    have h_no := h_no_done mask hmem
+    -- Step 4: If `hasBalancedPairSlow` returned `false`, the body would
+    -- `done`, contradicting `h_no`.
+    by_contra hslow
+    rw [Bool.not_eq_true] at hslow
+    apply h_no
+    exact (enumOuterBody_done_iff w bs mask
+      (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)).mpr
+      ⟨h_canon, h_sym, h_irr, h_adj, hslow⟩
+  · -- `.fst = some false`: match returns `false`, contradicting `h`.
+    rw [hsf] at h
+    cases h
+
+/-! ### §6 — Companion fast-path form -/
 
 /-- Trivial fast-path companion: when `findSymmetricPair = some _`,
 `hasBalancedPair = true` regardless of the slow path.  The
