@@ -257,6 +257,62 @@ theorem hasBalancedPair_of_orderIso (e : α ≃o β) :
 
 end OrderIsoTransport
 
+/-! ### §1' — Explicit-instance variant of order-iso transport (A5-G3b)
+
+The `OrderIsoTransport` lemmas above take `[PartialOrder α]` and
+`[PartialOrder β]` from the typeclass context. When the target is
+`Fin n` and the desired `≤` is *not* the canonical `Nat`-induced
+order (`instPartialOrderFin` / `instLEFin`) but a custom partial
+order such as `Case3Enum.predOrder pred h`, Lean's typeclass
+synthesis picks the canonical instance and a mismatch with the
+declared `≤` of the order isomorphism follows.
+
+The variant below takes both `PartialOrder` instances as **explicit
+data**, sidestepping typeclass synthesis entirely on the relevant
+sides. This is the form needed by callers who hold an
+`@OrderIso α (Fin n) _ (predOrder pred h).toLE` (e.g.
+`bandMajorOrderIso_predOrder L`, A5-B3) and want to lift a Fin-side
+balanced pair witness produced by
+`Case3Enum.BalancedLift.hasBalancedPair_of_hasBalancedPair` (whose
+result type bakes in `predOrder pred h`) to `HasBalancedPair α`. -/
+
+section OrderIsoTransportExplicit
+
+variable {α β : Type*}
+  [Fintype α] [DecidableEq α]
+  [Fintype β] [DecidableEq β]
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedDecidableInType false
+set_option linter.unusedFintypeInType false
+set_option linter.style.longLine false
+set_option linter.style.show false
+
+/-- **Explicit-instance variant of `hasBalancedPair_of_orderIso`** (A5-G3b).
+
+Same statement as `hasBalancedPair_of_orderIso`, but with the
+source and target `PartialOrder` instances passed as explicit
+arguments rather than synthesized.
+
+Useful when the order isomorphism's `≤` on either side is a
+non-default partial order (e.g. `Case3Enum.predOrder pred h` on
+`Fin n`) that the global typeclass search would not pick up:
+applying the unannotated `hasBalancedPair_of_orderIso` would force
+Lean to synthesize the section-bound `[PartialOrder (Fin n)]`,
+which resolves to `instPartialOrderFin` (the canonical Nat-induced
+order) rather than the desired `predOrder pred h`. Pinning the
+instances with `@`-application or `letI` at the call site does not
+suffice in general; this variant exposes the choice in the type. -/
+theorem hasBalancedPair_of_orderIso_explicit
+    (instα : PartialOrder α) (instβ : PartialOrder β)
+    (e : @OrderIso α β instα.toLE instβ.toLE) :
+    @HasBalancedPair α instα _ _ → @HasBalancedPair β instβ _ _ := by
+  letI : PartialOrder α := instα
+  letI : PartialOrder β := instβ
+  exact hasBalancedPair_of_orderIso e
+
+end OrderIsoTransportExplicit
+
 namespace Step8
 
 /-! ### §2 — Band-major Fin-n labelling
@@ -1315,6 +1371,36 @@ noncomputable def bandMajorOrderIso_predOrder (L : LayeredDecomposition α) :
   -- `≤` in `predOrder` agrees with `posetFromPredMask`-`≤`
   -- definitionally; reuse `bandMajorOrderIso L`'s `map_rel_iff'`.
   exact (bandMajorOrderIso L).map_rel_iff'
+
+/-- **Slow-path / fast-path lift to `HasBalancedPair α`** (A5-G3b).
+
+Convenience specialization of `hasBalancedPair_of_orderIso_explicit`
+to the `Case3Enum.predOrder` source partial order: lifts a Fin-side
+balanced pair witness produced by
+`Case3Enum.BalancedLift.hasBalancedPair_of_hasBalancedPair` (whose
+result type bakes in `predOrder pred h`) to the abstract poset `α`,
+transported via an order isomorphism `α ≃o (Fin n)` whose
+`Fin`-side `≤` is `(predOrder pred h).toLE` — e.g.
+`bandMajorOrderIso_predOrder L`. The default `Fin` typeclass
+instance (`instPartialOrderFin`) would fight synthesis on the
+unannotated `hasBalancedPair_of_orderIso`; routing through the
+explicit-instance variant pins the partial-order choice. -/
+theorem hasBalancedPair_of_predOrder_orderIso
+    {n : ℕ} {pred : Array ℕ}
+    (h : Case3Enum.ValidPredMask pred n)
+    (e : @OrderIso α (Fin n) _ (Case3Enum.predOrder pred h).toLE)
+    (hBalFin : @HasBalancedPair (Fin n) (Case3Enum.predOrder pred h) _ _) :
+    HasBalancedPair α := by
+  -- Pin the local `[LE (Fin n)]` choice to `predOrder.toLE` so that
+  -- `e.symm` elaborates with the correct order-iso target type. The
+  -- global `instLEFin` would otherwise be selected and mismatch the
+  -- declared `≤` of `e`. We construct `e.symm` by hand via
+  -- `@OrderIso.symm` with the LE instances pinned explicitly,
+  -- sidestepping the synthesis fight.
+  let einv : @OrderIso (Fin n) α (Case3Enum.predOrder pred h).toLE _ :=
+    @OrderIso.symm α (Fin n) _ (Case3Enum.predOrder pred h).toLE e
+  exact hasBalancedPair_of_orderIso_explicit
+    (Case3Enum.predOrder pred h) inferInstance einv hBalFin
 
 /-! #### A5-B3 packaging: `enumPosetsFor` unrolling at `mask = maskOf L`
 (`mg-0f0e`)
