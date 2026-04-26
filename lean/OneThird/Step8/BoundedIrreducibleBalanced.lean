@@ -1502,7 +1502,18 @@ Specifically, the caller-side discharge proceeds by:
 `step8.tex` §`sec:g4-balanced-pair`, Proposition
 `prop:in-situ-balanced` (`step8.tex:2965-2970`). F5a:
 `OneThird.Step8.Case3Enum.case3_certificate`. F5 consumer:
-`mg-3fd8` — closes `LayeredBalanced.lean:657`. -/
+`mg-3fd8` — closes `LayeredBalanced.lean:657`.
+
+**Status (mg-ff49 polecat report).** B1-B4 (`mg-46d7`, `mg-a08f`,
+`mg-e9d6`, `mg-0f0e`, `mg-43bc`) provide the bridge infrastructure
+(positional foundations, irreducibility / hasAdjacentIncomp /
+closureCanonical / warshall-stability on `predMaskOf L`). The
+remaining work to convert the `hEnum` placeholder body into a real
+certificate-driven proof is **not yet in tree** — see
+`docs/a5-glue-status.md` for the full status report and the
+recommended split into A5-G1 (`enumPosetsFor` Prop-level reduction),
+A5-G2 (in-scope glue + transport), and A5-G3 (Path C / `Case3Witness`
+elimination). -/
 theorem bounded_irreducible_balanced
     (L : LayeredDecomposition α)
     (_hWidth3 : HasWidthAtMost α 3)
