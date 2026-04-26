@@ -6,7 +6,6 @@ import OneThird.Poset
 import OneThird.LinearExtension
 import OneThird.RichPair
 import OneThird.Step8.MainAssembly
-import OneThird.Step8.Case3WitnessProof
 
 /-!
 # Main theorem: the width-3 1/3–2/3 theorem
@@ -35,20 +34,13 @@ Every finite width-≤ 3 poset that is not a chain admits a pair
 measure.
 
 Discharged via the Step 8 assembly
-(`OneThird.Step8.width3_one_third_two_thirds_assembled`).
-
-The K ≥ 2 leaf discharge of the F3 strong-induction proof of
-`Step8.Case3Witness` is supplied via the parametric `hStep`
-hypothesis (A5-G3e, `mg-b329`, `Step8.Case3WitnessProof.lean`); it
-replaces the prior monolithic `hC3 : Step8.Case3Witness` hypothesis
-and exposes the F3 induction structure at the headline statement. -/
+(`OneThird.Step8.width3_one_third_two_thirds_assembled`). -/
 theorem width3_one_third_two_thirds.{u}
     {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
     (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
-    (hStep : Step8.Case3WitnessHStep.{u}) :
+    (hC3 : Step8.Case3Witness.{u}) :
     HasBalancedPair α :=
-  Step8.width3_one_third_two_thirds_assembled hP hNonChain
-    (Step8.case3Witness_of_hStep hStep)
+  Step8.width3_one_third_two_thirds_assembled hP hNonChain hC3
 
 /-- **Theorem E — Counterexample ⇒ low BK conductance**
 (`thm:cex-implies-low-expansion` in `step8.tex`).
