@@ -68,6 +68,7 @@ import OneThird.Step8.LayeredReduction
 import OneThird.Step8.LayerOrdinal
 import OneThird.Step8.LayeredBalanced
 import OneThird.Step8.BoundedIrreducibleBalanced
+import OneThird.Step8.Case3Enum.AdjIncompBridge
 import OneThird.Step8.Window
 import OneThird.Step8.SmallN
 import OneThird.Step8.ChainPotentials
