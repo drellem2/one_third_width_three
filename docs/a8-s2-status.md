@@ -318,15 +318,73 @@ axioms / sorries; `#print axioms` reports only the mathlib trio.
 
 ### A8-S2-rotation — rotation argument for `m = 3`
 
-**Deliverable.** Either strengthen `StrictCase2Witness` to carry
-a `⪯`-chain of three within-band elements, or extract such a
-chain from the layered hypothesis profile (width 3,
-irreducibility, `¬ InCase3Scope`) at the call site of
-`case1_dispatch_balanced_or_witness`. Then implement the rotation
-argument (`step8.tex:2877-2914`).
+**Status:** **partial** — landed by `mg-5a62` (this commit).
+`lean/OneThird/Step8/Case2Rotation.lean` lifts the rotation
+argument's case-analysis dispatch (`step8.tex:2877-2914`) plus
+the underlying rotation inequality on `LinearExt α` to a
+self-contained probability lemma. The chain witness predicate
+`StrictCase2WitnessChain` is also introduced as the strengthened
+shape (option (i) of the deliverable).
 
-Estimated ~300-500 LOC. Depends on A8-S2-cont and
-A8-S2-bipartite-bound.
+* `StrictCase2WitnessChain L` — three pairwise distinct
+  within-band elements `a₁, a₂, a₃` forming a `⪯`-chain in the
+  two-sided ambient profile order.
+* `StrictCase2WitnessChain.chain_one_three` — transitivity of the
+  `⪯`-chain (the `(1, 3)` direction follows from `(1, 2)` and
+  `(2, 3)`).
+* `StrictCase2WitnessChain.incomp_pairs` — the three pairwise
+  within-band incomparabilities derived via `band_antichain`.
+* `rotation_cover` — for distinct `a₁, a₂, a₃ : α` and any
+  `L : LinearExt α`, at least one of the three rotation events
+  `a₂<_L a₁`, `a₃<_L a₂`, `a₁<_L a₃` holds (their negations would
+  form the cycle `a₁<a₂<a₃<a₁`, impossible in a total order).
+* `rotation_sum_ge_one` and `rotation_sum_ge_one'` — the two
+  rotation inequalities on the uniform measure over
+  `LinearExt α`: `Pr[a₂<a₁] + Pr[a₃<a₂] + Pr[a₁<a₃] ≥ 1` and
+  the symmetric variant.
+* `m3_rotation_balanced_or_residual` — the case-analysis core of
+  the `m = 3` argument: from three FKG sub-claim hypotheses
+  `1/2 ≤ Pr[a_i <_L a_{i+1}]` (`i = (1,2), (2,3), (1,3)`), either
+  produces `HasBalancedPair α` (when one of the three pair
+  probabilities is `≤ 2/3`, so it lies in `[1/2, 2/3]`) or returns
+  the **residual** `Pr > 2/3` triple-inequality.
+* `rotation_residual_lower_bound` — diagnostic recording the lower
+  bounds on the residual rotation sum.
+* `strictCase2WitnessChain_balanced_or_residual` — composition
+  with `StrictCase2WitnessChain L`.
+
+**Honest gap.** The paper's argument
+(`step8.tex:2900-2914`) attempts to derive a contradiction from
+the residual case via the rotation inequality plus a complement
+bound, but as written the contradiction does not literally close:
+the "three complements" the paper sums (`Pr[a₂<a₁] + Pr[a₃<a₂] +
+Pr[a₃<a₁]`) are **not** a rotation cover (their negations form the
+consistent total order `a₁<a₂<a₃`, not a cycle), so the rotation
+sum bound `≥ 1` does not apply to them. The genuine rotation
+covers do apply but yield no contradiction under the residual
+hypothesis (the rotation sum `Pr[a₂<a₁] + Pr[a₃<a₂] + Pr[a₁<a₃]`
+is bounded below by `2/3` from the third forward term alone,
+satisfying `≥ 1` trivially with margin).
+
+`Case2Rotation.lean:§4` documents the gap and the two routes to
+close the residual case in follow-up work:
+
+* **Route A: structural impossibility.** Use the layered
+  hypothesis profile (width 3, irreducibility, `¬ InCase3Scope`)
+  to show that "all three pair probabilities > 2/3" forces a
+  comparability in `Q` among `{a₁, a₂, a₃}`, contradicting the
+  within-band antichain hypothesis.
+* **Route B: tighter bounds from the cross-poset coupling in
+  probability-normalised form.** The
+  `OneThird.Mathlib.RelationPoset.FKG.probLT'_mono_of_relExt`
+  count-form headline (`§11`) lifted to a probability-normalised
+  form (acknowledged future work in
+  `Mathlib/RelationPoset/FKG.lean:407-426`) would also bound the
+  three pair-probabilities away from "all > 2/3".
+
+`#print axioms` on the new theorems reports only the mathlib trio
+(`propext`, `Classical.choice`, `Quot.sound`); no new axioms or
+sorries.
 
 ### Total revised estimate for full A8-S2
 
