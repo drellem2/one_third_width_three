@@ -62,6 +62,7 @@ import OneThird.Step8.G2Constants
 import OneThird.Step8.BipartiteEnum
 import OneThird.Step8.Case3Struct
 import OneThird.Step8.Case3Dispatch
+import OneThird.Step8.Case2FKG
 import OneThird.Step8.Case3Enum
 import OneThird.Step8.Case3Enum.Certificate
 import OneThird.Step8.Case3Enum.Correctness
