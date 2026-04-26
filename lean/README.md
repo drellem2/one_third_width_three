@@ -136,13 +136,18 @@ after A1–A7 landed. A1, A2, A4, A5, A6, A7 verified consistent and
 proof-bearing at the paper level. Two new under-spelled claims
 surfaced:
 
-* **mg-A8** (high) — `prop:in-situ-balanced` Case 3 ("width-3 profile
-  antichain", `step8.tex:2714-2728`) and `lem:enum`
-  (`step8.tex:2731-2748`) defer the `w ≥ 1`, depth ≥ 3 base case
-  to a "machine-checked enumeration" that is neither carried out in
-  the paper nor linked to an external artefact. The w = 0 fragment is
-  covered by the existing Lean helper `lem_layered_balanced_subtype`,
-  so F5 still needs A8's output to discharge `hw_zero`.
+* **mg-A8** (high; partial — `pc-f92d`, 2026-04-26) —
+  `prop:in-situ-balanced` Case 3 ("width-3 profile antichain",
+  `step8.tex:2714-2728`) and `lem:enum` (`step8.tex:2731-2748`)
+  defer the `w ≥ 1`, depth ≥ 3 base case to a "machine-checked
+  enumeration" that is neither carried out in the paper nor
+  linked to an external artefact. `pc-f92d` (`mg-f92d`) lifted
+  Case 1 of `prop:in-situ-balanced` to the general ambient form
+  as `Step8.hasBalancedPair_of_ambient_profile_match`
+  (`OneThird/Step8/Case3Struct.lean`); the full `hStruct` slot of
+  `bounded_irreducible_balanced_hybrid` remains open. See
+  `docs/a8-status.md` for the full status report and the
+  recommended sub-split into A8-S1 / A8-S2 / A8-S3.
 * **mg-A9** (discharged, 2026-04-21) — exposition of
   `lem:one-elem-perturb`'s "second factor" bound
   `|p_{xy}(Q) - Pr(A | \bar B)| ≤ 2/(m-1)` (`step8.tex:997-1013`)
