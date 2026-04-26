@@ -82,6 +82,7 @@ import OneThird.Step8.BoundedIrreducibleBalanced
 import OneThird.Step8.Case3Enum.AdjIncompBridge
 import OneThird.Step8.Case3Enum.EnumPosetsForBridge
 import OneThird.Step8.Case3Enum.PredMaskBridge
+import OneThird.Step8.Case3Enum.SymmetricLift
 import OneThird.Step8.Window
 import OneThird.Step8.SmallN
 import OneThird.Step8.ChainPotentials
