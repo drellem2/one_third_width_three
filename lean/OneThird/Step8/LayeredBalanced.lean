@@ -398,7 +398,24 @@ non-chain β: the F5 recursion inside `lem_layered_balanced` /
 it to `lem_layered_balanced` closes the `K ≥ 2` branch by direct
 invocation. This matches the codebase convention of threading the
 case-output witness through a layered dispatch hypothesis, rather
-than baking the Bool→Prop bridge into the Lean core. -/
+than baking the Bool→Prop bridge into the Lean core.
+
+**A5-B4 (`mg-43bc`) — internal dispatch decomposition.** The
+downstream discharge of `Case3Witness` decomposes (per the chosen
+"hybrid" resolution of the F5a-ℓ profile mismatch) into two
+sub-witnesses, threaded through
+`Step8.bounded_irreducible_balanced_hybrid`:
+
+* `hCert` — `InCase3Scope L.w (Fintype.card β) L.K →
+  HasBalancedPair β`, supplied by Path A (A5-B1/B2/B3) from
+  `Case3Enum.case3_certificate` via the band-major Fin-n encoding.
+* `hStruct` — `¬ InCase3Scope L.w (Fintype.card β) L.K →
+  HasBalancedPair β`, supplied by mg-A8 from the structural Cases
+  1 and 2 of `prop:in-situ-balanced` (FKG profile-ordering +
+  `Equiv.swap` automorphism).
+
+See `docs/a5-profile-resolution.md` for the full decision rationale
+and the documented hand-off contracts. -/
 def Case3Witness.{u} : Prop :=
   ∀ (β : Type u) [PartialOrder β] [Fintype β] [DecidableEq β]
     (LB : Step8.LayeredDecomposition β),

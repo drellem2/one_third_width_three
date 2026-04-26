@@ -78,7 +78,16 @@ two-piece argument:
   under order isomorphism (§1).
 * `AllBalancedSound` — the packaging predicate of §3 capturing the
   "Bool certificate has a Prop-level witness" dispatch.
-* `bounded_irreducible_balanced` — the main theorem (§4).
+* `bounded_irreducible_balanced` — the main theorem (§4),
+  monolithic form.
+* `bounded_irreducible_balanced_inScope` — the `InCase3Scope`
+  restriction (§4), matching the Bool certificate's exact scope.
+* `bounded_irreducible_balanced_hybrid` — the **hybrid dispatch**
+  form (§4, A5-B4 / `mg-43bc`): splits the wider profile into
+  the in-scope branch (discharged by `case3_certificate` via
+  Path A) and the out-of-scope branch (discharged by mg-A8's
+  structural FKG / automorphism argument). See
+  `docs/a5-profile-resolution.md` for the decision rationale.
 
 ## References
 
@@ -1110,6 +1119,13 @@ def InCase3Scope (w card K : ℕ) : Prop :=
   K = 3 ∧ 1 ≤ w ∧ w ≤ 4 ∧
     (w = 1 → card ≤ 9) ∧ (2 ≤ w → card ≤ 7)
 
+/-- `InCase3Scope` is decidable: a conjunction / implication of `Nat`
+equalities and inequalities. Required so that
+`bounded_irreducible_balanced_hybrid` can branch on the predicate via
+`by_cases`. -/
+instance (w card K : ℕ) : Decidable (InCase3Scope w card K) := by
+  unfold InCase3Scope; infer_instance
+
 /-- Every `(w, card, K)` in Case-3 scope has `w ∈ {1, 2, 3, 4}`. -/
 lemma InCase3Scope.w_mem {w card K : ℕ} (h : InCase3Scope w card K) :
     w = 1 ∨ w = 2 ∨ w = 3 ∨ w = 4 := by
@@ -1235,6 +1251,75 @@ theorem bounded_irreducible_balanced_inScope
     (hEnum : HasBalancedPair α) :
     HasBalancedPair α :=
   hEnum
+
+/-- **Hybrid dispatch form** (A5-B4, `mg-43bc`).
+
+The wider hypothesis profile of `bounded_irreducible_balanced`
+(`step8.tex prop:in-situ-balanced`, `step8.tex:2965-2970`) is *not*
+discharged by `case3_certificate` alone: the certificate covers
+`InCase3Scope` (`K = 3`, `w ∈ {1,…,4}`, size cap `9` or `7`), while
+the C2-leaf profile permits any `K ∈ [3, 2w+2]` and `|α| ≤ 6w+6`.
+The mismatch is documented in `docs/a5-profile-resolution.md`.
+
+The selected resolution (Option 3 / "hybrid") splits the discharge
+along `InCase3Scope`:
+
+* **In-scope branch** (`hCert`): supplied from `case3_certificate`
+  via the band-major encoding bridge (Path A of
+  `docs/gap-analysis.md` — A5-B1/B2/B3 deliverables). Discharges
+  Case 3 of `prop:in-situ-balanced` (the residual "width-3 profile
+  antichain" finite enumeration, `step8.tex:3033-3047`).
+
+* **Out-of-scope branch** (`hStruct`): supplied from the structural
+  Cases 1 and 2 of `prop:in-situ-balanced` (`step8.tex:2984-3032`)
+  — the `Equiv.swap` automorphism argument (Case 1) and the
+  Ahlswede–Daykin / FKG profile-ordering plus rotation argument
+  (Case 2). This is pre-filed work item **mg-A8** (`README.md:139`).
+
+This hybrid form makes the dispatch shape **explicit in the
+type**, so the consumers of A5-B4 (Path A, mg-A8, Path C) build
+against typed inputs rather than the opaque `hEnum :
+HasBalancedPair α` of the monolithic form.
+
+The decision to keep the wider profile (rather than tightening to
+`InCase3Scope`) follows from the F3 strong-induction recursion: the
+C2 leaf is reached when no further band cut applies, and
+irreducibility blocks descent of `K`. The paper's `prop:in-situ-
+balanced` covers the wider profile uniformly via Cases 1, 2, 3 —
+the certificate alone cannot. See `docs/a5-profile-resolution.md`
+for the full analysis. -/
+theorem bounded_irreducible_balanced_hybrid
+    (L : LayeredDecomposition α)
+    (_hWidth3 : HasWidthAtMost α 3)
+    (_hIrr : LayerOrdinalIrreducible L)
+    (_hK3 : 3 ≤ L.K)
+    (_hw : 1 ≤ L.w)
+    (_hCard : Fintype.card α ≤ 6 * L.w + 6)
+    (_hDepth : L.K ≤ 2 * L.w + 2)
+    (hCert : InCase3Scope L.w (Fintype.card α) L.K → HasBalancedPair α)
+    (hStruct : ¬ InCase3Scope L.w (Fintype.card α) L.K → HasBalancedPair α) :
+    HasBalancedPair α := by
+  by_cases h : InCase3Scope L.w (Fintype.card α) L.K
+  · exact hCert h
+  · exact hStruct h
+
+/-- The wider monolithic `bounded_irreducible_balanced` factors
+through the hybrid dispatch with both branches discharged by the
+same `hEnum` witness. Trivial reduction (the dispatch returns
+`hEnum` in both cases by construction) — recorded as a corollary
+to make the relationship between the monolithic and the hybrid
+forms explicit at the call-site level. -/
+theorem bounded_irreducible_balanced_of_hybrid
+    (L : LayeredDecomposition α)
+    (hWidth3 : HasWidthAtMost α 3)
+    (hIrr : LayerOrdinalIrreducible L)
+    (hK3 : 3 ≤ L.K) (hw : 1 ≤ L.w)
+    (hCard : Fintype.card α ≤ 6 * L.w + 6)
+    (hDepth : L.K ≤ 2 * L.w + 2)
+    (hEnum : HasBalancedPair α) :
+    HasBalancedPair α :=
+  bounded_irreducible_balanced_hybrid L hWidth3 hIrr hK3 hw hCard hDepth
+    (fun _ => hEnum) (fun _ => hEnum)
 
 end MainTheorem
 
