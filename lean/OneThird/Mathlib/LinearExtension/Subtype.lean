@@ -49,6 +49,12 @@ used in the paper proof of `lem:window-localization`
 * `OrdinalDecomp.hasBalancedPair_lift` — `HasBalancedPair` lifts from
   `Subtype (· ∈ Mid)` to `α` (the marginal-invariance corollary used
   by `lem:window-localization` and `cor:reducibility-transfer`).
+* `OrdinalDecomp.hasBalancedPair_lift_lower` /
+  `OrdinalDecomp.hasBalancedPair_lift_upper` — the symmetric lifts
+  from `↥D.Lower` and `↥D.Upper`, obtained by repackaging `D` so that
+  the chosen side sits in the `Mid` slot of a fresh decomposition and
+  applying the existing Mid lift. Consumed by the `Mid = ∅` reducibility
+  route (`OrdinalDecompOfReducible`, `lean/OneThird/Step8/LayerOrdinal.lean`).
 
 ## Reference
 
@@ -1162,5 +1168,74 @@ theorem OrdinalDecomp.hasBalancedPair_lift (D : OrdinalDecomp α)
     rw [IsBalanced]
     rw [D.probLT_restrict_eq u.property v.property]
     exact huv_bal
+
+/-- Repackage an `OrdinalDecomp α` so that the original `Lower` becomes
+the `Mid` of a fresh decomposition. The new pieces are
+`(∅, D.Lower, D.Mid ∪ D.Upper)`; element-wise comparability is
+inherited from `D.hLM_lt` and `D.hLU_lt`.
+
+Used to derive `hasBalancedPair_lift_lower` from the existing
+Mid-only lift `hasBalancedPair_lift`. -/
+def OrdinalDecomp.toMidOfLower (D : OrdinalDecomp α) : OrdinalDecomp α where
+  Lower := ∅
+  Mid := D.Lower
+  Upper := D.Mid ∪ D.Upper
+  hCover := by
+    rw [Finset.empty_union, ← Finset.union_assoc]; exact D.hCover
+  hDisjLM := Finset.disjoint_empty_left _
+  hDisjLU := Finset.disjoint_empty_left _
+  hDisjMU := by
+    rw [Finset.disjoint_union_right]
+    exact ⟨D.hDisjLM, D.hDisjLU⟩
+  hLM_lt := fun _ hx _ _ => absurd hx (Finset.notMem_empty _)
+  hLU_lt := fun _ hx _ _ => absurd hx (Finset.notMem_empty _)
+  hMU_lt := fun x hx y hy => by
+    rcases Finset.mem_union.mp hy with hyM | hyU
+    · exact D.hLM_lt x hx y hyM
+    · exact D.hLU_lt x hx y hyU
+
+/-- Repackage an `OrdinalDecomp α` so that the original `Upper` becomes
+the `Mid` of a fresh decomposition. The new pieces are
+`(D.Lower ∪ D.Mid, D.Upper, ∅)`; element-wise comparability is
+inherited from `D.hLU_lt` and `D.hMU_lt`.
+
+Used to derive `hasBalancedPair_lift_upper` from the existing
+Mid-only lift `hasBalancedPair_lift`. -/
+def OrdinalDecomp.toMidOfUpper (D : OrdinalDecomp α) : OrdinalDecomp α where
+  Lower := D.Lower ∪ D.Mid
+  Mid := D.Upper
+  Upper := ∅
+  hCover := by rw [Finset.union_empty]; exact D.hCover
+  hDisjLM := by
+    rw [Finset.disjoint_union_left]
+    exact ⟨D.hDisjLU, D.hDisjMU⟩
+  hDisjLU := Finset.disjoint_empty_right _
+  hDisjMU := Finset.disjoint_empty_right _
+  hLM_lt := fun x hx y hy => by
+    rcases Finset.mem_union.mp hx with hxL | hxM
+    · exact D.hLU_lt x hxL y hy
+    · exact D.hMU_lt x hxM y hy
+  hLU_lt := fun _ _ _ hy => absurd hy (Finset.notMem_empty _)
+  hMU_lt := fun _ _ _ hy => absurd hy (Finset.notMem_empty _)
+
+/-- **`HasBalancedPair` lifting from the lower piece**.
+
+Mirrors `hasBalancedPair_lift` for `↥D.Lower`. The proof goes via
+`toMidOfLower`, which puts `D.Lower` in the `Mid` slot of a fresh
+ordinal decomposition `D'` (with `Lower := ∅`, `Upper := D.Mid ∪ D.Upper`)
+and then invokes the existing Mid lift on `D'`. -/
+theorem OrdinalDecomp.hasBalancedPair_lift_lower (D : OrdinalDecomp α)
+    (h : HasBalancedPair ↥D.Lower) : HasBalancedPair α :=
+  D.toMidOfLower.hasBalancedPair_lift h
+
+/-- **`HasBalancedPair` lifting from the upper piece**.
+
+Mirrors `hasBalancedPair_lift` for `↥D.Upper`. The proof goes via
+`toMidOfUpper`, which puts `D.Upper` in the `Mid` slot of a fresh
+ordinal decomposition `D'` (with `Lower := D.Lower ∪ D.Mid`, `Upper := ∅`)
+and then invokes the existing Mid lift on `D'`. -/
+theorem OrdinalDecomp.hasBalancedPair_lift_upper (D : OrdinalDecomp α)
+    (h : HasBalancedPair ↥D.Upper) : HasBalancedPair α :=
+  D.toMidOfUpper.hasBalancedPair_lift h
 
 end OneThird
