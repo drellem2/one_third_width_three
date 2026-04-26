@@ -514,6 +514,228 @@ theorem strictCase2WitnessChain_balanced_or_residual
   · refine Or.inr ⟨a₁, a₂, a₃, h12, h23, h13, hb12, hb13,
       hi12, hi23, hi13, hu12, hd12, hu23, hd23, hr12, hr23, hr13⟩
 
+/-! ### §6 — Chain swap: forward chain probability bound
+
+This section provides a direct combinatorial closure of the **forward
+direction** of the residual case from `m3_rotation_balanced_or_residual`:
+under the chain hypothesis, every forward chain probability satisfies
+`probLT a a' ≤ 1/2`, which strictly contradicts the `> 2/3` residual.
+
+The construction.  Given a one-sided ⪯-chain `(a, a')` —
+`upper(a) ⊆ upper(a')` and `lower(a') ⊆ lower(a)` — and a linear
+extension `L` with `L.lt a a'`, exchange the positions of `a` and
+`a'` in `L` to obtain a new linear extension with `a' <_L a`.
+Monotonicity of the swapped extension follows from the chain
+inclusions and the `L.lt a a'` hypothesis (case-by-case on whether
+`x, y ∈ {a, a'}`); see `chainSwap_LE` below.
+
+Compared to the Case 1 ambient form
+(`Step8.hasBalancedPair_of_ambient_profile_match` in `Case3Struct.lean`,
+mg-f92d), the chain swap requires only a *one-sided* profile inclusion,
+not bi-implication.  The cost of the weaker hypothesis is that the
+swap is no longer a poset automorphism of `α` (so cannot be packaged
+via `LinearExt.pullback`), and is only valid as a swap on positions
+for LEs in which `a` precedes `a'`.
+
+The bound `Pr ≤ 1/2` is in the **same direction** as the chain
+inclusions.  The OPPOSITE direction (`Pr[a' <_L a] ≤ 2/3`) is **not**
+provided by chain swap; see `docs/a8-s2-rotation-residual-status.md`
+for the full gap analysis. -/
+
+set_option linter.unusedVariables false in
+/-- **Chain swap construction.**  Given a one-sided ⪯-chain `(a, a')`
+with `a ≠ a'`, `a ∥ a'`, `upper(a) ⊆ upper(a')`,
+`lower(a') ⊆ lower(a)`, and a linear extension `L` with `L.lt a a'`,
+construct a new linear extension by exchanging the positions of `a`
+and `a'` in `L`. The `hne` field is propagated through the signature
+for downstream callers (chain witnesses carry `a ≠ a'` separately
+from `a ∥ a'`); the proof itself only uses `hi`. -/
+def chainSwap_LE
+    {a a' : α} (hne : a ≠ a') (hi : a ∥ a')
+    (h_up : ∀ z, a < z → a' < z) (h_down : ∀ z, z < a' → z < a)
+    (L : LinearExt α) (h_lt : L.lt a a') : LinearExt α where
+  toFun := (Equiv.swap a a').trans L.toFun
+  monotone {x y} hxy := by
+    classical
+    have hpos : L.toFun a < L.toFun a' := h_lt
+    change L.toFun ((Equiv.swap a a') x) ≤ L.toFun ((Equiv.swap a a') y)
+    by_cases hxa : x = a
+    · rw [hxa] at hxy ⊢
+      rw [Equiv.swap_apply_left]
+      by_cases hya : y = a
+      · rw [hya, Equiv.swap_apply_left]
+      by_cases hya' : y = a'
+      · rw [hya'] at hxy
+        exact absurd hxy hi.1
+      · rw [Equiv.swap_apply_of_ne_of_ne hya hya']
+        have hay : a < y := lt_of_le_of_ne hxy (Ne.symm hya)
+        exact (L.lt_of_lt (h_up y hay)).le
+    by_cases hxa' : x = a'
+    · rw [hxa'] at hxy ⊢
+      rw [Equiv.swap_apply_right]
+      by_cases hya : y = a
+      · rw [hya] at hxy
+        exact absurd hxy hi.2
+      by_cases hya' : y = a'
+      · rw [hya', Equiv.swap_apply_right]
+      · rw [Equiv.swap_apply_of_ne_of_ne hya hya']
+        have ha'y : a' < y := lt_of_le_of_ne hxy (Ne.symm hya')
+        exact (hpos.trans (L.lt_of_lt ha'y)).le
+    -- x ∉ {a, a'}.
+    rw [Equiv.swap_apply_of_ne_of_ne hxa hxa']
+    by_cases hya : y = a
+    · rw [hya] at hxy ⊢
+      rw [Equiv.swap_apply_left]
+      have hxa_lt : x < a := lt_of_le_of_ne hxy hxa
+      exact ((L.lt_of_lt hxa_lt).trans hpos).le
+    by_cases hya' : y = a'
+    · rw [hya'] at hxy ⊢
+      rw [Equiv.swap_apply_right]
+      have hxa'_lt : x < a' := lt_of_le_of_ne hxy hxa'
+      have hxa_lt : x < a := h_down x hxa'_lt
+      exact (L.lt_of_lt hxa_lt).le
+    · rw [Equiv.swap_apply_of_ne_of_ne hya hya']
+      exact L.monotone hxy
+
+/-- Position of any element under the chain swap is the position of its
+`Equiv.swap a a'`-image under `L`. -/
+@[simp] lemma chainSwap_LE_pos
+    {a a' : α} (hne : a ≠ a') (hi : a ∥ a')
+    (h_up : ∀ z, a < z → a' < z) (h_down : ∀ z, z < a' → z < a)
+    (L : LinearExt α) (h_lt : L.lt a a') (z : α) :
+    (chainSwap_LE hne hi h_up h_down L h_lt).pos z =
+      L.pos (Equiv.swap a a' z) := rfl
+
+/-- The chain swap of an LE with `a <_L a'` has `a' <_L' a`. -/
+lemma chainSwap_LE_lt
+    {a a' : α} (hne : a ≠ a') (hi : a ∥ a')
+    (h_up : ∀ z, a < z → a' < z) (h_down : ∀ z, z < a' → z < a)
+    (L : LinearExt α) (h_lt : L.lt a a') :
+    (chainSwap_LE hne hi h_up h_down L h_lt).lt a' a := by
+  change (chainSwap_LE hne hi h_up h_down L h_lt).pos a' <
+        (chainSwap_LE hne hi h_up h_down L h_lt).pos a
+  rw [chainSwap_LE_pos, chainSwap_LE_pos,
+      Equiv.swap_apply_right, Equiv.swap_apply_left]
+  exact h_lt
+
+/-- **Forward chain probability bound.**  Under a one-sided ⪯-chain
+`(a, a')`, the forward probability `probLT a a'` is at most `1/2`.
+
+Proof: chain swap is an injection from `{L : L.lt a a'}` into
+`{L : L.lt a' a}` (its "inverse" applied to a chain swap recovers
+the original LE because `Equiv.swap a a'` is an involution).  Hence
+`|{L : L.lt a a'}| ≤ |{L : L.lt a' a}|`, which combined with
+`Pr[a < a'] + Pr[a' < a] = 1` yields `Pr[a < a'] ≤ 1/2`. -/
+theorem probLT_le_half_of_chain
+    {a a' : α} (hne : a ≠ a') (hi : a ∥ a')
+    (h_up : ∀ z, a < z → a' < z) (h_down : ∀ z, z < a' → z < a) :
+    probLT a a' ≤ (1 : ℚ) / 2 := by
+  classical
+  set Sf : Finset (LinearExt α) :=
+    Finset.univ.filter (fun L => L.lt a a') with hSf_def
+  set Sb : Finset (LinearExt α) :=
+    Finset.univ.filter (fun L => L.lt a' a) with hSb_def
+  -- Chain swap is an injection Sf → Sb.
+  let f : LinearExt α → LinearExt α := fun L =>
+    if h : L.lt a a' then chainSwap_LE hne hi h_up h_down L h else L
+  have h_f_lands : ∀ L ∈ Sf, f L ∈ Sb := by
+    intro L hL
+    simp only [Sf, Finset.mem_filter, Finset.mem_univ, true_and] at hL
+    simp only [Sb, Finset.mem_filter, Finset.mem_univ, true_and]
+    simp only [f, dif_pos hL]
+    exact chainSwap_LE_lt hne hi h_up h_down L hL
+  have h_f_inj : Set.InjOn f (Sf : Set (LinearExt α)) := by
+    intro L₁ hL₁ L₂ hL₂ heq
+    simp only [Sf, Finset.coe_filter, Finset.mem_univ, true_and,
+      Set.mem_setOf_eq] at hL₁ hL₂
+    simp only [f, dif_pos hL₁, dif_pos hL₂] at heq
+    apply LinearExt.ext
+    apply Equiv.ext
+    intro z
+    have htoFun_eq :
+        (chainSwap_LE hne hi h_up h_down L₁ hL₁).toFun =
+        (chainSwap_LE hne hi h_up h_down L₂ hL₂).toFun := by
+      rw [heq]
+    have h_at_swap :
+        ((Equiv.swap a a').trans L₁.toFun) (Equiv.swap a a' z) =
+        ((Equiv.swap a a').trans L₂.toFun) (Equiv.swap a a' z) := by
+      have hcoe :
+          ((chainSwap_LE hne hi h_up h_down L₁ hL₁).toFun :
+              α → Fin (Fintype.card α)) =
+          ((chainSwap_LE hne hi h_up h_down L₂ hL₂).toFun :
+              α → Fin (Fintype.card α)) := by
+        rw [htoFun_eq]
+      exact congrFun hcoe (Equiv.swap a a' z)
+    simp only [Equiv.trans_apply, Equiv.swap_apply_self] at h_at_swap
+    exact h_at_swap
+  have hcard_le : Sf.card ≤ Sb.card :=
+    Finset.card_le_card_of_injOn f h_f_lands h_f_inj
+  -- Bridge via probLT_add_probLT_of_ne.
+  have hcard_pos : (0 : ℚ) < (numLinExt α : ℚ) := by exact_mod_cast numLinExt_pos
+  have hSf_le_Sb : (Sf.card : ℚ) ≤ (Sb.card : ℚ) := by exact_mod_cast hcard_le
+  have h_p_le : probLT a a' ≤ probLT a' a := by
+    unfold probLT
+    exact (div_le_div_iff_of_pos_right hcard_pos).mpr hSf_le_Sb
+  have hsum : probLT a a' + probLT a' a = 1 := probLT_add_probLT_of_ne hne
+  linarith
+
+set_option linter.unusedVariables false in
+/-- **Residual impossibility under the chain hypothesis.**  The
+forward `Pr > 2/3` triple-residual output of
+`m3_rotation_balanced_or_residual` is structurally impossible under
+the chain hypothesis: chain swap forces each forward chain
+probability `probLT a_i a_{i+1} ≤ 1/2 < 2/3`, contradicting the
+strict `> 2/3` lower bound. -/
+theorem chain_residual_impossible
+    {a₁ a₂ a₃ : α} (h12 : a₁ ≠ a₂) (h23 : a₂ ≠ a₃) (h13 : a₁ ≠ a₃)
+    (hi12 : a₁ ∥ a₂) (hi23 : a₂ ∥ a₃) (hi13 : a₁ ∥ a₃)
+    (hu12 : ∀ z, a₁ < z → a₂ < z) (hd12 : ∀ z, z < a₂ → z < a₁)
+    (hu23 : ∀ z, a₂ < z → a₃ < z) (hd23 : ∀ z, z < a₃ → z < a₂)
+    (hu13 : ∀ z, a₁ < z → a₃ < z) (hd13 : ∀ z, z < a₃ → z < a₁)
+    (hr12 : (2 : ℚ) / 3 < probLT a₁ a₂)
+    (hr23 : (2 : ℚ) / 3 < probLT a₂ a₃)
+    (hr13 : (2 : ℚ) / 3 < probLT a₁ a₃) :
+    False := by
+  -- Any one of the three chain pairs suffices: chain swap on (a₁, a₂)
+  -- gives `probLT a₁ a₂ ≤ 1/2`, contradicting `2/3 < probLT a₁ a₂`.
+  -- The other two chain pairs are propagated through the signature
+  -- to make the residual triple-shape explicit at the call site.
+  have h12_le : probLT a₁ a₂ ≤ 1/2 :=
+    probLT_le_half_of_chain h12 hi12 hu12 hd12
+  linarith
+
+/-- **Composed corollary**: under the chain hypothesis (no FKG
+sub-claim required), `strictCase2WitnessChain_balanced_or_residual`
+collapses to `HasBalancedPair α` whenever the FKG sub-claim
+hypothesis is supplied — the residual disjunct is structurally
+ruled out by chain swap.
+
+The gap to closing `strictCase2WitnessChain L → HasBalancedPair α`
+unconditionally is the FKG sub-claim hypothesis itself (the input
+to `strictCase2WitnessChain_balanced_or_residual`); see
+`docs/a8-s2-rotation-residual-status.md` for the full status. -/
+theorem strictCase2WitnessChain_balanced_under_FKG
+    (L : LayeredDecomposition α) (hC2chain : StrictCase2WitnessChain L)
+    (hFKG : ∀ a₁ a₂ a₃ : α,
+      a₁ ≠ a₂ → a₂ ≠ a₃ → a₁ ≠ a₃ →
+      L.band a₁ = L.band a₂ → L.band a₁ = L.band a₃ →
+      a₁ ∥ a₂ → a₂ ∥ a₃ → a₁ ∥ a₃ →
+      (∀ z, a₁ < z → a₂ < z) → (∀ z, z < a₂ → z < a₁) →
+      (∀ z, a₂ < z → a₃ < z) → (∀ z, z < a₃ → z < a₂) →
+      (1 : ℚ) / 2 ≤ probLT a₁ a₂ ∧
+      (1 : ℚ) / 2 ≤ probLT a₂ a₃ ∧
+      (1 : ℚ) / 2 ≤ probLT a₁ a₃) :
+    HasBalancedPair α := by
+  rcases strictCase2WitnessChain_balanced_or_residual L hC2chain hFKG with
+    h | ⟨a₁, a₂, a₃, h12, h23, h13, _hb12, _hb13, hi12, hi23, hi13,
+         hu12, hd12, hu23, hd23, hr12, hr23, hr13⟩
+  · exact h
+  · -- Residual: contradicted by chain swap.
+    obtain ⟨hu13, hd13⟩ :=
+      StrictCase2WitnessChain.chain_one_three hu12 hd12 hu23 hd23
+    exact (chain_residual_impossible h12 h23 h13 hi12 hi23 hi13
+        hu12 hd12 hu23 hd23 hu13 hd13 hr12 hr23 hr13).elim
+
 end InSitu
 end Step8
 end OneThird

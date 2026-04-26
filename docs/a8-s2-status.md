@@ -374,6 +374,20 @@ close the residual case in follow-up work:
   to show that "all three pair probabilities > 2/3" forces a
   comparability in `Q` among `{a₁, a₂, a₃}`, contradicting the
   within-band antichain hypothesis.
+  **Status (`mg-ba0c` / `pc-ba0c2`, 2026-04-26): partial closure.**
+  The polecat-spec residual `2/3 < probLT a₁ a₂ ∧ … ∧ 2/3 <
+  probLT a₁ a₃` is **structurally impossible** under chain alone
+  via a direct position-swap argument (`chainSwap_LE`,
+  `probLT_le_half_of_chain`, `chain_residual_impossible` in
+  `Case2Rotation.lean:§6`). The full unconditional discharge of
+  `strictCase2WitnessChain L → HasBalancedPair α` is **blocked**
+  on the paper's FKG sub-claim hypothesis (the `1/2 ≤ probLT`
+  forward bound), which is genuinely Route B's deliverable. See
+  `docs/a8-s2-rotation-residual-status.md` for the full gap
+  analysis, the conditional theorem
+  `strictCase2WitnessChain_balanced_under_FKG`, and the
+  reverse-labelling all-three-`< 1/3` residual that arises from
+  the `m3_rotation` reformulation.
 * **Route B: tighter bounds from the cross-poset coupling in
   probability-normalised form.** The
   `OneThird.Mathlib.RelationPoset.FKG.probLT'_mono_of_relExt`
