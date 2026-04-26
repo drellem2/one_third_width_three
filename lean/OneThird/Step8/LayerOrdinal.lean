@@ -434,5 +434,113 @@ theorem hasBalancedPair_of_layered_strongInduction_le.{u}
   intro n α _ _ _ L _hle h2 hNC
   exact hasBalancedPair_of_layered_strongInduction hStep α L h2 hNC
 
+set_option linter.unusedVariables false in
+/-- **F3 (width-3-threaded form).** Strong induction on `Fintype.card α`
+for `HasBalancedPair`, with `HasWidthAtMost · 3` carried through both
+the call site's input and the induction hypothesis.
+
+The bare F3 framework `hasBalancedPair_of_layered_strongInduction`
+delivers the conclusion under just `2 ≤ Fintype.card α` and the
+non-chain hypothesis. Downstream consumers — in particular the
+in-scope leaf dispatch
+`Step8.bounded_irreducible_balanced_inScope`
+(`Step8/BoundedIrreducibleBalancedInScope.lean:99`) — additionally
+require `HasWidthAtMost α 3` on the recursive sub-poset, since the
+F5a `case3_certificate` enumeration is hardwired to bands of size
+`≤ 3`. The bare F3 framework drops this hypothesis through the IH; this
+variant threads it.
+
+**What this is.** Pure F3 framework — a strong-induction skeleton.
+The step function `hStep` is taken as an inline ∀-quantified hypothesis
+(matching `hasBalancedPair_of_layered_strongInduction`'s shape), with
+the single difference that `HasWidthAtMost · 3` appears both in the
+`hStep` antecedents (for `α` and for any `β` reached through the IH)
+and in the conclusion's antecedents.
+
+**What this is NOT.** This file does *not* introduce a named
+multi-hypothesis predicate (e.g., a `Case3WitnessHStep`-style
+abbreviation that bundles the step function's signature into a
+single `Prop`). The reverted commit `c5d5a10` (via `mg-05d3`) is the
+negative exemplar. The framework theorem here keeps `hStep` inline,
+the same way the bare F3 framework does.
+
+**Proof.** Strong induction on `Fintype.card α`, packaged via
+`Nat.strong_induction_on` with the type parameter generalised inside
+the inductive step — verbatim the same skeleton as
+`hasBalancedPair_of_layered_strongInduction`, with one extra
+hypothesis threaded through. -/
+theorem hasBalancedPair_of_layered_strongInduction_width3.{u}
+    (hStep : ∀ (α : Type u) [PartialOrder α] [Fintype α]
+        [DecidableEq α] (L : LayeredDecomposition α),
+        HasWidthAtMost α 3 →
+        2 ≤ Fintype.card α →
+        ¬ OneThird.IsChainPoset α →
+        (∀ (β : Type u) [PartialOrder β] [Fintype β]
+             [DecidableEq β] (LB : LayeredDecomposition β),
+          Fintype.card β < Fintype.card α →
+          HasWidthAtMost β 3 →
+          2 ≤ Fintype.card β →
+          ¬ OneThird.IsChainPoset β →
+          OneThird.HasBalancedPair β) →
+        OneThird.HasBalancedPair α) :
+    ∀ (α : Type u) [PartialOrder α] [Fintype α]
+      [DecidableEq α] (L : LayeredDecomposition α),
+      HasWidthAtMost α 3 →
+      2 ≤ Fintype.card α →
+      ¬ OneThird.IsChainPoset α →
+      OneThird.HasBalancedPair α := by
+  -- Strong induction on the numeric `Fintype.card α`, generalising over α.
+  suffices h : ∀ n : ℕ, ∀ (α : Type u) [PartialOrder α] [Fintype α]
+      [DecidableEq α] (L : LayeredDecomposition α),
+      Fintype.card α = n →
+      HasWidthAtMost α 3 →
+      2 ≤ Fintype.card α →
+      ¬ OneThird.IsChainPoset α →
+      OneThird.HasBalancedPair α by
+    intro α _ _ _ L hW3 h2 hNC
+    exact h (Fintype.card α) α L rfl hW3 h2 hNC
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro α _ _ _ L hcard hW3 h2 hNotChain
+    refine hStep α L hW3 h2 hNotChain ?_
+    intro β _ _ _ LB hβLt hW3β h2β hNCβ
+    -- `Fintype.card β < Fintype.card α = n`, so IH applies at `Fintype.card β`.
+    rw [hcard] at hβLt
+    exact ih (Fintype.card β) hβLt β LB rfl hW3β h2β hNCβ
+
+set_option linter.unusedVariables false in
+/-- **F3 corollary — width-3-threaded, cardinality-bounded form.**
+
+Variant of `hasBalancedPair_of_layered_strongInduction_width3` that
+exposes the cardinality bound `n` as an explicit parameter, mirroring
+`hasBalancedPair_of_layered_strongInduction_le` for the bare framework.
+
+The proof is the same strong induction, phrased with
+`Fintype.card α ≤ n` instead of implicit universal quantification. -/
+theorem hasBalancedPair_of_layered_strongInduction_width3_le.{u}
+    (hStep : ∀ (α : Type u) [PartialOrder α] [Fintype α] [DecidableEq α]
+        (L : LayeredDecomposition α),
+        HasWidthAtMost α 3 →
+        2 ≤ Fintype.card α →
+        ¬ OneThird.IsChainPoset α →
+        (∀ (β : Type u) [PartialOrder β] [Fintype β] [DecidableEq β]
+             (LB : LayeredDecomposition β),
+          Fintype.card β < Fintype.card α →
+          HasWidthAtMost β 3 →
+          2 ≤ Fintype.card β →
+          ¬ OneThird.IsChainPoset β →
+          OneThird.HasBalancedPair β) →
+        OneThird.HasBalancedPair α) :
+    ∀ (n : ℕ) (α : Type u) [PartialOrder α] [Fintype α] [DecidableEq α]
+      (L : LayeredDecomposition α),
+      Fintype.card α ≤ n →
+      HasWidthAtMost α 3 →
+      2 ≤ Fintype.card α →
+      ¬ OneThird.IsChainPoset α →
+      OneThird.HasBalancedPair α := by
+  intro n α _ _ _ L _hle hW3 h2 hNC
+  exact hasBalancedPair_of_layered_strongInduction_width3 hStep α L hW3 h2 hNC
+
 end Step8
 end OneThird
