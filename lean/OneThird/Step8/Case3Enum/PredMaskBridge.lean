@@ -449,4 +449,453 @@ lemma testBit_foldl_maskedFreeBody_of_mem (mask : Nat)
         rw [hsize]; exact hjs
       exact ih (maskedFreeBody mask freeUV k' pred) hjs2 hmem
 
+/-! ### §5 — Imperative→functional reduction of `enumPredPreWarshallOf`
+
+The two `for`-loops of `enumPredPreWarshallOf` reduce, in `Id`, to an
+explicit `addEdgesList` (forced-edge phase) + `List.foldl` of
+`maskedFreeBody` (masked-free phase). Mirrors the pattern of
+`BalancedLift.warshall_imperative_eq`. -/
+
+/-- `forIn` over the forced-edge body reduces to `addEdgesList`. -/
+private lemma forIn_forced_eq_addEdgesList (forcedUV : List (Nat × Nat))
+    (pred : Array Nat) :
+    (forIn (m := Id) forcedUV pred (fun uv pred =>
+      (do pure PUnit.unit
+          pure (ForInStep.yield
+            (pred.set! uv.2 (pred.getD uv.2 0 ||| bit uv.1))) : Id _))) =
+      addEdgesList forcedUV pred := by
+  induction forcedUV generalizing pred with
+  | nil => rfl
+  | cons uv rest ih =>
+    rw [List.forIn_cons]
+    show (forIn (m := Id) rest
+        (pred.set! uv.2 (pred.getD uv.2 0 ||| bit uv.1)) _ : Id _) = _
+    rw [ih, addEdgesList_cons]
+
+/-- A reformulation of `maskedFreeBody` using the `dite` form of
+`Array.getD`, matching the do-elaboration of the for-loop. -/
+private lemma maskedFreeBody_dite_eq (mask : Nat)
+    (freeUV : Array (Nat × Nat)) (k : Nat) (pred : Array Nat) :
+    (if testBit' mask k then
+      pred.set!
+        (if h : k < freeUV.size then freeUV.getInternal k h else (0, 0)).2
+        (pred.getD
+          (if h : k < freeUV.size then freeUV.getInternal k h else (0, 0)).2 0 |||
+          bit
+            (if h : k < freeUV.size then freeUV.getInternal k h else (0, 0)).1)
+      else pred) = maskedFreeBody mask freeUV k pred := by
+  unfold maskedFreeBody
+  rfl
+
+/-- `forIn` over the masked-free body reduces to `foldl maskedFreeBody`. -/
+private lemma forIn_free_eq_foldl_maskedFreeBody (mask : Nat)
+    (freeUV : Array (Nat × Nat)) (l : List Nat) (pred : Array Nat) :
+    (forIn (m := Id) l pred (fun k pred =>
+      (if testBit' mask k then
+        (do pure PUnit.unit
+            pure (ForInStep.yield
+              (pred.set!
+                (if h : k < freeUV.size then freeUV.getInternal k h
+                  else (0, 0)).2
+                (pred.getD
+                    (if h : k < freeUV.size then freeUV.getInternal k h
+                      else (0, 0)).2 0 |||
+                  bit (if h : k < freeUV.size then freeUV.getInternal k h
+                    else (0, 0)).1))) : Id _)
+      else
+        (do pure PUnit.unit
+            pure (ForInStep.yield pred) : Id _)))) =
+      l.foldl (fun pred k => maskedFreeBody mask freeUV k pred) pred := by
+  induction l generalizing pred with
+  | nil => rfl
+  | cons k rest ih =>
+    rw [List.forIn_cons, List.foldl_cons, ← maskedFreeBody_dite_eq mask freeUV k pred]
+    by_cases hbit : testBit' mask k
+    · simp only [hbit, ↓reduceIte]
+      show (forIn (m := Id) rest _ _ : Id _) = _
+      exact ih _
+    · simp only [hbit, Bool.false_eq_true, ↓reduceIte]
+      show (forIn (m := Id) rest _ _ : Id _) = _
+      exact ih _
+
+/-- **Imperative→functional reduction of `enumPredPreWarshallOf`.**
+
+The imperative two-`for`-loop construction equals the explicit
+functional form: starting from `Array.replicate (enumNOf bs) 0`,
+apply `addEdgesList forcedUV.toList`, then `foldl maskedFreeBody`
+over `[0, nfree)`. -/
+lemma enumPredPreWarshallOf_eq (w : Nat) (bs : List Nat) (mask : Nat) :
+    enumPredPreWarshallOf w bs mask =
+      (List.range' 0 (enumFreeUVOf w bs).size).foldl
+        (fun pred k => maskedFreeBody mask (enumFreeUVOf w bs) k pred)
+        (addEdgesList (enumForcedUVOf w bs).toList
+          (Array.replicate (enumNOf bs) 0)) := by
+  unfold enumPredPreWarshallOf
+  simp only [Std.Legacy.Range.forIn_eq_forIn_range', Std.Legacy.Range.size,
+    Nat.sub_zero, Nat.add_sub_cancel, Nat.div_one,
+    ← Array.forIn_toList]
+  rw [forIn_forced_eq_addEdgesList]
+  exact forIn_free_eq_foldl_maskedFreeBody mask (enumFreeUVOf w bs) _ _
+
+/-! ### §6 — Bit characterization of `enumPredPreWarshallOf` -/
+
+/-- The all-zeros replicate has every `getD` equal to `0`. -/
+private lemma getD_replicate_zero (n j : Nat) :
+    (Array.replicate n (0 : Nat)).getD j 0 = 0 := by
+  rw [Array.getD_eq_getD_getElem?]
+  by_cases hj : j < (Array.replicate n (0 : Nat)).size
+  · rw [Array.getElem?_eq_getElem hj]; simp
+  · rw [Array.getElem?_eq_none (Nat.le_of_not_lt hj)]; rfl
+
+/-- **Upper bound**: a bit set in `enumPredPreWarshallOf` is either
+in the forced-edge list or comes from a masked free-edge slot. -/
+lemma testBit_enumPredPreWarshallOf_imp (w : Nat) (bs : List Nat)
+    (mask : Nat) (i j : Nat)
+    (h : Nat.testBit ((enumPredPreWarshallOf w bs mask).getD j 0) i = true) :
+    j < enumNOf bs ∧
+      ((i, j) ∈ (enumForcedUVOf w bs).toList ∨
+        ∃ k, k < (enumFreeUVOf w bs).size ∧
+          testBit' mask k = true ∧
+          (enumFreeUVOf w bs).getD k (0, 0) = (i, j)) := by
+  rw [enumPredPreWarshallOf_eq] at h
+  set seed : Array Nat := addEdgesList (enumForcedUVOf w bs).toList
+    (Array.replicate (enumNOf bs) 0) with hseed_def
+  have hseed_size : seed.size = enumNOf bs := by
+    rw [hseed_def, addEdgesList_size, Array.size_replicate]
+  -- Combine §4 upper bound with §3 upper bound.
+  rcases testBit_foldl_maskedFreeBody_imp mask (enumFreeUVOf w bs)
+      (List.range' 0 (enumFreeUVOf w bs).size) seed i j h with hb_seed |
+      ⟨hjs2, k', hk'_mem, hbit', heq'⟩
+  · -- Bit was already set in the seed.
+    rcases testBit_addEdgesList_imp (enumForcedUVOf w bs).toList
+        (Array.replicate (enumNOf bs) 0) i j hb_seed with hb_zero | ⟨hjs0, hin⟩
+    · -- Bit is set in the all-zero replicate — impossible.
+      exfalso
+      rw [getD_replicate_zero, Nat.zero_testBit] at hb_zero
+      exact Bool.false_ne_true hb_zero
+    · refine ⟨?_, Or.inl hin⟩
+      rw [Array.size_replicate] at hjs0; exact hjs0
+  · -- Bit comes from a masked free-edge slot.
+    have hjs_n : j < enumNOf bs := by rw [hseed_size] at hjs2; exact hjs2
+    refine ⟨hjs_n, Or.inr ⟨k', ?_, hbit', heq'⟩⟩
+    rw [List.mem_range'_1] at hk'_mem; omega
+
+/-- **Lower bound (forced)**: forced-edge pairs always set the bit. -/
+lemma testBit_enumPredPreWarshallOf_of_forced (w : Nat) (bs : List Nat)
+    (mask : Nat) {i j : Nat}
+    (hin : (i, j) ∈ (enumForcedUVOf w bs).toList)
+    (hjs : j < enumNOf bs) :
+    Nat.testBit ((enumPredPreWarshallOf w bs mask).getD j 0) i = true := by
+  rw [enumPredPreWarshallOf_eq]
+  apply maskedFreeBody_foldl_bit_mono
+  apply testBit_addEdgesList_of_mem
+  · rw [Array.size_replicate]; exact hjs
+  · exact hin
+
+/-- **Lower bound (free)**: a masked free-edge slot also sets the
+bit. -/
+lemma testBit_enumPredPreWarshallOf_of_free (w : Nat) (bs : List Nat)
+    (mask : Nat) {i j : Nat}
+    (h : ∃ k, k < (enumFreeUVOf w bs).size ∧
+      testBit' mask k = true ∧
+      (enumFreeUVOf w bs).getD k (0, 0) = (i, j))
+    (hjs : j < enumNOf bs) :
+    Nat.testBit ((enumPredPreWarshallOf w bs mask).getD j 0) i = true := by
+  rw [enumPredPreWarshallOf_eq]
+  obtain ⟨k, hk_lt, hbit, heq⟩ := h
+  set seed : Array Nat := addEdgesList (enumForcedUVOf w bs).toList
+    (Array.replicate (enumNOf bs) 0) with hseed_def
+  have hseed_size : seed.size = enumNOf bs := by
+    rw [hseed_def, addEdgesList_size, Array.size_replicate]
+  apply testBit_foldl_maskedFreeBody_of_mem
+  · rw [hseed_size]; exact hjs
+  · refine ⟨k, ?_, hbit, heq⟩
+    rw [List.mem_range'_1]; omega
+
+/-! ### §7 — Membership characterization of `enumForcedUVOf` / `enumFreeUVOf`
+
+Unrolls `enumPartition`'s four-deep nested `for`-loops to characterize
+membership in `enumForcedUVOf` / `enumFreeUVOf` as position
+predicates: a pair `(a, b)` is in the forced (resp. free) array iff
+there exist band indices `i < j < bs.length` with `j - i > w`
+(resp. `≤ w`), `a` lies in band-`i+1`'s range, and `b` lies in
+band-`j+1`'s range. -/
+
+/-- Membership predicate for the forced output: there exist band
+indices `i, j` with `i < j < K = bs.length`, `j - i > w`, and
+`(a, b)` falls in the band-`i+1` × band-`j+1` rectangle. -/
+def IsForcedPair (w : Nat) (bs : List Nat) (a b : Nat) : Prop :=
+  ∃ i j, i < j ∧ j < bs.length ∧ j - i > w ∧
+    (offsetsOf bs).getD i 0 ≤ a ∧ a < (offsetsOf bs).getD (i + 1) 0 ∧
+    (offsetsOf bs).getD j 0 ≤ b ∧ b < (offsetsOf bs).getD (j + 1) 0
+
+/-- Membership predicate for the free output: as above with
+`j - i ≤ w` instead. -/
+def IsFreePair (w : Nat) (bs : List Nat) (a b : Nat) : Prop :=
+  ∃ i j, i < j ∧ j < bs.length ∧ j - i ≤ w ∧
+    (offsetsOf bs).getD i 0 ≤ a ∧ a < (offsetsOf bs).getD (i + 1) 0 ∧
+    (offsetsOf bs).getD j 0 ≤ b ∧ b < (offsetsOf bs).getD (j + 1) 0
+
+/-- "Push the rectangle `[offI, offI1) × [offJ, offJ1)` of pairs into
+the array, in `(a, b)` lexicographic order." -/
+private def pushRect (offI offI1 offJ offJ1 : Nat) (out : Array (Nat × Nat)) :
+    Array (Nat × Nat) :=
+  (List.range' offI (offI1 - offI)).foldl (fun out a =>
+    (List.range' offJ (offJ1 - offJ)).foldl (fun out b => out.push (a, b)) out) out
+
+/-- Membership in the foldl of `push (a, b)` over `b ∈ l`. -/
+private lemma mem_foldl_push_b (a : Nat) (l : List Nat)
+    (out : Array (Nat × Nat)) (c d : Nat) :
+    (c, d) ∈ (l.foldl (fun out b => out.push (a, b)) out).toList ↔
+      (c, d) ∈ out.toList ∨ (c = a ∧ d ∈ l) := by
+  induction l generalizing out with
+  | nil => simp
+  | cons b rest ih =>
+    rw [List.foldl_cons, ih, Array.toList_push, List.mem_append, List.mem_singleton,
+      Prod.mk.injEq, List.mem_cons]
+    tauto
+
+/-- Auxiliary helper: membership in the result of foldl over the
+outer a-list, with each step doing an inner b-push-loop. -/
+private lemma mem_pushRect_aux (innerL : List Nat)
+    (out : Array (Nat × Nat)) (c d : Nat) :
+    ∀ (l : List Nat),
+      (c, d) ∈ (l.foldl (fun out a =>
+        innerL.foldl (fun out b => out.push (a, b)) out) out).toList ↔
+        (c, d) ∈ out.toList ∨ (c ∈ l ∧ d ∈ innerL) := by
+  intro l
+  induction l generalizing out with
+  | nil => simp
+  | cons a rest ih =>
+    rw [List.foldl_cons, ih, mem_foldl_push_b]
+    constructor
+    · rintro ((h | ⟨hc, hd⟩) | ⟨hc, hd⟩)
+      · exact Or.inl h
+      · exact Or.inr ⟨List.mem_cons.mpr (Or.inl hc), hd⟩
+      · exact Or.inr ⟨List.mem_cons_of_mem _ hc, hd⟩
+    · rintro (h | ⟨hc, hd⟩)
+      · exact Or.inl (Or.inl h)
+      · rcases List.mem_cons.mp hc with rfl | hc'
+        · exact Or.inl (Or.inr ⟨rfl, hd⟩)
+        · exact Or.inr ⟨hc', hd⟩
+
+/-- The result of `pushRect` has size equal to `out.size + (offI1 - offI) * (offJ1 - offJ)`. -/
+private lemma pushRect_size (offI offI1 offJ offJ1 : Nat)
+    (out : Array (Nat × Nat)) :
+    (pushRect offI offI1 offJ offJ1 out).size =
+      out.size + (offI1 - offI) * (offJ1 - offJ) := by
+  unfold pushRect
+  generalize (offI1 - offI) = m
+  generalize (offJ1 - offJ) = n
+  -- Show the foldl preserves size accumulation by induction on the outer list.
+  suffices h :
+      ∀ (l : List Nat) (out : Array (Nat × Nat)),
+        (l.foldl (fun out a =>
+          (List.range' offJ n).foldl (fun out b => out.push (a, b)) out) out).size =
+            out.size + l.length * n by
+    rw [h]
+    rw [List.length_range']
+  intro l out
+  induction l generalizing out with
+  | nil => simp
+  | cons a rest ih =>
+    rw [List.foldl_cons, ih]
+    have h_inner :
+        ((List.range' offJ n).foldl (fun out b => out.push (a, b)) out).size =
+          out.size + n := by
+      have : ∀ (l : List Nat) (out : Array (Nat × Nat)),
+          (l.foldl (fun out b => out.push (a, b)) out).size = out.size + l.length := by
+        intro l out
+        induction l generalizing out with
+        | nil => simp
+        | cons b rest ih =>
+          rw [List.foldl_cons, ih, Array.size_push, List.length_cons]
+          omega
+      rw [this, List.length_range']
+    rw [h_inner, List.length_cons]
+    ring
+
+/-- Membership in `pushRect`'s output. -/
+private lemma mem_pushRect (offI offI1 offJ offJ1 : Nat)
+    (out : Array (Nat × Nat)) (c d : Nat) :
+    (c, d) ∈ (pushRect offI offI1 offJ offJ1 out).toList ↔
+      (c, d) ∈ out.toList ∨
+        (offI ≤ c ∧ c < offI1 ∧ offJ ≤ d ∧ d < offJ1) := by
+  unfold pushRect
+  rw [mem_pushRect_aux]
+  simp only [List.mem_range'_1]
+  -- Goal: (c, d) ∈ out.toList ∨ (offI ≤ c ∧ c < offI + (offI1 - offI)) ∧
+  --       (offJ ≤ d ∧ d < offJ + (offJ1 - offJ))
+  -- ↔  (c, d) ∈ out.toList ∨ offI ≤ c ∧ c < offI1 ∧ offJ ≤ d ∧ d < offJ1
+  refine or_congr Iff.rfl ?_
+  by_cases hI : offI1 ≤ offI
+  · -- offI1 ≤ offI, so the LHS forces c < offI which clashes with offI ≤ c.
+    have h_emp : offI1 - offI = 0 := by omega
+    rw [h_emp, Nat.add_zero]
+    constructor
+    · rintro ⟨⟨h1, h2⟩, _⟩; omega
+    · rintro ⟨h1, h2, _⟩; omega
+  · push_neg at hI
+    by_cases hJ : offJ1 ≤ offJ
+    · have h_emp : offJ1 - offJ = 0 := by omega
+      rw [h_emp, Nat.add_zero]
+      constructor
+      · rintro ⟨_, h1, h2⟩; omega
+      · rintro ⟨_, _, _, h⟩; omega
+    · push_neg at hJ
+      have hI_eq : offI + (offI1 - offI) = offI1 := by omega
+      have hJ_eq : offJ + (offJ1 - offJ) = offJ1 := by omega
+      rw [hI_eq, hJ_eq]
+      tauto
+
+/-- Inner two for-loops of `enumPartition` (over `a ∈ [offI, offI1)`,
+`b ∈ [offJ, offJ1)`), in the `cond = true` case, push the rectangle
+to `state.2`. -/
+private lemma forIn_inner_two_loops_true (offI offI1 offJ offJ1 : Nat)
+    (state : Array (Nat × Nat) × Array (Nat × Nat))
+    (h_cond : True = True) :
+    (forIn (m := Id) (List.range' offI (offI1 - offI)) state (fun a state =>
+      (do pure PUnit.unit
+          let r ← (forIn (m := Id) (List.range' offJ (offJ1 - offJ)) state
+            (fun b state =>
+              (do pure PUnit.unit
+                  pure (ForInStep.yield (state.1, state.2.push (a, b))) : Id _)))
+          pure (ForInStep.yield r) : Id _))) =
+      (state.1, pushRect offI offI1 offJ offJ1 state.2) := by
+  clear h_cond
+  unfold pushRect
+  -- Inner b-loop: pushes (a, b) to state.2 for b ∈ inner_list.
+  have h_inner : ∀ (l : List Nat) (st : Array (Nat × Nat) × Array (Nat × Nat))
+      (a : Nat),
+      (forIn (m := Id) l st (fun b state =>
+        (do pure PUnit.unit
+            pure (ForInStep.yield (state.1, state.2.push (a, b))) : Id _))) =
+        (st.1, l.foldl (fun out b => out.push (a, b)) st.2) := by
+    intro l st a
+    induction l generalizing st with
+    | nil => rfl
+    | cons b rest ih =>
+      rw [List.forIn_cons]
+      show (forIn (m := Id) rest (st.1, st.2.push (a, b)) _ : Id _) = _
+      rw [ih, List.foldl_cons]
+  -- Outer a-loop.
+  induction (List.range' offI (offI1 - offI)) generalizing state with
+  | nil => rfl
+  | cons a rest ih =>
+    rw [List.forIn_cons]
+    show (forIn (m := Id) rest _ _ : Id _) = _
+    rw [h_inner]
+    -- After inner: st.1 unchanged, st.2 now has rectangle pushes.
+    rw [ih]
+    rw [List.foldl_cons]
+
+/-- Inner two for-loops, `cond = false` case, push to `state.1`. -/
+private lemma forIn_inner_two_loops_false (offI offI1 offJ offJ1 : Nat)
+    (state : Array (Nat × Nat) × Array (Nat × Nat)) :
+    (forIn (m := Id) (List.range' offI (offI1 - offI)) state (fun a state =>
+      (do pure PUnit.unit
+          let r ← (forIn (m := Id) (List.range' offJ (offJ1 - offJ)) state
+            (fun b state =>
+              (do pure PUnit.unit
+                  pure (ForInStep.yield (state.1.push (a, b), state.2)) : Id _)))
+          pure (ForInStep.yield r) : Id _))) =
+      (pushRect offI offI1 offJ offJ1 state.1, state.2) := by
+  unfold pushRect
+  have h_inner : ∀ (l : List Nat) (st : Array (Nat × Nat) × Array (Nat × Nat))
+      (a : Nat),
+      (forIn (m := Id) l st (fun b state =>
+        (do pure PUnit.unit
+            pure (ForInStep.yield (state.1.push (a, b), state.2)) : Id _))) =
+        (l.foldl (fun out b => out.push (a, b)) st.1, st.2) := by
+    intro l st a
+    induction l generalizing st with
+    | nil => rfl
+    | cons b rest ih =>
+      rw [List.forIn_cons]
+      show (forIn (m := Id) rest (st.1.push (a, b), st.2) _ : Id _) = _
+      rw [ih, List.foldl_cons]
+  induction (List.range' offI (offI1 - offI)) generalizing state with
+  | nil => rfl
+  | cons a rest ih =>
+    rw [List.forIn_cons]
+    show (forIn (m := Id) rest _ _ : Id _) = _
+    rw [h_inner]
+    rw [ih]
+    rw [List.foldl_cons]
+
+/-- The body of one (i, j) iteration: applies `pushRect` to `state.2`
+if `j - i > w`, otherwise to `state.1`. -/
+private def jLoopBody (w : Nat) (offsets : Array Nat) (i j : Nat)
+    (state : Array (Nat × Nat) × Array (Nat × Nat)) :
+    Array (Nat × Nat) × Array (Nat × Nat) :=
+  let offI := offsets.getD i 0
+  let offI1 := offsets.getD (i + 1) 0
+  let offJ := offsets.getD j 0
+  let offJ1 := offsets.getD (j + 1) 0
+  if j - i > w then
+    (state.1, pushRect offI offI1 offJ offJ1 state.2)
+  else
+    (pushRect offI offI1 offJ offJ1 state.1, state.2)
+
+/-- The j-loop body's effect on freeUV. -/
+private lemma jLoopBody_fst (w : Nat) (offsets : Array Nat) (i j : Nat)
+    (state : Array (Nat × Nat) × Array (Nat × Nat)) :
+    (jLoopBody w offsets i j state).1 =
+      if j - i > w then state.1 else
+        pushRect (offsets.getD i 0) (offsets.getD (i+1) 0)
+                 (offsets.getD j 0) (offsets.getD (j+1) 0) state.1 := by
+  unfold jLoopBody
+  split_ifs <;> rfl
+
+/-- The j-loop body's effect on forcedUV. -/
+private lemma jLoopBody_snd (w : Nat) (offsets : Array Nat) (i j : Nat)
+    (state : Array (Nat × Nat) × Array (Nat × Nat)) :
+    (jLoopBody w offsets i j state).2 =
+      if j - i > w then
+        pushRect (offsets.getD i 0) (offsets.getD (i+1) 0)
+                 (offsets.getD j 0) (offsets.getD (j+1) 0) state.2
+      else state.2 := by
+  unfold jLoopBody
+  split_ifs <;> rfl
+
+/-- Membership monotonicity in `pushRect`. -/
+private lemma mem_pushRect_mono (offI offI1 offJ offJ1 : Nat)
+    (out : Array (Nat × Nat)) (cd : Nat × Nat) :
+    cd ∈ out.toList → cd ∈ (pushRect offI offI1 offJ offJ1 out).toList := by
+  obtain ⟨c, d⟩ := cd
+  intro h; rw [mem_pushRect]; exact Or.inl h
+
+/-- Membership monotonicity in `jLoopBody`. -/
+private lemma mem_jLoopBody_mono (w : Nat) (offsets : Array Nat) (i j : Nat)
+    (state : Array (Nat × Nat) × Array (Nat × Nat)) (cd : Nat × Nat) :
+    (cd ∈ state.1.toList → cd ∈ (jLoopBody w offsets i j state).1.toList) ∧
+    (cd ∈ state.2.toList → cd ∈ (jLoopBody w offsets i j state).2.toList) := by
+  refine ⟨?_, ?_⟩
+  · intro h
+    rw [jLoopBody_fst]
+    split_ifs
+    · exact h
+    · exact mem_pushRect_mono _ _ _ _ _ _ h
+  · intro h
+    rw [jLoopBody_snd]
+    split_ifs
+    · exact mem_pushRect_mono _ _ _ _ _ _ h
+    · exact h
+
+/-- Membership monotonicity in foldl of `jLoopBody`. -/
+private lemma mem_foldl_jLoopBody_mono (w : Nat) (offsets : Array Nat) (i : Nat)
+    (l : List Nat) (state : Array (Nat × Nat) × Array (Nat × Nat))
+    (cd : Nat × Nat) :
+    (cd ∈ state.1.toList →
+      cd ∈ (l.foldl (fun st j => jLoopBody w offsets i j st) state).1.toList) ∧
+    (cd ∈ state.2.toList →
+      cd ∈ (l.foldl (fun st j => jLoopBody w offsets i j st) state).2.toList) := by
+  induction l generalizing state with
+  | nil => exact ⟨id, id⟩
+  | cons j rest ih =>
+    rw [List.foldl_cons]
+    obtain ⟨h1, h2⟩ := ih (jLoopBody w offsets i j state)
+    obtain ⟨k1, k2⟩ := mem_jLoopBody_mono w offsets i j state cd
+    exact ⟨fun h => h1 (k1 h), fun h => h2 (k2 h)⟩
+
 end OneThird.Step8.Case3Enum
