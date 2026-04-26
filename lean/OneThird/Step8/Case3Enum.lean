@@ -238,19 +238,27 @@ def hasBalancedPair (pred : Array Nat) (n : Nat) : Bool :=
   | some _ => true
   | none => hasBalancedPairSlow pred n
 
-/-! ### §5 — Enumerate all pred-masks over free pairs for a fixed
-`(w, band_sizes)` tuple. -/
+/-! ### §5 — Per-`(w, bs)` partition / pred-construction helpers
 
-/-- For a fixed `(w, band_sizes)` tuple, enumerate every closure-
-canonical mask, filter to irreducible posets with an adjacent-incomp
-cross-pair, and return `true` iff every surviving configuration
-admits a balanced pair. -/
-def enumPosetsFor (w : Nat) (bandSizes : List Nat) : Bool := Id.run do
-  let offsets := offsetsOf bandSizes
-  let K := bandSizes.length
-  let n : Nat := offsets.getD K 0
-  -- Partition cross-band pairs into `free` (band-gap ≤ w) and
-  -- `forced` (band-gap > w).
+These are extracted as standalone `def`s (rather than inlined inside
+the `enumPosetsFor` `Id.run do` block) so that the Bool↔Prop
+iteration theorem
+`OneThird.Step8.Case3Enum.enumPosetsFor_iter_balanced`
+(see `EnumPosetsForBridge.lean`) reduces to a single `unfold` of
+`enumPosetsFor`'s outer `forIn` body, without having to thread the
+two-mutable-variable partition phase through the `MProd`-state
+elaboration of the do-block. -/
+
+/-- Total number of poset elements at band-sizes `bs`. -/
+@[inline] def enumNOf (bs : List Nat) : Nat :=
+  (offsetsOf bs).getD bs.length 0
+
+/-- Partition `(a, b)`-pairs into `freeUV` (band-gap ≤ w) and
+`forcedUV` (band-gap > w). -/
+def enumPartition (w : Nat) (bs : List Nat) :
+    Array (Nat × Nat) × Array (Nat × Nat) := Id.run do
+  let offsets := offsetsOf bs
+  let K := bs.length
   let mut freeUV : Array (Nat × Nat) := #[]
   let mut forcedUV : Array (Nat × Nat) := #[]
   for i in [0:K] do
@@ -265,33 +273,72 @@ def enumPosetsFor (w : Nat) (bandSizes : List Nat) : Bool := Id.run do
             forcedUV := forcedUV.push (a, b)
           else
             freeUV := freeUV.push (a, b)
+  return (freeUV, forcedUV)
+
+/-- The free `(u, v)`-pairs at `(w, bs)`. -/
+@[inline] def enumFreeUVOf (w : Nat) (bs : List Nat) : Array (Nat × Nat) :=
+  (enumPartition w bs).1
+
+/-- The forced `(u, v)`-pairs at `(w, bs)`. -/
+@[inline] def enumForcedUVOf (w : Nat) (bs : List Nat) : Array (Nat × Nat) :=
+  (enumPartition w bs).2
+
+/-- The number of free `(u, v)`-pairs at `(w, bs)`. -/
+@[inline] def enumNfreeOf (w : Nat) (bs : List Nat) : Nat :=
+  (enumFreeUVOf w bs).size
+
+/-- Per-mask pred *before* the Warshall closure: starts with all-zeros,
+applies forced-edge pushes, then mask-gated free-edge pushes. -/
+def enumPredPreWarshallOf (w : Nat) (bs : List Nat) (mask : Nat) :
+    Array Nat := Id.run do
+  let n := enumNOf bs
+  let freeUV := enumFreeUVOf w bs
+  let forcedUV := enumForcedUVOf w bs
   let nfree := freeUV.size
+  let mut pred : Array Nat := Array.replicate n 0
+  for uv in forcedUV do
+    let (u, v) := uv
+    pred := pred.set! v ((pred.getD v 0) ||| bit u)
+  for k in [0:nfree] do
+    if testBit' mask k then
+      let (u, v) := freeUV.getD k (0, 0)
+      pred := pred.set! v ((pred.getD v 0) ||| bit u)
+  return pred
+
+/-- Per-mask pred at iteration `mask`, after the Warshall closure. -/
+@[inline] def enumPredAtMaskOf (w : Nat) (bs : List Nat) (mask : Nat) :
+    Array Nat :=
+  warshall (enumPredPreWarshallOf w bs mask) (enumNOf bs)
+
+/-- For a fixed `(w, band_sizes)` tuple, enumerate every closure-
+canonical mask, filter to irreducible posets with an adjacent-incomp
+cross-pair, and return `true` iff every surviving configuration
+admits a balanced pair.
+
+The body is factored through the per-mask helper `enumPredAtMaskOf`
+(which inlines the partition + pred-construction phases): this keeps
+the outer `forIn` body single-mutable (no `pred` accumulator needed)
+so that the iteration-theorem
+`enumPosetsFor_iter_balanced` (`EnumPosetsForBridge.lean`) reduces
+to a clean `unfold` + `forIn`-`.fst` characterization. -/
+def enumPosetsFor (w : Nat) (bandSizes : List Nat) : Bool := Id.run do
+  let nfree := enumNfreeOf w bandSizes
   -- `nfree ≤ 27` by the Python script; in the certified scope
   -- `nfree ≤ 18`.  Refuse enumeration on larger-than-supported
   -- inputs (should never trigger in the certified scope).
   if nfree > 27 then return false
   for mask in [0:1 <<< nfree] do
-    -- Allocate `pred` fresh each mask (owned refcount, so subsequent
-    -- `set!` calls mutate in place).
-    let mut pred : Array Nat := Array.replicate n 0
-    for uv in forcedUV do
-      let (u, v) := uv
-      pred := pred.set! v ((pred.getD v 0) ||| bit u)
-    for k in [0:nfree] do
-      if testBit' mask k then
-        let (u, v) := freeUV.getD k (0, 0)
-        pred := pred.set! v ((pred.getD v 0) ||| bit u)
-    pred := warshall pred n
-    if !closureCanonical pred mask freeUV then continue
+    let pred := enumPredAtMaskOf w bandSizes mask
+    if !closureCanonical pred mask (enumFreeUVOf w bandSizes) then continue
     -- Fast path: a symmetric pair exists — accept (the config is
     -- balanced regardless of whether it satisfies irreducibility/
     -- adjacent-incomp).  This discharges the vast majority of
     -- masks; the remaining asymmetric ones fall through to the full
     -- validity-then-DP path.
-    if (findSymmetricPair pred n).isSome then continue
-    if !irreducible pred offsets then continue
-    if !hasAdjacentIncomp pred offsets then continue
-    if !hasBalancedPairSlow pred n then return false
+    if (findSymmetricPair pred (enumNOf bandSizes)).isSome then continue
+    if !irreducible pred (offsetsOf bandSizes) then continue
+    if !hasAdjacentIncomp pred (offsetsOf bandSizes) then continue
+    if !hasBalancedPairSlow pred (enumNOf bandSizes) then return false
   return true
 
 /-! ### §6 — Band-sizes generator and top-level check -/

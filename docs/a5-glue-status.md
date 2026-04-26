@@ -118,28 +118,45 @@ follow-up work items:
 
 ### A5-G1: `enumPosetsFor` Prop-level reduction (gap (A))
 
-**Deliverable.** A theorem of the shape
+**Status:** ✅ **Done** (`mg-580e` partial → `mg-b487` completion).
+
+**Deliverable.** `Case3Enum.enumPosetsFor_iter_balanced`
+(`OneThird/Step8/Case3Enum/EnumPosetsForBridge.lean §5`):
 
 ```
 theorem enumPosetsFor_iter_balanced
-    (w : ℕ) (bs : List ℕ) (h : enumPosetsFor w bs = true)
-    (mask : ℕ) (hmask : mask < 1 <<< nfreeForBs w bs)
-    (h_canon : closureCanonical (...) mask freeUV = true)
-    (h_sym  : findSymmetricPair (...) n = none)
-    (h_irr  : irreducible (...) offsets = true)
-    (h_adj  : hasAdjacentIncomp (...) offsets = true) :
-    hasBalancedPairSlow (...) n = true
+    (w : Nat) (bs : List Nat) (h : enumPosetsFor w bs = true)
+    (mask : Nat) (hmask : mask < 1 <<< enumNfreeOf w bs)
+    (h_canon : closureCanonical (enumPredAtMaskOf w bs mask) mask
+      (enumFreeUVOf w bs) = true)
+    (h_sym : (findSymmetricPair (enumPredAtMaskOf w bs mask)
+      (enumNOf bs)).isSome = false)
+    (h_irr : irreducible (enumPredAtMaskOf w bs mask)
+      (offsetsOf bs) = true)
+    (h_adj : hasAdjacentIncomp (enumPredAtMaskOf w bs mask)
+      (offsetsOf bs) = true) :
+    hasBalancedPairSlow (enumPredAtMaskOf w bs mask) (enumNOf bs)
+      = true
 ```
 
-plus a companion form covering the fast-path
-(`findSymmetricPair = some _ → balanced via Symmetric`).
+plus the fast-path companion `hasBalancedPair_of_findSymmetricPair_some`.
 
-**Pattern.** Replay the `forIn`-`Bool`-state and
-`forIn`-`MProd (Option Bool) PUnit` reduction from
-`AdjIncompBridge §1` / `IrreducibleBridge §6` / `BalancedLift §7`,
-adapted to the doubly-nested partition + masked outer loop.
+**Pattern realized.** `mg-b487` refactored
+`Case3Enum.enumPosetsFor` (`Case3Enum.lean §5`) to call standalone
+helpers `enumPartition`, `enumPredPreWarshallOf`, `enumPredAtMaskOf`
+rather than carrying two mutable variables (`freeUV` / `forcedUV`)
+through nested for-loops. With the per-mask body now single-mutable
+(no `pred` accumulator inside the outer for-loop), the
+`forIn`-`MProd (Option Bool) PUnit` reduction of `AdjIncompBridge §1` /
+`IrreducibleBridge §6` / `BalancedLift §7` lifts directly via
+`unfold + Std.Legacy.Range.forIn_eq_forIn_range' + rfl`.
 
-**Estimate.** ~400-600 LOC.
+**LOC.** ~110 LOC (`Case3Enum.lean` helpers ~75 LOC + new
+`EnumPosetsForBridge.lean` reduction theorem ~100 LOC; the §1–§3
+case-analysis lemmas were already landed by `mg-580e`).
+Refactor preserves observable behaviour: the W1-W4 native_decide
+certificates (`case3_balanced_w{1,2,3,4}`) still evaluate
+unchanged.
 
 ### A5-G2: in-scope glue (gap (B) + composition)
 
