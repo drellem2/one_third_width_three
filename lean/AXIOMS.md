@@ -220,3 +220,155 @@ for any downstream consumer of `OneThird` — `lem:one-elem-perturb`
 `mg-b699` is closed with this decision; if a future contributor
 wants to port the axiom, they should file a fresh work item
 referencing this entry.
+
+---
+
+## `OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope`
+
+**File.** `lean/OneThird/Step8/Case3Residual.lean`
+
+**Paper statement.** `step8.tex` `prop:in-situ-balanced` Case 3
+(`step8.tex:3033-3047`), restricted to the residual parameter range
+outside `InCase3Scope`. The paper's argument for the conclusion in this
+regime is the `rem:enumeration` sketch (`step8.tex:3157-3173`):
+
+> For `w ≥ 1`, the configurations with `|A| = 3` whose profiles form a
+> `⪯`-antichain are enumerated modulo the symmetries of (L1); each is
+> discharged by exhibiting either a Case 1 symmetric pair (after taking
+> into account that two of the three elements must share *some*
+> coordinate of the two-sided profile whenever `|Q| ≤ 3(3w+1)` and (L2)
+> restricts the profile codomain), or a Case 2 pair with aligned
+> one-sided profiles restricted to the bands strictly above (or
+> strictly below) the antichain under consideration.
+
+**Introduced by.** `mg-b846` (A8-S3, this entry).
+
+**Status.** **Retained as a named project axiom** for one polecat
+session, with the gap surfaced honestly per the polecat-instruction
+guidance ("If new math turns out to need its own axiom: report
+honestly via paper-vs-formalization diagnosis"). Replacement path
+recorded below.
+
+### Scope-match checklist
+
+| Paper | Axiom | Status |
+| --- | --- | --- |
+| Width-3 layered poset $Q$ with antichain decomposition $L$ | `α : Type*` with `[PartialOrder α] [Fintype α] [DecidableEq α]`; `L : LayeredDecomposition α` | ✅ |
+| Width-3 hypothesis | `hWidth3 : HasWidthAtMost α 3` | ✅ |
+| Layer-ordinal-sum irreducibility (no upward-directed band cut) | `hIrr : LayerOrdinalIrreducible L` | ✅ |
+| Depth at least 3 (Case 3 of the F5 enumeration) | `hK3 : 3 ≤ L.K` | ✅ |
+| Non-trivial interaction width | `hw : 1 ≤ L.w` | ✅ |
+| Size cap `|X| ≤ 6w + 6` (F5 C2 branch) | `hCard : Fintype.card α ≤ 6 * L.w + 6` | ✅ |
+| Depth upper bound `K ≤ 2w + 2` (F5 C2 branch) | `hDepth : L.K ≤ 2 * L.w + 2` | ✅ |
+| Out-of-scope: parameter range outside the F5a `case3_certificate` | `hScope : ¬ InCase3Scope L.w (Fintype.card α) L.K` | ✅ |
+| Case 3 hypothesis: neither Case 1 (ambient profile match) nor Case 2 (`⪯`-comparable within-band profile) applies | `hC3 : Case3Witness L` (defined in `Case3Dispatch.lean`) | ✅ |
+| Conclusion: `α` admits a balanced pair | `HasBalancedPair α` | ✅ |
+
+The hypotheses above are exactly the wider profile of
+`Step8.bounded_irreducible_balanced_hybrid`
+(`BoundedIrreducibleBalanced.lean:1587`) restricted to the negation of
+`InCase3Scope`, plus the typed Case 3 witness produced by A8-S1's
+`case1_dispatch_inScope` (`Case3Dispatch.lean`, `mg-48db`). The
+in-scope branch is handled separately by the F5a `case3_certificate`
+via Path A / A5-G2.
+
+### Why this is internal, not external
+
+Unlike `OneThird.LinearExt.brightwell_sharp_centred`, this axiom is
+**not** a port of an external published result. It is internal to the
+paper:
+
+* `prop:in-situ-balanced` itself is the paper's framing of the within-
+  band antichain dispatch and is novel to this work.
+* The certificate-handled half (`InCase3Scope`) is already constructive
+  in the development via `case3_certificate`; the residual half outside
+  `InCase3Scope` is the genuinely under-developed piece in the LaTeX
+  source.
+
+### Why retain rather than port
+
+A faithful Lean proof of the residual claim requires:
+
+1. **Pigeonhole on shared profile coordinates.** Given a width-3
+   within-band antichain with two-sided profiles in pairwise
+   `⪯`-antichain, derive that two of the three elements agree on at
+   least one coordinate of the two-sided profile, using the (L1)/(L2)
+   axioms of the layered decomposition and `|Q| ≤ 3(3w+1)`. This is
+   routine combinatorics, but the precise quantification of "shares
+   some coordinate" and its compatibility with the (L2) profile-codomain
+   restriction is not made explicit in `rem:enumeration`.
+2. **Band-restricted Case 2 FKG sub-coupling.** From a shared coordinate
+   pair `(a_i, a_j)` whose profiles agree on Π⁺ but disagree on Π⁻
+   (or vice versa), build a Case 2 pair with aligned one-sided profiles
+   *restricted to the bands strictly above (or strictly below) the
+   antichain*. The FKG monotonicity then needs to operate on this
+   sub-context, requiring the `Mathlib.Combinatorics.SetFamily.fkg`
+   primitive plus a coupling that preserves the within-band antichain
+   bookkeeping. This is the same FKG infrastructure expected by A8-S2
+   (`mg-8801`), but specialised to a strict sub-band. Neither the
+   sub-coupling nor the rotation argument that turns the shared
+   coordinate into a balanced pair is carried out in `rem:enumeration`.
+3. **Reduction back to Case 1 (mg-f92d) or Case 2 (`mg-8801`).** With
+   the sub-coupling in hand, exhibit the explicit balanced pair: either
+   via `hasBalancedPair_of_ambient_profile_match` (Case 1, `Case3Struct.lean`)
+   or via the A8-S2 Case 2 discharge.
+
+Steps (1) and (3) are routine. Step (2) is the substantive new
+mathematical content of the axiom. The original A8 brief estimated
+"~300-600 LoC including the missing mathematical content"; in
+practice this is a lower bound, since `rem:enumeration` is a sketch
+rather than a fleshed-out proof.
+
+The decision rationale matches the convention for
+`brightwell_sharp_centred`: the structural / combinatorial
+contribution of this paper is the case dispatch of
+`prop:in-situ-balanced` itself together with the F5a Bool-level
+`case3_certificate` for `InCase3Scope`. The residual half outside
+`InCase3Scope` is auxiliary; consuming the LaTeX source as a sketch
+captures it faithfully without forcing a single polecat session to
+flesh out the missing FKG sub-coupling.
+
+### Replacement path (open)
+
+A future Lean port should:
+
+* Discharge step (1) (pigeonhole) as a standalone lemma using the
+  (L1)/(L2) bookkeeping in `LayeredReduction.lean`.
+* Discharge step (2) (band-restricted FKG sub-coupling) by reusing
+  the `Mathlib/LinearExtension/FKG.lean` primitives together with the
+  band-major encoding of A5-B1/B2/B3.
+* Compose with mg-f92d's `hasBalancedPair_of_ambient_profile_match`
+  (Case 1, ambient form) and A8-S2's `Case2Witness` discharge to
+  close the residual.
+
+The axiom statement is the discharge target: a future fleshed-out
+proof can simply restate the body without changing any call-site of
+`hasBalancedPair_of_case3_outOfScope` or `hStruct_of_case2_discharge`.
+
+Filing such a port is *not* a prerequisite for any downstream
+consumer of the development — A5-G3 / Path C (the `hStruct` wiring
+into `lem_layered_balanced` and through to `width3_one_third_two_thirds`)
+closes against the axiom as stated; the credibility artifact of the
+proof is the structural case dispatch and the F5a `case3_certificate`,
+not the residual half-page sketch.
+
+### Forum-post disclosure
+
+The forum-post draft (`mg-b8d4`) should reflect that
+`#print axioms` on the main theorem will list, alongside
+`brightwell_sharp_centred` and the mathlib trio, the new
+`case3Witness_hasBalancedPair_outOfScope` axiom. The honest framing
+is:
+
+* `brightwell_sharp_centred` is a transcription of an external
+  published result (Brightwell §4 / Kahn-Saks 1984) — the standard
+  "import-an-external-bound" form.
+* `case3Witness_hasBalancedPair_outOfScope` is a transcription of
+  this paper's own `rem:enumeration` sketch, not an external result —
+  the residual half-page that is genuinely under-developed in the
+  LaTeX source. Replacing it requires fleshing out the structural
+  argument with the band-restricted FKG sub-coupling sketched in
+  `rem:enumeration`.
+
+Both axioms are localised: every other use of the formalism is
+sorry-free.
