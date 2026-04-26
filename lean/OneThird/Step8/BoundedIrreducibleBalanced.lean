@@ -10,6 +10,7 @@ import OneThird.Step8.Case3Enum.Certificate
 import OneThird.Step8.Case3Enum.Correctness
 import Mathlib.Tactic.IntervalCases
 import Mathlib.Tactic.Linarith
+import Mathlib.Algebra.BigOperators.Fin
 
 /-!
 # Step 8 — Bounded-irreducible-balanced: Prop-level lift of the F5a
@@ -557,25 +558,34 @@ lemma card_bandFiber_eq (L : LayeredDecomposition α) :
   -- Direct: the bijection `bandFiberEquiv` provides this.
   exact (Fintype.card_congr (bandFiberEquiv L)).symm
 
+/-- Fin-indexed version of `sum_bandSize_eq_card`: `∑ k : Fin L.K, |M_{k+1}|
+= |α|`. Used to align `finSigmaFinEquiv`'s codomain index with
+`Fintype.card α`. -/
+lemma sum_bandSize_eq_card_fin (L : LayeredDecomposition α) :
+    (∑ k : Fin L.K, bandSize L (k.val + 1)) = Fintype.card α := by
+  rw [Fin.sum_univ_eq_sum_range (f := fun i => bandSize L (i + 1))]
+  exact sum_bandSize_eq_card L
+
 /-- **Band-major Equiv `α ≃ Fin (Fintype.card α)`** (Path A1, mg-449b).
 
-Built from the band-major Sigma decomposition via the canonical
-`Fintype.equivFinOfCardEq`. The forward map sends each `x : α` to a
-`Fin (Fintype.card α)` index in the slot reserved for `band x`; the
-within-band order is an arbitrary canonical choice. The bijection's
-purpose is to set up the encoding of an abstract layered poset onto
-the predecessor-bitmask representation used by F5a's
-`Case3Enum.hasBalancedPair`.
+Built from the band-major Sigma decomposition by composing
+* `bandFiberEquiv L : α ≃ Σ k : Fin L.K, ↥(L.bandSet (k.val + 1))` (band split),
+* `Equiv.sigmaCongrRight bandFinEquiv` (within-band labelling),
+* `finSigmaFinEquiv : Σ k, Fin (n k) ≃ Fin (∑ k, n k)` (Mathlib),
+* `finCongr (sum_bandSize_eq_card_fin L)` (cardinality alignment).
 
-The "band-major" property — that band-`i` elements land in slot
-`[Σ_{j<i} |M_j|, Σ_{j≤i} |M_j|)` — is the content of the subsequent
-`bandMajorEquiv_band_range` family of lemmas (Path A2 territory:
-they're the bridge from this bijection to the predecessor-bitmask
-encoding's positional layout). -/
+The forward map sends each `x : α` to a `Fin (Fintype.card α)` index in
+the slot reserved for `band x`; the within-band order is an arbitrary
+canonical choice (the per-band `Fintype.equivFin`).
+
+The "band-major" property — that band-`(k+1)` elements land in slot
+`[bandOffset L k, bandOffset L (k+1))` — is the content of the
+subsequent `bandMajorEquiv_val_lt_bandOffset_iff` family of lemmas. -/
 noncomputable def bandMajorEquiv (L : LayeredDecomposition α) :
     α ≃ Fin (Fintype.card α) :=
-  (bandFiberEquiv L).trans
-    (Fintype.equivFinOfCardEq (card_bandFiber_eq L))
+  (bandFiberEquiv L).trans <|
+    (Equiv.sigmaCongrRight (fun k : Fin L.K => bandFinEquiv L (k.val + 1))).trans <|
+      finSigmaFinEquiv.trans (finCongr (sum_bandSize_eq_card_fin L))
 
 end BandMajor
 
