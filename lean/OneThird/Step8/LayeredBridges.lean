@@ -236,50 +236,57 @@ noncomputable def layeredFromBridges : LayeredDecomposition α := by
           (Fintype.card α - (∅ : Finset α).card + 1 : ℚ) := by
     intro hcard x y
     exact OneThird.LinearExt.exc_perturb (∅ : Finset α) hcard x y
-  -- Build the ground-set `LayeredDecomposition`. Key change vs. the prior
-  -- sham: `w := Lwidth3.bandwidth` (verbatim Step 7 bandwidth) rather than
-  -- `Fintype.card α + Lwidth3.bandwidth`.
+  -- Build the ground-set `LayeredDecomposition`. Key changes:
+  --   1. `w := Lwidth3.bandwidth` (verbatim Step 7 bandwidth) rather
+  --      than the prior sham `Fintype.card α + Lwidth3.bandwidth`.
+  --   2. The band map uses a Szpilrajn linear extension `e` rather than
+  --      the arbitrary `Fintype.equivFin`. This is needed to discharge
+  --      the `cross_band_lt_upward` field (added in `mg-53ce` /
+  --      A5-G2 path 1): `e` is monotone, so `x < y → band x ≤ band y`.
+  let e : LinearExt α := LinearExt.szpilrajn α
   exact
     { K := Fintype.card α
       w := Lwidth3.bandwidth
-      band := fun x => (Fintype.equivFin α x).val + 1
+      band := fun x => (e.toFun x).val + 1
       band_pos := fun _ => Nat.succ_le_succ (Nat.zero_le _)
       band_le := fun x => by
-        have : (Fintype.equivFin α x).val < Fintype.card α :=
-          (Fintype.equivFin α x).isLt
+        have : (e.toFun x).val < Fintype.card α := (e.toFun x).isLt
         omega
       band_size := fun k => by
         have h1 : ((Finset.univ : Finset α).filter
-            (fun x => (Fintype.equivFin α x).val + 1 = k)).card ≤ 1 := by
+            (fun x => (e.toFun x).val + 1 = k)).card ≤ 1 := by
           rw [Finset.card_le_one]
           intro a ha b hb
           simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha hb
-          have heq : (Fintype.equivFin α a).val = (Fintype.equivFin α b).val := by
-            omega
-          exact (Fintype.equivFin α).injective (Fin.ext heq)
+          have heq : (e.toFun a).val = (e.toFun b).val := by omega
+          exact e.toFun.injective (Fin.ext heq)
         omega
       band_antichain := fun k => by
-        -- Each band has ≤ 1 element (equivFin is injective), so trivially
+        -- Each band has ≤ 1 element (e.toFun is injective), so trivially
         -- an antichain.
         intro a ha b hb hne
         simp only [Finset.coe_filter, Finset.mem_univ, true_and,
           Set.mem_setOf_eq] at ha hb
-        have heq : (Fintype.equivFin α a).val = (Fintype.equivFin α b).val := by
-          omega
-        exact absurd ((Fintype.equivFin α).injective (Fin.ext heq)) hne
+        have heq : (e.toFun a).val = (e.toFun b).val := by omega
+        exact absurd (e.toFun.injective (Fin.ext heq)) hne
       forced_lt := fun x y hlt => by
         -- `Lwidth3.bandwidth = Fintype.card α + 1` by `hbw`, so
         -- `band x + w ≥ 1 + (|α| + 1) > |α| ≥ band y`; the hypothesis
-        -- cannot hold. (L2) is thus vacuously true — the structural w
-        -- equals Step 7's bandwidth verbatim, and a tightening to
-        -- `w = O_T(1)` with non-vacuous (L2) is future work on
-        -- `rem:layered-from-step7` consuming `_D`.
+        -- cannot hold. (L2-forced) is thus vacuously true — the
+        -- structural w equals Step 7's bandwidth verbatim, and a
+        -- tightening to `w = O_T(1)` with non-vacuous (L2) is future
+        -- work on `rem:layered-from-step7` consuming `_D`.
         exfalso
-        have hy : (Fintype.equivFin α y).val + 1 ≤ Fintype.card α := by
-          have : (Fintype.equivFin α y).val < Fintype.card α :=
-            (Fintype.equivFin α y).isLt
+        have hy : (e.toFun y).val + 1 ≤ Fintype.card α := by
+          have : (e.toFun y).val < Fintype.card α := (e.toFun y).isLt
           omega
         rw [hbw] at hlt
+        omega
+      cross_band_lt_upward := fun x y h => by
+        -- `e` is monotone, so `x ≤ y → e.toFun x ≤ e.toFun y`,
+        -- hence the band indices are non-decreasing.
+        have hle : e.toFun x ≤ e.toFun y := e.monotone h.le
+        have hv : (e.toFun x).val ≤ (e.toFun y).val := hle
         omega }
 
 end Step8

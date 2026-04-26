@@ -139,55 +139,66 @@ structure MainTheoremInputs (α : Type*) [PartialOrder α]
 /-- **Trivial layered decomposition.**
 
 For any non-empty finite poset with decidable equality we can assign
-each element its own band via `Fintype.equivFin`, taking depth
-`K = |α|` and interaction width `w = |α|`. Under this choice:
+each element its own band via the position map of a Szpilrajn linear
+extension `e : LinearExt α`, taking depth `K = |α|` and interaction
+width `w = |α|`. Under this choice:
 
-* each band contains at most one element (injectivity of `equivFin`),
+* each band contains at most one element (injectivity of `e.toFun`),
   so `(L1)` holds trivially with slack;
-* `band x + w ≥ 1 + |α| > |α| ≥ band y`, so the hypothesis of `(L2)`
-  is never satisfied — `forced_lt` holds vacuously.
+* `band x + w ≥ 1 + |α| > |α| ≥ band y`, so the hypothesis of
+  `(L2-forced)` is never satisfied — `forced_lt` holds vacuously;
+* `e` is monotone, so `x < y` forces `e.toFun x ≤ e.toFun y` and
+  hence `band x ≤ band y` — `(L2-upward)` /
+  `cross_band_lt_upward` holds.
+
+The choice of a Szpilrajn linear extension (rather than the arbitrary
+`Fintype.equivFin`) is what makes `cross_band_lt_upward` provable
+here; it was added in `mg-53ce` / A5-G2 path 1.
 
 This witness is sufficient to discharge `caseR_to_caseC` in the
 `MainTheoremInputs` bundle: the GAP G4 lemma `lem_layered_balanced`
 closes *any* layered decomposition to a balanced pair (using only
 `2 ≤ |α|` and the non-chain hypothesis). -/
-noncomputable def trivialLayered : LayeredDecomposition α where
-  K := Fintype.card α
-  w := Fintype.card α
-  band := fun x => (Fintype.equivFin α x).val + 1
-  band_pos := fun _ => Nat.succ_le_succ (Nat.zero_le _)
-  band_le := fun x => by
-    have : (Fintype.equivFin α x).val < Fintype.card α :=
-      (Fintype.equivFin α x).isLt
-    omega
-  band_size := fun k => by
-    have h1 : ((Finset.univ : Finset α).filter
-        (fun x => (Fintype.equivFin α x).val + 1 = k)).card ≤ 1 := by
-      rw [Finset.card_le_one]
-      intro a ha b hb
-      simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha hb
-      have heq : (Fintype.equivFin α a).val = (Fintype.equivFin α b).val := by
+noncomputable def trivialLayered : LayeredDecomposition α := by
+  let e : LinearExt α := LinearExt.szpilrajn α
+  exact
+    { K := Fintype.card α
+      w := Fintype.card α
+      band := fun x => (e.toFun x).val + 1
+      band_pos := fun _ => Nat.succ_le_succ (Nat.zero_le _)
+      band_le := fun x => by
+        have : (e.toFun x).val < Fintype.card α := (e.toFun x).isLt
         omega
-      exact (Fintype.equivFin α).injective (Fin.ext heq)
-    omega
-  band_antichain := fun k => by
-    -- Each band has ≤ 1 element (equivFin is injective), so is trivially
-    -- an antichain.
-    intro a ha b hb hne
-    simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_univ, true_and,
-      Set.mem_setOf_eq] at ha hb
-    have heq : (Fintype.equivFin α a).val = (Fintype.equivFin α b).val := by
-      omega
-    exact absurd ((Fintype.equivFin α).injective (Fin.ext heq)) hne
-  forced_lt := fun x y hlt => by
-    exfalso
-    have hx : 1 ≤ (Fintype.equivFin α x).val + 1 :=
-      Nat.succ_le_succ (Nat.zero_le _)
-    have hy : (Fintype.equivFin α y).val + 1 ≤ Fintype.card α := by
-      have : (Fintype.equivFin α y).val < Fintype.card α :=
-        (Fintype.equivFin α y).isLt
-      omega
-    omega
+      band_size := fun k => by
+        have h1 : ((Finset.univ : Finset α).filter
+            (fun x => (e.toFun x).val + 1 = k)).card ≤ 1 := by
+          rw [Finset.card_le_one]
+          intro a ha b hb
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha hb
+          have heq : (e.toFun a).val = (e.toFun b).val := by omega
+          exact e.toFun.injective (Fin.ext heq)
+        omega
+      band_antichain := fun k => by
+        -- Each band has ≤ 1 element (e.toFun is injective), so trivially
+        -- an antichain.
+        intro a ha b hb hne
+        simp only [Finset.coe_filter, Finset.mem_coe, Finset.mem_univ, true_and,
+          Set.mem_setOf_eq] at ha hb
+        have heq : (e.toFun a).val = (e.toFun b).val := by omega
+        exact absurd (e.toFun.injective (Fin.ext heq)) hne
+      forced_lt := fun x y hlt => by
+        exfalso
+        have hx : 1 ≤ (e.toFun x).val + 1 := Nat.succ_le_succ (Nat.zero_le _)
+        have hy : (e.toFun y).val + 1 ≤ Fintype.card α := by
+          have : (e.toFun y).val < Fintype.card α := (e.toFun y).isLt
+          omega
+        omega
+      cross_band_lt_upward := fun x y h => by
+        -- `e` is monotone, so `x ≤ y → e.toFun x ≤ e.toFun y`,
+        -- hence the band indices are non-decreasing.
+        have hle : e.toFun x ≤ e.toFun y := e.monotone h.le
+        have hv : (e.toFun x).val ≤ (e.toFun y).val := hle
+        omega }
 
 /-! ### §1c — Bridge-derived `LayeredDecomposition`
 

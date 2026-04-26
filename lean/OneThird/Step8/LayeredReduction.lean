@@ -25,11 +25,16 @@ of a finite width-3 poset `P = (α, ≤)` records:
 subject to the layered axioms
 
 * `(L1)` each band has size `≤ 3`;
-* `(L2)` if `band x + w < band y`, then `x < y` (the *forced*
-  cross-band comparability).
+* `(L2-forced)` if `band x + w < band y`, then `x < y` (the *forced*
+  cross-band comparability);
+* `(L2-upward)` if `x < y` in the partial order, then
+  `band x ≤ band y` (cross-band comparabilities are directed
+  upward — the §sec:g4 setup property of the paper, recorded as
+  `cross_band_lt_upward` and added in mg-53ce / A5-G2 path 1).
 
 `(L3)` of the paper (comparability whenever `|band i − band j| > w`)
-follows from `(L2)` by symmetry, so we do not require it as an axiom.
+follows from `(L2-forced)` by symmetry, so we do not require it as
+an axiom.
 
 ## Main results
 
@@ -74,11 +79,20 @@ a finite poset `P = (α, ≤)` records:
 
 * `band : α → ℕ` — band index in `[1, K]`;
 * `(L1)` `band_size : ∀ k, |{x : band x = k}| ≤ 3`;
-* `(L2)` `forced_lt : ∀ x y, band x + w < band y → x < y`.
+* `(L2-forced)` `forced_lt : ∀ x y, band x + w < band y → x < y`;
+* `(L2-upward)` `cross_band_lt_upward : ∀ x y, x < y → band x ≤ band y`.
+
+`(L2-upward)` records the paper's §sec:g4 setup property "cross-band
+comparabilities are directed upward". It was originally argued
+informally in `step8.tex` `prop:in-situ-balanced` (`step8.tex:2965-3048`)
+without an explicit Lean field; the `mg-53ce` polecat report
+(`docs/a5-g2-status.md`) diagnosed the missing axiom as the (L2)
+gap blocking `bounded_irreducible_balanced_inScope`. Path 1 of the
+resolution (this work) makes it a structural field.
 
 The condition `(L3)` of the paper (`|i − j| > w` ⇒ comparability)
-follows from `(L2)` applied symmetrically, so we omit it as a
-field. -/
+follows from `(L2-forced)` applied symmetrically, so we omit it as
+a field. -/
 structure LayeredDecomposition (α : Type*)
     [PartialOrder α] [Fintype α] where
   /-- Depth of the layering. -/
@@ -101,9 +115,19 @@ structure LayeredDecomposition (α : Type*)
     ∀ k : ℕ,
       IsAntichain (· ≤ ·)
         ((((Finset.univ : Finset α).filter (fun x => band x = k)) : Set α))
-  /-- (L2) Far-apart bands force comparability `x < y`
+  /-- (L2-forced) Far-apart bands force comparability `x < y`
   (`step8.tex:1894-1901`). -/
   forced_lt : ∀ x y : α, band x + w < band y → x < y
+  /-- (L2-upward) Cross-band comparabilities are directed upward:
+  if `x < y` in the partial order, then `band x ≤ band y`.
+
+  This is the paper's §sec:g4 setup property — see the
+  `prop:in-situ-balanced` discussion (`step8.tex:2965-3048`) — and
+  was added as an explicit field in `mg-53ce` / A5-G2 path 1 to close
+  the (L2) gap diagnosed in `docs/a5-g2-status.md`. With this field,
+  the band-major encoding `predMaskOf L` is upper-triangular, which
+  is what the F5a Bool certificate's enumeration requires. -/
+  cross_band_lt_upward : ∀ x y : α, x < y → band x ≤ band y
 
 namespace LayeredDecomposition
 
@@ -210,6 +234,7 @@ noncomputable def restrict (L : LayeredDecomposition α) (S : Finset α) :
         exact hb)
       hne_α hle_α
   forced_lt x y h := L.forced_lt x.val y.val h
+  cross_band_lt_upward x y h := L.cross_band_lt_upward x.val y.val h
 
 /-! ### §1c — `restrict` API lemmas -/
 
