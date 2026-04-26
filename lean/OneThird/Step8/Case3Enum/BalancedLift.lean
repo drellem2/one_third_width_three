@@ -421,7 +421,7 @@ open Case3Enum
 /-! #### §4.1 — `set!` / `getD` helpers -/
 
 /-- `(out.set! v w).getD v' 0` analyzed by case on `v' = v` and bounds. -/
-private lemma getD_set!_eq (out : Array Nat) (v : Nat) (w : Nat) (v' : Nat) :
+lemma getD_set!_eq (out : Array Nat) (v : Nat) (w : Nat) (v' : Nat) :
     (out.set! v w).getD v' 0 =
       if v' = v ∧ v < out.size then w else out.getD v' 0 := by
   rw [Array.set!_eq_setIfInBounds]

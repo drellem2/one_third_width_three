@@ -377,6 +377,329 @@ theorem findSymmetricPair_isSome_imp_symmetric_aux (pred : Array Nat) (n : ℕ)
       at h_sx_sy_z
     rw [h_sx_sy_z]
 
+/-! ## §3 — `successorMasks` bit-correctness (A5-G3a-followup, `mg-792a`)
+
+Discharges the explicit `h_succ` hypothesis of
+`findSymmetricPair_isSome_imp_symmetric_aux`.  The pattern parallels
+`BalancedLift.lean` §4: imperative `successorMasks` is reduced to a
+nested `forIn` whose inner step is a gated `set!` of `bit v` into
+`out[u]`.  We then track, by induction on the outer-loop prefix, the
+position-by-position bit-state of the accumulator. -/
+
+/-- Functional inner step of `successorMasks`: gated OR of `bit v`
+into `out[u]`, conditioned on `testBit' pv u`. -/
+private def succInnerStep (v pv u : ℕ) (out : Array Nat) : Array Nat :=
+  if testBit' pv u then out.set! u (out.getD u 0 ||| bit v) else out
+
+private lemma succInnerStep_size (v pv u : ℕ) (out : Array Nat) :
+    (succInnerStep v pv u out).size = out.size := by
+  unfold succInnerStep
+  split_ifs <;> simp
+
+/-- Bit-effect of `succInnerStep` at a specific (u', b') position. -/
+private lemma succInnerStep_testBit (v pv u u' b' : ℕ) (out : Array Nat) :
+    Nat.testBit ((succInnerStep v pv u out).getD u' 0) b' =
+      (Nat.testBit (out.getD u' 0) b' ||
+        (decide (u' = u) && decide (u < out.size) &&
+         testBit' pv u && decide (b' = v))) := by
+  unfold succInnerStep
+  by_cases h : testBit' pv u = true
+  · rw [if_pos h, getD_set!_eq]
+    by_cases hu' : u' = u
+    · subst hu'
+      by_cases hsz : u' < out.size
+      · rw [if_pos ⟨rfl, hsz⟩, Nat.testBit_or]
+        have hbit : Nat.testBit (bit v) b' = decide (b' = v) := by
+          unfold bit
+          rw [Nat.one_shiftLeft, Nat.testBit_two_pow]
+          by_cases h_eq : v = b'
+          · subst h_eq; simp
+          · have h_eq' : ¬ b' = v := fun heq => h_eq heq.symm
+            simp [h_eq, h_eq']
+        rw [hbit]
+        simp [h, hsz]
+      · rw [if_neg (fun ⟨_, h2⟩ => hsz h2)]
+        simp [h, hsz]
+    · rw [if_neg (fun ⟨h1, _⟩ => hu' h1)]
+      simp [hu']
+  · rw [if_neg h]
+    have hf : testBit' pv u = false := by
+      cases hb : testBit' pv u
+      · rfl
+      · exact absurd hb h
+    simp [hf]
+
+/-- Imperative outer body of `successorMasks` (in imperative shape for
+`rfl`-reduction; `succOuterBody_eq` gives the functional form). -/
+private def succOuterBody (pred : Array Nat) (n : ℕ) :
+    Nat → Array Nat → Id (ForInStep (Array Nat)) :=
+  fun v acc =>
+    (do
+      pure PUnit.unit
+      let r ← (forIn (m := Id) (List.range' 0 n) acc (fun u acc' =>
+        if testBit' (pred.getD v 0) u then
+          (do pure PUnit.unit;
+              pure (ForInStep.yield (acc'.set! u (acc'.getD u 0 ||| bit v))) : Id _)
+        else
+          (do pure PUnit.unit; pure (ForInStep.yield acc') : Id _)) : Id _)
+      pure (ForInStep.yield r))
+
+/-- `successorMasks` reduces to a `forIn` over its outer body. -/
+private lemma successorMasks_imperative_eq (pred : Array Nat) (n : ℕ) :
+    Case3Enum.successorMasks pred n =
+      forIn (m := Id) (List.range' 0 n)
+        (Array.replicate n 0 : Array Nat) (succOuterBody pred n) := by
+  classical
+  unfold Case3Enum.successorMasks succOuterBody
+  simp only [Std.Legacy.Range.forIn_eq_forIn_range', Std.Legacy.Range.size,
+    Nat.sub_zero, Nat.add_sub_cancel, Nat.div_one]
+  rfl
+
+/-- Inner imperative body equals `pure (yield (succInnerStep ...))`. -/
+private lemma succ_inner_body_eq (v pv u : ℕ) (out : Array Nat) :
+    (if testBit' pv u then
+      (do pure PUnit.unit;
+          pure (ForInStep.yield (out.set! u (out.getD u 0 ||| bit v))) : Id _)
+    else
+      (do pure PUnit.unit; pure (ForInStep.yield out) : Id _)) =
+    (pure (ForInStep.yield (succInnerStep v pv u out)) : Id _) := by
+  unfold succInnerStep
+  split_ifs <;> rfl
+
+/-- Functional outer step. -/
+private def succOuterStep (pred : Array Nat) (n v : ℕ) (out : Array Nat) :
+    Array Nat :=
+  forIn (m := Id) (List.range' 0 n) out (fun u acc =>
+    (pure (ForInStep.yield (succInnerStep v (pred.getD v 0) u acc)) : Id _))
+
+private lemma succOuterStep_size (pred : Array Nat) (n v : ℕ) (out : Array Nat) :
+    (succOuterStep pred n v out).size = out.size := by
+  unfold succOuterStep
+  generalize hL : (List.range' 0 n) = lo
+  clear hL
+  induction lo generalizing out with
+  | nil => rfl
+  | cons u us ih =>
+    rw [List.forIn_cons]
+    show (forIn (m := Id) us
+      (succInnerStep v (pred.getD v 0) u out) _).size = out.size
+    rw [ih]
+    exact succInnerStep_size ..
+
+/-- Outer body equals functional outer step under `pure (yield ...)`. -/
+private lemma succOuterBody_eq (pred : Array Nat) (n v : ℕ) (out : Array Nat) :
+    succOuterBody pred n v out =
+      (pure (ForInStep.yield (succOuterStep pred n v out)) : Id _) := by
+  unfold succOuterBody succOuterStep
+  have hbody_eq :
+    (fun (u : Nat) (acc' : Array Nat) =>
+      (if testBit' (pred.getD v 0) u then
+        (do pure PUnit.unit;
+            pure (ForInStep.yield (acc'.set! u (acc'.getD u 0 ||| bit v))) : Id _)
+      else
+        (do pure PUnit.unit; pure (ForInStep.yield acc') : Id _) :
+        Id (ForInStep (Array Nat)))) =
+    fun u acc' =>
+      (pure (ForInStep.yield
+        (succInnerStep v (pred.getD v 0) u acc')) : Id _) := by
+    funext u acc'
+    exact succ_inner_body_eq v _ u acc'
+  rw [hbody_eq]
+  rfl
+
+/-- `forIn`-cons reduction for the outer body. -/
+private lemma succ_outer_forIn_cons (pred : Array Nat) (n v : ℕ)
+    (init : Array Nat) (vs : List ℕ) :
+    (forIn (m := Id) (v :: vs) init (succOuterBody pred n) : Array Nat) =
+      forIn (m := Id) vs (succOuterStep pred n v init) (succOuterBody pred n) := by
+  rw [List.forIn_cons, succOuterBody_eq]
+  rfl
+
+/-- Bit-effect of the inner `forIn`: at position `(u', b')`, OR-ing over
+the iteration sets bit `v` of `out[u']` whenever `u' ∈ lo` (so `u'` is
+visited) and `testBit' pv u'` (so the gate fires) and `b' = v`. -/
+private lemma succ_inner_forIn_testBit (pred : Array Nat) (n v : ℕ) :
+    ∀ (lo : List ℕ) (init : Array Nat),
+    init.size = n →
+    (∀ u ∈ lo, u < n) →
+    ∀ u' b' : ℕ,
+    Nat.testBit ((forIn (m := Id) lo init (fun u acc =>
+        (pure (ForInStep.yield
+          (succInnerStep v (pred.getD v 0) u acc)) : Id _))).getD u' 0) b' =
+      (Nat.testBit (init.getD u' 0) b' ||
+        (decide (u' ∈ lo) && testBit' (pred.getD v 0) u' && decide (b' = v))) := by
+  intro lo
+  induction lo with
+  | nil =>
+    intro init _ _ u' b'
+    show Nat.testBit (init.getD u' 0) b' = _
+    simp
+  | cons u us ih =>
+    intro init hsize hbound u' b'
+    rw [List.forIn_cons]
+    show Nat.testBit ((forIn (m := Id) us
+      (succInnerStep v (pred.getD v 0) u init) _).getD u' 0) b' = _
+    have hu_lt : u < n := hbound u List.mem_cons_self
+    have hbound' : ∀ x ∈ us, x < n := fun x hx =>
+      hbound x (List.mem_cons_of_mem _ hx)
+    have hsize' : (succInnerStep v (pred.getD v 0) u init).size = n := by
+      rw [succInnerStep_size]; exact hsize
+    rw [ih (succInnerStep v (pred.getD v 0) u init) hsize' hbound' u' b',
+        succInnerStep_testBit, hsize]
+    have h_u_size : decide (u < n) = true := decide_eq_true hu_lt
+    rw [h_u_size]
+    by_cases h_u_eq : u' = u
+    · subst h_u_eq
+      have h1 : decide (u' = u') = true := decide_eq_true rfl
+      have h2 : decide (u' ∈ u' :: us) = true := by
+        have : u' ∈ u' :: us := List.mem_cons_self
+        exact decide_eq_true this
+      rw [h1, h2]
+      cases h_init : Nat.testBit (init.getD u' 0) b' <;>
+      cases h_pv : testBit' (pred.getD v 0) u' <;>
+      cases h_bv : decide (b' = v) <;>
+      cases h_uss : decide (u' ∈ us) <;> rfl
+    · have h1 : decide (u' = u) = false := decide_eq_false h_u_eq
+      have h2 : decide (u' ∈ u :: us) = decide (u' ∈ us) := by
+        by_cases hin : u' ∈ us
+        · have : u' ∈ u :: us := List.mem_cons_of_mem _ hin
+          rw [decide_eq_true this, decide_eq_true hin]
+        · have hnotin : u' ∉ u :: us := by
+            intro hh
+            rcases List.mem_cons.mp hh with h_eq | h_inus
+            · exact h_u_eq h_eq
+            · exact hin h_inus
+          rw [decide_eq_false hnotin, decide_eq_false hin]
+      rw [h1, h2]
+      simp [Bool.false_and]
+
+/-- Bit-effect of one outer step. -/
+private lemma succOuterStep_testBit (pred : Array Nat) (n v u' b' : ℕ)
+    (hu : u' < n) (init : Array Nat) (hsize : init.size = n) :
+    Nat.testBit ((succOuterStep pred n v init).getD u' 0) b' =
+      (Nat.testBit (init.getD u' 0) b' ||
+        (testBit' (pred.getD v 0) u' && decide (b' = v))) := by
+  unfold succOuterStep
+  rw [succ_inner_forIn_testBit pred n v (List.range' 0 n) init hsize
+        (fun u hu_in => by
+          have := List.mem_range'.mp hu_in
+          omega) u' b']
+  have h_in : u' ∈ List.range' 0 n :=
+    List.mem_range'.mpr ⟨u', hu, by omega⟩
+  rw [decide_eq_true h_in, Bool.true_and]
+
+/-- The outer-loop invariant, generalized in `lo` (the prefix to process)
+and `init` (the accumulator at the start of `lo`). -/
+private lemma succ_outer_forIn_aux (pred : Array Nat) (n : ℕ) :
+    ∀ (lo : List ℕ) (init : Array Nat),
+    lo.Nodup →
+    (∀ v ∈ lo, v < n) →
+    init.size = n →
+    (∀ u' b' : ℕ, u' < n → b' ∈ lo →
+      Nat.testBit (init.getD u' 0) b' = false) →
+    let result : Array Nat := forIn (m := Id) lo init (succOuterBody pred n)
+    result.size = n ∧
+    ∀ u' b' : ℕ, u' < n → b' < n →
+      Nat.testBit (result.getD u' 0) b' =
+        if b' ∈ lo then testBit' (pred.getD b' 0) u'
+        else Nat.testBit (init.getD u' 0) b' := by
+  intro lo
+  induction lo with
+  | nil =>
+    intro init _ _ hsize _
+    refine ⟨hsize, ?_⟩
+    intros u' b' _ _
+    show Nat.testBit (init.getD u' 0) b' = _
+    simp
+  | cons v vs ih =>
+    intro init hnodup hbound hsize hinit
+    show let result : Array Nat :=
+            forIn (m := Id) (v :: vs) init (succOuterBody pred n)
+         result.size = n ∧ _
+    rw [show (forIn (m := Id) (v :: vs) init (succOuterBody pred n) :
+              Array Nat) =
+            forIn (m := Id) vs (succOuterStep pred n v init)
+              (succOuterBody pred n) from
+        succ_outer_forIn_cons pred n v init vs]
+    have hnodup' : vs.Nodup := hnodup.of_cons
+    have hv_notin : v ∉ vs := List.Nodup.notMem hnodup
+    have hv_lt : v < n := hbound v List.mem_cons_self
+    have hbound' : ∀ x ∈ vs, x < n := fun x hx =>
+      hbound x (List.mem_cons_of_mem _ hx)
+    have hsize' : (succOuterStep pred n v init).size = n := by
+      rw [succOuterStep_size]; exact hsize
+    have hinit' : ∀ u' b' : ℕ, u' < n → b' ∈ vs →
+        Nat.testBit ((succOuterStep pred n v init).getD u' 0) b' = false := by
+      intros u' b' hu' hb'_in_vs
+      have h_b'_ne_v : b' ≠ v := fun h_eq => hv_notin (h_eq ▸ hb'_in_vs)
+      have h_b'_in_lo : b' ∈ v :: vs := List.mem_cons_of_mem _ hb'_in_vs
+      rw [succOuterStep_testBit pred n v u' b' hu' init hsize,
+          hinit u' b' hu' h_b'_in_lo]
+      simp [decide_eq_false h_b'_ne_v]
+    obtain ⟨hsize_result, h_result⟩ := ih _ hnodup' hbound' hsize' hinit'
+    refine ⟨hsize_result, ?_⟩
+    intros u' b' hu' hb'
+    rw [h_result u' b' hu' hb']
+    by_cases hb'_in_vs : b' ∈ vs
+    · rw [if_pos hb'_in_vs, if_pos (List.mem_cons_of_mem _ hb'_in_vs)]
+    · rw [if_neg hb'_in_vs,
+          succOuterStep_testBit pred n v u' b' hu' init hsize]
+      by_cases h_b'_eq_v : b' = v
+      · subst h_b'_eq_v
+        have h_in : b' ∈ b' :: vs := List.mem_cons_self
+        rw [if_pos h_in, hinit u' b' hu' h_in]
+        simp
+      · have h_b'_notin : b' ∉ v :: vs := by
+          intro hh
+          rcases List.mem_cons.mp hh with h_eq | h_in
+          · exact h_b'_eq_v h_eq
+          · exact hb'_in_vs h_in
+        rw [if_neg h_b'_notin]
+        simp [decide_eq_false h_b'_eq_v]
+
+/-- **Bit-correctness of `Case3Enum.successorMasks`**.
+
+For `u, v < n`,
+`Nat.testBit ((successorMasks pred n).getD u 0) v = testBit' (pred.getD v 0) u`.
+
+Discharges the explicit `h_succ` hypothesis of
+`findSymmetricPair_isSome_imp_symmetric_aux`. -/
+theorem successorMasks_testBit (pred : Array Nat) (n u v : ℕ)
+    (hu : u < n) (hv : v < n) :
+    Nat.testBit ((Case3Enum.successorMasks pred n).getD u 0) v =
+      testBit' (pred.getD v 0) u := by
+  rw [successorMasks_imperative_eq]
+  have h_init_size : (Array.replicate n 0 : Array Nat).size = n :=
+    Array.size_replicate
+  have h_init_zero : ∀ u' b' : ℕ, u' < n → b' ∈ List.range' 0 n →
+      Nat.testBit ((Array.replicate n 0 : Array Nat).getD u' 0) b' = false := by
+    intros u' b' _ _
+    have h_getD : (Array.replicate n 0 : Array Nat).getD u' 0 = 0 := by
+      rw [Array.getD_eq_getD_getElem?, Array.getElem?_replicate]
+      split <;> rfl
+    rw [h_getD]
+    exact Nat.zero_testBit _
+  have hnodup : (List.range' 0 n).Nodup := List.nodup_range'
+  have hbound : ∀ x ∈ List.range' 0 n, x < n := fun x hx => by
+    have := List.mem_range'.mp hx
+    omega
+  obtain ⟨_, hresult⟩ := succ_outer_forIn_aux pred n (List.range' 0 n)
+    (Array.replicate n 0) hnodup hbound h_init_size h_init_zero
+  rw [hresult u v hu hv]
+  have hv_in : v ∈ List.range' 0 n :=
+    List.mem_range'.mpr ⟨v, hv, by omega⟩
+  rw [if_pos hv_in]
+
+/-- **Bool→Prop lift of `findSymmetricPair`** (no `_aux`).
+
+Wraps `findSymmetricPair_isSome_imp_symmetric_aux` with the
+`successorMasks` bit-correctness hypothesis already discharged. -/
+theorem findSymmetricPair_isSome_imp_symmetric (pred : Array Nat) (n : ℕ)
+    (h : (Case3Enum.findSymmetricPair pred n).isSome = true) :
+    ∃ x y : Fin n, Symmetric pred n x y :=
+  findSymmetricPair_isSome_imp_symmetric_aux pred n
+    (fun u v hu hv => successorMasks_testBit pred n u v hu hv) h
+
 end Case3Enum
 end Step8
 end OneThird
