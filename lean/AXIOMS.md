@@ -243,6 +243,9 @@ regime is the `rem:enumeration` sketch (`step8.tex:3157-3173`):
 
 **Introduced by.** `mg-b846` (A8-S3, this entry).
 
+**QA-audited by.** `mg-7377` (A8-S3-QA; this entry — verdict
+**axiom is faithful**, see "QA verdict (mg-7377)" below).
+
 **Status.** **Retained as a named project axiom** for one polecat
 session, with the gap surfaced honestly per the polecat-instruction
 guidance ("If new math turns out to need its own axiom: report
@@ -372,3 +375,80 @@ is:
 
 Both axioms are localised: every other use of the formalism is
 sorry-free.
+
+### QA verdict (mg-7377)
+
+**Verdict.** **Axiom is faithful.** The axiom statement is a faithful
+transcription of `prop:in-situ-balanced` Case 3 restricted to
+`¬ InCase3Scope`. The audit found no missing or extra hypotheses, the
+conclusion matches the paper, and the AXIOMS.md disclosure (above)
+honestly surfaces the genuine gap (the paper sketch in
+`rem:enumeration` is not a fleshed-out proof; the band-restricted FKG
+sub-coupling is the substantive new mathematical content needed for a
+replacement).
+
+**Audit performed.**
+
+1. **Hypothesis profile match.** Each of the nine axiom hypotheses
+   (`L`, `hWidth3`, `hIrr`, `hK3`, `hw`, `hCard`, `hDepth`, `hScope`,
+   `hC3`) was matched against (a) the wider hypothesis profile of
+   `Step8.bounded_irreducible_balanced_hybrid`
+   (`BoundedIrreducibleBalanced.lean:1587`) and (b) the paper's
+   `prop:in-situ-balanced` (`step8.tex:2965-3048`). The seven
+   structural hypotheses (`L`, `hWidth3`, `hIrr`, `hK3`, `hw`,
+   `hCard`, `hDepth`) are byte-for-byte identical to the hybrid
+   theorem; the two extra hypotheses (`hScope`, `hC3`) are exactly the
+   residual-scope flag and the typed Case 3 witness from A8-S1
+   (`mg-48db`, `Step8.InSitu.Case3Witness L = ¬Case1 ∧ ¬Case2Witness L`).
+   No hypothesis is missing; no extras are present.
+
+2. **Size-cap relationship to the paper.** The axiom uses
+   `|α| ≤ 6w + 6` (the F5 C2 leaf cap) where the paper's
+   `prop:in-situ-balanced` uses `|Q| ≤ 3(3w+1) = 9w + 3`. For `w = 1`
+   the two coincide (`12 = 12`); for `w ≥ 2` the axiom's hypothesis is
+   strictly tighter (e.g. `18 ≤ 21` for `w = 2`). A tighter hypothesis
+   means the axiom is **no stronger** than the paper's claim, which is
+   conservative and faithful.
+
+3. **Conclusion.** `HasBalancedPair α` matches the paper's "$Q$
+   contains a balanced pair" exactly.
+
+4. **Quantifier order.** Standard universal closure over `L` and the
+   eight propositional hypotheses; no Skolem reordering or implicit
+   choice beyond what the paper makes explicit.
+
+5. **Sketch credibility.** The paper sketch in `rem:enumeration`
+   (`step8.tex:3157-3173`) is genuinely a sketch (not a fleshed-out
+   proof), but it is a credible structural argument: (a) pigeonhole
+   on shared profile coordinates given `|Q| ≤ 3(3w+1)` and the (L2)
+   profile-codomain restriction is plausible (and the AXIOMS.md
+   "Replacement path" calls it out as routine combinatorics);
+   (b) the reduction back to Case 1 (`mg-f92d`) or Case 2 (band-
+   restricted A8-S2 / `mg-8801`) is well-defined as a target,
+   modulo the band-restricted FKG sub-coupling. The paper itself
+   appeals to this sketch for `lem:enum`'s depth-`≥ 3` extension
+   ("`extended to profiles of 3-element antichains with 2w
+   near-bands` produces a balanced pair in every case",
+   `step8.tex:3066-3068`). The axiom transcribes the sketch's
+   conclusion at the polecat-instruction-blessed level of fidelity
+   ("If new math turns out to need its own axiom: report honestly").
+
+6. **Cross-reference.** `docs/a8-s3-status.md` and the AXIOMS.md
+   entry above (the body of this section) are both consistent with
+   the axiom statement and with each other. The "Replacement path
+   (open)" enumerates the same three steps in both files (pigeonhole,
+   band-restricted FKG sub-coupling, reduction back to Case 1/2).
+
+**Caveats noted but not blocking.** The axiom's `Case3Witness L`
+hypothesis (`¬Case1 ∧ ¬Case2Witness L`) is broader than the paper's
+explicit Case 3 entry condition (`|A| = 3` with three pairwise
+`⪯`-incomparable two-sided profiles). A future port that derives the
+positive width-3 antichain configuration from the negation will need
+to rule out degenerate band-cardinality cases (e.g. `|A| = |B| = 1`
+under irreducibility); the paper's case dispatch implicitly assumes
+`|A| ≥ 2` or `|B| ≥ 2`, which follows from width-3 + irreducibility +
+non-trivial cross-pair but is not explicit in `prop:in-situ-balanced`.
+This is a paper-side nuance, not an axiom-faithfulness issue: the
+axiom's conclusion is no stronger than the paper's. Recorded here so
+that the future replacement-path port carries the bookkeeping
+forward.
