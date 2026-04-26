@@ -736,6 +736,169 @@ theorem strictCase2WitnessChain_balanced_under_FKG
     exact (chain_residual_impossible h12 h23 h13 hi12 hi23 hi13
         hu12 hd12 hu23 hd23 hu13 hd13 hr12 hr23 hr13).elim
 
+/-! ### §7 — Bundled FKG sub-claim hypothesis (`m = 2` pair + `m = 3` chain)
+(`mg-27c2`)
+
+The paper's FKG sub-claim of `prop:bipartite-balanced` Case 2
+(`step8.tex:2855-2856`) is stated uniformly for `m ∈ {2, 3}`: under a
+within-band `⪯`-comparable pair (`m = 2`) or chain (`m = 3`), the
+forward probabilities `probLT a_i a_{i+1}` are bounded below by `1/2`.
+
+`Step8.InSitu.Case2FKGSubClaim L` bundles both shapes as a single named
+hypothesis. Bundling reflects the paper's "single sub-claim" framing
+and lets the `StrictCase2Witness L → HasBalancedPair α` closure
+dispatch on chain-extension availability without changing the headline
+hypothesis count.
+
+The `chain` field has the same shape as the existing `hFKG` argument of
+`strictCase2WitnessChain_balanced_under_FKG` (`§5`); the `pair` field is
+its `m = 2` specialisation, the natural single-pair shape consumed by
+the `m = 2` closure (chain swap + pair FKG ⇒ `probLT a a' = 1/2`). -/
+
+/-- **FKG sub-claim hypothesis** (`step8.tex:2855-2856`, `m ∈ {2, 3}`).
+
+A single Prop bundling the two FKG sub-claim instances the paper's
+Case 2 in-situ argument relies on:
+
+* `pair` — `m = 2` instance: `probLT a a' ≥ 1/2` for any within-band
+  `⪯`-comparable pair `(a, a')`.
+* `chain` — `m = 3` instance: `probLT a_i a_j ≥ 1/2` for the three
+  pair-probabilities of any within-band `⪯`-chain `(a₁, a₂, a₃)`.
+
+This is a hypothesis (an input to the closure theorem), not a theorem.
+The probability-normalised cross-poset FKG infrastructure that would
+prove it is documented as future work in
+`Mathlib/RelationPoset/FKG.lean §11` (lines 407-426). -/
+structure Case2FKGSubClaim (L : LayeredDecomposition α) : Prop where
+  /-- **`m = 2` sub-claim** — single within-band `⪯`-comparable pair
+  (`step8.tex:2855-2856`, `m = 2` instance). The paper derives this
+  from the bipartite Case 2 coupling argument
+  (`step8.tex:2858-2875`). -/
+  pair : ∀ a a' : α, a ≠ a' → L.band a = L.band a' → a ∥ a' →
+    (∀ z, a < z → a' < z) → (∀ z, z < a' → z < a) →
+    (1 : ℚ) / 2 ≤ probLT a a'
+  /-- **`m = 3` sub-claim** — three within-band `⪯`-chain elements
+  (`step8.tex:2855-2856`, `m = 3` instance). Same shape as the `hFKG`
+  argument of `strictCase2WitnessChain_balanced_under_FKG`. -/
+  chain : ∀ a₁ a₂ a₃ : α,
+    a₁ ≠ a₂ → a₂ ≠ a₃ → a₁ ≠ a₃ →
+    L.band a₁ = L.band a₂ → L.band a₁ = L.band a₃ →
+    a₁ ∥ a₂ → a₂ ∥ a₃ → a₁ ∥ a₃ →
+    (∀ z, a₁ < z → a₂ < z) → (∀ z, z < a₂ → z < a₁) →
+    (∀ z, a₂ < z → a₃ < z) → (∀ z, z < a₃ → z < a₂) →
+    (1 : ℚ) / 2 ≤ probLT a₁ a₂ ∧
+    (1 : ℚ) / 2 ≤ probLT a₂ a₃ ∧
+    (1 : ℚ) / 2 ≤ probLT a₁ a₃
+
+/-! ### §8 — `m = 2` single-pair closure
+(`mg-27c2`, `docs/a8-s2-strict-witness-status.md` §2)
+
+The `m = 2` instance of the StrictCase2 closure: under a strict
+`⪯`-comparable within-band pair `(a, a')` and the pair part of
+`Case2FKGSubClaim`, chain swap (`probLT_le_half_of_chain`) gives
+`probLT a a' ≤ 1/2`, the FKG sub-claim gives `probLT a a' ≥ 1/2`,
+hence `probLT a a' = 1/2 ∈ [1/3, 2/3]`. -/
+
+/-- **`m = 2` single-pair closure**
+(`step8.tex:2858-2875`, `m = 2` instance, `mg-27c2`).
+
+Combines chain swap (`probLT_le_half_of_chain`, mg-ba0c) with the
+`m = 2` part of the FKG sub-claim hypothesis to close the strict
+single-pair case directly: `probLT a a' = 1/2 ∈ [1/3, 2/3]`, so the
+within-band incomparable pair `(a, a')` is balanced.
+
+Used by `strictCase2Witness_balanced_under_FKG` in the branch where no
+`StrictCase2WitnessChain` extension is available (typically the band of
+`a` has only the strict pair). -/
+theorem strictCase2Witness_m2_balanced
+    {a a' : α} (hne : a ≠ a') (hi : a ∥ a')
+    (h_up : ∀ z, a < z → a' < z) (h_down : ∀ z, z < a' → z < a)
+    (hp : (1 : ℚ) / 2 ≤ probLT a a') :
+    HasBalancedPair α := by
+  have h_le : probLT a a' ≤ (1 : ℚ) / 2 :=
+    probLT_le_half_of_chain hne hi h_up h_down
+  refine ⟨a, a', hi, ?_, ?_⟩
+  · -- `1/3 ≤ probLT a a'` from `1/2 ≤ probLT a a'`.
+    linarith
+  · -- `probLT a a' ≤ 2/3` from `probLT a a' ≤ 1/2`.
+    linarith
+
+/-! ### §9 — `m = 2 → m = 3` chain extension dispatch
+(`mg-27c2`, paper-level argument in `step8.tex:3001-3032`)
+
+Under classical excluded middle on whether
+`StrictCase2WitnessChain L` holds, the `StrictCase2Witness L → HasBalancedPair α`
+closure dispatches:
+
+* **Chain extension succeeds** (`StrictCase2WitnessChain L` holds): the
+  band admits three within-band `⪯`-chain elements
+  `a₁ ⪯ a₂ ⪯ a₃`. Apply
+  `strictCase2WitnessChain_balanced_under_FKG` (§5) with the `chain`
+  part of `Case2FKGSubClaim`.
+
+* **Chain extension fails** (`¬ StrictCase2WitnessChain L`): no third
+  within-band `⪯`-chain element extends the strict pair `(a, a')`
+  carried by `StrictCase2Witness L` (e.g., the band has size 2, or the
+  third within-band element is `⪯`-incomparable to the pair). The
+  `m = 2` single-pair closure (`strictCase2Witness_m2_balanced`)
+  closes via chain swap + the `pair` part of `Case2FKGSubClaim`.
+
+The classical case split is the Lean image of the paper's Case 2 chain
+extension dispatch (`step8.tex:3001-3032`): "If there exist `a, a' ∈ A`
+with `Π(a) ⪯ Π(a')` (strictly, by the failure of Case 1), … if `|A| = 3`
+and the three profiles form a chain in `⪯`, the rotation argument
+applies; otherwise the `m = 2` direct closure handles the pair." -/
+
+/-- **`StrictCase2Witness L → HasBalancedPair α`**
+(`mg-27c2`, `docs/a8-s2-strict-witness-status.md` §3).
+
+The chain-form FKG closure of the strict Case 2 witness, dispatching by
+classical case-split on `StrictCase2WitnessChain L` (the chain
+extension):
+
+* **`m = 3` branch** — `StrictCase2WitnessChain L` holds: apply
+  `strictCase2WitnessChain_balanced_under_FKG` with `hFKG.chain`.
+* **`m = 2` branch** — `StrictCase2WitnessChain L` fails: apply
+  `strictCase2Witness_m2_balanced` (chain swap + `hFKG.pair`).
+
+Both branches are closed by the **same** bundled hypothesis
+`hFKG : Case2FKGSubClaim L`; the dispatch is internal to the proof.
+
+This is the discharge theorem consumed by mg-072c (the headline
+`width3_one_third_two_thirds` wiring after the Path C drop-`hC3` /
+add-`hFKG` swap). -/
+theorem strictCase2Witness_balanced_under_FKG
+    (L : LayeredDecomposition α) (hC2strict : StrictCase2Witness L)
+    (hFKG : Case2FKGSubClaim L) :
+    HasBalancedPair α := by
+  classical
+  by_cases h_chain : StrictCase2WitnessChain L
+  · -- `m = 3` branch: dispatch to the existing chain closure (§5/§6).
+    exact strictCase2WitnessChain_balanced_under_FKG L h_chain hFKG.chain
+  · -- `m = 2` branch: chain swap + pair FKG ⇒ `probLT a a' = 1/2`.
+    obtain ⟨a, a', hne, hband, hi, hu, hd, _hStrict⟩ := hC2strict
+    exact strictCase2Witness_m2_balanced hne hi hu hd
+      (hFKG.pair a a' hne hband hi hu hd)
+
+/-- **`Case2Witness L → HasBalancedPair α`** (composed form).
+
+Routes through `case2Witness_balanced_or_strict` (mg-8801): every
+`Case2Witness L` is either a Case 1 ambient match (closed inline by the
+symmetric collapse to `hasBalancedPair_of_ambient_profile_match`,
+mg-f92d) or a `StrictCase2Witness L` (closed by
+`strictCase2Witness_balanced_under_FKG`).
+
+This is the form the headline-wiring (mg-072c) consumes when filling
+the `case2Discharge : Case2Witness L → HasBalancedPair α` slot of
+`hStruct_of_case2_discharge` (`Case3Residual.lean:265`). -/
+theorem case2Witness_balanced_under_FKG
+    (L : LayeredDecomposition α) (hC2 : Case2Witness L)
+    (hFKG : Case2FKGSubClaim L) :
+    HasBalancedPair α := by
+  rcases case2Witness_balanced_or_strict L hC2 with h | h
+  · exact h
+  · exact strictCase2Witness_balanced_under_FKG L h hFKG
+
 end InSitu
 end Step8
 end OneThird
