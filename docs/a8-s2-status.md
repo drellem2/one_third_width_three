@@ -288,13 +288,33 @@ discharge is ~200-400 LOC on top.
 
 ### A8-S2-bipartite-bound — `Pr ≤ 2/3` from bipartite enumeration
 
-**Deliverable.** Lift the bipartite extremal `Pr ≤ 2/3` upper
-bound (`step8.tex:2916-2940`) from the K=2 setup of
-`bipartite_balanced_enum` (`BipartiteEnum.lean:284`) to a
-within-band statement on `LayeredDecomposition`. This is the
-upper-bound counterpart to A8-S2-cont's lower bound.
+**Status:** **landed** by `mg-ed4d` (this commit).
+`lean/OneThird/Step8/Case2BipartiteBound.lean` lifts the bipartite
+extremal `Pr ≤ 2/3` upper bound (`step8.tex:2916-2940`) from the
+K=2 setup of `bipartite_balanced_enum` (`BipartiteEnum.lean:284`)
+to a within-band statement on `LayeredDecomposition`:
 
-Estimated ~200-400 LOC. Can land in parallel with A8-S2-cont.
+* `bipartite` hypothesis derivation lemmas
+  (`bandSet_one_isAntichain`, `bandSets_disjoint`,
+  `bandSets_cover_K2`, `bandSet_one_le_bandSet_two_of_w0`, …) —
+  build the bipartite-enumeration hypotheses from a depth-2,
+  width-0 `LayeredDecomposition`.
+* `hasBalancedPair_of_K2_w0_incomp` — depth-2, width-0 layered +
+  any incomparable pair → `HasBalancedPair α` (direct lift).
+* `probLT_eq_half_of_within_band_K2_w0` — within-band probability
+  identity `probLT u v = 1/2` for K=2, w=0.
+* `probLT_le_two_thirds_of_within_band_K2_w0` — **the headline**:
+  `probLT u v ≤ 2/3` for any distinct within-band pair in K=2,
+  w=0 layered. The upper-bound counterpart of A8-S2-cont's
+  deferred FKG `≥ 1/2` lower bound.
+* `probLT_ge_one_third_of_within_band_K2_w0`,
+  `isBalanced_of_within_band_K2_w0`,
+  `hasBalancedPair_of_within_band_K2_w0` — auxiliary
+  packagings.
+
+The lift exposes `BipartiteEnum.probLT_eq_half_of_same_layer`
+(formerly `private`) as the building block — no new
+axioms / sorries; `#print axioms` reports only the mathlib trio.
 
 ### A8-S2-rotation — rotation argument for `m = 3`
 

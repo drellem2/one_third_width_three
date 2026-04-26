@@ -239,8 +239,12 @@ private lemma filter_lt_card_eq_of_same_layer
 /-! ### §4 — Same-layer pair has probability `1/2` -/
 
 /-- For a bipartite height-2 poset with an incomparable same-layer pair
-`(u, v)`, the linear-extension probability `Pr[u <_L v] = 1/2`. -/
-private lemma probLT_eq_half_of_same_layer
+`(u, v)`, the linear-extension probability `Pr[u <_L v] = 1/2`.
+
+Exposed (formerly `private`) as a building block for
+`OneThird.Step8.InSitu.Case2BipartiteBound`'s within-band lift of the
+`Pr ≤ 2/3` upper bound to `LayeredDecomposition` (mg-ed4d). -/
+lemma probLT_eq_half_of_same_layer
     {A B : Finset α}
     (hA_anti : IsAntichain (· ≤ ·) (A : Set α))
     (hB_anti : IsAntichain (· ≤ ·) (B : Set α))
