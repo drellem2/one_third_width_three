@@ -2,3 +2,15 @@
  Classical.choice,
  Quot.sound,
  OneThird.LinearExt.brightwell_sharp_centred]
+'OneThird.Step8.width3_one_third_two_thirds_assembled' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ OneThird.LinearExt.brightwell_sharp_centred]
+'OneThird.width3_one_third_two_thirds_via_step8' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ OneThird.LinearExt.brightwell_sharp_centred]
+'OneThird.Step8.mainAssembly' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OneThird.Step8.mainAssembly_smallN' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OneThird.Step8.cexImpliesLowBKExpansion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OneThird.counterexample_implies_low_BK_expansion' depends on axioms: [propext, Classical.choice, Quot.sound]
