@@ -9,10 +9,14 @@ and matches the disclosures in
 and in the README's "Please read this before citing" section.
 
 The claim shape, axiom count, and build instructions in the template
-are calibrated to the option (δ) park decision (2026-04-27) and the
-formalization-completeness audit (`mg-49a4`, commit `6af280c`). If a
-future change to the Lean tree drops `hC3` or the Brightwell axiom,
-revise this template before posting.
+are calibrated to the option (δ) park decision (2026-04-27), the
+formalization-completeness audit (`mg-49a4`, commit `6af280c`), and
+the η₅ park of the mg-27c2 `Case2FKGSubClaim` defect (mg-457c,
+following the η₄ block-and-report at mg-b0de / commit `8f97133`).
+If a future change to the Lean tree drops `hC3`, the Brightwell
+axiom, or closes the SubClaim defect (via A8-S2-cont `mg-8801` or
+a math-simplification experiment), revise this template before
+posting.
 
 ---
 
@@ -68,7 +72,13 @@ revise this template before posting.
 > No `sorryAx` or unaudited project axiom appears anywhere in the
 > headline's dependencies.
 >
-> **Known in-tree issue (forum reader caveat).** A separate audit
+> **Known in-tree issue (forum reader caveat):** mg-27c2
+> `Case2FKGSubClaim` is direction-reversed; parked via η₅ pending
+> deferred A8-S2-cont infrastructure (`mg-8801`) or a
+> math-simplification experiment. Headline
+> `width3_one_third_two_thirds` is unaffected. See
+> [`lean-forum-publication-readiness.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/lean-forum-publication-readiness.md)
+> §5 "Known in-tree issue". In more detail: a separate audit
 > (polecat `pc-a79e`, commit `64f2d87`,
 > [`docs/a8-path-b-block-and-report-status.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/a8-path-b-block-and-report-status.md))
 > identified that `Case2FKGSubClaim` (a hypothesis structure on the
@@ -76,21 +86,21 @@ revise this template before posting.
 > [`lean/OneThird/Step8/Case2Rotation.lean`](https://github.com/drellem2/one_third_width_three/blob/main/lean/OneThird/Step8/Case2Rotation.lean))
 > is **provably false** on natural inputs (a 3-element
 > counterexample with `K = 2`, `w = 1` gives `probLT a a' = 1/3`,
-> violating the SubClaim's `1/2 ≤ probLT a a'`). The conditional
-> theorems `case2Witness_balanced_under_FKG` and
+> violating the SubClaim's `1/2 ≤ probLT a a'`). An η₄ restate
+> attempt (`mg-b0de`, commit `8f97133`,
+> [`docs/a8-s2-restate-block-and-report-status.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/a8-s2-restate-block-and-report-status.md))
+> blocked because the ≤ 2/3 upper bound from chain-swap requires
+> `|Q| ≥ 12` but K=2 has `|Q| ≤ 6`; the pre-committed PM pivot η₅
+> (drop SubClaim path; keep `hC3` on the headline) fired. The
+> conditional theorems `case2Witness_balanced_under_FKG` and
 > `strictCase2Witness_m2_balanced` predicated on this SubClaim are
 > therefore technically-correct-but-vacuous implications on a false
 > antecedent. **The headline `width3_one_third_two_thirds` is
 > unaffected** — it consumes `hC3` rather than `Case2FKGSubClaim`,
-> and the `#print axioms` baseline above is current. A restate
-> (η₄, `mg-b0de`) is in flight: change the SubClaim's direction to
-> `probLT a a' ≤ 1/2` (already a theorem in tree via chain swap)
-> and combine with a separate `≤ 2/3` upper bound from Brightwell
-> covariance. Until that lands, please do not cite mg-27c2's
-> conditional Case 2 theorems as unconditional results. The full
-> disclosure is in
-> [`docs/lean-forum-publication-readiness.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/lean-forum-publication-readiness.md)
-> §5 "Known in-tree issue".
+> and `hC3`'s universal quantification subsumes Case 2 strict
+> witnessing, so the `#print axioms` baseline above is current.
+> Please do not cite mg-27c2's conditional Case 2 theorems as
+> unconditional results.
 >
 > **Build and verify.** `lake build OneThird` succeeds in roughly 3
 > minutes wall after `lake exe cache get` on Lean

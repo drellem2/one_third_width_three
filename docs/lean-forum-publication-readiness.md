@@ -274,7 +274,7 @@ documented in [`lean/AXIOMS.md`](../lean/AXIOMS.md) §2 for completeness.
 
 ---
 
-## 5. Known in-tree issue: mg-27c2 `Case2FKGSubClaim` direction-reversed (η₄ restate in flight via `mg-b0de`)
+## 5. Known in-tree issue: mg-27c2 `Case2FKGSubClaim` direction-reversed (η₅ park — not being fixed this iteration)
 
 A third disclosure item, distinct from `hC3` (parked open math, §2)
 and the two named project axioms (Brightwell external retain;
@@ -337,19 +337,75 @@ are nonetheless visible to a reader auditing `Case2Rotation.lean`,
 and they would matter the moment any future wiring tried to thread
 a constructed `hFKG` through the K=2 leaf.
 
-**The fix is η₄ (`mg-b0de`), in flight as of this disclosure.** The
-pivot — filed under Daniel OVERRIDE (`mg-602e`) and running
-independently of, in parallel with, this disclosure ticket — is to
-(i) restate `Case2FKGSubClaim.pair` with the correct direction
-(`probLT a a' ≤ 1/2`), at which point the SubClaim becomes
-equivalent to chain swap and is *already a theorem* (no axiom or
-new infrastructure required); (ii) redesign the consumer to combine
-the now-true `≤ 1/2` (chain swap) with a separately-derived `≤ 2/3`
-upper bound from Brightwell covariance to produce the balanced pair
-via `(a', a)` rather than `(a, a')`. mg-b0de may or may not have
-landed by the time you read this; if it has, the line numbers
-above will have shifted and the SubClaim's `pair` field's
-conclusion will read `probLT a a' ≤ 1/2`.
+**Iteration disposition: PARKED via η₅ — the SubClaim defect is
+not being fixed in this iteration.** An η₄ restate attempt
+(`mg-b0de`, filed under Daniel OVERRIDE `mg-602e`) tried to fix
+the issue by (i) flipping `Case2FKGSubClaim.pair` to the correct
+direction (`probLT a a' ≤ 1/2`, equivalent to chain swap and
+already a theorem in tree as `probLT_le_half_of_chain` at
+`lean/OneThird/Step8/Case2Rotation.lean:629`, mg-ba0c) and
+(ii) deriving a separate `≤ 2/3` upper bound from Brightwell
+covariance, combining the two to produce the balanced pair via
+`(a', a)` rather than `(a, a')`. **The η₄ attempt blocked**: the
+≤ 2/3 upper bound is not discharge-able from the existing
+Brightwell + chain-swap infrastructure. The Brightwell sharp
+centred bound `|p(Q) − p(Q−z)| ≤ 2/|Q|` (single-element
+perturbation; `lean/OneThird/Mathlib/LinearExtension/BrightwellAxiom.lean`)
+gives `Pr_Q[a < a'] ∈ [1/2 − 2/|Q|, 1/2 + 2/|Q|]`, so the
+upper bound `1/2 + 2/|Q| ≤ 2/3` requires `|Q| ≥ 12`. **K=2 has
+`|Q| = |α| ≤ 6`** (sum of two band sizes, each ≤ 3 by width-3
+hypothesis), so the existing Brightwell bound is too weak by a
+factor of 2 in the K=2 regime. The in-tree `Case2BipartiteBound`
+is K=2 / w=0 only and does not cover the strict within-band ⪯-pair
+case the SubClaim targets. Full audit:
+[`docs/a8-s2-restate-block-and-report-status.md`](a8-s2-restate-block-and-report-status.md)
+(commit `8f97133`, mg-b0de).
+
+The pre-committed PM pivot **η₅** (drop the SubClaim discharge
+path entirely; keep `hC3` on the headline) fired on receipt of
+the η₄ block-and-report. The defect remains in tree and is
+disclosed honestly, but no in-iteration fix is shipping.
+
+**Future-revival pathways.** Two routes exist if the SubClaim
+defect is to be closed in a later product cycle:
+
+* **A8-S2-cont (`mg-8801`, ~2000-3500 LoC):** the deferred
+  probability-form cross-poset FKG infrastructure
+  (probability-normalised Pr_Q vs absolute counts; cross-poset
+  monotonicity for adding/removing strictness witnesses;
+  the `≤ 2/3` upper bound at K=2 follows from this scope but
+  not from the existing Brightwell + chain-swap kit). This is a
+  multi-week multi-polecat arc if pursued; the audit at
+  `docs/a8-s3-status.md` and the rotation-residual status
+  (`docs/a8-s2-rotation-residual-status.md`, mg-ba0c) sketch
+  the scope.
+* **Math-simplification experiment** (per Daniel's 2026-04-27
+  directive on changing strategy in the difficult-to-formalize
+  region). A future product cycle aimed at a structurally
+  simpler discharge of Case 2 — replacing the cross-poset FKG
+  bound with a different mathematical argument that does not
+  need the deferred infrastructure. Out of scope for any
+  currently active polecat arc.
+
+**Reachability — the headline is unaffected.** The headline
+`width3_one_third_two_thirds` does **not** consume `hFKG :
+Case2FKGSubClaim L`. Under option (δ), the K=2 dispatch reaches
+the Case 2 leaf via the parked-`hC3` path: `Case3Witness` is
+universally quantified over layered width-3 non-chain `β`'s
+satisfying the F5 entry conditions, and that quantification
+**subsumes Case 2 strict witnessing** as one of the sub-types it
+discharges (the strict within-band ⪯-pair regime sits inside the
+`HasWidthAtMost β 3 ∧ ¬ IsChainPoset β ∧ 2 ≤ Fintype.card β`
+class that any consumer of `hC3` must cover). The
+false-antecedent theorems `case2Witness_balanced_under_FKG` and
+`strictCase2Witness_m2_balanced` are therefore not in the
+headline's transitive closure and do not affect the
+`#print axioms` baseline reproduced in §3. The headline's truth
+under its `hC3` hypothesis is unaffected by the SubClaim defect
+for the formalized statement: this is a paper-internal arithmetic
+issue worth disclosing, but it does not invalidate the existing
+PATH A claim ("structurally complete formalization modulo case-3
+residual").
 
 **What a forum reader should do.**
 
@@ -360,21 +416,27 @@ conclusion will read `probLT a a' ≤ 1/2`.
    `lean/OneThird/Step8/BipartiteEnumGeneral.lean:210`) as
    unconditional results.** They are technically-true implications
    on a false antecedent — vacuous in the natural Case 2 regime,
-   not load-bearing.
+   not load-bearing on the headline.
 2. **The headline is unaffected.** `width3_one_third_two_thirds`
    does not consume these conditional theorems; it carries `hC3`
-   instead. The §3 `#print axioms` baseline and the side-by-side
-   reading in §1 are accurate as stated.
-3. **If you are auditing the tree:** wait for mg-b0de to land
-   before treating the Case 2 leaf as proved, OR cite the in-tree
-   theorems alongside this disclosure (and the
-   [`pc-a79e` status doc](a8-path-b-block-and-report-status.md))
-   so the antecedent's status is not buried.
+   instead, and `hC3`'s universal quantification subsumes Case 2
+   strict witnessing. The §3 `#print axioms` baseline and the
+   side-by-side reading in §1 are accurate as stated.
+3. **If you are auditing the tree:** treat the Case 2 conditional
+   theorems as parked alongside `hC3` itself, and cite the
+   in-tree theorems alongside this disclosure (and the audit-trail
+   docs
+   [`a8-path-b-block-and-report-status.md`](a8-path-b-block-and-report-status.md)
+   for the SubClaim-falsifying counterexample,
+   [`a8-s2-restate-block-and-report-status.md`](a8-s2-restate-block-and-report-status.md)
+   for the η₄-blocked technical reasoning) so the antecedent's
+   status is not buried.
 
 This disclosure is additive: the mg-9e50 PATH A reframe still
 correctly characterises `hC3` and the Brightwell axiom; this
 section flags an *additional* in-tree caveat that the original
-PATH A docs did not surface.
+PATH A docs did not surface, with iteration disposition now
+finalized as parked.
 
 ---
 
@@ -512,8 +574,15 @@ docs it cites are the canonical record of what is currently proven.
 
 §5 ("Known in-tree issue: mg-27c2 `Case2FKGSubClaim` direction-reversed")
 was added under `mg-8f59` ("PATH A disclosure update — mg-27c2
-hypothesis was provably false") by polecat `pc-8f59` on 2026-04-27,
-in response to the `pc-a79e` block-and-report finding (commit
-`64f2d87`, mg-a79e). The companion η₄ restate ticket is `mg-b0de`,
-filed under Daniel OVERRIDE (`mg-602e`) and running in parallel
-with this disclosure update.
+hypothesis was provably false") by polecat `pc-8f59` on 2026-04-27
+(commit `a7ae06d`), in response to the `pc-a79e` block-and-report
+finding (commit `64f2d87`, mg-a79e). The η₄ restate attempt
+(`mg-b0de`, filed under Daniel OVERRIDE `mg-602e`) subsequently
+blocked: the ≤ 2/3 upper bound is not discharge-able from existing
+Brightwell + chain-swap infrastructure in the K=2 regime
+(|Q| ≤ 6 < 12); see audit at `docs/a8-s2-restate-block-and-report-status.md`
+(commit `8f97133`). The pre-committed PM pivot η₅ (drop SubClaim
+discharge path; keep `hC3`) fired on receipt of that
+block-and-report. §5 was amended to its current η₅-park final-state
+framing under `mg-457c` ("PATH A disclosure final-state amendment —
+η₅ park") by polecat `pc-457c` on 2026-04-27.
