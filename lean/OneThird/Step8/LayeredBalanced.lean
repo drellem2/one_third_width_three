@@ -415,7 +415,26 @@ sub-witnesses, threaded through
   `Equiv.swap` automorphism).
 
 See `docs/a5-profile-resolution.md` for the full decision rationale
-and the documented hand-off contracts. -/
+and the documented hand-off contracts.
+
+**Retention as a `def` (not a theorem) is INTENTIONAL** under
+pm-onethird's option (δ) park decision (2026-04-27). Path C
+cleanup — promoting this `def` to a theorem and dropping `hC3`
+from `OneThird.width3_one_third_two_thirds` — was attempted
+across four polecat rounds (mg-4a5b → mg-072c → mg-0fa0 →
+mg-94fd) and parked after the firm round-4 stop-loss. The
+remaining obstruction is the K=2 + irreducible + w≥1 + |β|≥3
+N-poset class, which sits inside this predicate's universal
+scope but has no in-tree handler: `bounded_irreducible_balanced_hybrid`
+and `case3Witness_hasBalancedPair_outOfScope` both require
+`3 ≤ L.K`; `hasBalancedPair_of_K2_w0_incomp` requires `L.w = 0`;
+the Window descent collapses; and the existing rotation argument
+in `Case2Rotation.lean` operates on within-band ⪯-pairs/chains,
+which the N-poset does not admit. Closing the gap requires
+compound-automorphism infrastructure (~300-500 LoC) that does
+not exist in the tree. **Do not attempt to promote this `def`
+to a theorem without first reading
+`docs/path-c-cleanup-roadmap.md`.** -/
 def Case3Witness.{u} : Prop :=
   ∀ (β : Type u) [PartialOrder β] [Fintype β] [DecidableEq β]
     (LB : Step8.LayeredDecomposition β),

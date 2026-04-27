@@ -34,7 +34,21 @@ Every finite width-≤ 3 poset that is not a chain admits a pair
 measure.
 
 Discharged via the Step 8 assembly
-(`OneThird.Step8.width3_one_third_two_thirds_assembled`). -/
+(`OneThird.Step8.width3_one_third_two_thirds_assembled`).
+
+**`hC3` retention is INTENTIONAL** under pm-onethird's option (δ)
+park decision (2026-04-27). Path C cleanup — the 1-for-1 swap
+that would drop `hC3` and add a single chain-form `hFKG`
+hypothesis — was attempted across four polecat rounds and
+parked after pc-94fd's firm round-4 stop-loss. The remaining
+obstruction is the K=2 + irreducible + w≥1 + |β|≥3 N-poset
+class, which requires compound-automorphism infrastructure
+(~300-500 LoC) that does not exist in the tree. **Do not
+attempt to drop `hC3` without first reading
+`docs/path-c-cleanup-roadmap.md`** — the audit trail names the
+obstruction, lists the in-tree infrastructure that already
+landed during the arc, and documents the conditions under which
+revival is worth re-attempting. -/
 theorem width3_one_third_two_thirds.{u}
     {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
     (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
