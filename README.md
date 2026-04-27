@@ -118,6 +118,28 @@ should know:
   documented replacement path in [`lean/AXIOMS.md`](lean/AXIOMS.md).
   The full side-by-side reading and the verification recipe is in
   [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md).
+- **Known in-tree issue: mg-27c2 `Case2FKGSubClaim` direction was
+  reversed.** A 3-element counterexample (polecat `pc-a79e`, commit
+  `64f2d87`,
+  [`docs/a8-path-b-block-and-report-status.md`](docs/a8-path-b-block-and-report-status.md))
+  shows that mg-27c2's `Case2FKGSubClaim` (a hypothesis structure
+  used by the Case 2 within-band ⪯-chain dispatch in
+  `lean/OneThird/Step8/Case2Rotation.lean`) is **provably false**
+  on natural Case 2 inputs: the SubClaim's `pair` field asserts
+  `1/2 ≤ probLT a a'` but the counterexample (`α = {a, a', y}`,
+  `a' < y`, `K = 2`, `w = 1`) gives `probLT a a' = 1/3`. The
+  conditional theorems `case2Witness_balanced_under_FKG` and
+  `strictCase2Witness_m2_balanced` predicated on this SubClaim are
+  technically-correct-but-vacuous implications on a false antecedent;
+  the headline `width3_one_third_two_thirds` is **unaffected** —
+  it consumes `hC3` rather than `Case2FKGSubClaim` and the
+  `#print axioms` baseline is current. The fix (η₄, `mg-b0de`) is
+  in flight: restate the SubClaim with the correct direction
+  (`probLT a a' ≤ 1/2`, equivalent to chain swap and already a
+  theorem) and combine with a separate `≤ 2/3` upper bound from
+  Brightwell covariance. See
+  [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md)
+  §5 "Known in-tree issue" for the full disclosure.
 
 ## The mathematical proof (LaTeX / PDF)
 

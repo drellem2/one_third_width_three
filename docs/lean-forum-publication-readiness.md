@@ -274,7 +274,111 @@ documented in [`lean/AXIOMS.md`](../lean/AXIOMS.md) §2 for completeness.
 
 ---
 
-## 5. Build and verify
+## 5. Known in-tree issue: mg-27c2 `Case2FKGSubClaim` direction-reversed (η₄ restate in flight via `mg-b0de`)
+
+A third disclosure item, distinct from `hC3` (parked open math, §2)
+and the two named project axioms (Brightwell external retain;
+`case3Witness_hasBalancedPair_outOfScope` semi-orphan, §4): a
+**conditional theorem** in the tree,
+`case2Witness_balanced_under_FKG`
+(`lean/OneThird/Step8/Case2Rotation.lean:894`, mg-27c2), and the
+companion `strictCase2Witness_m2_balanced`
+(`lean/OneThird/Step8/Case2Rotation.lean:813`), are predicated on
+the hypothesis structure `Case2FKGSubClaim L`
+(`lean/OneThird/Step8/Case2Rotation.lean:772`) whose `pair` field
+is **provably false** on the natural Case 2 inputs the dispatch is
+supposed to fire on. The implications themselves are technically
+correct (anything follows from a false antecedent), but they are
+vacuous on the strict within-band ⪯-chain pairs they target. A
+forum reader auditing `Case2Rotation.lean` would absolutely spot
+this; this section flags it explicitly.
+
+**The finding.** Audited end-to-end by polecat `pc-a79e`
+(commit `64f2d87`, mg-a79e); see
+[`docs/a8-path-b-block-and-report-status.md`](a8-path-b-block-and-report-status.md)
+for the full status doc. The `pair` field of `Case2FKGSubClaim L`
+asserts `1/2 ≤ probLT a a'` for a within-band ⪯-chain pair
+`(a, a')` with `upper(a) ⊆ upper(a')` and `lower(a') ⊆ lower(a)`.
+`pc-a79e` constructed an explicit 3-element layered counterexample
+(`α = {a, a', y}` with `a' < y`, `K = 2`, `w = 1`) satisfying every
+Lean-level hypothesis of `Case2FKGSubClaim.pair` yet giving
+`probLT a a' = 1/3 < 1/2` by direct enumeration of α's three valid
+linear extensions. The SubClaim's `pair` field is therefore false
+on natural inputs.
+
+**Root cause: direction reversal vs `step8.tex:2855-2875`.** The
+paper's chain-form FKG argument actually proves the *opposite*
+direction: the chain hypothesis "`a'` has more upper edges and
+fewer lower edges than `a`" gives `probLT a a' ≤ 1/2` (chain swap;
+`probLT_le_half_of_chain` at
+`lean/OneThird/Step8/Case2Rotation.lean:629`, already a theorem in
+tree, mg-ba0c). The Lean SubClaim's `pair` field bakes in the
+reverse inequality `1/2 ≤ probLT a a'`, and that direction is
+mathematically wrong on the strict case. Three independent in-tree
+audits had previously flagged the issue from different angles
+([`docs/a8-s2-rotation-residual-status.md`](a8-s2-rotation-residual-status.md)
+mg-ba0c §3,
+[`docs/a8-s2-strict-witness-status.md`](a8-s2-strict-witness-status.md)
+mg-43f3, plus the new mg-a79e doc); `pc-a79e` converted those
+audits into an explicit counterexample and the block-and-report
+verdict.
+
+**Reachability from the headline.** `case2Witness_balanced_under_FKG`
+and `strictCase2Witness_m2_balanced` are conditional on
+`hFKG : Case2FKGSubClaim L`. The headline
+`width3_one_third_two_thirds` does **not** consume `hFKG`: under
+option (δ), the K=2 dispatch reaches the Case 2 leaf via the
+parked-`hC3` path (which subsumes Case 2 inside the universally
+quantified `Case3Witness` discharge), rather than via a
+`hFKG`-conditional discharge. The false-antecedent theorems are
+therefore **not** in the headline's transitive closure, and the
+verbatim `#print axioms` baseline (§3 above) is unaffected. They
+are nonetheless visible to a reader auditing `Case2Rotation.lean`,
+and they would matter the moment any future wiring tried to thread
+a constructed `hFKG` through the K=2 leaf.
+
+**The fix is η₄ (`mg-b0de`), in flight as of this disclosure.** The
+pivot — filed under Daniel OVERRIDE (`mg-602e`) and running
+independently of, in parallel with, this disclosure ticket — is to
+(i) restate `Case2FKGSubClaim.pair` with the correct direction
+(`probLT a a' ≤ 1/2`), at which point the SubClaim becomes
+equivalent to chain swap and is *already a theorem* (no axiom or
+new infrastructure required); (ii) redesign the consumer to combine
+the now-true `≤ 1/2` (chain swap) with a separately-derived `≤ 2/3`
+upper bound from Brightwell covariance to produce the balanced pair
+via `(a', a)` rather than `(a, a')`. mg-b0de may or may not have
+landed by the time you read this; if it has, the line numbers
+above will have shifted and the SubClaim's `pair` field's
+conclusion will read `probLT a a' ≤ 1/2`.
+
+**What a forum reader should do.**
+
+1. **Do not cite mg-27c2's `case2Witness_balanced_under_FKG`,
+   `strictCase2Witness_m2_balanced`, or downstream consumers of
+   `Case2FKGSubClaim` (e.g., the Case 2 branch of mg-02c2's
+   `bipartite_balanced_enum_general` at
+   `lean/OneThird/Step8/BipartiteEnumGeneral.lean:210`) as
+   unconditional results.** They are technically-true implications
+   on a false antecedent — vacuous in the natural Case 2 regime,
+   not load-bearing.
+2. **The headline is unaffected.** `width3_one_third_two_thirds`
+   does not consume these conditional theorems; it carries `hC3`
+   instead. The §3 `#print axioms` baseline and the side-by-side
+   reading in §1 are accurate as stated.
+3. **If you are auditing the tree:** wait for mg-b0de to land
+   before treating the Case 2 leaf as proved, OR cite the in-tree
+   theorems alongside this disclosure (and the
+   [`pc-a79e` status doc](a8-path-b-block-and-report-status.md))
+   so the antecedent's status is not buried.
+
+This disclosure is additive: the mg-9e50 PATH A reframe still
+correctly characterises `hC3` and the Brightwell axiom; this
+section flags an *additional* in-tree caveat that the original
+PATH A docs did not surface.
+
+---
+
+## 6. Build and verify
 
 A third-party reader can reproduce the claim end-to-end as follows:
 
@@ -320,13 +424,14 @@ lake env lean -e '#check @OneThird.width3_one_third_two_thirds'
 
 ---
 
-## 6. Acknowledged caveats
+## 7. Acknowledged caveats
 
-There are exactly two residuals that a forum-post reader needs to
-internalise before drawing conclusions about what is and is not
-"formalized":
+There are two residuals on the headline that a forum-post reader
+needs to internalise before drawing conclusions about what is and
+is not "formalized" (plus the §5 in-tree-issue caveat on a
+non-headline conditional theorem):
 
-### 6a. The `hC3` Prop-level hypothesis (open math, parked)
+### 7a. The `hC3` Prop-level hypothesis (open math, parked)
 
 The headline carries `hC3 : Step8.Case3Witness` as a Prop-level
 hypothesis. Discharging it inside the formalization is open math at
@@ -345,7 +450,7 @@ parametrically-quantified shape of `Case3Witness`
 hypothesis explicit; it is not buried inside another lemma or
 discharged by an unannotated axiom.
 
-### 6b. The `brightwell_sharp_centred` axiom (external, retained)
+### 7b. The `brightwell_sharp_centred` axiom (external, retained)
 
 The headline depends on the named project axiom
 `OneThird.LinearExt.brightwell_sharp_centred`, which transcribes a
@@ -366,7 +471,7 @@ project-axiom-free.
 
 ---
 
-## 7. Pointers
+## 8. Pointers
 
 * **Paper:** [`main.pdf`](../main.pdf), [`main.tex`](../main.tex)
   (`thm:main` at `main.tex:230-241`).
@@ -378,11 +483,18 @@ project-axiom-free.
 * **`#print axioms` baseline:** [`lean/PRINT_AXIOMS_OUTPUT.txt`](../lean/PRINT_AXIOMS_OUTPUT.txt).
 * **Path C parked-work audit:** [`docs/path-c-cleanup-roadmap.md`](path-c-cleanup-roadmap.md).
 * **Formalization-completeness audit:** [`docs/formalization-completeness-audit.md`](formalization-completeness-audit.md).
+* **mg-27c2 `Case2FKGSubClaim` direction-reversed audit (§5):**
+  [`docs/a8-path-b-block-and-report-status.md`](a8-path-b-block-and-report-status.md)
+  (commit `64f2d87`, mg-a79e); related earlier audits
+  [`docs/a8-s2-rotation-residual-status.md`](a8-s2-rotation-residual-status.md)
+  (mg-ba0c) and
+  [`docs/a8-s2-strict-witness-status.md`](a8-s2-strict-witness-status.md)
+  (mg-43f3).
 * **Forum-post template (paste-able):** [`docs/lean-forum-post-template.md`](lean-forum-post-template.md).
 
 ---
 
-## 8. Provenance
+## 9. Provenance
 
 This document was filed under `mg-9e50` ("Reframe public claim for
 lean-forum publication readiness — PATH A — docs-only") by polecat
@@ -397,3 +509,11 @@ This doc supersedes any earlier informal "fully formalized" framing
 that pre-dated the option (δ) park decision (2026-04-27). Where this
 doc and an earlier README phrase disagree, this doc and the audit
 docs it cites are the canonical record of what is currently proven.
+
+§5 ("Known in-tree issue: mg-27c2 `Case2FKGSubClaim` direction-reversed")
+was added under `mg-8f59` ("PATH A disclosure update — mg-27c2
+hypothesis was provably false") by polecat `pc-8f59` on 2026-04-27,
+in response to the `pc-a79e` block-and-report finding (commit
+`64f2d87`, mg-a79e). The companion η₄ restate ticket is `mg-b0de`,
+filed under Daniel OVERRIDE (`mg-602e`) and running in parallel
+with this disclosure update.

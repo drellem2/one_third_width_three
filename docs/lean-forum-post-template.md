@@ -68,6 +68,30 @@ revise this template before posting.
 > No `sorryAx` or unaudited project axiom appears anywhere in the
 > headline's dependencies.
 >
+> **Known in-tree issue (forum reader caveat).** A separate audit
+> (polecat `pc-a79e`, commit `64f2d87`,
+> [`docs/a8-path-b-block-and-report-status.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/a8-path-b-block-and-report-status.md))
+> identified that `Case2FKGSubClaim` (a hypothesis structure on the
+> Case 2 within-band ⪯-chain dispatch in
+> [`lean/OneThird/Step8/Case2Rotation.lean`](https://github.com/drellem2/one_third_width_three/blob/main/lean/OneThird/Step8/Case2Rotation.lean))
+> is **provably false** on natural inputs (a 3-element
+> counterexample with `K = 2`, `w = 1` gives `probLT a a' = 1/3`,
+> violating the SubClaim's `1/2 ≤ probLT a a'`). The conditional
+> theorems `case2Witness_balanced_under_FKG` and
+> `strictCase2Witness_m2_balanced` predicated on this SubClaim are
+> therefore technically-correct-but-vacuous implications on a false
+> antecedent. **The headline `width3_one_third_two_thirds` is
+> unaffected** — it consumes `hC3` rather than `Case2FKGSubClaim`,
+> and the `#print axioms` baseline above is current. A restate
+> (η₄, `mg-b0de`) is in flight: change the SubClaim's direction to
+> `probLT a a' ≤ 1/2` (already a theorem in tree via chain swap)
+> and combine with a separate `≤ 2/3` upper bound from Brightwell
+> covariance. Until that lands, please do not cite mg-27c2's
+> conditional Case 2 theorems as unconditional results. The full
+> disclosure is in
+> [`docs/lean-forum-publication-readiness.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/lean-forum-publication-readiness.md)
+> §5 "Known in-tree issue".
+>
 > **Build and verify.** `lake build OneThird` succeeds in roughly 3
 > minutes wall after `lake exe cache get` on Lean
 > `v4.29.1` (pinned in `lean/lean-toolchain`); a recent
