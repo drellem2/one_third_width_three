@@ -64,6 +64,7 @@ import OneThird.Step8.ExcPerturb
 import OneThird.Step8.TheoremE
 import OneThird.Step8.G2Constants
 import OneThird.Step8.BipartiteEnum
+import OneThird.Step8.CompoundSwap
 import OneThird.Step8.Case3Struct
 import OneThird.Step8.Case3Dispatch
 import OneThird.Step8.Case2FKG
