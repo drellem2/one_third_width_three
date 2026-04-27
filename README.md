@@ -5,6 +5,12 @@
 > with `1/3 ≤ Pr[x <_L y] ≤ 2/3`, where `L` is a uniformly random
 > linear extension of `P`.
 
+The Lean formalization in [`lean/`](lean/) proves this **modulo a
+documented case-3 residual hypothesis** (`hC3 : Step8.Case3Witness`)
+and one named axiom transcribing a published external bound; see
+[`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md)
+for the side-by-side reading and the build-and-verify instructions.
+
 **📄 Paper (PDF):** **[`main.pdf`](main.pdf)** &nbsp;·&nbsp;
 **2-page summary:** [`summary.pdf`](summary.pdf) &nbsp;·&nbsp;
 **LaTeX source:** [`main.tex`](main.tex) (Theorem 1.1 / `thm:main`) &nbsp;·&nbsp;
@@ -55,7 +61,11 @@ Different readers want different entry points.
   would not) carry over.
 - **Lean / formal-methods reader** — go straight to
   [`lean/README.md`](lean/README.md). Build status, exact `sorry`
-  inventory, and per-file audit live there.
+  inventory, and per-file audit live there. For the publication-
+  readiness companion (Lean vs paper headline side-by-side, the
+  `hC3 : Step8.Case3Witness` residual hypothesis, `#print axioms`
+  baseline, and the `brightwell_sharp_centred` axiom rationale),
+  see [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md).
 - **"Is this for real?" reader** — read the disclosures in
   "Please read this before citing" immediately below. The short
   version: the author is unaffiliated, the work was written with
@@ -89,6 +99,25 @@ should know:
   been refereed, read end-to-end by any external expert, or
   submitted to a journal. External review is the next step, not a
   finished gate.
+- **Lean residuals.** The Lean formalization's headline theorem
+  `OneThird.width3_one_third_two_thirds`
+  ([`lean/OneThird/MainTheorem.lean`](lean/OneThird/MainTheorem.lean))
+  carries one Prop-level hypothesis `hC3 : Step8.Case3Witness` —
+  the universally-quantified discharge of the within-band antichain
+  Case 3 of the paper's `prop:in-situ-balanced` — and depends, via
+  the Step 8 assembly, on one named project axiom
+  `OneThird.LinearExt.brightwell_sharp_centred`, transcribing the
+  combined Brightwell 1999 §4 + Kahn–Saks 1984 Lemma 2.2 sharp
+  centred bound (a peer-reviewed published external result). The
+  `hC3` hypothesis is parked open math: closing it requires
+  compound-automorphism infrastructure (~300–500 LoC) that does not
+  exist in the tree, per pm-onethird's option (δ) park decision
+  (2026-04-27); the audit trail is in
+  [`docs/path-c-cleanup-roadmap.md`](docs/path-c-cleanup-roadmap.md).
+  The Brightwell axiom is retained per `mg-b699` decision, with a
+  documented replacement path in [`lean/AXIOMS.md`](lean/AXIOMS.md).
+  The full side-by-side reading and the verification recipe is in
+  [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md).
 
 ## The mathematical proof (LaTeX / PDF)
 
