@@ -69,6 +69,7 @@ import OneThird.Step8.Case3Struct
 import OneThird.Step8.Case3Dispatch
 import OneThird.Step8.CompoundMatching
 import OneThird.Step8.Case2FKG
+import OneThird.Step8.BipartiteEnumGeneral
 import OneThird.Step8.Case2BipartiteBound
 import OneThird.Step8.Case2Rotation
 import OneThird.Step8.Case3Residual
