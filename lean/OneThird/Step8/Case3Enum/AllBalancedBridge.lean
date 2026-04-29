@@ -213,7 +213,7 @@ This is the analogue of `enumPosetsFor_iter_balanced`
 per-mask loop to the outer per-`bs` loop, and is what discharges
 the `h_certificate : enumPosetsFor L.w (bandSizes L) = true`
 obligation in `bounded_irreducible_balanced_inScope`
-(`BoundedIrreducibleBalancedInScope.lean:114-115`) from F5a's
+(`BoundedIrreducibleBalancedInScope.lean:103-105`) from F5a's
 Bool-level `case3_certificate`. -/
 theorem allBalanced_imp_enumPosetsFor
     (w sizeLimit : Nat) (h : allBalanced w sizeLimit = true)
