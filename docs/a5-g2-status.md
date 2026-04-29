@@ -1,11 +1,19 @@
-# A5-G2 status — RESOLVED via path 1 (`mg-53ce` continuation)
+# A5-G2 status — RESOLVED via path 1 (`mg-53ce` + `mg-651f`)
 
-**Work item:** `mg-53ce` (A5-G2 path 1: add `cross_band_lt_upward`
-field to `LayeredDecomposition`).
+**Work items:**
 
-**Status:** **resolved (path 1 implemented)**.
+* `mg-53ce` (A5-G2 path 1, structural: add `cross_band_lt_upward`
+  field to `LayeredDecomposition`, update instance constructors).
+* `mg-651f` (A5-G2 path 1, wiring: discharge the carried
+  `h_construction_eq` / `h_freeUV_eq` / `h_succ` obligations of
+  `bounded_irreducible_balanced_inScope` inline, leaving only the
+  two genuinely external obligations — band non-emptiness and the
+  F5a Bool certificate fact for `L`'s band-size list).
 
-**Author:** path-1 polecat continuation, 2026-04-26.
+**Status:** **resolved (path 1 implemented and wired)**.
+
+**Authors:** path-1 polecat continuation, 2026-04-26 (`mg-53ce`);
+path-1 wiring closeout, 2026-04-29 (`mg-651f`).
 
 ---
 
@@ -52,14 +60,31 @@ contradicting `band c > band a`). So the F5a Bool certificate's
 upper-triangular `enumPredAtMaskOf` enumeration is structurally
 correct on every input that survives the layered axioms.
 
-The F5a discharge of `bounded_irreducible_balanced_inScope`
-(`BoundedIrreducibleBalanced.lean:1543-1550`) now has its
-load-bearing structural prerequisite in place. Wiring the
-construction-equivalence + B1'-B2-B3 + G1' + symmetric extraction
-+ bandMajorOrderIso transport into a real proof body remains a
-follow-on (originally the second half of the `mg-53ce` task spec)
-— it does not require any new axiom or sorry, just the glue work.
-This file no longer documents that wiring as blocked.
+The F5a discharge of `bounded_irreducible_balanced_inScope` is now
+fully wired in `lean/OneThird/Step8/BoundedIrreducibleBalancedInScope.lean`
+(originally `mg-d783` with five caller-side obligations; the
+construction-equivalence and `successorMasks` bit-correctness obligations
+were closed by `mg-9568` and `successorMasks_testBit` respectively, and
+this `mg-651f` change pulls those in-line so the theorem signature
+keeps only the two genuinely external obligations: band non-emptiness
+(`hNonempty`) and the F5a Bool certificate's `L`-specific consequence
+(`h_certificate`)). The composition is
+
+```
+G1' (enumPosetsFor_iter_balanced) +
+G3a + G3a-followup (findSymmetricPair_isSome_imp_symmetric +
+                     successorMasks_testBit) +
+G3b (hasBalancedPair_of_predOrder_orderIso) +
+G3c (enumPredAtMaskOf_eq_predMaskOf) +
+B1' (irreducible_predMaskOf_offsetsOf_eq_true) +
+B2  (hasAdjacentIncomp_predMaskOf_eq_true) +
+B3  (band-major positional alignment) +
+in-tree closureCanonical_predMaskOf / predMaskOf_warshall.
+```
+
+`#print axioms OneThird.Step8.bounded_irreducible_balanced_inScope`
+yields only the mathlib trio (`propext`, `Classical.choice`,
+`Quot.sound`) — no project axioms involved.
 
 **Axiom audit:** unchanged (mathlib trio +
 `brightwell_sharp_centred` +
@@ -166,10 +191,12 @@ For any `L`, construct `L' : LayeredDecomposition α` that respects
   Szpilrajn refactor.
 * `lean/OneThird/Step8/LayeredBridges.lean` — `layeredFromBridges`
   Szpilrajn refactor.
-* `lean/OneThird/Step8/BoundedIrreducibleBalanced.lean:1543-1550`
-  — `bounded_irreducible_balanced_inScope` placeholder body
-  (still `hEnum => hEnum`; the structural prerequisite is now in
-  place for a real discharge in a follow-up).
+* `lean/OneThird/Step8/BoundedIrreducibleBalancedInScope.lean`
+  — `bounded_irreducible_balanced_inScope` (real discharge, with
+  the post-`mg-9568` construction-equivalence and the
+  `successorMasks_testBit` bit-correctness pulled in-line by
+  `mg-651f`; only `hNonempty` and `h_certificate` remain as
+  caller-side obligations).
 * `step8.tex` `prop:in-situ-balanced` `2965-3048`; (L2) at the
   §sec:g4 setup discussion.
 * `docs/a5-glue-status.md` — parent A5 status.
