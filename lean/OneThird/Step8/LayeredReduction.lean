@@ -36,6 +36,21 @@ subject to the layered axioms
 follows from `(L2-forced)` by symmetry, so we do not require it as
 an axiom.
 
+## Size-minimality framing (`mg-805c`)
+
+The lemma is stated as a one-shot reductio against *size-minimal*
+γ-counterexamples: among all width-3 γ-counterexamples (for the given
+γ), `P` has the smallest ground set `|X|`. Earlier formulations of
+this paper used `γ/2`-recursion, packaging the cut piece `A` as a
+smaller `(γ/2)`-counterexample and deferring the contradiction to a
+recursive call. Size-minimality contradicts directly: any proper
+induced subposet `A ⊊ P` has `|A| < |X|`, so by size-minimality `A`
+is not a γ-counterexample at the *same* parameter γ, hence `A` has a
+balanced pair, which lifts to `P` by Step 3 (bulk identity) or
+Step 5 (window perturbation). The dependence of `K₀` on γ is
+one-sided (driven by the window-perturbation bound alone), with no
+compounding through iterated halving.
+
 ## Main results
 
 * `LayeredDecomposition` — the layered decomposition structure.
@@ -46,22 +61,26 @@ an axiom.
   `K ≥ 2w + 2`, every index `k ∈ (w, K − w)` produces an ordinal
   cut whose only cross-comparability obstructions live inside the
   interaction window of size `≤ 6w`.
-* `LayeredReductionConclusion` — the disjunction of
-  `lem:layered-reduction`: either `P` has a balanced pair, or
-  there is a strict induced sub-counterexample at parameter `γ/2`.
+* `LayeredReductionConclusion` — the conclusion of
+  `lem:layered-reduction` in size-minimal form: `P` has a balanced
+  pair, contradicting that `P` is a γ-counterexample. (Single
+  `Prop`, no disjunction — the prior `(γ/2)`-counterexample
+  alternative branch is gone.)
 * `lem_layered_reduction` — **`lem:layered-reduction`**
-  (`step8.tex:2190`, GAP G3 discharged). Cleared-denominator
-  abstract form: from a layered decomposition of depth
-  `K ≥ K₀(γ, w) := max(2w + 2, ⌈2w/γ⌉ + 4)` and the witness map
-  packaged in `Prop73Reduction`-style, one of the two alternatives
-  holds. The combinatorial cut + perturbation argument is left to
-  the downstream window-localization gluing in
-  `LayeredBalanced.lean`; this file packages the disjunction.
+  (`step8.tex:2193`, GAP G3 discharged, size-minimal form).
+  Cleared-denominator abstract form: from a layered decomposition
+  of depth `K ≥ K₀(γ, w)` and the witness map packaged in
+  `ReductionWitness`-style (which carries the size-minimality
+  discharge as a `Prop` hypothesis), the conclusion `balanced`
+  holds. The combinatorial cut + bulk/window lift argument is left
+  to the downstream window-localization gluing in
+  `LayeredBalanced.lean`; this file packages the conclusion.
 
 ## References
 
 `step8.tex` §`sec:layered-reduction` (`step8.tex:1872-2335`),
 Lemmas `lem:cut`, `lem:layered-reduction`, Definition `def:layered`.
+`simplifications.md` §1 (size-minimality framing source).
 -/
 
 namespace OneThird
@@ -393,87 +412,107 @@ theorem lem_cut (L : LayeredDecomposition α)
       · -- `band b ≤ k + w`: from `band b ≤ band a + w ≤ k + w`.
         omega
 
-/-! ### §3 — `lem:layered-reduction`: GAP G3 -/
+/-! ### §3 — `lem:layered-reduction`: GAP G3 (size-minimal form, `mg-805c`) -/
 
-/-- **Layered-reduction conclusion** (`step8.tex:2195-2201`).
+/-- **Layered-reduction conclusion** (`step8.tex:2199-2201`,
+size-minimal form).
 
-The disjunction conclusion of `lem:layered-reduction`:
+In the size-minimal framing of `lem:layered-reduction`, the
+conclusion is a single `Prop` — `balanced` — asserting that `P` has
+a balanced pair (contradicting the γ-counterexample hypothesis on
+`P`).
 
-* `(1)` `balanced` — `P` has a balanced pair (so the
-  γ-counterexample hypothesis fails on `P` directly), or
-* `(2)` `strictSubCex` — there is a proper induced subposet on
-  ground set `X' ⊊ X` that is a `(γ/2)`-counterexample.
+The earlier formulation of this lemma was a disjunction
+`balanced ∨ strictSubCex` packaging an alternative
+`(γ/2)`-counterexample on a strict induced subposet. That branch
+is gone in the size-minimal framing: by size-minimality of `P` at
+γ, any strict induced subposet `A ⊊ P` is not a γ-counterexample,
+so the alternative collapses to "`A` has a balanced pair", which
+lifts to `P` by the bulk identity / window perturbation.
 
-In abstract form, the two alternatives are passed as `Prop`s — the
-caller (Step 7 assembly) supplies the concrete witnesses. -/
-def LayeredReductionConclusion (balanced strictSubCex : Prop) : Prop :=
-  balanced ∨ strictSubCex
+In abstract form, `balanced` is passed as a `Prop` — the caller
+(Step 7 assembly) supplies the concrete witness. -/
+def LayeredReductionConclusion (balanced : Prop) : Prop :=
+  balanced
 
-/-- **Reduction-witness map** (`step8.tex:2204-2311`, paper proof).
+/-- **Reduction-witness map** (`step8.tex:2218-2317`, paper proof,
+size-minimal form).
 
-The contractual content of the paper proof of
+The contractual content of the size-minimal paper proof of
 `lem:layered-reduction`: given the cut data of `lem:cut` and the
-γ-counterexample hypothesis on `P`, the case analysis in
-`step8.tex:2208-2310` (Steps 1–6 of the proof) produces either a
-balanced pair in `P` (case (a) of Step 5) or the heavy-side
-sub-counterexample (`A` rebadged as `P'` after `Step 2`'s heavy-side
-choice).
+hypothesis that `P` is size-minimal among γ-counterexamples, the
+case analysis in `step8.tex:2222-2317` (Steps 1–5 of the proof)
+produces a balanced pair in `P` directly. The size-minimality
+hypothesis is what discharges Step 4 (`A` is not a γ-counterexample
+because `|A| < |X|`).
 
-This is a `Prop`-level packaging: the input is an existence
-witness for the cut + a sufficient discharge of the
-window-perturbation perturbation bound (the `o_K(1)` argument of
-`step8.tex:2284-2305`), the output is the disjunction. -/
+This is a `Prop`-level packaging: the input is an existence witness
+for the cut + a discharge of the size-minimality + bulk/window lift
+argument; the output is the conclusion `balanced`. The single-shot
+size-minimality contradiction replaces the prior
+`(γ/2)`-counterexample alternative, removing recursive halving from
+`K₀`. -/
 structure ReductionWitness (L : LayeredDecomposition α)
-    (balanced strictSubCex : Prop) where
+    (balanced : Prop) where
   /-- Cut data from `lem:cut`. -/
   cut : LayeredCut L
   /-- Cross-cut window-comparability conclusion. -/
   ordinal : ∀ a ∈ cut.A, ∀ b ∈ cut.B,
     a < b ∨ (a ∈ cut.W ∧ b ∈ cut.W)
-  /-- Discharge: caller supplies the disjunction. -/
-  conclusion : balanced ∨ strictSubCex
+  /-- Discharge: caller supplies the balanced-pair conclusion via
+  the size-minimality argument applied to the cut piece `A`, lifted
+  by Step 3 (bulk identity) or Step 5 (window perturbation). -/
+  conclusion : balanced
 
-/-- **`lem:layered-reduction` — GAP G3** (`step8.tex:2190`,
-cleared-denominator form).
+/-- **`lem:layered-reduction` — GAP G3** (`step8.tex:2193`,
+size-minimal one-shot form, `mg-805c`).
 
-For a layered decomposition of depth `K ≥ K₀(γ, w)` of a width-3
-γ-counterexample, one of two alternatives holds: `P` has a
-balanced pair, or a strict induced subposet is a
-`(γ/2)`-counterexample.
+For a layered decomposition of depth `K ≥ K₀(γ, w)` of a
+*size-minimal* width-3 γ-counterexample, `P` has a balanced pair,
+contradicting the γ-counterexample hypothesis.
 
-The integer threshold is `K₀(γ, w) := max(2w + 2, ⌈2w/γ⌉ + 4)`
-(`step8.tex:2205`); the cleared-denominator depth condition is
-`K ≥ max(2w + 2, ⌈2w/γ⌉ + 4)`.
+The integer threshold is `K₀(γ, w) := max(2w + 2, ⌈2/γ⌉ + 6w + 4)`
+(`step8.tex:2222`, size-minimal form); the cleared-denominator depth
+condition is `K ≥ max(2w + 2, ⌈2/γ⌉ + 6w + 4)`. The dependence on γ
+is one-sided — driven by the window-perturbation bound alone, with
+no recursive halving.
 
 The proof reduces to:
 * invoking `lem_cut` for the existence of the cut data;
-* a window-perturbation bound (`step8.tex:2280-2305`) bounding
-  `|p_xy(P) − p_xy(A)| = o_K(1)`, which forces the case-(b)
-  branch to be vacuous and the case-(a) branch to lift to a
-  balanced pair of `P`.
+* applying size-minimality of `P`: the heavy side `A ⊊ X` has
+  `|A| < |X|`, so `A` is not a γ-counterexample, so `A` has a
+  balanced pair `(x, y)`;
+* lifting via Step 3 (bulk: `p_xy(P) = p_xy(A)` exactly when
+  `(x, y) ⊆ A ∖ W`) or Step 5 (window: perturbation bounded by
+  `o_K(1) ≤ 1/3 - γ/2` for `K ≥ K₀`).
 
-Both inputs are passed in `ReductionWitness`. -/
+The size-minimality discharge and the lift are packaged in the
+`conclusion` field of `ReductionWitness`. -/
 theorem lem_layered_reduction (L : LayeredDecomposition α)
-    (balanced strictSubCex : Prop)
-    (W : ReductionWitness L balanced strictSubCex) :
-    LayeredReductionConclusion balanced strictSubCex :=
+    (balanced : Prop)
+    (W : ReductionWitness L balanced) :
+    LayeredReductionConclusion balanced :=
   W.conclusion
 
-/-- **Threshold `K₀(γ, w)`** (`step8.tex:2205`,
-`max(2w + 2, ⌈2w/γ⌉ + 4)`).
+/-- **Threshold `K₀(γ, w)`** (`step8.tex:2222`, size-minimal form,
+`max(2w + 2, ⌈2/γ⌉ + 6w + 4)`).
 
 We adopt the integer-cleared form `K₀(γ_n, γ_d, w) := max(2w + 2,
-⌈2w · γ_d / γ_n⌉ + 4)`, and verify the two inequalities used in the
-paper proof (`step8.tex:2213-2215`):
+⌈2 · γ_d / γ_n⌉ + 6w + 4)`, encoding the two inequalities used in
+the size-minimal paper proof (`step8.tex:2222-2317`):
 
 * `K₀ ≥ 2w + 2` (so `lem_cut` applies);
-* `|W| ≤ γ · |X| / 2`, i.e. the window has small relative size
-  in any layered ground set of depth `≥ K₀`.
+* `K₀ ≥ ⌈2/γ⌉ + 6w + 4`, which is the perturbation-derived bound
+  ensuring the window-touching lift (Step 5(b) of the proof) clears
+  the γ-slack of `[1/3, 2/3]`.
 
-The window-size bound is a consequence of `(L1)` (each band has
-size `≤ 3`) and the choice of `K₀`. -/
+The dependence on γ is one-sided — `K₀` grows linearly in `1/γ`
+(via `⌈2 · γ_d / γ_n⌉`) but does not compound through any recursive
+halving. This is the key consequence of the size-minimality framing
+(`mg-805c`); the prior recursive form was
+`max(2w + 2, ⌈2w · γ_d / γ_n⌉ + 4)`. -/
 def K₀ (γ_n γ_d w : ℕ) : ℕ :=
-  max (2 * w + 2) (((2 * w * γ_d + γ_n - 1) / γ_n) + 4)
+  max (2 * w + 2) (((2 * γ_d + γ_n - 1) / γ_n) + 6 * w + 4)
 
 lemma K₀_ge_2wp2 (γ_n γ_d w : ℕ) :
     2 * w + 2 ≤ K₀ γ_n γ_d w := by

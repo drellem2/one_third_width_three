@@ -699,15 +699,16 @@ theorem OrdinalChainLift.hasBalancedPair_lift_chain
 
 /-! ### §6 — Combined G3+G4 conclusion (`prop:step7(iii)`) -/
 
-/-- **Combined G3+G4 conclusion** (`step8.tex:3175-3192`,
+/-- **Combined G3+G4 conclusion** (`step8.tex:3187-3204`,
 `rem:g3-g4-interface`).
 
 Together, `lem_layered_reduction` (G3) and `lem_layered_balanced`
 (G4) exhaust `prop:step7(iii)` with no depth gap:
 
-* Deep regime `K ≥ K₀(γ, w)`: `lem_layered_reduction` gives the
-  stronger *sub-counterexample* output, useful for the minimality
-  step in `thm:main`.
+* Deep regime `K ≥ K₀(γ, w)`: `lem_layered_reduction` (in its
+  size-minimal one-shot form, `mg-805c`) directly produces a
+  balanced pair in `P`, using the cut + bulk/window lift
+  internally. No recursive descent on γ; no compounding decay.
 
 * Shallow regime `K < K₀(γ, w)`: `lem_layered_balanced` directly
   exhibits a balanced pair, contradicting the γ-counterexample

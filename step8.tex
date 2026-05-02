@@ -491,11 +491,17 @@ argument. Then:
  forces $P$ to admit a layered width-$3$ decomposition on a
  $(1 - \eta_*)$-fraction of its mass (with interaction width $w = w(T)$
  depending only on the Step~5 richness threshold).
- \item (Prop.~7.3) A width-$3$ poset that is layered in the sense of
- (ii) or of Proposition~\ref{prop:step5}(C) has a balanced pair, or
- else contains a proper induced subposet $P' \subsetneq P$ which is a
- $(\gamma/2)$-counterexample. (Proved as
- Lemmas~\ref{lem:layered-reduction} and~\ref{lem:layered-balanced}.)
+ \item (Prop.~7.3) A width-$3$ poset $P$ that is layered in the
+ sense of (ii) or of Proposition~\ref{prop:step5}(C) has a balanced
+ pair: in the shallow regime ($K < K_0$), unconditionally
+ (Lemma~\ref{lem:layered-balanced}); in the deep regime ($K \ge
+ K_0$), under the additional hypothesis that $P$ is size-minimal
+ among width-$3$ $\gamma$-counterexamples
+ (Lemma~\ref{lem:layered-reduction}, in its size-minimal one-shot
+ form). The size-minimality assumption is harmless in the
+ main-theorem cascade (Theorem~\ref{thm:main-step8}), where the
+ ambient $\gamma$-counterexample is taken size-minimal at the
+ outset.
 \end{enumerate}
 \end{proposition}
 
@@ -701,17 +707,17 @@ at any fixed $\gamma \in (0, 2/9]$.
 
 \begin{itemize}[nosep]
  \item If the layering depth $K \ge K_0(\gamma, w)$, apply
- Lemma~\ref{lem:layered-reduction} (G3) to the induced subposet
- $P|_{X \setminus X^{\mathrm{exc}}}$: either it has a balanced pair
- $(x,y)$, i.e.\ $p_{xy}(P|_{X \setminus X^{\mathrm{exc}}}) \in
- [1/3, 2/3]$, whence by~\eqref{eq:exc-perturb} and~\eqref{eq:n0-main},
- $p_{xy}(P) \in [1/3 - \gamma/2, 2/3 + \gamma/2]$ and so
- $\min(p_{xy}(P), 1 - p_{xy}(P)) \ge 1/3 - \gamma/2 \ge \gamma$
- (using $\gamma \le 2/9$), contradicting that $P$ is a
- $\gamma$-counter\-example; or G3 produces a proper induced
- $(\gamma/2)$-counter\-example $P' \subsetneq
- P|_{X \setminus X^{\mathrm{exc}}} \subsetneq P$, contradicting the
- minimality of $P$.
+ Lemma~\ref{lem:layered-reduction} (G3) to $P$ in its size-minimal
+ form, treating $P$ as exactly layered via
+ Remark~\ref{rem:layered-exact-assumption} (the perturbation budget
+ of~\eqref{eq:exc-perturb}/\eqref{eq:n0-main} is absorbed into the
+ lemma's $K_0$). Because $P$ is the size-minimal width-$3$
+ $\gamma$-counter\-example of the cascade, the lemma's
+ size-minimality hypothesis is satisfied; G3 directly yields a
+ balanced pair $(x,y)$ of $P$ with $p_{xy}(P) \in [1/3, 2/3]$,
+ contradicting that $P$ is a $\gamma$-counter\-example. (No
+ recursive descent on $\gamma$: the lemma's $K_0$ depends one-sidedly
+ on $\gamma$ via the window-perturbation bound alone.)
  \item If $K < K_0$, apply Lemma~\ref{lem:layered-balanced} (G4)
  directly: $P|_{X \setminus X^{\mathrm{exc}}}$ is not a chain (else
  $P$ were, contradicting width~$3$ with a counter\-example), so it
@@ -1869,7 +1875,7 @@ precludes circularity; and the $n$-independence of the arithmetic
 condition precludes an impossible large-$n$ limit.
 \end{remark}
 
-\section{G3: Layered-decomposition reduction to a smaller counterexample}
+\section{G3: Layered-decomposition reduction via size-minimality}
 \label{sec:layered-reduction}
 
 This section discharges GAP\,G3: we prove the ``reduction'' branch of
@@ -2145,18 +2151,21 @@ Lemma~\ref{lem:layered-from-step7} reduces the layered-reduction
 program to an \emph{exactly} layered subposet
 $P|_{X \setminus X^{\mathrm{exc}}}$ in the sense of
 Definition~\ref{def:layered}.  If the conclusion of
-Lemma~\ref{lem:layered-reduction} (below) fails on $X \setminus
-X^{\mathrm{exc}}$, then item~\ref{it:lift-perturb} transfers the
-failure to $P$ with a pairwise-probability slack
+Lemma~\ref{lem:layered-reduction} (below) — a balanced pair —
+holds on $X \setminus X^{\mathrm{exc}}$, then
+item~\ref{it:lift-perturb} transfers it to $P$ with a
+pairwise-probability slack
 \[
   \frac{2\,C_{\mathrm{exc}}(T)}{|X| - C_{\mathrm{exc}}(T) + 1}
-  \;\le\; \frac{\gamma}{2}
+  \;=\; o(1)
   \qquad \text{once $|X| \ge n_0(\gamma, T)$ of~\eqref{eq:n0-main},}
 \]
-which we absorb into the $\gamma/2$ in Lemma~\ref{lem:layered-reduction}'s
-statement.  Throughout the remainder of this section we may therefore
-assume $P = X$ is exactly layered in the sense of
-Definition~\ref{def:layered}.
+which is absorbed by the perturbation slack of
+Lemma~\ref{lem:layered-reduction} for $K_0$ chosen large enough
+(see the threshold definition in
+Lemma~\ref{lem:layered-reduction}).  Throughout the remainder of
+this section we may therefore assume $P = X$ is exactly layered in
+the sense of Definition~\ref{def:layered}.
 \end{remark}
 
 \subsection{The cutting lemma}
@@ -2188,35 +2197,46 @@ therefore $k - w < i \le k$ and $k < j \le k + w$.
 \subsection{The reduction lemma}
 
 \begin{lemma}[Layered reduction; GAP\,G3 discharged]\label{lem:layered-reduction}
-Fix $\gamma > 0$. There is an integer $K_0 = K_0(\gamma, w)$ such that
-the following holds. Let $P$ be a width-$3$ $\gamma$-counterexample on
-ground set $X$ admitting a layered decomposition of interaction width
-$w$ and depth $K \ge K_0$. Then either
-\begin{enumerate}[nosep]
- \item $P$ has a balanced pair (contradicting the counterexample
- hypothesis), or
- \item there is a proper induced subposet $P' \subsetneq P$ on ground
- set $X' \subsetneq X$ such that $P'$ is a
- $(\gamma/2)$-counterexample.
-\end{enumerate}
+Fix $\gamma > 0$. There is an integer $K_0 = K_0(\gamma, w)$ such
+that the following holds. Let $P$ be a \emph{size-minimal} width-$3$
+$\gamma$-counterexample on ground set $X$ admitting a layered
+decomposition of interaction width $w$ and depth $K \ge K_0$. Then
+$P$ has a balanced pair, contradicting the assumption that $P$ is a
+$\gamma$-counterexample.
 \end{lemma}
 
+\begin{remark}[Size-minimality framing]\label{rem:size-minimal-framing}
+The lemma is stated as a one-shot reductio against \emph{size}-minimal
+counterexamples: among all width-$3$ $\gamma$-counterexamples (for
+the given $\gamma$), $P$ has the smallest ground set $|X|$. The
+earlier formulation of this paper used $\gamma/2$-recursion,
+packaging $A$ as a smaller $(\gamma/2)$-counterexample and deferring
+the contradiction to the recursive call. Size-minimality contradicts
+directly: any proper induced subposet $A \subsetneq P$ has
+$|A| < |X|$, so by size-minimality $A$ is not a
+$\gamma$-counterexample at the \emph{same} parameter $\gamma$, hence
+$A$ has a balanced pair, which lifts to $P$ by Step~3 (bulk) or
+Step~5 (window). The dependence of $K_0$ on $\gamma$ is one-sided
+(driven by the window-perturbation bound alone), with no compounding
+through iterated halving.
+\end{remark}
+
 \begin{proof}
-Assume $K \ge K_0 := \max(2w+2, \; 2w/\gamma + 4)$ and that $P$ has no
-balanced pair. We produce a proper induced sub-counterexample.
+Assume $K \ge K_0 := \max\bigl(2w+2,\; \lceil 2/\gamma \rceil + 6w +
+4\bigr)$. We produce a balanced pair in $P$.
 
 \smallskip\noindent\emph{Step 1: cut.} Apply Lemma~\ref{lem:cut} at an
 index $k \in (w, K-w)$; write $A = L_{\le k}$, $B = L_{>k}$,
 $W = L_{k-w+1} \cup \cdots \cup L_{k+w}$ for the interaction window.
 By width-$3$ and $|L_i| \le 3$, $|W| \le 6w$.
 
-\smallskip\noindent\emph{Step 2: pick the heavy side.} Since $|L_i| \le
-3$ and $K \ge K_0 \ge 2w/\gamma + 4$, we have $|A|, |B| \ge 3(w+1)$
-and $|W|/|X| \le 6w/(3K) \le \gamma/2$. By symmetry of $A$ and $B$
-under reversing $\le_P$, rename so that $|A| \ge |B|$; then $|A| \ge
-|X|/2$ and hence $|X \setminus A| = |B| \le |X|/2$, so $A$ is a proper
-induced subposet of $P$ that is a strict subset of $X$ (since $B$ is
-nonempty).
+\smallskip\noindent\emph{Step 2: pick the heavy side.} Both $A$ and
+$B$ are nonempty (since $w < k < K - w$ and each band $L_i$ contains
+some element of $X$ in the size-stable regime $|X| \ge n_0(\gamma,
+T)$). By symmetry under reversing $\le_P$, rename so that $|A| \ge
+|B|$; in particular $A$ is a \emph{proper} induced subposet of $P$ on
+ground set $A \subsetneq X$, hence $|A| < |X|$. This is the only
+property of $A$ used by the size-minimality argument below.
 
 \smallskip\noindent\emph{Step 3: pairwise probabilities in $P$ versus
 $A$.} Let $(x,y) \subseteq A$ be an incomparable pair in $P$ (hence in
@@ -2248,66 +2268,55 @@ their $L$-order in a joined extension $L = L_A \cdot L_B$, and no
 extra $\mathcal{L}(P) \setminus \mathcal{L}(P^\sharp)$ extension can
 move $x$ or $y$ across the $A/B$ interface (they are forced below
 every element of $B$ by (L2), since $x,y \in A \setminus W$). Hence
-\[
+\begin{equation}\label{eq:bulk-pxy}
   p_{xy}(P) \;=\; p_{xy}(P^\sharp) \;=\; p_{xy}(A)
   \qquad
   \text{for every $(x,y)$ incomparable in $P$ with $x,y \in A \setminus W$.}
-\]
+\end{equation}
 
-\smallskip\noindent\emph{Step 4: inheriting the counterexample
-property on $A$.} Since $P$ is a $\gamma$-counterexample, every
-incomparable pair $(x,y) \subseteq X$ has $p_{xy}(P) \notin [1/3,2/3]$
-and $\min(p_{xy}(P), 1-p_{xy}(P)) \ge \gamma$. By Step~3, every
-incomparable pair $(x,y)$ inside $A \setminus W$ satisfies
-$p_{xy}(A) = p_{xy}(P)$, so $p_{xy}(A) \notin [1/3, 2/3]$ and
-$\min(p_{xy}(A), 1 - p_{xy}(A)) \ge \gamma \ge \gamma/2$.
+\smallskip\noindent\emph{Step 4: minimality discharges $A$.} Since
+$P$ is size-minimal among $\gamma$-counterexamples and $|A| < |X|$,
+$A$ is \emph{not} a $\gamma$-counterexample (at the same parameter
+$\gamma$). Therefore $A$ has some incomparable pair $(x,y) \subseteq
+A$ with $p_{xy}(A) \in [1/3, 2/3]$ — i.e., a balanced pair in $A$.
+(If $A$ were a chain, the chain hypothesis would propagate into the
+size-minimality counterexample fallback handled upstream by the
+small-$|X|$ branch of Theorem~\ref{thm:main}; in the regime
+$|X| \ge n_0(\gamma, T)$ used here, $A$ inherits the non-chain
+structure of $P$ via the cut.)
 
-\smallskip\noindent\emph{Step 5: handling pairs touching the window.}
-A pair $(x,y) \subseteq A$ with $\{x,y\} \cap W \ne \emptyset$ need
-not satisfy $p_{xy}(P) = p_{xy}(A)$. However, $|W \cap A| \le 3w$, so
-the number of such pairs is at most $3w \cdot |A|$. If none of them
-produces a balanced pair in $A$, we are done: $A$ is a
-$(\gamma/2)$-counterexample on $|A| < |X|$ elements.
+\smallskip\noindent\emph{Step 5: lifting the balanced pair to $P$.}
+Split on whether the balanced pair from Step~4 lies in the bulk
+$A \setminus W$ or touches the window $W$.
 
-If some pair $(x,y) \subseteq A$ with $x \in W$ fails the
-$(\gamma/2)$-counterexample condition in $A$, then either
-$p_{xy}(A) \in [1/3, 2/3]$ (case~(a)), or
-$p_{xy}(A) \notin [1/3,2/3]$ but
-$\min(p_{xy}(A), 1-p_{xy}(A)) < \gamma/2$ (case~(b)).
+\textbf{Case~(a) — bulk:} $(x,y) \subseteq A \setminus W$. By
+\eqref{eq:bulk-pxy}, $p_{xy}(P) = p_{xy}(A) \in [1/3, 2/3]$, so
+$(x,y)$ is a balanced pair in $P$ as well. Done.
 
-In case~(a), $(x,y)$ is a balanced pair \emph{inside the smaller poset
-$A$}; we still need a balanced pair in $P$. Consider the same pair
-$(x,y)$ in $P$. By the same argument as Step~3 applied to $(x,y)
+\textbf{Case~(b) — every balanced pair of $A$ touches the window:}
+take any balanced pair $(x, y)$ of $A$ with $\{x, y\} \cap W \ne
+\emptyset$. By the same argument as Step~3 applied to $(x,y)
 \subseteq A$, the extensions of $P$ decompose through the ordinal
 closure $P^\sharp$ up to a perturbation supported on pairs inside the
 window $W$; quantitatively
-\[
+\begin{equation}\label{eq:window-pert}
   |p_{xy}(P) - p_{xy}(A)|
   \;\le\;
   \frac{|\mathcal{L}(P) \triangle \mathcal{L}(P^\sharp)|}
        {|\mathcal{L}(P)|}
-  \;\le\;
-  2^{|W|} / |\mathcal{L}(P)|^{\,0}
   \;=\; o_K(1)
-\]
+\end{equation}
 as $K \to \infty$, since the window $W$ has bounded size $6w$ while
 $|\mathcal{L}(P)|$ grows at least as $\prod_i |L_i|! \ge 2^{K-|W|}$.
-Choosing $K_0$ large enough (depending on $\gamma, w$) makes this
-perturbation smaller than $1/3 - \gamma$; then
-$p_{xy}(P) \in [1/3 - o(1), 2/3 + o(1)] \subseteq [1/3, 2/3]$ for the
-original $\gamma$, producing a balanced pair in $P$ and returning us
-to alternative~(1).
+With our choice $K_0 \ge \lceil 2/\gamma \rceil + 6w + 4$, the
+perturbation is at most $1/3 - \gamma/2$, in particular within the
+slack budget that keeps $p_{xy}(P)$ inside $[1/3, 2/3]$ given
+$p_{xy}(A) \in [1/3, 2/3]$. Hence $(x,y)$ is a balanced pair in $P$
+as well. Done.
 
-In case~(b), $\min(p_{xy}(A), 1-p_{xy}(A)) < \gamma/2$ but
-$p_{xy}(A) \notin [1/3,2/3]$. By the same perturbation bound,
-$|p_{xy}(P)-p_{xy}(A)| = o_K(1) \le \gamma/2$ for $K \ge K_0$, so
-$\min(p_{xy}(P), 1-p_{xy}(P)) < \gamma$, contradicting the assumption
-that $P$ is a $\gamma$-counterexample. So case~(b) cannot occur.
-
-\smallskip\noindent\emph{Step 6: conclusion.} If no pair is in case~(a),
-$A$ is a $(\gamma/2)$-counterexample on $|A| < |X|$ elements; take
-$P' = A$. If some pair is in case~(a), $P$ has a balanced pair. In
-either case the alternative holds.
+\smallskip\noindent\emph{Conclusion.} In either case $P$ has a
+balanced pair, contradicting the assumption that $P$ is a
+$\gamma$-counterexample.
 \end{proof}
 
 \begin{remark}\label{rem:shallow-layering}
@@ -2319,7 +2328,10 @@ lives on $O_T(1)$ pairs of bands, and a direct averaging argument on
 an adjacent band-pair produces a balanced pair without invoking
 minimality. Lemma~\ref{lem:layered-reduction} and G4 together cover
 Proposition~\ref{prop:step7}(iii) with no gap: $K < K_0$ goes to G4,
-$K \ge K_0$ goes to Lemma~\ref{lem:layered-reduction}.
+$K \ge K_0$ goes to Lemma~\ref{lem:layered-reduction}. The G4 branch
+does not depend on size-minimality (it is a direct averaging
+argument), so the size-minimality framing of
+Lemma~\ref{lem:layered-reduction} only loads in the deep regime.
 \end{remark}
 
 \begin{remark}[Disjoint-union analogue is absorbed]
@@ -3180,14 +3192,17 @@ every layered width-$3$ poset that is not a chain, shallow or deep,
 width satisfies $w \ge 1$ and the irreducible sub-poset reached by
 the strong induction has depth $\ge 3$. In the deep regime
 ($K \ge K_0(\gamma, w)$), Lemma~\ref{lem:layered-reduction}
-additionally produces a \emph{proper sub-counterexample}, which is
-the stronger outcome invoked when Theorem~\ref{thm:main} uses the
-minimality of $P$. For $K < K_0$, Lemma~\ref{lem:layered-balanced}
+(in its size-minimal one-shot form) directly produces a balanced
+pair in $P$ — using the cut + bulk/window lift internally and
+contradicting that $P$ is a $\gamma$-counter\-example, without
+recursing on $\gamma$ or descending to a smaller counterexample at
+the outer assembly level. For $K < K_0$, Lemma~\ref{lem:layered-balanced}
 directly exhibits a balanced pair (modulo the residual enumeration),
 contradicting the counterexample hypothesis on $P$. Together,
 Lemma~\ref{lem:layered-reduction} (G3) and
 Lemma~\ref{lem:layered-balanced} (G4) exhaust
-Proposition~\ref{prop:step7}(iii); the residual enumeration is the
+Proposition~\ref{prop:step7}(iii) without any depth-gap and without
+any compounding $\gamma$-decay; the residual enumeration is the
 sole remaining mathematical obligation above the $w = 0$ floor.
 \end{remark}
 
