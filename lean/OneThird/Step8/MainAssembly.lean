@@ -33,7 +33,8 @@ This file is the capstone of the Lean formalisation: it combines
 * **Step 6 dichotomy** (`thm:step6`) — coherence forced by G2
   (`prop_G2`);
 * **Step 7 collapse** (`thm:step7`) — coherence ⇒ layered width-3;
-* **G3 reduction** (`lem_layered_reduction`) — deep regime;
+* **G3 reduction** (`lem_layered_reduction`) — deep regime,
+  size-minimal one-shot form (`mg-805c`);
 * **G4 balanced pair** (`lem_layered_balanced`) — shallow regime;
 * **Small-`n` base case** (`lem_small_n`) — below the cascade
   threshold
@@ -111,9 +112,11 @@ The fields:
 * `step7Globalization` — `prop:step7` (`step7.tex`): coherence
   globalizes to a layered decomposition (case (R) ⇒ case (C)).
 * `g3OrG4` — the G3/G4 dichotomy on a layered decomposition:
-  either it has depth `≥ K₀` (deep regime: G3 reduction yields a
-  smaller counterexample, contradicting minimality) or `< K₀`
-  (shallow regime: G4 directly produces a balanced pair).
+  either it has depth `≥ K₀` (deep regime: G3 reduction in its
+  size-minimal one-shot form (`mg-805c`) directly produces a
+  balanced pair in `P`, contradicting `P`'s γ-counterexample
+  status) or `< K₀` (shallow regime: G4 directly produces a
+  balanced pair).
 * `pertBound` — `eq:exc-perturb` (`step8.tex:681`): the pairwise
   probability perturbation bound for deleting a bounded exceptional
   set, `|p_xy(P) − p_xy(P|_{X∖X_exc})| ≤ 2 k / (n − k + 1)`.
