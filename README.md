@@ -109,14 +109,28 @@ should know:
   `OneThird.LinearExt.brightwell_sharp_centred`, transcribing the
   combined Brightwell 1999 §4 + Kahn–Saks 1984 Lemma 2.2 sharp
   centred bound (a peer-reviewed published external result). The
-  `hC3` hypothesis is parked open math: closing it requires
-  compound-automorphism infrastructure (~300–500 LoC) that does not
-  exist in the tree, per pm-onethird's option (δ) park decision
-  (2026-04-27); the audit trail is in
-  [`docs/path-c-cleanup-roadmap.md`](docs/path-c-cleanup-roadmap.md).
-  The Brightwell axiom is retained per `mg-b699` decision, with a
-  documented replacement path in [`lean/AXIOMS.md`](lean/AXIOMS.md).
-  The full side-by-side reading and the verification recipe is in
+  `hC3` hypothesis is parked open math: pm-onethird's option (δ)
+  park decision (2026-04-27) was confirmed structurally settled on
+  2026-05-04 after both Path C cleanup tracks block-and-reported.
+  Track 1 (compound-automorphism extension on `main`, `mg-b666`,
+  [`docs/path-c-track-1-status-1.md`](docs/path-c-track-1-status-1.md))
+  found a structural cardinality obstruction: even with the K=2
+  same-band compound-automorphism kit landed in tree (`mg-84f2` /
+  `mg-c0c7` / `mg-02c2`), no order-preserving permutation can swap
+  a strict `⪯`-pair, so the natural in-tree dispatch route cannot
+  discharge case-2-strict. Track 2 (math-simp arc 2.0,
+  [`docs/math-simp-arc-2.0/scoping.md`](docs/math-simp-arc-2.0/scoping.md))
+  surveyed four candidate fresh framings and found zero GREEN.
+  Closing `hC3` therefore now requires either the deferred
+  A8-S2-cont probability-normalised cross-poset FKG infrastructure
+  (~2000–3500 LoC, multi-week work outside polecat scope), a
+  width-3-specific tightening of the Kahn–Linial covariance bound,
+  or a different proof program entirely; revival triggers are in
+  [`docs/path-c-cleanup-roadmap.md`](docs/path-c-cleanup-roadmap.md)
+  §7. The Brightwell axiom is retained per `mg-b699` decision, with
+  a documented replacement path in
+  [`lean/AXIOMS.md`](lean/AXIOMS.md). The full side-by-side reading
+  and the verification recipe is in
   [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md).
 - **Known in-tree issue: mg-27c2 `Case2FKGSubClaim` is
   direction-reversed; iteration-parked via η₅.** A 3-element
@@ -135,9 +149,15 @@ should know:
   Brightwell + chain-swap infrastructure cannot discharge the
   restated bound. The defect is **iteration-parked** via the
   pre-committed PM pivot η₅ (drop SubClaim discharge path; keep
-  `hC3`); future-revival routes are the deferred A8-S2-cont
-  cross-poset FKG infrastructure (`mg-8801`, ~2000-3500 LoC) or
-  a math-simplification experiment in a future product cycle.
+  `hC3`); the available future-revival route is the deferred
+  A8-S2-cont cross-poset FKG infrastructure (`mg-8801`,
+  ~2000–3500 LoC). The math-simplification pathway was attempted in
+  the math-simp arc 1.0 (`mg-3e53`) and 2.0 (`mg-80ab`,
+  [`docs/math-simp-arc-2.0/scoping.md`](docs/math-simp-arc-2.0/scoping.md))
+  scoping passes (2026-05-02 and 2026-05-04) and closed without
+  finding a GREEN framing within polecat scoping authority; further
+  math-simplification revival now sits with paper-level research-arc
+  options outside this project's polecat scope.
   The conditional theorems `case2Witness_balanced_under_FKG` and
   `strictCase2Witness_m2_balanced` predicated on this SubClaim are
   technically-correct-but-vacuous implications on a false antecedent;

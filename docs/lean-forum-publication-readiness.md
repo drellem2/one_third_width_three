@@ -11,13 +11,50 @@ The intent is that a Lean / formal-methods reader can verify the
 claim end-to-end without needing to reverse-engineer the discrepancy
 between the paper's `thm:main` and the Lean-side headline theorem.
 
-**Status as of 2026-04-27.** Build is clean; the headline depends on
+**Status as of 2026-05-04.** Build is clean; the headline depends on
 one named project axiom (Brightwell, transcribing a published
 external result) plus Lean's standard classical-foundations trio,
 and carries one Prop-level hypothesis (`hC3`) that pins a
 parametrically-quantified discharge of the paper's `prop:in-situ-balanced`
 Case 3. Both residuals are documented below and disclosed verbatim
 in the forum-post template.
+
+**Update relative to the 2026-04-27 calibration.** Two parallel
+cleanup tracks closed on 2026-05-04, both block-and-reporting and
+both confirming that PATH A (ship the documented narrower public
+claim under the reframed wording established in `mg-9e50` / `mg-457c`)
+is the **settled** outcome — not just the default after a single
+park decision. The fresh evidence:
+
+* **Track 1 (`mg-b666`, compound-automorphism extension on `main`,
+  commit `5dff5e4`,
+  [`docs/path-c-track-1-status-1.md`](path-c-track-1-status-1.md)).**
+  Found a structural cardinality obstruction (§2 of that doc): no
+  order-preserving permutation `σ : α ≃ α` with `σ a = a'` can
+  exist when `upper(a) ⊊ upper(a')` strictly, because such a `σ`
+  would restrict to a bijection forcing `|upper(a)| = |upper(a')|`.
+  This rules out compound-automorphism extension to case-2-strict
+  for **any** construction — triple-orbit, partial-injection, and
+  different-pair variants all fail. The obstruction is structural,
+  not effort-bound.
+* **Track 2 (`mg-80ab`, math-simp arc 2.0 on branch
+  `math-simp-arc-2.0`, commit `b1ac92b`,
+  [`docs/math-simp-arc-2.0/scoping.md`](math-simp-arc-2.0/scoping.md)).**
+  Scoped four candidate fresh framings (audit-bar revisit / direct
+  probability bound / restrict-and-dispatch / alternate proof
+  program) and found **zero GREEN framings** within polecat scoping
+  authority. The probability-bound route is also blocked: the
+  in-tree Brightwell sharp centred bound is vacuous at `|α| ≤ 6`,
+  which is exactly the K=2 regime where the obstruction lives.
+
+The Future-revival pathways in §5 below are unchanged in substance
+(A8-S2-cont infrastructure, math-simplification experiment in a
+future product cycle), but the math-simplification pathway is now
+narrower than the 2026-04-27 framing implied: the natural fresh
+framings have been surveyed and found wanting, so any successful
+future math-simp must come from outside the four candidates already
+audited. The §5 wording has been updated accordingly (see §5 of
+this doc).
 
 ---
 
@@ -134,35 +171,60 @@ sub-posets via `L.restrict D.Mid`, so the Case-3 discharge has to
 cover an entire `∀`-family of sub-types, not a single fixed `β`.
 
 The discharge has been attempted across four polecat rounds (mg-4a5b
-→ mg-072c → mg-0fa0 → mg-94fd) under Path C cleanup. The arc shipped
-six pieces of substantive infrastructure (mg-9568, mg-7f06, mg-a735,
-mg-27c2, mg-2e58, mg-26bb — see `docs/path-c-cleanup-roadmap.md` §4)
-but stopped at a named structural obstruction:
+→ mg-072c → mg-0fa0 → mg-94fd) under Path C cleanup, plus a follow-on
+compound-automorphism build-out (mg-84f2 / mg-c0c7 / mg-02c2) and a
+2026-05-04 Track 1 attempt to extend that build-out (mg-b666). The
+arc shipped six pieces of substantive infrastructure (mg-9568,
+mg-7f06, mg-a735, mg-27c2, mg-2e58, mg-26bb — see
+`docs/path-c-cleanup-roadmap.md` §4) plus the K=2 same-band
+compound-automorphism kit (`CompoundSwap.lean`, `CompoundMatching.lean`,
+`BipartiteEnumGeneral.lean` — mg-84f2 / mg-c0c7 / mg-02c2). After the
+round-4 firm stop-loss, pm-onethird picked **option (δ): park** —
+retain `hC3` as a named hypothesis on the headline, ship the audit
+as the deliverable, and revisit if the underlying mathematical
+infrastructure lands later. **Track 1 then attempted to extend the
+landed compound-automorphism kit to discharge case-2-strict
+(2026-05-04, mg-b666) and surfaced a structural cardinality
+obstruction that rules out the extension for any compound-automorphism
+construction:**
 
-> The minimal failing instance is the **N-poset**:
-> `α = {x₁, x₂, y₁, y₂}` with `x₁ < y₁` and `x₂ < y₂`,
-> `band 1 = {x₁, x₂}`, `band 2 = {y₁, y₂}`, `K = 2`, `w = 1`. The
-> pair `(x₁, x₂)` is balanced (`Pr[x₁ <_L x₂] = 1/2` by direct
-> enumeration of N's six linear extensions), but the witness comes
-> from the **compound** automorphism `σ := (x₁ x₂)(y₁ y₂)` — the
-> single transposition `(x₁ x₂)` alone is not a poset automorphism.
-> The existing in-tree rotation infrastructure operates on
-> within-band ⪯-comparable pairs/chains; the N-poset has no such
-> pair, so neither Case 1 (ambient match) nor Case 2 (within-band
-> ⪯-pair) fires.
+> Let `α` be a finite poset and `(a, a')` a pair with
+> `upper(a) ⊊ upper(a')` strictly. There is **no** equivalence
+> `σ : α ≃ α` such that `σ a = a'` and `σ` is order-preserving:
+> any such `σ` would restrict to a bijection `upper(a) → upper(a')`,
+> forcing `|upper(a)| = |upper(a')|` and contradicting strict
+> inclusion. The same obstruction applies to triple-orbit
+> compound-automorphism (additional orbits do not change the
+> cardinality of `upper(a)`/`upper(a')`), to partial automorphism
+> (loses the involutivity needed for the symmetry argument that
+> gives `probLT a a' = 1/2`), and to compound-automorphism on a
+> different pair (the minimal counterexample `α = {a, a', y}` with
+> `a' < y`, `K = 2`, `w = 1` has trivial automorphism group so
+> admits no compound-automorphism witness on any pair). The witness
+> for that 3-element configuration comes from counting linear
+> extensions, not from symmetry — `probLT a a' = 1/3` exactly, at
+> the boundary of `[1/3, 2/3]`.
 
-(`docs/a5-g3e-path-c-wiring-v5-status.md`, paraphrased)
+(`docs/path-c-track-1-status-1.md` §2, paraphrased.)
 
-Closing the gap requires roughly 300–500 LoC of compound-automorphism
-math (a `MultiOrbit.swap_preserves_le`-style constructor + a structural
-matching lemma + a generalised dispatch head) that does not exist in
-the tree today. After the round-4 firm stop-loss, pm-onethird picked
-**option (δ): park** — retain `hC3` as a named hypothesis on the
-headline, ship the audit as the deliverable, and revisit if the
-underlying mathematical infrastructure lands later.
+So the obstruction is **structural, not effort-bound**. No additional
+LoC of compound-automorphism work — even with a hypothetical
+mathlib-side `MultiOrbit.swap_preserves_le` primitive — closes the
+gap. The closure now requires either (i) the deferred A8-S2-cont
+probability-normalised cross-poset FKG infrastructure (~2000–3500
+LoC, paper-tier mathematical work; sketched in `docs/a8-s2-status.md`
+§5), (ii) a width-3-specific tightening of the Kahn–Linial covariance
+bound that would close the unconditional `δ ≥ 0.276 → 1/3` gap, or
+(iii) an entirely different proof program. None of those is a
+"polecat-doable" arc; closure is multi-week external work or a
+research-arc commitment. The headline retains `hC3` indefinitely
+under that disposition.
 
 The full audit trail is `docs/path-c-cleanup-roadmap.md` (entry
-point) plus the five round-by-round status docs:
+point), `docs/path-c-track-1-status-1.md` (Track 1 structural
+impossibility), `docs/math-simp-arc-2.0/scoping.md` (Track 2 fresh
+framings), plus the five round-by-round status docs from the
+original four-round arc:
 
 * `docs/a8-s2-strict-witness-status.md` (mg-43f3) — pins the
   closure target to chain-form FKG.
@@ -366,8 +428,10 @@ path entirely; keep `hC3` on the headline) fired on receipt of
 the η₄ block-and-report. The defect remains in tree and is
 disclosed honestly, but no in-iteration fix is shipping.
 
-**Future-revival pathways.** Two routes exist if the SubClaim
-defect is to be closed in a later product cycle:
+**Future-revival pathways.** Two routes existed at η₅ park time
+(2026-04-27) for closing the SubClaim defect in a later product
+cycle. Both have been **further narrowed** by the 2026-05-04
+closures of Tracks 1 and 2:
 
 * **A8-S2-cont (`mg-8801`, ~2000-3500 LoC):** the deferred
   probability-form cross-poset FKG infrastructure
@@ -378,14 +442,56 @@ defect is to be closed in a later product cycle:
   multi-week multi-polecat arc if pursued; the audit at
   `docs/a8-s3-status.md` and the rotation-residual status
   (`docs/a8-s2-rotation-residual-status.md`, mg-ba0c) sketch
-  the scope.
-* **Math-simplification experiment** (per Daniel's 2026-04-27
+  the scope. **Status as of 2026-05-04:** unchanged — still the
+  primary in-tree path, still out of scope for any single
+  polecat session. Track 1 (`mg-b666`) confirmed that no
+  compound-automorphism shortcut bypasses this scope: the
+  case-2-strict regime is genuinely a probability-bound
+  question, and the in-tree probability machinery does not
+  reach it at `|α| ≤ 6`.
+* **Math-simplification experiment.** Per Daniel's 2026-04-27
   directive on changing strategy in the difficult-to-formalize
-  region). A future product cycle aimed at a structurally
-  simpler discharge of Case 2 — replacing the cross-poset FKG
-  bound with a different mathematical argument that does not
-  need the deferred infrastructure. Out of scope for any
-  currently active polecat arc.
+  region, a parallel arc was authorised to seek a structurally
+  simpler discharge of Case 2 / case-2-strict. Two scoping
+  passes ran:
+    * **Arc 1.0 (`mg-3e53`,
+      `docs/math-simplification-scoping.md`, 2026-05-02).**
+      Surveyed four candidates (A: ε-close-to-ordinal-sum
+      reductio; B: layered-reduction cleanup; C: finite-enum
+      certificate; D: width-3 Kahn–Linial tightening).
+      Recommended A; A1 RED-fallback'd
+      (`docs/math-simplification-A1-feasibility.md`, `mg-3d9d`);
+      B1 shipped as a parallel cleanup (`mg-805c`); A2/A3/A4
+      not commissioned.
+    * **Arc 2.0 (`mg-80ab`,
+      `docs/math-simp-arc-2.0/scoping.md`, 2026-05-04).**
+      Re-scoped under fresh framings (audit-bar revisit /
+      direct probability bound / restrict-and-dispatch /
+      alternate proof) post-mg-a79e/mg-b0de. **Zero GREEN
+      framings found.** The 2026-04-27 mg-a79e and mg-b0de
+      findings *contracted* the viable frame space for math
+      simplification rather than expanding it.
+  **Status as of 2026-05-04:** the in-scope math-simplification
+  search has been exhausted. Any future revival here is either
+  (i) a width-3 Kahn–Linial-tightening research arc (Track 2's
+  framing 2b / arc-1.0 candidate D, paper-level math discovery,
+  out of polecat scope), (ii) a fresh axiom under a Daniel-only
+  audit-bar override (Track 2's framing 1, currently RED on two
+  audit-bar conditions), or (iii) an alternate proof program
+  (Track 2's framing 4, multi-week external collaboration).
+  None of these is a polecat-doable arc.
+
+A third pathway, not on the original η₅ list but raised by
+Track 2 §6.4.4 as an explicit fallback: **finite-enumeration
+certificate for K=2 case-2-strict** (Track 2's framing 3 /
+sub-option B2, ~300–500 LoC). This is mechanical, not aesthetic;
+narrows but does not obviate `Case3Witness`; competes with
+rather than complements the structural infrastructure that
+already landed (`CompoundSwap.lean` etc.). Track 2 records it as
+**AMBER as a Track 1 fallback only**. Since Track 1 closed
+RED (structural impossibility, not effort-bound), B2 might be
+filed as a separate ticket if PM later wants to mechanically
+shrink the gap; not currently planned.
 
 **Reachability — the headline is unaffected.** The headline
 `width3_one_third_two_thirds` does **not** consume `hFKG :
@@ -493,17 +599,24 @@ needs to internalise before drawing conclusions about what is and
 is not "formalized" (plus the §5 in-tree-issue caveat on a
 non-headline conditional theorem):
 
-### 7a. The `hC3` Prop-level hypothesis (open math, parked)
+### 7a. The `hC3` Prop-level hypothesis (open math, settled park)
 
 The headline carries `hC3 : Step8.Case3Witness` as a Prop-level
-hypothesis. Discharging it inside the formalization is open math at
-the time of writing: it requires roughly 300–500 LoC of
-compound-automorphism infrastructure that does not exist in the tree.
-Path C cleanup attempted the discharge across four polecat rounds and
-was parked under option (δ) per pm-onethird's firm round-4 stop-loss;
-see `docs/path-c-cleanup-roadmap.md` (entry point) and the five
-round-by-round status docs. The headline retains `hC3` as a documented
-hypothesis under that decision.
+hypothesis. Discharging it inside the formalization is open math.
+Path C cleanup attempted the discharge across four polecat rounds
+followed by a compound-automorphism infrastructure build-out
+(mg-84f2 / mg-c0c7 / mg-02c2, in tree) and was parked under
+option (δ) per pm-onethird's firm round-4 stop-loss
+(`docs/path-c-cleanup-roadmap.md`). On 2026-05-04 a Track 1 attempt
+to extend the landed infrastructure to case-2-strict block-and-
+reported under a structural cardinality obstruction
+(`docs/path-c-track-1-status-1.md` §2): no order-preserving
+permutation `σ` with `σ a = a'` can exist in the strict-pair regime,
+because such a `σ` would force `|upper(a)| = |upper(a')|`. A
+parallel Track 2 fresh-framing scoping pass found no GREEN
+alternate framings (`docs/math-simp-arc-2.0/scoping.md`). The
+park is now **structurally settled** rather than effort-conditional;
+revisit triggers are listed in `docs/path-c-cleanup-roadmap.md` §7.
 
 A consumer of `width3_one_third_two_thirds` must either supply `hC3`
 themselves or treat the conclusion as conditional on it. The
@@ -586,3 +699,18 @@ discharge path; keep `hC3`) fired on receipt of that
 block-and-report. §5 was amended to its current η₅-park final-state
 framing under `mg-457c` ("PATH A disclosure final-state amendment —
 η₅ park") by polecat `pc-457c` on 2026-04-27.
+
+The 2026-05-04 Status / §2 / §5 / §7a refresh (this revision) was
+landed under `mg-721a` ("Lean-forum publication post — prep + venue
+selection") by polecat `p721a`, in response to the 2026-05-04
+PATH A pivot after both Path C cleanup tracks block-and-reported.
+The fresh evidence is Track 1 (`mg-b666`, structural cardinality
+obstruction on case-2-strict, commit `5dff5e4`,
+`docs/path-c-track-1-status-1.md`) and Track 2 (`mg-80ab`, math-simp
+arc 2.0 zero-GREEN scoping verdict, commit `b1ac92b` on branch
+`math-simp-arc-2.0`, `docs/math-simp-arc-2.0/scoping.md`). The
+substantive change vs. the 2026-04-27 calibration: the option (δ)
+park is now **structurally settled** rather than awaiting either
+more compound-automorphism work or a math-simplification arc. The
+companion forum-post template (`docs/lean-forum-post-template.md`)
+was refreshed in the same commit.

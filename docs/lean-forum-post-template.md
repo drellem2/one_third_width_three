@@ -10,13 +10,23 @@ and in the README's "Please read this before citing" section.
 
 The claim shape, axiom count, and build instructions in the template
 are calibrated to the option (δ) park decision (2026-04-27), the
-formalization-completeness audit (`mg-49a4`, commit `6af280c`), and
-the η₅ park of the mg-27c2 `Case2FKGSubClaim` defect (mg-457c,
-following the η₄ block-and-report at mg-b0de / commit `8f97133`).
-If a future change to the Lean tree drops `hC3`, the Brightwell
-axiom, or closes the SubClaim defect (via A8-S2-cont `mg-8801` or
-a math-simplification experiment), revise this template before
-posting.
+formalization-completeness audit (`mg-49a4`, commit `6af280c`), the
+η₅ park of the mg-27c2 `Case2FKGSubClaim` defect (mg-457c, following
+the η₄ block-and-report at mg-b0de / commit `8f97133`), and the
+2026-05-04 closure of both Path C cleanup tracks: Track 1
+(compound-automorphism extension over `main`) block-and-reported
+under a structural cardinality obstruction (`mg-b666`, commit
+`5dff5e4`, [`docs/path-c-track-1-status-1.md`](path-c-track-1-status-1.md)
+§2), and Track 2 (math-simp arc 2.0 fresh-framing scoping pass on
+the `math-simp-arc-2.0` branch) block-and-reported with no GREEN
+framing found across four candidate framings (`mg-80ab`, commit
+`b1ac92b`, [`docs/math-simp-arc-2.0/scoping.md`](math-simp-arc-2.0/scoping.md)).
+The PATH A "ship the documented narrower public claim" disposition
+is now the **settled** outcome rather than the default. If a future
+change to the Lean tree drops `hC3`, the Brightwell axiom, or closes
+the SubClaim defect (via A8-S2-cont `mg-8801`, a width-3-specific
+Kahn–Linial refinement, or a fresh research-arc proof program),
+revise this template before posting.
 
 ---
 
@@ -45,16 +55,50 @@ posting.
 > hypothesis `hC3 : Step8.Case3Witness`** — the universally-quantified
 > discharge of the within-band antichain Case 3 of the paper's
 > `prop:in-situ-balanced` — which a consumer of the headline must
-> supply or carry. Closing `hC3` inside the formalization is open
-> math at the time of writing: it requires roughly 300–500 LoC of
-> compound-automorphism infrastructure that does not exist in the
-> tree (the minimal failing instance is the four-element N-poset, where
-> the balanced-pair witness comes from a compound transposition that
-> the in-tree rotation argument cannot produce). The cleanup arc that
-> attempted the discharge across four polecat rounds is documented in
-> [`docs/path-c-cleanup-roadmap.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/path-c-cleanup-roadmap.md);
-> the parked decision is firm pending either a mathlib-side
-> compound-automorphism primitive or a focused multi-week pass.
+> supply or carry. Closing `hC3` inside the formalization is **open
+> math**, and the natural in-tree route is now known to be
+> structurally blocked. Two cleanup tracks ran in parallel through
+> 2026-05-04 and both block-and-reported:
+>
+> * **Track 1 (compound-automorphism extension over `main`).** The
+>   K=2 same-band compound-automorphism infrastructure that already
+>   discharges Case 3 / `NoWithinBandPreceq` (`mg-84f2` / `mg-c0c7` /
+>   `mg-02c2`, in tree) cannot be extended to discharge case-2-strict.
+>   Any order-preserving permutation `σ : α ≃ α` with `σ a = a'`
+>   restricts to a bijection `upper(a) ↔ upper(a')`, forcing
+>   `|upper(a)| = |upper(a')|` — and contradicting the strict inclusion
+>   that defines the case-2-strict regime. The obstruction is
+>   structural and rules out **any** compound-automorphism construction
+>   (triple-orbit, partial-injection, and different-pair variants all
+>   fail for the same cardinality reason); it is independent of Lean
+>   encoding. Audit:
+>   [`docs/path-c-track-1-status-1.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/path-c-track-1-status-1.md)
+>   §2.
+> * **Track 2 (math-simp arc 2.0 fresh-framing scoping pass on a
+>   parallel branch).** Surveyed four candidate alternate framings —
+>   audit-bar revisit (multi-element / ordinal-cut Brightwell axiom);
+>   direct probability bound bypassing FKG; restrict-and-dispatch with
+>   a clean dispatch boundary for case-2-strict; alternate proof
+>   program (Brightwell-pump / Kahn–Saks / Linial route) — and found
+>   **zero GREEN framings**. The complementary probability-bound route
+>   is also blocked at K=2: the in-tree Brightwell sharp centred bound
+>   is vacuous when `|α| ≤ 6`. Audit:
+>   [`docs/math-simp-arc-2.0/scoping.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/math-simp-arc-2.0/scoping.md).
+>
+> Closing `hC3` therefore now requires one of: (i) the deferred
+> A8-S2-cont probability-normalised cross-poset FKG infrastructure
+> (~2000–3500 LoC, multi-week scope; sketched in
+> [`docs/a8-s2-status.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/a8-s2-status.md)
+> §5); (ii) a width-3-specific tightening of the unconditional
+> Kahn–Linial covariance bound (the `δ ≥ 0.276 → 1/3` gap in width 3,
+> a long-standing question outside the polecat scoping authority of
+> this project); or (iii) a different proof program entirely. The
+> revival conditions and audit trail are in
+> [`docs/path-c-cleanup-roadmap.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/path-c-cleanup-roadmap.md)
+> §7 and
+> [`docs/path-c-track-1-status-1.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/path-c-track-1-status-1.md);
+> the parked decision is firm pending one of the named revival
+> triggers.
 >
 > **Axioms.** `#print axioms OneThird.width3_one_third_two_thirds`
 > reports `[propext, Classical.choice, Quot.sound,
