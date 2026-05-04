@@ -182,48 +182,73 @@ compound-automorphism kit (`CompoundSwap.lean`, `CompoundMatching.lean`,
 round-4 firm stop-loss, pm-onethird picked **option (δ): park** —
 retain `hC3` as a named hypothesis on the headline, ship the audit
 as the deliverable, and revisit if the underlying mathematical
-infrastructure lands later. **Track 1 then attempted to extend the
-landed compound-automorphism kit to discharge case-2-strict
-(2026-05-04, mg-b666) and surfaced a structural cardinality
-obstruction that rules out the extension for any compound-automorphism
-construction:**
+infrastructure lands later. The retention is **structural, not
+effort-bound**: three independent structural facts (cardinality
+obstruction; Brightwell vacuity at K=2 / `|Q| ≤ 6`; the published
+`[0.276, 1/3)` Kahn–Linial gap) converge on the residual K=2 +
+irreducible + w ≥ 1 + |β| ≥ 3 family in such a way that no
+in-tree-derivable simpler argument has survived 21 candidate
+framings across three independent scoping arcs. The unified
+explanation is in
+[`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md) — the
+canonical "why is the formalization conditional" entry point. The
+short version:
 
-> Let `α` be a finite poset and `(a, a')` a pair with
-> `upper(a) ⊊ upper(a')` strictly. There is **no** equivalence
-> `σ : α ≃ α` such that `σ a = a'` and `σ` is order-preserving:
-> any such `σ` would restrict to a bijection `upper(a) → upper(a')`,
-> forcing `|upper(a)| = |upper(a')|` and contradicting strict
-> inclusion. The same obstruction applies to triple-orbit
-> compound-automorphism (additional orbits do not change the
-> cardinality of `upper(a)`/`upper(a')`), to partial automorphism
-> (loses the involutivity needed for the symmetry argument that
-> gives `probLT a a' = 1/2`), and to compound-automorphism on a
-> different pair (the minimal counterexample `α = {a, a', y}` with
-> `a' < y`, `K = 2`, `w = 1` has trivial automorphism group so
-> admits no compound-automorphism witness on any pair). The witness
-> for that 3-element configuration comes from counting linear
-> extensions, not from symmetry — `probLT a a' = 1/3` exactly, at
-> the boundary of `[1/3, 2/3]`.
+> **F1 — Cardinality obstruction.** Order-preserving permutations
+> cannot swap a strict ⪯-pair: any `σ : α ≃ α` with `σ a = a'`
+> restricts to a bijection `upper(a) → upper(a')`, forcing
+> `|upper(a)| = |upper(a')|` and contradicting strict inclusion.
+> This rules out compound-automorphism (and its triple-orbit /
+> partial-injection / different-pair variants); the minimal
+> counterexample `α = {a, a', y}` with `a' < y`, `K = 2`, `w = 1`
+> has trivial automorphism group, so symmetry produces zero
+> witnesses while `probLT a a' = 1/3` exactly by linear-extension
+> count. Audit:
+> [`docs/path-c-track-1-status-1.md`](path-c-track-1-status-1.md)
+> §2 (mg-b666).
+>
+> **F2 — Brightwell vacuity at K=2 / `|Q| ≤ 6`.** The single-element
+> bound from `brightwell_sharp_centred` is `2/|Q|`; clearing the
+> `≤ 2/3` target via chain-swap collapse requires `|Q| ≥ 12`, but
+> K=2 has `|Q| ≤ 6`. Iterating across multiple strictness witnesses
+> only worsens the bound to a harmonic sum `2 H_{|Q|} ≈ 4.9`. The
+> probability-normalised cross-poset FKG bound is the deferred
+> A8-S2-cont scope (~2000–3500 LoC). Audit:
+> [`docs/a8-s2-restate-block-and-report-status.md`](a8-s2-restate-block-and-report-status.md)
+> §3 (mg-b0de).
+>
+> **F3 — Published `[0.276, 1/3)` gap.** The unconditional
+> Kahn–Saks → Brightwell → Kahn–Linial line tops out at
+> `δ* ≥ 0.276393…` and has not closed the `[0.276…, 1/3)` gap
+> in 30+ years. The width-3 specialisation has not been achieved
+> without going through a Cheeger-type or equivalently structural
+> argument. Audit: `main.tex` §1 (Known results, Comparison with
+> previous approaches).
 
-(`docs/path-c-track-1-status-1.md` §2, paraphrased.)
+So no additional LoC of compound-automorphism work — even with a
+hypothetical mathlib-side `MultiOrbit.swap_preserves_le` primitive
+— closes the gap. The closure now requires either (i) the deferred
+A8-S2-cont probability-normalised cross-poset FKG infrastructure
+(~2000–3500 LoC, paper-tier mathematical work; sketched in
+`docs/a8-s2-status.md` §5), (ii) a width-3-specific tightening of
+the Kahn–Linial covariance bound that would close the unconditional
+`δ ≥ 0.276 → 1/3` gap, or (iii) an entirely different proof
+program. None of those is a "polecat-doable" arc; closure is
+multi-week external work or a research-arc commitment. The headline
+retains `hC3` indefinitely under that disposition. Note: this is
+"no in-tree-derivable simpler argument," strictly weaker than "no
+simpler argument exists" — see
+[`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md) §
+"What this doc does not claim".
 
-So the obstruction is **structural, not effort-bound**. No additional
-LoC of compound-automorphism work — even with a hypothetical
-mathlib-side `MultiOrbit.swap_preserves_le` primitive — closes the
-gap. The closure now requires either (i) the deferred A8-S2-cont
-probability-normalised cross-poset FKG infrastructure (~2000–3500
-LoC, paper-tier mathematical work; sketched in `docs/a8-s2-status.md`
-§5), (ii) a width-3-specific tightening of the Kahn–Linial covariance
-bound that would close the unconditional `δ ≥ 0.276 → 1/3` gap, or
-(iii) an entirely different proof program. None of those is a
-"polecat-doable" arc; closure is multi-week external work or a
-research-arc commitment. The headline retains `hC3` indefinitely
-under that disposition.
-
-The full audit trail is `docs/path-c-cleanup-roadmap.md` (entry
-point), `docs/path-c-track-1-status-1.md` (Track 1 structural
+The full audit trail is
+[`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md) (entry
+point for the structural explanation),
+`docs/path-c-cleanup-roadmap.md` (entry point for the cleanup arc),
+`docs/path-c-track-1-status-1.md` (Track 1 structural
 impossibility), `docs/math-simp-arc-2.0/scoping.md` (Track 2 fresh
-framings), plus the five round-by-round status docs from the
+framings), `docs/math-simp-arc-3.0/scoping.md` (Track 3 strategy
+revisit), plus the five round-by-round status docs from the
 original four-round arc:
 
 * `docs/a8-s2-strict-witness-status.md` (mg-43f3) — pins the
@@ -612,11 +637,15 @@ to extend the landed infrastructure to case-2-strict block-and-
 reported under a structural cardinality obstruction
 (`docs/path-c-track-1-status-1.md` §2): no order-preserving
 permutation `σ` with `σ a = a'` can exist in the strict-pair regime,
-because such a `σ` would force `|upper(a)| = |upper(a')|`. A
-parallel Track 2 fresh-framing scoping pass found no GREEN
-alternate framings (`docs/math-simp-arc-2.0/scoping.md`). The
-park is now **structurally settled** rather than effort-conditional;
-revisit triggers are listed in `docs/path-c-cleanup-roadmap.md` §7.
+because such a `σ` would force `|upper(a)| = |upper(a')|`. Parallel
+Track 2 (`mg-80ab`, `docs/math-simp-arc-2.0/scoping.md`) and
+Track 3 (`mg-65e1`, `docs/math-simp-arc-3.0/scoping.md`) scoping
+passes found no GREEN alternate framings across 21 candidates.
+The park is now **structurally settled** rather than
+effort-conditional; the unified F1 / F2 / F3 explanation is in
+[`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md) (the
+canonical "why is the formalization conditional" doc); revisit
+triggers are listed in `docs/path-c-cleanup-roadmap.md` §7.
 
 A consumer of `width3_one_third_two_thirds` must either supply `hC3`
 themselves or treat the conclusion as conditional on it. The

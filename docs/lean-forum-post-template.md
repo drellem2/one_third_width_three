@@ -98,7 +98,12 @@ revise this template before posting.
 > §7 and
 > [`docs/path-c-track-1-status-1.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/path-c-track-1-status-1.md);
 > the parked decision is firm pending one of the named revival
-> triggers.
+> triggers. The unified F1 / F2 / F3 explanation of why this is
+> structural — the cardinality obstruction, the Brightwell
+> `|Q| ≤ 6` vacuity, and the published `[0.276, 1/3)` Kahn–Linial
+> gap — is in
+> [`docs/why-hC3-is-structural.md`](https://github.com/drellem2/one_third_width_three/blob/main/docs/why-hC3-is-structural.md);
+> read this if you want one document instead of eight status files.
 >
 > **Axioms.** `#print axioms OneThird.width3_one_third_two_thirds`
 > reports `[propext, Classical.choice, Quot.sound,
