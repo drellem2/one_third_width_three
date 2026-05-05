@@ -5,9 +5,17 @@
 > with `1/3 ≤ Pr[x <_L y] ≤ 2/3`, where `L` is a uniformly random
 > linear extension of `P`.
 
-The Lean formalization in [`lean/`](lean/) proves this **modulo a
-documented case-3 residual hypothesis** (`hC3 : Step8.Case3Witness`)
-and one named axiom transcribing a published external bound; see
+The Lean formalization in [`lean/`](lean/) proves this
+**hypothesis-free** (modulo `hP : HasWidthAtMost α 3` and
+`hNonChain : ¬ IsChainPoset α`, matching the paper's `thm:main`),
+depending on the mathlib classical foundations plus two named
+project axioms — one transcribing a published external bound
+(`brightwell_sharp_centred`, Brightwell 1999 §4 + Kahn–Saks 1984)
+and one transcribing this paper's own `rem:enumeration` sketch for
+the residual Case-3 parameter range
+(`case3Witness_hasBalancedPair_outOfScope`) — together with a
+small set of `Lean.ofReduceBool`-backed `native_decide` enumeration
+certificates. See
 [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md)
 for the side-by-side reading and the build-and-verify instructions.
 
@@ -62,10 +70,10 @@ Different readers want different entry points.
 - **Lean / formal-methods reader** — go straight to
   [`lean/README.md`](lean/README.md). Build status, exact `sorry`
   inventory, and per-file audit live there. For the publication-
-  readiness companion (Lean vs paper headline side-by-side, the
-  `hC3 : Step8.Case3Witness` residual hypothesis, `#print axioms`
-  baseline, and the `brightwell_sharp_centred` axiom rationale),
-  see [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md).
+  readiness companion (Lean vs paper headline side-by-side,
+  `#print axioms` baseline, and the `brightwell_sharp_centred` /
+  `case3Witness_hasBalancedPair_outOfScope` axiom rationales), see
+  [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md).
 - **"Is this for real?" reader** — read the disclosures in
   "Please read this before citing" immediately below. The short
   version: the author is unaffiliated, the work was written with
@@ -102,43 +110,41 @@ should know:
 - **Lean residuals.** The Lean formalization's headline theorem
   `OneThird.width3_one_third_two_thirds`
   ([`lean/OneThird/MainTheorem.lean`](lean/OneThird/MainTheorem.lean))
-  carries one Prop-level hypothesis `hC3 : Step8.Case3Witness` —
-  the universally-quantified discharge of the within-band antichain
-  Case 3 of the paper's `prop:in-situ-balanced` — and depends, via
-  the Step 8 assembly, on one named project axiom
-  `OneThird.LinearExt.brightwell_sharp_centred`, transcribing the
-  combined Brightwell 1999 §4 + Kahn–Saks 1984 Lemma 2.2 sharp
-  centred bound (a peer-reviewed published external result). The
-  `hC3` hypothesis is parked open math: pm-onethird's option (δ)
-  park decision (2026-04-27) was confirmed structurally settled on
-  2026-05-04. The retention is **structural, not effort-bound** —
-  three independent structural facts (cardinality obstruction;
-  Brightwell vacuity at K=2 / `|Q| ≤ 6`; the published
-  `[0.276, 1/3)` Kahn–Linial gap) converge to make the residual
-  K=2 + irreducible + w ≥ 1 + |β| ≥ 3 family resistant to every
-  in-tree-derivable simpler argument. The unified explanation is
-  in [`docs/why-hC3-is-structural.md`](docs/why-hC3-is-structural.md)
-  (canonical "why is the formalization conditional" entry point;
-  read this before citing). The three-arc audit trail is Track 1
-  (compound-automorphism extension on `main`, `mg-b666`,
-  [`docs/path-c-track-1-status-1.md`](docs/path-c-track-1-status-1.md);
-  found the structural cardinality obstruction), Track 2 (math-simp
-  arc 2.0,
-  [`docs/math-simp-arc-2.0/scoping.md`](docs/math-simp-arc-2.0/scoping.md);
-  zero GREEN of four fresh framings), and Track 3 (math-simp arc
-  3.0,
-  [`docs/math-simp-arc-3.0/scoping.md`](docs/math-simp-arc-3.0/scoping.md);
-  zero GREEN across eight ε-close definitions × twelve strategy
-  alternatives). Closing `hC3` therefore now requires either the
-  deferred A8-S2-cont probability-normalised cross-poset FKG
-  infrastructure (~2000–3500 LoC, multi-week work outside polecat
-  scope), a width-3-specific tightening of the Kahn–Linial
-  covariance bound, or a different proof program entirely; revival
-  triggers are in
-  [`docs/path-c-cleanup-roadmap.md`](docs/path-c-cleanup-roadmap.md)
-  §7. The Brightwell axiom is retained per `mg-b699` decision, with
-  a documented replacement path in
-  [`lean/AXIOMS.md`](lean/AXIOMS.md). The full side-by-side reading
+  is **hypothesis-free** as of Option-C Stage 2B (`mg-8c72`,
+  2026-05-05): it takes only `hP : HasWidthAtMost α 3` and
+  `hNonChain : ¬ IsChainPoset α`, matching the paper's `thm:main`.
+  The historical `hC3 : Step8.Case3Witness` parameter — retained
+  through pm-onethird's option (δ) park decision (2026-04-27) —
+  was discharged by `Step8.OptionC.Case3Witness_proof` after
+  Stage 2A (`mg-2a56`, `LayeredDecomposition.compactify`) and
+  Stage 2B (Candidate A'' tightening + the F3 K-dispatch
+  composing the K=2 closure of `mg-01ec` with sub-poset descent
+  via `compactify`). The headline now depends, via the Step 8
+  assembly, on **two named project axioms**:
+  `OneThird.LinearExt.brightwell_sharp_centred` (transcribing the
+  Brightwell 1999 §4 + Kahn–Saks 1984 Lemma 2.2 sharp centred
+  bound — a peer-reviewed published external result) and
+  `OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope`
+  (transcribing this paper's own `rem:enumeration` sketch for the
+  residual `¬ InCase3Scope` parameter range — internal to the
+  paper, not an external citation). The structural reason that
+  the residual K=2 + irreducible + w ≥ 1 + |β| ≥ 3 family resists
+  the simpler discharge programs that were attempted before
+  Option-C — three independent structural facts (cardinality
+  obstruction; Brightwell vacuity at K=2 / `|Q| ≤ 6`; the
+  published `[0.276, 1/3)` Kahn–Linial gap) — is unified in
+  [`docs/why-hC3-is-structural.md`](docs/why-hC3-is-structural.md)
+  (read this before citing; the F1/F2/F3 framework is the
+  canonical "why is the residual sketch retained" explanation,
+  even though `hC3` itself is now closed and the residual
+  appears as a named axiom rather than a hypothesis). The
+  Brightwell axiom is retained per `mg-b699` decision, with a
+  documented replacement path in
+  [`lean/AXIOMS.md`](lean/AXIOMS.md); the
+  `case3Witness_hasBalancedPair_outOfScope` axiom is QA-audited
+  as a faithful transcription per `mg-7377`, with a fleshed-out
+  Lean port (band-restricted FKG sub-coupling) recorded as open
+  future work in `lean/AXIOMS.md`. The full side-by-side reading
   and the verification recipe is in
   [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md).
 - **Known in-tree issue: mg-27c2 `Case2FKGSubClaim` is
@@ -175,8 +181,11 @@ should know:
   `strictCase2Witness_m2_balanced` predicated on this SubClaim are
   technically-correct-but-vacuous implications on a false antecedent;
   the headline `width3_one_third_two_thirds` is **unaffected** —
-  its `hC3` hypothesis is universally quantified and subsumes Case 2
-  strict witnessing, and the `#print axioms` baseline is current.
+  the Option-C Stage 2B `Case3Witness_proof` (`mg-8c72`) routes the
+  K=2 dispatch through `option_c_K2_closure` (`mg-01ec`) rather than
+  the SubClaim path, and the K ≥ 3 dispatch through the
+  `case3Witness_hasBalancedPair_outOfScope` residual axiom; the
+  `#print axioms` baseline is current.
   See
   [`docs/lean-forum-publication-readiness.md`](docs/lean-forum-publication-readiness.md)
   §5 "Known in-tree issue" for the full disclosure and revival pathway.
