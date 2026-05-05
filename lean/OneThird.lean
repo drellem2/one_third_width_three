@@ -79,6 +79,7 @@ import OneThird.Step8.Case3Enum.Correctness
 import OneThird.Step8.Case3Enum.BalancedLift
 import OneThird.Step8.Case3Enum.IrreducibleBridge
 import OneThird.Step8.LayeredReduction
+import OneThird.Step8.LayeredDecomposition.Compactify
 import OneThird.Step8.LayerOrdinal
 import OneThird.Step8.LayeredBalanced
 import OneThird.Step8.BoundedIrreducibleBalanced
