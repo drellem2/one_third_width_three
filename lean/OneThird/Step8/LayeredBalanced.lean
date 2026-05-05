@@ -372,76 +372,185 @@ lemma hasWidthAtMost_subtype (hW : HasWidthAtMost α 3) (S : Finset α) :
 F5a's Bool certificate (`case3_certificate`) that feeds the K ≥ 2
 leaf of the F5 recursion.
 
-For every width-≤-3 layered β that is not a chain and has `2 ≤ |β|`,
-there is a balanced pair in β. This is the ∀-lifted form of F5a's
-enumeration certificate, intended to be supplied by the caller.
+This is the **Candidate A'' tightening** of Option-C Stage 2B
+(`mg-8c72`): the universal hypothesis is restricted to layered
+decompositions `LB` carrying four cap-antecedents that propagate
+under sub-poset descent through
+`Step8.LayeredDecomposition.compactify`:
 
-Concretely, a downstream discharge of `Case3Witness` runs through
-`Step8.bounded_irreducible_balanced` (F5a-ℓ): given the ambient F5
-strong-induction context (Case A — single-band antichain — and
-Case B — ordinal-sum descent via `LayerOrdinalReducible` — having
-been handled separately), the residual Case C irreducible-leaf
-dispatch is handled by the Bool certificate `case3_certificate`
-(F5a) as packaged through `bounded_irreducible_balanced`. The
-Prop-level `hEnum` witness bridge from the Bool certificate is
-supplied by the caller in the codebase's "Bool-certificate
-dispatch" convention (cf. `Step8.SmallN.smallNFiniteEnum`).
+1. `Function.Injective LB.band` — band map injectivity, which makes
+   the inner `Step8.InSitu.Case2Witness` predicate (a within-band
+   `⪯`-comparable pair `(a, a')` with `a ≠ a'` and
+   `LB.band a = LB.band a'`) **vacuous**. This closes Obstruction A
+   of `mg-979e-block-and-report.md` §1.a (Case 2 gap at K ≥ 3
+   ¬InCase3Scope dispatch).
+2. `LB.K ≤ 2 * LB.w + 2` — depth cap from the F5 C2 branch profile
+   of `Step8.bounded_irreducible_balanced_hybrid`.
+3. `Fintype.card β ≤ 6 * LB.w + 6` — cardinality cap from the F5 C2
+   branch profile.
+4. `∀ k ∈ [1, LB.K], (LB.bandSet k).Nonempty` — bands non-empty
+   (required by `bounded_irreducible_balanced_inScope`'s
+   `hNonempty` slot).
 
-The hypothesis is stated uniformly across all layered width-3
-non-chain β: the F5 recursion inside `lem_layered_balanced` /
-`lem_layered_balanced_subtype` recurses on sub-posets via
-`L.restrict D.Mid`, so the caller-supplied witness must cover the
-∀-family of sub-types visited by the recursion.
+Caps 1-3 propagate under `compactify` via
+`compactify_band_injective_of_injective`,
+`compactify_K_le_of_K_le`, and `compactify_card_le_of_card_le`
+(`Step8.LayeredDecomposition.Compactify`, `mg-2a56`); cap 4 holds
+by construction of `compactify` (empty bands are removed).
 
-**Note.** Semantically, `Case3Witness` is the statement of
-`lem_layered_balanced` for `β` in the given universe `u`; supplying
-it to `lem_layered_balanced` closes the `K ≥ 2` branch by direct
-invocation. This matches the codebase convention of threading the
-case-output witness through a layered dispatch hypothesis, rather
-than baking the Bool→Prop bridge into the Lean core.
+For every width-≤-3 layered β that is not a chain, has `2 ≤ |β|`,
+and admits an `LB` satisfying caps 1-4, there is a balanced pair
+in β.
 
-**A5-B4 (`mg-43bc`) — internal dispatch decomposition.** The
-downstream discharge of `Case3Witness` decomposes (per the chosen
-"hybrid" resolution of the F5a-ℓ profile mismatch) into two
-sub-witnesses, threaded through
-`Step8.bounded_irreducible_balanced_hybrid`:
+**Discharge architecture** (`Case3Witness_proof`,
+`OneThird/Step8/OptionC/Case3WitnessProof.lean`). Strong induction
+on `Fintype.card β`, with the K-dispatch:
 
-* `hCert` — `InCase3Scope L.w (Fintype.card β) L.K →
-  HasBalancedPair β`, supplied by Path A (A5-B1/B2/B3) from
-  `Case3Enum.case3_certificate` via the band-major Fin-n encoding.
-* `hStruct` — `¬ InCase3Scope L.w (Fintype.card β) L.K →
-  HasBalancedPair β`, supplied by mg-A8 from the structural Cases
-  1 and 2 of `prop:in-situ-balanced` (FKG profile-ordering +
-  `Equiv.swap` automorphism).
+* **K = 1**: vacuous under cap 1 + `2 ≤ |β|` (Injective forces
+  `bandSize 1 ≤ 1`, so `|β| ≤ 1`, contradicting `2 ≤ |β|`).
+* **K = 2**: dispatch on layered-ordinal reducibility at `k = 1`.
+  If reducible, β is forced into a chain under cap 1
+  (contradicting `¬IsChainPoset`); if irreducible, apply
+  `OptionC.option_c_K2_closure` (`mg-01ec`).
+* **K ≥ 3**: dispatch on layered-ordinal reducibility. If reducible
+  at some `k`, descend on the piece carrying the incomparable pair
+  via `LB.compactify` (caps propagate); if irreducible, apply
+  `Step8.bounded_irreducible_balanced_hybrid` whose `hStruct` slot
+  consumes the Injective cap (Case 2 vacuous) plus
+  `case3Witness_hasBalancedPair_outOfScope` (existing axiom).
 
-See `docs/a5-profile-resolution.md` for the full decision rationale
-and the documented hand-off contracts.
-
-**Retention as a `def` (not a theorem) is INTENTIONAL** under
-pm-onethird's option (δ) park decision (2026-04-27). Path C
-cleanup — promoting this `def` to a theorem and dropping `hC3`
-from `OneThird.width3_one_third_two_thirds` — was attempted
-across four polecat rounds (mg-4a5b → mg-072c → mg-0fa0 →
-mg-94fd) and parked after the firm round-4 stop-loss. The
-remaining obstruction is the K=2 + irreducible + w≥1 + |β|≥3
-N-poset class, which sits inside this predicate's universal
-scope but has no in-tree handler: `bounded_irreducible_balanced_hybrid`
-and `case3Witness_hasBalancedPair_outOfScope` both require
-`3 ≤ L.K`; `hasBalancedPair_of_K2_w0_incomp` requires `L.w = 0`;
-the Window descent collapses; and the existing rotation argument
-in `Case2Rotation.lean` operates on within-band ⪯-pairs/chains,
-which the N-poset does not admit. Closing the gap requires
-compound-automorphism infrastructure (~300-500 LoC) that does
-not exist in the tree. **Do not attempt to promote this `def`
-to a theorem without first reading
-`docs/path-c-cleanup-roadmap.md`.** -/
+**Caller-side discharge.** The headline call site
+`OneThird.width3_one_third_two_thirds` supplies caps for
+`Step8.layeredFromBridges`: band injective via the Szpilrajn
+extension (`band x := (e.toFun x).val + 1`); K = `|α|`, w =
+`Lwidth3.bandwidth = |α| + 1` make caps 2 and 3 trivially hold;
+each band has exactly 1 element so cap 4 holds. The internal
+`lem_layered_balanced` consumer (which applies `hC3` in its K ≥ 2
+branch) substitutes a canonical Szpilrajn-derived
+`canonicalLayered α` (with auto-derived caps) for the input `L`,
+since the universal claim `Case3Witness β` is uniform over all
+qualifying `LB`. -/
 def Case3Witness.{u} : Prop :=
   ∀ (β : Type u) [PartialOrder β] [Fintype β] [DecidableEq β]
     (LB : Step8.LayeredDecomposition β),
+    Function.Injective LB.band →
+    LB.K ≤ 2 * LB.w + 2 →
+    Fintype.card β ≤ 6 * LB.w + 6 →
+    (∀ k : ℕ, 1 ≤ k → k ≤ LB.K → (LB.bandSet k).Nonempty) →
     HasWidthAtMost β 3 →
     ¬ IsChainPoset β →
     2 ≤ Fintype.card β →
     HasBalancedPair β
+
+/-! ### §3b — `canonicalLayered`: a Szpilrajn-derived layered decomposition
+satisfying the Candidate A'' caps for any finite poset. -/
+
+/-- **Canonical layered decomposition** — analogue of
+`Step8.trivialLayered`/`Step8.layeredFromBridges` packaged earlier in
+the import chain so that `lem_layered_balanced` can apply the
+Candidate A''-tightened `Case3Witness` hypothesis without depending on
+`MainAssembly`/`LayeredBridges`.
+
+The construction picks a Szpilrajn linear extension `e : LinearExt α`
+and lays each element in its own band: `band x := (e.toFun x).val + 1`,
+`K := |α|`, `w := |α|`. Under this choice every band is a singleton
+(injectivity of `e.toFun`), so all (L1)/(L2) axioms hold and the four
+Candidate A'' caps hold trivially:
+
+* `Function.Injective band`: `e.toFun` is injective.
+* `K ≤ 2 * w + 2`: `|α| ≤ 2 * |α| + 2`.
+* `|α| ≤ 6 * w + 6`: `|α| ≤ 6 * |α| + 6`.
+* `(bandSet k).Nonempty` for `k ∈ [1, K]`: each band has exactly one
+  element (the unique `x` with `e.toFun x = k - 1`).
+
+`canonicalLayered` is used internally by `lem_layered_balanced` to
+discharge the `K ≥ 2` branch via `hC3` on a layered decomposition
+whose Candidate A'' caps are derivable in-place. -/
+noncomputable def canonicalLayered (α : Type*) [PartialOrder α]
+    [Fintype α] [DecidableEq α] :
+    LayeredDecomposition α := by
+  let e : LinearExt α := LinearExt.szpilrajn α
+  exact
+    { K := Fintype.card α
+      w := Fintype.card α
+      band := fun x => (e.toFun x).val + 1
+      band_pos := fun _ => Nat.succ_le_succ (Nat.zero_le _)
+      band_le := fun x => by
+        have : (e.toFun x).val < Fintype.card α := (e.toFun x).isLt
+        omega
+      band_size := fun k => by
+        have h1 : ((Finset.univ : Finset α).filter
+            (fun x => (e.toFun x).val + 1 = k)).card ≤ 1 := by
+          rw [Finset.card_le_one]
+          intro a ha b hb
+          simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha hb
+          have heq : (e.toFun a).val = (e.toFun b).val := by omega
+          exact e.toFun.injective (Fin.ext heq)
+        omega
+      band_antichain := fun k => by
+        intro a ha b hb hne
+        simp only [Finset.coe_filter, Finset.mem_univ, true_and,
+          Set.mem_setOf_eq] at ha hb
+        have heq : (e.toFun a).val = (e.toFun b).val := by omega
+        exact absurd (e.toFun.injective (Fin.ext heq)) hne
+      forced_lt := fun x y hlt => by
+        exfalso
+        have hx : 1 ≤ (e.toFun x).val + 1 := Nat.succ_le_succ (Nat.zero_le _)
+        have hy : (e.toFun y).val + 1 ≤ Fintype.card α := by
+          have : (e.toFun y).val < Fintype.card α := (e.toFun y).isLt
+          omega
+        omega
+      cross_band_lt_upward := fun x y h => by
+        have hle : e.toFun x ≤ e.toFun y := e.monotone h.le
+        have hv : (e.toFun x).val ≤ (e.toFun y).val := hle
+        omega }
+
+@[simp] lemma canonicalLayered_K (α : Type*) [PartialOrder α]
+    [Fintype α] [DecidableEq α] :
+    (canonicalLayered α).K = Fintype.card α := rfl
+
+@[simp] lemma canonicalLayered_w (α : Type*) [PartialOrder α]
+    [Fintype α] [DecidableEq α] :
+    (canonicalLayered α).w = Fintype.card α := rfl
+
+/-- The canonical band map is injective (since the underlying Szpilrajn
+extension is injective). -/
+lemma canonicalLayered_band_injective {α : Type*} [PartialOrder α]
+    [Fintype α] [DecidableEq α] :
+    Function.Injective (canonicalLayered α).band := by
+  intro a b h
+  -- `band x = (szpilrajn.toFun x).val + 1` by the definition of
+  -- `canonicalLayered`; cancel the `+ 1` and lift through Fin/Equiv.
+  have h' : ((LinearExt.szpilrajn α).toFun a).val + 1 =
+      ((LinearExt.szpilrajn α).toFun b).val + 1 := h
+  have hval : ((LinearExt.szpilrajn α).toFun a).val =
+      ((LinearExt.szpilrajn α).toFun b).val := by omega
+  exact (LinearExt.szpilrajn α).toFun.injective (Fin.ext hval)
+
+/-- Each band of `canonicalLayered α` has exactly one element — the
+unique `x` with `(szpilrajn.toFun x).val + 1 = k`. In particular every
+band in `[1, |α|]` is non-empty. -/
+lemma canonicalLayered_bandSet_nonempty {α : Type*} [PartialOrder α]
+    [Fintype α] [DecidableEq α]
+    {k : ℕ} (hk1 : 1 ≤ k) (hk : k ≤ Fintype.card α) :
+    ((canonicalLayered α).bandSet k).Nonempty := by
+  classical
+  -- The Szpilrajn `e.toFun : α → Fin |α|` is injective on a finite type
+  -- with codomain of equal cardinality, hence surjective.
+  set e : LinearExt α := LinearExt.szpilrajn α with he_def
+  have hk_pred : k - 1 < Fintype.card α := by omega
+  have hsurj : Function.Surjective (e.toFun : α → Fin (Fintype.card α)) := by
+    have hcard_eq : Fintype.card α = Fintype.card (Fin (Fintype.card α)) := by
+      rw [Fintype.card_fin]
+    exact (Fintype.bijective_iff_injective_and_card e.toFun).mpr
+      ⟨e.toFun.injective, hcard_eq⟩ |>.2
+  obtain ⟨x, hx⟩ := hsurj ⟨k - 1, hk_pred⟩
+  refine ⟨x, ?_⟩
+  rw [LayeredDecomposition.mem_bandSet]
+  -- `(canonicalLayered α).band x = (e.toFun x).val + 1`
+  show (e.toFun x).val + 1 = k
+  have : (e.toFun x).val = k - 1 := by rw [hx]
+  omega
 
 /-- **`lem:layered-balanced` — GAP G4** (`step8.tex:2348`,
 cleared-denominator form).
@@ -545,7 +654,34 @@ theorem lem_layered_balanced.{u}
     -- width-3 non-chain layered β uniformly via F5a-ℓ's
     -- `bounded_irreducible_balanced` dispatch (see `Case3Witness`
     -- docstring).
-    exact hC3 α L hW3 hNotChain' h2
+    --
+    -- **Candidate A'' adaptation** (`mg-8c72`). The tightened
+    -- `Case3Witness` predicate carries four cap-antecedents
+    -- (Injective band map, `K ≤ 2w + 2`, `|β| ≤ 6w + 6`, non-empty
+    -- bands). The universal claim is uniform over qualifying `LB`,
+    -- so we may discharge the K ≥ 2 branch with a *canonical*
+    -- Szpilrajn-derived layered decomposition `canonicalLayered α`
+    -- (caps proved in-place) rather than the input `L`. This keeps
+    -- `lem_layered_balanced`'s public signature stable while
+    -- propagating the tightening through the operational headline
+    -- path (which threads `Case3Witness_proof` at the headline).
+    let L' : LayeredDecomposition α := canonicalLayered α
+    have hInj : Function.Injective L'.band :=
+      canonicalLayered_band_injective
+    have hKw : L'.K ≤ 2 * L'.w + 2 := by
+      change Fintype.card α ≤ 2 * Fintype.card α + 2
+      omega
+    have hCardw : Fintype.card α ≤ 6 * L'.w + 6 := by
+      change Fintype.card α ≤ 6 * Fintype.card α + 6
+      omega
+    have hNonempty : ∀ k : ℕ, 1 ≤ k → k ≤ L'.K →
+        (L'.bandSet k).Nonempty := by
+      intro k hk1 hkK
+      have hkK' : k ≤ Fintype.card α := by
+        have : L'.K = Fintype.card α := canonicalLayered_K α
+        omega
+      exact canonicalLayered_bandSet_nonempty hk1 hkK'
+    exact hC3 α L' hInj hKw hCardw hNonempty hW3 hNotChain' h2
 
 /-- **Subtype-level balanced-pair helper** (`step8.tex:2571-2667`).
 

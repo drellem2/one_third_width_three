@@ -6,6 +6,7 @@ import OneThird.Poset
 import OneThird.LinearExtension
 import OneThird.RichPair
 import OneThird.Step8.MainAssembly
+import OneThird.Step8.OptionC.Case3WitnessProof
 
 /-!
 # Main theorem: the width-3 1/3–2/3 theorem
@@ -14,7 +15,9 @@ This file states the main theorem of the paper and the headline
 Step 8 intermediate result `thm:cex-implies-low-expansion`.
 
 The headline theorem `width3_one_third_two_thirds` is discharged
-via the Step 8 assembly (`OneThird.Step8.MainAssembly`); the
+via the Step 8 assembly (`OneThird.Step8.MainAssembly`) with
+`Step8.Case3Witness` supplied internally by `Case3Witness_proof`
+(`OneThird.Step8.OptionC.Case3WitnessProof`, `mg-8c72`); the
 intermediate Theorem E is discharged here via the trivial
 `S = 𝓛(P)` cut, with the tighter frozen-pair averaging cut of
 the paper recorded in `OneThird.Step8.cexImpliesLowBKExpansion`
@@ -34,27 +37,28 @@ Every finite width-≤ 3 poset that is not a chain admits a pair
 measure.
 
 Discharged via the Step 8 assembly
-(`OneThird.Step8.width3_one_third_two_thirds_assembled`).
+(`OneThird.Step8.width3_one_third_two_thirds_assembled`) with the
+`Step8.Case3Witness` hypothesis supplied internally by
+`Step8.OptionC.Case3Witness_proof` (Option-C Stage 2B, `mg-8c72`).
 
-**`hC3` retention is INTENTIONAL** under pm-onethird's option (δ)
-park decision (2026-04-27). Path C cleanup — the 1-for-1 swap
-that would drop `hC3` and add a single chain-form `hFKG`
-hypothesis — was attempted across four polecat rounds and
-parked after pc-94fd's firm round-4 stop-loss. The remaining
-obstruction is the K=2 + irreducible + w≥1 + |β|≥3 N-poset
-class, which requires compound-automorphism infrastructure
-(~300-500 LoC) that does not exist in the tree. **Do not
-attempt to drop `hC3` without first reading
-`docs/path-c-cleanup-roadmap.md`** — the audit trail names the
-obstruction, lists the in-tree infrastructure that already
-landed during the arc, and documents the conditions under which
-revival is worth re-attempting. -/
+**Hypothesis-free as of `mg-8c72`.** The historical `hC3` parameter
+of `Case3Witness` was dropped after Option-C Stage 2A (`mg-2a56`,
+band-compactification) and Stage 2B (this work, Candidate A''
+tightening + `Case3Witness_proof`) closed Obstructions A and B of
+`docs/option-c-execution-arc/mg-979e-block-and-report.md`. The
+operational headline path supplies the Candidate A'' caps for
+`Step8.layeredFromBridges` trivially: band injective via the
+Szpilrajn extension; `K = |α|` and `w = |α| + 1` make `K ≤ 2w + 2`
+and `|α| ≤ 6w + 6` hold trivially; each band has exactly one
+element so `(bandSet k).Nonempty` for all `k ∈ [1, K]`. The
+internal `lem_layered_balanced` consumer applies `Case3Witness_proof`
+on its own canonical Szpilrajn-derived `canonicalLayered α`. -/
 theorem width3_one_third_two_thirds.{u}
     {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
-    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
-    (hC3 : Step8.Case3Witness.{u}) :
+    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α) :
     HasBalancedPair α :=
-  Step8.width3_one_third_two_thirds_assembled hP hNonChain hC3
+  Step8.width3_one_third_two_thirds_assembled hP hNonChain
+    Step8.OptionC.Case3Witness_proof
 
 /-- **Theorem E — Counterexample ⇒ low BK conductance**
 (`thm:cex-implies-low-expansion` in `step8.tex`).

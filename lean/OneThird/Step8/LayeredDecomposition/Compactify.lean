@@ -4,6 +4,8 @@ Released under the MIT License.
 -/
 import OneThird.Step8.LayeredReduction
 import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Order.Interval.Finset.Fin
+import Mathlib.Data.Finset.Sort
 
 /-!
 # Step 8 — `LayeredDecomposition.compactify`: empty-band compactification
@@ -436,6 +438,99 @@ lemma compactify_band_eq_iff_band_eq (L : LayeredDecomposition α) (S : Finset �
   · intro h
     change compactBand L S (L.band z.val) = compactBand L S (L.band w.val)
     rw [h]
+
+/-! ### §5 — Non-empty bands of the compactification
+
+Every band index `k ∈ [1, (L.compactify S).K]` of the compactified
+decomposition is non-empty: by construction `K' = compactBand L S L.K`
+counts the non-empty original bands. We extract the witness for new-
+band-`k` as the smallest `j ∈ [1, L.K]` with `compactBand L S j ≥ k`;
+sandwiched against `compactBand_diff_le` with diff 1, this `j` is
+forced to be non-empty (otherwise `compactBand` would not cross
+threshold `k` between `j-1` and `j`) and to satisfy
+`compactBand L S j = k`. This is the fourth Candidate A'' cap (per
+`mg-979e-block-and-report.md` §1.b / `mg-8c72`) — preserved
+automatically by `compactify`, unlike `restrict` which leaves empty
+bands. -/
+
+/-- If `j ≥ 1` is empty on `S` (no element of `S` has band `j`), then
+`compactBand L S j = compactBand L S (j - 1)`: the filter at `j`
+inherits exactly the filter at `j - 1` (no new contribution from `j`). -/
+private lemma compactBand_succ_of_empty (L : LayeredDecomposition α) (S : Finset α)
+    {j : ℕ} (hj1 : 1 ≤ j) (hje : ¬ NonEmptyOnS L S j) :
+    compactBand L S j = compactBand L S (j - 1) := by
+  unfold compactBand
+  congr 1
+  ext x
+  simp only [Finset.mem_filter, Finset.mem_Icc]
+  constructor
+  · rintro ⟨⟨hx1, hxj⟩, hxne⟩
+    refine ⟨⟨hx1, ?_⟩, hxne⟩
+    -- x ≤ j and x ≠ j (else x = j would give NonEmptyOnS j via hxne).
+    by_contra hxj_ngt
+    push_neg at hxj_ngt
+    -- hxj_ngt : j - 1 < x, hxj : x ≤ j ⇒ x = j.
+    have : x = j := by omega
+    rw [this] at hxne
+    exact hje hxne
+  · rintro ⟨⟨hx1, hxj⟩, hxne⟩
+    exact ⟨⟨hx1, by omega⟩, hxne⟩
+
+lemma compactify_bandSet_nonempty (L : LayeredDecomposition α) (S : Finset α)
+    {k : ℕ} (hk1 : 1 ≤ k) (hk : k ≤ (L.compactify S).K) :
+    ((L.compactify S).bandSet k).Nonempty := by
+  classical
+  -- `(L.compactify S).K = compactBand L S L.K`.
+  have hK_eq : (L.compactify S).K = compactBand L S L.K := rfl
+  rw [hK_eq] at hk
+  -- Find smallest `j ∈ [1, L.K]` with `compactBand L S j ≥ k`. This `j`
+  -- has `compactBand L S j = k` AND is non-empty on `S`.
+  -- Existence of `j`: `j := L.K` works since `compactBand L S L.K ≥ k`.
+  -- Concretely, use `Nat.find` on `∃ j, j ≤ L.K ∧ k ≤ compactBand L S j`.
+  have h_exists : ∃ j : ℕ, j ≤ L.K ∧ k ≤ compactBand L S j :=
+    ⟨L.K, le_refl _, hk⟩
+  let j₀ := Nat.find h_exists
+  have hj₀_spec : j₀ ≤ L.K ∧ k ≤ compactBand L S j₀ := Nat.find_spec h_exists
+  have hj₀_min : ∀ m < j₀, ¬ (m ≤ L.K ∧ k ≤ compactBand L S m) := by
+    intro m hm
+    exact Nat.find_min h_exists hm
+  obtain ⟨hj₀_le, hj₀_compactBand_ge⟩ := hj₀_spec
+  -- `j₀ ≥ 1`: at j = 0, `compactBand L S 0 = 0 < 1 ≤ k`, so j₀ ≠ 0.
+  have hj₀_pos : 1 ≤ j₀ := by
+    rcases Nat.eq_zero_or_pos j₀ with hj0 | hjpos
+    · exfalso
+      rw [hj0] at hj₀_compactBand_ge
+      rw [compactBand_zero] at hj₀_compactBand_ge
+      omega
+    · exact hjpos
+  -- `compactBand L S (j₀ - 1) < k`: by minimality of `j₀`.
+  have hpred_lt : compactBand L S (j₀ - 1) < k := by
+    by_contra h
+    push_neg at h
+    have hj_pred_le : j₀ - 1 ≤ L.K := by omega
+    have h_pred_lt_j₀ : j₀ - 1 < j₀ := by omega
+    exact hj₀_min (j₀ - 1) h_pred_lt_j₀ ⟨hj_pred_le, h⟩
+  -- `compactBand L S j₀ ≤ compactBand L S (j₀ - 1) + 1` via diff ≤ 1.
+  have h_diff_le : compactBand L S j₀ ≤ compactBand L S (j₀ - 1) + 1 := by
+    have := compactBand_diff_le L S (Nat.sub_le j₀ 1)
+    omega
+  -- Sandwich: `compactBand L S j₀ = k`.
+  have hcompactBand_eq : compactBand L S j₀ = k := by omega
+  -- `j₀` is non-empty on `S`: otherwise `compactBand L S j₀ =
+  -- compactBand L S (j₀ - 1)` (by the empty-band step lemma), but
+  -- the LHS is `≥ k` and the RHS is `< k`. Contradiction.
+  have hj₀_ne : NonEmptyOnS L S j₀ := by
+    by_contra hje
+    have h_eq := compactBand_succ_of_empty L S hj₀_pos hje
+    omega
+  -- Pick the witnessing element of S.
+  obtain ⟨a, haS, hba⟩ := hj₀_ne
+  refine ⟨⟨a, haS⟩, ?_⟩
+  rw [LayeredDecomposition.mem_bandSet]
+  -- `(L.compactify S).band ⟨a, haS⟩ = compactBand L S (L.band a) = compactBand L S j₀ = k`.
+  show compactBand L S (L.band a) = k
+  rw [hba]
+  exact hcompactBand_eq
 
 end LayeredDecomposition
 

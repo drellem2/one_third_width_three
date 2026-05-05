@@ -89,6 +89,8 @@ import OneThird.Step8.Case3Enum.AllBalancedBridge
 import OneThird.Step8.Case3Enum.PredMaskBridge
 import OneThird.Step8.Case3Enum.SymmetricLift
 import OneThird.Step8.BoundedIrreducibleBalancedInScope
+import OneThird.Step8.OptionC.K2Closure
+import OneThird.Step8.OptionC.Case3WitnessProof
 import OneThird.Step8.Window
 import OneThird.Step8.WindowDecomp
 import OneThird.Step8.SmallN

@@ -7,12 +7,14 @@ for the mathematical outline and `../main.pdf` for the full paper.
 
 ## Status
 
-**The formalisation is complete, modulo a single named axiom.**
+**The formalisation is complete, modulo two named axioms and the
+`native_decide` enumeration kernels.**
 
-`lake build` succeeds (1385 jobs, **zero `sorry` warnings**). Every
+`lake build` succeeds (1409 jobs, **zero `sorry` warnings**). Every
 paper theorem statement has a Lean counterpart; the full assembly of
 Steps 1–8 compiles and discharges the main theorem
-`OneThird.width3_one_third_two_thirds`.
+`OneThird.width3_one_third_two_thirds` **without hypothesis**
+(matching the paper's `thm:main` modulo the disclosed axioms).
 
 ### Axioms
 
@@ -21,34 +23,76 @@ Steps 1–8 compiles and discharges the main theorem
 -- [propext,
 --  Classical.choice,
 --  Quot.sound,
---  OneThird.LinearExt.brightwell_sharp_centred]
+--  OneThird.LinearExt.brightwell_sharp_centred,
+--  OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope,
+--  OneThird.Step8.Case3Enum.case3_balanced_w1._native.native_decide.ax_1_1,
+--  OneThird.Step8.Case3Enum.case3_balanced_w2._native.native_decide.ax_1_1,
+--  OneThird.Step8.Case3Enum.case3_balanced_w3._native.native_decide.ax_1_1,
+--  OneThird.Step8.Case3Enum.case3_balanced_w4._native.native_decide.ax_1_1,
+--  OneThird.Step8.OptionC.case2_certificate._native.native_decide.ax_1_1]
 ```
 
 The raw `#print axioms` output — reproducible via
 `lake env lean scripts/PrintAxioms.lean` — is archived verbatim in
 [`PRINT_AXIOMS_OUTPUT.txt`](PRINT_AXIOMS_OUTPUT.txt).
 
-The first three are the mathlib-standard classical foundations. The
-fourth, **`OneThird.LinearExt.brightwell_sharp_centred`**, is the
-only project-specific axiom: it transcribes
-`eq:sharp-centred` (`step8.tex:1048`), the Brightwell / Kahn–Saks
-sharp centred bound
-`|Σ_{L' ∈ A}(f(L') − f̄)| ≤ 2N/m` derived in the paper via
-FKG / Ahlswede–Daykin + per-term covariance. Each field of the Lean
-statement is audited against the paper in `lean/AXIOMS.md` with a
-scope-match checklist. Per the **mg-b699** (F6-4-port) decision,
-this axiom is **retained** rather than ported: it is a faithful
-transcription of Brightwell's [*Balanced pairs in partial orders*,
-Discrete Math. **201** (1999), §4, Theorem 4.1] combined with
-Kahn–Saks [*Balancing poset extensions*, Order **1** (1984),
-Lemma 2.2], a published external result, and a full Lean port is
-estimated at 500–800 LoC of mathlib-tier covariance / set-system
-infrastructure that is orthogonal to the structural proof. See
-`lean/AXIOMS.md` for the decision rationale and the open
-replacement path.
+* The first three (`propext`, `Classical.choice`, `Quot.sound`) are
+  the mathlib-standard classical foundations.
+* **`OneThird.LinearExt.brightwell_sharp_centred`** transcribes
+  `eq:sharp-centred` (`step8.tex:1048`), the Brightwell / Kahn–Saks
+  sharp centred bound
+  `|Σ_{L' ∈ A}(f(L') − f̄)| ≤ 2N/m` — a published external result
+  (Brightwell, *Balanced pairs in partial orders*, Discrete Math.
+  **201** (1999), §4, Theorem 4.1; Kahn–Saks, *Balancing poset
+  extensions*, Order **1** (1984), Lemma 2.2). Per the **mg-b699**
+  (F6-4-port) decision, this axiom is **retained** rather than
+  ported.
+* **`OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope`**
+  transcribes `prop:in-situ-balanced` Case 3 (`step8.tex:3033-3047`)
+  for the residual parameter range outside the F5a `case3_certificate`
+  scope (the `rem:enumeration` sketch at `step8.tex:3157-3173`). This
+  is internal to the paper rather than a citation; it is retained
+  with full disclosure per the polecat-instruction guidance ("If new
+  math turns out to need its own axiom: report honestly via
+  paper-vs-formalization diagnosis"). See `AXIOMS.md` for the
+  faithful-transcription audit.
+* The five `_native.native_decide.ax_1_1` axioms are per-decision
+  instantiations of the standard `Lean.ofReduceBool` axiom underlying
+  `native_decide`. They underwrite the F5a Case-3 enumeration
+  certificate (`Step8.Case3Enum.case3_certificate`, four facts at
+  `w ∈ {1, 2, 3, 4}`) and the Option-C Stage 1 K=2 closure
+  certificate (`Step8.OptionC.case2_certificate`).
+
+Each field of the project axioms is audited against the paper in
+`lean/AXIOMS.md` with a scope-match checklist.
 
 There is no `sorryAx` in the axiom list — the Lean text is
 sorry-free.
+
+### `hC3` retention dropped (Option-C Stage 2, `mg-2a56` + `mg-8c72`)
+
+The historical `hC3 : Step8.Case3Witness.{u}` parameter on
+`OneThird.width3_one_third_two_thirds` was retained through the Path C
+parking decision (2026-04-27, `mg-94fd` round-4 stop-loss) because the
+universal `Case3Witness` claim could not be proved without
+compound-automorphism infrastructure. Option-C Stage 2 closed the gap
+in two stages:
+
+* **Stage 2A** (`mg-2a56`, `LayeredDecomposition.compactify`) —
+  band-compactification under sub-poset descent, fixing the
+  empty-band obstruction (Obstruction B of `mg-979e`).
+* **Stage 2B** (`mg-8c72`, `OptionC.Case3WitnessProof`) — Candidate
+  A'' tightening (Injective band map + K-cap + cardinality cap +
+  non-empty bands) plus the F3 step proof composing K=1 (vacuous
+  under Injective), K=2 (`option_c_K2_closure`, `mg-01ec`), and K≥3
+  (`bounded_irreducible_balanced_hybrid` with the Case 2 slot made
+  vacuous by Injective and the Case 3 slot consuming
+  `case3Witness_hasBalancedPair_outOfScope`) leaves, with sub-poset
+  descent threaded through `compactify`.
+
+`Step8.OptionC.Case3Witness_proof` discharges the tightened
+`Step8.Case3Witness.{u}` universal as a Lean theorem; the headline
+supplies it internally.
 
 ### Closing the previous G4 `sorry` — landed chain
 
@@ -265,7 +309,13 @@ which emits
 'OneThird.width3_one_third_two_thirds' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- OneThird.LinearExt.brightwell_sharp_centred]
+ OneThird.LinearExt.brightwell_sharp_centred,
+ OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope,
+ OneThird.Step8.Case3Enum.case3_balanced_w1._native.native_decide.ax_1_1,
+ OneThird.Step8.Case3Enum.case3_balanced_w2._native.native_decide.ax_1_1,
+ OneThird.Step8.Case3Enum.case3_balanced_w3._native.native_decide.ax_1_1,
+ OneThird.Step8.Case3Enum.case3_balanced_w4._native.native_decide.ax_1_1,
+ OneThird.Step8.OptionC.case2_certificate._native.native_decide.ax_1_1]
 ```
 
 ## File inventory
