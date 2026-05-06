@@ -8,53 +8,71 @@ repository: the [forum-post template](lean-forum-post-template.md)
 quotes from this doc rather than restating the claim shape.
 
 The intent is that a Lean / formal-methods reader can verify the
-claim end-to-end without needing to reverse-engineer the discrepancy
-between the paper's `thm:main` and the Lean-side headline theorem.
+claim end-to-end and audit the trust surface without needing to
+reverse-engineer the relationship between the paper's `thm:main`
+and the Lean-side headline theorem.
 
-**Status as of 2026-05-04.** Build is clean; the headline depends on
-one named project axiom (Brightwell, transcribing a published
-external result) plus Lean's standard classical-foundations trio,
-and carries one Prop-level hypothesis (`hC3`) that pins a
-parametrically-quantified discharge of the paper's `prop:in-situ-balanced`
-Case 3. Both residuals are documented below and disclosed verbatim
-in the forum-post template.
+**Status as of 2026-05-06.** Build is clean (1409 lake jobs, 632 s
+cold). The headline `OneThird.width3_one_third_two_thirds` is
+**unconditional** — its signature carries only `hP : HasWidthAtMost
+α 3` and `hNonChain : ¬ IsChainPoset α`, exactly matching the
+paper's `thm:main` (modulo the paper's separate `Hypothesis~A`
+arithmetic-richness side condition, on which `thm:main` itself
+remains conditional). The trust surface is the four-category list
+disclosed below and reproduced verbatim in the forum-post template:
 
-**Update relative to the 2026-04-27 calibration.** Two parallel
-cleanup tracks closed on 2026-05-04, both block-and-reporting and
-both confirming that PATH A (ship the documented narrower public
-claim under the reframed wording established in `mg-9e50` / `mg-457c`)
-is the **settled** outcome — not just the default after a single
-park decision. The fresh evidence:
+1. mathlib's classical-foundations trio (`propext`,
+   `Classical.choice`, `Quot.sound`);
+2. one external published bound transcribed as the project axiom
+   `OneThird.LinearExt.brightwell_sharp_centred` (Brightwell 1999
+   §4 + Kahn–Saks 1984 Lemma 2.2);
+3. one paper-internal sketch transcribed as the project axiom
+   `OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope`
+   (the residual `¬ InCase3Scope` half of `prop:in-situ-balanced`
+   Case 3, faithful transcription of `rem:enumeration` per the
+   `mg-7377` QA verdict; replacement deferred indefinitely per the
+   `mg-5cd8` disposition-B amendment);
+4. Lean's `Lean.ofReduceBool` axiom (standard `native_decide`
+   compiler-trust), instantiated five times for the F5a Case-3
+   enumeration certificate (`case3_balanced_w{1,2,3,4}`) and the
+   Option-C Stage-1 K=2 closure (`case2_certificate`).
 
-* **Track 1 (`mg-b666`, compound-automorphism extension on `main`,
-  commit `5dff5e4`,
-  [`docs/path-c-track-1-status-1.md`](path-c-track-1-status-1.md)).**
-  Found a structural cardinality obstruction (§2 of that doc): no
-  order-preserving permutation `σ : α ≃ α` with `σ a = a'` can
-  exist when `upper(a) ⊊ upper(a')` strictly, because such a `σ`
-  would restrict to a bijection forcing `|upper(a)| = |upper(a')|`.
-  This rules out compound-automorphism extension to case-2-strict
-  for **any** construction — triple-orbit, partial-injection, and
-  different-pair variants all fail. The obstruction is structural,
-  not effort-bound.
-* **Track 2 (`mg-80ab`, math-simp arc 2.0 on branch
-  `math-simp-arc-2.0`, commit `b1ac92b`,
-  [`docs/math-simp-arc-2.0/scoping.md`](math-simp-arc-2.0/scoping.md)).**
-  Scoped four candidate fresh framings (audit-bar revisit / direct
-  probability bound / restrict-and-dispatch / alternate proof
-  program) and found **zero GREEN framings** within polecat scoping
-  authority. The probability-bound route is also blocked: the
-  in-tree Brightwell sharp centred bound is vacuous at `|α| ≤ 6`,
-  which is exactly the K=2 regime where the obstruction lives.
+**Update relative to 2026-05-04.** The 2026-05-04 calibration
+characterised the headline as carrying an `hC3 : Step8.Case3Witness`
+Prop-level hypothesis under the option (δ) park decision
+(2026-04-27). That parameter has since been **closed**: the
+Option-C arc landed Stage 2A (`mg-2a56`,
+`LayeredDecomposition.compactify`, commit `e4ffe2d`, 2026-05-05) —
+band-compactification under sub-poset descent, removing the
+empty-band obstruction — and Stage 2B (`mg-8c72`,
+`OptionC.Case3WitnessProof`, commit `16d26ef`, 2026-05-05), which
+discharges a Candidate A''-tightened `Step8.Case3Witness.{u}`
+universal as a Lean theorem (composing the K=1 vacuous case under
+Injective, the K=2 closure of `mg-01ec` /
+`Step8.OptionC.option_c_K2_closure` via the
+`case2_certificate` `native_decide` enumeration, and the K ≥ 3
+leaves consuming `case3Witness_hasBalancedPair_outOfScope`, with
+sub-poset descent threaded through `compactify`). The headline now
+supplies the witness internally; the public signature drops `hC3`.
 
-The Future-revival pathways in §5 below are unchanged in substance
-(A8-S2-cont infrastructure, math-simplification experiment in a
-future product cycle), but the math-simplification pathway is now
-narrower than the 2026-04-27 framing implied: the natural fresh
-framings have been surveyed and found wanting, so any successful
-future math-simp must come from outside the four candidates already
-audited. The §5 wording has been updated accordingly (see §5 of
-this doc).
+The forum-readiness validation pass `mg-5cd8` (2026-05-06,
+[`docs/forum-readiness-validation/verdict.md`](forum-readiness-validation/verdict.md))
+audited the post-Stage-2B state and returned **AMBER on doc-drift
+only**: the build is green, the axiom inventory matches
+disposition-B expectations, all five `native_decide` audits are
+clean, and the only finding was that this doc and the forum-post
+template had not yet been refreshed for the unconditional headline.
+This refresh closes that finding (mg-d7fd; AMBER → GREEN).
+
+The substantive math content of §5 (the F1 / F2 / F3 structural
+analysis of why a simpler in-tree discharge of Case 3 was not
+available) and §7a (the published `[0.276, 1/3)` Kahn–Linial gap)
+remains accurate as historical context for **why the
+`case3Witness_hasBalancedPair_outOfScope` axiom is retained** as a
+faithful transcription of `rem:enumeration` rather than fleshed
+out into a Lean proof. The replacement-path framing has shifted
+from "park `hC3`" to "retain the axiom, port deferred indefinitely
+per `mg-5cd8` disposition B".
 
 ---
 
@@ -87,32 +105,23 @@ the Kahn–Linial regime ($\gamma \ge 1/3 - \delta_{\mathrm{KL}}$) and
 on the finite-`n` regime ($n \le n_0(\gamma, T)$); Hypothesis~A
 covers the intermediate large-`n` small-`γ` band.
 
-### 1b. Lean headline (`width3_one_third_two_thirds`, `lean/OneThird/MainTheorem.lean:52-57`)
+### 1b. Lean headline (`width3_one_third_two_thirds`, `lean/OneThird/MainTheorem.lean`)
 
 ```lean
 theorem width3_one_third_two_thirds.{u}
     {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
-    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
-    (hC3 : Step8.Case3Witness.{u}) :
+    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α) :
     HasBalancedPair α :=
-  Step8.width3_one_third_two_thirds_assembled hP hNonChain hC3
+  Step8.width3_one_third_two_thirds_assembled hP hNonChain
+    Step8.OptionC.Case3Witness_proof
 ```
 
-The Lean residual is the **Prop-level hypothesis `hC3 :
-Step8.Case3Witness`**, a universally-quantified discharge of the
-within-band antichain Case 3 of the paper's `prop:in-situ-balanced`
-(`step8.tex:2965-3048`). The full definition is at
-`lean/OneThird/Step8/LayeredBalanced.lean:438-444`:
-
-```lean
-def Case3Witness.{u} : Prop :=
-  ∀ (β : Type u) [PartialOrder β] [Fintype β] [DecidableEq β]
-    (LB : Step8.LayeredDecomposition β),
-    HasWidthAtMost β 3 →
-    ¬ IsChainPoset β →
-    2 ≤ Fintype.card β →
-    HasBalancedPair β
-```
+The Lean signature is the same as the paper's `thm:main` modulo
+the standard `[Fintype]` / `[DecidableEq]` instances: width ≤ 3
+plus non-chain implies a balanced pair. There is no Prop-level
+`hC3` parameter; the universal Case-3 discharge is supplied
+internally by `Step8.OptionC.Case3Witness_proof` (Option-C Stage 2B,
+`mg-8c72`, `lean/OneThird/Step8/OptionC/Case3WitnessProof.lean`).
 
 `HasBalancedPair α` (`lean/OneThird/Poset.lean`) unfolds to: there
 exist incomparable `x y : α` with
@@ -121,78 +130,118 @@ measure — the same conclusion as `thm:main`.
 
 ### 1c. Side-by-side reading
 
-The Lean headline carries `hC3` as an additional Prop-level
-hypothesis that the paper's `thm:main` does not carry; the paper's
-`thm:main` carries Hypothesis~A as an arithmetic side condition that
-the Lean headline does not carry. **The two residuals do not coincide
-and one is not a routine translation of the other.**
+The Lean signature and the paper's `thm:main` signature now match.
+The differences are entirely on the disclosure side: the paper
+proves `thm:main` conditional on Hypothesis~A (arithmetic richness,
+an open mathematical condition), whereas the Lean tree proves the
+same conclusion without arithmetic richness as a hypothesis but
+with two named project axioms in the headline's transitive closure
+plus a small set of `Lean.ofReduceBool`-backed `native_decide`
+certificates. **The two residual surfaces do not coincide and are
+not a routine translation of one another.**
 
-* The paper's residual (Hypothesis~A) is an arithmetic-richness
-  inequality on the Step 5/6/7 cascade constants. It is `n`-independent
-  but `γ`-quantified, and it pins the large-`n` tail of the small-`γ`
-  regime via BK expansion. It is open mathematically: not derived from
-  Steps 1–7, not formally verified, not refuted.
-* The Lean residual (`hC3`) is a universally-quantified Prop-level
-  predicate over layered width-3 non-chain `β`'s, asserting that the
-  Case 3 dispatch of `prop:in-situ-balanced` (within-band antichain)
-  always produces a balanced pair. It is a constructive parametric
-  hypothesis that any caller of the headline must supply.
-
-In particular: **the Lean formalization is not a complete proof of
-`thm:main` modulo Hypothesis~A**. The two trees parametrise the open
-piece differently. A consumer of the Lean headline must independently
-discharge `hC3`; the question of whether `hC3` follows from
-Hypothesis~A (or vice versa) is not in scope of this formalization.
+* The paper's `thm:main` residual (Hypothesis~A) is an
+  arithmetic-richness inequality on the Step 5/6/7 cascade constants.
+  It is `n`-independent but `γ`-quantified, and it pins the
+  large-`n` tail of the small-`γ` regime via BK expansion. It is
+  open mathematically: not derived from Steps 1–7, not formally
+  verified, not refuted.
+* The Lean tree replaces the arithmetic-richness conditionality
+  with concrete trust line items. The structurally interesting one
+  is `case3Witness_hasBalancedPair_outOfScope`, which transcribes
+  the paper's own `rem:enumeration` sketch
+  (`step8.tex:3157-3173`) for the residual `¬ InCase3Scope`
+  parameter range; this is internal to the paper, not an external
+  citation, and the paper's sketch is genuinely a sketch rather
+  than a fleshed-out proof. The other (`brightwell_sharp_centred`)
+  is the published external Brightwell / Kahn–Saks bound and
+  is the standard "import an external published result" pattern.
 
 The honest summary, which the forum-post template uses, is:
 
-> The structural argument of Steps 1–8 is fully formalized in Lean.
-> The headline theorem `width3_one_third_two_thirds` is paper-faithful
-> modulo (i) one named axiom transcribing a published external result
-> (the Brightwell / Kahn–Saks sharp centred bound) and (ii) one
-> documented Prop-level hypothesis `hC3 : Case3Witness` discharging
-> the within-band antichain Case 3 of `prop:in-situ-balanced`. The
-> paper's `thm:main` itself remains conditional on Hypothesis~A
-> (arithmetic richness, an open mathematical condition); the Lean
-> tree replaces that conditionality with the constructive parametric
-> `hC3` rather than transcribing Hypothesis~A directly.
+> The headline theorem `OneThird.width3_one_third_two_thirds` has
+> the same hypothesis profile as the paper's `thm:main` (width ≤ 3,
+> non-chain). The proof is paper-faithful modulo a four-category
+> trust surface: the mathlib classical-foundations trio; one
+> project axiom transcribing the published Brightwell / Kahn–Saks
+> sharp centred bound; one project axiom transcribing the paper's
+> own `rem:enumeration` Case-3 residual sketch; and Lean's
+> `Lean.ofReduceBool` for five `native_decide`-backed Case-3 /
+> Case-2 enumeration certificates. The paper's `thm:main` itself
+> remains conditional on Hypothesis~A (arithmetic richness, an open
+> mathematical condition); the Lean tree does not transcribe
+> Hypothesis~A.
 
 ---
 
-## 2. What `hC3 : Case3Witness` is and why it is parked
+## 2. What `case3Witness_hasBalancedPair_outOfScope` is and why it is retained
 
-`Case3Witness` (`lean/OneThird/Step8/LayeredBalanced.lean:438-444`)
-is the **universally quantified Case-3 discharge** for layered width-3
-non-chain `β`. Operationally, it asserts that for every layered
-decomposition `LB` of every type `β` satisfying the F5 entry conditions
-(width ≤ 3, not a chain, `|β| ≥ 2`), `β` has a balanced pair. The
-F5 strong-induction inside `lem_layered_balanced` recurses on
-sub-posets via `L.restrict D.Mid`, so the Case-3 discharge has to
-cover an entire `∀`-family of sub-types, not a single fixed `β`.
+The `case3Witness_hasBalancedPair_outOfScope` axiom
+(`lean/OneThird/Step8/Case3Residual.lean`, audited in
+[`lean/AXIOMS.md`](../lean/AXIOMS.md) §2) discharges the
+**residual `¬ InCase3Scope` half** of the paper's
+`prop:in-situ-balanced` Case 3 (`step8.tex:3033-3047`) — the
+parameter range outside the F5a Bool-certified `case3_certificate`.
+The paper's argument for this regime is the `rem:enumeration`
+sketch (`step8.tex:3157-3173`); the axiom transcribes that
+sketch's conclusion at the polecat-instruction-blessed level of
+fidelity ("If new math turns out to need its own axiom: report
+honestly"). The `mg-7377` QA verdict
+([`lean/AXIOMS.md`](../lean/AXIOMS.md) §2 "QA verdict (mg-7377)")
+is **axiom is faithful**: every hypothesis matches the wider
+profile of `Step8.bounded_irreducible_balanced_hybrid`
+(`BoundedIrreducibleBalanced.lean`) restricted to `¬ InCase3Scope`,
+plus the typed Case 3 witness produced by A8-S1's
+`case1_dispatch_inScope`; the size cap `|α| ≤ 6w + 6` is strictly
+tighter than the paper's `|Q| ≤ 9w + 3` (so the axiom is no
+stronger than the paper's claim).
 
-The discharge has been attempted across four polecat rounds (mg-4a5b
-→ mg-072c → mg-0fa0 → mg-94fd) under Path C cleanup, plus a follow-on
-compound-automorphism build-out (mg-84f2 / mg-c0c7 / mg-02c2) and a
-2026-05-04 Track 1 attempt to extend that build-out (mg-b666). The
-arc shipped six pieces of substantive infrastructure (mg-9568,
-mg-7f06, mg-a735, mg-27c2, mg-2e58, mg-26bb — see
-`docs/path-c-cleanup-roadmap.md` §4) plus the K=2 same-band
-compound-automorphism kit (`CompoundSwap.lean`, `CompoundMatching.lean`,
-`BipartiteEnumGeneral.lean` — mg-84f2 / mg-c0c7 / mg-02c2). After the
-round-4 firm stop-loss, pm-onethird picked **option (δ): park** —
-retain `hC3` as a named hypothesis on the headline, ship the audit
-as the deliverable, and revisit if the underlying mathematical
-infrastructure lands later. The retention is **structural, not
-effort-bound**: three independent structural facts (cardinality
-obstruction; Brightwell vacuity at K=2 / `|Q| ≤ 6`; the published
-`[0.276, 1/3)` Kahn–Linial gap) converge on the residual K=2 +
-irreducible + w ≥ 1 + |β| ≥ 3 family in such a way that no
-in-tree-derivable simpler argument has survived 21 candidate
-framings across three independent scoping arcs. The unified
-explanation is in
-[`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md) — the
-canonical "why is the formalization conditional" entry point. The
-short version:
+The axiom is consumed inside `Step8.OptionC.Case3Witness_proof`
+(Option-C Stage 2B, `mg-8c72`), which discharges the
+Candidate A''-tightened `Step8.Case3Witness.{u}` universal as a
+Lean theorem and is supplied internally by the headline. The
+public signature of `width3_one_third_two_thirds` no longer
+mentions `Case3Witness` or any related Prop-level hypothesis.
+
+Per the `mg-5cd8` disposition-B amendment (2026-05-06,
+[`docs/forum-readiness-validation/verdict.md`](forum-readiness-validation/verdict.md)
+"Disposition-B amendment note"), the axiom is **retained as
+specified**, with the port deferred indefinitely. The replacement
+path — pigeonhole on shared profile coordinates plus a
+band-restricted Case 2 FKG sub-coupling plus a reduction back to
+Case 1 / Case 2 — is recorded in
+[`lean/AXIOMS.md`](../lean/AXIOMS.md) §2 "Replacement path
+(open)", but its substantive new mathematical content is the same
+band-restricted probability-form FKG sub-coupling that the
+deferred A8-S2-cont scope already targets, and is not currently
+planned as a polecat-doable arc. The mg-75ef latex-first artifact
+(2026-05-06; new file produced after `mg-5cd8`'s validation pass)
+fleshes out the paper's `rem:enumeration` sketch into a structured
+multi-step argument modulo the deferred cross-poset
+probability-form FKG infrastructure, providing a forward-citeable
+math-side scaffolding for any future replacement effort; it does
+not retire the axiom.
+
+### Why discharging this in tree is structurally hard (historical context)
+
+This subsection summarises why a simpler in-tree discharge of the
+residual Case 3 was not available before Option-C, and why the
+axiom transcription is the honest framing rather than a stopgap.
+The pre-Option-C parking decision (option (δ), 2026-04-27) and
+the 2026-05-04 Track 1 / Track 2 closures had already established
+that no compound-automorphism build-out and no fresh in-tree
+proof framing closed the gap; Option-C Stages 2A + 2B then
+discharged the *outer* universal `Step8.Case3Witness` as a Lean
+theorem **by routing the residual leaves through the
+`outOfScope` axiom**, leaving the axiom itself as the trust line
+item.
+
+The unified F1 / F2 / F3 explanation is in
+[`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md) (the
+canonical "why is the residual sketch retained" entry point;
+written under the pre-Stage-2B `hC3`-parking framing but
+substantively unchanged in its structural content). The short
+version:
 
 > **F1 — Cardinality obstruction.** Order-preserving permutations
 > cannot swap a strict ⪯-pair: any `σ : α ≃ α` with `σ a = a'`
@@ -227,29 +276,32 @@ short version:
 
 So no additional LoC of compound-automorphism work — even with a
 hypothetical mathlib-side `MultiOrbit.swap_preserves_le` primitive
-— closes the gap. The closure now requires either (i) the deferred
-A8-S2-cont probability-normalised cross-poset FKG infrastructure
-(~2000–3500 LoC, paper-tier mathematical work; sketched in
-`docs/a8-s2-status.md` §5), (ii) a width-3-specific tightening of
-the Kahn–Linial covariance bound that would close the unconditional
-`δ ≥ 0.276 → 1/3` gap, or (iii) an entirely different proof
-program. None of those is a "polecat-doable" arc; closure is
-multi-week external work or a research-arc commitment. The headline
-retains `hC3` indefinitely under that disposition. Note: this is
-"no in-tree-derivable simpler argument," strictly weaker than "no
-simpler argument exists" — see
+— produces an in-tree discharge of the residual without the
+deferred FKG infrastructure. A future replacement of
+`case3Witness_hasBalancedPair_outOfScope` requires either (i) the
+deferred A8-S2-cont probability-normalised cross-poset FKG
+infrastructure (~2000–3500 LoC, paper-tier mathematical work;
+sketched in `docs/a8-s2-status.md` §5), (ii) a width-3-specific
+tightening of the Kahn–Linial covariance bound that would close
+the unconditional `δ ≥ 0.276 → 1/3` gap, or (iii) an entirely
+different proof program. None of those is a polecat-doable arc;
+the disposition-B amendment of `mg-5cd8` records the retention as
+indefinite. Note: this is "no in-tree-derivable simpler argument,"
+strictly weaker than "no simpler argument exists" — see
 [`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md) §
 "What this doc does not claim".
 
 The full audit trail is
 [`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md) (entry
-point for the structural explanation),
-`docs/path-c-cleanup-roadmap.md` (entry point for the cleanup arc),
+point for the structural explanation; pre-Stage-2B framing,
+substantively current),
+`docs/path-c-cleanup-roadmap.md` (entry point for the pre-Option-C
+cleanup arc),
 `docs/path-c-track-1-status-1.md` (Track 1 structural
-impossibility), `docs/math-simp-arc-2.0/scoping.md` (Track 2 fresh
-framings), `docs/math-simp-arc-3.0/scoping.md` (Track 3 strategy
-revisit), plus the five round-by-round status docs from the
-original four-round arc:
+impossibility, mg-b666), the math-simp arc 2.0 scoping pass
+(`mg-80ab`, four candidate fresh framings, zero GREEN found), and
+the math-simp arc 3.0 strategy revisit (`mg-65e1`), plus the five
+round-by-round status docs from the original four-round arc:
 
 * `docs/a8-s2-strict-witness-status.md` (mg-43f3) — pins the
   closure target to chain-form FKG.
@@ -259,11 +311,18 @@ original four-round arc:
 * `docs/a5-g3e-path-c-wiring-v5-status.md` (mg-94fd) — firm round-4
   stop-loss; option (δ) trigger.
 
-`hC3` retention is intentional under that decision; the docstring at
-`lean/OneThird/MainTheorem.lean:39-51` and the `Case3Witness` def
-docstring at `lean/OneThird/Step8/LayeredBalanced.lean:420-437` both
-flag it as "do not attempt to drop without first reading the
-roadmap".
+As of Stage 2B (`mg-8c72`, 2026-05-05) the `hC3` parameter is no
+longer on the headline; the `Step8.Case3Witness` universal is
+discharged internally by `Step8.OptionC.Case3Witness_proof`
+(`lean/OneThird/Step8/OptionC/Case3WitnessProof.lean`), and the
+`outOfScope` axiom carries the residual disclosure. The
+`MainTheorem.lean` docstring records the closure history; the
+`Step8.Case3Witness.{u}` definition has been tightened to the
+Candidate A''-restricted universal that `Case3Witness_proof`
+discharges as a Lean theorem. The above F1 / F2 / F3 framework
+remains a faithful description of why the residual is not closer
+to the surface — the same structural facts now explain why the
+`outOfScope` axiom is *retained* rather than ported in tree.
 
 ---
 
@@ -278,7 +337,13 @@ Reproducible from a clean clone via
 'OneThird.width3_one_third_two_thirds' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
- OneThird.LinearExt.brightwell_sharp_centred]
+ OneThird.LinearExt.brightwell_sharp_centred,
+ OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope,
+ OneThird.Step8.Case3Enum.case3_balanced_w1._native.native_decide.ax_1_1,
+ OneThird.Step8.Case3Enum.case3_balanced_w2._native.native_decide.ax_1_1,
+ OneThird.Step8.Case3Enum.case3_balanced_w3._native.native_decide.ax_1_1,
+ OneThird.Step8.Case3Enum.case3_balanced_w4._native.native_decide.ax_1_1,
+ OneThird.Step8.OptionC.case2_certificate._native.native_decide.ax_1_1]
 'OneThird.Step8.width3_one_third_two_thirds_assembled' depends on axioms: [propext,
  Classical.choice,
  Quot.sound,
@@ -293,17 +358,29 @@ Reproducible from a clean clone via
 'OneThird.counterexample_implies_low_BK_expansion' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-Three of these (`propext`, `Classical.choice`, `Quot.sound`) are the
-mathlib-standard classical foundations that are also depended on by
-essentially every classical mathlib theorem; the fourth,
-`OneThird.LinearExt.brightwell_sharp_centred`, is the only
-project-specific axiom in the headline's transitive closure.
+Three of these (`propext`, `Classical.choice`, `Quot.sound`) are
+the mathlib-standard classical foundations that are also depended
+on by essentially every classical mathlib theorem.
+`OneThird.LinearExt.brightwell_sharp_centred` and
+`OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope`
+are the two named project axioms (§4 below). The five
+`_native.native_decide.ax_1_1` entries are per-decision instances
+of the standard `Lean.ofReduceBool` axiom underlying
+`native_decide`; they underwrite the F5a Case-3 enumeration
+certificate `Step8.Case3Enum.case3_certificate` (four facts at
+`w ∈ {1, 2, 3, 4}`, faithfully audited in
+[`docs/forum-readiness-validation/native-decide-audit.md`](forum-readiness-validation/native-decide-audit.md))
+and the Option-C Stage-1 K=2 closure certificate
+`Step8.OptionC.case2_certificate` consumed by `mg-01ec`'s
+`option_c_K2_closure`.
 
 The intermediate theorems (`mainAssembly`, `mainAssembly_smallN`,
 `cexImpliesLowBKExpansion`, `counterexample_implies_low_BK_expansion`)
-depend only on the mathlib trio: the Brightwell axiom enters the
-transitive closure only when `MainTheoremInputs` is constructed via
-`mainTheoremInputsOf` for the headline assembly.
+depend only on the mathlib trio: the Brightwell axiom, the
+`outOfScope` axiom, and the `native_decide` instances enter the
+headline closure only when `MainTheoremInputs` is constructed via
+`mainTheoremInputsOf` and `Case3Witness_proof` is supplied for the
+headline assembly.
 
 ---
 
@@ -350,35 +427,39 @@ clause of the paper proof, and the QA discrepancy audit (`mg-a6a1`,
 [`lean/AXIOMS.md`](../lean/AXIOMS.md) §1.4 "Discrepancy audit") fixed
 two off-by-one issues during transcription before the axiom landed.
 
-A second named project axiom,
-`OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope`,
-exists in the tree but is **not** reachable from the headline
-`width3_one_third_two_thirds` (see §6 of the formalization-completeness
-audit, `docs/formalization-completeness-audit.md`): under option (δ),
-the Case-3 discharge is parked behind the `hC3` hypothesis rather than
-wired through the dispatch that would consume that axiom. It is
-documented in [`lean/AXIOMS.md`](../lean/AXIOMS.md) §2 for completeness.
+After Option-C Stage 2B (`mg-8c72`, 2026-05-05), the second named
+project axiom
+`OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope` is
+**reachable** from the headline `width3_one_third_two_thirds` —
+the headline supplies `Step8.Case3Witness` internally via
+`Step8.OptionC.Case3Witness_proof`, which threads the residual
+`¬ InCase3Scope` leaves of the F3 K-dispatch through that axiom.
+This is the standard "import a published external bound" pattern
+applied to the paper's own `rem:enumeration` sketch (paper-internal,
+not external); the QA verdict and full audit are in
+[`lean/AXIOMS.md`](../lean/AXIOMS.md) §2 (`mg-7377`, "Axiom is
+faithful"); see also §2 above. The retention is firm under the
+`mg-5cd8` disposition-B amendment; replacement is deferred
+indefinitely.
 
 ---
 
-## 5. Known in-tree issue: mg-27c2 `Case2FKGSubClaim` direction-reversed (η₅ park — not being fixed this iteration)
+## 5. Known in-tree issue: mg-27c2 `Case2FKGSubClaim` direction-reversed (now bypassed by Option-C K=2 closure; left in tree for forum-reader transparency)
 
-A third disclosure item, distinct from `hC3` (parked open math, §2)
-and the two named project axioms (Brightwell external retain;
-`case3Witness_hasBalancedPair_outOfScope` semi-orphan, §4): a
-**conditional theorem** in the tree,
+A disclosure item distinct from the two named project axioms (§4):
+a **conditional theorem** in the tree,
 `case2Witness_balanced_under_FKG`
 (`lean/OneThird/Step8/Case2Rotation.lean:894`, mg-27c2), and the
 companion `strictCase2Witness_m2_balanced`
 (`lean/OneThird/Step8/Case2Rotation.lean:813`), are predicated on
 the hypothesis structure `Case2FKGSubClaim L`
 (`lean/OneThird/Step8/Case2Rotation.lean:772`) whose `pair` field
-is **provably false** on the natural Case 2 inputs the dispatch is
-supposed to fire on. The implications themselves are technically
-correct (anything follows from a false antecedent), but they are
-vacuous on the strict within-band ⪯-chain pairs they target. A
-forum reader auditing `Case2Rotation.lean` would absolutely spot
-this; this section flags it explicitly.
+is **provably false** on the natural Case 2 inputs the original
+dispatch was supposed to fire on. The implications themselves are
+technically correct (anything follows from a false antecedent),
+but they are vacuous on the strict within-band ⪯-chain pairs they
+target. A forum reader auditing `Case2Rotation.lean` would
+absolutely spot this; this section flags it explicitly.
 
 **The finding.** Audited end-to-end by polecat `pc-a79e`
 (commit `64f2d87`, mg-a79e); see
@@ -413,16 +494,23 @@ verdict.
 **Reachability from the headline.** `case2Witness_balanced_under_FKG`
 and `strictCase2Witness_m2_balanced` are conditional on
 `hFKG : Case2FKGSubClaim L`. The headline
-`width3_one_third_two_thirds` does **not** consume `hFKG`: under
-option (δ), the K=2 dispatch reaches the Case 2 leaf via the
-parked-`hC3` path (which subsumes Case 2 inside the universally
-quantified `Case3Witness` discharge), rather than via a
-`hFKG`-conditional discharge. The false-antecedent theorems are
-therefore **not** in the headline's transitive closure, and the
-verbatim `#print axioms` baseline (§3 above) is unaffected. They
-are nonetheless visible to a reader auditing `Case2Rotation.lean`,
-and they would matter the moment any future wiring tried to thread
-a constructed `hFKG` through the K=2 leaf.
+`width3_one_third_two_thirds` does **not** consume `hFKG`: after
+Option-C Stage 2B, the K=2 dispatch reaches the Case 2 leaf via
+`Step8.OptionC.option_c_K2_closure` (`mg-01ec`, commit `c403216`),
+which is a finite-enumeration Bool certificate
+(`Step8.OptionC.case2_certificate`, decided by `native_decide` and
+audited in
+[`docs/forum-readiness-validation/native-decide-audit.md`](forum-readiness-validation/native-decide-audit.md))
+plus a Bool→Prop bridge — so the K=2 closure now bypasses the
+provably-false SubClaim entirely. The K ≥ 3 leaves of the F3
+K-dispatch consume the
+`case3Witness_hasBalancedPair_outOfScope` axiom rather than any
+`hFKG`-conditional theorem. The false-antecedent SubClaim
+theorems are therefore **not** in the headline's transitive
+closure, and the verbatim `#print axioms` baseline (§3 above) is
+unaffected. They are nonetheless visible to a reader auditing
+`Case2Rotation.lean`, and they would matter the moment any future
+wiring tried to thread a constructed `hFKG` through the K=2 leaf.
 
 **Iteration disposition: PARKED via η₅ — the SubClaim defect is
 not being fixed in this iteration.** An η₄ restate attempt
@@ -453,10 +541,23 @@ path entirely; keep `hC3` on the headline) fired on receipt of
 the η₄ block-and-report. The defect remains in tree and is
 disclosed honestly, but no in-iteration fix is shipping.
 
-**Future-revival pathways.** Two routes existed at η₅ park time
-(2026-04-27) for closing the SubClaim defect in a later product
-cycle. Both have been **further narrowed** by the 2026-05-04
-closures of Tracks 1 and 2:
+**Post-Stage-2B status (2026-05-05).** Option-C Stage 2B
+(`mg-8c72`) discharged the outer `Step8.Case3Witness` universal
+without depending on a fixed SubClaim: the K=2 Case 2 leaf is
+covered by `option_c_K2_closure` (`mg-01ec`, finite-enumeration
+Bool certificate), and the K ≥ 3 leaves consume the
+`case3Witness_hasBalancedPair_outOfScope` axiom directly. The
+SubClaim defect therefore remains in tree as a paper-internal
+direction-reversal flag for `Case2Rotation.lean` readers but no
+longer parks any path to the headline closure.
+
+**Future-revival pathways for the SubClaim direction-fix itself
+(orthogonal to the headline).** Two routes existed at η₅ park
+time (2026-04-27); both were **further narrowed** by the
+2026-05-04 closures of Tracks 1 and 2 and remain
+relevant only if a future contributor wants to *fix* the SubClaim
+defect rather than bypass it (the headline is already routed
+around it post-Stage-2B):
 
 * **A8-S2-cont (`mg-8801`, ~2000-3500 LoC):** the deferred
   probability-form cross-poset FKG infrastructure
@@ -488,14 +589,13 @@ closures of Tracks 1 and 2:
       (`docs/math-simplification-A1-feasibility.md`, `mg-3d9d`);
       B1 shipped as a parallel cleanup (`mg-805c`); A2/A3/A4
       not commissioned.
-    * **Arc 2.0 (`mg-80ab`,
-      `docs/math-simp-arc-2.0/scoping.md`, 2026-05-04).**
-      Re-scoped under fresh framings (audit-bar revisit /
-      direct probability bound / restrict-and-dispatch /
-      alternate proof) post-mg-a79e/mg-b0de. **Zero GREEN
-      framings found.** The 2026-04-27 mg-a79e and mg-b0de
-      findings *contracted* the viable frame space for math
-      simplification rather than expanding it.
+    * **Arc 2.0 (`mg-80ab`, 2026-05-04).** Re-scoped under
+      fresh framings (audit-bar revisit / direct probability
+      bound / restrict-and-dispatch / alternate proof)
+      post-mg-a79e/mg-b0de. **Zero GREEN framings found.** The
+      2026-04-27 mg-a79e and mg-b0de findings *contracted* the
+      viable frame space for math simplification rather than
+      expanding it.
   **Status as of 2026-05-04:** the in-scope math-simplification
   search has been exhausted. Any future revival here is either
   (i) a width-3 Kahn–Linial-tightening research arc (Track 2's
@@ -520,23 +620,17 @@ shrink the gap; not currently planned.
 
 **Reachability — the headline is unaffected.** The headline
 `width3_one_third_two_thirds` does **not** consume `hFKG :
-Case2FKGSubClaim L`. Under option (δ), the K=2 dispatch reaches
-the Case 2 leaf via the parked-`hC3` path: `Case3Witness` is
-universally quantified over layered width-3 non-chain `β`'s
-satisfying the F5 entry conditions, and that quantification
-**subsumes Case 2 strict witnessing** as one of the sub-types it
-discharges (the strict within-band ⪯-pair regime sits inside the
-`HasWidthAtMost β 3 ∧ ¬ IsChainPoset β ∧ 2 ≤ Fintype.card β`
-class that any consumer of `hC3` must cover). The
-false-antecedent theorems `case2Witness_balanced_under_FKG` and
+Case2FKGSubClaim L`. After Option-C Stage 2B, the K=2 leaf is
+discharged by `option_c_K2_closure` (Bool certificate, `mg-01ec`)
+and the K ≥ 3 leaves by the `case3Witness_hasBalancedPair_outOfScope`
+axiom; neither path threads `hFKG`. The false-antecedent theorems
+`case2Witness_balanced_under_FKG` and
 `strictCase2Witness_m2_balanced` are therefore not in the
 headline's transitive closure and do not affect the
-`#print axioms` baseline reproduced in §3. The headline's truth
-under its `hC3` hypothesis is unaffected by the SubClaim defect
-for the formalized statement: this is a paper-internal arithmetic
-issue worth disclosing, but it does not invalidate the existing
-PATH A claim ("structurally complete formalization modulo case-3
-residual").
+`#print axioms` baseline reproduced in §3. The unconditional
+post-Stage-2B headline is unaffected by the SubClaim defect: this
+is a paper-internal direction-reversal worth disclosing, but it
+does not invalidate the formalized statement.
 
 **What a forum reader should do.**
 
@@ -549,25 +643,27 @@ residual").
    on a false antecedent — vacuous in the natural Case 2 regime,
    not load-bearing on the headline.
 2. **The headline is unaffected.** `width3_one_third_two_thirds`
-   does not consume these conditional theorems; it carries `hC3`
-   instead, and `hC3`'s universal quantification subsumes Case 2
-   strict witnessing. The §3 `#print axioms` baseline and the
-   side-by-side reading in §1 are accurate as stated.
-3. **If you are auditing the tree:** treat the Case 2 conditional
-   theorems as parked alongside `hC3` itself, and cite the
+   does not consume these conditional theorems; the K=2 leaf is
+   discharged by the `option_c_K2_closure` Bool certificate
+   (`mg-01ec`), and the K ≥ 3 leaves consume the
+   `case3Witness_hasBalancedPair_outOfScope` axiom. The §3
+   `#print axioms` baseline and the side-by-side reading in §1
+   are accurate as stated.
+3. **If you are auditing the tree:** treat the SubClaim
+   conditional theorems as legacy artifacts that the
+   Stage 2B Option-C closure routes around, and cite the
    in-tree theorems alongside this disclosure (and the audit-trail
    docs
    [`a8-path-b-block-and-report-status.md`](a8-path-b-block-and-report-status.md)
    for the SubClaim-falsifying counterexample,
    [`a8-s2-restate-block-and-report-status.md`](a8-s2-restate-block-and-report-status.md)
-   for the η₄-blocked technical reasoning) so the antecedent's
+   for the η₄-blocked direction-fix attempt) so the antecedent's
    status is not buried.
 
-This disclosure is additive: the mg-9e50 PATH A reframe still
-correctly characterises `hC3` and the Brightwell axiom; this
-section flags an *additional* in-tree caveat that the original
-PATH A docs did not surface, with iteration disposition now
-finalized as parked.
+This disclosure flags an in-tree caveat that does not affect the
+post-Stage-2B headline closure but is visible to anyone reading
+`Case2Rotation.lean`. The mg-9e50 PATH A reframe history is
+preserved in §9 (Provenance).
 
 ---
 
@@ -585,26 +681,33 @@ lake build OneThird
 Expected: `lake build OneThird` succeeds in roughly 3 minutes wall
 clock after `lake exe cache get`, with zero `sorry` warnings and
 several hundred benign linter warnings (`unusedDecidableInType`,
-`unusedSectionVars`). No errors.
+`unusedSectionVars`, plus a handful of `push_neg`-style
+deprecations recorded in
+[`docs/forum-readiness-validation/build-verification.md`](forum-readiness-validation/build-verification.md)).
+No errors.
 
 The most recent end-to-end build was performed by the
-formalization-completeness audit `mg-49a4` on 2026-04-27 (commit
-`6af280c`), which reports "1403 jobs, ~3 min wall after cache get;
-0 sorries; clean" and regenerates the `#print axioms` baseline above.
+forum-readiness validation pass `mg-5cd8` on 2026-05-06 against
+HEAD `0df0bc4`, which reports "1409 lake jobs, 552 s build wall
+(632 s including clone + cache get); 0 sorries; clean" and confirms
+the fresh-build `#print axioms` matches
+[`PRINT_AXIOMS_OUTPUT.txt`](../lean/PRINT_AXIOMS_OUTPUT.txt)
+byte-for-byte. See
+[`docs/forum-readiness-validation/build-verification.md`](forum-readiness-validation/build-verification.md)
+for the full reproduction trace.
 
 To inspect the headline's axiom dependencies directly:
 
 ```sh
 cd lean
-lake env lean scripts/PrintAxiomsAudit.lean
+lake env lean scripts/PrintAxioms.lean
 ```
 
-This prints the table reproduced verbatim in §3 above. The single-theorem
-form (just `width3_one_third_two_thirds`) is at
-`lean/scripts/PrintAxioms.lean` and matches
-[`PRINT_AXIOMS_OUTPUT.txt`](../lean/PRINT_AXIOMS_OUTPUT.txt).
+This prints the table reproduced verbatim in §3 above and
+matches [`PRINT_AXIOMS_OUTPUT.txt`](../lean/PRINT_AXIOMS_OUTPUT.txt).
 
-To inspect the headline statement and its `hC3` hypothesis:
+To inspect the headline statement (now hypothesis-free modulo
+`hP` and `hNonChain`):
 
 ```sh
 cd lean
@@ -619,40 +722,64 @@ lake env lean -e '#check @OneThird.width3_one_third_two_thirds'
 
 ## 7. Acknowledged caveats
 
-There are two residuals on the headline that a forum-post reader
-needs to internalise before drawing conclusions about what is and
-is not "formalized" (plus the §5 in-tree-issue caveat on a
+There are three trust line items on the headline that a forum-post
+reader needs to internalise before drawing conclusions about what
+is and is not "formalized" (plus the §5 in-tree-issue caveat on a
 non-headline conditional theorem):
 
-### 7a. The `hC3` Prop-level hypothesis (open math, settled park)
+### 7a. The historical `hC3` Prop-level hypothesis — discharged in Stage 2B
 
-The headline carries `hC3 : Step8.Case3Witness` as a Prop-level
-hypothesis. Discharging it inside the formalization is open math.
-Path C cleanup attempted the discharge across four polecat rounds
-followed by a compound-automorphism infrastructure build-out
-(mg-84f2 / mg-c0c7 / mg-02c2, in tree) and was parked under
-option (δ) per pm-onethird's firm round-4 stop-loss
-(`docs/path-c-cleanup-roadmap.md`). On 2026-05-04 a Track 1 attempt
-to extend the landed infrastructure to case-2-strict block-and-
+**The `hC3 : Step8.Case3Witness` hypothesis was discharged as a
+theorem in Option-C Stage 2B (`mg-8c72`, commit `16d26ef`,
+2026-05-05). The headline is unconditional.** The public signature
+of `OneThird.width3_one_third_two_thirds` carries only `hP :
+HasWidthAtMost α 3` and `hNonChain : ¬ IsChainPoset α`, exactly
+matching the paper's `thm:main` modulo the standard `[Fintype]` /
+`[DecidableEq]` instances. The `Step8.Case3Witness` universal is
+supplied internally by `Step8.OptionC.Case3Witness_proof`
+(`lean/OneThird/Step8/OptionC/Case3WitnessProof.lean`).
+
+This subsection records the closure history because the question
+"why does this Lean formalization carry the
+`case3Witness_hasBalancedPair_outOfScope` axiom?" goes through it.
+Pre-Stage-2B, `hC3` was **parked open math**, retained as a
+Prop-level hypothesis on the headline under pm-onethird's option
+(δ) decision (2026-04-27, `mg-94fd`). Path C cleanup attempted
+the discharge across four polecat rounds followed by a
+compound-automorphism infrastructure build-out (mg-84f2 /
+mg-c0c7 / mg-02c2, in tree). On 2026-05-04 a Track 1 attempt to
+extend the landed infrastructure to case-2-strict block-and-
 reported under a structural cardinality obstruction
-(`docs/path-c-track-1-status-1.md` §2): no order-preserving
-permutation `σ` with `σ a = a'` can exist in the strict-pair regime,
-because such a `σ` would force `|upper(a)| = |upper(a')|`. Parallel
-Track 2 (`mg-80ab`, `docs/math-simp-arc-2.0/scoping.md`) and
-Track 3 (`mg-65e1`, `docs/math-simp-arc-3.0/scoping.md`) scoping
-passes found no GREEN alternate framings across 21 candidates.
-The park is now **structurally settled** rather than
-effort-conditional; the unified F1 / F2 / F3 explanation is in
+([`docs/path-c-track-1-status-1.md`](path-c-track-1-status-1.md)
+§2): no order-preserving permutation `σ` with `σ a = a'` can
+exist in the strict-pair regime, because such a `σ` would force
+`|upper(a)| = |upper(a')|`. Parallel Track 2 (`mg-80ab`) and
+Track 3 (`mg-65e1`) scoping passes found no GREEN alternate
+framings across 21 candidates. The unified F1 / F2 / F3
+explanation of why a simpler in-tree discharge was not available
+is in
 [`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md) (the
-canonical "why is the formalization conditional" doc); revisit
-triggers are listed in `docs/path-c-cleanup-roadmap.md` §7.
+canonical "why is the residual sketch retained" doc; written
+under the pre-Stage-2B `hC3`-parking framing but substantively
+unchanged in its structural content).
 
-A consumer of `width3_one_third_two_thirds` must either supply `hC3`
-themselves or treat the conclusion as conditional on it. The
-parametrically-quantified shape of `Case3Witness`
-(`lean/OneThird/Step8/LayeredBalanced.lean:438-444`) makes the
-hypothesis explicit; it is not buried inside another lemma or
-discharged by an unannotated axiom.
+Option-C Stage 2A (`mg-2a56`, commit `e4ffe2d`,
+`LayeredDecomposition.compactify`) and Stage 2B (`mg-8c72`,
+commit `16d26ef`) then closed the *outer* `Case3Witness`
+universal as a Lean theorem, by routing the residual leaves
+through the `case3Witness_hasBalancedPair_outOfScope` axiom (§7c
+below) for K ≥ 3 and through the `option_c_K2_closure` Bool
+certificate (`mg-01ec`, commit `c403216`) for K = 2. The K = 1
+case is vacuous under the Candidate A'' "Injective band map"
+tightening, and sub-poset descent is threaded through
+`compactify`. The structural F1 / F2 / F3 obstruction now
+explains why the `outOfScope` axiom is *retained* rather than
+ported in tree.
+
+A consumer of `width3_one_third_two_thirds` no longer supplies
+`hC3` and does not need to treat the conclusion as conditional
+on a Prop-level hypothesis; the trust footprint is the four-category
+list in §3 / §1.
 
 ### 7b. The `brightwell_sharp_centred` axiom (external, retained)
 
@@ -668,10 +795,42 @@ to the structural proof.
 
 Filing such a port is **not** a prerequisite for any downstream
 consumer: the Lean tree treats the bound as a black box exactly as
-the LaTeX source does. Within the scope of this paper's
-contribution — the structural / combinatorial argument of Steps 1–7
-and the layered Step 8 dispatch — the formalization is sorry- and
-project-axiom-free.
+the LaTeX source does.
+
+### 7c. The `case3Witness_hasBalancedPair_outOfScope` axiom (paper-internal, retained)
+
+The headline also depends on the named project axiom
+`OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope`,
+which transcribes the **paper's own** `rem:enumeration` sketch
+(`step8.tex:3157-3173`) for the residual `¬ InCase3Scope`
+parameter range of `prop:in-situ-balanced` Case 3. Unlike the
+Brightwell axiom, this is paper-internal rather than an external
+citation: the paper sketch is genuinely a sketch (not a
+fleshed-out proof), and the substantive new mathematical content
+needed for a Lean port is the band-restricted Case 2 FKG
+sub-coupling (the same probability-form cross-poset FKG
+infrastructure deferred under A8-S2-cont, `mg-8801`).
+
+The QA verdict (`mg-7377`,
+[`lean/AXIOMS.md`](../lean/AXIOMS.md) §2 "QA verdict") is **axiom
+is faithful**: every hypothesis in the axiom statement matches
+the wider profile of `Step8.bounded_irreducible_balanced_hybrid`
+restricted to `¬ InCase3Scope`, the size cap `|α| ≤ 6w + 6` is
+strictly tighter than the paper's `|Q| ≤ 9w + 3` (so the axiom
+is no stronger than the paper's claim), and the conclusion
+matches `prop:in-situ-balanced`'s Case 3 conclusion exactly.
+The axiom is reachable from the headline post-Stage-2B (it is
+consumed by `Step8.OptionC.Case3Witness_proof`'s K ≥ 3 leaves);
+the disposition-B amendment of `mg-5cd8` records the retention
+as **deferred indefinitely**. The mg-75ef latex-first artifact
+(2026-05-06) provides a forward-citeable structured sketch of the
+math-side argument that any future replacement effort would
+flesh out.
+
+The mg-75ef artifact is on a polecat branch and not yet on
+`main`; the math-side replacement scope is documented in
+[`lean/AXIOMS.md`](../lean/AXIOMS.md) §2 "Replacement path
+(open)".
 
 ---
 
@@ -680,13 +839,36 @@ project-axiom-free.
 * **Paper:** [`main.pdf`](../main.pdf), [`main.tex`](../main.tex)
   (`thm:main` at `main.tex:230-241`).
 * **Lean entry point:** [`lean/OneThird/MainTheorem.lean`](../lean/OneThird/MainTheorem.lean)
-  (lines 52-57 for the headline, 28-51 for the docstring).
+  (the headline plus its docstring; signature is
+  `(hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)`).
 * **Lean per-file audit:** [`lean/README.md`](../lean/README.md).
-* **Axiom rationale:** [`lean/AXIOMS.md`](../lean/AXIOMS.md) (per-axiom
-  scope-match checklist, replacement path).
+* **Axiom rationale:** [`lean/AXIOMS.md`](../lean/AXIOMS.md)
+  (per-axiom scope-match checklist, replacement path; covers both
+  `brightwell_sharp_centred` (§1) and
+  `case3Witness_hasBalancedPair_outOfScope` (§2)).
 * **`#print axioms` baseline:** [`lean/PRINT_AXIOMS_OUTPUT.txt`](../lean/PRINT_AXIOMS_OUTPUT.txt).
+* **Forum-readiness validation pass (mg-5cd8, AMBER on doc-drift):**
+  [`docs/forum-readiness-validation/verdict.md`](forum-readiness-validation/verdict.md)
+  with sub-audits in
+  [`build-verification.md`](forum-readiness-validation/build-verification.md),
+  [`native-decide-audit.md`](forum-readiness-validation/native-decide-audit.md),
+  [`axiom-inventory-verification.md`](forum-readiness-validation/axiom-inventory-verification.md),
+  and [`doc-consistency.md`](forum-readiness-validation/doc-consistency.md).
+* **Option-C Stage 2A status (compactify):**
+  [`docs/option-c-execution-arc/stage-2a-compactify-status.md`](option-c-execution-arc/stage-2a-compactify-status.md)
+  (mg-2a56, commit `e4ffe2d`).
+* **Option-C Stage 2B status (Case3Witness_proof):**
+  [`docs/option-c-execution-arc/stage-2b-status.md`](option-c-execution-arc/stage-2b-status.md)
+  (mg-8c72, commit `16d26ef`).
+* **Option-C K=2 closure status:**
+  [`docs/option-c-execution-arc/k2-closure-status.md`](option-c-execution-arc/k2-closure-status.md)
+  (mg-01ec, commit `c403216`).
 * **Path C parked-work audit:** [`docs/path-c-cleanup-roadmap.md`](path-c-cleanup-roadmap.md).
-* **Formalization-completeness audit:** [`docs/formalization-completeness-audit.md`](formalization-completeness-audit.md).
+* **Why-hC3-is-structural synthesis:** [`docs/why-hC3-is-structural.md`](why-hC3-is-structural.md)
+  (mg-cda8, F1 / F2 / F3 framework).
+* **case3Witness operational-consumption audit:**
+  [`docs/case3witness-operational-audit.md`](case3witness-operational-audit.md)
+  (mg-e0b8).
 * **mg-27c2 `Case2FKGSubClaim` direction-reversed audit (§5):**
   [`docs/a8-path-b-block-and-report-status.md`](a8-path-b-block-and-report-status.md)
   (commit `64f2d87`, mg-a79e); related earlier audits
@@ -729,17 +911,76 @@ block-and-report. §5 was amended to its current η₅-park final-state
 framing under `mg-457c` ("PATH A disclosure final-state amendment —
 η₅ park") by polecat `pc-457c` on 2026-04-27.
 
-The 2026-05-04 Status / §2 / §5 / §7a refresh (this revision) was
-landed under `mg-721a` ("Lean-forum publication post — prep + venue
-selection") by polecat `p721a`, in response to the 2026-05-04
-PATH A pivot after both Path C cleanup tracks block-and-reported.
-The fresh evidence is Track 1 (`mg-b666`, structural cardinality
-obstruction on case-2-strict, commit `5dff5e4`,
-`docs/path-c-track-1-status-1.md`) and Track 2 (`mg-80ab`, math-simp
-arc 2.0 zero-GREEN scoping verdict, commit `b1ac92b` on branch
-`math-simp-arc-2.0`, `docs/math-simp-arc-2.0/scoping.md`). The
-substantive change vs. the 2026-04-27 calibration: the option (δ)
-park is now **structurally settled** rather than awaiting either
-more compound-automorphism work or a math-simplification arc. The
-companion forum-post template (`docs/lean-forum-post-template.md`)
+The 2026-05-04 Status / §2 / §5 / §7a refresh was landed under
+`mg-721a` ("Lean-forum publication post — prep + venue selection")
+by polecat `p721a`, in response to the 2026-05-04 PATH A pivot
+after both Path C cleanup tracks block-and-reported. The fresh
+evidence at that point was Track 1 (`mg-b666`, structural
+cardinality obstruction on case-2-strict, commit `5dff5e4`,
+[`docs/path-c-track-1-status-1.md`](path-c-track-1-status-1.md))
+and Track 2 (`mg-80ab`, math-simp arc 2.0 zero-GREEN scoping
+verdict).
+
+The 2026-05-06 Status / §1 / §2 / §3 / §4 / §5 / §7a / §7c / §8
+refresh (this revision) was landed under `mg-d7fd` ("Doc-refresh:
+post-Stage-2B forum-disclosure docs") in response to the
+forum-readiness validation pass `mg-5cd8`
+([`docs/forum-readiness-validation/verdict.md`](forum-readiness-validation/verdict.md))
+returning **AMBER on doc-drift only** (build green, axiom
+inventory matches disposition-B expectations, all five
+`native_decide` audits clean; the only finding was that this doc
+and the forum-post template still framed `hC3` as a live headline
+hypothesis after Option-C Stage 2B closed it). The substantive
+chain that justifies the post-Stage-2B framing:
+
+* **Option-C Stage 2A — `LayeredDecomposition.compactify`**
+  (`mg-2a56`, commit `e4ffe2d`, 2026-05-05;
+  [`docs/option-c-execution-arc/stage-2a-compactify-status.md`](option-c-execution-arc/stage-2a-compactify-status.md)).
+  Band-compactification under sub-poset descent, removing the
+  empty-band obstruction (Obstruction B of `mg-979e`).
+* **Option-C K=2 substantive closure — `option_c_K2_closure`**
+  (`mg-01ec`, commit `c403216`, 2026-05-05;
+  [`docs/option-c-execution-arc/k2-closure-status.md`](option-c-execution-arc/k2-closure-status.md)).
+  Finite-enumeration Bool certificate `case2_certificate` plus
+  Bool→Prop bridge for the K=2 leaves of the F3 K-dispatch.
+* **Option-C Stage 2B — `Case3WitnessProof`** (`mg-8c72`, commit
+  `16d26ef`, 2026-05-05;
+  [`docs/option-c-execution-arc/stage-2b-status.md`](option-c-execution-arc/stage-2b-status.md)).
+  Candidate A''-tightened `Step8.Case3Witness.{u}` discharged as
+  a Lean theorem composing K=1 vacuous + K=2 closure +
+  K ≥ 3 leaves through `case3Witness_hasBalancedPair_outOfScope`,
+  with sub-poset descent threaded through `compactify`. Headline
+  signature drops `hC3`.
+* **Root README refresh** (`mg-0dd2`, commit `0df0bc4`,
+  2026-05-05) — root README's "Please read this before citing"
+  section calibrated to the post-Stage-2B unconditional headline.
+* **Forum-readiness validation pass — AMBER on doc-drift only**
+  (`mg-5cd8`, commit `ddbb933`, 2026-05-06;
+  [`docs/forum-readiness-validation/verdict.md`](forum-readiness-validation/verdict.md)).
+  Audited fresh-clone build, native_decide invocations, axiom
+  inventory, and disclosure docs. Found this doc and the
+  forum-post template stale; recommended a small PM-filed
+  doc-refresh.
+* **Disposition-B amendment** (recorded in the `mg-5cd8` ticket
+  body, 2026-05-06; archived in
+  [`docs/forum-readiness-validation/verdict.md`](forum-readiness-validation/verdict.md)
+  "Disposition-B amendment note"). Confirms that
+  `case3Witness_hasBalancedPair_outOfScope` STAYS as a named
+  project axiom; its replacement port is **deferred indefinitely**.
+  The trust surface around this axiom is honestly disclosed
+  rather than ported in tree.
+* **mg-75ef latex-first artifact** (2026-05-06; not on `main`).
+  Per the `feedback_latex_first_for_math_simp` discipline,
+  fleshes out the paper's `rem:enumeration` sketch into a
+  structured multi-step argument modulo the deferred cross-poset
+  probability-form FKG infrastructure. Provides forward-citeable
+  math-side scaffolding for any future replacement effort but
+  does not retire the axiom.
+
+The substantive change vs. the 2026-05-04 framing: the headline
+is **unconditional** (post-Stage-2B); the trust surface adds
+`case3Witness_hasBalancedPair_outOfScope` and five
+`Lean.ofReduceBool` instances; the axiom retention is firm under
+the disposition-B amendment. The companion forum-post template
+([`docs/lean-forum-post-template.md`](lean-forum-post-template.md))
 was refreshed in the same commit.

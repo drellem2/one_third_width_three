@@ -373,8 +373,25 @@ is:
   argument with the band-restricted FKG sub-coupling sketched in
   `rem:enumeration`.
 
-Both axioms are localised: every other use of the formalism is
-sorry-free.
+The headline `#print axioms` output additionally lists five
+`_native.native_decide.ax_1_1` entries — one per `native_decide`
+invocation in the proof closure
+(`Step8.Case3Enum.case3_balanced_w{1,2,3,4}` for the F5a Case-3
+enumeration certificate, plus `Step8.OptionC.case2_certificate` for
+the Option-C Stage-1 K=2 closure). Each is a per-invocation
+instance of Lean's `Lean.ofReduceBool` axiom underlying
+`native_decide`; the trust surface is "the Lean compiler evaluates
+Bool decidable predicates correctly" — standard Lean practice for
+finite case analysis. These are not project axioms (they are
+introduced by Lean's `native_decide` tactic, not by an `axiom`
+declaration in this development), so they are out of scope for
+this catalogue, but a forum reader auditing the verbatim
+`#print axioms` output (`lean/PRINT_AXIOMS_OUTPUT.txt`) will see
+them and they should be disclosed alongside the two named project
+axioms when the forum-post foregrounds the full trust surface.
+
+Both project axioms are localised: every other use of the
+formalism is sorry-free.
 
 ### QA verdict (mg-7377)
 
