@@ -16,6 +16,13 @@ open questions.
 (Path γ confirmed); `lean/AXIOMS.md` framing refreshed from
 "scheduled for replacement" to "definitively retained" /
 "indefinitely deferred."
+**Last update.** mg-91be (cat-mg-91be), 2026-05-07. Sub-α-C
+scoping in flight (§3.4 added, AMBER leaning GREEN); §1.8 added
+(Stanley `μ` log-supermod corollary); §3.5–§3.8 added (Daniel-help
+leverage points DH-1 through DH-4); §4.5 added (sub-α-C decision
+points and triggers). Per Daniel directive 2026-05-07T16:06Z
+(`feedback_long_arcs_are_pm_authority`), PM commits the sub-α-C
+long arc; mg-fb16 unhold remains released for Path γ ship velocity.
 
 ---
 
@@ -105,6 +112,23 @@ open questions.
   could not bound `Pr[A ∩ R]` for the drops headline.
 * **Verdict.** Verified. Together with §1.6, this is the doubly-RED
   obstruction on sub-α-A.
+
+### §1.8 `μ(I) := e(I) · e(α \ I)` is log-supermodular on `J(α)`
+
+* **Source.** mg-91be §3.2 (sub-α-C scoping); originally Stanley
+  1981.
+* **Statement.** For `μ : J(α) → ℕ` defined by `μ(I) := e(I) ·
+  e(α \ I)` (where `e(K) = |L(α[K])|`), `μ` is log-supermodular on
+  `J(α)`: `μ(I) μ(J) ≤ μ(I ∪ J) μ(I ∩ J)`. Follows from §1.5
+  (Stanley log-supermod of `e` on both `J(α)` and the dual) and
+  De Morgan's law.
+* **Verdict.** Verified, in literature; not in mathlib. Caveat:
+  `μ` is supported on **all of `J(α)`** (sums over levels); the
+  level-`k` restriction of `μ` is **not** log-supermodular per
+  mg-21a4 §3.2 (size-mismatch failure). This is why the chamber
+  decomposition (geometric level-`k` localisation via the
+  hyperplane slice `t_(k) = const` of the cube `[0,1]^α`) is
+  essential to sub-α-C.
 
 ---
 
@@ -198,7 +222,91 @@ open questions.
   same non-distributivity problem on `L(α)` for width-3 `α`.
 * **Default.** Brightwell-port also closed under the same
   obstruction. mg-3c06 (the Brightwell mathlib-gap ticket) is
-  the long-arc dual.
+  the long-arc dual. Re-evaluated under sub-α-C: see §3.7 (DH-3).
+
+### §3.4 Sub-α-C scoping in flight — AMBER leaning GREEN
+
+* **Source.** mg-91be (this update);
+  `docs/path-alpha-execution-arc/sub-alpha-C-scoping.md`.
+* **Question.** Can the Hibi polytope chamber infrastructure for
+  FKG-on-LE be ported to Lean as a long-arc multi-polecat effort,
+  with the output primitive
+  `probEvent'_mono_of_subseteq_upClosed` axiom-eliminating both
+  `case3Witness_hasBalancedPair_outOfScope` and
+  `brightwell_sharp_centred`?
+* **Verdict.** **AMBER leaning GREEN.** 6–10 load-bearing primitives
+  (EX-1 through EX-10 in mg-91be §5) sketched with explicit Lean
+  signatures; aggregate Path A scope ~5050–8700 LoC over ~13–17
+  polecat sessions, ~9–15 weeks calendar steady state. Within
+  factor 1.3 of state.md §4.2's "2000–4000 + 1450–2700 LoC"
+  working figure. Path B alternative (avoid polytopes via
+  Stanley + tilted Holley) at ~2900–4900 LoC if the level-`k`
+  localisation step closes — currently unknown.
+* **Default.** PM files **EX-1 (Stanley log-supermodularity port)**
+  as the first execution ticket — it is load-bearing for both
+  Path A and Path B and is the most isolatable mathlib-friendly
+  chunk. After EX-1 lands, the Path-A-vs-Path-B fork can be
+  re-evaluated.
+
+### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR
+
+* **Source.** mg-91be §7.1.
+* **Question.** Is Stanley's `e(I) e(J) ≤ e(I ∪ J) e(I ∩ J)` on
+  `J(α)` upstream-able to mathlib in advance of the Path α arc?
+* **Why it matters.** EX-1 is independently valuable as a mathlib
+  contribution. If a mathlib reviewer (Yael Dillies maintains
+  `Mathlib.Combinatorics.SetFamily.FourFunctions`; natural
+  candidate) is interested, ~600–1000 LoC of project-internal
+  work moves to mathlib and ~2 polecat sessions are saved on the
+  project clock.
+* **Status.** Surfaced to Daniel via PM mail (post-mg-91be merge).
+  Concrete ask: open Zulip discussion or DM with the FKG-area
+  maintainer. The combinatorial proof (Daykin 1990 / Bjorner
+  1989) is the mathlib-friendly form; Aleksandrov–Fenchel
+  (Stanley 1981) is heavier and not suitable for upstream.
+
+### §3.6 DH-2 — thin-slice for case3 application only
+
+* **Source.** mg-91be §7.2.
+* **Question.** Does the case3 application chain need the full
+  chamber decomposition for arbitrary finite posets, or only for
+  the specific width-3 antichain witnessing case3?
+* **Why it matters.** mg-75ef §3 establishes case3 uses drops at a
+  specific level `k` for a specific up-closed event derived from
+  the case3 bipartite structure. A thin-slice formulation could
+  shrink EX-3 through EX-7 by ~30–50%.
+* **Status.** Surfaced to Daniel post-mg-91be. Speculative; depends
+  on whether the case3 invocation level `k` admits a combinatorial
+  special case (e.g., `k = 1` reduces to a single-element-ideal
+  event).
+
+### §3.7 DH-3 — Brightwell-port-A vs Brightwell-port-B fork (mg-3c06)
+
+* **Source.** mg-91be §7.3.
+* **Question.** Does mg-3c06 (the Brightwell mathlib-gap ticket)
+  benefit from sub-α-C as shared infrastructure, or does
+  Brightwell require its own sub-α-C-equivalent?
+* **Why it matters.** Up to ~1500 LoC saved if EX-7 (drops headline)
+  suffices to discharge Brightwell's `eq:sharp-centred`; none if
+  Brightwell requires a separate FKG/AD setup on `L(α) × Fin m`.
+* **Status.** Surfaced to Daniel post-mg-91be. Concrete ask:
+  inspect `step8.tex:1042-1276` and Brightwell §4 to confirm
+  whether the centred-sum bound decomposes into a finite
+  combination of drops invocations.
+
+### §3.8 DH-4 — continuous FKG/AD acceleration
+
+* **Source.** mg-91be §7.4.
+* **Question.** Is there a working pathway via discrete FKG that
+  avoids continuous FKG (EX-6) entirely?
+* **Why it matters.** EX-6 (continuous FKG on `[0,1]^n`) is the
+  single largest mathlib-PR-class chunk of Path A
+  (~1000–2000 LoC). Bypass routes: Path B (level-`k` localisation
+  on `J(α)` discretely), or discretisation via Riemann sums on an
+  integer sub-lattice of `[0,1]^n`.
+* **Status.** Surfaced to Daniel post-mg-91be. Most speculative of
+  the four DH leverage points; surface only if Daniel has prior
+  knowledge of mathlib continuous FKG efforts.
 
 ---
 
@@ -255,6 +363,46 @@ After Daniel's path-γ-vs-α-C decision lands:
   as a port).
 * **§2 stays** as the historical record of retracted claims.
 
+(Closed by mg-91be: per Daniel directive 2026-05-07T16:06Z, **both
+Path γ and sub-α-C are simultaneously committed** — Path γ remains
+the recommended status-quo for ship velocity, and sub-α-C is
+dispatched as the long arc to full formalisation. mg-fb16 unhold
+remains released. §3.1 stays "Path γ confirmed"; §3.4 captures
+sub-α-C in flight.)
+
+### §4.5 Sub-α-C decision points and triggers (post-mg-91be scoping)
+
+* **Today (post-mg-91be merge).** PM mails Daniel with the
+  AMBER-leaning-GREEN verdict and the four DH leverage points
+  (§3.5 through §3.8). PM files EX-1 (Stanley log-supermodularity
+  port) as the first execution ticket.
+* **Post-EX-1 land.** Re-evaluate Path A vs Path B fork based on
+  how amenable Stanley's argument is to combinatorial Lean
+  formalisation. If the proof reveals a clean combinatorial
+  level-`k` localisation: pursue Path B (~2900–4900 LoC,
+  ~6–10 weeks). Otherwise: pursue Path A (~5050–8700 LoC,
+  ~9–15 weeks).
+* **Post-EX-7 land.** EX-8 (case3-port-2) and EX-9
+  (Brightwell-port-A) execute in parallel; both consume the drops
+  headline and have no mutual dependencies. EX-10 (axiom-removal)
+  follows sequentially after both.
+* **DH triggers (parallel to EX-1, dispatched on Daniel input).**
+  - DH-1 lands → `mathlib upstream Stanley log-supermod` → EX-1
+    moves to mathlib; subtract ~2 sessions.
+  - DH-2 confirmed → thin-slice case3 specialisation → halves
+    EX-3 through EX-5 work.
+  - DH-3 amortisation confirmed → EX-9 reduces to ~500–800 LoC
+    specialisation; otherwise spawn separate mg-3c06-class arc.
+  - DH-4 alternative → EX-6 (continuous FKG) bypassed; subtract
+    ~2–3 sessions.
+* **Trip-wires for the long arc** (per polecat brief §6).
+  - Aggregate scope > 10000 LoC: STOP, mail Daniel; sub-α-C may
+    be the wrong scope.
+  - New structural obstruction REDs sub-α-C: STOP, mail Daniel;
+    Path γ becomes the only feasible direction.
+  - Calendar overrun > 6 months without an EX-7 land: STOP, scope
+    review.
+
 ---
 
 ## §5 References (chronological by Path α arc)
@@ -266,8 +414,12 @@ After Daniel's path-γ-vs-α-C decision lands:
   `docs/path-alpha-scoping/scoping.md`.
 * mg-dc9d (`a95020e`) — Hibi-1 STOP report, mg-ff7f §2.5 retraction.
   `docs/path-alpha-execution-arc/hibi-1-stop-report.md`.
-* mg-21a4 (this commit) — sub-α-A scoping, RED verdict.
+* mg-21a4 (`f862b76`) — sub-α-A scoping, RED verdict.
   `docs/path-alpha-execution-arc/sub-alpha-A-scoping.md`.
+* mg-bb74 (`73ed85e`) — `lean/AXIOMS.md` framing refresh
+  ("definitively retained").
+* mg-91be (this commit) — sub-α-C scoping, AMBER leaning GREEN.
+  `docs/path-alpha-execution-arc/sub-alpha-C-scoping.md`.
 
 ---
 
