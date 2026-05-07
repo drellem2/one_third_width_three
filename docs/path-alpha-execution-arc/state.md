@@ -23,6 +23,15 @@ leverage points DH-1 through DH-4); §4.5 added (sub-α-C decision
 points and triggers). Per Daniel directive 2026-05-07T16:06Z
 (`feedback_long_arcs_are_pm_authority`), PM commits the sub-α-C
 long arc; mg-fb16 unhold remains released for Path γ ship velocity.
+**Last update.** mg-c7b9 (cat-mg-c7b9), 2026-05-07. EX-1 Session A
+scoping done (§1.9 added, variant chosen = Bjorner combinatorial
+induction); §3.4 updated (first execution ticket of sub-α-C filed,
+EX-1 Session A latex done, **AMBER verdict** with open inductive
+closure question); §3.5 (DH-1) refined with the specific upstream
+PR target (`Mathlib/Combinatorics/Order/StanleyLogSupermod.lean`,
+maintainer Yael Dillies). PM next step: file **Session A.2**
+follow-up scoping ticket to close the inductive closure gap (or
+survey alternative proof routes) before dispatching Session B.
 
 ---
 
@@ -130,6 +139,40 @@ long arc; mg-fb16 unhold remains released for Path γ ship velocity.
   hyperplane slice `t_(k) = const` of the cube `[0,1]^α`) is
   essential to sub-α-C.
 
+### §1.9 EX-1 (Stanley log-supermod) chosen proof variant — Bjorner combinatorial induction
+
+* **Source.** mg-c7b9 (this update);
+  `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-scoping.md`.
+* **Statement.** Of the four candidate proof variants for Stanley
+  log-supermodularity (Stanley 1981 AF; Daykin 1990 4FT-direct;
+  Bjorner 1989 combinatorial induction; fresh combinatorial),
+  variant 3 (**Bjorner combinatorial induction on `|I △ J|` with
+  a 2-element swap base case**) is selected as the most
+  upstream-PR-class option for the Lean port.
+* **Rationale.** The chosen variant consumes only mathlib's
+  `Mathlib.Order.LowerSet` lattice + the in-tree `numLinExt`
+  infrastructure. NO dependency on continuous FKG (mathlib gap),
+  Aleksandrov–Fenchel (heavy convex geometry, mathlib gap), or
+  mathlib's `four_functions_theorem` (does not directly produce
+  Stanley log-supermod — 4FT consumes log-supermod as hypothesis,
+  not as conclusion). The proof structure: induction on `|I △ J|`
+  with reduction via a Bjorner injection
+  `Ψ : LE(α[I]) × LE(α[J]) ↪ LE(α[I^+]) × LE(α[J^+])`
+  combined with a 2-element swap lemma (Lemma 2.3 of mg-c7b9 §2.2)
+  proven via the insertion-position formula
+  `N₂(τ; m, m') = N(τ;m) · N(τ;m') + T(τ)` and a finite range-
+  overlap arithmetic identity (Lemma 2.4 of mg-c7b9 §2.4,
+  discharged in Lean by `omega` case analysis).
+* **Verdict (mg-c7b9).** **AMBER.** Variant chosen, mathlib mapping
+  fully identified, 3 new top-level lemmas (`subPoset`,
+  `numLinExt_subPoset_insertion`, `stanley_log_supermod`) sized at
+  ~600–900 LoC for the Lean port, all upstream-PR-class. **Two
+  open questions** in the proof: (i) the 24-sub-case range-overlap
+  identity verified for one canonical sub-ordering only, and (ii)
+  the inductive closure exposes a real gap that requires the full
+  Bjorner 1989 lex-induction. Session A.2 follow-up scoping ticket
+  needed before Session B dispatches.
+
 ---
 
 ## §2 Retracted — what was claimed and is now disproven
@@ -224,33 +267,48 @@ long arc; mg-fb16 unhold remains released for Path γ ship velocity.
   obstruction. mg-3c06 (the Brightwell mathlib-gap ticket) is
   the long-arc dual. Re-evaluated under sub-α-C: see §3.7 (DH-3).
 
-### §3.4 Sub-α-C scoping in flight — AMBER leaning GREEN
+### §3.4 Sub-α-C scoping in flight — AMBER leaning GREEN; EX-1 Session A landed
 
-* **Source.** mg-91be (this update);
-  `docs/path-alpha-execution-arc/sub-alpha-C-scoping.md`.
+* **Source.** mg-91be (sub-α-C high-level scoping);
+  `docs/path-alpha-execution-arc/sub-alpha-C-scoping.md`. Updated
+  by mg-c7b9 (EX-1 Session A scoping);
+  `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-scoping.md`.
 * **Question.** Can the Hibi polytope chamber infrastructure for
   FKG-on-LE be ported to Lean as a long-arc multi-polecat effort,
   with the output primitive
   `probEvent'_mono_of_subseteq_upClosed` axiom-eliminating both
   `case3Witness_hasBalancedPair_outOfScope` and
   `brightwell_sharp_centred`?
-* **Verdict.** **AMBER leaning GREEN.** 6–10 load-bearing primitives
-  (EX-1 through EX-10 in mg-91be §5) sketched with explicit Lean
-  signatures; aggregate Path A scope ~5050–8700 LoC over ~13–17
-  polecat sessions, ~9–15 weeks calendar steady state. Within
-  factor 1.3 of state.md §4.2's "2000–4000 + 1450–2700 LoC"
-  working figure. Path B alternative (avoid polytopes via
-  Stanley + tilted Holley) at ~2900–4900 LoC if the level-`k`
-  localisation step closes — currently unknown.
-* **Default.** PM files **EX-1 (Stanley log-supermodularity port)**
-  as the first execution ticket — it is load-bearing for both
-  Path A and Path B and is the most isolatable mathlib-friendly
-  chunk. After EX-1 lands, the Path-A-vs-Path-B fork can be
-  re-evaluated.
+* **Verdict (arc-level).** **AMBER leaning GREEN.** 6–10
+  load-bearing primitives (EX-1 through EX-10 in mg-91be §5)
+  sketched with explicit Lean signatures; aggregate Path A scope
+  ~5050–8700 LoC over ~13–17 polecat sessions, ~9–15 weeks
+  calendar steady state. Within factor 1.3 of state.md §4.2's
+  "2000–4000 + 1450–2700 LoC" working figure. Path B alternative
+  (avoid polytopes via Stanley + tilted Holley) at ~2900–4900 LoC
+  if the level-`k` localisation step closes — currently unknown.
+* **Verdict (EX-1 Session A, mg-c7b9).** **AMBER.** Variant chosen
+  (Bjorner combinatorial induction, §1.9); mathlib mapping
+  identified (`Mathlib.Order.LowerSet` + in-tree `numLinExt`); 3
+  new upstream-PR-class lemmas at ~600–900 LoC for Session B Lean
+  port. Open question: inductive closure of the Bjorner argument
+  not fully verified in Session A; needs Session A.2 follow-up.
+* **EX-1 progress.** Session A latex done (mg-c7b9, this commit).
+  **Session A.2** (close inductive closure gap or survey
+  alternative proof routes) to be filed by PM as the next
+  follow-up ticket. **Session B** (full Lean port) deferred until
+  A.2 lands per `feedback_pre_execution_dependency_verification`.
+* **Default for next ticket.** PM files **EX-1 Session A.2**
+  (verify Bjorner 1989 induction directly OR survey alternatives:
+  Daykin–Saks 4FT-on-chains, Hibi 1985 ring-theoretic, direct
+  order-polytope volume). Estimated ~1 polecat session,
+  ~250–400k tokens. After A.2 lands, Session B dispatches with
+  fully-verified proof structure.
 
-### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR
+### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
-* **Source.** mg-91be §7.1.
+* **Source.** mg-91be §7.1. Refined by mg-c7b9 §4.3 with the
+  specific proof-variant target.
 * **Question.** Is Stanley's `e(I) e(J) ≤ e(I ∪ J) e(I ∩ J)` on
   `J(α)` upstream-able to mathlib in advance of the Path α arc?
 * **Why it matters.** EX-1 is independently valuable as a mathlib
@@ -259,11 +317,27 @@ long arc; mg-fb16 unhold remains released for Path γ ship velocity.
   candidate) is interested, ~600–1000 LoC of project-internal
   work moves to mathlib and ~2 polecat sessions are saved on the
   project clock.
+* **Refined upstream ask (mg-c7b9).** The variant to upstream is
+  **Bjorner 1989 combinatorial induction** (state.md §1.9), NOT
+  Aleksandrov–Fenchel (variant 1, heavy convex geometry, mathlib
+  gap) or four-functions theorem-direct (variant 2, no clean
+  reduction exists per mg-c7b9 §1.2). Target file:
+  `Mathlib/Combinatorics/Order/StanleyLogSupermod.lean`. The
+  upstream PR would carry the same 3 top-level lemmas as the
+  project-internal Lean port: `subPoset` constructor (or inline
+  `Subtype` usage), `numLinExt_subPoset_insertion` (insertion-
+  position formula, ~150–200 LoC), and `stanley_log_supermod`
+  (main theorem, ~250–400 LoC).
 * **Status.** Surfaced to Daniel via PM mail (post-mg-91be merge).
-  Concrete ask: open Zulip discussion or DM with the FKG-area
-  maintainer. The combinatorial proof (Daykin 1990 / Bjorner
-  1989) is the mathlib-friendly form; Aleksandrov–Fenchel
-  (Stanley 1981) is heavier and not suitable for upstream.
+  Concrete ask: open Zulip discussion or DM with Yael Dillies.
+  **Heightened relevance post-mg-c7b9:** the inductive closure
+  gap identified in Session A means the project-internal proof is
+  not yet line-by-line verified. A mathlib upstream PR (where
+  Yael or other reviewers can audit a textbook treatment of
+  Bjorner 1989) may be MORE efficient than the project Session A.2
+  + Session B sequence. If Daniel engages mathlib upstream now,
+  Session B may collapse to ~50 LoC consumer + `import Mathlib...`
+  — and Session A.2 becomes unnecessary.
 
 ### §3.6 DH-2 — thin-slice for case3 application only
 
