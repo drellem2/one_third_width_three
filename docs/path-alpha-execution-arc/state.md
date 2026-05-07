@@ -12,6 +12,10 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
+**Last update.** mg-bb74 (cat-mg-bb74), 2026-05-07. §3.1 closed
+(Path γ confirmed); `lean/AXIOMS.md` framing refreshed from
+"scheduled for replacement" to "definitively retained" /
+"indefinitely deferred."
 
 ---
 
@@ -155,7 +159,7 @@ open questions.
 
 ## §3 Open — what is still to verify
 
-### §3.1 Daniel's call: Path γ vs sub-α-C
+### §3.1 Daniel's call: Path γ vs sub-α-C — CLOSED (Path γ confirmed)
 
 * **Question.** Given Path α (mg-ff7f scoping) and sub-α-A
   (mg-21a4 scoping) are both RED, does Daniel prefer
@@ -163,7 +167,12 @@ open questions.
   a project axiom; cont-4 §6 recommendation) or **sub-α-C**
   (Hibi polytope chamber infrastructure as a multi-author
   quarter-scale mathlib-gap effort)?
-* **Status.** Open. PM mails Daniel post-mg-21a4 merge.
+* **Status.** **Closed (Path γ confirmed).** Daniel confirmed via
+  "onward" reminder 2026-05-07T08:08Z (parsed as default-acceptance
+  per `feedback_pm_is_mini_ceo_default`); PM filed
+  `lean/AXIOMS.md` framing refresh ticket (mg-bb74, this commit);
+  mg-fb16 ship question remains Daniel-scope as project-life-level
+  call.
 * **Default.** Path γ. The audit-bar economics (cont-4 §6) and the
   forum-readiness sign-off (mg-d7fd) both favour retention.
 

@@ -8,8 +8,19 @@ records:
 * the corresponding paper statement (file, line, equation label);
 * a scope-match checklist (hypotheses, constants, quantifier order);
 * the work item that introduced the axiom, the QA audit that
-  certified it, and the work item scheduled to replace it with a
-  proof.
+  certified it, and — for completeness of the audit trail — the
+  hypothetical replacement path that a future Lean port could take.
+
+Both named project axioms below are **definitively retained on the
+trust surface.** Replacement is not on any roadmap: see
+`docs/path-alpha-execution-arc/state.md` for the cumulative scoping
+record. Path α (mg-ff7f) and sub-α-A (mg-21a4) are both formally RED;
+sub-α-C (Hibi polytope chamber infrastructure as a multi-author
+mathlib-gap effort) is the only surviving theoretical replacement
+route and is not pursued. The "Replacement path" subsections below
+are preserved as historical reference for any future contributor who
+revisits the question (e.g., if mathlib gains the prerequisite
+infrastructure independently); they do not represent scheduled work.
 
 Unless otherwise noted, every axiom below has been manually verified
 against the paper proof it axiomatizes, and a closed-form integer
@@ -37,18 +48,23 @@ separation and the Ahlswede–Daykin inequality" subsection of
 
 **QA-audited by.** `mg-a6a1` (F6-4-QA; this entry).
 
-**Status.** **Retained as a named axiom.** Decision recorded in
-`mg-b699` (F6-4-port, post-sorry-free): the bound is a faithful
-transcription of a published external result
+**Status.** **Definitively retained as a named axiom.** Decision
+originally recorded in `mg-b699` (F6-4-port, post-sorry-free) and
+reaffirmed post-Path-α exhaustion (mg-21a4, 2026-05-06): the bound is
+a faithful transcription of a published external result
 (Brightwell~\cite{Brightwell1999}, §4, combined with
 Kahn--Saks~\cite{KahnSaks1984}, Lemma 2.2), and a full Lean port —
 estimated at 500--800 LoC of mathlib-tier infrastructure for the
 per-term Kahn--Saks / Brightwell covariance bound on the product
 distributive lattice $\mathcal L(\alpha) \times \{1, \dots, m\}$ —
-is deferred indefinitely as post-launch refinement. The structural
-proof of `width3_one_third_two_thirds` is the credibility artifact;
-per-leaf porting of a cited theorem does not move the needle. See
-"Decision rationale (mg-b699)" below.
+shares the FKG-on-LE prerequisite that Path α scoped and proved
+RED (see
+`docs/path-alpha-execution-arc/state.md` §3.3: the τ-inversion
+product lattice on `L(α) × {1,…,m}` has the same non-distributivity
+obstruction on `L(α)` for width-3 `α` as the case3 axiom below). The
+structural proof of `width3_one_third_two_thirds` is the credibility
+artifact; per-leaf porting of a cited theorem does not move the
+needle. See "Decision rationale (mg-b699)" below.
 
 ### Scope-match checklist
 
@@ -209,17 +225,29 @@ credibility artifact is the structural proof; an independent
 formalisation of a 1999 published lemma is an orthogonal
 infrastructure project, post-launch.
 
-**Replacement path (open).** A future Lean port of this axiom
-should consume the existing FKG and 1-Lipschitz infrastructure and
-add the Kahn--Saks covariance step, mirroring the paper proof at
-`step8.tex:1046--1276`. Filing such a port is *not* a prerequisite
+**Replacement path (indefinitely deferred).** Recorded for
+historical reference, not as scheduled work. A future Lean port of
+this axiom would consume the existing FKG and 1-Lipschitz
+infrastructure and add the Kahn--Saks covariance step, mirroring the
+paper proof at `step8.tex:1046--1276`. The substantive obstruction
+is shared with the case3 axiom below: the per-term covariance bound
+needs FKG / `four_functions_theorem` on the τ-inversion product
+lattice over `L(α) × {1,…,m}`, which is non-distributive on `L(α)`
+for width-3 `α`
+(`docs/path-alpha-execution-arc/state.md` §1.2, §3.3). Path α
+(mg-ff7f scoping) and sub-α-A (mg-21a4 scoping) are formally RED;
+sub-α-C (Hibi polytope chamber infrastructure as a multi-author
+mathlib-gap effort) is the only surviving theoretical replacement
+route and is not pursued. Filing such a port is *not* a prerequisite
 for any downstream consumer of `OneThird` — `lem:one-elem-perturb`
 (`mg-1f5e`), `lem:exc-perturb` (`mg-7496`), and the main theorem
 (`mg-194c`) all close cleanly against the axiom as stated.
 
-`mg-b699` is closed with this decision; if a future contributor
-wants to port the axiom, they should file a fresh work item
-referencing this entry.
+`mg-b699` is closed with this decision; the post-Path-α reaffirmation
+lives in `state.md` §4. If a future contributor wants to attempt a
+port (e.g., because mathlib gains the FKG-on-LE prerequisite
+independently), they should file a fresh work item referencing this
+entry.
 
 ---
 
@@ -246,11 +274,15 @@ regime is the `rem:enumeration` sketch (`step8.tex:3157-3173`):
 **QA-audited by.** `mg-7377` (A8-S3-QA; this entry — verdict
 **axiom is faithful**, see "QA verdict (mg-7377)" below).
 
-**Status.** **Retained as a named project axiom** for one polecat
-session, with the gap surfaced honestly per the polecat-instruction
-guidance ("If new math turns out to need its own axiom: report
-honestly via paper-vs-formalization diagnosis"). Replacement path
-recorded below.
+**Status.** **Definitively retained as a named project axiom**,
+with the gap surfaced honestly per the polecat-instruction guidance
+("If new math turns out to need its own axiom: report honestly via
+paper-vs-formalization diagnosis"). Originally retained pending a
+replacement-path scoping; post-Path-α exhaustion (mg-21a4,
+2026-05-06) the replacement path is indefinitely deferred — see
+"Replacement path: indefinitely deferred" below and
+`docs/path-alpha-execution-arc/state.md` for the cumulative scoping
+record.
 
 ### Scope-match checklist
 
@@ -331,9 +363,25 @@ contribution of this paper is the case dispatch of
 captures it faithfully without forcing a single polecat session to
 flesh out the missing FKG sub-coupling.
 
-### Replacement path (open)
+### Replacement path: indefinitely deferred (per Path α exhaustion 2026-05-06)
 
-A future Lean port should:
+Originally framed as an "open replacement path" pending scoping.
+After the four-session Path α arc — mg-b10a (FKG-on-LE obstruction
+first surfaced, A8-S2-cont-4 STOP report) → mg-ff7f (Path α scoping,
+later partially retracted) → mg-dc9d (Hibi-1 STOP, τ-inversion order
+on `LinearExt α` shown non-distributive) → mg-21a4 (sub-α-A scoping,
+RED via per-level FKG counterexample on the discrete 3-antichain at
+`k = 1`, plus the drops-application's `R` is non-level) — the
+substantive obstruction is now formally pinned down. The replacement
+path is therefore **indefinitely deferred**, not scheduled. See
+`docs/path-alpha-execution-arc/state.md` (§1.6, §1.7, §3.1, §4) for
+the cumulative scoping record and
+`docs/path-alpha-execution-arc/sub-alpha-A-scoping.md` for the
+RED-verdict detail.
+
+Recorded for historical reference (so a future contributor revisiting
+this entry can see what a port would need without re-deriving the
+scoping), the original replacement-path sketch was:
 
 * Discharge step (1) (pigeonhole) as a standalone lemma using the
   (L1)/(L2) bookkeeping in `LayeredReduction.lean`.
@@ -344,8 +392,16 @@ A future Lean port should:
   (Case 1, ambient form) and A8-S2's `Case2Witness` discharge to
   close the residual.
 
-The axiom statement is the discharge target: a future fleshed-out
-proof can simply restate the body without changing any call-site of
+Step (2) is what Path α was scoped to deliver. Sub-α-A's per-level
+FKG mitigation does not exist (mg-21a4 §3); the only surviving
+theoretical replacement route is sub-α-C (Hibi polytope chamber
+infrastructure), which is a multi-author quarter-scale mathlib-gap
+effort and is not pursued. If mathlib gains the prerequisite Hibi
+chamber infrastructure independently (e.g., as part of an unrelated
+mathlib PR), a fresh polecat could revisit step (2) with no scoping
+changes to the surrounding axiom statement: the axiom remains the
+discharge target, and a future fleshed-out proof can simply restate
+the body without changing any call-site of
 `hasBalancedPair_of_case3_outOfScope` or `hStruct_of_case2_discharge`.
 
 Filing such a port is *not* a prerequisite for any downstream
@@ -452,9 +508,14 @@ replacement).
 
 6. **Cross-reference.** `docs/a8-s3-status.md` and the AXIOMS.md
    entry above (the body of this section) are both consistent with
-   the axiom statement and with each other. The "Replacement path
-   (open)" enumerates the same three steps in both files (pigeonhole,
-   band-restricted FKG sub-coupling, reduction back to Case 1/2).
+   the axiom statement and with each other. The "Replacement path"
+   subsection enumerates the same three steps in both files
+   (pigeonhole, band-restricted FKG sub-coupling, reduction back to
+   Case 1/2). [Post-mg-7377 note: the AXIOMS.md heading was retitled
+   from "Replacement path (open)" to "Replacement path: indefinitely
+   deferred (per Path α exhaustion 2026-05-06)" by mg-bb74. The
+   underlying three-step enumeration is unchanged; the reframing
+   reflects Path α exhaustion, not new math.]
 
 **Caveats noted but not blocking.** The axiom's `Case3Witness L`
 hypothesis (`¬Case1 ∧ ¬Case2Witness L`) is broader than the paper's
