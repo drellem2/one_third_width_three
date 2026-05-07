@@ -32,6 +32,16 @@ PR target (`Mathlib/Combinatorics/Order/StanleyLogSupermod.lean`,
 maintainer Yael Dillies). PM next step: file **Session A.2**
 follow-up scoping ticket to close the inductive closure gap (or
 survey alternative proof routes) before dispatching Session B.
+**Last update.** mg-7928 (cat-mg-7928), 2026-05-07. EX-1 Session
+A.2 scoping done (§1.9 updated to mark variant-3 closure RED on
+fresh structural fact; §1.10 NEW for the Session A.2 verdict);
+§3.4 updated (EX-1 sub-level verdict shifted to "variant-3 RED,
+variant-1 viable, Options A–D"); §3.5 (DH-1) leverage heightened
+post-A.2; §4.5 updated with Daniel decision point on Options A–D.
+PM next step: **mail Daniel** with the four-option PM action item
+(Option A: DH-1 + temporary axiom, recommended; Option B:
+commit to Variant 1 AF; Option C: Session A.3 literature lookup;
+Option D: rescope sub-α-C entirely).
 
 ---
 
@@ -139,39 +149,72 @@ survey alternative proof routes) before dispatching Session B.
   hyperplane slice `t_(k) = const` of the cube `[0,1]^α`) is
   essential to sub-α-C.
 
-### §1.9 EX-1 (Stanley log-supermod) chosen proof variant — Bjorner combinatorial induction
+### §1.9 EX-1 (Stanley log-supermod) — variant-3 closure RED; variant-1 (AF) viable
 
-* **Source.** mg-c7b9 (this update);
+* **Source.** mg-c7b9 (variant-3 chosen);
   `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-scoping.md`.
+  Updated by mg-7928 (variant-3 closure RED'd; variant-1 surfaced);
+  `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-induction-closure.md`.
 * **Statement.** Of the four candidate proof variants for Stanley
   log-supermodularity (Stanley 1981 AF; Daykin 1990 4FT-direct;
-  Bjorner 1989 combinatorial induction; fresh combinatorial),
-  variant 3 (**Bjorner combinatorial induction on `|I △ J|` with
-  a 2-element swap base case**) is selected as the most
-  upstream-PR-class option for the Lean port.
-* **Rationale.** The chosen variant consumes only mathlib's
-  `Mathlib.Order.LowerSet` lattice + the in-tree `numLinExt`
-  infrastructure. NO dependency on continuous FKG (mathlib gap),
-  Aleksandrov–Fenchel (heavy convex geometry, mathlib gap), or
-  mathlib's `four_functions_theorem` (does not directly produce
-  Stanley log-supermod — 4FT consumes log-supermod as hypothesis,
-  not as conclusion). The proof structure: induction on `|I △ J|`
-  with reduction via a Bjorner injection
-  `Ψ : LE(α[I]) × LE(α[J]) ↪ LE(α[I^+]) × LE(α[J^+])`
-  combined with a 2-element swap lemma (Lemma 2.3 of mg-c7b9 §2.2)
-  proven via the insertion-position formula
-  `N₂(τ; m, m') = N(τ;m) · N(τ;m') + T(τ)` and a finite range-
-  overlap arithmetic identity (Lemma 2.4 of mg-c7b9 §2.4,
-  discharged in Lean by `omega` case analysis).
-* **Verdict (mg-c7b9).** **AMBER.** Variant chosen, mathlib mapping
-  fully identified, 3 new top-level lemmas (`subPoset`,
-  `numLinExt_subPoset_insertion`, `stanley_log_supermod`) sized at
-  ~600–900 LoC for the Lean port, all upstream-PR-class. **Two
-  open questions** in the proof: (i) the 24-sub-case range-overlap
-  identity verified for one canonical sub-ordering only, and (ii)
-  the inductive closure exposes a real gap that requires the full
-  Bjorner 1989 lex-induction. Session A.2 follow-up scoping ticket
-  needed before Session B dispatches.
+  Bjorner 1989 combinatorial induction; fresh combinatorial):
+  - **Variant 3 (Bjorner combinatorial induction)** was chosen by
+    mg-c7b9 as the most upstream-PR-class option, but its
+    inductive closure is **RED on a fresh structural fact**
+    (mg-7928 §1.2): the Bjorner injection
+    `Ψ : LE(α[I]) × LE(α[J]) ↪ LE(α[I⁺]) × LE(α[J⁺])` combined
+    with the IH on the smaller-δ pair produces the inequality
+    `e(I) e(J) ≤ e(I ∪ J) · e((I ∩ J) ∪ {m, m'})`, which is
+    **strictly weaker** than the target
+    `e(I) e(J) ≤ e(I ∪ J) · e(I ∩ J)` because `e(·)` is monotone
+    increasing in `K` (so `e((I ∩ J) ∪ {m, m'}) ≥ e(I ∩ J)`).
+    No IH re-application closes the gap (mg-7928 §1.3 enumerates
+    candidate sub-pairs and rules each out).
+  - **Variant 2 (4FT-direct)** REJECT (reaffirmed): 4FT consumes
+    log-supermodularity as hypothesis, doesn't produce it.
+  - **Variant 4 (fresh)** REJECT: Stanley log-supermod is
+    genuinely deep; a fresh proof would constitute new mathematics
+    out of polecat scope.
+  - **Variant 1 (Stanley 1981 Aleksandrov–Fenchel)** is the only
+    literature-known viable route. Heavy mathlib gap (~3000–5000
+    LoC for AF inequality + order polytope volume formulas
+    + mixed volume infrastructure), partially amortised against
+    sub-α-C Path A's chamber decomp arc.
+* **Verdict (mg-7928 Session A.2).** **AMBER, variant-3 RED.**
+  Variant-3 closure cannot be made rigorous within the Bjorner
+  framework. Variant-1 is heavy but viable. **Four PM action
+  options surfaced** (mg-7928 §3.1): Option A (DH-1 + temporary
+  axiom, recommended), Option B (commit to Variant 1 AF),
+  Option C (Session A.3 literature lookup), Option D (rescope
+  sub-α-C entirely — Daniel's authority). PM mails Daniel with
+  the four options.
+
+### §1.10 EX-1 Session A.2 — variant-3 closure RED, alternative-path deliverable
+
+* **Source.** mg-7928 (this update);
+  `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-induction-closure.md`.
+* **Statement.** The simple Bjorner-style closure imagined in
+  mg-c7b9 §2.5–§2.6 (lex induction on `(|I ∪ J|, |I △ J|)` with
+  Ψ injection bridging) **cannot be made rigorous**. The fresh
+  structural fact (mg-7928 §1.2): the IH-bridging step produces
+  an inequality with factor `e((I ∩ J) ∪ {m, m'})` on the RHS
+  rather than the target's `e(I ∩ J)`, and `e` is monotone
+  increasing in the wrong direction for an IH re-application to
+  close the gap. mg-7928 §1.3 enumerates candidate sub-pairs
+  `(I ∩ J, I ∪ J)`, `((I ∩ J) ∪ {m}, (I ∩ J) ∪ {m'})`,
+  `(I, J⁺)`, `(I⁺, J)` — each either has the same lex rank as
+  `(I, J)` (recursion non-terminating) or produces an inequality
+  whose multiplication with `(\diamond)` does not yield `(\star)`.
+  Sharpening the lex parameter (mg-7928 §1.5) does not change the
+  shape of the IH-produced inequality, so the obstruction is
+  structural, not parameter-choice.
+* **Trip-wire fired.** Per polecat brief §5
+  ("Bjorner-style fails on a fresh fact … STOP and surface"),
+  mg-7928 stopped short of attempting further closure variants
+  and surfaced the verdict to PM.
+* **Verdict (mg-7928).** **AMBER (variant-3 RED, variant-1
+  viable).** PM action item: mail Daniel with Options A–D
+  (mg-7928 §3.1).
 
 ---
 
@@ -267,43 +310,53 @@ survey alternative proof routes) before dispatching Session B.
   obstruction. mg-3c06 (the Brightwell mathlib-gap ticket) is
   the long-arc dual. Re-evaluated under sub-α-C: see §3.7 (DH-3).
 
-### §3.4 Sub-α-C scoping in flight — AMBER leaning GREEN; EX-1 Session A landed
+### §3.4 Sub-α-C scoping — arc-level AMBER unchanged; EX-1 variant-3 RED, four PM options
 
 * **Source.** mg-91be (sub-α-C high-level scoping);
-  `docs/path-alpha-execution-arc/sub-alpha-C-scoping.md`. Updated
-  by mg-c7b9 (EX-1 Session A scoping);
+  `docs/path-alpha-execution-arc/sub-alpha-C-scoping.md`. EX-1
+  Session A by mg-c7b9;
   `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-scoping.md`.
+  EX-1 Session A.2 by mg-7928;
+  `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-induction-closure.md`.
 * **Question.** Can the Hibi polytope chamber infrastructure for
   FKG-on-LE be ported to Lean as a long-arc multi-polecat effort,
   with the output primitive
   `probEvent'_mono_of_subseteq_upClosed` axiom-eliminating both
   `case3Witness_hasBalancedPair_outOfScope` and
   `brightwell_sharp_centred`?
-* **Verdict (arc-level).** **AMBER leaning GREEN.** 6–10
-  load-bearing primitives (EX-1 through EX-10 in mg-91be §5)
-  sketched with explicit Lean signatures; aggregate Path A scope
-  ~5050–8700 LoC over ~13–17 polecat sessions, ~9–15 weeks
-  calendar steady state. Within factor 1.3 of state.md §4.2's
-  "2000–4000 + 1450–2700 LoC" working figure. Path B alternative
-  (avoid polytopes via Stanley + tilted Holley) at ~2900–4900 LoC
-  if the level-`k` localisation step closes — currently unknown.
-* **Verdict (EX-1 Session A, mg-c7b9).** **AMBER.** Variant chosen
-  (Bjorner combinatorial induction, §1.9); mathlib mapping
-  identified (`Mathlib.Order.LowerSet` + in-tree `numLinExt`); 3
-  new upstream-PR-class lemmas at ~600–900 LoC for Session B Lean
-  port. Open question: inductive closure of the Bjorner argument
-  not fully verified in Session A; needs Session A.2 follow-up.
-* **EX-1 progress.** Session A latex done (mg-c7b9, this commit).
-  **Session A.2** (close inductive closure gap or survey
-  alternative proof routes) to be filed by PM as the next
-  follow-up ticket. **Session B** (full Lean port) deferred until
-  A.2 lands per `feedback_pre_execution_dependency_verification`.
-* **Default for next ticket.** PM files **EX-1 Session A.2**
-  (verify Bjorner 1989 induction directly OR survey alternatives:
-  Daykin–Saks 4FT-on-chains, Hibi 1985 ring-theoretic, direct
-  order-polytope volume). Estimated ~1 polecat session,
-  ~250–400k tokens. After A.2 lands, Session B dispatches with
-  fully-verified proof structure.
+* **Verdict (arc-level).** **AMBER leaning GREEN, unchanged.**
+  6–10 load-bearing primitives (EX-1 through EX-10 in mg-91be
+  §5) sketched. Aggregate Path A scope ~5050–8700 LoC over
+  ~13–17 polecat sessions, ~9–15 weeks calendar. The EX-1
+  variant-3 closure failure (mg-7928, §1.10) is a sub-level
+  RED but does not REDthe arc — Variant 1 (AF / order polytope
+  volume) is viable, just heavier. Path B alternative (combinatorial
+  level-`k` localisation) is unaffected.
+* **Verdict (EX-1 sub-level, mg-7928 Session A.2).** **AMBER.**
+  Variant-3 closure RED on fresh structural fact (§1.10);
+  Variant-1 viable but heavy (~3000–5000 LoC mathlib gap,
+  partially amortised against EX-3..EX-7 chamber decomp).
+  Variants 2, 4 REJECT.
+* **EX-1 progress.** Session A latex done (mg-c7b9). Session A.2
+  latex done (mg-7928, this commit). **Four PM action options
+  surfaced** (mg-7928 §3.1):
+  - **Option A (recommended).** DH-1 acceleration + temporary
+    project axiom for `stanley_log_supermod`. Sub-α-C rescopes to
+    start at EX-3 (chamber decomp), with Stanley log-supermod
+    consumed as hypothesis until DH-1 lands.
+  - **Option B.** Commit to Variant 1 (Stanley 1981 AF). Heavy
+    (~3000–5000 LoC mathlib gap) but known. Aligns EX-1 with
+    EX-3..EX-7 AF/chamber infrastructure.
+  - **Option C.** Session A.3 with literature lookup (Bjorner
+    1989, Stanley EC1 §3.5, Aigner Ch. II.4, Brualdi–Mohammadi
+    1995). Scoping-only, ~100–200k tokens, risk: convergence to
+    A or B anyway.
+  - **Option D.** Rescope sub-α-C entirely (RED + lock-in Path γ).
+    Daniel's authority per `feedback_long_arcs_are_pm_authority`.
+* **Default for next ticket.** PM **mails Daniel** with the
+  four-option summary; Daniel makes the call. Polecat
+  recommendation is Option A. **Session B (Lean port)
+  indefinitely deferred** pending Daniel's choice.
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
@@ -317,27 +370,26 @@ survey alternative proof routes) before dispatching Session B.
   candidate) is interested, ~600–1000 LoC of project-internal
   work moves to mathlib and ~2 polecat sessions are saved on the
   project clock.
-* **Refined upstream ask (mg-c7b9).** The variant to upstream is
-  **Bjorner 1989 combinatorial induction** (state.md §1.9), NOT
-  Aleksandrov–Fenchel (variant 1, heavy convex geometry, mathlib
-  gap) or four-functions theorem-direct (variant 2, no clean
-  reduction exists per mg-c7b9 §1.2). Target file:
-  `Mathlib/Combinatorics/Order/StanleyLogSupermod.lean`. The
-  upstream PR would carry the same 3 top-level lemmas as the
-  project-internal Lean port: `subPoset` constructor (or inline
-  `Subtype` usage), `numLinExt_subPoset_insertion` (insertion-
-  position formula, ~150–200 LoC), and `stanley_log_supermod`
-  (main theorem, ~250–400 LoC).
+* **Refined upstream ask (mg-c7b9, mg-7928).** The variant to
+  upstream is **whatever proof variant the mathlib community
+  deems appropriate**, likely Stanley 1981 Aleksandrov–Fenchel
+  or chain-encoded Ahlswede–Daykin. Specifically, the
+  Bjorner 1989 combinatorial route imagined by mg-c7b9 has been
+  shown by mg-7928 (§1.10) to **not close** in any obvious way,
+  so the upstream PR cannot rely on that variant. Target file:
+  `Mathlib/Combinatorics/Order/StanleyLogSupermod.lean`. The PR
+  would carry `stanley_log_supermod` (main theorem) plus whatever
+  underlying infrastructure the chosen proof needs.
 * **Status.** Surfaced to Daniel via PM mail (post-mg-91be merge).
-  Concrete ask: open Zulip discussion or DM with Yael Dillies.
-  **Heightened relevance post-mg-c7b9:** the inductive closure
-  gap identified in Session A means the project-internal proof is
-  not yet line-by-line verified. A mathlib upstream PR (where
-  Yael or other reviewers can audit a textbook treatment of
-  Bjorner 1989) may be MORE efficient than the project Session A.2
-  + Session B sequence. If Daniel engages mathlib upstream now,
-  Session B may collapse to ~50 LoC consumer + `import Mathlib...`
-  — and Session A.2 becomes unnecessary.
+  **Heightened relevance post-mg-7928 (Session A.2):** the
+  variant-3 closure failure means the project's mathlib-friendly
+  cheap variant is gone. The remaining viable variant (1, AF) has
+  ~3000–5000 LoC mathlib gap, so the project-internal cost is now
+  much higher than mg-c7b9 estimated. **DH-1 is now the highest-
+  leverage path by a wide margin** — a successful mathlib upstream
+  PR collapses ~3000–5000 LoC of project work to ~50 LoC consumer.
+  Polecat mg-7928 recommends Option A (DH-1 + temporary project
+  axiom for `stanley_log_supermod`); see §3.4.
 
 ### §3.6 DH-2 — thin-slice for case3 application only
 
@@ -450,6 +502,24 @@ sub-α-C in flight.)
   AMBER-leaning-GREEN verdict and the four DH leverage points
   (§3.5 through §3.8). PM files EX-1 (Stanley log-supermodularity
   port) as the first execution ticket.
+* **Post-mg-7928 (Session A.2) — Daniel decision required.**
+  Variant-3 (Bjorner combinatorial) closure RED'd on fresh
+  structural fact (§1.10). PM mails Daniel with the four
+  EX-1 options surfaced by mg-7928 §3.1:
+  - **Option A (polecat recommendation).** DH-1 acceleration +
+    temporary project axiom for `stanley_log_supermod` in
+    `lean/AXIOMS.md`. Net impact on Path γ: zero. Net impact on
+    sub-α-C Path A: rescope to start at EX-3, defer EX-1 until
+    DH-1 lands.
+  - **Option B.** Commit to Variant 1 (AF). Heavy
+    (~3000–5000 LoC mathlib gap) but known to work; aligns with
+    EX-3..EX-7 AF/chamber infrastructure.
+  - **Option C.** Session A.3 literature lookup (~100–200k
+    tokens, scoping-only, risk: convergence to A or B).
+  - **Option D.** Rescope sub-α-C entirely (lock in Path γ).
+    Daniel's authority per `feedback_long_arcs_are_pm_authority`.
+  Daniel's call gates whether sub-α-C proceeds, and on which
+  variant.
 * **Post-EX-1 land.** Re-evaluate Path A vs Path B fork based on
   how amenable Stanley's argument is to combinatorial Lean
   formalisation. If the proof reveals a clean combinatorial
@@ -492,8 +562,14 @@ sub-α-C in flight.)
   `docs/path-alpha-execution-arc/sub-alpha-A-scoping.md`.
 * mg-bb74 (`73ed85e`) — `lean/AXIOMS.md` framing refresh
   ("definitively retained").
-* mg-91be (this commit) — sub-α-C scoping, AMBER leaning GREEN.
+* mg-91be (`bb450a4`) — sub-α-C scoping, AMBER leaning GREEN.
   `docs/path-alpha-execution-arc/sub-alpha-C-scoping.md`.
+* mg-c7b9 (`4b5b1ba`) — EX-1 Session A scoping, AMBER (variant 3
+  chosen, closure not yet verified).
+  `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-scoping.md`.
+* mg-7928 (this commit) — EX-1 Session A.2, AMBER (variant 3
+  closure RED'd; Options A–D for Daniel decision).
+  `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-induction-closure.md`.
 
 ---
 
