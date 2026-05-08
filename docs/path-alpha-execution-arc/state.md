@@ -58,6 +58,22 @@ deferred to a narrow follow-up ticket — see §1.11 + AXIOMS.md
 "Corollary deferred" — pending either a `numLinExt`-on-dual bridge
 lemma or a parallel upper-set axiom. PM next step: file EX-3
 scoping ticket.
+**Last update.** mg-163f (cat-mg-163f), 2026-05-08. **Path-A-vs-
+Path-B fork resolved: GREEN-A.** §1.12 NEW for the fork-resolution
+deliverable (`docs/path-alpha-execution-arc/path-A-vs-path-B-fork-
+resolution.md`); §3.4 updated (sub-α-C arc-level verdict upgraded
+to GREEN; Path A committed; Path B AMBER-leaning-RED at level-`k`
+localisation step per §3.4 of the deliverable); §3.9 NEW (DH-4
+heightened post-fork-resolution; EX-6 continuous FKG is now the
+single largest mathlib-PR-class chunk and the highest-leverage
+DH after DH-1); §4.5 updated (fork-resolution decision point
+closed; PM commits Path A; EX-3 = next execution ticket; Path A
+LoC refined to ~4450–7700 post-EX-1-landing). Sub-α-C arc-level
+verdict is now GREEN. Path A's only material RED risk is EX-6
+(continuous FKG) which is AMBER with a clean integer-sub-lattice
+fallback for fixed-`α` applications. PM next step: file EX-3
+scoping ticket; surface DH-4 to Daniel as heightened leverage
+point alongside DH-1.
 
 ---
 
@@ -204,6 +220,47 @@ scoping ticket.
   Option C (Session A.3 literature lookup), Option D (rescope
   sub-α-C entirely — Daniel's authority). PM mails Daniel with
   the four options.
+
+### §1.12 Path-A-vs-Path-B fork resolved — GREEN-A; PM commits Path A
+
+* **Source.** mg-163f (this update);
+  `docs/path-alpha-execution-arc/path-A-vs-path-B-fork-resolution.md`.
+* **Statement.** Per mg-91be §4.3 / state.md §3.4 hand-off, the
+  Path-A-vs-Path-B fork was filed for re-evaluation post-EX-1-
+  landing. mg-163f's scoping resolves the fork: **Path B's
+  level-`k` localisation step is AMBER-leaning-RED.** The four
+  candidate sub-formulations (B-1) restrict-to-level-`k`, (B-2)
+  tilted-measure, (B-3) level-decorated lattice, and (B-4)
+  direct-injection — all hit structural obstructions of the same
+  character as the mg-21a4 §3.2 size-mismatch class. (B-3) was
+  newly resolved in this scoping: under product order on
+  `J(α) × Fin (n+1)`, the level-decorated Holley either degenerates
+  (level-locked indicator `1[|I| = k]` exits its support under
+  lattice ops) or factorises to the un-decorated Holley with no
+  level-`k` content gained. (B-4) was newly resolved: the
+  generating-function attack on the tilted measure gives only
+  `(0, ∞)`-pointwise polynomial inequalities, which do not imply
+  per-coefficient inequalities (counterexample: `g(z) = (z-1)^2 ≥ 0`
+  on ℝ but with negative middle coefficient).
+* **Path A LoC refinement post-EX-1-landing.** Aggregate
+  ~4450–7700 LoC (down from sub-α-C scoping §5.11's 5050–8700 by
+  ~600–1000 LoC: EX-1 collapses to 0 as axiom; EX-5 drops by
+  ~50–200 LoC because the Stanley axiom collapses sub-poset volume
+  identity to a 1-line invocation). Within ~1.15× of state.md §4.2
+  working figure (3450–6700 LoC).
+* **Path A material RED risks.** Single risk: EX-6 (continuous
+  FKG/AD on `[0,1]^n`) is AMBER. mg-163f §2.3 surveyed mathlib
+  prerequisites (`Mathlib.MeasureTheory`, `four_functions_theorem`,
+  `Mathlib.Analysis.Convex.Basic`) and finds **no structural
+  obstacle**; the standard Riemann-sum discretisation route is
+  Lean-portable. Fallback: integer-sub-lattice discretisation gives
+  weaker drops with size-`N` factor; for fixed-`α` applications
+  (case3, Brightwell), factor is constant, so applications still
+  close. Path A does **not** structurally collapse under EX-6 RED.
+* **Verdict.** **GREEN-A.** PM commits Path A. EX-3 (order polytope
+  `O(α)` as Lean type) is the next execution ticket; spec drafted
+  in mg-163f §5: ~300–500 LoC, ~200–300k tokens, 1 polecat
+  session.
 
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
@@ -370,7 +427,7 @@ scoping ticket.
   obstruction. mg-3c06 (the Brightwell mathlib-gap ticket) is
   the long-arc dual. Re-evaluated under sub-α-C: see §3.7 (DH-3).
 
-### §3.4 Sub-α-C scoping — arc-level AMBER unchanged; EX-1 variant-3 RED, four PM options
+### §3.4 Sub-α-C scoping — arc-level GREEN; Path A committed (fork resolved mg-163f)
 
 * **Source.** mg-91be (sub-α-C high-level scoping);
   `docs/path-alpha-execution-arc/sub-alpha-C-scoping.md`. EX-1
@@ -384,14 +441,19 @@ scoping ticket.
   `probEvent'_mono_of_subseteq_upClosed` axiom-eliminating both
   `case3Witness_hasBalancedPair_outOfScope` and
   `brightwell_sharp_centred`?
-* **Verdict (arc-level).** **AMBER leaning GREEN, unchanged.**
+* **Verdict (arc-level).** **GREEN, upgraded post-mg-163f.**
   6–10 load-bearing primitives (EX-1 through EX-10 in mg-91be
-  §5) sketched. Aggregate Path A scope ~5050–8700 LoC over
-  ~13–17 polecat sessions, ~9–15 weeks calendar. The EX-1
-  variant-3 closure failure (mg-7928, §1.10) is a sub-level
-  RED but does not REDthe arc — Variant 1 (AF / order polytope
-  volume) is viable, just heavier. Path B alternative (combinatorial
-  level-`k` localisation) is unaffected.
+  §5) sketched. Aggregate Path A scope ~4450–7700 LoC
+  post-EX-1-landing (mg-163f §2.2; down from 5050–8700) over
+  ~12–16 polecat sessions, ~9–15 weeks calendar. The EX-1
+  variant-3 closure failure (mg-7928, §1.10) was a sub-level
+  RED but did not RED the arc; Option A (mg-d0fc, §1.11) landed
+  the temp axiom and unblocked sub-α-C. Post-fork-resolution
+  (mg-163f, §1.12), Path A is committed; Path B's level-`k`
+  localisation step is AMBER-leaning-RED (no surviving sub-
+  formulation). Single material RED risk on Path A is EX-6
+  (continuous FKG) which is AMBER with a clean integer-sub-lattice
+  fallback for fixed-`α` applications.
 * **Verdict (EX-1 sub-level, mg-7928 Session A.2).** **AMBER.**
   Variant-3 closure RED on fresh structural fact (§1.10);
   Variant-1 viable but heavy (~3000–5000 LoC mathlib gap,
@@ -419,13 +481,14 @@ scoping ticket.
   - **Option D.** Rescope sub-α-C entirely (RED + lock-in Path γ).
     **Not pursued** (Daniel did not signal sub-α-C abandonment;
     `feedback_long_arcs_are_pm_authority` retained for sub-α-C).
-* **Default for next ticket.** **PM files EX-3 scoping ticket**
-  (chamber-decomposition / order polytope, Path A primary).
-  EX-3 consumes `stanley_log_supermod` as hypothesis; the temp
-  axiom is the discharge target of either DH-1 (preferred) or
+* **Default for next ticket.** **PM files EX-3 execution ticket**
+  (order polytope `O(α)` as Lean type, Path A primary; spec drafted
+  in mg-163f §5). EX-3 does **not** consume `stanley_log_supermod`
+  directly (axiom is consumed starting at EX-5); the temp axiom
+  remains the discharge target of either DH-1 (preferred) or
   Option B (fallback). The corollary `stanley_mu_log_supermod` is
-  filed as a separate narrow follow-up before EX-3 (estimated
-  ~50–150 LoC).
+  no longer needed for Path A (Path B-only) and is dropped from
+  the critical path.
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
@@ -489,19 +552,66 @@ scoping ticket.
   whether the centred-sum bound decomposes into a finite
   combination of drops invocations.
 
-### §3.8 DH-4 — continuous FKG/AD acceleration
+### §3.8 DH-4 — continuous FKG/AD acceleration (heightened post-mg-163f)
 
-* **Source.** mg-91be §7.4.
-* **Question.** Is there a working pathway via discrete FKG that
-  avoids continuous FKG (EX-6) entirely?
-* **Why it matters.** EX-6 (continuous FKG on `[0,1]^n`) is the
-  single largest mathlib-PR-class chunk of Path A
-  (~1000–2000 LoC). Bypass routes: Path B (level-`k` localisation
-  on `J(α)` discretely), or discretisation via Riemann sums on an
-  integer sub-lattice of `[0,1]^n`.
-* **Status.** Surfaced to Daniel post-mg-91be. Most speculative of
-  the four DH leverage points; surface only if Daniel has prior
-  knowledge of mathlib continuous FKG efforts.
+* **Source.** mg-91be §7.4. Heightened by mg-163f §4.3 post-fork-
+  resolution: Path B (the discrete bypass route) is committed
+  AMBER-leaning-RED, so EX-6 (continuous FKG/AD on `[0,1]^n`)
+  is now the **single largest mathlib-PR-class chunk on the
+  critical path** (~1000–2000 LoC).
+* **Question.** Is continuous FKG/AD on `[0,1]^n` upstream-able
+  to mathlib in advance of EX-6?
+* **Why it matters (post-fork).** EX-6 collapses to a citation if
+  upstream lands; Path A's heaviest chunk drops by ~1000–2000 LoC.
+  Combined with DH-1 (Stanley log-supermod upstream), DH-4 is the
+  highest-leverage shortener for Path A.
+* **mathlib-PR feasibility (mg-163f §2.3).** No structural
+  obstacle. Standard Riemann-sum discretisation route is
+  Lean-portable; mathlib has `four_functions_theorem` (discrete
+  base case), `MeasureTheory` (integration), `Analysis.Convex`
+  (lattice typeclass on `[0,1]^n`). Estimated ~600–800 LoC
+  discrete-side scaffolding + ~400–1200 LoC limit argument.
+  Natural mathlib reviewers: Yael Dillies, James Gallicchio,
+  Bhavik Mehta. Concrete file target:
+  `Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`.
+* **Fallback if DH-4 doesn't land.** Integer-sub-lattice
+  discretisation gives a weaker drops with size-`N` factor; for
+  fixed-`α` applications (case3, Brightwell) factor is constant,
+  so applications still close. EX-6 RED does not structurally
+  collapse Path A.
+* **Status.** Heightened post-mg-163f. PM should surface DH-4 to
+  Daniel alongside DH-1 in the next digest with the concrete file
+  target.
+
+### §3.9 Path B — closed (AMBER-leaning-RED at level-`k` localisation)
+
+* **Source.** mg-163f §3.
+* **Question (closed).** Does the discrete coupling (Stanley
+  axiom + cross-poset Holley + level-`k` localisation) deliver
+  the drops headline at a fixed level `k`?
+* **Verdict.** **AMBER-leaning-RED.** Four candidate sub-
+  formulations (B-1 through B-4) all hit structural obstructions:
+  - **(B-1)** Restrict-to-level-`k` indicator `1[|I| = k]` breaks
+    log-supermod (size-mismatch; mg-21a4 §3.2).
+  - **(B-2)** Tilted measure `μ_z(I) := μ(I) · z^{|I|}`: gives
+    level-averaged inequality with Gaussian envelope, not exact
+    level-`k` (mg-21a4 §3.2). Generating-function coefficient
+    extraction does not preserve sign (mg-163f §3.4
+    counterexample `g(z) = (z-1)^2`).
+  - **(B-3)** Level-decorated lattice on `J(α) × Fin (n+1)`:
+    under product order, level-locked variant degenerates;
+    level-product variant factorises to un-decorated Holley
+    with no level-`k` content (mg-163f §3.3).
+  - **(B-4)** Direct injection `Ψ' : LE(α[I]) × LE(α[J]) ↪
+    LE(α[I ∪ J]) × LE(α[I ∩ J])`: equivalent to Stanley
+    log-supermod itself plus a chain-encoded level-`k`
+    constraint, which is the original problem in disguise
+    (mg-7928 §2.4 + mg-163f §3.4).
+* **What survives.** A "summed-over-levels" reduced Path B is
+  derivable, but it does not specialise to a fixed-`k` drops as
+  required by case3 and Brightwell applications.
+* **Status.** **Closed.** No further investigation warranted. Path
+  A is the operative path.
 
 ---
 
@@ -600,12 +710,15 @@ sub-α-C in flight.)
   axiom** (§1.11); state.md and `lean/AXIOMS.md` updated; build
   green; AMBER verdict (corollary deferred). PM next: file the
   corollary follow-up + EX-3 scoping ticket.
-* **Post-EX-1 land.** Re-evaluate Path A vs Path B fork based on
-  how amenable Stanley's argument is to combinatorial Lean
-  formalisation. If the proof reveals a clean combinatorial
-  level-`k` localisation: pursue Path B (~2900–4900 LoC,
-  ~6–10 weeks). Otherwise: pursue Path A (~5050–8700 LoC,
-  ~9–15 weeks).
+* **Post-EX-1 land — Path-A-vs-Path-B fork resolved (mg-163f).**
+  Per mg-163f §3.3 + §3.4, Path B's level-`k` localisation step
+  is AMBER-leaning-RED on a sharper survey of the four candidate
+  sub-formulations (B-1 restrict-to-level, B-2 tilted measure,
+  B-3 level-decorated lattice, B-4 direct injection). PM commits
+  **Path A** (~4450–7700 LoC post-EX-1-landing, ~12–16 polecat
+  sessions, ~9–15 weeks calendar). EX-3 (order polytope `O(α)`
+  as Lean type) is the next execution ticket; spec drafted in
+  mg-163f §5. Decision point closed.
 * **Post-EX-7 land.** EX-8 (case3-port-2) and EX-9
   (Brightwell-port-A) execute in parallel; both consume the drops
   headline and have no mutual dependencies. EX-10 (axiom-removal)
@@ -650,11 +763,16 @@ sub-α-C in flight.)
 * mg-7928 (`6e07904`) — EX-1 Session A.2, AMBER (variant 3
   closure RED'd; Options A–D for Daniel decision).
   `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-induction-closure.md`.
-* mg-d0fc (this commit) — EX-1 Option A executed: temp axiom
+* mg-d0fc (`00cbc2d`) — EX-1 Option A executed: temp axiom
   `OneThird.LinearExt.stanley_log_supermod` landed; AMBER
   (corollary `stanley_mu_log_supermod` deferred to follow-up).
   `lean/OneThird/Mathlib/LinearExtension/StanleyLogSupermodAxiom.lean`,
   `lean/AXIOMS.md` (third entry).
+* mg-163f (this commit) — Path-A-vs-Path-B fork resolution: GREEN-A.
+  Path A committed (~4450–7700 LoC post-EX-1-landing); Path B
+  AMBER-leaning-RED at level-`k` localisation step (four sub-
+  formulations all RED). EX-3 spec drafted.
+  `docs/path-alpha-execution-arc/path-A-vs-path-B-fork-resolution.md`.
 
 ---
 
