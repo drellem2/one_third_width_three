@@ -42,6 +42,22 @@ PM next step: **mail Daniel** with the four-option PM action item
 (Option A: DH-1 + temporary axiom, recommended; Option B:
 commit to Variant 1 AF; Option C: Session A.3 literature lookup;
 Option D: rescope sub-α-C entirely).
+**Last update.** mg-d0fc (cat-mg-d0fc), 2026-05-08. **Option A
+executed.** §1.11 NEW for the temp-axiom land
+(`OneThird.LinearExt.stanley_log_supermod` in
+`lean/OneThird/Mathlib/LinearExtension/StanleyLogSupermodAxiom.lean`);
+§3.4 updated (Option A status: executed; sub-α-C arc next
+execution ticket = EX-3 chamber-decomposition scoping); §4.5
+updated (decision point closed — Option A picked + executed by PM;
+DH-1 surface to Daniel pending evening digest). AXIOMS.md gains
+a third audit-bar 4-condition entry for the temp axiom; trust
+surface for the `width3_one_third_two_thirds` headline is unchanged
+(still two named axioms + `native_decide` quintet). The corollary
+`stanley_mu_log_supermod` (μ(I) := e(I)·e(α \ I) log-supermod) is
+deferred to a narrow follow-up ticket — see §1.11 + AXIOMS.md
+"Corollary deferred" — pending either a `numLinExt`-on-dual bridge
+lemma or a parallel upper-set axiom. PM next step: file EX-3
+scoping ticket.
 
 ---
 
@@ -188,6 +204,50 @@ Option D: rescope sub-α-C entirely).
   Option C (Session A.3 literature lookup), Option D (rescope
   sub-α-C entirely — Daniel's authority). PM mails Daniel with
   the four options.
+
+### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
+
+* **Source.** mg-d0fc (this update);
+  `lean/OneThird/Mathlib/LinearExtension/StanleyLogSupermodAxiom.lean`;
+  `lean/AXIOMS.md` (third entry).
+* **Statement.** Following Daniel's directive (post-mg-7928 evening
+  digest, taken as default-acceptance per
+  `feedback_pm_is_mini_ceo_default` and
+  `feedback_block_and_report`), PM dispatched Option A: introduce
+  `stanley_log_supermod` as a **temporary named project axiom** in
+  the `OneThird.LinearExt` namespace, audit-bar-compliant per the
+  4-condition table (External / Difficult / Labeled / Low-risk).
+  The axiom carries the Stanley 1981 inequality
+  `e(I) e(J) ≤ e(I ⊔ J) e(I ⊓ J)` for `I, J : LowerSet α` and a
+  finite poset `α`, with `e(K) := |L(α[K])| := numLinExt (subPoset
+  (K : Set α))`. The axiom file declares `subPoset` (a wrapped
+  subtype with inherited `PartialOrder` / `Fintype` / `DecidableEq`)
+  as the only piece of new infrastructure; otherwise the file
+  consists of imports, the axiom statement, and inline
+  documentation of the audit trail.
+* **Trust surface impact.** The third named project axiom is **not**
+  consumed by `width3_one_third_two_thirds` or any Step-8 / Step-1
+  / F5a / F6 / Path γ pathway. The `width3_one_third_two_thirds`
+  headline trust surface remains unchanged: two named axioms
+  (`brightwell_sharp_centred`,
+  `case3Witness_hasBalancedPair_outOfScope`) + the `native_decide`
+  quintet. The third axiom enters the trust surface of the
+  *sub-α-C arc only* (consumed by EX-3 onward as hypothesis until
+  DH-1 / Option B replacement lands).
+* **Deferred.** The corollary `stanley_mu_log_supermod`
+  (`μ(I) := e(I) · e(α \ I)` log-supermod on `J(α)`) is deferred
+  to a narrow follow-up ticket per the mg-d0fc AMBER verdict.
+  Reason: the derivation requires the dual application
+  `e(α \ I) e(α \ J) ≤ e(α \ (I ⊓ J)) e(α \ (I ⊔ J))` on
+  upper-set complements, which needs either a parallel upper-set
+  axiom or a `numLinExt`-on-dual bridge lemma — neither in tree as
+  of this commit. EX-3 (chamber-decomposition scoping) does not
+  consume the corollary directly, so the deferral does not block
+  the next sub-α-C execution ticket.
+* **Verdict.** **AMBER** (axiom + AXIOMS.md + state.md complete;
+  corollary derivation deferred). Build green at this commit. PM
+  files the corollary follow-up ticket and the EX-3 scoping ticket
+  next.
 
 ### §1.10 EX-1 Session A.2 — variant-3 closure RED, alternative-path deliverable
 
@@ -340,23 +400,32 @@ Option D: rescope sub-α-C entirely).
 * **EX-1 progress.** Session A latex done (mg-c7b9). Session A.2
   latex done (mg-7928, this commit). **Four PM action options
   surfaced** (mg-7928 §3.1):
-  - **Option A (recommended).** DH-1 acceleration + temporary
-    project axiom for `stanley_log_supermod`. Sub-α-C rescopes to
-    start at EX-3 (chamber decomp), with Stanley log-supermod
-    consumed as hypothesis until DH-1 lands.
+  - **Option A (recommended) — EXECUTED post-mg-d0fc (2026-05-08).**
+    DH-1 acceleration + temporary project axiom for
+    `stanley_log_supermod`. Sub-α-C rescopes to start at EX-3
+    (chamber decomp), with Stanley log-supermod consumed as
+    hypothesis until DH-1 lands. mg-d0fc landed the temp axiom
+    (`OneThird.LinearExt.stanley_log_supermod`,
+    `lean/OneThird/Mathlib/LinearExtension/StanleyLogSupermodAxiom.lean`)
+    and updated `lean/AXIOMS.md` with the audit-bar 4-condition
+    entry. **AMBER verdict** (corollary deferred — see §1.11).
   - **Option B.** Commit to Variant 1 (Stanley 1981 AF). Heavy
     (~3000–5000 LoC mathlib gap) but known. Aligns EX-1 with
-    EX-3..EX-7 AF/chamber infrastructure.
+    EX-3..EX-7 AF/chamber infrastructure. **Not pursued; subsumed
+    by Option A's `axiom`-then-port path.**
   - **Option C.** Session A.3 with literature lookup (Bjorner
     1989, Stanley EC1 §3.5, Aigner Ch. II.4, Brualdi–Mohammadi
-    1995). Scoping-only, ~100–200k tokens, risk: convergence to
-    A or B anyway.
+    1995). **Not pursued** (Option A executed first).
   - **Option D.** Rescope sub-α-C entirely (RED + lock-in Path γ).
-    Daniel's authority per `feedback_long_arcs_are_pm_authority`.
-* **Default for next ticket.** PM **mails Daniel** with the
-  four-option summary; Daniel makes the call. Polecat
-  recommendation is Option A. **Session B (Lean port)
-  indefinitely deferred** pending Daniel's choice.
+    **Not pursued** (Daniel did not signal sub-α-C abandonment;
+    `feedback_long_arcs_are_pm_authority` retained for sub-α-C).
+* **Default for next ticket.** **PM files EX-3 scoping ticket**
+  (chamber-decomposition / order polytope, Path A primary).
+  EX-3 consumes `stanley_log_supermod` as hypothesis; the temp
+  axiom is the discharge target of either DH-1 (preferred) or
+  Option B (fallback). The corollary `stanley_mu_log_supermod` is
+  filed as a separate narrow follow-up before EX-3 (estimated
+  ~50–150 LoC).
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
@@ -520,6 +589,17 @@ sub-α-C in flight.)
     Daniel's authority per `feedback_long_arcs_are_pm_authority`.
   Daniel's call gates whether sub-α-C proceeds, and on which
   variant.
+* **Post-mg-d0fc (Option A executed) — decision point closed.**
+  PM committed Option A per `feedback_block_and_report` +
+  `feedback_pm_is_mini_ceo_default` (decide + inform; do not
+  second-guess polecat recommendations on Lean tickets). Daniel's
+  default-acceptance window applied; sub-α-C proceeds via the
+  Option A pathway (temp axiom + DH-1 surface). DH-1 surfaces to
+  Daniel via the evening digest; PM does not block on Daniel
+  acknowledgment for EX-3 dispatch. **mg-d0fc landed the temp
+  axiom** (§1.11); state.md and `lean/AXIOMS.md` updated; build
+  green; AMBER verdict (corollary deferred). PM next: file the
+  corollary follow-up + EX-3 scoping ticket.
 * **Post-EX-1 land.** Re-evaluate Path A vs Path B fork based on
   how amenable Stanley's argument is to combinatorial Lean
   formalisation. If the proof reveals a clean combinatorial
@@ -567,9 +647,14 @@ sub-α-C in flight.)
 * mg-c7b9 (`4b5b1ba`) — EX-1 Session A scoping, AMBER (variant 3
   chosen, closure not yet verified).
   `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-scoping.md`.
-* mg-7928 (this commit) — EX-1 Session A.2, AMBER (variant 3
+* mg-7928 (`6e07904`) — EX-1 Session A.2, AMBER (variant 3
   closure RED'd; Options A–D for Daniel decision).
   `docs/path-alpha-execution-arc/ex1-stanley-log-supermod-induction-closure.md`.
+* mg-d0fc (this commit) — EX-1 Option A executed: temp axiom
+  `OneThird.LinearExt.stanley_log_supermod` landed; AMBER
+  (corollary `stanley_mu_log_supermod` deferred to follow-up).
+  `lean/OneThird/Mathlib/LinearExtension/StanleyLogSupermodAxiom.lean`,
+  `lean/AXIOMS.md` (third entry).
 
 ---
 

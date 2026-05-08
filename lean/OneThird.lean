@@ -15,6 +15,7 @@ import OneThird.Mathlib.LinearExtension.FiberSize
 import OneThird.Mathlib.LinearExtension.Birkhoff
 import OneThird.Mathlib.LinearExtension.FKG
 import OneThird.Mathlib.LinearExtension.BrightwellAxiom
+import OneThird.Mathlib.LinearExtension.StanleyLogSupermodAxiom
 import OneThird.Mathlib.BKGraph
 import OneThird.LinearExtension
 import OneThird.Mathlib.SimpleGraph.EdgeBoundary

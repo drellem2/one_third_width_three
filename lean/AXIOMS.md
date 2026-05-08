@@ -11,16 +11,27 @@ records:
   certified it, and — for completeness of the audit trail — the
   hypothetical replacement path that a future Lean port could take.
 
-Both named project axioms below are **definitively retained on the
-trust surface.** Replacement is not on any roadmap: see
-`docs/path-alpha-execution-arc/state.md` for the cumulative scoping
-record. Path α (mg-ff7f) and sub-α-A (mg-21a4) are both formally RED;
+Three named project axioms appear below. The first two
+(`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`)
+are **definitively retained on the trust surface** of the
+`width3_one_third_two_thirds` headline; replacement is not on any
+roadmap. Path α (mg-ff7f) and sub-α-A (mg-21a4) are both formally RED;
 sub-α-C (Hibi polytope chamber infrastructure as a multi-author
 mathlib-gap effort) is the only surviving theoretical replacement
-route and is not pursued. The "Replacement path" subsections below
-are preserved as historical reference for any future contributor who
-revisits the question (e.g., if mathlib gains the prerequisite
-infrastructure independently); they do not represent scheduled work.
+route and is not pursued for the headline trust surface (its
+"Replacement path" subsections below are preserved as historical
+reference for any future contributor who revisits the question — e.g.,
+if mathlib gains the prerequisite infrastructure independently — and
+do not represent scheduled work).
+
+The third axiom (`stanley_log_supermod`) is a **temporary
+project axiom** introduced under
+`docs/path-alpha-execution-arc/state.md` §3.4 Option A. It is **not**
+consumed by the existing `width3_one_third_two_thirds` headline; it is
+the discharge target of either DH-1 (mathlib upstream of Stanley
+log-supermodularity) or Option B (full in-tree port of the Stanley
+1981 AF proof) under the sub-α-C execution arc. EX-3 onward consumes
+the axiom as hypothesis until the replacement lands.
 
 Unless otherwise noted, every axiom below has been manually verified
 against the paper proof it axiomatizes, and a closed-form integer
@@ -530,3 +541,104 @@ This is a paper-side nuance, not an axiom-faithfulness issue: the
 axiom's conclusion is no stronger than the paper's. Recorded here so
 that the future replacement-path port carries the bookkeeping
 forward.
+
+---
+
+## `OneThird.LinearExt.stanley_log_supermod`
+
+**File.** `lean/OneThird/Mathlib/LinearExtension/StanleyLogSupermodAxiom.lean`
+
+**Paper statement.** Stanley 1981, *Two combinatorial applications of
+the Aleksandrov–Fenchel inequalities*, J. Combin. Theory Ser. A
+**31** (1981), no. 1, 56–65. For lower sets `I, J ∈ J(α)` of a finite
+poset `α`, the linear-extension counting function
+`e(K) := |L(α[K])|` is log-supermodular:
+
+```
+  e(I) · e(J)  ≤  e(I ∪ J) · e(I ∩ J).
+```
+
+In `LowerSet α`, `(I ⊔ J : Set α) = (I : Set α) ∪ (J : Set α)` and
+`(I ⊓ J : Set α) = (I : Set α) ∩ (J : Set α)`, so the axiom statement
+reads `e(I) e(J) ≤ e(I ⊔ J) e(I ⊓ J)`.
+
+**Introduced by.** `mg-d0fc` (this ticket; temp-axiom under Option A
+post-mg-7928 RED on Bjorner closure).
+
+**QA-audited by.** `mg-d0fc` (this ticket; audit-bar 4-condition table
+below).
+
+**Status.** **Temporarily retained as a named project axiom.**
+Replaced when either
+- **DH-1** (mathlib upstream of Stanley log-supermod, target file
+  `Mathlib/Combinatorics/Order/StanleyLogSupermod.lean`, target
+  maintainer Yael Dillies) lands; or
+- **Option B** (full in-tree port of the Stanley 1981 AF proof,
+  ~3000–5000 LoC, bundled with sub-α-C EX-3 onward) is dispatched.
+
+The axiom is **not** consumed by the existing
+`width3_one_third_two_thirds` headline or by any Step-8 / Step-1 /
+F5a / F6 / Path γ pathway — those remain on the existing two-named-
+axiom trust surface (`brightwell_sharp_centred`,
+`case3Witness_hasBalancedPair_outOfScope`). It is consumed by EX-3
+(chamber-decomposition scoping) and downstream sub-α-C execution
+tickets where Stanley log-supermod enters as a hypothesis to the
+chamber-decomposition / Hibi-polytope infrastructure.
+
+### Audit-bar 4-condition table
+
+Per `feedback_audit_bar_for_axioms` (Daniel 2026-04-27).
+
+| Condition  | Verdict | Justification |
+|-----------|---------|---------------|
+| External  | ✓ | Stanley 1981, *Two combinatorial applications of the Aleksandrov–Fenchel inequalities*, J. Combin. Theory Ser. A **31** (1981), no. 1, 56–65. The deepest known proofs go via the Aleksandrov–Fenchel inequalities (Stanley 1981) or via Daykin 1990 (4FT-direct) / Bjorner 1989 (combinatorial). Established result with 40+ years of citation history in algebraic combinatorics. |
+| Difficult | ✓ | Mathlib-gap. Full in-tree AF port estimated ~3000–5000 LoC including order-polytope volume formulas (Stanley 1986 *Two poset polytopes*) and mixed-volume infrastructure. The cheap closure variants (Bjorner-style induction, mg-c7b9) were RED'd by mg-7928 §1.2 on a fresh structural fact: the Bjorner injection `Ψ` combined with the IH on the smaller-δ pair produces a strictly weaker inequality than the target, with no IH re-application closing the gap. mg-7928 §1.3 enumerates and rules out four candidate sub-pair recursions. Daykin 1990 4FT-direct REJECTED (4FT consumes log-supermodularity as hypothesis, doesn't produce it). Fresh combinatorial proofs are out-of-scope as new mathematics. |
+| Labeled   | ✓ | This entry. The axiom is the only `axiom` declaration in `lean/OneThird/Mathlib/LinearExtension/StanleyLogSupermodAxiom.lean`. |
+| Low-risk  | ✓ | Stanley 1981 is a well-cited, mature literature foundation. The result is used routinely throughout algebraic and probabilistic combinatorics (Brightwell 1999, Daykin 1990, Stanley EC1 §3.5 surveys); no plausible error in the established result. |
+
+### Scope-match checklist
+
+| Paper | Axiom | Status |
+| --- | --- | --- |
+| Finite poset `α` | `α : Type*` with `[PartialOrder α] [Fintype α] [DecidableEq α]` | ✅ |
+| Order ideals `I, J ∈ J(α)` (lower sets of `α`) | `I J : LowerSet α` | ✅ |
+| Counting function `e(K) := |L(α[K])|` for `K ⊆ α` | `numLinExt (subPoset (K : Set α))` where `subPoset s = ↥s` with inherited `PartialOrder`, `Fintype`, `DecidableEq` | ✅ |
+| `e(I) · e(J) ≤ e(I ∪ J) · e(I ∩ J)` | `numLinExt (subPoset I) * numLinExt (subPoset J) ≤ numLinExt (subPoset (I ⊔ J)) * numLinExt (subPoset (I ⊓ J))` with the `LowerSet`-lattice identities `(I ⊔ J : Set α) = I ∪ J` and `(I ⊓ J : Set α) = I ∩ J` | ✅ |
+| (No additional hypotheses) | No additional hypotheses | ✅ |
+
+### Replacement path (active; conditional on DH-1 or Option B)
+
+Per `docs/path-alpha-execution-arc/state.md` §3.4 + §3.5, the
+preferred replacement path is **DH-1** (mathlib upstream PR of
+Stanley log-supermod). Failing that, **Option B** (full project AF
+port). EX-3 onward consumes this axiom as hypothesis until the
+replacement lands. The `axiom` declaration in the file
+`StanleyLogSupermodAxiom.lean` is replaced by a `theorem` with the
+imported / ported proof at that point, with no signature change at
+consumer call sites.
+
+The replacement path differs in character from the
+`brightwell_sharp_centred` and `case3Witness_hasBalancedPair_outOfScope`
+"indefinitely deferred" replacement paths above: this axiom's
+replacement is **active**, gated on Daniel's choice in the four-option
+PM action item (mg-7928 §3.1), with Option A (DH-1 + temp axiom)
+already executed as of this entry.
+
+### Corollary `μ(I) := e(I) · e(α \ I)` log-supermod (deferred)
+
+Stanley 1981 also yields the corollary that
+`μ(I) := e(I) · e(α \ I)` is log-supermodular on `J(α)`
+(mg-91be §3.2; sub-α-C scoping §5.2 EX-2). The derivation requires
+applying `stanley_log_supermod` twice — once to `(I, J)` and once to
+the upper-set complements `(α \ I, α \ J)` — and combining via De
+Morgan. The dual application requires either (a) instantiating the
+axiom on `αᵒᵖ` plus a `numLinExt`-on-dual identity, or (b) a parallel
+axiom `stanley_log_supermod_upper`.
+
+The corollary is **deferred to a narrow follow-up ticket** per the
+mg-d0fc AMBER verdict path. EX-3 (chamber-decomposition scoping) does
+not consume the corollary directly — only `stanley_log_supermod` —
+so the deferral does not block the next sub-α-C execution ticket. The
+corollary will be filed by PM as a small follow-up (estimated
+~50–150 LoC once the dual-poset bridge lemma is in place, or
+~50 LoC once a parallel upper-set axiom is added).
