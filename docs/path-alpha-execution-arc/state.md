@@ -74,6 +74,28 @@ verdict is now GREEN. Path A's only material RED risk is EX-6
 fallback for fixed-`α` applications. PM next step: file EX-3
 scoping ticket; surface DH-4 to Daniel as heightened leverage
 point alongside DH-1.
+**Last update.** mg-8c66 (cat-mg-8c66), 2026-05-08. **EX-3
+executed: `OrderPolytope α` landed.** §1.13 NEW for the EX-3
+deliverable (`lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`):
+`OrderPolytope α` defined as the set of order-preserving maps
+`α → [0,1] ⊆ ℝ`, with named theorems for its convexity
+(`OrderPolytope.convex`), closedness (`OrderPolytope.isClosed`),
+boundedness (`OrderPolytope.isBounded`), compactness
+(`OrderPolytope.isCompact`, requires `[Fintype α]`), and Borel
+measurability (`OrderPolytope.measurableSet`, requires
+`[Fintype α]`). The discrete-3-antichain hand-verification
+(mg-163f §5 / EX-3 brief §2.3) is in tree as a generic lemma
+`OrderPolytope.eq_cube_of_discrete` plus an `example` instantiating
+it on `Three := {a, b, c}` with the discrete partial order to
+witness `O(Three) = [0,1]^Three`. §3.4 updated (sub-α-C arc:
+EX-3 done; EX-4 scoping is the next execution ticket). The
+`Mathlib.Order.LowerSet.Basic` import sketched in mg-163f §5.3
+was renamed to `Mathlib.Order.UpperLower.Basic` in this Mathlib
+version (v4.29.1); minor signature-template adjustment, no
+mathematical change. Trip-wires not fired: build green; no
+mathlib refactor needed; no token blow-up. Trust surface
+unchanged (still two named axioms + Stanley temp axiom for sub-α-C).
+PM next step: file EX-4 scoping ticket (Stanley vertex theorem).
 
 ---
 
@@ -262,6 +284,71 @@ point alongside DH-1.
   in mg-163f §5: ~300–500 LoC, ~200–300k tokens, 1 polecat
   session.
 
+### §1.13 EX-3 executed — `OrderPolytope α` landed with basic instances
+
+* **Source.** mg-8c66 (this update);
+  `lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`.
+* **Statement.** The order polytope `O(α)` of a finite poset `α`
+  is defined as
+
+  ```lean
+  def OrderPolytope (α : Type*) [PartialOrder α] : Set (α → ℝ) :=
+    { f : α → ℝ |
+        (∀ x, f x ∈ Set.Icc (0 : ℝ) 1) ∧
+        (∀ x y, x ≤ y → f x ≤ f y) }
+  ```
+
+  in the `OneThird.LinearExt` namespace. Five named theorems
+  populate the basic structural properties per mg-163f §5.3:
+  - `OrderPolytope.convex : Convex ℝ (OrderPolytope α)` — convexity
+    via direct verification on the two defining conditions;
+  - `OrderPolytope.isClosed : IsClosed (OrderPolytope α)` — closedness
+    in the product topology, as a finite-or-infinite intersection
+    of preimages of closed sets under continuous evaluations;
+  - `OrderPolytope.isBounded : Bornology.IsBounded (OrderPolytope α)`
+    — boundedness via containment in the bounded cube `[0,1]^α`
+    (`Bornology.IsBounded.pi`);
+  - `OrderPolytope.isCompact [Fintype α] : IsCompact (OrderPolytope α)`
+    — compactness as a closed subset of the compact cube `[0,1]^α`
+    (Tychonoff via `isCompact_univ_pi`);
+  - `OrderPolytope.measurableSet [Fintype α] : MeasurableSet (OrderPolytope α)`
+    — Borel measurability as a countable intersection of measurable
+    half-spaces (`measurableSet_le`, `measurableSet_Icc`).
+
+  The hand-verification on the discrete 3-antichain
+  (`α = {a, b, c}` with no nontrivial order relations) is recorded
+  by the generic lemma `OrderPolytope.eq_cube_of_discrete : (∀ x y,
+  x ≤ y → x = y) → OrderPolytope α = univ.pi (fun _ => Icc 0 1)`,
+  applied to a small in-tree type `Three := {a, b, c}` carrying the
+  discrete partial order. The `example` line at the bottom of the
+  file witnesses `O(Three) = [0,1]^Three`.
+
+* **Implementation note.** The fork-resolution doc mg-163f §5.3
+  sketched the basic properties as Lean `instance`s, but `Convex`,
+  `IsClosed`, `IsCompact`, `Bornology.IsBounded`, and `MeasurableSet`
+  are all `Prop`-valued predicates on a fixed `Set`, not type-class
+  arguments — so `instance` syntax does not apply. They are stated
+  as named theorems instead; downstream EX-4/EX-5 consumers invoke
+  by name, no instance resolution needed. The
+  `Mathlib.Order.LowerSet.Basic` import sketched in mg-163f §5.3
+  was renamed to `Mathlib.Order.UpperLower.Basic` in this Mathlib
+  version (v4.29.1); the file imports the latter.
+
+* **Trust surface impact.** No new axioms. EX-3 does not consume
+  `stanley_log_supermod` (the axiom is consumed starting at EX-5).
+  The `width3_one_third_two_thirds` headline trust surface is
+  unchanged (two named axioms + `native_decide` quintet). The
+  sub-α-C arc trust surface is also unchanged (third axiom
+  `stanley_log_supermod` consumed only by EX-5 onward).
+
+* **Verdict.** **GREEN.** Build green at this commit
+  (`lake build` clean). All basic structural properties populated
+  with no `sorry`. Trip-wires not fired: no token blow-up
+  (estimated ~80–100k of 300k cap), no mathlib refactor required,
+  no build failure, no definition pollution. PM next step: file
+  EX-4 scoping ticket (Stanley vertex theorem
+  `vertices(O(α)) = {1_I : I ∈ J(α)}`).
+
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
 * **Source.** mg-d0fc (this update);
@@ -427,7 +514,7 @@ point alongside DH-1.
   obstruction. mg-3c06 (the Brightwell mathlib-gap ticket) is
   the long-arc dual. Re-evaluated under sub-α-C: see §3.7 (DH-3).
 
-### §3.4 Sub-α-C scoping — arc-level GREEN; Path A committed (fork resolved mg-163f)
+### §3.4 Sub-α-C scoping — arc-level GREEN; Path A committed (fork resolved mg-163f); EX-3 done (mg-8c66)
 
 * **Source.** mg-91be (sub-α-C high-level scoping);
   `docs/path-alpha-execution-arc/sub-alpha-C-scoping.md`. EX-1
@@ -481,14 +568,15 @@ point alongside DH-1.
   - **Option D.** Rescope sub-α-C entirely (RED + lock-in Path γ).
     **Not pursued** (Daniel did not signal sub-α-C abandonment;
     `feedback_long_arcs_are_pm_authority` retained for sub-α-C).
-* **Default for next ticket.** **PM files EX-3 execution ticket**
-  (order polytope `O(α)` as Lean type, Path A primary; spec drafted
-  in mg-163f §5). EX-3 does **not** consume `stanley_log_supermod`
-  directly (axiom is consumed starting at EX-5); the temp axiom
-  remains the discharge target of either DH-1 (preferred) or
-  Option B (fallback). The corollary `stanley_mu_log_supermod` is
-  no longer needed for Path A (Path B-only) and is dropped from
-  the critical path.
+* **Default for next ticket.** **EX-3 done (mg-8c66, this commit;
+  see §1.13). PM files EX-4 scoping ticket** (Stanley vertex
+  theorem `vertices(O(α)) = {1_I : I ∈ J(α)}`, per mg-163f §5.5).
+  EX-3 did **not** consume `stanley_log_supermod` directly (axiom
+  is consumed starting at EX-5); the temp axiom remains the
+  discharge target of either DH-1 (preferred) or Option B
+  (fallback). The corollary `stanley_mu_log_supermod` is no longer
+  needed for Path A (Path B-only) and is dropped from the critical
+  path.
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
@@ -719,6 +807,16 @@ sub-α-C in flight.)
   sessions, ~9–15 weeks calendar). EX-3 (order polytope `O(α)`
   as Lean type) is the next execution ticket; spec drafted in
   mg-163f §5. Decision point closed.
+* **Post-mg-8c66 (EX-3 executed) — decision point closed.**
+  Order polytope `OrderPolytope α` landed in
+  `lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`
+  with the five basic structural properties (convex, closed,
+  bounded, compact under `[Fintype α]`, measurable under
+  `[Fintype α]`) populated as named theorems plus the discrete-
+  3-antichain hand-verification. Build green. No new axioms
+  introduced; Stanley temp axiom not consumed at EX-3 (it enters
+  starting at EX-5). PM next step: file EX-4 scoping ticket
+  (Stanley vertex theorem `vertices(O(α)) = {1_I : I ∈ J(α)}`).
 * **Post-EX-7 land.** EX-8 (case3-port-2) and EX-9
   (Brightwell-port-A) execute in parallel; both consume the drops
   headline and have no mutual dependencies. EX-10 (axiom-removal)
@@ -768,11 +866,16 @@ sub-α-C in flight.)
   (corollary `stanley_mu_log_supermod` deferred to follow-up).
   `lean/OneThird/Mathlib/LinearExtension/StanleyLogSupermodAxiom.lean`,
   `lean/AXIOMS.md` (third entry).
-* mg-163f (this commit) — Path-A-vs-Path-B fork resolution: GREEN-A.
+* mg-163f (`9e6edcd`) — Path-A-vs-Path-B fork resolution: GREEN-A.
   Path A committed (~4450–7700 LoC post-EX-1-landing); Path B
   AMBER-leaning-RED at level-`k` localisation step (four sub-
   formulations all RED). EX-3 spec drafted.
   `docs/path-alpha-execution-arc/path-A-vs-path-B-fork-resolution.md`.
+* mg-8c66 (this commit) — EX-3 executed: `OrderPolytope α`
+  defined with basic structural properties (convex, closed,
+  bounded, compact, measurable) and discrete-3-antichain
+  hand-verification. Build green; no new axioms.
+  `lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`.
 
 ---
 
