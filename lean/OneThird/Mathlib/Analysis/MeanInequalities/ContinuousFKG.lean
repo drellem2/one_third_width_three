@@ -921,13 +921,113 @@ private lemma sum_step_diff_bound {N : ℕ} (hN : 1 ≤ N)
     (∑ k : Fin n → Fin N, f (fun i => ((k i : ℝ) + 1) / N))
       - (∑ k : Fin n → Fin N, f (fun i => (k i : ℝ) / N))
     ≤ ((N + 1 : ℝ) ^ n - (N : ℝ) ^ n) * f (fun _ => 1) := by
-  -- DEFERRED (Session D): cancellation of common-index Σ-terms.
-  -- Specifically: embed `Fin N → Fin (N+1)` via `succ` (image: l.val ≥ 1)
-  -- and via `castSucc` (image: l.val < N); compute the sum-difference
-  -- = Σ_{some l.val = N} f(l/N) - Σ_{some l.val = 0} f(l/N)
-  -- and bound by (N+1)^n - N^n using non-negativity of f and monotonicity
-  -- bound `f(l/N) ≤ f(1,…,1) = M`. ~150 LoC of Finset reindexing.
-  sorry
+  classical
+  set M : ℝ := f (fun _ => 1) with hM_def
+  have hM_nn : 0 ≤ M := hf₀ _
+  have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+  -- Pointwise upper bound: for `l : Fin n → Fin (N+1)`, each coordinate
+  -- `(l i).val ≤ N`, so `(l i)/N ≤ 1` and by monotonicity `f(l/N) ≤ M`.
+  have h_le_M : ∀ l : Fin n → Fin (N + 1),
+      f (fun i => (((l i) : ℕ) : ℝ) / (N : ℝ)) ≤ M := by
+    intro l
+    apply hf
+    intro i
+    rw [div_le_one hN']
+    have : ((l i) : ℕ) ≤ N := Nat.lt_succ_iff.mp (l i).isLt
+    exact_mod_cast this
+  -- The two reindexing maps: `φ` shifts each coord by `+1` via `Fin.succ`,
+  -- `ψ` keeps each coord the same via `Fin.castSucc`.
+  let φ : (Fin n → Fin N) → (Fin n → Fin (N + 1)) := fun k i => (k i).succ
+  let ψ : (Fin n → Fin N) → (Fin n → Fin (N + 1)) := fun k i => (k i).castSucc
+  have hφ_inj : Function.Injective φ := by
+    intro a b hab
+    funext i
+    have h := congr_fun hab i
+    exact Fin.succ_injective _ h
+  have hψ_inj : Function.Injective ψ := by
+    intro a b hab
+    funext i
+    have h := congr_fun hab i
+    exact Fin.castSucc_injective _ h
+  -- Step (A): rewrite the first sum (`f((k+1)/N)`) as a sum over
+  -- `Finset.univ.image φ ⊆ (Fin n → Fin (N+1))`.
+  have hA :
+      (∑ k : Fin n → Fin N, f (fun i => ((k i : ℝ) + 1) / N))
+        = ∑ l ∈ (Finset.univ : Finset (Fin n → Fin N)).image φ,
+            f (fun i => (((l i) : ℕ) : ℝ) / (N : ℝ)) := by
+    rw [Finset.sum_image (fun a _ b _ hab => hφ_inj hab)]
+    refine Finset.sum_congr rfl (fun k _ => ?_)
+    refine congrArg f (funext fun i => ?_)
+    show ((k i : ℝ) + 1) / (N : ℝ) = (((φ k i) : ℕ) : ℝ) / (N : ℝ)
+    have : (((φ k i) : ℕ) : ℝ) = ((k i : ℕ) : ℝ) + 1 := by
+      simp [φ, Fin.val_succ]
+    rw [this]
+  -- Step (B): rewrite the second sum (`f(k/N)`) as a sum over
+  -- `Finset.univ.image ψ`.
+  have hB :
+      (∑ k : Fin n → Fin N, f (fun i => (k i : ℝ) / N))
+        = ∑ l ∈ (Finset.univ : Finset (Fin n → Fin N)).image ψ,
+            f (fun i => (((l i) : ℕ) : ℝ) / (N : ℝ)) := by
+    rw [Finset.sum_image (fun a _ b _ hab => hψ_inj hab)]
+    refine Finset.sum_congr rfl (fun k _ => ?_)
+    refine congrArg f (funext fun i => ?_)
+    show (k i : ℝ) / (N : ℝ) = (((ψ k i) : ℕ) : ℝ) / (N : ℝ)
+    simp [ψ, Fin.val_castSucc]
+  -- Step (C): split the universal sum on `Fin n → Fin (N+1)` two ways:
+  -- via the partition `image φ ⊔ (univ \ image φ)` and via
+  -- `image ψ ⊔ (univ \ image ψ)`. This gives `A − B = comp_B − comp_A`
+  -- where `comp_X := ∑ l ∈ univ \ X, g l`.
+  set A_im : Finset (Fin n → Fin (N + 1)) :=
+    (Finset.univ : Finset (Fin n → Fin N)).image φ with hA_im_def
+  set B_im : Finset (Fin n → Fin (N + 1)) :=
+    (Finset.univ : Finset (Fin n → Fin N)).image ψ with hB_im_def
+  set g : (Fin n → Fin (N + 1)) → ℝ :=
+    fun l => f (fun i => (((l i) : ℕ) : ℝ) / (N : ℝ)) with hg_def
+  have hA_compl :
+      (∑ l ∈ ((Finset.univ : Finset (Fin n → Fin (N + 1))) \ A_im), g l)
+        = (∑ l : Fin n → Fin (N + 1), g l) - (∑ l ∈ A_im, g l) := by
+    rw [Finset.sum_sdiff_eq_sub (Finset.subset_univ _)]
+  have hB_compl :
+      (∑ l ∈ ((Finset.univ : Finset (Fin n → Fin (N + 1))) \ B_im), g l)
+        = (∑ l : Fin n → Fin (N + 1), g l) - (∑ l ∈ B_im, g l) := by
+    rw [Finset.sum_sdiff_eq_sub (Finset.subset_univ _)]
+  -- Step (D): the residual `(univ \ B_im)` has cardinality `(N+1)^n − N^n`.
+  -- Each `g l ≤ M` by `h_le_M`, hence `∑ ≤ ((N+1)^n − N^n) · M`.
+  have hN_pow_le : N ^ n ≤ (N + 1) ^ n := Nat.pow_le_pow_left (Nat.le_succ _) n
+  have h_card_univ : (Finset.univ : Finset (Fin n → Fin (N + 1))).card = (N + 1) ^ n := by
+    rw [Finset.card_univ, Fintype.card_fun, Fintype.card_fin, Fintype.card_fin]
+  have h_card_B_im : B_im.card = N ^ n := by
+    rw [hB_im_def, Finset.card_image_of_injective _ hψ_inj,
+        Finset.card_univ, Fintype.card_fun, Fintype.card_fin, Fintype.card_fin]
+  have h_card_compl_B :
+      ((Finset.univ : Finset (Fin n → Fin (N + 1))) \ B_im).card
+        = (N + 1) ^ n - N ^ n := by
+    rw [Finset.card_sdiff_of_subset (Finset.subset_univ _), h_card_univ, h_card_B_im]
+  have h_compl_B_bound :
+      (∑ l ∈ ((Finset.univ : Finset (Fin n → Fin (N + 1))) \ B_im), g l)
+        ≤ ((N + 1 : ℝ) ^ n - (N : ℝ) ^ n) * M := by
+    have hbd : ∀ l ∈ ((Finset.univ : Finset (Fin n → Fin (N + 1))) \ B_im),
+        g l ≤ M := fun l _ => h_le_M l
+    calc (∑ l ∈ ((Finset.univ : Finset (Fin n → Fin (N + 1))) \ B_im), g l)
+        ≤ ((Finset.univ : Finset (Fin n → Fin (N + 1))) \ B_im).card • M :=
+            Finset.sum_le_card_nsmul _ _ M hbd
+      _ = ((N + 1) ^ n - N ^ n : ℕ) • M := by rw [h_card_compl_B]
+      _ = ((N + 1 : ℝ) ^ n - (N : ℝ) ^ n) * M := by
+            rw [nsmul_eq_mul, Nat.cast_sub hN_pow_le]
+            push_cast
+            ring
+  have h_compl_A_nonneg :
+      0 ≤ ∑ l ∈ ((Finset.univ : Finset (Fin n → Fin (N + 1))) \ A_im), g l :=
+    Finset.sum_nonneg (fun _ _ => hf₀ _)
+  -- Step (E): combine. The LHS of the goal equals `A − B`, which by
+  -- `hA_compl` and `hB_compl` rewrites to `(comp_B + ∑) − (comp_A + ∑)`
+  -- = `comp_B − comp_A ≤ comp_B ≤ ((N+1)^n − N^n) M`.
+  rw [hA, hB]
+  -- After rewriting we have `∑_{l ∈ A_im} g l - ∑_{l ∈ B_im} g l ≤ ...`.
+  -- From hA_compl: ∑ univ = comp_A + ∑ A_im.
+  -- From hB_compl: ∑ univ = comp_B + ∑ B_im.
+  -- Hence ∑ A_im - ∑ B_im = comp_B - comp_A.
+  linarith
 
 /-- For monotone `f` on `(Fin n → ℝ)`, the L¹ "gap" between
 `stepLower N f` and `stepUpper N f` on the half-open cube is at most

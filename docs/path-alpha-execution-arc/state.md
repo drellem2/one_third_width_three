@@ -468,6 +468,36 @@ ticket (a.e. convergence + DCT + master `continuous_fkg` / `continuous_ad`
 + full `integral_stepLower_eq_riemann` assembly + 1D Chebyshev
 hand-verification). ETA per mg-e622 §8.2: ~400–700 LoC, ~250–400k
 tokens; Session C consumes Session B's per-cell ingredients.
+**Last update.** mg-8561 (cat-mg-8561), 2026-05-09. **EX-6 Session
+D — `sum_step_diff_bound` cancellation lemma closed (sorry-free).**
+The "single fundamental remaining sorry" identified in mg-4adf
+(post-Session-C diagnosis) is now closed via the planned
+`Finset.sum_bij`-style reindexing along the two embeddings
+`Fin.succ : Fin N ↪ Fin (N+1)` (image: `∀ i, l_i ≥ 1`) and
+`Fin.castSucc : Fin N ↪ Fin (N+1)` (image: `∀ i, l_i < N`). The
+proof reindexes both Riemann sums into sums over the larger grid
+`Fin n → Fin (N+1)`, partitions `univ` two ways via the images,
+and shows the difference equals `(∑_{∃i, l_i = N} f(l/N)) −
+(∑_{∃i, l_i = 0} f(l/N))`. Non-negativity of `f` drops the second
+sum, and the residual `{l : ∃ i, l_i.val = N}` is bounded by
+`((N+1)^n − N^n) · M` via `Finset.sum_le_card_nsmul` + the
+pointwise bound `f(l/N) ≤ f(1,…,1) = M` (monotonicity of `f` and
+`l_i.val ≤ N` for `l : Fin (N+1)`). Cardinality computation uses
+`Finset.card_sdiff_of_subset` + `Finset.card_image_of_injective`
+(via `Fin.castSucc_injective`) + `Fintype.card_fun` +
+`Fintype.card_fin`. **No new mathlib gap; no new project
+axioms.** Build: `lake build` succeeds (2641 jobs total, 3
+remaining sorries — `tendsto_integral_stepLower`, `continuous_fkg`,
+`continuous_ad` — all dependent on `sum_step_diff_bound` and now
+mechanical assembly per mg-4adf diagnosis). Trust surface impact:
+none. Final length of `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`:
+~1150 lines (added ~100 lines for the lemma body). §3.4 updated
+(sub-α-C arc: **EX-6 Session D done; mechanical assembly — three
+dependent sorries — remains as Session E**). PM next step:
+dispatch **Session E** to close `tendsto_integral_stepLower` (DCT
+squeeze) + `continuous_fkg` + `continuous_ad` (each ~50–100 LoC,
+discrete-FKG-on-grid → divide → recognise as Riemann sums → take
+`N → ∞` via `Filter.Tendsto.mul`). Trip-wires: not fired.
 
 ---
 
