@@ -624,6 +624,38 @@ replacement is **active**, gated on Daniel's choice in the four-option
 PM action item (mg-7928 §3.1), with Option A (DH-1 + temp axiom)
 already executed as of this entry.
 
+### Separate verification (per Daniel directive 2026-05-08T16:11Z)
+
+Per Daniel reminder 2026-05-08T16:11Z extending
+`feedback_audit_bar_for_axioms` to a stronger separate-verification
+bar for this axiom (paraphrased: "*if this Stanley thing is a solid
+external result and we run some separate verification on it … then
+that might be a good call*"), mg-e22f executed three orthogonal
+sub-checks:
+
+| Sub-check | Verdict | Evidence |
+|-----------|---------|----------|
+| Cross-literature: ≥ 3 sources, ≥ 3 decades | **PASS** | 7 sources spanning 4 decades (1980s/1990s/2000s/2020s): Stanley 1981 (S1, primary); Daykin 1980 (S2, parallel 4FT framework); Stanley 1986 (S3, companion order-polytope volume formula); Brightwell 1999 (S4, applied black-box use); Brightwell–Tetali 2003 (S5, entropy/counting use); Chan–Pak 2024 survey arXiv:2311.02743 (S6, modern survey §9–§10); Chan–Pak 2024 arXiv:2110.10740 (S7, independent rederivation). |
+| Numerical sanity: 16 posets, 2 835 (I, J) pairs verified, 0 violations | **PASS** | `scripts/stanley_log_supermod_check.py` (mg-e22f); brute-force verification of `e(I) e(J) ≤ e(I ∪ J) e(I ∩ J)` on antichains (3, 4, 5), chains (3, 4), V/Λ on 3, N / Diamond / 2+2 / Y / Λ on 4, and width-3 layered + 5-vertex shapes. Out-of-tree (independent of Lean codebase). 1 651 / 2 835 pairs are tight (equality), consistent with the AF-extremal characterisation in Chan–Pak 2024 §10. |
+| Uncontested in literature | **PASS** | No erratum or counterexample-claiming paper exists. Active research direction is **equality-case characterisation** (Chan–Pak 2024 §10; arXiv:2305-class extremals paper; STOC 2024 AF-equality complexity paper) and rederivation in modern language (arXiv:2110.10740) — both of which strongly affirm the underlying inequality. |
+
+**Trip-wires not fired** (per mg-e22f §5): no numerical violation
+(would have triggered URGENT mail to Daniel + revert of mg-d0fc +
+halt of sub-α-C); no thin literature coverage (would have triggered
+reduced-confidence framing).
+
+**Verification deliverable.**
+`docs/path-alpha-execution-arc/stanley-log-supermod-verification.md`
+(mg-e22f, this commit) — full §1 statement recap, §2 cross-literature
+detail, §3 numerical sanity, §4 verdict, §5 references.
+
+**Verdict.** **GREEN.** `stanley_log_supermod` (mg-d0fc) is a solid
+external result, independently verified along three orthogonal axes
+(literature cross-coverage, numerical brute-force, uncontested
+status). Trust-surface-safe for downstream sub-α-C consumption.
+PM responsibility per Daniel reminder 2026-05-08T16:11Z; verified
+via mg-e22f.
+
 ### Corollary `μ(I) := e(I) · e(α \ I)` log-supermod (deferred)
 
 Stanley 1981 also yields the corollary that

@@ -74,6 +74,25 @@ verdict is now GREEN. Path A's only material RED risk is EX-6
 fallback for fixed-`α` applications. PM next step: file EX-3
 scoping ticket; surface DH-4 to Daniel as heightened leverage
 point alongside DH-1.
+**Last update.** mg-e22f (cat-mg-e22f), 2026-05-09. **Stanley
+log-supermod independent verification GREEN.** §1.15 NEW for the
+trust-surface separate-verification deliverable
+(`docs/path-alpha-execution-arc/stanley-log-supermod-verification.md`):
+three sub-checks per Daniel directive 2026-05-08T16:11Z all pass
+(cross-literature: 7 sources / 4 decades; numerical sanity: 16
+posets / 2 835 pairs / 0 violations; uncontested in literature).
+§3.5 (DH-1) updated to note the temp axiom is now externally
+verified, but DH-1 mathlib upstream PR remains the highest-leverage
+shortening for the sub-α-C arc trust surface. `lean/AXIOMS.md`
+`stanley_log_supermod` entry extended with a "Separate verification"
+subsection (third axiom; first two unchanged). No Lean source
+changes beyond the AXIOMS.md write-up. Trust surface unchanged
+(headline still two named axioms + `native_decide` quintet; sub-α-C
+arc still adds `stanley_log_supermod` as third axiom). Trip-wires
+not fired (no numerical violation, no literature thinness). PM next
+step: surface verification GREEN to Daniel in evening digest;
+proceed with EX-4 dispatch (Stanley vertex theorem) per mg-8c66
+hand-off.
 **Last update.** mg-8c66 (cat-mg-8c66), 2026-05-08. **EX-3
 executed: `OrderPolytope α` landed.** §1.13 NEW for the EX-3
 deliverable (`lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`):
@@ -349,6 +368,87 @@ PM next step: file EX-4 scoping ticket (Stanley vertex theorem).
   EX-4 scoping ticket (Stanley vertex theorem
   `vertices(O(α)) = {1_I : I ∈ J(α)}`).
 
+### §1.15 Stanley log-supermod independent verification — GREEN (mg-e22f)
+
+* **Source.** mg-e22f (this update);
+  `docs/path-alpha-execution-arc/stanley-log-supermod-verification.md`
+  (deliverable doc, ~470 lines latex);
+  `scripts/stanley_log_supermod_check.py` (numerical verifier);
+  `lean/AXIOMS.md` (third entry, "Separate verification" subsection
+  added).
+
+* **Trigger.** Daniel directive 2026-05-08T16:11Z (paraphrased):
+
+  > *"I am very cautious about allowing axioms BUT if this Stanley
+  > thing is a solid external result and we run some separate
+  > verification on it and it saves 5k lines of lean, then that
+  > might be a good call. It's your responsibility."*
+
+  Stronger separate-verification bar than `feedback_audit_bar_for_axioms`:
+  conditional acceptance contingent on PM running an independent
+  trust-surface check. PM filed mg-e22f to discharge that
+  responsibility.
+
+* **Three sub-checks** (all PASS):
+
+  1. **Cross-literature: ≥ 3 sources, ≥ 3 decades.** **PASS.**
+     Seven sources cataloged spanning four decades:
+     - 1980s: Stanley 1981 (primary, JCTA 31:56–65); Daykin 1980
+       (Stud. Appl. Math 63:263–270, 4FT framework); Stanley 1986
+       (Discrete Comput. Geom. 1:9–23, order-polytope volume
+       formula).
+     - 1990s: Brightwell 1999 (Discrete Math 201:25–52, applied
+       use in 1/3–2/3 conjecture context).
+     - 2000s: Brightwell–Tetali 2003 (Order 20:333–345, entropy
+       bounds on boolean lattice).
+     - 2020s: Chan–Pak 2024 survey (arXiv:2311.02743, EMS Surveys
+       Math. Sci.); Chan–Pak 2024 rederivation (arXiv:2110.10740,
+       J. Assoc. Math. Res. 2(1):53–153).
+
+  2. **Numerical sanity check.** **PASS.** Brute-force verification
+     on 16 finite posets (`|α| ∈ {3, 4, 5}`) covering antichains,
+     chains, V/Λ on 3, N/Diamond/2+2/Y/Λ on 4, width-3 layered
+     structures, and 5-vertex shapes. **2 835 (I, J) pairs**
+     checked, **0 violations**, 1 651 tight (equality) pairs (the
+     latter consistent with Chan–Pak 2024 §10 equality-case
+     characterisation). Out-of-tree (Python script independent of
+     Lean codebase).
+
+  3. **Uncontested in literature.** **PASS.** No erratum or
+     counterexample-claiming paper exists. Active research
+     direction is **equality-case characterisation** (S6 §10; the
+     2023 ScienceDirect "extremals of Stanley's inequalities"
+     paper; the 2024 STOC paper on AF-equality complexity in PH),
+     which strongly affirms the underlying inequality. The
+     Chan-Pak 2024 rederivation in modern language (S7) is itself
+     an independent re-confirmation 43 years post-Stanley 1981.
+
+* **AXIOMS.md update.** Third axiom entry
+  (`OneThird.LinearExt.stanley_log_supermod`) extended with a new
+  "Separate verification (per Daniel directive 2026-05-08T16:11Z)"
+  subsection containing the 3-row sub-check verdict table, links to
+  the deliverable doc and numerical script, and the GREEN verdict.
+  No changes to the audit-bar 4-condition table (External /
+  Difficult / Labeled / Low-risk all unchanged).
+
+* **Trust surface impact.** None. The verification deliverable is
+  documentation + a numerical script; no Lean source changes
+  beyond the AXIOMS.md write-up. The third project axiom remains
+  on the sub-α-C arc trust surface, now with an additional
+  separate-verification subsection backing the `External` and
+  `Low-risk` conditions. The `width3_one_third_two_thirds`
+  headline trust surface is unchanged.
+
+* **Trip-wires not fired.** Per ticket §5: no numerical violation
+  (would have triggered URGENT mail to Daniel + revert mg-d0fc +
+  halt sub-α-C); no thin literature coverage (would have
+  triggered reduced-confidence framing). No token blow-up
+  (well under the 250k cap; mostly latex + Python scripting).
+
+* **Verdict.** **GREEN** per ticket §6. PM next step: surface
+  verification GREEN to Daniel in evening digest and continue with
+  EX-4 dispatch (Stanley vertex theorem) per mg-8c66 hand-off.
+
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
 * **Source.** mg-d0fc (this update);
@@ -610,6 +710,19 @@ PM next step: file EX-4 scoping ticket (Stanley vertex theorem).
   PR collapses ~3000–5000 LoC of project work to ~50 LoC consumer.
   Polecat mg-7928 recommends Option A (DH-1 + temporary project
   axiom for `stanley_log_supermod`); see §3.4.
+  **Post-mg-e22f update (2026-05-09).** The temp axiom is now
+  externally **independently verified** along three orthogonal axes
+  (cross-literature 7 sources / 4 decades; numerical sanity 16
+  posets / 2 835 pairs / 0 violations; uncontested-in-literature)
+  per Daniel's stronger separate-verification bar (directive
+  2026-05-08T16:11Z); see §1.15 + AXIOMS.md `stanley_log_supermod`
+  "Separate verification" subsection. This **does not** change DH-1's
+  leverage assessment — the verification supports the temp axiom on
+  the trust surface but does not eliminate the LoC saving from a
+  successful mathlib upstream PR. **DH-1 remains the highest-leverage
+  shortening for the sub-α-C arc trust surface** (collapses the third
+  named axiom to a mathlib citation; surfaced to Daniel as such in
+  the next evening digest).
 
 ### §3.6 DH-2 — thin-slice for case3 application only
 
@@ -871,11 +984,20 @@ sub-α-C in flight.)
   AMBER-leaning-RED at level-`k` localisation step (four sub-
   formulations all RED). EX-3 spec drafted.
   `docs/path-alpha-execution-arc/path-A-vs-path-B-fork-resolution.md`.
-* mg-8c66 (this commit) — EX-3 executed: `OrderPolytope α`
+* mg-8c66 (`ed9f6e6`) — EX-3 executed: `OrderPolytope α`
   defined with basic structural properties (convex, closed,
   bounded, compact, measurable) and discrete-3-antichain
   hand-verification. Build green; no new axioms.
   `lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`.
+* mg-e22f (this commit) — Stanley log-supermod independent
+  verification: GREEN per Daniel directive 2026-05-08T16:11Z.
+  Three sub-checks pass (cross-literature 7 sources / 4 decades;
+  numerical sanity 16 posets / 2 835 pairs / 0 violations;
+  uncontested in literature). No Lean source changes beyond
+  AXIOMS.md write-up. Trip-wires not fired.
+  `docs/path-alpha-execution-arc/stanley-log-supermod-verification.md`,
+  `scripts/stanley_log_supermod_check.py`,
+  `lean/AXIOMS.md` (third entry, "Separate verification" subsection).
 
 ---
 
