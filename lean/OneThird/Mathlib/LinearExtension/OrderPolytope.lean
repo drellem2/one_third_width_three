@@ -3,10 +3,16 @@ Copyright (c) 2026 The OneThird Authors. All rights reserved.
 Released under the MIT License.
 -/
 import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+import Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar
+import Mathlib.MeasureTheory.Constructions.Pi
+import Mathlib.MeasureTheory.MeasurableSpace.Embedding
 import Mathlib.Analysis.Convex.Basic
 import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Order.UpperLower.Basic
 import Mathlib.Algebra.Order.Group.Indicator
+import Mathlib.Data.Fin.Tuple.Sort
+import Mathlib.Data.Fintype.Perm
+import OneThird.Mathlib.LinearExtension.Fintype
 
 /-!
 # Order polytope `O(α)`
@@ -584,6 +590,420 @@ theorem extremePoints_eq [Fintype α] :
   rintro ⟨I, rfl⟩
   exact indicator_upperSet_isExtreme I
 
+/-! ### §8 — Chamber simplex `σ_L` (Stanley 1986 Theorem 1.4)
+
+For `L : LinearExt α`, the **chamber simplex** indexed by `L` is
+the position-monotone subset of the unit cube:
+
+```
+  σ_L := { f : α → ℝ | (∀ x, 0 ≤ f x ≤ 1) ∧ (∀ x y, L.pos x ≤ L.pos y → f x ≤ f y) }.
+```
+
+The chamber lies inside the order polytope (every `L`-respecting `f` is
+α-monotone, since `L` is a linear extension), and Stanley 1986 (1.5)
+asserts `Vol(σ_L) = 1/n!` for every `L : LinearExt α`. The proof here
+follows the latex strategy of `docs/path-alpha-execution-arc/ex5-chamber-decomp-scoping.md`
+(mg-79a9): push σ_L forward to the standard ordered cube `Δ_n ⊆ Fin n → ℝ`
+via the measure-preserving relabel `MeasurableEquiv.piCongrLeft`, then
+prove `Vol(Δ_n) = 1/n!` by S_n-tiling. -/
+
+/-! #### §8.1 — Chamber definition and basic properties. -/
+
+/-- The **chamber simplex** indexed by a linear extension `L : LinearExt α`:
+the set of `α → ℝ` functions with values in `[0, 1]` that are non-decreasing
+along `L`'s linear order. -/
+def chamber [Fintype α] [DecidableEq α] (L : OneThird.LinearExt α) : Set (α → ℝ) :=
+  { f : α → ℝ |
+      (∀ x : α, f x ∈ Set.Icc (0 : ℝ) 1) ∧
+      (∀ x y : α, L.pos x ≤ L.pos y → f x ≤ f y) }
+
+lemma mem_chamber [Fintype α] [DecidableEq α] {L : OneThird.LinearExt α} {f : α → ℝ} :
+    f ∈ chamber L ↔
+      (∀ x : α, f x ∈ Set.Icc (0 : ℝ) 1) ∧
+      (∀ x y : α, L.pos x ≤ L.pos y → f x ≤ f y) := Iff.rfl
+
+/-- Every chamber lies inside the order polytope: a function
+non-decreasing along `L`'s linear order is automatically α-monotone,
+because `L` is a linear extension of α. -/
+theorem chamber_subset_orderPolytope [Fintype α] [DecidableEq α]
+    (L : OneThird.LinearExt α) : chamber L ⊆ OrderPolytope α := by
+  intro f hf
+  refine ⟨hf.1, fun x y hxy => ?_⟩
+  exact hf.2 x y (L.monotone hxy)
+
+end OrderPolytope
+
+/-! ### §9 — The standard ordered cube `Δ_n ⊆ Fin n → ℝ`
+
+The **standard ordered cube** is the simplex of monotone functions
+`y : Fin n → ℝ` with values in `[0, 1]`:
+
+```
+  Δ_n := { y : Fin n → ℝ | (∀ i, 0 ≤ y i ≤ 1) ∧ (∀ i j, i ≤ j → y i ≤ y j) }.
+```
+
+This file proves `Vol(Δ_n) = 1/n!` (Stanley 1986 (1.5), specialised to
+`α = Fin n` with the natural order). The proof uses the symmetric
+`S_n`-tiling of the cube `[0,1]^n`: each `y ∈ [0,1]^n` is mapped into the
+chamber `Δ_n^σ` by the unique sorting permutation `σ = Tuple.sort y`,
+and the chambers `Δ_n^σ` for `σ : Equiv.Perm (Fin n)` cover `[0,1]^n`
+with pairwise null overlaps (each contained in a `{y k = y k'}` hyperplane).
+
+This lemma is the **DH-5 mathlib upstream candidate** identified in
+`docs/path-alpha-execution-arc/ex5-chamber-decomp-scoping.md` §6.3.
+-/
+
+namespace OrderedCube
+
+open MeasureTheory
+open scoped Function ENNReal
+
+variable {n : ℕ}
+
+/-- The **standard ordered cube** `Δ_n ⊆ Fin n → ℝ`: monotone functions
+with values in `[0, 1]`. -/
+def orderedCube (n : ℕ) : Set (Fin n → ℝ) :=
+  { y : Fin n → ℝ |
+      (∀ i, y i ∈ Set.Icc (0 : ℝ) 1) ∧
+      (∀ i j : Fin n, i ≤ j → y i ≤ y j) }
+
+/-- The σ-permuted ordered cube `Δ_n^σ`: those `y` for which `y ∘ σ`
+sits in the standard ordered cube. -/
+def orderedCubePerm (n : ℕ) (σ : Equiv.Perm (Fin n)) : Set (Fin n → ℝ) :=
+  { y : Fin n → ℝ |
+      (∀ i, y (σ i) ∈ Set.Icc (0 : ℝ) 1) ∧
+      (∀ i j : Fin n, i ≤ j → y (σ i) ≤ y (σ j)) }
+
+lemma orderedCubePerm_refl : orderedCubePerm n (Equiv.refl _) = orderedCube n := rfl
+
+/-- `orderedCubePerm n σ` is the preimage of `orderedCube n` under
+post-composition with `σ`. -/
+lemma orderedCubePerm_eq_preimage (σ : Equiv.Perm (Fin n)) :
+    orderedCubePerm n σ = (fun y : Fin n → ℝ => y ∘ σ) ⁻¹' orderedCube n := by
+  ext y
+  rfl
+
+lemma orderedCubePerm_subset_cube (σ : Equiv.Perm (Fin n)) :
+    orderedCubePerm n σ ⊆ Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1) := by
+  intro y hy i _
+  -- y i ∈ Icc 0 1: use that σ is a bijection.
+  have : σ (σ.symm i) = i := σ.apply_symm_apply i
+  exact this ▸ hy.1 (σ.symm i)
+
+lemma orderedCube_subset_cube :
+    orderedCube n ⊆ Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1) := by
+  simpa using orderedCubePerm_subset_cube (Equiv.refl _)
+
+/-! #### §9.1 — Measurability of `orderedCube` and `orderedCubePerm`. -/
+
+lemma measurableSet_orderedCubePerm (σ : Equiv.Perm (Fin n)) :
+    MeasurableSet (orderedCubePerm n σ) := by
+  have hA : MeasurableSet { y : Fin n → ℝ | ∀ i, y (σ i) ∈ Set.Icc (0 : ℝ) 1 } := by
+    have heq :
+        { y : Fin n → ℝ | ∀ i, y (σ i) ∈ Set.Icc (0 : ℝ) 1 } =
+          ⋂ i, (fun y : Fin n → ℝ => y (σ i)) ⁻¹' Set.Icc (0 : ℝ) 1 := by
+      ext y; simp [Set.mem_iInter]
+    rw [heq]
+    exact MeasurableSet.iInter
+      fun i => measurableSet_Icc.preimage (measurable_pi_apply (σ i))
+  have hB : MeasurableSet
+      { y : Fin n → ℝ | ∀ i j : Fin n, i ≤ j → y (σ i) ≤ y (σ j) } := by
+    have heq :
+        { y : Fin n → ℝ | ∀ i j : Fin n, i ≤ j → y (σ i) ≤ y (σ j) } =
+          ⋂ i, ⋂ j, ⋂ _ : i ≤ j, { y : Fin n → ℝ | y (σ i) ≤ y (σ j) } := by
+      ext y; simp [Set.mem_iInter]
+    rw [heq]
+    refine MeasurableSet.iInter fun i => MeasurableSet.iInter fun j =>
+      MeasurableSet.iInter fun _ => ?_
+    exact measurableSet_le (measurable_pi_apply (σ i)) (measurable_pi_apply (σ j))
+  have heq :
+      orderedCubePerm n σ =
+        { y : Fin n → ℝ | ∀ i, y (σ i) ∈ Set.Icc (0 : ℝ) 1 } ∩
+          { y : Fin n → ℝ | ∀ i j : Fin n, i ≤ j → y (σ i) ≤ y (σ j) } := by
+    ext y; rfl
+  rw [heq]
+  exact hA.inter hB
+
+lemma measurableSet_orderedCube : MeasurableSet (orderedCube n) := by
+  simpa using measurableSet_orderedCubePerm (Equiv.refl (Fin n))
+
+/-! #### §9.2 — The σ-action on `Fin n → ℝ` is measure-preserving.
+
+For each `σ : Equiv.Perm (Fin n)`, the relabelling `y ↦ y ∘ σ` is the
+measurable equivalence `MeasurableEquiv.piCongrLeft (fun _ => ℝ) σ.symm`,
+which is measure-preserving by `volume_measurePreserving_piCongrLeft`. -/
+
+/-- The relabelling `y ↦ y ∘ σ : (Fin n → ℝ) ≃ᵐ (Fin n → ℝ)`, realised as
+`(MeasurableEquiv.piCongrLeft (fun _ => ℝ) σ).symm` so that the apply-form
+`relabelEquiv σ y j = y (σ j)` follows from the `@[simp]` lemma
+`Equiv.piCongrLeft_symm_apply`. -/
+def relabelEquiv (σ : Equiv.Perm (Fin n)) :
+    (Fin n → ℝ) ≃ᵐ (Fin n → ℝ) :=
+  (MeasurableEquiv.piCongrLeft (fun _ : Fin n => ℝ) σ).symm
+
+@[simp] lemma relabelEquiv_apply (σ : Equiv.Perm (Fin n)) (y : Fin n → ℝ) (j : Fin n) :
+    relabelEquiv σ y j = y (σ j) := by
+  -- Via `MeasurableEquiv.coe_piCongrLeft` the coercion of `M.piCongrLeft P σ` is
+  -- `Equiv.piCongrLeft P σ`; its `.symm` evaluated by `Equiv.piCongrLeft_symm_apply`.
+  change ((MeasurableEquiv.piCongrLeft (fun _ : Fin n => ℝ) σ).symm : (Fin n → ℝ) → _) y j
+    = y (σ j)
+  rfl
+
+lemma volume_measurePreserving_relabelEquiv (σ : Equiv.Perm (Fin n)) :
+    MeasurePreserving (relabelEquiv σ)
+      (volume : Measure (Fin n → ℝ)) (volume : Measure (Fin n → ℝ)) :=
+  (volume_measurePreserving_piCongrLeft (fun _ : Fin n => ℝ) σ).symm
+
+lemma volume_orderedCubePerm (σ : Equiv.Perm (Fin n)) :
+    volume (orderedCubePerm n σ) = volume (orderedCube n) := by
+  rw [orderedCubePerm_eq_preimage]
+  -- Show `(· ∘ σ) ⁻¹' orderedCube n = relabelEquiv σ ⁻¹' orderedCube n`.
+  have hpre : (fun y : Fin n → ℝ => y ∘ σ) ⁻¹' orderedCube n
+      = relabelEquiv σ ⁻¹' orderedCube n := by
+    ext y
+    refine Iff.rfl.trans ?_
+    constructor <;> intro hy
+    · refine ⟨fun i => ?_, fun i j hij => ?_⟩
+      · simpa [relabelEquiv_apply] using hy.1 i
+      · simpa [relabelEquiv_apply] using hy.2 i j hij
+    · refine ⟨fun i => ?_, fun i j hij => ?_⟩
+      · simpa [relabelEquiv_apply] using hy.1 i
+      · simpa [relabelEquiv_apply] using hy.2 i j hij
+  rw [hpre]
+  exact (volume_measurePreserving_relabelEquiv σ).measure_preimage_equiv (orderedCube n)
+
+/-! #### §9.3 — The chambers cover the cube.
+
+For each `y ∈ [0,1]^n`, the sorting permutation `σ := Tuple.sort y`
+satisfies `y ∈ orderedCubePerm n σ`. -/
+
+lemma cube_subset_iUnion_orderedCubePerm :
+    Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1) ⊆
+      ⋃ σ : Equiv.Perm (Fin n), orderedCubePerm n σ := by
+  intro y hy
+  refine Set.mem_iUnion.mpr ⟨Tuple.sort y, ?_, ?_⟩
+  · intro i
+    -- Tuple.sort is a permutation, so `(Tuple.sort y) i` ranges over Fin n,
+    -- and `y ∈ univ.pi (Icc 0 1)` means `y k ∈ Icc 0 1` for all k.
+    exact hy ((Tuple.sort y) i) (Set.mem_univ _)
+  · intro i j hij
+    -- `Tuple.monotone_sort` says `y ∘ Tuple.sort y` is monotone.
+    exact Tuple.monotone_sort y hij
+
+lemma iUnion_orderedCubePerm_subset_cube :
+    (⋃ σ : Equiv.Perm (Fin n), orderedCubePerm n σ) ⊆
+      Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1) := by
+  rw [Set.iUnion_subset_iff]
+  intro σ
+  exact orderedCubePerm_subset_cube σ
+
+lemma cube_eq_iUnion_orderedCubePerm :
+    Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1) =
+      ⋃ σ : Equiv.Perm (Fin n), orderedCubePerm n σ := by
+  apply Set.Subset.antisymm
+  · exact cube_subset_iUnion_orderedCubePerm
+  · exact iUnion_orderedCubePerm_subset_cube
+
+/-! #### §9.4 — Pairwise overlaps lie in a hyperplane and have measure zero. -/
+
+/-- The hyperplane `{y | y k = y k'}`, realised as a `Submodule ℝ (Fin n → ℝ)`. -/
+def equalCoordSubmodule (k k' : Fin n) : Submodule ℝ (Fin n → ℝ) where
+  carrier := { y : Fin n → ℝ | y k = y k' }
+  zero_mem' := by change (0 : Fin n → ℝ) k = (0 : Fin n → ℝ) k'; simp
+  add_mem' {a b} ha hb := by
+    change (a + b) k = (a + b) k'
+    simp only [Pi.add_apply]
+    rw [show a k = a k' from ha, show b k = b k' from hb]
+  smul_mem' c a ha := by
+    change (c • a) k = (c • a) k'
+    simp only [Pi.smul_apply]
+    rw [show a k = a k' from ha]
+
+lemma mem_equalCoordSubmodule {k k' : Fin n} {y : Fin n → ℝ} :
+    y ∈ equalCoordSubmodule k k' ↔ y k = y k' := Iff.rfl
+
+lemma equalCoordSubmodule_ne_top {k k' : Fin n} (h : k ≠ k') :
+    equalCoordSubmodule k k' ≠ ⊤ := by
+  intro hEq
+  -- The function `f i := if i = k then 1 else 0` has `f k = 1`, `f k' = 0`,
+  -- so `f k ≠ f k'` and `f` cannot lie in `equalCoordSubmodule k k'`.
+  let f : Fin n → ℝ := fun i => if i = k then 1 else 0
+  have hf_in : f ∈ equalCoordSubmodule k k' := by
+    rw [hEq]; trivial
+  rw [mem_equalCoordSubmodule] at hf_in
+  have hk : f k = 1 := if_pos rfl
+  have hk' : f k' = 0 := if_neg h.symm
+  rw [hk, hk'] at hf_in
+  exact one_ne_zero hf_in
+
+lemma volume_equalCoordSubmodule {k k' : Fin n} (h : k ≠ k') :
+    volume (equalCoordSubmodule k k' : Set (Fin n → ℝ)) = 0 :=
+  Measure.addHaar_submodule volume _ (equalCoordSubmodule_ne_top h)
+
+/-- For `σ ≠ τ`, the two chambers' intersection lies in a hyperplane,
+hence has Lebesgue measure zero. -/
+lemma volume_inter_orderedCubePerm_of_ne {σ τ : Equiv.Perm (Fin n)} (h : σ ≠ τ) :
+    volume (orderedCubePerm n σ ∩ orderedCubePerm n τ) = 0 := by
+  -- σ ≠ τ as Equiv.Perm, so ∃ i₀, σ i₀ ≠ τ i₀.
+  obtain ⟨i₀, hi₀⟩ : ∃ i₀ : Fin n, σ i₀ ≠ τ i₀ := by
+    by_contra hAll
+    push_neg at hAll
+    exact h (Equiv.ext hAll)
+  set k := σ i₀ with hk_def
+  set k' := τ i₀ with hk'_def
+  have hkne : k ≠ k' := hi₀
+  -- Show `orderedCubePerm n σ ∩ orderedCubePerm n τ ⊆ equalCoordSubmodule k k'`.
+  have hsub : orderedCubePerm n σ ∩ orderedCubePerm n τ ⊆
+      (equalCoordSubmodule k k' : Set (Fin n → ℝ)) := by
+    intro y hy
+    obtain ⟨hyσ, hyτ⟩ := hy
+    -- both `y ∘ σ` and `y ∘ τ` are monotone.
+    have hmσ : Monotone (fun i => y (σ i)) := fun i j hij => hyσ.2 i j hij
+    have hmτ : Monotone (fun i => y (τ i)) := fun i j hij => hyτ.2 i j hij
+    have heq : (fun i => y (σ i)) = (fun i => y (τ i)) :=
+      Tuple.unique_monotone hmσ hmτ
+    have happ : y (σ i₀) = y (τ i₀) := congrFun heq i₀
+    -- Goal: y ∈ ↑(equalCoordSubmodule k k') = {y | y k = y k'}.
+    -- By `set`, `k = σ i₀` and `k' = τ i₀` definitionally.
+    show y k = y k'
+    exact happ
+  -- Apply addHaar_submodule via measure monotonicity.
+  refine measure_mono_null hsub ?_
+  exact volume_equalCoordSubmodule hkne
+
+/-! #### §9.5 — Volume of the ordered cube. -/
+
+/-- **DH-5 candidate** (Stanley 1986 (1.5)). The standard ordered cube
+`Δ_n ⊆ Fin n → ℝ` has Lebesgue volume `1 / n!`.
+
+Proof: use the symmetric `S_n`-tiling
+`[0,1]^n = ⋃_{σ ∈ S_n} Δ_n^σ` (each `y` lands in the chamber indexed by
+its sorting permutation `Tuple.sort y`); each `Δ_n^σ` has the same
+volume as `Δ_n` (by the measure-preserving relabel
+`MeasurableEquiv.piCongrLeft`); pairwise overlaps `Δ_n^σ ∩ Δ_n^τ` for
+`σ ≠ τ` lie in a hyperplane `{y k = y k'}` and have measure zero
+(`Measure.addHaar_submodule`). Combining, `n! · Vol(Δ_n) = Vol([0,1]^n) = 1`. -/
+theorem volume_orderedCube (n : ℕ) :
+    volume (orderedCube n) = ENNReal.ofReal (1 / (Nat.factorial n : ℝ)) := by
+  -- Step 1: volume of `[0,1]^n` is 1.
+  have hCube : volume (Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1))
+      = 1 := by
+    rw [volume_pi_pi]; simp
+  -- Step 2: AE-disjoint family of chambers via `measure_biUnion_finset₀`.
+  have hMble : ∀ σ ∈ (Finset.univ : Finset (Equiv.Perm (Fin n))),
+      NullMeasurableSet (orderedCubePerm n σ) volume :=
+    fun σ _ => (measurableSet_orderedCubePerm σ).nullMeasurableSet
+  have hAE : Set.Pairwise ((Finset.univ : Finset (Equiv.Perm (Fin n))) : Set _)
+      (AEDisjoint volume on orderedCubePerm n) := by
+    intro σ _ τ _ h
+    -- `AEDisjoint μ s t` unfolds to `μ (s ∩ t) = 0` by definition.
+    exact volume_inter_orderedCubePerm_of_ne h
+  have hUnion :
+      volume (⋃ σ ∈ (Finset.univ : Finset (Equiv.Perm (Fin n))), orderedCubePerm n σ) =
+        ∑ σ ∈ (Finset.univ : Finset (Equiv.Perm (Fin n))), volume (orderedCubePerm n σ) :=
+    measure_biUnion_finset₀ hAE hMble
+  -- Step 3: convert the bi-union to an i-union and substitute via the cover.
+  have hUnionEq :
+      (⋃ σ ∈ (Finset.univ : Finset (Equiv.Perm (Fin n))), orderedCubePerm n σ) =
+        Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1) := by
+    rw [show (⋃ σ ∈ (Finset.univ : Finset (Equiv.Perm (Fin n))), orderedCubePerm n σ)
+          = ⋃ σ : Equiv.Perm (Fin n), orderedCubePerm n σ by
+          ext y; simp]
+    exact (cube_eq_iUnion_orderedCubePerm).symm
+  rw [hUnionEq, hCube] at hUnion
+  -- hUnion : 1 = ∑ σ ∈ univ, volume (orderedCubePerm n σ).
+  -- Step 4: rewrite each summand using `volume_orderedCubePerm`.
+  have hSum :
+      (∑ σ ∈ (Finset.univ : Finset (Equiv.Perm (Fin n))), volume (orderedCubePerm n σ)) =
+        (Nat.factorial n : ℝ≥0∞) * volume (orderedCube n) := by
+    simp only [volume_orderedCubePerm, Finset.sum_const, Finset.card_univ,
+               Fintype.card_perm, Fintype.card_fin, nsmul_eq_mul]
+  rw [hSum] at hUnion
+  -- hUnion : 1 = (n! : ℝ≥0∞) * volume (orderedCube n).
+  -- Step 5: solve for volume (orderedCube n) and convert to ENNReal.ofReal form.
+  have hfact_pos : 0 < (Nat.factorial n : ℝ) := by exact_mod_cast Nat.factorial_pos n
+  have hfact_ne : (Nat.factorial n : ℝ≥0∞) ≠ 0 := by
+    exact_mod_cast (Nat.factorial_pos n).ne'
+  have hfact_ne_top : (Nat.factorial n : ℝ≥0∞) ≠ ∞ := ENNReal.natCast_ne_top _
+  -- From `1 = (n! : ℝ≥0∞) * v`, deduce `v = 1 / n!` via `eq_div_iff`.
+  -- ENNReal.eq_div_iff: `b = c / a ↔ a * b = c` (when a ≠ 0, a ≠ ∞).
+  have hsolve : volume (orderedCube n) = (1 : ℝ≥0∞) / (Nat.factorial n : ℝ≥0∞) := by
+    rw [ENNReal.eq_div_iff hfact_ne hfact_ne_top]
+    exact hUnion.symm
+  rw [hsolve, ENNReal.ofReal_div_of_pos hfact_pos, ENNReal.ofReal_one,
+      ENNReal.ofReal_natCast]
+
+end OrderedCube
+
+/-! ### §10 — Chamber volume `Vol(σ_L) = 1/n!`
+
+For any linear extension `L : LinearExt α`, the chamber `σ_L` has the
+same Lebesgue volume as the standard ordered cube `Δ_n`, namely `1/n!`.
+The proof: push `σ_L` forward to `Δ_n` via the measure-preserving
+relabelling `Φ_L : (α → ℝ) ≃ᵐ (Fin n → ℝ)` defined by composition
+with `L.toFun.symm`. -/
+
+namespace OrderPolytope
+
+open MeasureTheory OrderedCube
+
+variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
+
+/-- The relabelling `Φ_L : (α → ℝ) ≃ᵐ (Fin n → ℝ)` defined by post-composing
+with `L.toFun.symm`. Measure-preserving by `volume_measurePreserving_piCongrLeft`. -/
+def chamberRelabel (L : OneThird.LinearExt α) :
+    (α → ℝ) ≃ᵐ (Fin (Fintype.card α) → ℝ) :=
+  MeasurableEquiv.piCongrLeft (fun _ : Fin (Fintype.card α) => ℝ) L.toFun
+
+@[simp] lemma chamberRelabel_apply (L : OneThird.LinearExt α) (f : α → ℝ)
+    (i : Fin (Fintype.card α)) : chamberRelabel L f i = f (L.toFun.symm i) := by
+  have h := Equiv.piCongrLeft_apply_apply (P := fun _ : Fin (Fintype.card α) => ℝ)
+    (e := L.toFun) (f := fun a : α => f a) (a := L.toFun.symm i)
+  simp only [Equiv.apply_symm_apply] at h
+  exact h
+
+lemma volume_measurePreserving_chamberRelabel (L : OneThird.LinearExt α) :
+    MeasurePreserving (chamberRelabel L)
+      (volume : Measure (α → ℝ)) (volume : Measure (Fin (Fintype.card α) → ℝ)) :=
+  volume_measurePreserving_piCongrLeft (fun _ : Fin (Fintype.card α) => ℝ) L.toFun
+
+/-- The chamber `σ_L` is the preimage of the standard ordered cube under
+the relabelling `Φ_L`. -/
+lemma chamber_eq_preimage_orderedCube (L : OneThird.LinearExt α) :
+    chamber L = chamberRelabel L ⁻¹' orderedCube (Fintype.card α) := by
+  ext f
+  constructor
+  · intro hf
+    refine ⟨fun i => ?_, fun i j hij => ?_⟩
+    · -- chamberRelabel L f i = f (L.toFun.symm i) ∈ Icc 0 1
+      simpa [chamberRelabel_apply] using hf.1 (L.toFun.symm i)
+    · -- chamberRelabel L f i ≤ chamberRelabel L f j when i ≤ j
+      simp only [chamberRelabel_apply]
+      apply hf.2
+      -- L.pos (L.toFun.symm i) ≤ L.pos (L.toFun.symm j)
+      -- L.pos x = L.toFun x; L.toFun (L.toFun.symm i) = i.
+      change L.toFun (L.toFun.symm i) ≤ L.toFun (L.toFun.symm j)
+      rw [L.toFun.apply_symm_apply, L.toFun.apply_symm_apply]
+      exact hij
+  · intro hf
+    refine ⟨fun x => ?_, fun x y hxy => ?_⟩
+    · -- f x ∈ Icc 0 1: use hf.1 with i = L.pos x
+      have h := hf.1 (L.toFun x)
+      simp only [chamberRelabel_apply, L.toFun.symm_apply_apply] at h
+      exact h
+    · -- f x ≤ f y given L.pos x ≤ L.pos y
+      have h := hf.2 (L.toFun x) (L.toFun y) hxy
+      simp only [chamberRelabel_apply, L.toFun.symm_apply_apply] at h
+      exact h
+
+/-- **Stanley 1986 Theorem 1.4 (volume part).** Each chamber `σ_L` has
+Lebesgue volume `1/n!` where `n = |α|`. -/
+theorem chamber_volume (L : OneThird.LinearExt α) :
+    volume (chamber L) = ENNReal.ofReal (1 / (Nat.factorial (Fintype.card α) : ℝ)) := by
+  rw [chamber_eq_preimage_orderedCube]
+  rw [(volume_measurePreserving_chamberRelabel L).measure_preimage_equiv]
+  exact volume_orderedCube _
+
 end OrderPolytope
 
 /-! ### §7 — Discrete 3-antichain `example`
@@ -616,6 +1036,17 @@ mg-163f §5 / EX-3 brief §2.3. -/
 example : OrderPolytope Three =
     Set.univ.pi (fun _ : Three => Set.Icc (0 : ℝ) 1) :=
   OrderPolytope.eq_cube_of_discrete fun _ _ h => h
+
+instance : Fintype Three := ⟨{Three.a, Three.b, Three.c}, by intro x; cases x <;> decide⟩
+
+/-- **Hand-verification: discrete 3-antichain chamber volume.** For
+`Three = {a, b, c}` discrete, each of the `3! = 6` chambers has volume
+`1/6 = 1/3!`. -/
+example (L : OneThird.LinearExt Three) :
+    MeasureTheory.volume (OrderPolytope.chamber L) =
+      ENNReal.ofReal (1 / 6) := by
+  rw [OrderPolytope.chamber_volume]
+  rfl
 
 end LinearExt
 end OneThird
