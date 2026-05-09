@@ -188,6 +188,42 @@ is the next execution ticket). §3.10 (DH-5) ready to surface to
 Daniel post-merge: combined EX-3 + EX-4 mathlib upstream PR
 (`Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`) is now
 realisable since both pieces are in tree.
+**Last update.** mg-79a9 (cat-mg-79a9), 2026-05-09. **EX-5
+Session A executed: chamber decomposition latex-first scoping done.**
+§1.17 NEW for the Session A deliverable
+(`docs/path-alpha-execution-arc/ex5-chamber-decomp-scoping.md`,
+~1220 lines latex). All three chamber-decomposition claims
+(Stanley 1986 §1) rigorously proved: (1) `Vol(σ_L) = 1/n!` via
+`MeasurableEquiv.piCongrLeft` relabel + symmetric S_n-tiling of
+`[0,1]^n` giving `Vol(Δ_n) = 1/n!` for the standard ordered cube
+`Δ_n`; (2) `O(α) = ⋃_L σ_L` via Szpilrajn-on-level-set cover
+construction (sort α by `f`-value, break ties using Szpilrajn
+within each level set); (3) `Vol(σ_L ∩ σ_{L'}) = 0` via
+`addHaar_submodule` on the strict hyperplane `{f x = f y}` for
+the inversion pair `(x, y)` separating `L` and `L'`. Mathlib API
+verified GREEN against the project's pinned mathlib (no
+fundamental gap; `MeasureTheory.measurePreserving_piCongrLeft:744`,
+`MeasureTheory.volume_Icc_pi:241`, `addHaar_submodule:175`,
+`isAddHaarMeasure_volume_pi:126` all available). One derivable
+in-file gap surfaced: `volume_orderedCube` (`Vol{ y ∈ ℝ^n |
+0 ≤ y_0 ≤ … ≤ y_{n-1} ≤ 1 } = 1/n!`) is **not directly in
+mathlib** (only the *probability simplex* is, via
+`Analysis.Convex.StdSimplex`); ~150–200 LoC of derivation, scoped
+as Session B sub-deliverable + **DH-5 strengthening** (state.md
+§3.10) — the combined EX-3 + EX-4 + EX-5 mathlib upstream PR
+becomes a stronger candidate. §3.4 updated (sub-α-C arc: EX-5
+Session A done, GREEN-2; PM files Session B next). Verdict:
+**GREEN-2** (split Session B + Session C; mg-91be §5.5's "2
+polecat sessions" estimate retained, ~815–1185 total LoC over
+the 2 Lean sessions, ~495–745k tokens combined). Trip-wires not
+fired (Session A finishing under 270k of 320k cap; no
+mathlib-measure-theory fundamental obstruction; no convex-
+geometry / mixed-volume detour; no discretised-fallback fire).
+Trust surface unchanged (EX-5 introduces no new project axioms;
+`stanley_log_supermod` still consumed only by EX-7+). PM next
+step: file **EX-5 Session B scoping ticket** (volume + relabel
++ `volume_orderedCube` DH-5 candidate; deliverable §5.1–§5.2 +
+§6 + §7.1).
 
 ---
 
@@ -718,6 +754,138 @@ realisable since both pieces are in tree.
   the lower edge of the Session A estimate. PM next step: file
   EX-5 chamber decomposition scoping ticket.
 
+### §1.17 EX-5 Session A — chamber simplex `σ_L` + chamber decomposition latex-first scoping (mg-79a9)
+
+* **Source.** mg-79a9 (this update);
+  `docs/path-alpha-execution-arc/ex5-chamber-decomp-scoping.md`
+  (deliverable doc, ~1220 lines latex). Predecessors: mg-2442
+  (`89786cf`, EX-4 Session B Lean port); mg-4831 (`ac56bc4`,
+  EX-4 Session A latex); mg-8c66 (`ed9f6e6`, EX-3 OrderPolytope);
+  mg-163f (`9e6edcd`, Path A committed); mg-91be (`bb450a4`,
+  sub-α-C scoping with EX-5 spec in §5.5).
+
+* **Statement.** Latex-first scoping of EX-5 — the chamber
+  decomposition of the order polytope `O(α)` into `numLinExt α`-
+  many simplices `σ_L` indexed by `L : LinearExt α`, each of
+  Lebesgue volume `1/n!`, with measure-zero pairwise overlaps.
+  Per Stanley 1986 §1 (Lemma 1.3, Corollary 1.4):
+
+  - `Vol(σ_L) = 1 / (Nat.factorial n)` for each `L`.
+  - `O(α) = ⋃_{L : LinearExt α} σ_L`.
+  - `Vol(σ_L ∩ σ_{L'}) = 0` for `L ≠ L'`.
+
+  All three claims rigorously proved with **no convex-geometry /
+  mixed-volume / Aleksandrov–Fenchel detour**: volume via the
+  measure-preserving relabel `MeasurableEquiv.piCongrLeft` (Mathlib
+  `MeasureTheory/Constructions/Pi.lean:744`) reducing σ_L to the
+  standard ordered cube `Δ_n`, plus the symmetric S_n-tiling of
+  `[0,1]^n` giving `Vol(Δ_n) = 1/n!` (deliverable §2). Cover via
+  Szpilrajn-on-level-set: sort α by `f`-value and break ties using
+  Szpilrajn within each level set (deliverable §3). Measure-zero
+  overlap via the standard "intersection lies in a hyperplane
+  `{f x = f y}`, which is a strict `Submodule ℝ (α → ℝ)`, hence
+  Lebesgue-null by `addHaar_submodule`
+  (Mathlib `MeasureTheory/Measure/Lebesgue/EqHaar.lean:175`)"
+  (deliverable §4).
+
+* **Lean signatures (deliverable §5).** Position-based `chamber`
+  definition (avoiding `Fin (n - 1)` natural-number subtraction):
+
+  ```lean
+  def chamber (L : LinearExt α) : Set (α → ℝ) :=
+    { f : α → ℝ |
+        (∀ x : α, f x ∈ Set.Icc (0 : ℝ) 1) ∧
+        (∀ x y : α, L.pos x ≤ L.pos y → f x ≤ f y) }
+  ```
+
+  with `chamber_iff_chain` recovering the mg-91be §5.5 chain form
+  (`f(L⁻¹(i.castSucc)) ≤ f(L⁻¹(i.succ))` for `i : Fin (n - 1)`)
+  as a derived equivalence. Three master theorems:
+  `chamber_volume`, `orderPolytope_eq_iUnion_chamber`,
+  `chamber_inter_meas_zero`. Plus auxiliary `volume_orderedCube`
+  (DH-5 candidate) and `linearExtFromOrderPreserving` /
+  `exists_inversion_pair`.
+
+* **Mathlib API consumed (deliverable §6).** All measure-theoretic
+  prerequisites verified against the project's pinned mathlib
+  (`v4.29.1`-class):
+  `MeasureTheory.Measure.pi`,
+  `MeasureTheory.measurePreserving_piCongrLeft:744` (relabel),
+  `MeasureTheory.volume_Icc_pi:241` (cube volume),
+  `MeasureTheory.Measure.addHaar_submodule:175` (strict subspaces
+  null), `MeasureTheory.isAddHaarMeasure_volume_pi:126` (Lebesgue is
+  Haar on Pi types), plus the auto-resolved instances
+  `MeasureTheory.MeasureSpace.pi:216`, `Pi.borelSpace`,
+  `Module.Finite.pi`, `Pi.normedAddCommGroup`, `Pi.normedSpace`.
+  **No critical mathlib gap.**
+
+* **Mathlib gap surfaced (deliverable §6.3) — DH-5 strengthening.**
+  The standard ordered cube volume
+  `Vol{ y ∈ ℝ^n | 0 ≤ y_0 ≤ … ≤ y_{n-1} ≤ 1 } = 1/n!` is **not
+  directly in mathlib** — `Analysis.Convex.StdSimplex` defines the
+  *probability simplex* (`{f | (∀ i, 0 ≤ f i) ∧ ∑ f i = 1}`), not
+  the ordered cube. The lemma is **derivable** in ~150–200 LoC
+  (S_n-tiling + permutation invariance + diagonal hyperplane null);
+  Session B lands `volume_orderedCube` as a sub-deliverable.
+  **Strengthens DH-5 (state.md §3.10):** the combined EX-3 + EX-4
+  + EX-5 mathlib upstream PR `Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`
+  now realisably carries order polytope basics + Stanley vertex
+  theorem + `volume_orderedCube` + chamber decomposition,
+  totalling ~700–1100 LoC of mathlib value. Lower priority than
+  DH-1 / DH-4 but the case strengthens with each landing.
+
+* **Verdict (deliverable §0 + §7).** **GREEN-2** (split Session B +
+  Session C). The mg-91be §5.5 estimate ("2 polecat sessions,
+  ~800–1500 LoC, ~400–800k tokens combined") refines to:
+
+  | Session | LoC | Tokens (k) |
+  |---------|----:|-----------:|
+  | Session B (volume + relabel + `volume_orderedCube` DH-5) | ~395–560 | ~235–350 |
+  | Session C (cover + measure-zero overlap + master) | ~420–625 | ~260–395 |
+  | **Total** | **~815–1185** | **~495–745** |
+
+  Session A consumed ~270k tokens (well under the 320k trip-wire);
+  total Session-A-through-Session-C tokens ~765–1015k, at the upper
+  edge of mg-91be §5.5's 400–800k envelope. LoC mid-range. **No
+  fallback to mg-163f §4.4 discretised path needed.**
+
+* **Trip-wires (deliverable §6.5 + §7.4) — none fired.**
+  - Token blow-up: not fired (Session A finishing under 270k).
+  - Mathlib measure-theory gap: AMBER-fired then resolved
+    (`volume_orderedCube` is derivable in-file, scoped as Session
+    B sub-deliverable + DH-5 strengthening; **no fundamental
+    mathlib obstruction**).
+  - Volume proof harder than expected: not fired (Stanley's
+    "unimodular simplex" line in §1 (1.5) maps directly to
+    `measurePreserving_piCongrLeft`; no AF / mixed-volume detour).
+  - Cover-construction blow-up: not fired (constructive ~150–250
+    LoC; Route A always available; Route B optional via
+    in-tree `OrdinalDecomp`).
+  - Overlap-construction blow-up: not fired (`addHaar_submodule`
+    is off-the-shelf; ~30 LoC core argument).
+
+* **Trust surface impact: none.** EX-5 introduces no new project
+  axioms; the chamber decomposition is a measure-theoretic statement
+  consumed downstream by EX-7 (drops headline) and EX-9 (Brightwell-
+  port-A centred-sum) but does **not** consume `stanley_log_supermod`
+  itself. The third axiom remains consumed only by EX-7+ onward.
+  `width3_one_third_two_thirds` headline trust surface unchanged.
+
+* **Sub-α-C arc next step.** PM files **EX-5 Session B** scoping
+  ticket: deliverable §5.1–§5.2 + §6 + §7.1 are the Session B brief.
+  Session B = direct Lean port of the volume claim + `chamber`
+  definition + `volume_orderedCube` DH-5 candidate; ~395–560 LoC,
+  ~235–350k tokens, 1 polecat session. Session C dispatches on
+  Session B landing.
+
+* **Verdict.** **GREEN-2.** Latex-first scoping done; rigorous
+  proofs of all three chamber-decomposition claims; Lean signatures
+  drafted; mathlib API verified GREEN; one mathlib gap
+  (`volume_orderedCube`) surfaced and folded into Session B as
+  DH-5 strengthening; ETA refined to Session B + Session C
+  (~815–1185 LoC total, ~495–745k tokens combined). PM next step:
+  file EX-5 Session B (volume + DH-5).
+
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
 * **Source.** mg-d0fc (this update);
@@ -941,23 +1109,39 @@ realisable since both pieces are in tree.
   see §1.13). EX-4 Session A done (mg-4831, `ac56bc4`; see
   §1.14) — GREEN with small spec correction (LowerSet → UpperSet
   in the target signature; chamber-decomp arc downstream
-  unaffected). EX-4 Session B done (mg-2442, this commit; see
+  unaffected). EX-4 Session B done (mg-2442, `89786cf`; see
   §1.16) — GREEN; both directions of Stanley vertex theorem in
   Lean as `OrderPolytope.extremePoints_eq` against the in-tree
   `OrderPolytope α`; trust surface unchanged (`#print axioms`
   emits only `{propext, Classical.choice, Quot.sound}`); ~330 LoC
-  at the lower edge of the mg-4831 §6 estimate. PM files EX-5
-  chamber decomposition scoping ticket** (next execution ticket
-  in the sub-α-C arc; chamber simplices `σ_L = { f ∈ O(α) |
-  f x_{L(1)} ≤ ··· ≤ f x_{L(n)} }` for `L : LinearExt α`,
-  `Vol(σ_L) = 1/n!`, `O(α) = ⋃ σ_L` per Stanley 1986 §1; first
-  consumer of `stanley_log_supermod` axiom downstream).
-  EX-3 and EX-4 did **not** consume `stanley_log_supermod`
-  directly (axiom is consumed starting at EX-5); the temp axiom
-  remains the discharge target of either DH-1 (preferred) or
-  Option B (fallback). The corollary `stanley_mu_log_supermod`
-  is no longer needed for Path A (Path B-only) and is dropped
-  from the critical path.
+  at the lower edge of the mg-4831 §6 estimate.
+  **EX-5 Session A done (mg-79a9, this commit; see §1.17) —
+  GREEN-2 (split Session B + Session C).** Latex-first scoping
+  of the chamber decomposition `O(α) = ⋃_L σ_L` with `Vol(σ_L) =
+  1/n!` and measure-zero pairwise overlaps (Stanley 1986 §1):
+  rigorous proofs of all three claims via measure-preserving
+  relabel `MeasurableEquiv.piCongrLeft` reducing σ_L to the
+  standard ordered cube `Δ_n`, symmetric S_n-tiling of `[0,1]^n`
+  giving `Vol(Δ_n) = 1/n!`, Szpilrajn-on-level-set cover
+  construction, and `addHaar_submodule` for the strict-hyperplane
+  measure-zero overlap. **No fundamental mathlib gap**; one
+  derivable in-file gap (`volume_orderedCube`, ~150–200 LoC of
+  derivation in Session B) **strengthens DH-5** (combined EX-3 +
+  EX-4 + EX-5 mathlib upstream PR `Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`).
+  **No fallback to mg-163f §4.4 discretised path needed.** ETA
+  refined to Session B (volume + DH-5, ~395–560 LoC) +
+  Session C (cover + overlap + master, ~420–625 LoC), total
+  ~815–1185 LoC, ~495–745k tokens combined; at the upper edge
+  of mg-91be §5.5's 800–1500 LoC / 400–800k token envelope. **PM
+  files EX-5 Session B scoping ticket next** (volume + relabel +
+  `volume_orderedCube` DH-5 candidate; deliverable §5.1–§5.2 +
+  §6 + §7.1 are the Session B brief). EX-3, EX-4, and EX-5
+  Session A do **not** consume `stanley_log_supermod` directly
+  (axiom enters consumer chain starting at EX-7 onward); the
+  temp axiom remains the discharge target of either DH-1
+  (preferred) or Option B (fallback). The corollary
+  `stanley_mu_log_supermod` is no longer needed for Path A
+  (Path B-only) and is dropped from the critical path.
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
