@@ -290,6 +290,85 @@ upstream candidate `Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`
 is now realisable as a single PR (~900–1100 LoC). Trip-wires
 per mg-79a9 §7.2 not fired. PM next step: **file EX-6 scoping
 ticket** (continuous FKG / Ahlswede–Daykin on `[0,1]^n`).
+**Last update.** mg-e622 (cat-mg-e622), 2026-05-09. **EX-6 Session
+A — continuous FKG / Ahlswede–Daykin on `[0,1]^n` latex-first
+scoping done.** §1.20 NEW for the Session A deliverable
+(`docs/path-alpha-execution-arc/ex6-continuous-fkg-scoping.md`,
+~900 lines latex). Predecessors: mg-10d9 (`7b084ba`, EX-5 Session C
+chamber decomposition complete); mg-163f (`9e6edcd`, Path A
+committed, DH-4 risk AMBER with integer-sub-lattice fallback);
+mg-91be (`bb450a4`, sub-α-C scoping with EX-6 spec in §5.6).
+**Verdict GREEN-2** (split Session B + Session C). Standard
+Riemann-sum discretisation route: discrete FKG/AD on
+`(Fin (N+1))^n` via mathlib `fkg` / `four_functions_theorem_univ`
++ step-function approximation `f_N⁻ ≤ f ≤ f_N⁺` for monotone `f`
++ limit `N → ∞` via
+`tendsto_integral_filter_of_dominated_convergence`. **Both
+polecat-brief questions answered:** (1) yes, mathlib has discrete
+FKG/AD as the base case; (2) Riemann-sum discretisation **is**
+the standard proof of continuous FKG (not an alternative path),
+and the full continuous theorem is recommended over the
+integer-sub-lattice fallback. **No critical mathlib gap.** All
+mathlib APIs verified at `lake-manifest.json` →
+`mathlib v4.29.1`-class:
+`Mathlib.Combinatorics.SetFamily.FourFunctions` (`fkg:365`,
+`four_functions_theorem:297`, `four_functions_theorem_univ:341`),
+`Mathlib.Order.Lattice` (`Pi.instDistribLattice` for the product
+lattice on `Fin n → Fin (N+1)`),
+`Mathlib.MeasureTheory.Integral.DominatedConvergence`
+(`tendsto_integral_filter_of_dominated_convergence:70`),
+`Mathlib.MeasureTheory.Integral.Lebesgue.Add`
+(`lintegral_iSup:34`,
+`lintegral_tendsto_of_tendsto_of_monotone:113`),
+`Mathlib.MeasureTheory.Constructions.Pi`
+(`volume_pi_pi`, `volume_Icc_pi:241`),
+`Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar`
+(`addHaar_submodule:175`),
+`Mathlib.Topology.Order.Monotone`
+(`Monotone.countable_not_continuousAt`, 1D version). One
+auxiliary multivariate version not packaged in mathlib
+(`Monotone.aeContinuousAt_pi` for `(α → ℝ) → ℝ` with
+`[Fintype α]`) is **derivable in ~80 LoC** from the existing 1D
+version + `Set.Countable.measure_zero` — surfaced as
+**Sub-DH-4-A** upstream candidate, **not blocking**. **DH-4
+leverage assessment.** The deliverable is structured for direct
+mathlib upstream extraction once Sessions B + C land:
+`lean/OneThird/Mathlib/Probability/ContinuousFKG.lean` →
+`Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean` is a
+~1000–1600 LoC single-PR candidate (Yael Dillies, James
+Gallicchio, Bhavik Mehta natural reviewers per mg-163f §3.9).
+The **integer-sub-lattice fallback** (mg-163f §4.4) is **not
+recommended as primary**: the size-`N` discretisation factor
+infiltrates EX-7 / EX-8 / EX-9 and partly cancels the EX-6 LoC
+saving (+200–400 LoC downstream); the discrete-FKG part of
+Session B is reusable as the fallback's main content if Session C
+trip-wires fire. **Session B + C ETA refinement.** mg-91be §5.6's
+"~1000–2000 LoC, ~600–1000k tokens" splits to: Session B (~600–900
+LoC, ~350–500k tokens) for discrete FKG/AD + step-function
+approximation + Riemann-sum identity; Session C (~400–700 LoC,
+~250–400k tokens) for a.e. convergence + DCT + master theorem +
+hand-verification. **Total ~1000–1600 LoC, ~600–900k tokens.**
+Session A consumed ~150k tokens (well under the 400k cap); total
+A + B + C ~750–1050k, at the upper edge of the mg-91be §5.6
+600–1000k envelope. LoC mid-range. **No fallback to mg-163f §4.4
+needed.** **Trust surface impact: none.** EX-6 introduces no new
+project axioms (consumed by EX-7 onward, not by EX-6 itself);
+`stanley_log_supermod` not consumed. **Trip-wires per polecat
+brief §3 / mg-91be §5.6 — none fired.** Token blow-up: not fired.
+Mathlib refactor: not fired. Continuous-FKG-already-in-mathlib
+collision: not fired (no `continuous_fkg` / `Preston` references
+in `Mathlib` at this rev). DH-4 fallback firing in Session A: not
+fired (Riemann-sum is primary, not fallback). AD lattice-
+hypothesis transport: not fired (`min(k/N, l/N) = min(k, l)/N`
+trivial). Monotone-implies-a.e.-continuous gap: AMBER (multivariate
+not packaged in mathlib; derivable in ~80 LoC; sub-DH-4-A);
+not blocking. §3.4 updated (sub-α-C arc: **EX-6 Session A done,
+GREEN-2**; PM files Session B next). §3.8 (DH-4) updated
+post-session: continuous FKG proof is now **rigorously written
+and Lean-portable**, ready for Session B + C dispatch and
+(separately) mathlib upstream PR. **Verdict GREEN-2.** PM next
+step: file **EX-6 Session B** scoping ticket (deliverable §3 +
+§5.1–§5.2 + §6.1 + §8.1 form the Session B brief).
 
 ---
 
@@ -1290,6 +1369,197 @@ ticket** (continuous FKG / Ahlswede–Daykin on `[0,1]^n`).
   trip-wires unfired; LoC and tokens come in under estimate
   (Route C compactness win).
 
+### §1.20 EX-6 Session A — continuous FKG / Ahlswede–Daykin on `[0,1]^n` latex-first scoping (mg-e622)
+
+* **Source.** mg-e622 (this update);
+  `docs/path-alpha-execution-arc/ex6-continuous-fkg-scoping.md`
+  (deliverable doc, ~900 lines latex). Predecessors: mg-10d9
+  (`7b084ba`, EX-5 Session C chamber-decomposition triple in tree);
+  mg-497d (`5dd9e50`, EX-5 Session B chamber definition + volume
+  theorem); mg-79a9 (`3e76ac3`, EX-5 Session A latex scoping);
+  mg-2442 (`89786cf`, EX-4 Session B Stanley vertex theorem in Lean);
+  mg-8c66 (`ed9f6e6`, EX-3 OrderPolytope); mg-163f (`9e6edcd`, Path A
+  committed; §2.3 DH-4 risk + §4.4 integer-sub-lattice fallback);
+  mg-91be (`bb450a4`, sub-α-C scoping with EX-6 spec in §5.6);
+  mg-d0fc (`00cbc2d`, `stanley_log_supermod` axiom — **not consumed
+  by EX-6**, axiom enters at EX-7+ per state.md §1.11).
+
+* **Statement.** Latex-first scoping of EX-6 — the continuous FKG /
+  Ahlswede–Daykin inequality on the unit hypercube `[0,1]^n` for
+  non-negative coordinate-monotone integrable `f, g`, viewed as the
+  base case for Brightwell §4 / Daykin–Saks 1981 drops headline
+  (state.md §1.7's "drops headline reduces to a continuous FKG/AD on
+  the cube"). The two master theorems (deliverable §1.2):
+
+  - `continuous_fkg`: `(∫_{I_n} f)(∫_{I_n} g) ≤ (∫_{I_n} f g)
+    · vol(I_n)` for non-neg monotone integrable `f, g`. With
+    `vol(I_n) = 1`, this is `(∫ f)(∫ g) ≤ ∫ f g`.
+  - `continuous_ad`: for non-neg integrable `f₁, f₂, f₃, f₄`
+    satisfying `f₁(x) f₂(y) ≤ f₃(x ⊓ y) f₄(x ⊔ y)`, the integrals
+    satisfy `(∫ f₁)(∫ f₂) ≤ (∫ f₃)(∫ f₄)`.
+
+  Both proved rigorously via the **standard Riemann-sum
+  discretisation route** (deliverable §2–§4):
+
+  1. **Discrete sub-lattice.** Restrict to `D_N^n =
+     {0, 1/N, …, 1}^n`, isomorphic to `(Fin (N+1))^n` as a finite
+     distributive lattice via `Pi.instDistribLattice`.
+  2. **Discrete FKG/AD.** Apply mathlib `fkg` /
+     `four_functions_theorem_univ` on `(Fin (N+1))^n` with `μ ≡ 1`
+     (deliverable §3).
+  3. **Step-function approximation.** Define `f_N⁻(x) := f(p_N(x))`
+     where `p_N(x)` is the lower-corner grid point of the cell
+     containing `x`. Sandwich `f_N⁻ ≤ f ≤ f_N⁺` on `I_n` by
+     monotonicity (deliverable §2.2 + §4.3).
+  4. **Riemann-sum identity.** `∫_{I_n} f_N⁻ = (1/N^n) ·
+     Σ_{p ∈ {0, 1/N, …, (N-1)/N}^n} f(p)` (deliverable §2.3 +
+     §3.4).
+  5. **Limit.** Pass to `N → ∞` via
+     `tendsto_integral_filter_of_dominated_convergence` with bound
+     `f(1, …, 1) · 1_{I_n} ∈ L^1` and a.e. convergence
+     `f_N⁻ → f` on the continuity set of `f` (Lebesgue-co-null for
+     monotone `f` per deliverable §2.5). The discrete inequality
+     passes through the limit by `Filter.Tendsto.mul`.
+
+* **Hand-verifications (deliverable §1.5 + §1.6).**
+
+  - **`n = 1`.** Reduces to 1D Chebyshev on monotone `f, g : [0,1] →
+    ℝ`: `(∫₀¹ f)(∫₀¹ g) ≤ ∫₀¹ f g · 1`. Standard symmetrisation
+    proof.
+  - **`n = 2`, `N = 1`.** The 4-point lattice `{0,1}^2`. Concrete
+    saturation example `f(x_1, x_2) := x_1, g(x_1, x_2) := x_2`
+    gives both sides `= 1/4` (FKG is tight at coordinate-independent
+    monotone functions; verified via Fubini + `volume_pi_pi`).
+
+* **Lean signatures (deliverable §5).** Target file
+  `lean/OneThird/Mathlib/Probability/ContinuousFKG.lean` (NEW, Path A,
+  Session B + Session C combined). Sub-namespace
+  `OneThird.Probability.ContinuousFKG`.
+
+  Session B signatures (§5.1 + §5.2): `gridFn`, `gridFn_monotone`,
+  `gridFn_nonneg`, `discrete_fkg_grid`, `discrete_ad_grid`,
+  `stepRetract`, `stepLower`, `stepLower_le_self`,
+  `integral_stepLower_eq_riemann`, `tendsto_integral_stepLower`.
+
+  Session C signatures (§5.3): `continuous_fkg`, `continuous_ad`,
+  plus the auxiliary `Monotone.aeContinuousAt_pi` (sub-DH-4-A
+  candidate; ~80 LoC).
+
+  Hand-verification examples (§5.4): 1D Chebyshev `example` + 2D
+  saturation `example`.
+
+* **Mathlib API consumed (deliverable §6.1).** All measure-theoretic
+  + lattice prerequisites verified against the project's pinned
+  mathlib (`v4.29.1`-class):
+  `Mathlib.Combinatorics.SetFamily.FourFunctions`
+  (`fkg:365`, `four_functions_theorem:297`,
+  `four_functions_theorem_univ:341`, `holley:347`),
+  `Mathlib.Order.Lattice` (`Pi.instDistribLattice` for the product
+  lattice on `Fin n → Fin (N+1)`),
+  `Mathlib.MeasureTheory.Integral.DominatedConvergence`
+  (`tendsto_integral_filter_of_dominated_convergence:70`),
+  `Mathlib.MeasureTheory.Integral.Lebesgue.Add`
+  (`lintegral_iSup:34`,
+  `lintegral_tendsto_of_tendsto_of_monotone:113`),
+  `Mathlib.MeasureTheory.Constructions.Pi`
+  (`volume_pi_pi`, `volume_Icc_pi:241`,
+  `measurePreserving_piCongrLeft`),
+  `Mathlib.MeasureTheory.Measure.Lebesgue.EqHaar`
+  (`addHaar_submodule:175`),
+  `Mathlib.Topology.Order.Monotone`
+  (`Monotone.countable_not_continuousAt`, 1D version).
+  **No critical mathlib gap.**
+
+* **Mathlib gap surfaced (deliverable §6.3) — Sub-DH-4-A
+  strengthening.** Multivariate "monotone implies a.e. continuous"
+  for `Monotone f : (Fin n → ℝ) → ℝ` is **not directly in mathlib**
+  in packaged form — the 1D version
+  `Monotone.countable_not_continuousAt` exists, but the
+  multivariate composition (`per-coordinate countability +
+  Set.Countable.measure_zero`) is not surfaced as a single lemma.
+  **Derivable in ~80 LoC** in-file. Sub-DH-4-A upstream candidate:
+  add `Monotone.aeContinuousAt_pi` to
+  `Mathlib/Topology/Order/Monotone.lean` adjacent to the existing
+  1D version. Daniel's optional surface; **not blocking** Sessions
+  B + C.
+
+* **Verdict (deliverable §0 + §8.4).** **GREEN-2** (split Session B +
+  Session C). The mg-91be §5.6 estimate ("2–3 polecat sessions,
+  ~1000–2000 LoC, ~600–1000k tokens combined") refines to:
+
+  | Session | LoC | Tokens (k) |
+  |---------|----:|-----------:|
+  | Session B (discrete FKG/AD + step-function approx + Riemann-sum identity) | ~600–900 | ~350–500 |
+  | Session C (a.e. convergence + DCT + master theorem + hand-verification) | ~400–700 | ~250–400 |
+  | **Total** | **~1000–1600** | **~600–900** |
+
+  Session A consumed ~150k tokens (well under the 400k trip-wire);
+  total Session-A-through-Session-C tokens ~750–1050k, at the upper
+  edge of mg-91be §5.6's 600–1000k envelope. LoC mid-range.
+  **No fallback to mg-163f §4.4 discretised path needed.**
+
+* **DH-4 leverage assessment (deliverable §7).** The deliverable
+  doubles as a Path-A-internal Lean-portability check **and** a
+  feasibility study for the mathlib-upstream PR
+  `Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean` (DH-4).
+  Three readings of "DH-4" enumerated:
+
+  1. **DH-4 = mathlib upstream contribution** (Daniel-side action).
+     Once Sessions B + C land, the file is **mathlib-PR-ready**;
+     Daniel's optional surface for Yael Dillies / James Gallicchio /
+     Bhavik Mehta to upstream.
+  2. **DH-4 = Riemann-sum discretisation as the project-internal
+     route.** This is the recommended primary path: deliverable §3 +
+     §4 ports the proof in tree at mathlib-PR quality.
+  3. **DH-4 fallback = integer-sub-lattice discretisation**
+     (mg-163f §4.4). **Not recommended as primary** — the size-`N`
+     discretisation factor infiltrates EX-7 / EX-8 / EX-9 and partly
+     cancels the EX-6 LoC saving (+200–400 LoC downstream). Remains
+     as the contingency: the discrete-FKG part of Session B is
+     directly reusable as the fallback's main content if Session C
+     trip-wires fire.
+
+  **Recommendation: full continuous FKG (Reading #2 + #1).** Sessions
+  B + C deliver the proof; #1 is Daniel's optional follow-up.
+
+* **Trip-wires (deliverable §6.5 + §8.3) — none fired.**
+  - Token blow-up: not fired (Session A finishing under 150k of 400k).
+  - Mathlib refactor required: not fired (all APIs at v4.29.1).
+  - Continuous-FKG-already-in-mathlib collision: not fired (no
+    `continuous_fkg` / `Preston` references in `Mathlib` at this rev).
+  - DH-4 fallback firing in Session A: not fired (Riemann-sum is
+    primary, not fallback; per §7).
+  - AD lattice-hypothesis transport surprise: not fired
+    (`min(k/N, l/N) = min(k, l)/N` trivial on `Pi`).
+  - Monotone-implies-a.e.-continuous gap: AMBER (multivariate not
+    packaged in mathlib; derivable in ~80 LoC; sub-DH-4-A);
+    **not blocking**.
+
+* **Trust surface impact: none.** EX-6 introduces no new project
+  axioms; the continuous FKG/AD inequality is a measure-theoretic
+  statement consumed downstream by EX-7 (drops headline) and EX-9
+  (Brightwell-port-A centred-sum) but does **not** consume
+  `stanley_log_supermod` itself. The third axiom remains consumed
+  only by EX-7 onward. `width3_one_third_two_thirds` headline trust
+  surface unchanged.
+
+* **Sub-α-C arc next step.** PM files **EX-6 Session B** scoping
+  ticket: deliverable §3 + §5.1–§5.2 + §6.1 + §8.1 are the Session B
+  brief. Session B = direct Lean port of the discrete FKG/AD on
+  `(Fin (N+1))^n` + step-function approximation `stepRetract` /
+  `stepLower` + Riemann-sum identity
+  `integral_stepLower_eq_riemann`; ~600–900 LoC, ~350–500k tokens,
+  1 polecat session. Session C dispatches on Session B landing.
+
+* **Verdict.** **GREEN-2.** Latex-first scoping done; rigorous proof
+  of continuous FKG/AD on the cube via Riemann-sum discretisation;
+  Lean signatures drafted; mathlib API verified GREEN; one mathlib
+  gap (`Monotone.aeContinuousAt_pi` multivariate; ~80 LoC derivable)
+  surfaced and folded into Session C as Sub-DH-4-A strengthening;
+  ETA refined to Session B + Session C (~1000–1600 LoC total,
+  ~600–900k tokens combined). PM next step: file EX-6 Session B
+  (discrete FKG + step approximation + Riemann-sum identity).
+
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
 * **Source.** mg-d0fc (this update);
@@ -1552,6 +1822,38 @@ ticket** (continuous FKG / Ahlswede–Daykin on `[0,1]^n`).
   Option B (fallback). The corollary `stanley_mu_log_supermod`
   is no longer needed for Path A (Path B-only) and is dropped
   from the critical path.
+  **EX-5 Session C done (mg-10d9, `7b084ba`; see §1.19) —
+  GREEN.** Cover + measure-zero overlap + master volume theorem
+  in Lean (~280 LoC at the lower edge of mg-79a9 §7.2's 420–625
+  estimate; Route C lex-sort compactness win); chamber-decomposition
+  triple complete in tree (`chamber`, `volume_orderedCube`,
+  `chamber_cover`, `chamber_inter_meas_zero`,
+  `orderPolytope_volume`); trust surface unchanged (no new project
+  axioms). DH-5 fully realised — combined EX-3 + EX-4 + EX-5
+  upstream candidate `Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`
+  is realisable as a single ~900–1100 LoC PR.
+  **EX-6 Session A done (mg-e622, this commit; see §1.20) —
+  GREEN-2 (split Session B + Session C).** Latex-first scoping
+  of continuous FKG / Ahlswede–Daykin on `[0,1]^n` via the
+  standard Riemann-sum discretisation route: discrete FKG/AD on
+  `(Fin (N+1))^n` (mathlib `fkg` / `four_functions_theorem_univ`)
+  + step-function approximation `f_N⁻ ≤ f ≤ f_N⁺` + limit `N → ∞`
+  via DCT (`tendsto_integral_filter_of_dominated_convergence`).
+  **No fundamental mathlib gap**; one auxiliary derivable in-file
+  gap (`Monotone.aeContinuousAt_pi` multivariate, ~80 LoC of
+  derivation in Session C) **strengthens DH-4 sub-DH-4-A** (small
+  upstream PR alongside the main DH-4 continuous-FKG file).
+  **No fallback to mg-163f §4.4 integer-sub-lattice path needed.**
+  **PM files EX-6 Session B scoping ticket next** (discrete FKG/AD
+  on `(Fin (N+1))^n` + step-function approximation + Riemann-sum
+  identity; deliverable §3 + §5.1–§5.2 + §6.1 + §8.1 are the
+  Session B brief; ~600–900 LoC, ~350–500k tokens, 1 polecat
+  session). EX-6 does **not** consume `stanley_log_supermod` (axiom
+  enters at EX-7+ per §1.11) and does **not** consume EX-3/EX-4/EX-5
+  (chamber decomp lives downstream of EX-6 in EX-7's drops headline
+  derivation, not upstream of EX-6 itself); EX-6 can therefore be
+  developed in parallel with any future EX-3/EX-4/EX-5 mathlib-
+  upstream extraction.
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
@@ -1658,6 +1960,32 @@ ticket** (continuous FKG / Ahlswede–Daykin on `[0,1]^n`).
 * **Status.** Heightened post-mg-163f. PM should surface DH-4 to
   Daniel alongside DH-1 in the next digest with the concrete file
   target.
+  **Post-mg-e622 update (2026-05-09).** **EX-6 Session A latex-first
+  scoping done** (§1.20); the proof of continuous FKG/AD on `[0,1]^n`
+  is **rigorously written** via the standard Riemann-sum
+  discretisation route (deliverable §1–§4) and **Lean-portable**
+  with **no fundamental mathlib gap** (deliverable §6.1: all APIs
+  verified at v4.29.1 — `fkg`, `four_functions_theorem_univ`,
+  `Pi.instDistribLattice`, `tendsto_integral_filter_of_dominated_convergence`,
+  `volume_pi_pi`, `addHaar_submodule`,
+  `Monotone.countable_not_continuousAt`). One auxiliary multivariate
+  "monotone implies a.e. continuous" lemma (`Monotone.aeContinuousAt_pi`,
+  ~80 LoC derivable) is the only sub-gap; **sub-DH-4-A** small
+  upstream candidate alongside the main file. **The deliverable is
+  the mathlib-PR-class proof, structured for direct upstream
+  extraction once Sessions B + C land** (Session B = ~600–900 LoC
+  discrete-side scaffolding + step-function approximation +
+  Riemann-sum identity; Session C = ~400–700 LoC a.e. convergence +
+  DCT + master theorem; total ~1000–1600 LoC). Daniel's optional
+  surface for the upstream PR
+  (`Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`); natural
+  reviewers Yael Dillies, James Gallicchio, Bhavik Mehta.
+  **Integer-sub-lattice fallback** (mg-163f §4.4) is **not**
+  recommended as primary route per deliverable §7: the size-`N`
+  factor infiltrates EX-7+ (+200–400 LoC downstream); the fallback
+  remains as the contingency if Session C trip-wires fire (the
+  discrete-FKG part of Session B is reusable as the fallback's
+  main content). PM next step: file EX-6 Session B scoping ticket.
 
 ### §3.10 DH-5 — Stanley order-polytope basics as upstream mathlib PR (post-mg-4831)
 
