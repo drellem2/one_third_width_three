@@ -12,6 +12,50 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
+**Last update.** mg-1f3a (cat-mg-1f3a), 2026-05-10. **EX-7 Session C.1
+— chamber transport for `OrderPolytope' Q` (Option 1 closure path,
+no 5th axiom).** §1.26 NEW for the Session C.1 deliverable
+(`lean/OneThird/Mathlib/RelationPoset/DropsHeadlineChamber.lean`,
+~267 LoC).  Predecessor: mg-4a56 (`ddedda4`, EX-7 Session B
+structural infra Option 3 per mayor override).  Polecat brief
+(mg-1f3a) framed Session C.1 as the start of the Option 1 full
+closure path for the master theorem
+`probEvent'_mono_of_subseteq_upClosed`, decomposed per state.md
+§1.25 forward pointer into (a) chamber-volume transport ~150 LoC,
+(b) single-edge induction + swap ~200 LoC, (c) master assembly via
+AD + Stanley ~250–650 LoC.  This session lands piece (a).
+**Deliverable.** Chamber-decomposition machinery transported to the
+data-version `OrderPolytope' Q` in the `OneThird.RelationPoset`
+namespace: `chamber'` (data-version chamber simplex);
+`chamber'_volume` (Stanley 1986 (1.5): `volume(σ_L) = 1/n!`);
+`chamber'_inter_meas_zero` (Stanley 1986 (1.4) overlap);
+`chamber'_cover` (Stanley 1986 (1.4) cover);
+`orderPolytope'_volume` (Stanley 1986 (1.4) master:
+`volume(O(Q)) = numLinExt' Q / n!`);
+`measurableSet_chamber'`, `chamber'_subset_orderPolytope'`,
+`numLinExt'_eq_numLinExt_asPartialOrder`. All seven exposed theorems
+transport via the mg-4a56 `OrderPolytope'_eq_asPartialOrder`
+`rfl`-bridge plus the natural
+`{ toFun := L.toFun, monotone := L.monotone }`-construction; no new
+mathematical content beyond mg-10d9 / mg-497d. **Trust surface
+impact: none.** `#print axioms` on the seven exposed theorems gives
+only the mathlib-standard `{propext, Classical.choice, Quot.sound}`
+triplet — **no new project axioms**.  `width3_one_third_two_thirds`
+headline trust surface unchanged (still 2 named axioms +
+native_decide quintet); sub-α-C arc trust surface unchanged (still
+4 named axioms; ≤4-axiom envelope per mayor mg-4a56 preserved).
+Master theorem advances to **EX-7 Session C.2** (single-edge
+induction + swap involution, ~200 LoC); Sessions C.2 + C.3 remain
+estimated ~450–850 LoC combined.  Build green for full `OneThird`
+target (~2643 lake jobs).  3-round trip-wire on EX-7 chain (per
+brief) cleared: 0 amber rounds running.  §3.4 updated (sub-α-C
+arc: EX-7 Session C.1 done, Session C.2 is the next execution
+ticket).  PM next step: file **EX-7 Session C.2 scoping ticket**
+(structural induction lemma `Q.Subseteq Q' → chain of single-edge
+`addRel` augmentations` + swap involution `τ_{ab}` on
+`LinearExt' Q` for `Q`-incomparable `(a, b)` + chamber identity
+`O(Q) = O(Q') ⊔ τ_{ab}(O(Q'))` mod a Lebesgue-null hyperplane;
+mg-1f3a §1.26 handoff brief is the Session C.2 brief).
 **Last update.** mg-4a56 (cat-mg-4a56), 2026-05-09. **EX-7 Session B —
 structural infrastructure (Option 3) per mayor override.** §1.25 NEW
 for the Session B deliverable
@@ -2353,6 +2397,149 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   + ~?80–100k tokens; Session C estimated ~600–1000 LoC + ~250–400k
   tokens).
 
+### §1.26 EX-7 Session C.1 — chamber transport for `OrderPolytope' Q` (mg-1f3a)
+
+* **Source.** mg-1f3a (this update);
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadlineChamber.lean`
+  (NEW file, ~267 LoC); `lean/OneThird.lean` (one-line import addition).
+
+* **Predecessors.**
+  - mg-4a56 (`ddedda4`, EX-7 Session B) — structural infrastructure
+    (`OrderPolytope' Q` data-version polytope + sublattice property +
+    `rfl`-bridge `OrderPolytope'_eq_asPartialOrder`); Option 3 per
+    mayor override (state.md §1.25).
+  - mg-2746 (`dcd0925`, EX-7 Session A) — latex-first scoping +
+    Path R-A recommendation (state.md §1.22).
+  - mg-071b (`8b49708`, EX-6 Session F) — Monotone-free
+    `continuous_ad_general` via 4th project axiom `cellMass_AD`
+    (state.md §1.23).
+  - mg-d731 (`e1fdaa1`, cellMass_AD verification GREEN, state.md §1.24).
+  - mg-d0fc — `stanley_log_supermod` temp axiom (state.md §1.11).
+  - mg-10d9 — chamber decomposition triple (state.md §1.19).
+
+* **Polecat brief.** EX-7 Session C.1 starts the Option 1 closure
+  path for the master theorem `probEvent'_mono_of_subseteq_upClosed`
+  (Daykin–Saks 1981 / Brightwell 1999 §4 drops headline) under the
+  mayor's `≤4-axiom` envelope (no 5th project axiom).  Per state.md
+  §1.25 forward-pointer, the Session C decomposition is (a) chamber-
+  volume transport (~150 LoC), (b) single-edge induction + swap
+  involution (~200 LoC), (c) master theorem assembly via continuous
+  AD + Stanley (~250–650 LoC).  Session C.1 lands piece **(a)**;
+  Session C.2 + Session C.3 deliver pieces (b) + (c).
+
+* **Deliverable.**  Chamber-decomposition machinery transported to the
+  data-version `OrderPolytope' Q` in the `OneThird.RelationPoset`
+  namespace at
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadlineChamber.lean`:
+
+  - **§1 — `chamber' L`** (chamber simplex for `L : LinearExt' Q`).
+    Definition `{ f : α → ℝ | ... ∧ L.pos x ≤ L.pos y → f x ≤ f y }`,
+    `mem_chamber'` membership unfolding.  Same shape as the typeclass
+    `OneThird.LinearExt.OrderPolytope.chamber` (mg-497d), depending
+    only on `L.pos = L.toFun` and not on the ambient `[PartialOrder α]`
+    typeclass.
+  - **§2 — `chamber'_subset_orderPolytope'`** (chamber inclusion in
+    the data-version order polytope).  Direct proof at the data level.
+  - **§3 — Chamber volume + measurability + pairwise overlap.**
+    `chamber'_volume` (Stanley 1986 (1.5): `volume(σ_L) = 1/n!`),
+    `measurableSet_chamber'` (Borel-measurability), and
+    `chamber'_inter_meas_zero` (Stanley 1986 (1.4) pairwise overlap
+    Lebesgue-null).  All three transport via the inline `rfl`-bridge
+    `chamber' L = chamber ⟨L.toFun, L.monotone⟩` once
+    `Q.asPartialOrder` is activated.
+  - **§4 — Chamber cover + master volume formula.**
+    `chamber'_cover` (Stanley 1986 (1.4) cover:
+    `OrderPolytope' Q = ⋃ L : LinearExt' Q, chamber' L`),
+    `numLinExt'_eq_numLinExt_asPartialOrder` (count agreement under
+    the `Q.asPartialOrder` typeclass via `Fintype.card_congr`), and
+    `orderPolytope'_volume` (Stanley 1986 (1.4) master:
+    `volume(O(Q)) = numLinExt' Q / n!`).
+  - **§5 — Forward to EX-7 Sessions C.2 + C.3.**  In-file forward
+    pointer documenting the four remaining steps to close the master
+    theorem (single-edge induction; swap involution + chamber
+    pairing; continuous AD inner step via `continuous_ad_general` +
+    sublattice property of `OrderPolytope'`; Stanley log-supermod
+    closure at the discrete sum).
+
+* **Design note.**  Both `OneThird.LinearExt.OrderPolytope.chamber*`
+  and the mg-4a56 `OrderPolytope'_eq_asPartialOrder` `rfl`-bridge live
+  under the typeclass `[PartialOrder α]`.  The session activates
+  `Q.asPartialOrder` *inside each proof body* via `letI`, then
+  constructs an explicit `LinearExt α := ⟨L.toFun, L.monotone⟩` from
+  a `LinearExt' Q` (the two structures share the bijection-plus-
+  monotonicity shape, with `asPartialOrder.le = Q.le` definitionally).
+  Sidesteps the elaboration friction `letI` introduces in type
+  signatures and keeps the `chamber'`/`chamber` `rfl`-bridge inline
+  at each call site.
+
+* **Trust surface impact: NONE.**  `#print axioms` on the seven
+  exposed theorems
+  (`chamber'_volume`, `chamber'_inter_meas_zero`, `chamber'_cover`,
+  `orderPolytope'_volume`, `measurableSet_chamber'`,
+  `chamber'_subset_orderPolytope'`,
+  `numLinExt'_eq_numLinExt_asPartialOrder`) gives only the
+  mathlib-standard `{propext, Classical.choice, Quot.sound}` triplet
+  — **no new project axioms** introduced by this session.
+  `width3_one_third_two_thirds` headline trust surface unchanged
+  (still 2 named axioms + native_decide quintet); sub-α-C arc trust
+  surface unchanged (still 4 named axioms: `brightwell_sharp_centred`,
+  `case3Witness_hasBalancedPair_outOfScope`, `stanley_log_supermod`,
+  `cellMass_AD`).
+
+* **LoC count.** ~267 LoC in the new file (within mg-1f3a brief
+  budget of ~250–400 LoC; pure infrastructure ≤140 LoC plus
+  comprehensive docstring + forward pointer).
+
+* **Build status.** Build green for full `OneThird` target (~2643
+  lake jobs).  Local
+  `lake build OneThird.Mathlib.RelationPoset.DropsHeadlineChamber`
+  green.
+
+* **Trip-wires not fired** (per mg-2746 §7.4 / mg-1f3a brief
+  3-round trip-wire on EX-7 chain):
+  - Token blow-up: not fired (well under the 500k cap; this session
+    well under 200k due to the chamber-transport being shape-clean
+    transport via `rfl`-bridge + `letI` discipline).
+  - Hypothesis-mismatch on chamber transport: **not fired** — the
+    `OrderPolytope'_eq_asPartialOrder` `rfl`-bridge from mg-4a56
+    transports cleanly under `Q.asPartialOrder`, and the `chamber*`
+    typeclass theorems specialise without obstruction.
+  - Trust-surface envelope (≤4-axiom): **not fired** — Session C.1
+    introduced no new axioms, preserving the 4-axiom envelope.
+  - The 3-round trip-wire on EX-7 chain (per polecat brief): EX-7
+    Session A (AMBER-leaning-GREEN), EX-7 Session B (GREEN per
+    Option 3), EX-7 Session C.1 (this commit, **GREEN**) — 0 amber
+    rounds running; trip-wire counter cleared.
+
+* **EX-7 Session C.2 handoff brief.**  Single-edge induction + swap
+  involution.  Estimated ~200 LoC (mg-2746 §2.4 step 2 + step 3).
+  Consumes:
+  - This session's chamber-volume transport (especially
+    `chamber'_volume`, `chamber'_inter_meas_zero`,
+    `orderPolytope'_volume`);
+  - mg-4a56 `OrderPolytope'_subset_of_subseteq` for the
+    sub-poset monotonicity reduction;
+  - `RelationPoset.addRel`, `RelationPoset.subseteq_addRel`,
+    and the `Q'.rel \ Q.rel` cardinality structure for the induction
+    setup;
+  - `RelationPoset.LinearExt'.restrict` for the swap involution's
+    bijective part on consistent linear extensions.
+  Recommended Session C.2 split: (b1) structural induction lemma
+  reducing `Q.Subseteq Q'` to a chain of single-edge `addRel`
+  augmentations (~80–100 LoC); (b2) swap involution `τ_{ab}` on
+  `LinearExt' Q` for `(a, b)` `Q`-incomparable + the chamber
+  identity `O(Q) = O(Q') ⊔ τ_{ab}(O(Q'))` mod a Lebesgue-null
+  hyperplane (~100–120 LoC).  No new project axioms anticipated;
+  trust surface preserved per Option 1 closure path.
+
+* **Verdict.** **GREEN per mg-1f3a brief scope.**  Chamber-transport
+  infrastructure landed cleanly with no new axioms; build green;
+  trust surface unchanged; Session C.2 handoff brief written.  The
+  polecat brief's ~250–400 LoC and ~500k token budget remain on-track
+  for the combined Sessions C.1 + C.2 + C.3 delivery (this session
+  uses ~267 LoC + ~?100–150k tokens; Sessions C.2 + C.3 estimated
+  ~450–850 LoC + ~250–400k tokens).
+
 ### §1.24 cellMass_AD independent verification — GREEN (mg-d731)
 
 * **Source.** mg-d731 (this update);
@@ -2849,6 +3036,31 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   ticket next** (mg-2746 §2.4 + §5.2 form the Session C brief; budget
   split per mayor preference); EX-8 (case3-port-2) and EX-9 (Brightwell-
   port-A) remain blocked behind EX-7 Session C.
+  **EX-7 Session C.1 done (mg-1f3a, this commit; see §1.26) — GREEN
+  per Option 1 closure path (no 5th axiom).** Chamber-transport
+  infrastructure for `OrderPolytope' Q` landed in
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadlineChamber.lean`
+  (~267 LoC): `chamber'` (data-version chamber simplex),
+  `chamber'_subset_orderPolytope'`, `chamber'_volume` (Stanley
+  1986 (1.5): `volume(σ_L) = 1/n!`), `measurableSet_chamber'`,
+  `chamber'_inter_meas_zero` (Stanley 1986 (1.4) overlap),
+  `chamber'_cover` (Stanley 1986 (1.4) cover),
+  `numLinExt'_eq_numLinExt_asPartialOrder` (count agreement under
+  `Q.asPartialOrder`), `orderPolytope'_volume` (Stanley 1986 (1.4)
+  master: `volume(O(Q)) = numLinExt' Q / n!`).  All seven theorems
+  transport via the mg-4a56 `OrderPolytope'_eq_asPartialOrder`
+  `rfl`-bridge plus the natural
+  `{ toFun := L.toFun, monotone := L.monotone }`-construction;
+  no new mathematical content beyond mg-10d9 / mg-497d.  Trust
+  surface impact: **none** (`#print axioms` triplet
+  `{propext, Classical.choice, Quot.sound}`; no new project axioms;
+  ≤4-axiom envelope preserved per mayor mg-4a56 override).
+  Master theorem `probEvent'_mono_of_subseteq_upClosed` advances to
+  **EX-7 Session C.2** (single-edge induction + swap involution,
+  ~200 LoC; mg-1f3a §1.26 handoff brief). EX-7 Session C.2 + C.3
+  remain estimated ~450–850 LoC combined; EX-8 and EX-9 blocked
+  behind Session C.3 closure.  3-round trip-wire on EX-7 chain
+  (per mg-1f3a brief) cleared: 0 amber rounds running.
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
