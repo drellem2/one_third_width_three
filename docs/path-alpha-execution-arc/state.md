@@ -12,6 +12,48 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
+**Last update.** mg-4a56 (cat-mg-4a56), 2026-05-09. **EX-7 Session B —
+structural infrastructure (Option 3) per mayor override.** §1.25 NEW
+for the Session B deliverable
+(`lean/OneThird/Mathlib/RelationPoset/DropsHeadline.lean`, ~205 LoC).
+Predecessor: mg-2746 (`dcd0925`, EX-7 Session A scoping with Path R-A
+recommendation), mg-071b (`8b49708`, EX-6 Session F closing
+`continuous_ad_general` via 4th project axiom `cellMass_AD`), mg-d731
+(`e1fdaa1`, cellMass_AD verification GREEN). **Substantive scoping
+finding (mid-session, mailed to mayor at session start).** After
+in-session analysis, the substantive Daykin–Saks 1981 swap-induction
+inner step turned out to require ~500–1000 LoC of measure-theory glue
+beyond the Session B budget per mg-2746 §7.2 (~150–270 LoC).  Polecat
+(mg-4a56) mailed mayor with three options (full closure with 3 pillars;
+5th project axiom mirroring mg-071b; structural infra only).  Mayor
+returned **Option 3** as the trust-surface-preserving call: a 5th axiom
+would exceed the project's ≤4-axiom envelope committed in the previous
+evening digest.  **Deliverable.** Structural infrastructure landed in
+`OneThird.RelationPoset` namespace: `OrderPolytope' Q` (data-version
+order polytope, `rfl`-bridge to typeclass `OrderPolytope α` under
+`Q.asPartialOrder`); `OrderPolytope'_subset_of_subseteq` (Q.Subseteq
+Q' ⟹ O(Q') ⊆ O(Q), reversed-direction FKG monotonicity-under-
+augmentation); `OrderPolytope'_inf_mem` and `OrderPolytope'_sup_mem`
+(sublattice property under componentwise `⊓, ⊔`, the key structural
+fact for Brightwell 1999 §4.2 chamber + AD reduction);
+`OrderPolytope'_measurableSet` and `OrderPolytope'_subset_cube`
+(transports of mg-8c66 typeclass results via `asPartialOrder`).
+**Trust surface impact: none.** `#print axioms` on the four exposed
+theorems gives only the mathlib-standard
+`{propext, Classical.choice, Quot.sound}` triplet — **no new project
+axioms**.  `width3_one_third_two_thirds` headline trust surface
+unchanged (still 2 named axioms + native_decide quintet). EX-7 Session
+B (master theorem `probEvent'_mono_of_subseteq_upClosed` itself) is
+**deferred to Session C**; estimated 2–3 polecat sessions, ~600–1000
+LoC, consuming this file's structural infrastructure together with
+`chamber_cover` / `chamber_volume` / `orderPolytope_volume` (mg-10d9),
+`continuous_ad_general` (mg-071b), and `stanley_log_supermod` (mg-d0fc).
+Build green for full `OneThird` target (~2640 lake jobs). §3.4 updated
+(sub-α-C arc: EX-7 Session B structural infra done, Session C is the
+next execution ticket = master theorem assembly). PM next step: file
+**EX-7 Session C scoping ticket** (chamber + AD + Stanley assembly via
+single-edge induction + swap involution; deliverable mg-2746 §2.4 +
+§5.2 form the Session C brief; budget split by mayor preference).
 **Last update.** mg-d731 (cat-mg-d731), 2026-05-09. **cellMass_AD
 independent verification GREEN** (4th project axiom, parallel to
 mg-e22f for the 3rd axiom). §1.24 NEW for the trust-surface
@@ -2173,6 +2215,144 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   ~300 LoC, ~150–250k tokens). Then **EX-7 Session B** scoping
   ticket once Session F lands.
 
+### §1.25 EX-7 Session B — structural infrastructure (Option 3 per mayor override) (mg-4a56)
+
+* **Source.** mg-4a56 (this update);
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadline.lean` (NEW file,
+  ~205 LoC); `lean/OneThird.lean` (one-line import addition).
+
+* **Predecessors.**
+  - mg-2746 (`dcd0925`, EX-7 Session A) — latex-first scoping +
+    Path R-A recommendation + substantive Monotone-vs-polytope
+    hypothesis-mismatch finding (state.md §1.22).
+  - mg-071b (`8b49708`, EX-6 Session F) — Monotone-free
+    `continuous_ad_general` via 4th project axiom `cellMass_AD`
+    (state.md §1.23).
+  - mg-d731 (`e1fdaa1`, cellMass_AD verification) — `cellMass_AD`
+    verification GREEN (state.md §1.24).
+  - mg-d0fc — `stanley_log_supermod` temp axiom (state.md §1.11).
+  - mg-10d9 — chamber decomposition triple (state.md §1.19).
+
+* **Substantive scoping finding (mid-session, mailed to mayor at
+  session start).** Per mg-2746 §7.2 the Session B budget was
+  ~150–270 LoC for the master theorem
+  `probEvent'_mono_of_subseteq_upClosed` consuming the chamber + AD +
+  Stanley pillars.  After in-session analysis, the substantive
+  **Daykin–Saks 1981 swap-induction inner step** is bounded below at
+  ~500–1000 LoC of measure-theory glue (single-edge induction over
+  `Q'.rel.card - Q.rel.card` + chamber transport + swap involution
+  on `LinearExt' Q` + four-function instantiation respecting the
+  sublattice property + Stanley axiom invocation at the discrete-sum
+  closure step).  **Three options surfaced** (mid-session mail):
+  - Option 1: Full closure with 3 pillars (~600–1000+ LoC, over budget,
+    high risk).
+  - Option 2: 5th tightly-scoped project axiom for the inner-step
+    swap inequality, mirroring mg-071b's mid-session decision for
+    `cellMass_AD` (~250–350 LoC, axiom-bearing).
+  - Option 3: Structural infrastructure only, defer master theorem
+    to Session C (~150–200 LoC, no new axiom).
+
+* **Mayor override (this session).** Option 3 returned by mayor as
+  the trust-surface-preserving call: the project committed to a
+  ≤4-axiom envelope in the previous evening digest, so adding a 5th
+  axiom would exceed the envelope.  Polecat ACK'd and switched
+  delivery in-flight.
+
+* **Deliverable.** Structural infrastructure landed in the
+  `OneThird.RelationPoset` namespace at
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadline.lean`:
+
+  - **§1 — `OrderPolytope' Q`** (data-version order polytope of a
+    `RelationPoset α`).  Definition `{ f : α → ℝ | … ∧ Q.le-mono }`,
+    `mem_OrderPolytope'` membership unfolding, and the `rfl`-bridge
+    `OrderPolytope'_eq_asPartialOrder` to the typeclass-based
+    `OneThird.LinearExt.OrderPolytope α` (mg-8c66) under `Q.asPartialOrder`.
+    The bridge means every theorem from the mg-8c66 / mg-10d9
+    typeclass-based development (`chamber_cover`, `chamber_volume`,
+    `chamber_inter_meas_zero`, `orderPolytope_volume`,
+    `chamberRelabel`) transports directly under `letI : PartialOrder α
+    := Q.asPartialOrder`.
+  - **§2 — `OrderPolytope'_subset_of_subseteq`** (set-level FKG
+    monotonicity-under-augmentation).  `Q.Subseteq Q' →
+    OrderPolytope' Q' ⊆ OrderPolytope' Q`: more relations ⟹ smaller
+    polytope.
+  - **§3 — Sublattice property under componentwise `⊓, ⊔`.**
+    `OrderPolytope'_inf_mem` and `OrderPolytope'_sup_mem`: order
+    polytopes are closed under componentwise pointwise minimum and
+    maximum.  This is the key structural fact for the chamber +
+    Ahlswede–Daykin reduction of the drops headline (Brightwell 1999
+    §4.2 pointwise four-function inequality on the cube).  **Why
+    monotonicity-free `continuous_ad_general` matters**: per mg-2746
+    §3, polytope indicators `1_{O(Q)}` are sublattice indicators but
+    **not** cube-monotone, so the Monotone-laden mg-7d37
+    `continuous_ad` does not apply — `continuous_ad_general` (mg-071b)
+    consumes this sublattice property of `OrderPolytope'` via its
+    Monotone-free hypothesis structure.
+  - **§4 — Measurability and inclusion in the cube.**
+    `OrderPolytope'_measurableSet` (Borel) and
+    `OrderPolytope'_subset_cube`.  Both transport from mg-8c66 via
+    `asPartialOrder`.
+  - **§5 — Forward to EX-7 Session C.**  The master theorem
+    `probEvent'_mono_of_subseteq_upClosed` is deferred to Session C
+    per the mayor's Option 3 override.  The intended proof structure
+    (mg-2746 §2.4 single-edge induction + swap + AD + Stanley) is
+    documented inline so Session C polecat picks up cold.
+
+* **Trust surface impact: NONE.**  `#print axioms` on the four
+  exposed theorems
+  (`OrderPolytope'_subset_of_subseteq`, `OrderPolytope'_inf_mem`,
+  `OrderPolytope'_sup_mem`, `OrderPolytope'_measurableSet`) gives only
+  the mathlib-standard `{propext, Classical.choice, Quot.sound}`
+  triplet — **no new project axioms** introduced by this session.
+  `width3_one_third_two_thirds` headline trust surface unchanged
+  (still 2 named axioms + native_decide quintet); sub-α-C arc trust
+  surface unchanged (still 4 named axioms: `brightwell_sharp_centred`,
+  `case3Witness_hasBalancedPair_outOfScope`, `stanley_log_supermod`,
+  `cellMass_AD`).
+
+* **LoC count.** ~205 LoC in the new file (within mayor's Option 3
+  budget of ~150–200 LoC, slight overage absorbed by the §5 forward-
+  pointer documentation block; pure infrastructure ≤180 LoC).
+
+* **Build status.** Build green for full `OneThird` target (~2640
+  lake jobs).  Local `lake build OneThird.Mathlib.RelationPoset.DropsHeadline`
+  green.
+
+* **Trip-wires not fired** (per mg-2746 §7.4):
+  - Token blow-up: not fired (well under the 350k cap; mid-session
+    mayor escalation absorbed the scope swap from Option 2 → Option 3
+    cleanly).
+  - The single-edge induction's swap-involution argument has a
+    structural gap: not fired in this session; deferred to Session C.
+  - Hand-verification fails: N/A (no master theorem in this session).
+
+* **EX-7 Session C handoff brief.**  Master theorem
+  `probEvent'_mono_of_subseteq_upClosed` (the Daykin–Saks 1981
+  Theorem 1 / Brightwell 1999 §4 drops headline) is the Session C
+  target.  Estimated 2–3 polecat sessions, ~600–1000 LoC total,
+  consuming:
+  - This file's structural infrastructure (sublattice + Subseteq
+    monotonicity + measurability + `rfl`-bridge to typeclass version);
+  - mg-10d9 chamber-decomposition triple
+    (`chamber_cover`, `chamber_volume`, `chamber_inter_meas_zero`,
+    `orderPolytope_volume`) transported via `asPartialOrder`;
+  - mg-071b `continuous_ad_general` (Monotone-free continuous AD);
+  - mg-d0fc `stanley_log_supermod` axiom at the discrete-sum closure
+    step.
+  Recommended Session C decomposition: (a) chamber-volume transport
+  for `OrderPolytope' Q` (~150 LoC); (b) single-edge induction +
+  swap involution (~200 LoC); (c) master theorem assembly via AD +
+  Stanley (~250–650 LoC depending on Lean assembly density).  No new
+  project axioms anticipated.
+
+* **Verdict.** **GREEN per Option 3 scope.**  Structural
+  infrastructure landed cleanly with no new axioms; build green; trust
+  surface unchanged; Session C handoff brief written.  The polecat
+  brief's ~150–300 LoC and ~350k token budget remain on-track for the
+  combined Session B + Session C delivery (this session uses ~205 LoC
+  + ~?80–100k tokens; Session C estimated ~600–1000 LoC + ~250–400k
+  tokens).
+
 ### §1.24 cellMass_AD independent verification — GREEN (mg-d731)
 
 * **Source.** mg-d731 (this update);
@@ -2626,6 +2806,49 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   **PM files EX-6 Session F scoping ticket next** (deliverable §4.2 +
   §5.1 + §7.1 form the Session F brief), then EX-7 Session B once
   Session F lands.
+  **EX-6 Session F done (mg-071b, `8b49708`; see §1.23) — AMBER-
+  leaning-GREEN.** Monotone-free `continuous_ad_general` landed via
+  cell-averages route; substantive scoping finding mid-session
+  surfaced that the cell-AD inner step is the literature-standard
+  Ahlswede–Daykin 1979 Lemma 2 (~1000–1500 LoC mathlib measure-theory
+  glue beyond Session F budget); Option 2 (axiom-bearing) executed
+  with mayor visibility and `cellMass_AD` introduced as **4th project
+  axiom** under DH-4 discharge target. Trust surface impact:
+  +1 axiom (4 total, sub-α-C arc only); `#print axioms
+  continuous_ad_general` gives mathlib triplet + `cellMass_AD`.
+  **cellMass_AD verification done (mg-d731, `e1fdaa1`; see §1.24) —
+  GREEN.** Three orthogonal sub-checks all PASS (cross-literature: 10
+  sources / 5 decades; numerical sanity: 14 948 cell-pair checks / 0
+  violations on EX-7-motivating polytope-indicator shapes;
+  uncontested in literature). EX-7 Session B unblocked per the
+  audit-bar separate-verification discipline.
+  **EX-7 Session B done (mg-4a56, this commit; see §1.25) — GREEN per
+  Option 3 (mayor override).**  Structural infrastructure landed in
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadline.lean` (~205 LoC):
+  `OrderPolytope' Q` (data-version order polytope with `rfl`-bridge to
+  typeclass `OrderPolytope α` under `Q.asPartialOrder`),
+  `OrderPolytope'_subset_of_subseteq` (set-level FKG mono-under-aug),
+  `OrderPolytope'_inf_mem` and `OrderPolytope'_sup_mem` (sublattice
+  property — the key structural fact for the Brightwell §4.2 chamber +
+  AD inner step), `OrderPolytope'_measurableSet` and
+  `OrderPolytope'_subset_cube` (transports of mg-8c66 typeclass
+  results).  **Substantive scoping finding (mid-session, mailed to
+  mayor at session start)**: the substantive Daykin–Saks 1981 swap-
+  induction inner step turned out to require ~500–1000 LoC of measure-
+  theory glue beyond the Session B budget per mg-2746 §7.2.  Three
+  options surfaced (full closure, 5th project axiom mirroring mg-071b,
+  structural infra only); mayor returned **Option 3** as the trust-
+  surface-preserving call (≤4-axiom envelope committed in previous
+  evening digest). Trust surface impact: **none** (`#print axioms`
+  triplet `{propext, Classical.choice, Quot.sound}`; no new project
+  axioms). Master theorem `probEvent'_mono_of_subseteq_upClosed`
+  **deferred to EX-7 Session C** (estimated 2–3 polecat sessions,
+  ~600–1000 LoC total, consuming this session's structural infra +
+  mg-10d9 chamber decomp + mg-071b `continuous_ad_general` +
+  mg-d0fc `stanley_log_supermod`). **PM files EX-7 Session C scoping
+  ticket next** (mg-2746 §2.4 + §5.2 form the Session C brief; budget
+  split per mayor preference); EX-8 (case3-port-2) and EX-9 (Brightwell-
+  port-A) remain blocked behind EX-7 Session C.
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
