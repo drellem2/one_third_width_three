@@ -468,6 +468,75 @@ ticket (a.e. convergence + DCT + master `continuous_fkg` / `continuous_ad`
 + full `integral_stepLower_eq_riemann` assembly + 1D Chebyshev
 hand-verification). ETA per mg-e622 §8.2: ~400–700 LoC, ~250–400k
 tokens; Session C consumes Session B's per-cell ingredients.
+**Last update.** mg-7d37 (cat-mg-7d37), 2026-05-09. **EX-6 Session
+E — three remaining sorries closed; entire EX-6 arc sorry-free.**
+The `tendsto_integral_stepLower`, `continuous_fkg`, and
+`continuous_ad` master theorems in
+`lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`
+are now proven outright. **Architecture.** Three layers:
+(i) **Squeeze for `tendsto_integral_stepLower`.** Uses the sandwich
+`stepLower N f ≤ f ≤ stepUpper N f` on the half-open cube
+`[0,1)^n` (via `stepLower_le_self` / `le_stepUpper_self`). The
+half-open cube and closed cube differ on a Lebesgue-null set
+(volume(IccCube) = volume(IcoCube) = 1 by `volume_pi_pi` +
+`Real.volume_Icc` / `Real.volume_Ico`, hence
+volume(IccCube \ IcoCube) = 0 by `measure_diff` + `ae_eq_set`).
+The squeeze uses `setIntegral_congr_set` to identify the integrals,
+`setIntegral_mono_on` for the integral inequalities, and
+`integral_stepUpper_sub_stepLower_bound` (Session D) for the gap
+bound `((N+1)^n / N^n - 1) · f(1,…,1) → 0`. The `((N+1)/N)^n → 1`
+limit is built up from `tendsto_one_div_atTop_nhds_zero_nat` plus
+`Filter.Tendsto.add` / `.pow` / `.sub_const` / `.mul_const`. Final
+step: `tendsto_of_tendsto_of_tendsto_of_le_of_le'` (squeeze theorem)
+on `0 ≤ F - L_N ≤ ((N+1)^n/N^n - 1) · M`, then `Tendsto.sub` to
+flip the sign.
+(ii) **Master `continuous_fkg`.** Volume of the unit cube reduces
+to `1` via `volume_pi_pi` + `Real.volume_Icc` (so the trailing
+`(volume IccCube).toReal` factor on the RHS becomes `1`).
+`f * g` is monotone non-negative integrable (product of monotone
+non-negs by `mul_le_mul`). At each `N ≥ 1`, `fkg_discrete_pi_finN`
+gives `S_f · S_g ≤ N^n · S_{fg}`; multiply by `(1/N^n)^2` and use
+`integral_stepLower_eq_riemann` (each side is `(1/N^n) · ∑`); the
+`(f * g)(k/N) = f(k/N) · g(k/N)` rewrite (via `Pi.mul_apply`)
+identifies the (f*g)-sum with the bilinear sum. Then
+`tendsto_integral_stepLower` for `f`, `g`, `f * g` plus
+`Filter.Tendsto.mul` and `le_of_tendsto_of_tendsto` close the proof.
+(iii) **Master `continuous_ad`.** Same structure, using new lemma
+**`ad_discrete_pi_finN`** (Fin N variant of `ad_discrete_pi`,
+parallel to `fkg_discrete_pi_finN`); requires new helpers
+`gridPointN`, `gridPointN_inf`, `gridPointN_sup` (Fin N analogues
+of `gridPoint`, `gridPoint_inf`, `gridPoint_sup`), proved by the
+same case analysis on `N = 0` / `N ≥ 1` and `le_total` on
+coordinates. **Signature widening for `continuous_ad`.** The
+inline scoping note ("same pattern as `continuous_fkg`") commits
+the proof to Riemann-sum convergence via `tendsto_integral_stepLower`,
+which requires per-coordinate monotonicity of each `f_i`. The
+original signature in mg-8561 lacked monotonicity hypotheses; we
+add **`Monotone f_i`** (i = 1, 2, 3, 4) to bring the hypothesis set
+in line with the proof method. This matches the OneThird application
+chain (EX-7 / EX-9 consume AD with monotone indicators of upper-closed
+sets — see ex6-continuous-fkg-scoping.md §5.5 / §1.3); a fully
+generic continuous AD on `[0,1]^n` (no monotonicity, just the AD
+lattice hypothesis + integrability) would need a different
+convergence route (e.g. dominated convergence on a measurable
+class via stepLower → f a.e.) and is **out of scope for EX-6 / sub-α-C**.
+**Trust surface impact: none** (no new axioms; no `stanley_log_supermod`
+consumption; no mathlib refactor). **No new mathlib gap.** Build:
+`lake build` succeeds (2641 jobs total, **0 sorries** in the
+EX-6 file; full `OneThird` target sorry-free for sub-α-C). Final
+length of `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`:
+~1500 lines (added ~340 lines for the three master theorems plus
+`gridPointN` / `gridPointN_inf` / `gridPointN_sup` /
+`ad_discrete_pi_finN`). §3.4 updated (sub-α-C arc: **EX-6
+complete; sub-α-C arc CLOSES on EX-7 dispatch**). Trip-wires (per
+mg-91be §5.6 / mg-e622 §8.3): not fired (token-budget under
+600k cap; mathlib refactor not needed; AD-without-monotonicity
+gap surfaced as the documented signature widening, not as a
+proof-architecture surprise). PM next step: file **EX-7 scoping
+ticket** for `probEvent'_mono_of_subseteq_upClosed` (the EX-6
+consumer) — `1_{O(Q')}` × `1_{A_k(S)}` instantiation against
+`continuous_fkg`, plus the `(Fin n → ℝ)` ↔ `(α → ℝ)` reindexing
+needed for the abstract drops application.
 **Last update.** mg-8561 (cat-mg-8561), 2026-05-09. **EX-6 Session
 D — `sum_step_diff_bound` cancellation lemma closed (sorry-free).**
 The "single fundamental remaining sorry" identified in mg-4adf

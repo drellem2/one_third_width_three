@@ -796,6 +796,85 @@ theorem fkg_discrete_pi_finN {N : ℕ}
   rw [hsum] at h
   exact h
 
+/-- The grid index point as a real-valued vector, `Fin N` variant. -/
+noncomputable def gridPointN (N : ℕ) (k : Fin n → Fin N) : Fin n → ℝ :=
+  fun i => (k i : ℝ) / (N : ℝ)
+
+/-- The lattice operation `⊓` on `Fin N` (which is `min`) commutes
+with `gridPointN`. Parallel to `gridPoint_inf` for `Fin (N+1)`. -/
+lemma gridPointN_inf (N : ℕ) (k l : Fin n → Fin N) :
+    gridPointN N (k ⊓ l) = gridPointN N k ⊓ gridPointN N l := by
+  funext i
+  simp only [gridPointN, Pi.inf_apply]
+  rcases Nat.eq_zero_or_pos N with hN | hN
+  · subst hN; exact (k i).elim0
+  have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+  have h_min : ((k i ⊓ l i : Fin N) : ℕ) = min (k i : ℕ) (l i : ℕ) := by
+    rcases le_total (k i) (l i) with hle | hle
+    · simp [inf_eq_left.mpr hle, min_eq_left (Fin.le_iff_val_le_val.mp hle)]
+    · simp [inf_eq_right.mpr hle, min_eq_right (Fin.le_iff_val_le_val.mp hle)]
+  rw [show ((((k i ⊓ l i : Fin N) : ℕ) : ℝ)) = ((min (k i : ℕ) (l i : ℕ) : ℕ) : ℝ) by
+        rw [h_min]]
+  rcases le_total (k i : ℕ) (l i : ℕ) with hle | hle
+  · have hcast : ((k i : ℕ) : ℝ) ≤ ((l i : ℕ) : ℝ) := by exact_mod_cast hle
+    rw [Nat.min_eq_left hle]
+    rw [min_eq_left]
+    exact div_le_div_of_nonneg_right hcast hN'.le
+  · have hcast : ((l i : ℕ) : ℝ) ≤ ((k i : ℕ) : ℝ) := by exact_mod_cast hle
+    rw [Nat.min_eq_right hle]
+    rw [min_eq_right]
+    exact div_le_div_of_nonneg_right hcast hN'.le
+
+/-- The lattice operation `⊔` on `Fin N` (which is `max`) commutes
+with `gridPointN`. Parallel to `gridPoint_sup` for `Fin (N+1)`. -/
+lemma gridPointN_sup (N : ℕ) (k l : Fin n → Fin N) :
+    gridPointN N (k ⊔ l) = gridPointN N k ⊔ gridPointN N l := by
+  funext i
+  simp only [gridPointN, Pi.sup_apply]
+  rcases Nat.eq_zero_or_pos N with hN | hN
+  · subst hN; exact (k i).elim0
+  have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+  have h_max : ((k i ⊔ l i : Fin N) : ℕ) = max (k i : ℕ) (l i : ℕ) := by
+    rcases le_total (k i) (l i) with hle | hle
+    · simp [sup_eq_right.mpr hle, max_eq_right (Fin.le_iff_val_le_val.mp hle)]
+    · simp [sup_eq_left.mpr hle, max_eq_left (Fin.le_iff_val_le_val.mp hle)]
+  rw [show ((((k i ⊔ l i : Fin N) : ℕ) : ℝ)) = ((max (k i : ℕ) (l i : ℕ) : ℕ) : ℝ) by
+        rw [h_max]]
+  rcases le_total (k i : ℕ) (l i : ℕ) with hle | hle
+  · have hcast : ((k i : ℕ) : ℝ) ≤ ((l i : ℕ) : ℝ) := by exact_mod_cast hle
+    rw [Nat.max_eq_right hle]
+    rw [max_eq_right]
+    exact div_le_div_of_nonneg_right hcast hN'.le
+  · have hcast : ((l i : ℕ) : ℝ) ≤ ((k i : ℕ) : ℝ) := by exact_mod_cast hle
+    rw [Nat.max_eq_left hle]
+    rw [max_eq_left]
+    exact div_le_div_of_nonneg_right hcast hN'.le
+
+/-- **Discrete Ahlswede–Daykin (4FT) on `(Fin N)^n`**, index range
+`Fin N` variant. The lattice hypothesis transports through `gridPointN`
+which commutes with `⊓` and `⊔`. -/
+theorem ad_discrete_pi_finN {N : ℕ}
+    {f₁ f₂ f₃ f₄ : (Fin n → ℝ) → ℝ}
+    (hf₁ : 0 ≤ f₁) (hf₂ : 0 ≤ f₂) (hf₃ : 0 ≤ f₃) (hf₄ : 0 ≤ f₄)
+    (hAD : ∀ x y, f₁ x * f₂ y ≤ f₃ (x ⊓ y) * f₄ (x ⊔ y)) :
+    (∑ k : Fin n → Fin N, gridFnN N f₁ k) *
+        (∑ k : Fin n → Fin N, gridFnN N f₂ k)
+    ≤ (∑ k : Fin n → Fin N, gridFnN N f₃ k) *
+        (∑ k : Fin n → Fin N, gridFnN N f₄ k) := by
+  classical
+  refine four_functions_theorem_univ
+    (gridFnN N f₁) (gridFnN N f₂) (gridFnN N f₃) (gridFnN N f₄)
+    (gridFnN_nonneg hf₁) (gridFnN_nonneg hf₂) (gridFnN_nonneg hf₃) (gridFnN_nonneg hf₄)
+    (fun k l => ?_)
+  have hkl_inf : gridPointN N (k ⊓ l) = gridPointN N k ⊓ gridPointN N l :=
+    gridPointN_inf N k l
+  have hkl_sup : gridPointN N (k ⊔ l) = gridPointN N k ⊔ gridPointN N l :=
+    gridPointN_sup N k l
+  show f₁ (gridPointN N k) * f₂ (gridPointN N l)
+        ≤ f₃ (gridPointN N (k ⊓ l)) * f₄ (gridPointN N (k ⊔ l))
+  rw [hkl_inf, hkl_sup]
+  exact hAD (gridPointN N k) (gridPointN N l)
+
 end DiscreteFKGFinN
 
 /-! ### §6 — `stepUpper` approximation, sandwich, and Riemann identity -/
@@ -1079,7 +1158,16 @@ variable {n : ℕ}
 
 /-- **Riemann-sum convergence (lower-step → integral).** For `f ≥ 0`
 monotone integrable on `[0,1]^n`, the lower-step Riemann integrals
-on `[0,1)^n` converge to `∫_{[0,1]^n} f` as `N → ∞`. -/
+on `[0,1)^n` converge to `∫_{[0,1]^n} f` as `N → ∞`.
+
+The proof is a squeeze. On the half-open cube `[0,1)^n` the step
+sandwich gives `stepLower N f ≤ f ≤ stepUpper N f` pointwise (via
+`stepLower_le_self` / `le_stepUpper_self`), hence the integral
+sandwich `L_N ≤ ∫_{[0,1)^n} f ≤ U_N`. The half-open cube and the
+closed cube differ on a measure-zero set (the upper-face boundary),
+so `∫_{[0,1)^n} f = ∫_{[0,1]^n} f`. The gap `U_N - L_N ≤
+((N+1)^n / N^n - 1) · f(1,…,1)` (by `integral_stepUpper_sub_stepLower_bound`)
+tends to `0` as `N → ∞`. -/
 theorem tendsto_integral_stepLower
     {f : (Fin n → ℝ) → ℝ}
     (hf₀ : 0 ≤ f) (hf : Monotone f)
@@ -1090,11 +1178,142 @@ theorem tendsto_integral_stepLower
             stepLower N f x ∂volume)
       Filter.atTop
       (nhds (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f x ∂volume)) := by
-  -- DEFERRED (Session D): squeeze ∫ stepLower N f ≤ ∫ f ≤ ∫ stepUpper N f
-  -- using `integral_stepUpper_sub_stepLower_bound` (which depends on
-  -- `sum_step_diff_bound`). The bound `((N+1)/N)^n - 1 → 0` gives the
-  -- Tendsto via `Tendsto.sub_zero` + `Filter.Tendsto.mono_right`.
-  sorry
+  classical
+  set IcoCube : Set (Fin n → ℝ) :=
+    Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1) with hIcoCube_def
+  set IccCube : Set (Fin n → ℝ) := Set.Icc (0 : Fin n → ℝ) 1 with hIccCube_def
+  set F : ℝ := ∫ x in IccCube, f x ∂volume with hF_def
+  set M : ℝ := f (fun _ => 1) with hM_def
+  have hM_nn : 0 ≤ M := hf₀ _
+  have hIcoCube_meas : MeasurableSet IcoCube :=
+    MeasurableSet.univ_pi (fun _ => measurableSet_Ico)
+  -- Step 1: IcoCube ⊆ IccCube.
+  have hsub : IcoCube ⊆ IccCube := by
+    intro x hx
+    simp only [hIcoCube_def, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_Ico] at hx
+    refine ⟨fun i => (hx i).1, fun i => (hx i).2.le⟩
+  -- Helper: `x ∈ IcoCube → ∀ i, 0 ≤ x i ∧ x i ≤ 1` (for stepLower).
+  have hx_in_cube :
+      ∀ {x : Fin n → ℝ}, x ∈ IcoCube → ∀ i, 0 ≤ x i ∧ x i ≤ 1 := by
+    intro x hx i
+    have hi : x i ∈ Set.Ico (0 : ℝ) 1 := hx i (Set.mem_univ i)
+    rw [Set.mem_Ico] at hi
+    exact ⟨hi.1, hi.2.le⟩
+  -- Helper: `x ∈ IcoCube → ∀ i, 0 ≤ x i ∧ x i < 1` (for stepUpper).
+  have hx_in_Ico :
+      ∀ {x : Fin n → ℝ}, x ∈ IcoCube → ∀ i, 0 ≤ x i ∧ x i < 1 := by
+    intro x hx i
+    have hi : x i ∈ Set.Ico (0 : ℝ) 1 := hx i (Set.mem_univ i)
+    rw [Set.mem_Ico] at hi
+    exact hi
+  -- Step 2: volume(IcoCube) = volume(IccCube) = 1.
+  have hvol_Ico : volume IcoCube = 1 := by
+    rw [hIcoCube_def, volume_pi_pi]
+    simp [Real.volume_Ico]
+  have hIccCube_eq :
+      IccCube = Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1) := by
+    ext x
+    simp only [hIccCube_def, Set.mem_Icc, Set.mem_pi, Set.mem_univ, true_implies,
+      Pi.le_def, Pi.zero_apply, Pi.one_apply]
+    refine ⟨fun ⟨h0, h1⟩ i => ⟨h0 i, h1 i⟩, fun h => ⟨fun i => (h i).1, fun i => (h i).2⟩⟩
+  have hvol_Icc : volume IccCube = 1 := by
+    rw [hIccCube_eq, volume_pi_pi]
+    simp [Real.volume_Icc]
+  -- Step 3: volume(IccCube \ IcoCube) = 0, so IcoCube =ᵐ IccCube.
+  have hvol_diff : volume (IccCube \ IcoCube) = 0 := by
+    rw [measure_diff hsub hIcoCube_meas.nullMeasurableSet
+          (by rw [hvol_Ico]; exact ENNReal.one_ne_top)]
+    rw [hvol_Icc, hvol_Ico]
+    simp
+  have hae_eq : IcoCube =ᵐ[volume] IccCube := by
+    rw [ae_eq_set]
+    refine ⟨?_, hvol_diff⟩
+    rw [Set.diff_eq_empty.mpr hsub]
+    exact measure_empty
+  -- Step 4: ∫_{IcoCube} f = ∫_{IccCube} f = F.
+  have hf_int_Ico : IntegrableOn f IcoCube volume := hfL1.mono_set hsub
+  have hF_eq_Ico : ∫ x in IcoCube, f x ∂volume = F :=
+    setIntegral_congr_set hae_eq
+  -- Step 5: For N ≥ 1, ∫_{IcoCube} stepLower N f ≤ F.
+  have hL_le_F : ∀ N, 1 ≤ N →
+      ∫ x in IcoCube, stepLower N f x ∂volume ≤ F := by
+    intro N hN
+    rw [← hF_eq_Ico]
+    refine setIntegral_mono_on (integrableOn_stepLower_cube hN f) hf_int_Ico
+      hIcoCube_meas (fun x hx => ?_)
+    exact stepLower_le_self hN hf (hx_in_cube hx)
+  -- Step 6: For N ≥ 1, F ≤ ∫_{IcoCube} stepUpper N f.
+  have hF_le_U : ∀ N, 1 ≤ N →
+      F ≤ ∫ x in IcoCube, stepUpper N f x ∂volume := by
+    intro N hN
+    rw [← hF_eq_Ico]
+    refine setIntegral_mono_on hf_int_Ico (integrableOn_stepUpper_cube hN f)
+      hIcoCube_meas (fun x hx => ?_)
+    exact le_stepUpper_self hN hf (hx_in_Ico hx)
+  -- Step 7: For N ≥ 1, F - L_N ≤ ((N+1)^n / N^n - 1) * M.
+  have h_diff_bound : ∀ N, 1 ≤ N →
+      F - ∫ x in IcoCube, stepLower N f x ∂volume
+        ≤ ((N + 1 : ℝ) ^ n / (N : ℝ) ^ n - 1) * M := by
+    intro N hN
+    have hL := hL_le_F N hN
+    have hU := hF_le_U N hN
+    have hbound := integral_stepUpper_sub_stepLower_bound (n := n) hN hf₀ hf
+    linarith
+  -- Step 8: ((N+1)^n / N^n - 1) * M → 0 as N → ∞.
+  have h_quot_to_one :
+      Filter.Tendsto (fun N : ℕ => ((N : ℝ) + 1) / (N : ℝ)) Filter.atTop
+          (nhds 1) := by
+    have h1 : Filter.Tendsto (fun N : ℕ => (1 : ℝ) / (N : ℝ)) Filter.atTop
+        (nhds 0) := tendsto_one_div_atTop_nhds_zero_nat
+    have heq : (fun N : ℕ => ((N : ℝ) + 1) / (N : ℝ))
+                =ᶠ[Filter.atTop] (fun N => 1 + 1 / (N : ℝ)) := by
+      filter_upwards [Filter.eventually_ge_atTop 1] with N hN
+      have hN0 : (0 : ℝ) < (N : ℝ) := by exact_mod_cast (by omega : 0 < N)
+      field_simp
+    rw [Filter.tendsto_congr' heq]
+    have hconst : Filter.Tendsto (fun _ : ℕ => (1 : ℝ)) Filter.atTop (nhds 1) :=
+      tendsto_const_nhds
+    have := hconst.add h1
+    simpa using this
+  have h_pow_to_one :
+      Filter.Tendsto (fun N : ℕ => ((N : ℝ) + 1) ^ n / (N : ℝ) ^ n)
+          Filter.atTop (nhds 1) := by
+    have hpow := h_quot_to_one.pow n
+    have heq : (fun N : ℕ => (((N : ℝ) + 1) / (N : ℝ)) ^ n) =
+               (fun N : ℕ => ((N : ℝ) + 1) ^ n / (N : ℝ) ^ n) := by
+      funext N; rw [div_pow]
+    rw [heq] at hpow
+    simpa using hpow
+  have h_diff_to_zero :
+      Filter.Tendsto (fun N : ℕ => ((N : ℝ) + 1) ^ n / (N : ℝ) ^ n - 1)
+          Filter.atTop (nhds 0) := by
+    have := h_pow_to_one.sub_const 1
+    simpa using this
+  have h_bound_to_zero :
+      Filter.Tendsto
+          (fun N : ℕ => (((N : ℝ) + 1) ^ n / (N : ℝ) ^ n - 1) * M)
+          Filter.atTop (nhds 0) := by
+    have := h_diff_to_zero.mul_const M
+    simpa using this
+  -- Step 9: squeeze: 0 ≤ F - L_N ≤ ((N+1)^n/N^n - 1) * M, both → 0.
+  have hF_minus_L_to_zero :
+      Filter.Tendsto
+          (fun N : ℕ => F - ∫ x in IcoCube, stepLower N f x ∂volume)
+          Filter.atTop (nhds 0) := by
+    apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds
+      h_bound_to_zero
+    · filter_upwards [Filter.eventually_ge_atTop 1] with N hN
+      linarith [hL_le_F N hN]
+    · filter_upwards [Filter.eventually_ge_atTop 1] with N hN
+      exact h_diff_bound N hN
+  -- Step 10: L_N = F - (F - L_N) → F - 0 = F.
+  have h_final :
+      Filter.Tendsto
+          (fun N : ℕ => F - (F - ∫ x in IcoCube, stepLower N f x ∂volume))
+          Filter.atTop (nhds (F - 0)) :=
+    tendsto_const_nhds.sub hF_minus_L_to_zero
+  simp only [sub_sub_cancel, sub_zero] at h_final
+  exact h_final
 
 /-- **Continuous FKG on `[0,1]^n`** (Brightwell 1999 §4 source). For
 non-negative coordinate-monotone `f, g, fg` integrable on the cube:
@@ -1114,21 +1333,100 @@ theorem continuous_fkg
       (∫ x in Set.Icc (0 : Fin n → ℝ) 1, g x ∂volume)
     ≤ (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f x * g x ∂volume) *
       (volume (Set.Icc (0 : Fin n → ℝ) 1)).toReal := by
-  -- Discrete FKG `fkg_discrete_pi_finN` on `(Fin n → Fin N)` with
-  -- divisor `N` gives, after dividing both sides by `N^(2n)`:
-  --   (∫ stepLower N f)(∫ stepLower N g) ≤ ∫ stepLower N (f*g)
-  -- (Riemann identity, plus stepLower N (f*g) = stepLower N f * stepLower N g
-  -- pointwise; use integral_stepLower_eq_riemann to convert sums.)
-  -- Take `N → ∞` via `tendsto_integral_stepLower` for `f`, `g`, and `f*g`,
-  -- then conclude via `Filter.Tendsto.mul` and `le_of_tendsto`.
-  -- `f * g` is non-neg monotone integrable (product of non-neg monotone).
-  -- DEFERRED (Session D): assembly modulo `tendsto_integral_stepLower`.
-  sorry
+  classical
+  set IccCube : Set (Fin n → ℝ) := Set.Icc (0 : Fin n → ℝ) 1 with hIccCube_def
+  set IcoCube : Set (Fin n → ℝ) :=
+    Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1) with hIcoCube_def
+  -- vol(IccCube).toReal = 1 (cube has Lebesgue measure 1).
+  have hvol_one : (volume IccCube).toReal = 1 := by
+    have hIccCube_eq :
+        IccCube = Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1) := by
+      ext x
+      simp only [hIccCube_def, Set.mem_Icc, Set.mem_pi, Set.mem_univ, true_implies,
+        Pi.le_def, Pi.zero_apply, Pi.one_apply]
+      refine ⟨fun ⟨h0, h1⟩ i => ⟨h0 i, h1 i⟩,
+              fun h => ⟨fun i => (h i).1, fun i => (h i).2⟩⟩
+    rw [hIccCube_eq, volume_pi_pi]
+    simp [Real.volume_Icc]
+  rw [hvol_one, mul_one]
+  -- f * g is monotone non-negative.
+  have hfg₀ : 0 ≤ (f * g : (Fin n → ℝ) → ℝ) := by
+    intro x; simp only [Pi.mul_apply]; exact mul_nonneg (hf₀ x) (hg₀ x)
+  have hfg_mono : Monotone (f * g) := by
+    intro x y hxy
+    simp only [Pi.mul_apply]
+    exact mul_le_mul (hf hxy) (hg hxy) (hg₀ x) (hf₀ y)
+  -- Step (A): for each N ≥ 1, the discrete FKG on `(Fin n → Fin N)` divided
+  -- by `N^(2n)` gives the integral inequality
+  --   (∫ stepLower N f) * (∫ stepLower N g) ≤ ∫ stepLower N (f * g).
+  have h_disc : ∀ N, 1 ≤ N →
+      (∫ x in IcoCube, stepLower N f x ∂volume) *
+        (∫ x in IcoCube, stepLower N g x ∂volume)
+      ≤ ∫ x in IcoCube, stepLower N (f * g) x ∂volume := by
+    intro N hN
+    have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+    have hNn_pos : (0 : ℝ) < (N : ℝ) ^ n := by positivity
+    have hfkg := fkg_discrete_pi_finN (n := n) (N := N) hf₀ hg₀ hf hg
+    rw [integral_stepLower_eq_riemann hN, integral_stepLower_eq_riemann hN,
+        integral_stepLower_eq_riemann hN]
+    -- Convert the (f * g)-sum to gridFnN-product form.
+    have h_fgk :
+        (∑ k : Fin n → Fin N, (f * g) (fun i => (k i : ℝ) / N))
+          = ∑ k : Fin n → Fin N, gridFnN N f k * gridFnN N g k := by
+      refine Finset.sum_congr rfl (fun k _ => ?_)
+      simp [gridFnN_apply, Pi.mul_apply]
+    rw [h_fgk]
+    -- Set up SF, SG, SFG abbreviations.
+    set SF := ∑ k : Fin n → Fin N, gridFnN N f k with hSF_def
+    set SG := ∑ k : Fin n → Fin N, gridFnN N g k with hSG_def
+    set SFG := ∑ k : Fin n → Fin N, gridFnN N f k * gridFnN N g k with hSFG_def
+    -- The remaining `f` and `g` sums are SF and SG by definition.
+    show (1 / (N : ℝ) ^ n) * SF * ((1 / (N : ℝ) ^ n) * SG)
+          ≤ (1 / (N : ℝ) ^ n) * SFG
+    -- Multiply hfkg : SF * SG ≤ N^n * SFG by the non-negative factor
+    -- (1/N^n)^2 to obtain the desired inequality.
+    have hc_nn : (0 : ℝ) ≤ (1 / (N : ℝ) ^ n) ^ 2 := by positivity
+    calc (1 / (N : ℝ) ^ n) * SF * ((1 / (N : ℝ) ^ n) * SG)
+        = (1 / (N : ℝ) ^ n) ^ 2 * (SF * SG) := by ring
+      _ ≤ (1 / (N : ℝ) ^ n) ^ 2 * ((N : ℝ) ^ n * SFG) := by
+            exact mul_le_mul_of_nonneg_left hfkg hc_nn
+      _ = (1 / (N : ℝ) ^ n) * SFG := by
+            have hN_ne : ((N : ℝ) ^ n) ≠ 0 := ne_of_gt hNn_pos
+            field_simp
+  -- Step (B): the integral inequality passes to the limit `N → ∞`.
+  have hL_f := tendsto_integral_stepLower (n := n) hf₀ hf hfL1
+  have hL_g := tendsto_integral_stepLower (n := n) hg₀ hg hgL1
+  have hL_fg := tendsto_integral_stepLower (n := n) hfg₀ hfg_mono hfgL1
+  have hLHS_lim : Filter.Tendsto
+      (fun N : ℕ =>
+        (∫ x in IcoCube, stepLower N f x ∂volume) *
+          (∫ x in IcoCube, stepLower N g x ∂volume))
+      Filter.atTop
+      (nhds ((∫ x in IccCube, f x ∂volume) *
+        (∫ x in IccCube, g x ∂volume))) := hL_f.mul hL_g
+  -- The RHS limit is `∫ (f * g) x ∂volume`, which equals `∫ f x * g x ∂volume`
+  -- because `(f * g) x = f x * g x` (rfl).
+  have hRHS_lim : Filter.Tendsto
+      (fun N : ℕ => ∫ x in IcoCube, stepLower N (f * g) x ∂volume)
+      Filter.atTop
+      (nhds (∫ x in IccCube, f x * g x ∂volume)) := by
+    -- `(f * g) x = f x * g x` is `rfl`, so the limits coincide.
+    convert hL_fg using 2
+  refine le_of_tendsto_of_tendsto hLHS_lim hRHS_lim ?_
+  filter_upwards [Filter.eventually_ge_atTop 1] with N hN
+  exact h_disc N hN
 
-/-- **Continuous Ahlswede–Daykin (4FT) on `[0,1]^n`**. -/
+/-- **Continuous Ahlswede–Daykin (4FT) on `[0,1]^n`**.
+
+The Riemann-sum convergence `tendsto_integral_stepLower` requires
+coordinate-monotonicity for each `f_i`, so we adopt that hypothesis
+(matching the OneThird application: AD is consumed with monotone
+indicators of up-closed sets — see EX-7 / EX-9 consumer chain). -/
 theorem continuous_ad
     {f₁ f₂ f₃ f₄ : (Fin n → ℝ) → ℝ}
     (hf₁₀ : 0 ≤ f₁) (hf₂₀ : 0 ≤ f₂) (hf₃₀ : 0 ≤ f₃) (hf₄₀ : 0 ≤ f₄)
+    (hf₁ : Monotone f₁) (hf₂ : Monotone f₂)
+    (hf₃ : Monotone f₃) (hf₄ : Monotone f₄)
     (hf₁L1 : IntegrableOn f₁ (Set.Icc (0 : Fin n → ℝ) 1))
     (hf₂L1 : IntegrableOn f₂ (Set.Icc (0 : Fin n → ℝ) 1))
     (hf₃L1 : IntegrableOn f₃ (Set.Icc (0 : Fin n → ℝ) 1))
@@ -1138,14 +1436,60 @@ theorem continuous_ad
       (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₂ x ∂volume)
     ≤ (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₃ x ∂volume) *
       (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₄ x ∂volume) := by
-  -- Same pattern as `continuous_fkg`: apply `ad_discrete_pi` (via `gridFnN`-
-  -- form, paralleling `fkg_discrete_pi_finN`) at each `N`, divide by `N^(2n)`,
-  -- recognise sums as `∫ stepLower N`, and pass to `N → ∞`. Hypothesis
-  -- `hAD` transports through `gridFnN` because the lattice ops on
-  -- `(Fin n → Fin N)` map (under `(k_i : ℝ)/N`) to the cube lattice ops
-  -- (`gridPoint_inf`, `gridPoint_sup` analogues).
-  -- DEFERRED (Session D): assembly modulo `tendsto_integral_stepLower`.
-  sorry
+  classical
+  set IccCube : Set (Fin n → ℝ) := Set.Icc (0 : Fin n → ℝ) 1 with hIccCube_def
+  set IcoCube : Set (Fin n → ℝ) :=
+    Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1) with hIcoCube_def
+  -- Step (A): for each N ≥ 1, the discrete AD on `(Fin n → Fin N)` divided
+  -- by `N^(2n)` gives the integral inequality
+  --   (∫ stepLower N f₁) * (∫ stepLower N f₂) ≤ (∫ stepLower N f₃) * (∫ stepLower N f₄).
+  have h_disc : ∀ N, 1 ≤ N →
+      (∫ x in IcoCube, stepLower N f₁ x ∂volume) *
+        (∫ x in IcoCube, stepLower N f₂ x ∂volume)
+      ≤ (∫ x in IcoCube, stepLower N f₃ x ∂volume) *
+        (∫ x in IcoCube, stepLower N f₄ x ∂volume) := by
+    intro N hN
+    have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+    have hNn_pos : (0 : ℝ) < (N : ℝ) ^ n := by positivity
+    have hAD_disc :=
+      ad_discrete_pi_finN (n := n) (N := N) hf₁₀ hf₂₀ hf₃₀ hf₄₀ hAD
+    rw [integral_stepLower_eq_riemann hN, integral_stepLower_eq_riemann hN,
+        integral_stepLower_eq_riemann hN, integral_stepLower_eq_riemann hN]
+    set S₁ := ∑ k : Fin n → Fin N, gridFnN N f₁ k with hS₁_def
+    set S₂ := ∑ k : Fin n → Fin N, gridFnN N f₂ k with hS₂_def
+    set S₃ := ∑ k : Fin n → Fin N, gridFnN N f₃ k with hS₃_def
+    set S₄ := ∑ k : Fin n → Fin N, gridFnN N f₄ k with hS₄_def
+    show (1 / (N : ℝ) ^ n) * S₁ * ((1 / (N : ℝ) ^ n) * S₂)
+          ≤ (1 / (N : ℝ) ^ n) * S₃ * ((1 / (N : ℝ) ^ n) * S₄)
+    -- Multiply hAD_disc : S₁ * S₂ ≤ S₃ * S₄ by the non-neg factor (1/N^n)^2.
+    have hc_nn : (0 : ℝ) ≤ (1 / (N : ℝ) ^ n) ^ 2 := by positivity
+    calc (1 / (N : ℝ) ^ n) * S₁ * ((1 / (N : ℝ) ^ n) * S₂)
+        = (1 / (N : ℝ) ^ n) ^ 2 * (S₁ * S₂) := by ring
+      _ ≤ (1 / (N : ℝ) ^ n) ^ 2 * (S₃ * S₄) :=
+            mul_le_mul_of_nonneg_left hAD_disc hc_nn
+      _ = (1 / (N : ℝ) ^ n) * S₃ * ((1 / (N : ℝ) ^ n) * S₄) := by ring
+  -- Step (B): the integral inequality passes to the limit `N → ∞`.
+  have hL₁ := tendsto_integral_stepLower (n := n) hf₁₀ hf₁ hf₁L1
+  have hL₂ := tendsto_integral_stepLower (n := n) hf₂₀ hf₂ hf₂L1
+  have hL₃ := tendsto_integral_stepLower (n := n) hf₃₀ hf₃ hf₃L1
+  have hL₄ := tendsto_integral_stepLower (n := n) hf₄₀ hf₄ hf₄L1
+  have hLHS_lim : Filter.Tendsto
+      (fun N : ℕ =>
+        (∫ x in IcoCube, stepLower N f₁ x ∂volume) *
+          (∫ x in IcoCube, stepLower N f₂ x ∂volume))
+      Filter.atTop
+      (nhds ((∫ x in IccCube, f₁ x ∂volume) *
+        (∫ x in IccCube, f₂ x ∂volume))) := hL₁.mul hL₂
+  have hRHS_lim : Filter.Tendsto
+      (fun N : ℕ =>
+        (∫ x in IcoCube, stepLower N f₃ x ∂volume) *
+          (∫ x in IcoCube, stepLower N f₄ x ∂volume))
+      Filter.atTop
+      (nhds ((∫ x in IccCube, f₃ x ∂volume) *
+        (∫ x in IccCube, f₄ x ∂volume))) := hL₃.mul hL₄
+  refine le_of_tendsto_of_tendsto hLHS_lim hRHS_lim ?_
+  filter_upwards [Filter.eventually_ge_atTop 1] with N hN
+  exact h_disc N hN
 
 end MasterTheorems
 
