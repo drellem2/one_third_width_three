@@ -82,6 +82,7 @@ on `Three` at the end of this file).
 
 set_option linter.unusedFintypeInType false
 set_option linter.unusedSectionVars false
+set_option linter.unusedDecidableInType false
 
 namespace OneThird
 namespace LinearExt
@@ -1004,6 +1005,273 @@ theorem chamber_volume (L : OneThird.LinearExt α) :
   rw [(volume_measurePreserving_chamberRelabel L).measure_preimage_equiv]
   exact volume_orderedCube _
 
+/-- The chamber `σ_L` is Borel-measurable: it is the preimage of the
+measurable `orderedCube` under the measurable equivalence `chamberRelabel L`. -/
+theorem measurableSet_chamber (L : OneThird.LinearExt α) :
+    MeasurableSet (chamber L) := by
+  rw [chamber_eq_preimage_orderedCube]
+  exact (chamberRelabel L).measurableSet_preimage.mpr measurableSet_orderedCube
+
+end OrderPolytope
+
+/-! ### §11 — Chamber cover, measure-zero overlap, and master volume
+
+This section completes Stanley 1986 Theorem 1.4 by showing:
+
+* the chambers `σ_L` cover the order polytope `O(α)`
+  (`OrderPolytope.chamber_cover`);
+* pairwise intersections `σ_L ∩ σ_{L'}` have Lebesgue measure zero
+  for `L ≠ L'` (`OrderPolytope.chamber_inter_meas_zero`);
+* combining with `chamber_volume`, the master volume formula
+  `Vol(O(α)) = e(α) / n!` (`OrderPolytope.orderPolytope_volume`).
+
+Cover: per the latex deliverable `docs/path-alpha-execution-arc/ex5-chamber-decomp-scoping.md`
+(mg-79a9) §3, given `f ∈ O(α)`, sort α by lex key `(f x, S.pos x)` where
+`S` is a fixed Szpilrajn linear extension used to break ties. The lex key
+is injective on α (since `S.pos` is), so the resulting sort permutation is
+unique; the chamber-membership argument follows from `Tuple.monotone_sort`.
+
+Overlap: per the deliverable §4, for `L ≠ L'` extract a witness `x : α`
+with `L.toFun x ≠ L'.toFun x`; setting `y := L.toFun.symm (L'.toFun x)`
+gives `x ≠ y`. On the intersection both `f ∘ L.toFun.symm` and
+`f ∘ L'.toFun.symm` are monotone `Fin n → ℝ` functions, hence equal by
+`Tuple.unique_monotone`; evaluating at `L'.toFun x` gives `f x = f y`.
+The hyperplane `{f | f x = f y}` is the kernel of the linear functional
+`f ↦ f x - f y`, a strict submodule of `α → ℝ`, so Lebesgue-null by
+`addHaar_submodule`.
+
+Master volume: combine the cover, AE-disjointness from the overlap lemma,
+and the per-chamber volume `1/n!` via `measure_biUnion_finset₀`. -/
+
+namespace OrderPolytope
+
+open MeasureTheory OrderedCube
+open scoped Function ENNReal
+
+variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
+
+/-! #### §11.1 — Cover via lex sort `(f x, S.pos x)`. -/
+
+/-- Auxiliary: the lex sort key `Fin n → Lex (ℝ × Fin n)` indexed by a
+linear extension `S` (used as the Szpilrajn tie-breaker), defined by
+`i ↦ toLex (f (S.toFun.symm i), i)`. -/
+private def coverKey (f : α → ℝ) (S : OneThird.LinearExt α) :
+    Fin (Fintype.card α) → Lex (ℝ × Fin (Fintype.card α)) :=
+  fun i => toLex (f (S.toFun.symm i), i)
+
+/-- Auxiliary: the sort permutation of the lex key. -/
+private noncomputable def coverPerm (f : α → ℝ) (S : OneThird.LinearExt α) :
+    Equiv.Perm (Fin (Fintype.card α)) :=
+  Tuple.sort (coverKey f S)
+
+/-- For any `f ∈ OrderPolytope α`, the linear extension `L_f : LinearExt α`
+constructed by sorting α by the lex key `(f x, S.pos x)`, where `S` is a
+fixed Szpilrajn extension used for tie-breaking. The construction satisfies
+`f ∈ chamber L_f` (see `mem_chamber_linearExtFromOrderPreserving`). -/
+noncomputable def linearExtFromOrderPreserving {f : α → ℝ}
+    (hf : f ∈ OrderPolytope α) : OneThird.LinearExt α :=
+  let S : OneThird.LinearExt α := OneThird.LinearExt.szpilrajn α
+  let σ : Equiv.Perm (Fin (Fintype.card α)) := coverPerm f S
+  { toFun := S.toFun.trans σ.symm
+    monotone := fun {x y} hxy => by
+      change σ.symm (S.toFun x) ≤ σ.symm (S.toFun y)
+      by_contra hneg
+      push_neg at hneg
+      -- hneg : σ.symm (S.toFun y) < σ.symm (S.toFun x).
+      have hmono : coverKey f S (σ (σ.symm (S.toFun y))) ≤
+          coverKey f S (σ (σ.symm (S.toFun x))) :=
+        Tuple.monotone_sort (coverKey f S) (le_of_lt hneg)
+      rw [σ.apply_symm_apply, σ.apply_symm_apply] at hmono
+      simp only [coverKey, Equiv.symm_apply_apply] at hmono
+      -- hmono : toLex (f y, S.toFun y) ≤ toLex (f x, S.toFun x).
+      rw [Prod.Lex.toLex_le_toLex'] at hmono
+      obtain ⟨h1, h2⟩ := hmono
+      have hfxy : f x ≤ f y := hf.2 x y hxy
+      have hSxy : S.toFun x ≤ S.toFun y := S.monotone hxy
+      have hfeq : f y = f x := le_antisymm h1 hfxy
+      have hSeq : S.toFun y ≤ S.toFun x := h2 hfeq
+      have hSeq' : S.toFun y = S.toFun x := le_antisymm hSeq hSxy
+      have hxy_eq : x = y := S.toFun.injective hSeq'.symm
+      rw [hxy_eq] at hneg
+      exact lt_irrefl _ hneg }
+
+/-- The constructed linear extension contains `f` in its chamber. -/
+lemma mem_chamber_linearExtFromOrderPreserving {f : α → ℝ}
+    (hf : f ∈ OrderPolytope α) :
+    f ∈ chamber (linearExtFromOrderPreserving hf) := by
+  refine ⟨hf.1, ?_⟩
+  intro x y hpos
+  -- (linearExtFromOrderPreserving hf).pos x ≤ (linearExtFromOrderPreserving hf).pos y.
+  let S : OneThird.LinearExt α := OneThird.LinearExt.szpilrajn α
+  let σ : Equiv.Perm (Fin (Fintype.card α)) := coverPerm f S
+  change σ.symm (S.toFun x) ≤ σ.symm (S.toFun y) at hpos
+  have hmono : coverKey f S (σ (σ.symm (S.toFun x))) ≤
+      coverKey f S (σ (σ.symm (S.toFun y))) :=
+    Tuple.monotone_sort (coverKey f S) hpos
+  rw [σ.apply_symm_apply, σ.apply_symm_apply] at hmono
+  simp only [coverKey, Equiv.symm_apply_apply] at hmono
+  rw [Prod.Lex.toLex_le_toLex'] at hmono
+  exact hmono.1
+
+/-- **Stanley 1986 Theorem 1.4 (cover part).** The order polytope `O(α)`
+is the union of all chambers `σ_L` over linear extensions of `α`. -/
+theorem chamber_cover :
+    (OrderPolytope α : Set (α → ℝ)) = ⋃ L : OneThird.LinearExt α, chamber L := by
+  refine Set.Subset.antisymm (fun f hf => ?_) (fun f hf => ?_)
+  · exact Set.mem_iUnion.mpr
+      ⟨linearExtFromOrderPreserving hf, mem_chamber_linearExtFromOrderPreserving hf⟩
+  · rw [Set.mem_iUnion] at hf
+    obtain ⟨L, hL⟩ := hf
+    exact chamber_subset_orderPolytope L hL
+
+/-! #### §11.2 — Pairwise overlaps lie in a hyperplane and have measure zero. -/
+
+/-- The hyperplane `{f : α → ℝ | f x = f y}`, realised as a
+`Submodule ℝ (α → ℝ)`. -/
+def equalCoordSubmoduleAlpha (x y : α) : Submodule ℝ (α → ℝ) where
+  carrier := { f : α → ℝ | f x = f y }
+  zero_mem' := by change (0 : α → ℝ) x = (0 : α → ℝ) y; simp
+  add_mem' {a b} ha hb := by
+    change (a + b) x = (a + b) y
+    simp only [Pi.add_apply]
+    rw [show a x = a y from ha, show b x = b y from hb]
+  smul_mem' c a ha := by
+    change (c • a) x = (c • a) y
+    simp only [Pi.smul_apply]
+    rw [show a x = a y from ha]
+
+lemma mem_equalCoordSubmoduleAlpha {x y : α} {f : α → ℝ} :
+    f ∈ equalCoordSubmoduleAlpha x y ↔ f x = f y := Iff.rfl
+
+lemma equalCoordSubmoduleAlpha_ne_top {x y : α} (h : x ≠ y) :
+    (equalCoordSubmoduleAlpha (α := α) x y) ≠ ⊤ := by
+  intro hEq
+  -- The function which is 1 at `x` and 0 elsewhere violates `f x = f y`.
+  let f : α → ℝ := fun i => if i = x then 1 else 0
+  have hf_in : f ∈ equalCoordSubmoduleAlpha x y := by rw [hEq]; trivial
+  rw [mem_equalCoordSubmoduleAlpha] at hf_in
+  have hx : f x = 1 := if_pos rfl
+  have hy : f y = 0 := if_neg (Ne.symm h)
+  rw [hx, hy] at hf_in
+  exact one_ne_zero hf_in
+
+lemma volume_equalCoordSubmoduleAlpha {x y : α} (h : x ≠ y) :
+    volume (equalCoordSubmoduleAlpha (α := α) x y : Set (α → ℝ)) = 0 :=
+  Measure.addHaar_submodule volume _ (equalCoordSubmoduleAlpha_ne_top h)
+
+/-- **Stanley 1986 Theorem 1.4 (overlap part).** For `L ≠ L'`, the chambers
+`σ_L` and `σ_{L'}` intersect in a Lebesgue-null set.
+
+Proof: extract `x : α` with `L.toFun x ≠ L'.toFun x` from `L ≠ L'`; set
+`y := L.toFun.symm (L'.toFun x)`. On the intersection, both
+`f ∘ L.toFun.symm` and `f ∘ L'.toFun.symm` are monotone `Fin n → ℝ`,
+hence equal by `Tuple.unique_monotone`; evaluating at `L'.toFun x` gives
+`f x = f y` with `x ≠ y`. The hyperplane `{f | f x = f y}` is null by
+`addHaar_submodule`. -/
+theorem chamber_inter_meas_zero {L L' : OneThird.LinearExt α} (h : L ≠ L') :
+    volume (chamber L ∩ chamber L') = 0 := by
+  classical
+  obtain ⟨x, hx⟩ : ∃ x : α, L.toFun x ≠ L'.toFun x := by
+    by_contra hAll
+    push_neg at hAll
+    exact h (OneThird.LinearExt.ext (Equiv.ext hAll))
+  set y : α := L.toFun.symm (L'.toFun x) with hy_def
+  have hxy_ne : x ≠ y := by
+    intro heq
+    apply hx
+    have : L.toFun y = L'.toFun x := L.toFun.apply_symm_apply (L'.toFun x)
+    rw [← heq] at this
+    exact this
+  -- Show `chamber L ∩ chamber L' ⊆ {f | f x = f y}`.
+  have hsub : chamber L ∩ chamber L' ⊆
+      (equalCoordSubmoduleAlpha (α := α) x y : Set (α → ℝ)) := by
+    rintro f ⟨hfL, hfL'⟩
+    -- Both `f ∘ L.toFun.symm` and `f ∘ L'.toFun.symm` are monotone Fin n → ℝ.
+    have hmono_L : Monotone (fun i : Fin (Fintype.card α) => f (L.toFun.symm i)) := by
+      intro i j hij
+      apply hfL.2
+      change L.toFun (L.toFun.symm i) ≤ L.toFun (L.toFun.symm j)
+      rw [L.toFun.apply_symm_apply, L.toFun.apply_symm_apply]
+      exact hij
+    have hmono_L' : Monotone (fun i : Fin (Fintype.card α) => f (L'.toFun.symm i)) := by
+      intro i j hij
+      apply hfL'.2
+      change L'.toFun (L'.toFun.symm i) ≤ L'.toFun (L'.toFun.symm j)
+      rw [L'.toFun.apply_symm_apply, L'.toFun.apply_symm_apply]
+      exact hij
+    -- Apply Tuple.unique_monotone with the same target tuple `f ∘ L.toFun.symm`
+    -- and the two perms `id` and `L.toFun ∘ L'.toFun.symm` (as Fin n → Fin n).
+    let F : Fin (Fintype.card α) → ℝ := fun i => f (L.toFun.symm i)
+    let τ : Equiv.Perm (Fin (Fintype.card α)) := L'.toFun.symm.trans L.toFun
+    have hτ_apply : ∀ i, F (τ i) = f (L'.toFun.symm i) := by
+      intro i
+      change f (L.toFun.symm (L.toFun (L'.toFun.symm i))) = f (L'.toFun.symm i)
+      rw [L.toFun.symm_apply_apply]
+    have hF_id_mono : Monotone (F ∘ (Equiv.refl (Fin (Fintype.card α)))) := by
+      simpa using hmono_L
+    have hF_τ_mono : Monotone (F ∘ τ) := by
+      intro i j hij
+      simp only [Function.comp_apply, hτ_apply]
+      exact hmono_L' hij
+    have hEq : F ∘ (Equiv.refl _) = F ∘ τ :=
+      Tuple.unique_monotone hF_id_mono hF_τ_mono
+    have hEvAt : (F ∘ (Equiv.refl (Fin (Fintype.card α)))) (L'.toFun x) =
+        (F ∘ τ) (L'.toFun x) := congrFun hEq (L'.toFun x)
+    -- LHS of hEvAt: F (L'.toFun x) = f (L.toFun.symm (L'.toFun x)) = f y.
+    -- RHS of hEvAt: F (τ (L'.toFun x)) = f (L'.toFun.symm (L'.toFun x)) = f x.
+    have hLHS_eq_fy : (F ∘ (Equiv.refl (Fin (Fintype.card α)))) (L'.toFun x) = f y := rfl
+    have hRHS_eq_fx : (F ∘ τ) (L'.toFun x) = f x := by
+      change F (τ (L'.toFun x)) = f x
+      rw [hτ_apply, L'.toFun.symm_apply_apply]
+    change f x = f y
+    -- f x = (F ∘ τ) (L'.toFun x) = (F ∘ id) (L'.toFun x) = f y.
+    rw [← hRHS_eq_fx, ← hEvAt, hLHS_eq_fy]
+  exact measure_mono_null hsub (volume_equalCoordSubmoduleAlpha hxy_ne)
+
+/-! #### §11.3 — Master volume theorem `Vol(O(α)) = e(α) / n!`. -/
+
+/-- **Stanley 1986 Corollary 1.4.** The Lebesgue volume of the order polytope
+`O(α)` equals `e(α) / n!`, where `e(α) := numLinExt α` is the number of
+linear extensions of `α` and `n := |α|`.
+
+Proof: by `chamber_cover`, `O(α)` is the union of the chambers; the family
+is AE-disjoint by `chamber_inter_meas_zero` and each chamber is measurable
+(`measurableSet_chamber`); summing gives `numLinExt α · (1 / n!)` via
+`measure_biUnion_finset₀` and `chamber_volume`. -/
+theorem orderPolytope_volume :
+    volume (OrderPolytope α : Set (α → ℝ)) =
+      ENNReal.ofReal ((numLinExt α : ℝ) /
+        (Nat.factorial (Fintype.card α) : ℝ)) := by
+  classical
+  rw [chamber_cover]
+  -- Convert the type-level i-union to a finset bi-union.
+  rw [show (⋃ L : OneThird.LinearExt α, chamber L) =
+      ⋃ L ∈ (Finset.univ : Finset (OneThird.LinearExt α)), chamber L by
+      ext f; simp]
+  -- AE-disjoint family.
+  have hAE : Set.Pairwise ((Finset.univ : Finset (OneThird.LinearExt α)) :
+        Set (OneThird.LinearExt α))
+      (AEDisjoint volume on (chamber : OneThird.LinearExt α → Set (α → ℝ))) :=
+    fun L _ L' _ hLL' => chamber_inter_meas_zero hLL'
+  have hMble : ∀ L ∈ (Finset.univ : Finset (OneThird.LinearExt α)),
+      NullMeasurableSet (chamber L) volume :=
+    fun L _ => (measurableSet_chamber L).nullMeasurableSet
+  rw [measure_biUnion_finset₀ hAE hMble]
+  -- Sum each chamber's volume = 1/n!.
+  simp only [chamber_volume]
+  rw [Finset.sum_const, Finset.card_univ]
+  -- Reduce `card • ENNReal.ofReal (1/n!)` to `ENNReal.ofReal (numLinExt / n!)`.
+  unfold numLinExt
+  rw [nsmul_eq_mul]
+  have hcard_nn : (0 : ℝ) ≤ (Fintype.card (OneThird.LinearExt α) : ℝ) :=
+    Nat.cast_nonneg _
+  rw [show ((Fintype.card (OneThird.LinearExt α) : ℕ) : ℝ≥0∞) =
+        ENNReal.ofReal ((Fintype.card (OneThird.LinearExt α) : ℝ)) from
+      (ENNReal.ofReal_natCast _).symm]
+  rw [← ENNReal.ofReal_mul hcard_nn]
+  congr 1
+  ring
+
 end OrderPolytope
 
 /-! ### §7 — Discrete 3-antichain `example`
@@ -1046,6 +1314,14 @@ example (L : OneThird.LinearExt Three) :
     MeasureTheory.volume (OrderPolytope.chamber L) =
       ENNReal.ofReal (1 / 6) := by
   rw [OrderPolytope.chamber_volume]
+  rfl
+
+/-- **Hand-verification: discrete 3-antichain order polytope volume.** For
+`Three = {a, b, c}` discrete with `numLinExt Three = 3! = 6`, the order
+polytope has volume `6 / 6 = 1`, matching `Vol([0,1]^3) = 1`. -/
+example : MeasureTheory.volume (OrderPolytope Three : Set (Three → ℝ)) =
+    ENNReal.ofReal ((numLinExt Three : ℝ) / 6) := by
+  rw [OrderPolytope.orderPolytope_volume]
   rfl
 
 end LinearExt

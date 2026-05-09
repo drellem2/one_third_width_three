@@ -252,6 +252,44 @@ Trust surface unchanged (EX-5 introduces no new project axioms;
 step: file **EX-5 Session B scoping ticket** (volume + relabel
 + `volume_orderedCube` DH-5 candidate; deliverable §5.1–§5.2 +
 §6 + §7.1).
+**Last update.** mg-10d9 (cat-mg-10d9), 2026-05-09. **EX-5
+Session C executed: chamber cover + measure-zero overlap +
+master volume theorem ported to Lean.** §1.19 NEW for the
+Session C deliverable (`lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`
+extension, ~280 LoC of Lean). Closes the chamber-decomposition
+arc: (1) `chamber_cover`: `OrderPolytope α = ⋃ L, chamber L` via
+`linearExtFromOrderPreserving` (sort α by lex key
+`(f x, S.pos x)` with `S` a fixed Szpilrajn extension for
+tie-breaking; `Tuple.sort` + `Tuple.monotone_sort` close the
+construction); (2) `chamber_inter_meas_zero`:
+`Vol(σ_L ∩ σ_{L'}) = 0` for `L ≠ L'` via `Tuple.unique_monotone`
+deducing `f x = f y` for an inversion pair `(x, y)` plus
+`Measure.addHaar_submodule` on the strict hyperplane
+`equalCoordSubmoduleAlpha x y = {f | f x = f y}`; (3)
+`orderPolytope_volume`: `Vol(O(α)) = numLinExt α / n!` combining
+cover + AE-disjointness + per-chamber `chamber_volume` via
+`measure_biUnion_finset₀`. Trust surface impact: **none**
+(`#print axioms` on the three new theorems gives only
+`{propext, Classical.choice, Quot.sound}` — no new project
+axioms, as predicted by mg-79a9 §6.5 and §7.2). LoC ~280 lands
+under the lower edge of mg-79a9 §7.2's estimate
+(~420–625 LoC), aided by the `Tuple.sort`-on-lex-key route
+(Route C, not Route A or B from mg-79a9 §3.5) avoiding the
+explicit Szpilrajn-on-each-level-set construction; the
+augmented partial order `x ≤_α y ∨ f x < f y` is realised
+implicitly via the lex sort key `(f x, S.pos x)` with `S`
+a fixed Szpilrajn extension. §3.4 updated (sub-α-C arc:
+**EX-5 done in full, GREEN**; chamber-decomposition triple
+complete; EX-6 continuous FKG/AD on the cube is the next
+execution ticket — DH-4 leverage candidate per mg-163f §3.9).
+**DH-5 strengthening (state.md §3.10).** All four chamber-
+decomposition pieces are now in tree (`chamber`,
+`volume_orderedCube`, `chamber_cover`, `chamber_inter_meas_zero`,
+`orderPolytope_volume`); combined EX-3 + EX-4 + EX-5 mathlib
+upstream candidate `Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`
+is now realisable as a single PR (~900–1100 LoC). Trip-wires
+per mg-79a9 §7.2 not fired. PM next step: **file EX-6 scoping
+ticket** (continuous FKG / Ahlswede–Daykin on `[0,1]^n`).
 
 ---
 
@@ -1063,6 +1101,194 @@ step: file **EX-5 Session B scoping ticket** (volume + relabel
 * **Verdict.** **GREEN.** Chamber definition + volume theorem
   landed in tree; `volume_orderedCube` (DH-5 candidate) landed in
   tree; build green; no new project axioms; trip-wires not fired.
+
+### §1.19 EX-5 Session C — chamber cover + measure-zero overlap + master volume (mg-10d9)
+
+* **Source.** mg-10d9 (this update);
+  `lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`
+  (extension; ~280 LoC of Lean added). Predecessor: mg-497d
+  (`5dd9e50`, EX-5 Session B with `chamber` + `chamber_volume` +
+  `volume_orderedCube`); brief origin mg-79a9 (`3e76ac3`)
+  §3 (cover), §4 (overlap), §5.3–§5.5 (signatures), §6 (mathlib
+  API), §7.2 (Session C scope and trip-wires).
+
+* **Statement.** Direct Lean port of the cover (Stanley 1986
+  Lemma 1.3 cover part) + measure-zero overlap (Stanley 1986
+  Lemma 1.3 face part, weakened to measure-zero per mg-79a9
+  §1.4) + master volume (Stanley 1986 Corollary 1.4). Three
+  exposed theorems, plus auxiliary cover construction:
+
+  - **Cover** `chamber_cover`:
+
+    ```lean
+    theorem chamber_cover :
+        (OrderPolytope α : Set (α → ℝ)) =
+          ⋃ L : OneThird.LinearExt α, chamber L
+    ```
+
+    proved by constructing `linearExtFromOrderPreserving hf : LinearExt α`
+    for each `f ∈ OrderPolytope α` and showing
+    `mem_chamber_linearExtFromOrderPreserving hf : f ∈ chamber (...)`.
+    The construction sorts `α` by the lex key
+    `(f x, S.pos x) : Lex (ℝ × Fin n)` where `S` is a fixed Szpilrajn
+    extension used for tie-breaking; the resulting permutation is
+    well-defined since the secondary `S.pos` coordinate makes the key
+    injective. **Implementation note: this is "Route C" (the
+    augmented partial order `x ≤_α y ∨ f x < f y` from mg-79a9 §3.2
+    realised implicitly via lex sort), not Route A (explicit
+    Szpilrajn-on-each-level-set) or Route B (`OrdinalDecomp`-driven
+    induction)** — Route C avoids both the Subtype-fintype
+    real-equality decidability obstruction (Route A RED-fallback
+    flagged by mg-79a9 §7.2) and the level-set-vs-band-set
+    structural mismatch (Route B contingency flagged by mg-79a9
+    §3.5). `Tuple.sort` + `Tuple.monotone_sort` +
+    `Prod.Lex.toLex_le_toLex'` close both directions
+    (`monotone` field for the linear extension, and chamber
+    membership) cleanly with a single `by_contra` on the lex
+    inequality (~50 LoC for the construction + ~15 LoC for
+    chamber membership).
+
+  - **Overlap** `chamber_inter_meas_zero`:
+
+    ```lean
+    theorem chamber_inter_meas_zero {L L' : OneThird.LinearExt α}
+        (h : L ≠ L') : volume (chamber L ∩ chamber L') = 0
+    ```
+
+    proved by extracting `x : α` with `L.toFun x ≠ L'.toFun x` from
+    `L ≠ L'` (via `OneThird.LinearExt.ext` + `funext`); setting
+    `y := L.toFun.symm (L'.toFun x)` gives the inversion pair `(x, y)`
+    with `x ≠ y`. On the intersection both
+    `f ∘ L.toFun.symm` and `f ∘ L'.toFun.symm` are monotone
+    `Fin n → ℝ` functions, equal as a value of `Tuple.unique_monotone`
+    applied to `F := f ∘ L.toFun.symm` with permutations
+    `σ := id` and `τ := L'.toFun.symm.trans L.toFun`. Evaluating
+    the equality at `i := L'.toFun x` gives `f y = f x`, so the
+    intersection is contained in the strict hyperplane
+    `equalCoordSubmoduleAlpha x y = {f | f x = f y}` (a
+    `Submodule ℝ (α → ℝ)`, strict because `x ≠ y`); volume zero by
+    `Measure.addHaar_submodule`. Auxiliary in-tree:
+    `equalCoordSubmoduleAlpha`, `mem_equalCoordSubmoduleAlpha`,
+    `equalCoordSubmoduleAlpha_ne_top`, `volume_equalCoordSubmoduleAlpha`
+    (~30 LoC for the submodule infrastructure; ~80 LoC for the main
+    overlap proof).
+
+  - **Master volume** `orderPolytope_volume`:
+
+    ```lean
+    theorem orderPolytope_volume :
+        volume (OrderPolytope α : Set (α → ℝ)) =
+          ENNReal.ofReal ((numLinExt α : ℝ) /
+            (Nat.factorial (Fintype.card α) : ℝ))
+    ```
+
+    proved by combining `chamber_cover` + AE-disjointness from
+    `chamber_inter_meas_zero` + per-chamber volume via
+    `chamber_volume`, dispatched through `measure_biUnion_finset₀`
+    over `Finset.univ : Finset (LinearExt α)`. Auxiliary:
+    `measurableSet_chamber` (chamber is measurable as preimage of
+    `orderedCube` under the measurable equivalence
+    `chamberRelabel L`). Final arithmetic step converts
+    `card • ENNReal.ofReal (1/n!)` to
+    `ENNReal.ofReal (numLinExt α / n!)` via `nsmul_eq_mul` +
+    `ENNReal.ofReal_natCast` + `ENNReal.ofReal_mul` + `ring`
+    (~30 LoC).
+
+  - **Hand-verification.** A `Three`-discrete `example` confirms
+    `volume (OrderPolytope Three) = ENNReal.ofReal (numLinExt Three / 6)`
+    (closes via `rfl` after `orderPolytope_volume`), matching
+    `numLinExt Three = 3! = 6` and therefore `Vol = 1` per the
+    `[0,1]^3` cube identity established in §1.13.
+
+* **Mathlib API consumed.** All in mg-79a9 §6.1's verified set,
+  no surprises: `Tuple.sort`, `Tuple.monotone_sort`,
+  `Tuple.unique_monotone`, `Prod.Lex.toLex_le_toLex'` (sort-
+  based cover); `MeasureTheory.Measure.addHaar_submodule:175`
+  (strict-submodule null);
+  `MeasureTheory.measure_biUnion_finset₀` (AE-disjoint sum);
+  `MeasureTheory.measure_mono_null`,
+  `MeasurableEquiv.measurableSet_preimage`,
+  `Equiv.apply_symm_apply` / `symm_apply_apply`,
+  `OneThird.LinearExt.ext` + `OneThird.LinearExt.szpilrajn`
+  (in-tree). The `[NormedAddCommGroup (α → ℝ)]`,
+  `[NormedSpace ℝ (α → ℝ)]`, `[BorelSpace (α → ℝ)]`,
+  `[FiniteDimensional ℝ (α → ℝ)]`,
+  `[IsAddHaarMeasure (volume : Measure (α → ℝ))]` typeclass
+  surface resolves automatically for general `α : Type*`
+  with `[Fintype α]` (no `Fin n`-specialisation needed) once
+  `MeasureTheory.Pi.borelSpace`, `Module.Finite.pi`,
+  `isAddHaarMeasure_volume_pi`, `Pi.normedAddCommGroup`,
+  `Pi.normedSpace` are in scope from existing imports.
+
+* **Trust surface impact: none.** `#print axioms` on the three
+  exposed theorems
+  (`chamber_cover`, `chamber_inter_meas_zero`,
+  `orderPolytope_volume`) gives only the mathlib-standard
+  `{propext, Classical.choice, Quot.sound}` triplet — **no new
+  project axioms**, as predicted by mg-79a9 §6.5 and §7.2.
+  `stanley_log_supermod` not consumed by EX-5 (consumed only
+  from EX-7+ per mg-d0fc §1.11).
+
+* **LoC and tokens.** ~280 LoC of Lean (file goes from ~1052 to
+  ~1330 lines). Lands **under the lower edge** of the mg-79a9
+  §7.2 estimate (~420–625 LoC) — Route C (lex-sort) is more
+  compact than Route A (Szpilrajn-on-level-set) or Route B
+  (`OrdinalDecomp` induction) by avoiding the explicit
+  level-set partition + cumulative-cardinality bookkeeping.
+  Tokens well under the 500k cap.
+
+* **Trip-wires per mg-79a9 §7.2 — none fired.**
+  - Token blow-up: not fired.
+  - Route A vs Route B: superseded by Route C (lex-sort), which
+    avoids both routes' contingencies. Route A's RED-fallback
+    on `f x = c` decidability does not apply since the lex key
+    `(f x, S.pos x)` is **injective** (no equality testing of
+    real values needed); Route B's `OrdinalDecomp`-vs-level-set
+    shape mismatch does not apply since the lex sort does not
+    use `OrdinalDecomp` infrastructure.
+  - `linearExtFromOrderPreserving` structural obstructions:
+    not fired. `Tuple.sort` on `Lex (ℝ × Fin n)` resolves cleanly;
+    `Prod.Lex.toLex_le_toLex'` provides the lex-comparison
+    unfolding lemma; `LinearOrder (α ×ₗ β)` instance from
+    `Prod.Lex.instLinearOrder` resolves automatically for
+    `[LinearOrder α] [LinearOrder β]` (both `ℝ` and `Fin n`).
+  - `addHaar_submodule` instance resolution for `α → ℝ`
+    (general `α`, not just `Fin n`): not fired. All five typeclass
+    dependencies resolve automatically.
+
+* **DH-5 fully realised (state.md §3.10).** All four chamber-
+  decomposition pieces are now in tree:
+  - `chamber L : Set (α → ℝ)` definition (Session B);
+  - `chamber_volume : volume (chamber L) = 1/n!` (Session B);
+  - `chamber_cover : OrderPolytope α = ⋃ L, chamber L` (this
+    Session C);
+  - `chamber_inter_meas_zero : volume (σ_L ∩ σ_{L'}) = 0`
+    (this Session C);
+  - `orderPolytope_volume : volume (OrderPolytope α) =
+    numLinExt α / n!` (this Session C).
+  Combined with the EX-3 polytope basics (mg-8c66) + EX-4
+  Stanley vertex theorem (mg-2442), the mathlib upstream
+  candidate `Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`
+  is **realisable as a single PR today**, ~900–1100 LoC of
+  mathlib value (orderPolytope basics + extreme-points
+  vertex theorem + chamber decomposition triple + master
+  volume corollary + ordered-cube volume `1/n!` lemma).
+  Daniel's optional surface item.
+
+* **Sub-α-C arc next step.** PM files **EX-6 scoping ticket**
+  (continuous FKG / Ahlswede–Daykin on `[0,1]^n`, Brightwell §4
+  source). Per mg-163f §3.9, EX-6 is the largest mathlib-PR-class
+  chunk after DH-1 and the highest-leverage DH after DH-1 + DH-5
+  combined. EX-6 does not consume EX-5 directly (chamber decomp
+  feeds into EX-7 drops headline derivation, not EX-6 continuous
+  FKG itself), so Session C landing unblocks EX-6 dispatch
+  immediately.
+
+* **Verdict.** **GREEN.** Chamber decomposition triple landed
+  in tree; `orderPolytope_volume` master corollary landed in
+  tree; build green; no new project axioms; all mg-79a9 §7.2
+  trip-wires unfired; LoC and tokens come in under estimate
+  (Route C compactness win).
 
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
