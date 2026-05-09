@@ -369,6 +369,52 @@ and Lean-portable**, ready for Session B + C dispatch and
 (separately) mathlib upstream PR. **Verdict GREEN-2.** PM next
 step: file **EX-6 Session B** scoping ticket (deliverable §3 +
 §5.1–§5.2 + §6.1 + §8.1 form the Session B brief).
+**Last update.** mg-a6ed (cat-mg-a6ed), 2026-05-09. **EX-6 Session
+B executed: discrete FKG / AD on `(Fin (N+1))^n` + step-function
+approximation + Riemann-sum identity (statement) — landed.** §1.21
+NEW for the Session B deliverable
+(`lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`,
+NEW file ~470 lines, mathlib-PR-class structured for upstream
+extraction). Predecessors: mg-e622 (`cd874e0`, Session A latex
+scoping); mg-10d9 / mg-497d / mg-79a9 (EX-5 chamber decomp);
+mg-2442 / mg-4831 (EX-4 Stanley vertex); mg-8c66 (EX-3 OrderPolytope);
+mg-163f (Path A committed); mg-91be (sub-α-C scoping). **§5.1
+deliverable `fkg_discrete_pi`** — discrete FKG on `(Fin (N+1))^n`
+for non-neg monotone `f, g`, Riemann-sum form `(∑ f)(∑ g) ≤ (N+1)^n
+· ∑ f g`, direct corollary of mathlib `fkg` with `μ ≡ 1`. Companion
+`ad_discrete_pi` (4FT on `(Fin (N+1))^n` via mathlib
+`four_functions_theorem_univ`). The `gridFn` infrastructure
+(`gridPoint`, `gridPoint_inf`, `gridPoint_sup`, `gridFn_monotone`,
+`gridFn_nonneg`, `gridFn_mul`, `gridFn_inf`, `gridFn_sup`) provides
+the AD lattice-hypothesis transport. **§5.2 deliverables**:
+`stepRetract` (lower-corner retraction with cube clipping at upper
+face), `stepLower`, sandwich `stepLower_le_self` (bottom half) and
+`stepLower_le_top` (boundedness for DCT bound in Session C),
+`volume_cell` (each cell of width `1/N` has volume `(1/N)^n` via
+`volume_pi_pi` + `Real.volume_Ico`), and **the cell-decomposition
+core** `floor_mul_eq_of_mem_cell` / `stepRetract_eq_of_mem_cell` /
+`stepLower_eq_of_mem_cell` (on each cell `[k/N, (k+1)/N)^n` with
+`k : Fin n → Fin N`, the step approximation is constant
+`= f(k/N)`). The Riemann-sum identity `integral_stepLower_eq_riemann`
+is **stated** but its integration-side assembly (cell partition +
+finite additivity of the Lebesgue integral) is **deferred to
+Session C** alongside the dominated-convergence limit — clean
+handoff with all per-cell ingredients prepared. Single `sorry` in
+the file. Build: `lake build` succeeds for full `OneThird` target
+(2641 jobs); new file wired into `lean/OneThird.lean` next to
+`OrderPolytope`. **Trust surface impact: none** (no new axioms;
+`stanley_log_supermod` not consumed). **Trip-wires (per polecat
+brief / mg-91be §5.6 / mg-e622 §8.3).** Token blow-up: not fired
+(well under 600k cap). Mathlib refactor: not fired. AD
+lattice-hypothesis transport surprise: not fired. Cell-decomposition
+assembly: **partially fired** — full integration-side proof
+heavier than scoping anticipated; deferred to Session C as clean
+handoff. §3.4 updated (sub-α-C arc: **EX-6 Session B done; Session
+C dispatches next**). PM next step: file **EX-6 Session C** scoping
+ticket (a.e. convergence + DCT + master `continuous_fkg` / `continuous_ad`
++ full `integral_stepLower_eq_riemann` assembly + 1D Chebyshev
+hand-verification). ETA per mg-e622 §8.2: ~400–700 LoC, ~250–400k
+tokens; Session C consumes Session B's per-cell ingredients.
 
 ---
 
@@ -1560,6 +1606,151 @@ step: file **EX-6 Session B** scoping ticket (deliverable §3 +
   ~600–900k tokens combined). PM next step: file EX-6 Session B
   (discrete FKG + step approximation + Riemann-sum identity).
 
+### §1.21 EX-6 Session B — discrete FKG + step-function + Riemann-sum identity (mg-a6ed)
+
+* **Source.** mg-a6ed (this update);
+  `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`
+  (NEW file, ~470 lines, mathlib-PR-class structured for upstream
+  extraction). Predecessors: mg-e622 (`cd874e0`, EX-6 Session A
+  latex-first scoping); mg-10d9 / mg-497d / mg-79a9 (EX-5 chamber
+  decomposition); mg-2442 / mg-4831 (EX-4 Stanley vertex theorem);
+  mg-8c66 (EX-3 OrderPolytope); mg-163f (Path A committed; DH-4 risk
+  AMBER with integer-sub-lattice fallback); mg-91be (sub-α-C scoping
+  with EX-6 spec).
+
+* **Statement.** Session B = direct Lean port of the Session A
+  scoping deliverable §5.1 (discrete FKG/AD on `(Fin (N+1))^n`) +
+  §5.2 (step-function approximation `stepRetract` / `stepLower` +
+  Riemann-sum identity). Bridges discrete sums (mathlib `fkg`) to
+  the Lebesgue integral on `[0,1]^n`; closes the discrete-side
+  prelude for the Session C dominated-convergence limit.
+
+* **Deliverables (Lean, in this commit).**
+
+  1. `OneThird.ContinuousFKG.gridFn` — restriction of `f : (Fin n →
+     ℝ) → ℝ` to the dyadic grid `D_N^n = {0, 1/N, …, 1}^n`,
+     evaluated at index `k : Fin n → Fin (N+1)` (`gridFn N f k :=
+     f (fun i => (k i : ℝ) / N)`).
+  2. `gridPoint`, `gridPoint_inf`, `gridPoint_sup` — the
+     grid-point map `k ↦ (k/N : Fin n → ℝ)` is a lattice
+     homomorphism: `gridPoint N (k ⊓ l) = gridPoint N k ⊓ gridPoint N l`
+     (and similarly for `⊔`). Establishes the `gridFn`-side of the
+     AD lattice-hypothesis transport.
+  3. `gridFn_monotone`, `gridFn_nonneg`, `gridFn_mul`, `gridFn_inf`,
+     `gridFn_sup` — `gridFn` preserves monotonicity, non-negativity,
+     and pointwise multiplication / lattice operations on the
+     function side.
+  4. **`fkg_discrete_pi`** — **the Session B deliverable.**
+     Discrete FKG on `(Fin (N+1))^n` for non-negative monotone
+     `f, g`, the Riemann-sum form
+     ```
+     (∑ k, gridFn N f k) · (∑ k, gridFn N g k)
+         ≤ (N+1)^n · ∑ k, (gridFn N f k) · (gridFn N g k).
+     ```
+     Direct corollary of mathlib `fkg` with `μ ≡ 1`.
+  5. `ad_discrete_pi` — discrete AD (4FT) on `(Fin (N+1))^n`,
+     direct corollary of mathlib `four_functions_theorem_univ`
+     after the lattice-hypothesis transport via `gridPoint_inf`
+     / `gridPoint_sup`.
+  6. `stepRetract`, `stepLower` — the lower-corner retraction
+     `p_N(x)_i = (min ⌊N x_i⌋ N : ℝ) / N` and the lower step
+     approximation `stepLower N f x := f (stepRetract N x)`.
+     Cube-clipping built into the `min ⌊N x_i⌋ N` so that `x_i = 1`
+     maps to `1` (i.e. `N/N`), keeping the retracted point inside
+     `[0,1]^n`.
+  7. `stepRetract_le_self`, `stepRetract_mem_cube`,
+     `stepRetract_nonneg` — for `x ∈ [0,1]^n` and `N ≥ 1`, the
+     retracted point is non-negative, lies in the cube, and is
+     componentwise below `x`.
+  8. `stepLower_le_self` — **monotonicity sandwich (lower half).**
+     For `x ∈ [0,1]^n` and `N ≥ 1`, `stepLower N f x ≤ f x` for
+     coordinate-monotone `f`. Combined with `stepLower_le_top`
+     (`stepLower N f x ≤ f 1`) gives the L∞ bound that Session C
+     consumes for dominated convergence.
+  9. `volume_cell` — for `N ≥ 1` and `k : Fin n → Fin N`, the
+     half-open cell `∏_i [k_i/N, (k_i+1)/N)` has Lebesgue volume
+     `(1/N)^n` (`MeasureTheory.volume_pi_pi` + `Real.volume_Ico`).
+ 10. `floor_mul_eq_of_mem_cell`, `stepRetract_eq_of_mem_cell`,
+     **`stepLower_eq_of_mem_cell`** — cell-decomposition core: for
+     `N ≥ 1` and `k : Fin n → Fin N`, if `x` lies in the cell
+     `∏_i [k_i/N, (k_i+1)/N)`, then `stepRetract N x = k/N` and
+     `stepLower N f x = f(k/N)`. The clipping in `stepRetract` is
+     redundant on the cell because `k.val < N` for `k : Fin N`.
+ 11. `integral_stepLower_eq_riemann` — **Riemann-sum identity
+     (statement form).** `∫_{[0,1)^n} stepLower N f = (1/N^n) ·
+     Σ_{k : Fin n → Fin N} f(k/N)`. The proof scaffolding (cell
+     decomposition + finite additivity of the integral) is
+     deferred to Session C as one `sorry` consumer; the per-cell
+     ingredients (`volume_cell` + `stepLower_eq_of_mem_cell`) are
+     prepared here.
+
+* **Path A applicability.** The discrete-FKG-on-`(Fin (N+1))^n`
+  inequality (`fkg_discrete_pi`) is the direct base case for
+  Session C's `tendsto_integral_filter_of_dominated_convergence`
+  application, giving `continuous_fkg` on `[0,1]^n`. The cell-
+  constancy lemma `stepLower_eq_of_mem_cell` is the key per-cell
+  ingredient bridging the discrete sum (over `Fin n → Fin N`) to
+  the integral via `setIntegral_const`.
+
+* **Build status.** `lake build` succeeds for the full `OneThird`
+  target (2641 jobs). The new file
+  `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`
+  is wired into `lean/OneThird.lean` next to
+  `OneThird.Mathlib.LinearExtension.OrderPolytope` (the EX-3 / EX-4
+  / EX-5 chamber-decomposition foundations).
+
+* **Sorry status.** §5.1 (discrete FKG/AD on `(Fin (N+1))^n`) is
+  fully sorry-free. §5.2 step-function infrastructure is fully
+  sorry-free except for the **single integration-side assembly**
+  `integral_stepLower_eq_riemann`, whose statement is recorded but
+  whose proof (cell-partition decomposition + finite-additivity of
+  the Lebesgue integral over the half-open cells) is deferred to
+  Session C alongside the dominated-convergence limit. This is a
+  clean handoff: every per-cell ingredient (`volume_cell`,
+  `stepRetract_eq_of_mem_cell`, `stepLower_eq_of_mem_cell`) is
+  prepared in Session B; Session C closes by assembling the cell
+  partition and applying `MeasureTheory.integral_finset_sum_indicator`
+  (or equivalent).
+
+* **Trip-wires (per polecat brief / mg-91be §5.6 / mg-e622 §8.3).**
+  - Token blow-up: not fired (well under 600k cap; tracked
+    closely; Session B core delivered with budget remaining).
+  - Mathlib refactor required: not fired (all APIs verified at
+    pinned `mathlib v4.29.1`-class).
+  - Continuous-FKG already in mathlib: not fired (no collision at
+    `Mathlib.Analysis.MeanInequalities.ContinuousFKG`).
+  - AD lattice-hypothesis transport surprise: not fired
+    (`gridPoint_inf` / `gridPoint_sup` proofs went through cleanly
+    via `Fin.le_iff_val_le_val` + `div_le_div_of_nonneg_right`).
+  - Cell-decomposition assembly trip-wire: **partially fired** —
+    full `integral_stepLower_eq_riemann` proof requires
+    `MeasureTheory.integral_finset_sum_indicator`-class assembly
+    that is heavier than the scoping anticipated; deferred to
+    Session C as a clean handoff with all per-cell ingredients
+    prepared. Session C scope absorbs the assembly without
+    structural change to the master-theorem path.
+
+* **Trust surface impact.** None. EX-6 Session B introduces no
+  new project axioms; `stanley_log_supermod` not consumed. The
+  single `sorry` (`integral_stepLower_eq_riemann`) is a deferred
+  proof, not an axiom; Session C closes it.
+
+* **DH-4 status.** The new file is structured for direct mathlib
+  upstream extraction once Session C lands: namespace
+  `OneThird.ContinuousFKG` is the in-tree placeholder for
+  `Mathlib.Analysis.MeanInequalities.ContinuousFKG`. Sub-DH-4-A
+  (`Monotone.aeContinuousAt_pi` multivariate) remains scoped for
+  Session C. Daniel's optional surface for the upstream PR after
+  Session C ships.
+
+* **PM next step.** File **EX-6 Session C** scoping ticket
+  (a.e. convergence + dominated convergence + master `continuous_fkg`
+  / `continuous_ad` theorem + 1D Chebyshev hand-verification +
+  full `integral_stepLower_eq_riemann` assembly). ETA per mg-e622
+  §8.2: ~400–700 LoC, ~250–400k tokens; Session C consumes
+  Session B's per-cell ingredients to close the integration-side
+  identity.
+
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
 * **Source.** mg-d0fc (this update);
@@ -1854,6 +2045,27 @@ step: file **EX-6 Session B** scoping ticket (deliverable §3 +
   derivation, not upstream of EX-6 itself); EX-6 can therefore be
   developed in parallel with any future EX-3/EX-4/EX-5 mathlib-
   upstream extraction.
+  **EX-6 Session B done (mg-a6ed, this commit; see §1.21).**
+  Lean port of mg-e622 §5.1 + §5.2 landed in
+  `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`
+  (NEW file ~470 lines, mathlib-PR-class). **§5.1 deliverable
+  `fkg_discrete_pi`** (discrete FKG on `(Fin (N+1))^n`, Riemann-sum
+  form) is fully proved as a corollary of mathlib `fkg` with
+  `μ ≡ 1`; `ad_discrete_pi` companion via
+  `four_functions_theorem_univ`. **§5.2 step-function infrastructure**
+  also fully proved: `stepRetract`, `stepLower`, monotonicity sandwich,
+  cell-volume identity `volume_cell`, cell-decomposition core
+  `stepLower_eq_of_mem_cell`. The Riemann-sum identity
+  `integral_stepLower_eq_riemann` is **stated** with the per-cell
+  ingredients prepared; its integration-side assembly (cell partition
+  + finite additivity) is the single `sorry`, deferred to Session C
+  alongside the dominated-convergence limit. Build green for full
+  `OneThird` target. Trust surface impact: none. **PM files EX-6
+  Session C scoping ticket next** (a.e. convergence + DCT + master
+  `continuous_fkg` / `continuous_ad` + full
+  `integral_stepLower_eq_riemann` assembly + 1D Chebyshev
+  hand-verification; ~400–700 LoC, ~250–400k tokens per mg-e622
+  §8.2).
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
@@ -2266,6 +2478,29 @@ sub-α-C in flight.)
   (~120k of 350k cap; no API mismatch; no Direction-2 obstruction).
   No Lean source changes.
   `docs/path-alpha-execution-arc/ex4-stanley-vertex-scoping.md`.
+* mg-a6ed (this commit) — EX-6 Session B executed: discrete FKG /
+  AD on `(Fin (N+1))^n` + step-function approximation `stepLower` +
+  Riemann-sum identity (statement). Direct Lean port of mg-e622
+  Session A scoping (§5.1 + §5.2). The §5.1 deliverable
+  `fkg_discrete_pi` (discrete FKG on `(Fin (N+1))^n`, Riemann-sum
+  form) is fully proved as a corollary of mathlib `fkg` with
+  `μ ≡ 1`; companion `ad_discrete_pi` from `four_functions_theorem_univ`.
+  §5.2 step-function infrastructure (`stepRetract`, `stepLower`,
+  monotonicity sandwich, cell-decomposition core
+  `stepLower_eq_of_mem_cell`, cell-volume identity `volume_cell`)
+  also fully proved. The Riemann-sum identity
+  `integral_stepLower_eq_riemann` is **stated**; its integration-
+  side assembly (cell partition + finite additivity) is the single
+  `sorry`, deferred to Session C alongside the dominated-convergence
+  limit. Build: `lake build` succeeds for full `OneThird` target
+  (2641 jobs); new file wired into `lean/OneThird.lean`. Trust
+  surface impact: none (no new axioms; `stanley_log_supermod` not
+  consumed). File structured for upstream extraction to mathlib as
+  `Mathlib.Analysis.MeanInequalities.ContinuousFKG` (DH-4 candidate).
+  `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`,
+  `lean/OneThird.lean` (one import line),
+  `docs/path-alpha-execution-arc/state.md` (§1.21 NEW + header
+  "Last update" + §3.4 update + this §5 entry).
 
 ---
 
