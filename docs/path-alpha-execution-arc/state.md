@@ -115,6 +115,39 @@ mathematical change. Trip-wires not fired: build green; no
 mathlib refactor needed; no token blow-up. Trust surface
 unchanged (still two named axioms + Stanley temp axiom for sub-α-C).
 PM next step: file EX-4 scoping ticket (Stanley vertex theorem).
+**Last update.** mg-4831 (cat-mg-4831), 2026-05-09. **EX-4
+Session A executed: Stanley vertex theorem latex writeup + mathlib
+mapping done.** §1.14 NEW for the Session A deliverable
+(`docs/path-alpha-execution-arc/ex4-stanley-vertex-scoping.md`,
+~880 lines latex): both directions of Stanley 1986 Theorem 1.2
+proven rigorously without convex-geometry / mixed-volume / continuous
+FKG — Direction 1 is direct (convex combination of [0,1]-bounded
+values pinning at the boundary), Direction 2 uses an explicit
+`±ε`-perturbation on the level set `f^{-1}(c)` for `c ∈ (0,1)` in
+the range of `f`. Mathlib `Set.extremePoints` API verified GREEN
+against the in-tree `OrderPolytope α` (mg-8c66): typeclass surface
+fits cleanly, useful structural lemmas (`mem_extremePoints`,
+`extremePoints_pi`, `Convex.mem_extremePoints_iff_convex_diff`)
+are off-the-shelf. **One small spec correction surfaced** (§4.1
+of the deliverable): the mg-91be §5.4 / mg-163f §5.5 target
+signature uses `LowerSet α` for the indexing set, but the in-tree
+`OrderPolytope` convention (`f x ≤ f y` for `x ≤ y`, mg-8c66) makes
+`1_I` order-preserving iff `I` is an **upper set**, not a lower
+set. Fix is one-line (recommend `UpperSet α`; alternative is
+`LowerSet α` + complement); chamber-decomp arc downstream
+(EX-5..EX-7) is unaffected by the choice (cardinality preserved
+under upper/lower duality). §3.4 updated (sub-α-C arc: EX-4
+Session A done, GREEN with spec correction; Session B = next
+execution ticket). §3.10 NEW (DH-5 secondary mathlib-upstream
+candidate: combined EX-3 + EX-4 PR as
+`Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`; lower
+priority than DH-1 / DH-4). Trip-wires not fired (~120k of 350k
+cap; no API mismatch; no Direction-2 obstruction). Session B ETA
+refined to ~330–470 LoC, ~170–265k tokens (down from mg-91be §5.4's
+400–600 LoC, 200–300k tokens, on the back of a clean direct argument
+that needs no Stanley-axiom invocation). Trust surface unchanged
+(EX-4 introduces no new axioms). PM next step: file EX-4 Session B
+scoping ticket (direct Lean port using §6 of the deliverable).
 
 ---
 
@@ -367,6 +400,91 @@ PM next step: file EX-4 scoping ticket (Stanley vertex theorem).
   no build failure, no definition pollution. PM next step: file
   EX-4 scoping ticket (Stanley vertex theorem
   `vertices(O(α)) = {1_I : I ∈ J(α)}`).
+
+### §1.14 Stanley vertex theorem — Session A latex writeup + mathlib mapping (mg-4831)
+
+* **Source.** mg-4831 (this update);
+  `docs/path-alpha-execution-arc/ex4-stanley-vertex-scoping.md`
+  (deliverable doc, ~880 lines latex). Predecessors: mg-8c66
+  (`ed9f6e6`, EX-3 OrderPolytope landed); mg-163f (`9e6edcd`,
+  Path-A-vs-Path-B fork resolution + EX-4 spec in §5.5);
+  mg-91be (`bb450a4`, sub-α-C scoping + EX-4 spec in §5.4).
+
+* **Statement.** Stanley 1986 Theorem 1.2: for a finite poset `α`,
+  the extreme points of the order polytope `O(α)` are exactly the
+  indicator functions `1_I` for `I ∈ F(α)` (the lattice of upper
+  sets / filters). Equivalently, parameterised by the lattice of
+  lower sets `J(α) = LowerSet α` via complement,
+  `1_{αᶜ I} = 1_{α \ I}`. Both directions formalised:
+  - **Direction 1 (`1_I` is extreme).** Direct convex-combination
+    pinning argument: if `1_I = (1-t) f + t g` with `t ∈ (0,1)`
+    and `f, g ∈ O(α)`, then on each `x ∈ I` the [0,1]-bound forces
+    `f(x) = g(x) = 1`, and on each `x ∉ I` the non-negativity bound
+    forces `f(x) = g(x) = 0`. Hence `f = g = 1_I` pointwise.
+  - **Direction 2 (every extreme is `1_I`).** Contrapositive +
+    explicit perturbation: if `f ∈ O(α)` takes some value `c ∈ (0,1)`,
+    perturb `f → f_ε^± := f ± ε·1_{S_=(c)}` on the level set
+    `S_=(c) := f^{-1}(c)`. For ε ≤ ε* / 2 with ε* := min(c, 1-c,
+    G(f, c)) and G(f, c) the gap function over the boundary pairs
+    crossing `S_=(c)`, both `f_ε^±` lie in `O(α)` and
+    `f = (f_ε^+ + f_ε^-)/2` with `f_ε^+ ≠ f_ε^-`. So `f` is not
+    extreme. Contrapositively, every extreme `f` takes only values
+    in `{0, 1}`, and `f^{-1}(1)` is automatically an upper set.
+
+* **Mathlib `Set.extremePoints` API verification.** **GREEN.** The
+  typeclass surface (`[Semiring ℝ]`, `[PartialOrder ℝ]`,
+  `[AddCommMonoid (α → ℝ)]`, `[SMul ℝ (α → ℝ)]`) is automatic for
+  `OrderPolytope α : Set (α → ℝ)`. Key lemmas
+  `mem_extremePoints` (`Mathlib.Analysis.Convex.Extreme:133`),
+  `extremePoints_pi` (`:211`), and
+  `Convex.mem_extremePoints_iff_convex_diff` (`:267`) are off-the-shelf.
+  No critical mathlib gap; `extremePoints (Icc a b) = {a, b}` is
+  not directly named in `v4.29.1` but is a one-liner from
+  `mem_extremePoints` (DH-5a candidate, secondary).
+
+* **Spec correction surfaced.** §4.1 of the deliverable: the
+  mg-91be §5.4 / mg-163f §5.5 target signature parameterises the
+  RHS by `LowerSet α`, but the in-tree `OrderPolytope` (mg-8c66,
+  `f x ≤ f y` for `x ≤ y`) makes `1_I` order-preserving iff `I` is
+  an **upper set**, not a lower set. The EX-1-style counterexample
+  is the chain `0 < 1` with `I = {0}` (lower): `1_I(0) = 1 > 0 =
+  1_I(1)` violates monotonicity. Recommended fix: use `UpperSet α`
+  in the Lean signature (option 1, cleaner); equivalent alternative
+  is `LowerSet α` + complement `(I : Set α)ᶜ` (option 2, preserves
+  the LowerSet parameterisation downstream consumers in EX-5..EX-7
+  use; one-line bridge via `UpperSet.compl`). Cardinality identity
+  `|F(α)| = |J(α)|` is preserved under either choice; chamber-decomp
+  arc downstream is unaffected.
+
+* **Recommended Lean signature for Session B.**
+  ```lean
+  theorem orderPolytope_extremePoints (α : Type*) [PartialOrder α]
+      [Fintype α] :
+      Set.extremePoints ℝ (OrderPolytope α) =
+      { f : α → ℝ | ∃ I : UpperSet α,
+          f = Set.indicator (I : Set α) (1 : α → ℝ) }
+  ```
+
+* **Trust surface impact.** None. EX-4 introduces no new axioms;
+  the proof uses only `Set.extremePoints` + `Set.indicator` +
+  `UpperSet`/`IsUpperSet` from mathlib, plus the `OrderPolytope`
+  (mg-8c66) in tree. The `width3_one_third_two_thirds` headline
+  trust surface and the sub-α-C arc trust surface are both
+  unchanged (no consumption of `stanley_log_supermod`).
+
+* **Session B ETA refinement.** mg-91be §5.4 / mg-163f §2.2
+  estimated EX-4 at ~400-600 LoC, ~200-300k tokens. This Session A
+  refines downward to **~330–470 LoC, ~170–265k tokens** on the
+  back of a clean direct argument that needs no Stanley-axiom
+  invocation (the perturbation argument is purely arithmetic +
+  order-theoretic). Component breakdown is in §6 of the deliverable.
+
+* **Verdict.** **GREEN with small spec correction.** Both
+  directions proven rigorously; mathlib API verified; one-line
+  spec correction (LowerSet → UpperSet) surfaced as the only
+  Session B amendment. PM next step: file EX-4 Session B scoping
+  ticket (direct Lean port using §6 of the deliverable as the
+  component breakdown).
 
 ### §1.15 Stanley log-supermod independent verification — GREEN (mg-e22f)
 
@@ -668,15 +786,19 @@ PM next step: file EX-4 scoping ticket (Stanley vertex theorem).
   - **Option D.** Rescope sub-α-C entirely (RED + lock-in Path γ).
     **Not pursued** (Daniel did not signal sub-α-C abandonment;
     `feedback_long_arcs_are_pm_authority` retained for sub-α-C).
-* **Default for next ticket.** **EX-3 done (mg-8c66, this commit;
-  see §1.13). PM files EX-4 scoping ticket** (Stanley vertex
-  theorem `vertices(O(α)) = {1_I : I ∈ J(α)}`, per mg-163f §5.5).
-  EX-3 did **not** consume `stanley_log_supermod` directly (axiom
-  is consumed starting at EX-5); the temp axiom remains the
-  discharge target of either DH-1 (preferred) or Option B
-  (fallback). The corollary `stanley_mu_log_supermod` is no longer
-  needed for Path A (Path B-only) and is dropped from the critical
-  path.
+* **Default for next ticket.** **EX-3 done (mg-8c66, `ed9f6e6`;
+  see §1.13). EX-4 Session A done (mg-4831, this commit; see
+  §1.14) — GREEN with small spec correction (LowerSet → UpperSet
+  in the target signature; chamber-decomp arc downstream
+  unaffected). PM files EX-4 Session B scoping ticket**
+  (direct Lean port using §6 of the deliverable as the component
+  breakdown; ~330–470 LoC, ~170–265k tokens, 1 polecat session).
+  EX-3 and EX-4 did **not** consume `stanley_log_supermod`
+  directly (axiom is consumed starting at EX-5); the temp axiom
+  remains the discharge target of either DH-1 (preferred) or
+  Option B (fallback). The corollary `stanley_mu_log_supermod`
+  is no longer needed for Path A (Path B-only) and is dropped
+  from the critical path.
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
@@ -783,6 +905,38 @@ PM next step: file EX-4 scoping ticket (Stanley vertex theorem).
 * **Status.** Heightened post-mg-163f. PM should surface DH-4 to
   Daniel alongside DH-1 in the next digest with the concrete file
   target.
+
+### §3.10 DH-5 — Stanley order-polytope basics as upstream mathlib PR (post-mg-4831)
+
+* **Source.** mg-4831 §5.2.
+* **Question.** Is the EX-3 (`OrderPolytope α` definition + basic
+  structural properties) + EX-4 (Stanley vertex theorem)
+  combination upstream-able to mathlib as a single
+  "Stanley order polytope basics" unit?
+* **Why it matters.** Both EX-3 (mg-8c66) and EX-4 (this Session A
+  scoping) are independently mathlib-PR-class chunks (mg-91be §5.3
+  / §5.4 / §7; mg-163f §2.8). A combined upstream PR
+  (`Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`,
+  ~600–900 LoC) is a cleaner mathlib-reviewer story than each
+  alone, and it has **independent value** outside the OneThird
+  project (the order polytope is a standard object in algebraic
+  combinatorics, used in Stanley's poset-Ehrhart theory and many
+  downstream applications). Maintainer: Yaël Dillies (consistent
+  with `Mathlib.Analysis.Convex.Extreme` + `Mathlib.Combinatorics.SetFamily.FourFunctions`).
+  Sub-component DH-5a: `extremePoints (Set.Icc a b) = {a, b}` for
+  `a ≤ b` in a `LinearOrderedField` — a small (~15-25 LoC)
+  upstream-PR-class lemma noted in mg-4831 §4.4.
+* **Cost saving.** Speculative; not on the critical path. EX-3 is
+  already in tree (mg-8c66) so DH-5 acceleration would only
+  collapse the EX-4 Session B port (~330–470 LoC) to a mathlib
+  citation if the combined PR lands. Lower priority than DH-1
+  (Stanley log-supermod, ~3000–5000 LoC saving) and DH-4
+  (continuous FKG, ~1000–2000 LoC saving).
+* **Status.** Surfaced post-mg-4831. PM should mention DH-5 in
+  the next digest as a *secondary* mathlib-upstream candidate
+  (alongside DH-1 + DH-4 as the higher-leverage primary
+  candidates). Concrete file target:
+  `Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`.
 
 ### §3.9 Path B — closed (AMBER-leaning-RED at level-`k` localisation)
 
@@ -930,6 +1084,24 @@ sub-α-C in flight.)
   introduced; Stanley temp axiom not consumed at EX-3 (it enters
   starting at EX-5). PM next step: file EX-4 scoping ticket
   (Stanley vertex theorem `vertices(O(α)) = {1_I : I ∈ J(α)}`).
+* **Post-mg-4831 (EX-4 Session A executed) — decision point closed.**
+  Stanley vertex theorem latex writeup + mathlib API mapping
+  delivered in `docs/path-alpha-execution-arc/ex4-stanley-vertex-scoping.md`
+  (~880 lines). Both directions of Stanley 1986 Theorem 1.2 proven
+  rigorously without convex-geometry / continuous FKG / mixed-volume
+  machinery. Mathlib `Set.extremePoints` API verified GREEN against
+  the in-tree `OrderPolytope α`. **One small spec correction
+  surfaced** (deliverable §4.1): the LoC-spec `LowerSet`
+  parameterisation should be `UpperSet` (or `LowerSet` + complement)
+  to match the in-tree `OrderPolytope`'s order-preserving
+  convention; chamber-decomp arc downstream unaffected. **Session B
+  ETA refined to ~330–470 LoC, ~170–265k tokens** (from mg-91be
+  §5.4's 400–600 LoC, 200–300k tokens). DH-5 (Stanley
+  order-polytope basics as upstream mathlib PR) surfaced as
+  secondary mathlib-upstream candidate (§3.10). Build unchanged
+  (no Lean source touched). PM next step: file EX-4 Session B
+  scoping ticket (direct Lean port using deliverable §6 as
+  component breakdown).
 * **Post-EX-7 land.** EX-8 (case3-port-2) and EX-9
   (Brightwell-port-A) execute in parallel; both consume the drops
   headline and have no mutual dependencies. EX-10 (axiom-removal)
@@ -989,7 +1161,7 @@ sub-α-C in flight.)
   bounded, compact, measurable) and discrete-3-antichain
   hand-verification. Build green; no new axioms.
   `lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`.
-* mg-e22f (this commit) — Stanley log-supermod independent
+* mg-e22f (`f1c4a66`) — Stanley log-supermod independent
   verification: GREEN per Daniel directive 2026-05-08T16:11Z.
   Three sub-checks pass (cross-literature 7 sources / 4 decades;
   numerical sanity 16 posets / 2 835 pairs / 0 violations;
@@ -998,6 +1170,21 @@ sub-α-C in flight.)
   `docs/path-alpha-execution-arc/stanley-log-supermod-verification.md`,
   `scripts/stanley_log_supermod_check.py`,
   `lean/AXIOMS.md` (third entry, "Separate verification" subsection).
+* mg-4831 (this commit) — EX-4 Session A executed: Stanley vertex
+  theorem latex writeup + mathlib `Set.extremePoints` API mapping.
+  GREEN with small spec correction (target signature should use
+  `UpperSet α` rather than `LowerSet α`; cardinality preserved
+  under upper/lower duality so chamber-decomp arc downstream
+  unaffected). Both directions of Stanley 1986 Theorem 1.2 proven
+  rigorously; no convex-geometry / continuous FKG / Aleksandrov–
+  Fenchel needed (Direction 1 is direct; Direction 2 uses
+  `±ε`-perturbation on the level set `f^{-1}(c)`). Session B ETA
+  refined to ~330–470 LoC, ~170–265k tokens. DH-5 (Stanley
+  order-polytope basics as upstream mathlib PR; combined EX-3 +
+  EX-4) surfaced as secondary candidate. Trip-wires not fired
+  (~120k of 350k cap; no API mismatch; no Direction-2 obstruction).
+  No Lean source changes.
+  `docs/path-alpha-execution-arc/ex4-stanley-vertex-scoping.md`.
 
 ---
 
