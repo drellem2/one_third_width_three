@@ -12,6 +12,29 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
+**Last update.** mg-d731 (cat-mg-d731), 2026-05-09. **cellMass_AD
+independent verification GREEN** (4th project axiom, parallel to
+mg-e22f for the 3rd axiom). §1.24 NEW for the trust-surface
+separate-verification deliverable
+(`docs/path-alpha-execution-arc/cellMass-AD-verification.md`):
+three sub-checks per Daniel directive 2026-05-08T16:11Z all pass
+(cross-literature: 10 sources / 5 decades, including Grimmett 1999
++ Liggett 1985/2005 graduate textbooks and Brightwell 1999 §4.2
+project primary cite; numerical sanity: 94 instances / 14 948
+cell-pair checks / 0 violations, exact rationals, covers the
+EX-7-motivating polytope-indicator shapes; uncontested in
+literature). §3.8 (DH-4) updated to note `cellMass_AD` is now
+externally verified; DH-4 mathlib upstream PR remains the highest-
+leverage shortener for Path A's EX-6/EX-7 chunk. `lean/AXIOMS.md`
+`cellMass_AD` entry extended with a "Separate verification"
+subsection (4th axiom; first three unchanged). No Lean source
+changes beyond the AXIOMS.md write-up. Trust surface unchanged
+(headline still two named axioms + `native_decide` quintet; sub-α-C
+arc adds `stanley_log_supermod` + `cellMass_AD` as 3rd and 4th
+axioms, both now externally verified). Trip-wires not fired (no
+numerical violation, no literature thinness). PM next step:
+surface verification GREEN to Daniel in evening digest; proceed
+with EX-7 Session B scoping ticket dispatch.
 **Last update.** mg-071b (cat-mg-071b), 2026-05-09. **EX-6
 Session F — `continuous_ad_general` (Monotone-free) landed via
 4th project axiom.** §1.23 NEW for the Session F deliverable
@@ -2150,6 +2173,118 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   ~300 LoC, ~150–250k tokens). Then **EX-7 Session B** scoping
   ticket once Session F lands.
 
+### §1.24 cellMass_AD independent verification — GREEN (mg-d731)
+
+* **Source.** mg-d731 (this update);
+  `docs/path-alpha-execution-arc/cellMass-AD-verification.md`
+  (deliverable doc, ~470 lines latex);
+  `scripts/cellMass_AD_check.py` (numerical verifier, ~330 lines
+  Python with exact rational arithmetic);
+  `lean/AXIOMS.md` (fourth entry, "Separate verification"
+  subsection added).
+
+* **Trigger.** Daniel directive 2026-05-08T16:11Z (paraphrased):
+
+  > *"I am very cautious about allowing axioms BUT if this Stanley
+  > thing is a solid external result and we run some separate
+  > verification on it and it saves 5k lines of lean, then that
+  > might be a good call. It's your responsibility."*
+
+  Originally framed for Stanley log-supermod (mg-e22f), but
+  established the **audit-bar separate-verification extension** as a
+  discipline for any newly-introduced project axiom claimed as an
+  external-literature transcription. mg-d731 discharges the
+  discipline for the **fourth named project axiom**,
+  `OneThird.ContinuousFKG.cellMass_AD` (mg-071b, `8b49708`,
+  EX-6 Session F). Trust-surface gate: until this verification
+  GREEN, EX-7 Session B held per the audit-bar discipline.
+
+* **Three sub-checks** (all PASS):
+
+  1. **Cross-literature: ≥ 3 sources, ≥ 3 decades.** **PASS.**
+     Ten sources catalogued spanning **five decades**:
+     - 1970s: Ahlswede–Daykin 1978 (S1, primary 4FT, Z. Wahrsch.
+       43:183–185, DOI 10.1007/BF00536201); Preston 1974
+       (S2, independent continuous-spin extension, Comm. Math.
+       Phys. 36:233–241); Holley 1974 (S3, predecessor in same CMP
+       issue).
+     - 1980s: Daykin 1980 (S4, hierarchy framework, Stud. Appl.
+       Math. 63:263–270); Graham 1983 (S5, applications survey,
+       Springer-Verlag chapter).
+     - 1990s: Brightwell 1999 (S6, project's primary cite +
+       applied-poset use, Discrete Math. 201:25–52, **§4.2 cell-
+       averaging step is the immediate ancestor of EX-7 consumption**);
+       Grimmett 1999 (S7, Percolation textbook §2.2, Springer GMW
+       321).
+     - 2000s: Liggett 1985/2005 reprint (S8, IPS textbook Ch. II §2,
+       Springer GMW 276).
+     - 2020s: Encyclopedia of Mathematics current entry (S9);
+       Chan–Pak 2024 survey (S10, arXiv:2311.02743, EMS Surveys
+       Math. Sci.).
+
+     The result is **taught in graduate textbooks** (Grimmett 1999,
+     Liggett 1985/2005) and **applied as black-box** in adjacent
+     poset-combinatorics literature. **Independent author groups: 8+**.
+     **No erratum or counterexample-claiming paper** exists.
+
+  2. **Numerical sanity check.** **PASS.** Brute-force verification
+     on **94 test instances** of the discrete cell-AD lemma on
+     `(Fin F)^n` for `n ∈ {1, 2, 3, 4}` and `F ∈ {2, 4, 6, 12}`,
+     with cell-grids `N | F`. Generator families: constant baseline,
+     log-supermod (deterministic + random non-neg-coef
+     pair-products), random 4-tuples with global UB, **sublattice-
+     indicator family** (`O(2-chain), O(V), O(Λ), O(3-chain),
+     O(diamond)` order polytopes — the **EX-7-motivating polytope-
+     indicator shapes** that drove mg-2746's Monotone-vs-polytope
+     hypothesis-mismatch finding), and a distinct 4-tuple
+     non-symmetric quadruple. **14 948 cell-pair `(p, q)` checks**,
+     **0 violations**, exact rational arithmetic via Python
+     `Fraction` (no floating-point ambiguity), out-of-tree
+     (independent of Lean codebase).
+
+  3. **Uncontested in literature.** **PASS.** Result is standard
+     background in 1990s+ graduate textbooks (Grimmett, Liggett)
+     and applied as black-box in poset-combinatorics literature
+     (Brightwell §4.2, Chan–Pak §9). The cell-averaging step appears
+     identically in both AD's discrete route (S1) and Preston's
+     continuous-spin route (S2) — two **genuinely independent
+     proofs** by different methods. The Encyclopedia of Mathematics
+     entry (S9, current/maintained) is uncontested.
+
+* **AXIOMS.md update.** Fourth axiom entry
+  (`OneThird.ContinuousFKG.cellMass_AD`) extended with a new
+  "Separate verification (per Daniel directive 2026-05-08T16:11Z)"
+  subsection containing the 3-row sub-check verdict table, links to
+  the deliverable doc and numerical script, the GREEN verdict, and
+  a note normalising the AD primary-citation date to **1978** (the
+  AXIOMS.md text and source-axiom docstring cite "1979" due to
+  journal-cover-date conventions; substantive math identical, DOI
+  10.1007/BF00536201). No changes to the audit-bar 4-condition
+  table (External / Difficult / Labeled / Low-risk all unchanged).
+
+* **Trust surface impact.** None. The verification deliverable is
+  documentation + a numerical script; no Lean source changes
+  beyond the AXIOMS.md write-up. The fourth project axiom remains
+  on the sub-α-C arc trust surface, now with an additional
+  separate-verification subsection backing the `External` and
+  `Low-risk` conditions. The `width3_one_third_two_thirds` headline
+  trust surface is unchanged. EX-7 Session B (downstream consumer of
+  `continuous_ad_general` ⇒ `cellMass_AD`) is **unblocked** per the
+  audit-bar separate-verification discipline.
+
+* **Trip-wires not fired.** Per ticket §5: no numerical violation
+  (would have triggered URGENT mail to Daniel + revert mg-071b +
+  halt sub-α-C); no thin literature coverage (would have triggered
+  reduced-confidence framing). No token blow-up (well under the
+  250k cap; mostly latex + Python scripting).
+
+* **Verdict.** **GREEN** per ticket §6. PM next step: surface
+  verification GREEN to Daniel in evening digest and proceed with
+  **EX-7 Session B** scoping ticket dispatch (chamber-decomposition
+  reduction + `continuous_ad_general` consumption +
+  `stanley_log_supermod` inner-step closure, ~150–270 LoC per
+  mg-2746 §7.2).
+
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
 * **Source.** mg-d0fc (this update);
@@ -2623,6 +2758,24 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   remains as the contingency if Session C trip-wires fire (the
   discrete-FKG part of Session B is reusable as the fallback's
   main content). PM next step: file EX-6 Session B scoping ticket.
+  **Post-mg-d731 update (2026-05-09).** `cellMass_AD` (the 4th
+  named project axiom, mg-071b `8b49708`) **independently verified
+  GREEN** under the audit-bar separate-verification extension
+  (Daniel directive 2026-05-08T16:11Z). Three sub-checks all PASS:
+  cross-literature (10 sources / 5 decades, including standard
+  graduate textbooks Grimmett 1999 and Liggett 1985 and the
+  project's primary downstream consumer Brightwell 1999 §4.2),
+  numerical sanity (94 instances / 14 948 cell-pair checks / 0
+  violations, exact rational arithmetic, covering the
+  EX-7-motivating polytope-indicator family), and uncontested
+  status. DH-4 mathlib upstream PR remains the highest-leverage
+  shortener for Path A's EX-6/EX-7 chunk; the temporary axiom is
+  now externally verified and trust-surface-safe for downstream
+  EX-7 Session B consumption. Verification deliverable
+  `docs/path-alpha-execution-arc/cellMass-AD-verification.md`;
+  numerical script `scripts/cellMass_AD_check.py`; AXIOMS.md
+  `cellMass_AD` entry extended with "Separate verification"
+  subsection. See §1.24 (this update).
 
 ### §3.10 DH-5 — Stanley order-polytope basics as upstream mathlib PR (post-mg-4831)
 

@@ -863,3 +863,45 @@ in this commit:
 
 confirms that no further project axioms are introduced by the master
 theorem assembly (only the cell-AD axiom plus the mathlib triplet).
+
+### Separate verification (per Daniel directive 2026-05-08T16:11Z)
+
+Per Daniel reminder 2026-05-08T16:11Z extending
+`feedback_audit_bar_for_axioms` to a stronger separate-verification
+bar for axioms claimed as external-literature transcriptions
+(paraphrased: "*if this … thing is a solid external result and we run
+some separate verification on it … then that might be a good call*"),
+mg-d731 executed three orthogonal sub-checks for `cellMass_AD`,
+parallel to the mg-e22f deliverable for `stanley_log_supermod`:
+
+| Sub-check | Verdict | Evidence |
+|-----------|---------|----------|
+| Cross-literature: ≥ 3 sources, ≥ 3 decades | **PASS** | 10 sources spanning 5 decades (1970s/1980s/1990s/2000s/2020s): Ahlswede–Daykin 1978 (S1, primary 4FT); Preston 1974 (S2, independent continuous-spin extension); Holley 1974 (S3, predecessor); Daykin 1980 (S4, hierarchy); Graham 1983 (S5, applications survey); Brightwell 1999 (S6, project's primary cite + applied-poset use, §4.2 cell-averaging step); Grimmett 1999 (S7, Percolation textbook §2.2); Liggett 1985/2005 (S8, IPS textbook Ch. II §2); Encyclopedia of Mathematics current entry (S9); Chan–Pak 2024 survey (S10, arXiv:2311.02743). |
+| Numerical sanity: 94 instances, 14 948 (p, q) pairs verified, 0 violations | **PASS** | `scripts/cellMass_AD_check.py` (mg-d731); brute-force verification of `M_1(p) M_2(q) ≤ M_3(p ⊓ q) M_4(p ⊔ q)` on `(Fin F)^n` for `n ∈ {1, 2, 3, 4}` and `F ∈ {2, 4, 6, 12}`, covering: constant baseline, log-supermod (deterministic + random with non-neg pair-product coefficients), random 4-tuples with global UB, sublattice-indicator family (`O(2-chain), O(V), O(Λ), O(3-chain), O(diamond)` order polytopes — the EX-7-motivating polytope-indicator shapes), distinct 4-tuple non-symmetric. Out-of-tree (Python rational arithmetic, independent of Lean codebase); exact rationals (no floating-point). |
+| Uncontested in literature | **PASS** | No erratum or counterexample-claiming paper exists. Result is **standard background** in 1990s+ graduate textbooks (Grimmett 1999 §2.2; Liggett 1985/2005 Ch. II §2) and **applied as black-box** in poset-combinatorics literature (Brightwell 1999 §4.2; Chan–Pak 2024 §9). The cell-averaging step appears identically in both AD's discrete route (S1) and Preston's continuous-spin route (S2), giving two genuinely independent proofs. |
+
+**Trip-wires not fired** (per mg-d731 §3.7): no numerical violation
+(would have triggered URGENT mail to Daniel + revert of mg-071b +
+halt of sub-α-C); no thin literature coverage (would have triggered
+reduced-confidence framing).
+
+**Primary citation date.** AD's 4FT paper appeared in
+Z. Wahrscheinlichkeitstheorie verw. Gebiete vol. **43**
+(1978), pp. 183–185; the AXIOMS.md text above and the source-axiom
+docstring cite it as "Ahlswede–Daykin 1979" due to journal-cover-
+date conventions. The substantive math is identical (DOI
+10.1007/BF00536201); future forum-post / publication artefacts
+should normalise to **1978**.
+
+**Verification deliverable.**
+`docs/path-alpha-execution-arc/cellMass-AD-verification.md`
+(mg-d731, this commit) — full §1 statement recap, §2 cross-
+literature detail, §3 numerical sanity, §4 verdict, §5 references.
+
+**Verdict.** **GREEN.** `cellMass_AD` (mg-071b) is a solid external
+result, independently verified along three orthogonal axes
+(literature cross-coverage, numerical brute-force on the
+EX-7-motivating polytope-indicator shapes, and uncontested status
+in standard textbooks). Trust-surface-safe for downstream
+sub-α-C / EX-7 Session B consumption. PM responsibility per Daniel
+reminder 2026-05-08T16:11Z; verified via mg-d731.
