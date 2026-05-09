@@ -468,6 +468,55 @@ ticket (a.e. convergence + DCT + master `continuous_fkg` / `continuous_ad`
 + full `integral_stepLower_eq_riemann` assembly + 1D Chebyshev
 hand-verification). ETA per mg-e622 §8.2: ~400–700 LoC, ~250–400k
 tokens; Session C consumes Session B's per-cell ingredients.
+**Last update.** mg-2746 (cat-mg-2746), 2026-05-09. **EX-7 Session
+A — drops headline via chamber + continuous FKG/AD latex-first
+scoping done.** §1.22 NEW for the Session A deliverable
+(`docs/path-alpha-execution-arc/ex7-drops-headline-scoping.md`,
+~700 lines latex). Predecessor: mg-7d37 (`6631d54`, EX-6 Session E
+sorry-free closure including the Monotone-laden `continuous_ad`).
+**Substantive scoping finding (verdict §0 + §3).** The drops
+headline `Pr_Q[L_k ∈ A] ≤ Pr_{Q'}[L_k ∈ A]` for `Q.Subseteq Q'`
+reduces to a continuous AD inequality on `[0,1]^α` via the chamber
+decomposition (mg-10d9 in tree). **However**, the in-tree
+`continuous_ad` (mg-7d37, ContinuousFKG.lean:1425) carries
+`Monotone f_i` hypotheses for each of the four functions (mg-7d37
+signature widening, state.md §1.21), and **the drops application
+needs AD on indicator functions of order polytopes
+(`1_{O(Q)}, 1_{O(Q')}`), which are NOT cube-monotone**.
+Counterexample: `f = (0.3, 0.5) ∈ O({(a,b)})` (cube `[0,1]^{a,b}`,
+relation `a ≤ b`); `f' = (0.7, 0.5) ≥ f` componentwise; `f'(a) =
+0.7 > 0.5 = f'(b)`, so `f' ∉ O({(a,b)})`. Polytope indicators are
+sublattice indicators (closed under `⊓, ⊔`) but not monotone.
+**Resolution (Path R-A, recommended).** File EX-6 Session F (NEW,
+prerequisite to EX-7 Session B) to land a Monotone-free
+`continuous_ad_general` via cell-averages + Lebesgue
+differentiation theorem (mathlib v4.29.1
+`MeasureTheory.Covering.Differentiation`-class), replacing the
+mg-7d37 Riemann-sum-sandwich convergence route. ~300 LoC, ~150–250k
+tokens; **Sub-DH-4-B strengthening** of DH-4 (the literature-standard
+Ahlswede–Daykin 1979 / Preston 1974 form is Monotone-free; mathlib
+upstream reviewer would expect both versions in a DH-4 PR).
+**Path R-B (contingency).** Combinatorial chamber-pairing argument
+without continuous AD; ~400–700 LoC; AMBER-leaning-RED if R-A
+trip-wires fire. **EX-7 Session B (post-Session-F).** ~150–270
+LoC, ~80–150k tokens; consumes `continuous_ad_general` + chamber
+decomp + `stanley_log_supermod` axiom. **Total Sessions F + B:
+~400–600 LoC, ~250–400k tokens.** Tracks upper edge of mg-91be
+§5.7's 400–800 LoC, ~250–500k token estimate; ~+300 LoC for the
+unanticipated EX-6 Session F prerequisite (vs. polecat brief's
+~150–300 LoC for EX-7 Session B alone). Trust surface impact: none
+(no new project axioms; `stanley_log_supermod` consumed at the
+inner-step closure per §2.6 of the deliverable). **Verdict
+AMBER-leaning-GREEN.** §3.4 updated (sub-α-C arc: EX-7 Session A
+done; **EX-6 Session F is the next execution ticket**, not EX-7
+Session B directly). PM next step: file **EX-6 Session F** scoping
+ticket (`continuous_ad_general` Monotone-free extension, ~300 LoC),
+then EX-7 Session B once Session F lands. Trip-wires per §6.4 +
+§7.4 of the deliverable: token blow-up not fired (~70k of 350k);
+mathlib measure-theory fundamental obstruction not fired; the
+hypothesis-mismatch on `continuous_ad` is the substantive Session A
+finding (not a halt-trip-wire — Path R-A resolution is clear).
+
 **Last update.** mg-7d37 (cat-mg-7d37), 2026-05-09. **EX-6 Session
 E — three remaining sorries closed; entire EX-6 arc sorry-free.**
 The `tendsto_integral_stepLower`, `continuous_fkg`, and
@@ -1903,6 +1952,162 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   Session B's per-cell ingredients to close the integration-side
   identity.
 
+### §1.22 EX-7 Session A — drops headline via chamber + continuous AD latex-first scoping (mg-2746)
+
+* **Source.** mg-2746 (this update);
+  `docs/path-alpha-execution-arc/ex7-drops-headline-scoping.md`
+  (deliverable doc, ~700 lines latex). Predecessors: mg-7d37
+  (`6631d54`, EX-6 Session E sorry-free closure including the
+  Monotone-laden `continuous_ad`); full EX-6 arc (mg-e622, mg-a6ed,
+  mg-4adf, mg-8561, mg-7d37); EX-5 chamber decomposition
+  (mg-79a9, mg-497d, mg-10d9); EX-3 / EX-4 OrderPolytope + Stanley
+  vertex (mg-8c66, mg-4831, mg-2442); mg-d0fc Stanley axiom;
+  mg-91be sub-α-C scoping with EX-7 spec in §5.7;
+  mg-b10a original FKG-on-LE obstruction.
+
+* **Statement.** Latex-first scoping of EX-7 — the Daykin–Saks 1981
+  drops headline / Brightwell 1999 §4 monotonicity-under-augmentation
+  for the level-`k` initial-ideal probability under `Q.Subseteq Q'`:
+  for `Q.Subseteq Q'` finite posets on α, level `k ∈ {0, …, n}`, and
+  an event `S : Finset α → Prop` up-closed under inclusion,
+
+  ```
+  Pr_{L ∼ Unif L(Q)}[S(L_k)]  ≤  Pr_{L ∼ Unif L(Q')}[S(L_k)].
+  ```
+
+  Standard chamber-decomposition + continuous-AD reduction
+  (Brightwell §4): `Pr_R[S(L_k)] = (∫_{O(R)} 𝟙_S(A_k(f)) df) / Vol(O(R))`
+  by chamber decomposition (mg-10d9 in tree); the drops then becomes
+  a four-function lattice inequality on the cube, dischargeable by
+  continuous Ahlswede–Daykin.
+
+* **Substantive scoping finding (deliverable §0 + §3).** The
+  in-tree `continuous_ad` (mg-7d37,
+  `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean:1425`)
+  carries `Monotone f_i` hypotheses for each of the four functions
+  (mg-7d37 signature widening per state.md §1.21). **The drops
+  application needs AD on indicator functions of order polytopes
+  (`1_{O(Q)}, 1_{O(Q')}`), which are NOT cube-monotone.**
+  Counterexample (deliverable §0): `α = {a, b}`, Q = discrete,
+  Q' = `{(a, b)}`. Take `f = (0.3, 0.5) ∈ O(Q')` (cube relation
+  `a ≤ b` holds: 0.3 ≤ 0.5). Take `f' = (0.7, 0.5) ≥ f`
+  componentwise. Then `f'(a) = 0.7 > 0.5 = f'(b)`, so
+  `f' ∉ O(Q')`. Polytope indicators are **sublattice indicators**
+  (closed under componentwise `⊓, ⊔`) but not cube-monotone.
+
+* **Resolution: Path R-A (recommended).** Extend EX-6 with a
+  Monotone-free `continuous_ad_general` theorem.
+  Mathematically standard form (Ahlswede–Daykin 1979, Section 2;
+  Preston 1974, Theorem 5.4; Brightwell 1999, §4.2): the
+  four-function AD on `[0,1]^n` requires only non-negativity,
+  integrability, and the four-function lattice inequality — **no
+  pointwise monotonicity**. The mg-7d37 proof needed monotonicity
+  for its Riemann-sum convergence route (`stepLower N f → f` a.e.
+  requires Monotone f); a different convergence route via
+  **cell averages + Lebesgue differentiation theorem** drops the
+  monotonicity requirement. For any locally integrable f, mathlib's
+  `MeasureTheory.Covering.Differentiation` (Vitali-family / cube-
+  cell version) gives `cellAvg N f → f` a.e. as N → ∞, and cell
+  averages preserve the four-function AD inequality (linearity +
+  Cauchy–Schwarz; Ahlswede–Daykin 1979 Lemma 2). Discrete AD on
+  cell averages × dominated convergence on the limit closes the
+  Monotone-free version. **~250–400 LoC, ~150–250k tokens** as a
+  new EX-6 Session F (prerequisite to EX-7 Session B).
+
+* **Path R-A is also Sub-DH-4-B strengthening of DH-4.** The
+  literature-standard `continuous_ad` is the Monotone-free version;
+  the Monotone-laden version is a project-specific weakening for
+  proof-technical reasons. A mathlib upstream PR for
+  `Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean` would
+  naturally carry **both** versions: the general (literature-
+  standard) form as the master theorem + the Monotone-laden form
+  as a corollary. EX-6 Session F lands both as Sub-DH-4-B.
+
+* **Path R-B (contingency).** Combinatorial chamber-pairing
+  argument without invoking continuous AD. Direct discrete reduction
+  to a level-`k` localisation problem on `(L(Q'), uniform)` via
+  the swap involution + chamber pairing. ~400–700 LoC; AMBER-
+  leaning-RED (the level-`k` localisation problem is the obstacle
+  that RED'd Path B per state.md §3.9). Path R-B is the contingency
+  if Path R-A trip-wires fire on an unexpected mathlib obstruction
+  (e.g., LebesgueDifferentiation-class API mismatch in v4.29.1).
+
+* **EX-7 Session B (post-Session-F).** ~150–270 LoC, ~80–150k
+  tokens (matches the polecat brief's "~150–300 LoC"). Three
+  components per deliverable §4.3: (a) `OrderPolytope' Q` thin
+  wrapper + sublattice + Subseteq-monotonicity (~30 LoC); (b)
+  chamber-decomposition reduction `probEvent'_eq_chamber_integral`
+  (~50 LoC); (c) `probEvent'_mono_of_subseteq_upClosed` master
+  theorem via `continuous_ad_general` + single-edge induction +
+  Stanley axiom invocation at inner-step closure (~70–150 LoC + ~10
+  LoC hand-verification).
+
+* **Stanley axiom consumption (deliverable §2.6).** The inner-step
+  continuous-AD inequality reduces to a discrete combinatorial sum
+  on `(L(Q'), uniform)`, which closes via
+  `OneThird.LinearExt.stanley_log_supermod` applied to the size-`k`
+  ideals at the swap boundary. ~10–20 LoC of axiom invocation in
+  Session B. **No new project axioms** introduced by EX-7 (Session
+  B `#print axioms` will include the mathlib triplet plus
+  `stanley_log_supermod`); trust surface unchanged from current
+  sub-α-C arc state.
+
+* **`α → ℝ` ↔ `Fin n → ℝ` reindexing.** The chamber-side machinery
+  in tree (mg-497d / mg-10d9) lives at `α → ℝ` (general
+  `Fintype α`); the continuous AD lives at `Fin n → ℝ`. The
+  reindexing is handled transparently via the in-tree
+  `chamberRelabel` (mg-497d), built on
+  `Equiv.piCongrLeft` + `MeasurePreserving`.
+
+* **Mathlib API check (deliverable §6).** All needed APIs are at
+  v4.29.1 or in-tree predecessors:
+  `MeasureTheory.Covering.Differentiation` (Path R-A LDT),
+  `setIntegral_const`, `integral_finset_sum`,
+  `four_functions_theorem_univ`, `Equiv.piCongrLeft`,
+  in-tree `chamber_cover` / `chamber_volume` / `chamber_inter_meas_zero`
+  / `orderPolytope_volume` / `chamberRelabel` / `stanley_log_supermod`
+  / `RelationPoset.Subseteq` / `LinearExt'.initialIdeal'` / `probEvent'`.
+  **No critical mathlib gap.** The deliverable §6.2 flags one open
+  verification (exact mathlib lemma name for Vitali-family LDT in
+  v4.29.1) — Session F polecat verifies and adapts; Path R-B falls
+  back if mathlib surprises.
+
+* **Trip-wires per deliverable §6.4 + §7.4 — none fired in
+  Session A.** Token blow-up: not fired (~70k of 350k cap).
+  Mathlib measure-theory fundamental obstruction: not fired.
+  Hypothesis-mismatch finding: substantive scoping outcome
+  (the role of Session A; not a halt-trip-wire — Path R-A
+  resolution is clear). Drops-headline-already-proven-elsewhere:
+  not fired (no in-tree or upstream alternative). Structural
+  obstruction on `S` up-closed-under-inclusion: not fired (per
+  deliverable §1.3, the hypothesis is mathematically sufficient via
+  the standard Brightwell §4 / Daykin–Saks 1981 factorisation).
+
+* **Combined Sessions F + B estimate.** ~400–600 LoC, ~250–400k
+  tokens. Tracks upper edge of mg-91be §5.7's 400–800 LoC, ~250–500k
+  envelope. The polecat brief's quoted "~150–300 LoC" was for **EX-7
+  Session B alone** (achievable post-Session-F); the EX-6 Session F
+  prerequisite is the unanticipated portion.
+
+* **Sub-α-C arc impact.** Aggregate Path A scope refines from
+  mg-91be §5.11's ~5050–8700 LoC to ~5350–9000 LoC factoring in
+  the EX-6 Session F prerequisite (+~300 LoC). Still within the
+  state.md §4.2 ballpark caveat; no §4.2 trip-wire fired (the
+  10000 LoC trip-wire that would force STOP).
+
+* **Verdict.** **AMBER-leaning-GREEN.** Math statement settled;
+  chamber-decomposition machinery in tree; Stanley axiom in tree;
+  Monotone-free `continuous_ad_general` is mathematically standard
+  and Lean-portable via Lebesgue differentiation. Single
+  prerequisite (EX-6 Session F) blocks EX-7 Session B; total
+  Sessions F + B ~400–600 LoC over 2 Lean sessions.
+
+* **Sub-α-C arc next step.** PM files **EX-6 Session F** scoping
+  ticket (Monotone-free `continuous_ad_general` extension to
+  `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`,
+  ~300 LoC, ~150–250k tokens). Then **EX-7 Session B** scoping
+  ticket once Session F lands.
+
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
 * **Source.** mg-d0fc (this update);
@@ -2218,6 +2423,32 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   `integral_stepLower_eq_riemann` assembly + 1D Chebyshev
   hand-verification; ~400–700 LoC, ~250–400k tokens per mg-e622
   §8.2).
+  **EX-7 Session A done (mg-2746, this commit; see §1.22) —
+  AMBER-leaning-GREEN.** Latex-first scoping of the drops headline
+  `probEvent'_mono_of_subseteq_upClosed` for `Q.Subseteq Q'` via
+  chamber decomposition + continuous AD. **Substantive scoping
+  finding**: the in-tree `continuous_ad` (mg-7d37) carries
+  `Monotone f_i` hypotheses that do not match the EX-7 application's
+  non-cube-monotone polytope indicators `1_{O(Q)}, 1_{O(Q')}`
+  (counterexample: `f = (0.3, 0.5) ∈ O({(a,b)})` but
+  `f' = (0.7, 0.5) ≥ f` componentwise has `f'(a) > f'(b)`, so
+  `f' ∉ O({(a,b)})`). **Resolution**: Path R-A files **EX-6
+  Session F** (NEW, prerequisite to EX-7 Session B) for a
+  Monotone-free `continuous_ad_general` via cell-averages + Lebesgue
+  differentiation theorem (literature-standard Ahlswede–Daykin 1979 /
+  Preston 1974 form; Sub-DH-4-B strengthening of DH-4); ~300 LoC,
+  ~150–250k tokens. EX-7 Session B (post-Session-F) is then
+  ~150–270 LoC, ~80–150k tokens (matches polecat brief). **Combined
+  Sessions F + B: ~400–600 LoC, ~250–400k tokens**, tracking the
+  upper edge of mg-91be §5.7's 400–800 LoC envelope. Trust surface
+  impact: none (no new project axioms;
+  `OneThird.LinearExt.stanley_log_supermod` consumed at the
+  inner-step closure per deliverable §2.6). Path R-B (combinatorial
+  chamber-pairing argument) is the AMBER-leaning-RED contingency if
+  Path R-A trip-wires fire on an unexpected mathlib obstruction.
+  **PM files EX-6 Session F scoping ticket next** (deliverable §4.2 +
+  §5.1 + §7.1 form the Session F brief), then EX-7 Session B once
+  Session F lands.
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
@@ -2653,6 +2884,26 @@ sub-α-C in flight.)
   `lean/OneThird.lean` (one import line),
   `docs/path-alpha-execution-arc/state.md` (§1.21 NEW + header
   "Last update" + §3.4 update + this §5 entry).
+* mg-2746 (this commit) — EX-7 Session A executed: drops headline
+  via chamber + continuous AD latex-first scoping. **Substantive
+  scoping finding**: in-tree `continuous_ad` (mg-7d37) requires
+  `Monotone f_i` for each of the four functions, but the drops
+  application needs AD on non-cube-monotone polytope indicators
+  `1_{O(Q)}, 1_{O(Q')}` (counterexample documented in deliverable §0
+  + §3). **Resolution Path R-A**: file EX-6 Session F (new
+  prerequisite) for a Monotone-free `continuous_ad_general` via
+  cell-averages + Lebesgue differentiation theorem (literature-
+  standard form; Sub-DH-4-B strengthening of DH-4); ~300 LoC,
+  ~150–250k tokens. EX-7 Session B then ~150–270 LoC, ~80–150k
+  tokens. Combined ~400–600 LoC over 2 Lean sessions. Path R-B
+  (combinatorial chamber-pairing) AMBER-leaning-RED contingency.
+  Trust surface impact: none (no new project axioms;
+  `stanley_log_supermod` consumed at inner-step closure). Trip-wires
+  per deliverable §6.4 + §7.4 not fired (~70k of 350k cap; mathlib
+  measure theory at v4.29.1 covers all needed APIs). Verdict
+  AMBER-leaning-GREEN. PM next step: file EX-6 Session F scoping
+  ticket, then EX-7 Session B once Session F lands.
+  `docs/path-alpha-execution-arc/ex7-drops-headline-scoping.md`.
 * mg-4adf (this commit) — EX-6 Session C executed (partial):
   closed Session B's deferred `integral_stepLower_eq_riemann`
   sorry sorry-free via the cell-partition + finite-additivity
