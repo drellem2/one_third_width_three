@@ -435,38 +435,6 @@ lemma volume_cell {N : ℕ} (hN : 1 ≤ N) (k : Fin n → Fin N) :
   congr 1
   rw [div_pow, one_pow]
 
-/-- **Riemann sum identity (statement form).** For `N ≥ 1`, the
-left-endpoint Riemann sum of `f` over the `N^n`-grid `(Fin N)^n`
-equals the integral of the step function `stepLower N f` over the
-half-open cube `[0,1)^n`:
-
-```
-∫_{x ∈ [0,1)^n} stepLower N f x ∂volume
-  = (1/N^n) · ∑_{k : Fin n → Fin N} f(k/N).
-```
-
-The proof decomposes `[0,1)^n` into the disjoint cells `C_k`
-(`k : Fin n → Fin N`), each of volume `(1/N)^n`, on each of which the
-step function `stepLower N f` is constant with value `f(k/N)`.
-
-**Status (Session B).** The statement is recorded here; the full proof
-(cell decomposition + finite additivity of the integral) is deferred
-to Session C alongside the dominated-convergence limit argument. The
-volume-of-cell identity (`volume_cell`) is the Session B
-contribution; the assembly is Session C. -/
-theorem integral_stepLower_eq_riemann
-    {N : ℕ} (_hN : 1 ≤ N) (f : (Fin n → ℝ) → ℝ)
-    (_hfm : Measurable f) :
-    ∫ x in Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1),
-        stepLower N f x ∂volume
-      = (1 / (N : ℝ) ^ n) *
-          ∑ k : Fin n → Fin N, f (fun i => (k i : ℝ) / N) := by
-  -- The full assembly (cell decomposition + finite additivity) is the
-  -- substantive Session C contribution; the cell-volume identity
-  -- `volume_cell` and the constancy of `stepLower N f` on each cell
-  -- are the per-cell ingredients prepared in Session B.
-  sorry
-
 /-- **Floor-on-cell identity.** For `N ≥ 1`, if `(k : ℝ)/N ≤ x` and
 `x < (k+1)/N` for `k : Fin N`, then `Nat.floor (N · x) = k`. -/
 private lemma floor_mul_eq_of_mem_cell {N : ℕ} (hN : 1 ≤ N) (k : Fin N)
@@ -485,10 +453,8 @@ private lemma floor_mul_eq_of_mem_cell {N : ℕ} (hN : 1 ≤ N) (k : Fin N)
       field_simp
     rw [hsimp] at hmul
     exact hmul
-  -- Now apply `Nat.floor_eq_iff` for nonneg reals and Nat.
   have hxnn : (0 : ℝ) ≤ (N : ℝ) * x :=
     le_trans (by exact_mod_cast (Nat.zero_le _ : 0 ≤ (k : ℕ))) hkN
-  -- Use `Nat.floor_eq_iff` (nonneg form).
   rw [Nat.floor_eq_iff hxnn]
   refine ⟨hkN, ?_⟩
   exact_mod_cast hkNlt
@@ -504,7 +470,6 @@ lemma stepRetract_eq_of_mem_cell
   obtain ⟨hxi_lo, hxi_hi⟩ := hx i
   have hfloor : Nat.floor ((N : ℝ) * x i) = ((k i : Fin N) : ℕ) :=
     floor_mul_eq_of_mem_cell hN (k i) hxi_lo hxi_hi
-  -- `min (Nat.floor (N * x_i)) N = (k i : ℕ)` since `(k i : ℕ) < N`.
   have hki_lt : ((k i : Fin N) : ℕ) < N := (k i).isLt
   unfold stepRetract
   rw [hfloor, min_eq_left hki_lt.le]
@@ -528,6 +493,560 @@ lemma stepLower_eq_of_mem_cell
   funext i
   exact stepRetract_eq_of_mem_cell hN k hx i
 
+/-- **1D cell tiling.** For `N ≥ 1`, the unit half-open interval
+`[0,1)` is the disjoint union of the `N` half-open cells
+`[j/N, (j+1)/N)` for `j : Fin N`. -/
+private lemma Ico_zero_one_eq_iUnion_cells {N : ℕ} (hN : 1 ≤ N) :
+    Set.Ico (0 : ℝ) 1
+      = ⋃ j : Fin N, Set.Ico ((j : ℝ) / N) (((j : ℝ) + 1) / N) := by
+  have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+  ext x
+  simp only [Set.mem_Ico, Set.mem_iUnion]
+  refine ⟨?_, ?_⟩
+  · rintro ⟨hx0, hx1⟩
+    have hNxnn : 0 ≤ (N : ℝ) * x := mul_nonneg hN'.le hx0
+    have hfloor_lt_N : Nat.floor ((N : ℝ) * x) < N := by
+      rw [Nat.floor_lt hNxnn]
+      have : (N : ℝ) * x < (N : ℝ) * 1 := mul_lt_mul_of_pos_left hx1 hN'
+      simpa using this
+    refine ⟨⟨Nat.floor ((N : ℝ) * x), hfloor_lt_N⟩, ?_, ?_⟩
+    · -- (j : ℝ)/N ≤ x
+      have hj_le : ((Nat.floor ((N : ℝ) * x) : ℕ) : ℝ) ≤ (N : ℝ) * x :=
+        Nat.floor_le hNxnn
+      change ((((⟨Nat.floor ((N : ℝ) * x), hfloor_lt_N⟩ : Fin N) : ℕ) : ℝ)) / (N : ℝ) ≤ x
+      rw [div_le_iff₀ hN']
+      linarith
+    · -- x < (j+1)/N
+      have hj_gt : (N : ℝ) * x < (Nat.floor ((N : ℝ) * x) : ℕ) + 1 :=
+        Nat.lt_floor_add_one _
+      change x < ((((⟨Nat.floor ((N : ℝ) * x), hfloor_lt_N⟩ : Fin N) : ℕ) : ℝ) + 1) / (N : ℝ)
+      rw [lt_div_iff₀ hN']
+      linarith
+  · rintro ⟨j, hjlow, hjhi⟩
+    refine ⟨?_, ?_⟩
+    · -- 0 ≤ x
+      exact le_trans (div_nonneg (by exact_mod_cast Nat.zero_le _) hN'.le) hjlow
+    · -- x < 1
+      have hj_le_N : ((j : ℕ) : ℝ) + 1 ≤ (N : ℝ) := by
+        have : (j : ℕ) + 1 ≤ N := j.isLt
+        exact_mod_cast this
+      have h_one : (((j : ℕ) : ℝ) + 1) / (N : ℝ) ≤ 1 := by
+        rw [div_le_one hN']; exact hj_le_N
+      linarith
+
+/-- **Cell pairwise disjointness.** For distinct `k, l : Fin n → Fin N`
+with `N ≥ 1`, the cells `∏_i [k_i/N, (k_i+1)/N)` and
+`∏_i [l_i/N, (l_i+1)/N)` are disjoint. -/
+private lemma cell_disjoint {N : ℕ} (hN : 1 ≤ N) :
+    Pairwise (Function.onFun Disjoint
+      (fun k : Fin n → Fin N =>
+        Set.univ.pi (fun i =>
+          Set.Ico ((k i : ℝ) / N) (((k i : ℝ) + 1) / N)))) := by
+  intro k l hkl
+  have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+  obtain ⟨i, hi⟩ : ∃ i, k i ≠ l i := by
+    by_contra hall
+    apply hkl
+    funext i
+    exact not_not.mp (fun hne => hall ⟨i, hne⟩)
+  rw [Function.onFun, Set.disjoint_iff_inter_eq_empty]
+  ext x
+  simp only [Set.mem_inter_iff, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_Ico,
+    Set.mem_empty_iff_false, iff_false, not_and]
+  intro hk hl
+  have hki := hk i
+  have hli := hl i
+  have hi_val : (k i : ℕ) ≠ (l i : ℕ) := fun h => hi (Fin.ext h)
+  rcases lt_or_gt_of_ne hi_val with h | h
+  · -- (k i : ℕ) < (l i : ℕ): so (k i + 1) ≤ l i, so (k i+1)/N ≤ l i/N.
+    have h_succ : ((k i : ℕ) : ℝ) + 1 ≤ ((l i : ℕ) : ℝ) := by exact_mod_cast h
+    have hx_lt : x i < (((k i : ℕ) : ℝ) + 1) / N := hki.2
+    have hx_ge : ((l i : ℕ) : ℝ) / N ≤ x i := hli.1
+    have hsucc_le : (((k i : ℕ) : ℝ) + 1) / N ≤ ((l i : ℕ) : ℝ) / N :=
+      div_le_div_of_nonneg_right h_succ hN'.le
+    linarith
+  · have h_succ : ((l i : ℕ) : ℝ) + 1 ≤ ((k i : ℕ) : ℝ) := by exact_mod_cast h
+    have hx_lt : x i < (((l i : ℕ) : ℝ) + 1) / N := hli.2
+    have hx_ge : ((k i : ℕ) : ℝ) / N ≤ x i := hki.1
+    have hsucc_le : (((l i : ℕ) : ℝ) + 1) / N ≤ ((k i : ℕ) : ℝ) / N :=
+      div_le_div_of_nonneg_right h_succ hN'.le
+    linarith
+
+/-- **Riemann sum identity.** For `N ≥ 1`, the
+left-endpoint Riemann sum of `f` over the `N^n`-grid `(Fin N)^n`
+equals the integral of the step function `stepLower N f` over the
+half-open cube `[0,1)^n`:
+
+```
+∫_{x ∈ [0,1)^n} stepLower N f x ∂volume
+  = (1/N^n) · ∑_{k : Fin n → Fin N} f(k/N).
+```
+
+The proof decomposes `[0,1)^n` into the disjoint cells `C_k`
+(`k : Fin n → Fin N`), each of volume `(1/N)^n`, on each of which the
+step function `stepLower N f` is constant with value `f(k/N)`. -/
+theorem integral_stepLower_eq_riemann
+    {N : ℕ} (hN : 1 ≤ N) (f : (Fin n → ℝ) → ℝ) :
+    ∫ x in Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1),
+        stepLower N f x ∂volume
+      = (1 / (N : ℝ) ^ n) *
+          ∑ k : Fin n → Fin N, f (fun i => (k i : ℝ) / N) := by
+  classical
+  have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+  -- The cell map.
+  set cellSet : (Fin n → Fin N) → Set (Fin n → ℝ) := fun k =>
+    Set.univ.pi (fun i => Set.Ico ((k i : ℝ) / N) (((k i : ℝ) + 1) / N))
+    with hcellSet_def
+  -- Cells are measurable.
+  have hcell_meas : ∀ k, MeasurableSet (cellSet k) :=
+    fun k => MeasurableSet.univ_pi (fun _ => measurableSet_Ico)
+  -- Cells are pairwise disjoint.
+  have hcell_disj : Pairwise (Function.onFun Disjoint cellSet) := cell_disjoint hN
+  -- Cells union to [0,1)^n.
+  have hcell_union :
+      (⋃ k, cellSet k)
+        = Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1) := by
+    ext x
+    simp only [hcellSet_def, Set.mem_iUnion, Set.mem_pi, Set.mem_univ, true_implies,
+      Set.mem_Ico]
+    constructor
+    · rintro ⟨k, hk⟩ i
+      have := (Ico_zero_one_eq_iUnion_cells (N := N) hN).symm
+      have hxi : x i ∈ ⋃ j : Fin N, Set.Ico ((j : ℝ) / N) (((j : ℝ) + 1) / N) := by
+        refine Set.mem_iUnion.mpr ⟨k i, ?_⟩
+        have := hk i
+        simpa [Set.mem_Ico] using this
+      rw [this] at hxi
+      simpa [Set.mem_Ico] using hxi
+    · intro hx
+      have hxi : ∀ i, ∃ j : Fin N,
+          x i ∈ Set.Ico ((j : ℝ) / N) (((j : ℝ) + 1) / N) := by
+        intro i
+        have hi : x i ∈ Set.Ico (0 : ℝ) 1 := by
+          simp only [Set.mem_Ico]; exact hx i
+        rw [Ico_zero_one_eq_iUnion_cells (N := N) hN] at hi
+        exact Set.mem_iUnion.mp hi
+      choose K hK using hxi
+      refine ⟨K, fun i => ?_⟩
+      simpa [Set.mem_Ico] using hK i
+  -- On each cell, stepLower is the constant `f(k/N)`.
+  have hsl_const : ∀ (k : Fin n → Fin N) {x : Fin n → ℝ}, x ∈ cellSet k →
+      stepLower N f x = f (fun i => (k i : ℝ) / N) := by
+    intro k x hx
+    rw [hcellSet_def] at hx
+    simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_Ico] at hx
+    exact stepLower_eq_of_mem_cell hN f k hx
+  -- Each cell has volume `1/N^n`.
+  have hcell_vol : ∀ k, (volume : Measure (Fin n → ℝ)) (cellSet k)
+                          = ENNReal.ofReal (1 / (N : ℝ) ^ n) :=
+    fun k => volume_cell hN k
+  have hcell_vol_real : ∀ k, (volume : Measure (Fin n → ℝ)).real (cellSet k)
+                              = 1 / (N : ℝ) ^ n := by
+    intro k
+    rw [Measure.real, hcell_vol k, ENNReal.toReal_ofReal]
+    positivity
+  -- stepLower is integrable on each cell (it equals a constant there).
+  have hsl_int : ∀ k, IntegrableOn (stepLower N f) (cellSet k) volume := by
+    intro k
+    haveI : IsFiniteMeasure (volume.restrict (cellSet k)) := by
+      refine ⟨?_⟩
+      rw [Measure.restrict_apply_univ, hcell_vol k]
+      exact ENNReal.ofReal_lt_top
+    refine (integrable_const (f (fun i => (k i : ℝ) / N))).congr ?_
+    rw [Filter.EventuallyEq, ae_restrict_iff' (hcell_meas k)]
+    refine Filter.Eventually.of_forall ?_
+    intro x hx
+    exact (hsl_const k hx).symm
+  -- Apply finite additivity of the integral over the cell decomposition.
+  rw [← hcell_union]
+  rw [integral_iUnion_fintype hcell_meas hcell_disj hsl_int]
+  -- Each cell integral equals f(k/N) · vol(cell).
+  have h_each : ∀ k, ∫ x in cellSet k, stepLower N f x ∂volume
+                  = f (fun i => (k i : ℝ) / N) * (1 / (N : ℝ) ^ n) := by
+    intro k
+    rw [setIntegral_congr_fun (hcell_meas k) (fun x hx => hsl_const k hx)]
+    rw [setIntegral_const, smul_eq_mul, hcell_vol_real k]
+    ring
+  simp_rw [h_each]
+  rw [← Finset.sum_mul, mul_comm]
+
+/-- `stepLower N f` is integrable on the half-open cube `[0,1)^n` for
+any function `f`. The cell decomposition makes it a finite sum of
+constants on cells of finite volume. -/
+lemma integrableOn_stepLower_cube {N : ℕ} (hN : 1 ≤ N)
+    (f : (Fin n → ℝ) → ℝ) :
+    IntegrableOn (stepLower N f)
+      (Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1)) volume := by
+  classical
+  set cellSet : (Fin n → Fin N) → Set (Fin n → ℝ) := fun k =>
+    Set.univ.pi (fun i => Set.Ico ((k i : ℝ) / N) (((k i : ℝ) + 1) / N))
+  have hcell_meas : ∀ k, MeasurableSet (cellSet k) :=
+    fun k => MeasurableSet.univ_pi (fun _ => measurableSet_Ico)
+  have hcell_vol : ∀ k, (volume : Measure (Fin n → ℝ)) (cellSet k)
+                          = ENNReal.ofReal (1 / (N : ℝ) ^ n) :=
+    fun k => volume_cell hN k
+  have hsl_const : ∀ (k : Fin n → Fin N) {x : Fin n → ℝ}, x ∈ cellSet k →
+      stepLower N f x = f (fun i => (k i : ℝ) / N) := by
+    intro k x hx
+    simp only [cellSet, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_Ico] at hx
+    exact stepLower_eq_of_mem_cell hN f k hx
+  have hsl_int : ∀ k, IntegrableOn (stepLower N f) (cellSet k) volume := by
+    intro k
+    haveI : IsFiniteMeasure (volume.restrict (cellSet k)) := by
+      refine ⟨?_⟩
+      rw [Measure.restrict_apply_univ, hcell_vol k]
+      exact ENNReal.ofReal_lt_top
+    refine (integrable_const (f (fun i => (k i : ℝ) / N))).congr ?_
+    rw [Filter.EventuallyEq, ae_restrict_iff' (hcell_meas k)]
+    refine Filter.Eventually.of_forall ?_
+    intro x hx
+    exact (hsl_const k hx).symm
+  -- Cells union to [0,1)^n.
+  have hcell_union :
+      (⋃ k, cellSet k)
+        = Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1) := by
+    ext x
+    simp only [cellSet, Set.mem_iUnion, Set.mem_pi, Set.mem_univ, true_implies,
+      Set.mem_Ico]
+    constructor
+    · rintro ⟨k, hk⟩ i
+      have hxi : x i ∈ ⋃ j : Fin N, Set.Ico ((j : ℝ) / N) (((j : ℝ) + 1) / N) := by
+        refine Set.mem_iUnion.mpr ⟨k i, ?_⟩
+        have := hk i
+        simpa [Set.mem_Ico] using this
+      rw [(Ico_zero_one_eq_iUnion_cells (N := N) hN).symm] at hxi
+      simpa [Set.mem_Ico] using hxi
+    · intro hx
+      have hxi : ∀ i, ∃ j : Fin N,
+          x i ∈ Set.Ico ((j : ℝ) / N) (((j : ℝ) + 1) / N) := by
+        intro i
+        have hi : x i ∈ Set.Ico (0 : ℝ) 1 := by
+          simp only [Set.mem_Ico]; exact hx i
+        rw [Ico_zero_one_eq_iUnion_cells (N := N) hN] at hi
+        exact Set.mem_iUnion.mp hi
+      choose K hK using hxi
+      refine ⟨K, fun i => ?_⟩
+      simpa [Set.mem_Ico] using hK i
+  rw [← hcell_union]
+  exact integrableOn_finite_iUnion.mpr hsl_int
+
 end RiemannSum
+
+/-! ### §5 — Discrete FKG on `(Fin (N))^n` (Riemann-form variant)
+
+The `fkg_discrete_pi` theorem uses index range `Fin (N+1)` (grid
+`{0, 1/N, …, 1}`). For the half-open Riemann sum (consumed by the
+limit argument) we need the parallel inequality with index range
+`Fin N` (grid `{0, 1/N, …, (N-1)/N}`); the cube boundary `x_i = 1` is
+absorbed into the half-open cell `[0,1)`, which is a measure-zero
+deviation. The proof structure mirrors `fkg_discrete_pi`. -/
+
+section DiscreteFKGFinN
+
+/-- Restriction to the half-open grid `{0, 1/N, …, (N-1)/N}^n ⊂
+[0,1)^n`, indexed by `Fin n → Fin N` with divisor `N`. -/
+noncomputable def gridFnN (N : ℕ) (f : (Fin n → ℝ) → ℝ) :
+    (Fin n → Fin N) → ℝ :=
+  fun k => f (fun i => (k i : ℝ) / (N : ℝ))
+
+@[simp] lemma gridFnN_apply (N : ℕ) (f : (Fin n → ℝ) → ℝ)
+    (k : Fin n → Fin N) :
+    gridFnN N f k = f (fun i => (k i : ℝ) / (N : ℝ)) := rfl
+
+lemma gridFnN_nonneg {N : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : 0 ≤ f) :
+    0 ≤ gridFnN N f := fun _ => hf _
+
+lemma gridFnN_monotone {N : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : Monotone f) :
+    Monotone (gridFnN N f) := by
+  intro k l hkl
+  apply hf
+  intro i
+  have hi : (k i : ℕ) ≤ (l i : ℕ) := Fin.le_iff_val_le_val.mp (hkl i)
+  have hi' : ((k i : ℕ) : ℝ) ≤ ((l i : ℕ) : ℝ) := by exact_mod_cast hi
+  rcases Nat.eq_zero_or_pos N with hN | hN
+  · subst hN; simp
+  · have hN' : (0 : ℝ) ≤ (N : ℝ) := by exact_mod_cast hN.le
+    exact div_le_div_of_nonneg_right hi' hN'
+
+@[simp] lemma gridFnN_mul (N : ℕ) (f g : (Fin n → ℝ) → ℝ) :
+    gridFnN N (f * g) = gridFnN N f * gridFnN N g := by
+  funext k; simp [gridFnN, Pi.mul_apply]
+
+/-- **Discrete FKG on `(Fin N)^n`**, index range `Fin N` variant. -/
+theorem fkg_discrete_pi_finN {N : ℕ}
+    {f g : (Fin n → ℝ) → ℝ}
+    (hf₀ : 0 ≤ f) (hg₀ : 0 ≤ g)
+    (hf : Monotone f) (hg : Monotone g) :
+    (∑ k : Fin n → Fin N, gridFnN N f k) *
+        (∑ k : Fin n → Fin N, gridFnN N g k)
+    ≤ ((N : ℝ) ^ n) *
+        (∑ k : Fin n → Fin N, gridFnN N f k * gridFnN N g k) := by
+  classical
+  have hcard : Fintype.card (Fin n → Fin N) = N ^ n := by
+    rw [Fintype.card_fun, Fintype.card_fin, Fintype.card_fin]
+  have h := fkg (μ := fun _ : Fin n → Fin N => (1 : ℝ))
+                (gridFnN N f) (gridFnN N g)
+                (fun _ => zero_le_one) (gridFnN_nonneg hf₀) (gridFnN_nonneg hg₀)
+                (gridFnN_monotone hf) (gridFnN_monotone hg)
+                (fun _ _ => by simp)
+  simp only [one_mul] at h
+  have hsum : (∑ _ : Fin n → Fin N, (1 : ℝ)) = ((N : ℝ) ^ n) := by
+    rw [Finset.sum_const, Finset.card_univ, hcard, nsmul_eq_mul, mul_one]
+    push_cast; rfl
+  rw [hsum] at h
+  exact h
+
+end DiscreteFKGFinN
+
+/-! ### §6 — `stepUpper` approximation, sandwich, and Riemann identity -/
+
+section StepUpper
+
+/-- The **upper-step approximation** of `f` at refinement `N`:
+shifts the lower retraction by `1/N` in each coordinate before
+evaluating `f`. On a cell `∏_i [k_i/N, (k_i+1)/N)` of the half-open
+cube `[0,1)^n` (`k : Fin n → Fin N`), `stepUpper N f x = f((k+1)/N)`
+is the upper-corner value. -/
+noncomputable def stepUpper (N : ℕ) (f : (Fin n → ℝ) → ℝ) :
+    (Fin n → ℝ) → ℝ :=
+  fun x => f (fun i => stepRetract N x i + 1 / (N : ℝ))
+
+@[simp] lemma stepUpper_apply (N : ℕ) (f : (Fin n → ℝ) → ℝ)
+    (x : Fin n → ℝ) :
+    stepUpper N f x = f (fun i => stepRetract N x i + 1 / (N : ℝ)) := rfl
+
+/-- **Upper sandwich.** For `x ∈ [0,1)^n` and `N ≥ 1`, if `f` is
+coordinate-monotone, `f x ≤ stepUpper N f x`. -/
+lemma le_stepUpper_self {N : ℕ} (hN : 1 ≤ N) {f : (Fin n → ℝ) → ℝ}
+    (hf : Monotone f) {x : Fin n → ℝ}
+    (hx : ∀ i, 0 ≤ x i ∧ x i < 1) :
+    f x ≤ stepUpper N f x := by
+  apply hf
+  intro i
+  obtain ⟨hxi₀, hxi₁⟩ := hx i
+  have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+  have hNx_nn : 0 ≤ (N : ℝ) * x i := mul_nonneg hN'.le hxi₀
+  have hfloor_lt_N : Nat.floor ((N : ℝ) * x i) < N := by
+    rw [Nat.floor_lt hNx_nn]
+    calc (N : ℝ) * x i < (N : ℝ) * 1 := mul_lt_mul_of_pos_left hxi₁ hN'
+      _ = (N : ℝ) := mul_one _
+  have hfloor_gt : (N : ℝ) * x i < ((Nat.floor ((N : ℝ) * x i) : ℕ) : ℝ) + 1 :=
+    Nat.lt_floor_add_one _
+  change x i ≤ stepRetract N x i + 1 / (N : ℝ)
+  unfold stepRetract
+  have hmin_eq : (min (Nat.floor ((N : ℝ) * x i)) N : ℕ) = Nat.floor ((N : ℝ) * x i) :=
+    min_eq_left hfloor_lt_N.le
+  rw [hmin_eq]
+  -- Goal: x i ≤ (⌊N x i⌋ : ℝ)/N + 1/N
+  rw [show ((Nat.floor ((N : ℝ) * x i) : ℕ) : ℝ) / (N : ℝ) + 1 / (N : ℝ)
+        = (((Nat.floor ((N : ℝ) * x i) : ℕ) : ℝ) + 1) / (N : ℝ) by ring]
+  rw [le_div_iff₀ hN', mul_comm (x i) (N : ℝ)]
+  linarith
+
+/-- **stepUpper Riemann identity.** The integral of `stepUpper N f`
+over the half-open cube `[0,1)^n` equals the upper-corner Riemann sum. -/
+theorem integral_stepUpper_eq_riemann
+    {N : ℕ} (hN : 1 ≤ N) (f : (Fin n → ℝ) → ℝ) :
+    ∫ x in Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1),
+        stepUpper N f x ∂volume
+      = (1 / (N : ℝ) ^ n) *
+          ∑ k : Fin n → Fin N, f (fun i => ((k i : ℝ) + 1) / N) := by
+  -- stepUpper N f x = stepLower N (shifted f) x; then apply
+  -- integral_stepLower_eq_riemann.
+  set fSh : (Fin n → ℝ) → ℝ := fun y => f (fun i => y i + 1 / (N : ℝ))
+    with hfSh_def
+  have heq : (fun x => stepUpper N f x) = (fun x => stepLower N fSh x) := by
+    funext x; rfl
+  rw [show (fun x => stepUpper N f x) = (fun x => stepLower N fSh x) from heq]
+  rw [integral_stepLower_eq_riemann hN]
+  congr 1
+  refine Finset.sum_congr rfl (fun k _ => ?_)
+  change f (fun i => (k i : ℝ) / N + 1 / (N : ℝ)) = f (fun i => ((k i : ℝ) + 1) / N)
+  congr 1
+  funext i
+  field_simp
+
+/-- `stepUpper N f` is integrable on the half-open cube. -/
+lemma integrableOn_stepUpper_cube {N : ℕ} (hN : 1 ≤ N)
+    (f : (Fin n → ℝ) → ℝ) :
+    IntegrableOn (stepUpper N f)
+      (Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1)) volume := by
+  set fSh : (Fin n → ℝ) → ℝ := fun y => f (fun i => y i + 1 / (N : ℝ))
+  have heq : (fun x => stepUpper N f x) = (fun x => stepLower N fSh x) := by
+    funext x; rfl
+  rw [show (stepUpper N f) = (stepLower N fSh) from heq]
+  exact integrableOn_stepLower_cube hN fSh
+
+end StepUpper
+
+/-! ### §7 — Riemann-sum convergence for monotone integrable functions
+
+For `f ≥ 0` monotone on `(Fin n → ℝ)`, the lower-step Riemann
+approximation `stepLower N f` converges to `f` in the integral sense:
+`∫_{[0,1)^n} stepLower N f → ∫_{[0,1]^n} f` as `N → ∞`. The proof
+uses the sandwich `stepLower ≤ f ≤ stepUpper` (`stepLower_le_self`,
+`le_stepUpper_self`) plus the finite-additivity bound
+
+```
+∫ stepUpper N f - ∫ stepLower N f
+  = (1/N^n) [∑ f((k+1)/N) - ∑ f(k/N)]
+  ≤ n · M / N
+```
+
+where `M := f(1,…,1)`. The bound on the sum-difference (the
+`sum_step_diff_bound` lemma below) is the substantive piece — it
+factors out via reindexing into `Fin (N+1)^n` and applying the
+inclusion `Fin N ↪ Fin (N+1)` (twice, via `Fin.castSucc` and
+`Fin.succ`); the cancellation of common indices in `{1,…,N-1}^n`
+leaves a residual of size `(N+1)^n − N^n ≤ n(N+1)^{n-1}`. -/
+
+section RiemannLimit
+
+/-- Sum-difference bound used in the squeeze argument. The bound
+
+```
+∑_{k : Fin n → Fin N} f((k+1)/N) − ∑_{k : Fin n → Fin N} f(k/N)
+  ≤ n · (N+1)^{n-1} · M
+```
+
+(or equivalently after dividing by `N^n`, the `∫ stepUpper - ∫
+stepLower ≤ n M / N` form once the prefactor is absorbed). The
+deferred proof uses `Finset.sum_bij` along the embeddings
+`Fin.castSucc : Fin N ↪ Fin (N+1)` and `Fin.succ : Fin N ↪ Fin (N+1)`,
+followed by cancellation of the common image
+`{l : ∀ i, 1 ≤ l_i.val ∧ l_i.val < N}` and bounding the residual
+`{l : ∃ i, l_i.val = N}` via `(N+1)^n - N^n`. -/
+private lemma sum_step_diff_bound {N : ℕ} (hN : 1 ≤ N)
+    {f : (Fin n → ℝ) → ℝ} (hf₀ : 0 ≤ f) (hf : Monotone f) :
+    (∑ k : Fin n → Fin N, f (fun i => ((k i : ℝ) + 1) / N))
+      - (∑ k : Fin n → Fin N, f (fun i => (k i : ℝ) / N))
+    ≤ ((N + 1 : ℝ) ^ n - (N : ℝ) ^ n) * f (fun _ => 1) := by
+  -- DEFERRED (Session D): cancellation of common-index Σ-terms.
+  -- Specifically: embed `Fin N → Fin (N+1)` via `succ` (image: l.val ≥ 1)
+  -- and via `castSucc` (image: l.val < N); compute the sum-difference
+  -- = Σ_{some l.val = N} f(l/N) - Σ_{some l.val = 0} f(l/N)
+  -- and bound by (N+1)^n - N^n using non-negativity of f and monotonicity
+  -- bound `f(l/N) ≤ f(1,…,1) = M`. ~150 LoC of Finset reindexing.
+  sorry
+
+/-- For monotone `f` on `(Fin n → ℝ)`, the L¹ "gap" between
+`stepLower N f` and `stepUpper N f` on the half-open cube is at most
+`((N+1)^n - N^n) M / N^n ≤ n · (1 + 1/N)^(n-1) · M / N`, going to
+`0` as `N → ∞`. -/
+private lemma integral_stepUpper_sub_stepLower_bound
+    {N : ℕ} (hN : 1 ≤ N)
+    {f : (Fin n → ℝ) → ℝ} (hf₀ : 0 ≤ f) (hf : Monotone f) :
+    (∫ x in Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1),
+        stepUpper N f x ∂volume)
+      - (∫ x in Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1),
+        stepLower N f x ∂volume)
+    ≤ ((N + 1 : ℝ) ^ n / (N : ℝ) ^ n - 1) * f (fun _ => 1) := by
+  rw [integral_stepUpper_eq_riemann hN, integral_stepLower_eq_riemann hN]
+  rw [show (1 / (N : ℝ) ^ n) *
+        ∑ k : Fin n → Fin N, f (fun i => ((k i : ℝ) + 1) / N)
+      - (1 / (N : ℝ) ^ n) *
+        ∑ k : Fin n → Fin N, f (fun i => (k i : ℝ) / N)
+      = (1 / (N : ℝ) ^ n) *
+          ((∑ k : Fin n → Fin N, f (fun i => ((k i : ℝ) + 1) / N))
+            - ∑ k : Fin n → Fin N, f (fun i => (k i : ℝ) / N)) by ring]
+  have hN' : (0 : ℝ) < (N : ℝ) := by exact_mod_cast hN
+  have hNn_pos : 0 < (N : ℝ) ^ n := by positivity
+  have h_diff := sum_step_diff_bound (n := n) hN hf₀ hf
+  calc (1 / (N : ℝ) ^ n) *
+        ((∑ k : Fin n → Fin N, f (fun i => ((k i : ℝ) + 1) / N))
+          - ∑ k : Fin n → Fin N, f (fun i => (k i : ℝ) / N))
+      ≤ (1 / (N : ℝ) ^ n) *
+          (((N + 1 : ℝ) ^ n - (N : ℝ) ^ n) * f (fun _ => 1)) := by
+            gcongr
+    _ = ((N + 1 : ℝ) ^ n / (N : ℝ) ^ n - 1) * f (fun _ => 1) := by
+            field_simp
+
+end RiemannLimit
+
+/-! ### §8 — Master continuous FKG / AD on `[0,1]^n` (signatures + status)
+
+The master theorems `continuous_fkg` and `continuous_ad` follow the
+discrete-FKG inequality `fkg_discrete_pi_finN` on the half-open cube
+combined with the Riemann-sum convergence of the lower-step
+approximations to `∫ f`. The convergence step `tendsto_integral_stepLower`
+depends on `sum_step_diff_bound` (deferred Session D). The signatures
+are recorded here for the downstream consumer (EX-7+); the bodies
+reduce to the squeeze on `∫ stepLower N` modulo the deferred bound. -/
+
+section MasterTheorems
+
+variable {n : ℕ}
+
+/-- **Riemann-sum convergence (lower-step → integral).** For `f ≥ 0`
+monotone integrable on `[0,1]^n`, the lower-step Riemann integrals
+on `[0,1)^n` converge to `∫_{[0,1]^n} f` as `N → ∞`. -/
+theorem tendsto_integral_stepLower
+    {f : (Fin n → ℝ) → ℝ}
+    (hf₀ : 0 ≤ f) (hf : Monotone f)
+    (hfL1 : IntegrableOn f (Set.Icc (0 : Fin n → ℝ) 1)) :
+    Filter.Tendsto
+      (fun N : ℕ =>
+        ∫ x in Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1),
+            stepLower N f x ∂volume)
+      Filter.atTop
+      (nhds (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f x ∂volume)) := by
+  -- DEFERRED (Session D): squeeze ∫ stepLower N f ≤ ∫ f ≤ ∫ stepUpper N f
+  -- using `integral_stepUpper_sub_stepLower_bound` (which depends on
+  -- `sum_step_diff_bound`). The bound `((N+1)/N)^n - 1 → 0` gives the
+  -- Tendsto via `Tendsto.sub_zero` + `Filter.Tendsto.mono_right`.
+  sorry
+
+/-- **Continuous FKG on `[0,1]^n`** (Brightwell 1999 §4 source). For
+non-negative coordinate-monotone `f, g, fg` integrable on the cube:
+
+```
+(∫ f) (∫ g) ≤ (∫ f g) · vol([0,1]^n) = ∫ f g.
+```
+-/
+theorem continuous_fkg
+    {f g : (Fin n → ℝ) → ℝ}
+    (hf₀ : 0 ≤ f) (hg₀ : 0 ≤ g)
+    (hf : Monotone f) (hg : Monotone g)
+    (hfL1 : IntegrableOn f (Set.Icc (0 : Fin n → ℝ) 1))
+    (hgL1 : IntegrableOn g (Set.Icc (0 : Fin n → ℝ) 1))
+    (hfgL1 : IntegrableOn (f * g) (Set.Icc (0 : Fin n → ℝ) 1)) :
+    (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f x ∂volume) *
+      (∫ x in Set.Icc (0 : Fin n → ℝ) 1, g x ∂volume)
+    ≤ (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f x * g x ∂volume) *
+      (volume (Set.Icc (0 : Fin n → ℝ) 1)).toReal := by
+  -- Discrete FKG `fkg_discrete_pi_finN` on `(Fin n → Fin N)` with
+  -- divisor `N` gives, after dividing both sides by `N^(2n)`:
+  --   (∫ stepLower N f)(∫ stepLower N g) ≤ ∫ stepLower N (f*g)
+  -- (Riemann identity, plus stepLower N (f*g) = stepLower N f * stepLower N g
+  -- pointwise; use integral_stepLower_eq_riemann to convert sums.)
+  -- Take `N → ∞` via `tendsto_integral_stepLower` for `f`, `g`, and `f*g`,
+  -- then conclude via `Filter.Tendsto.mul` and `le_of_tendsto`.
+  -- `f * g` is non-neg monotone integrable (product of non-neg monotone).
+  -- DEFERRED (Session D): assembly modulo `tendsto_integral_stepLower`.
+  sorry
+
+/-- **Continuous Ahlswede–Daykin (4FT) on `[0,1]^n`**. -/
+theorem continuous_ad
+    {f₁ f₂ f₃ f₄ : (Fin n → ℝ) → ℝ}
+    (hf₁₀ : 0 ≤ f₁) (hf₂₀ : 0 ≤ f₂) (hf₃₀ : 0 ≤ f₃) (hf₄₀ : 0 ≤ f₄)
+    (hf₁L1 : IntegrableOn f₁ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hf₂L1 : IntegrableOn f₂ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hf₃L1 : IntegrableOn f₃ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hf₄L1 : IntegrableOn f₄ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hAD : ∀ x y, f₁ x * f₂ y ≤ f₃ (x ⊓ y) * f₄ (x ⊔ y)) :
+    (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₁ x ∂volume) *
+      (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₂ x ∂volume)
+    ≤ (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₃ x ∂volume) *
+      (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₄ x ∂volume) := by
+  -- Same pattern as `continuous_fkg`: apply `ad_discrete_pi` (via `gridFnN`-
+  -- form, paralleling `fkg_discrete_pi_finN`) at each `N`, divide by `N^(2n)`,
+  -- recognise sums as `∫ stepLower N`, and pass to `N → ∞`. Hypothesis
+  -- `hAD` transports through `gridFnN` because the lattice ops on
+  -- `(Fin n → Fin N)` map (under `(k_i : ℝ)/N`) to the cube lattice ops
+  -- (`gridPoint_inf`, `gridPoint_sup` analogues).
+  -- DEFERRED (Session D): assembly modulo `tendsto_integral_stepLower`.
+  sorry
+
+end MasterTheorems
 
 end OneThird.ContinuousFKG

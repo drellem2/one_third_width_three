@@ -369,6 +369,59 @@ and Lean-portable**, ready for Session B + C dispatch and
 (separately) mathlib upstream PR. **Verdict GREEN-2.** PM next
 step: file **EX-6 Session B** scoping ticket (deliverable §3 +
 §5.1–§5.2 + §6.1 + §8.1 form the Session B brief).
+**Last update.** mg-4adf (cat-mg-4adf), 2026-05-09. **EX-6 Session
+C executed (partial): closed `integral_stepLower_eq_riemann` sorry +
+master continuous FKG/AD signatures.** Session B's deferred sorry
+(cell partition + finite additivity assembly of the lower-step
+integral over `[0,1)^n`) is **closed sorry-free** via
+`integral_iUnion_fintype` over the disjoint half-open cells `C_k`
+(`k : Fin n → Fin N`), each of volume `1/N^n`, with the per-cell
+constancy `stepLower_eq_of_mem_cell` from Session B. New
+infrastructure: `Ico_zero_one_eq_iUnion_cells` (1D cell tiling),
+`cell_disjoint` (pairwise cell disjointness), `integrableOn_stepLower_cube`
+(integrability of `stepLower N f` on `[0,1)^n`); plus `gridFnN`
+(`Fin n → Fin N` variant of `gridFn`) and `fkg_discrete_pi_finN`
+(the Riemann-form discrete FKG); plus `stepUpper`, `le_stepUpper_self`
+(upper sandwich), `integral_stepUpper_eq_riemann` (upper Riemann
+identity, derived from the lower identity applied to the shifted
+function `y ↦ f(y + (1/N)·𝟙)`), and `integrableOn_stepUpper_cube`.
+The stepUpper-minus-stepLower integral bound
+`integral_stepUpper_sub_stepLower_bound` is recorded in terms of
+`((N+1)^n - N^n) · M / N^n = ((1+1/N)^n - 1) · M`, which → 0 as
+`N → ∞`. The master theorems `tendsto_integral_stepLower`,
+`continuous_fkg`, `continuous_ad` are signed in §8 of the file with
+**precise sorry-diagnosis** (per Daniel feedback 2026-05-09: be
+specific in deferred-sorry diagnosis, paper vs formalization). The
+**single fundamental remaining sorry** is `sum_step_diff_bound`:
+
+```
+∑_{k:Fin n → Fin N} f((k+1)/N) − ∑_{k:Fin n → Fin N} f(k/N)
+  ≤ ((N+1)^n − N^n) · f(1,…,1)
+```
+
+Diagnosis (formalization-only; no paper/mathlib gap): both sums
+embed in `Σ_{l : Fin n → Fin (N+1)} f(l/N)` via `Fin.succ` (image:
+`∀ i, l_i.val ≥ 1`) and `Fin.castSucc` (image: `∀ i, l_i.val < N`)
+respectively. The difference `A − B = X_N − X_0` cancels at the
+common image `{l : ∀ i, 1 ≤ l_i.val < N}` and reduces to
+`X_N − X_0 ≤ X_N` (by non-negativity of `f`), with `X_N` the sum
+over `{l : ∃ i, l_i.val = N}` of cardinality `(N+1)^n − N^n`. Each
+term `f(l/N) ≤ M` by monotonicity. Pure `Finset.sum_bij` reindexing
+along the two embeddings + cardinality + a `Finset.sum_le_sum_of_subset`-
+style upper-bound; ~150 LoC of mathlib-standard combinatorics; no
+mathlib gap. Three dependent sorries in `tendsto_integral_stepLower`
+(squeeze), `continuous_fkg`, and `continuous_ad` cascade from this
+one; all are otherwise mechanical assembly (apply
+`fkg_discrete_pi_finN` on `(Fin n → Fin N)`, divide by `N^(2n)`,
+recognise as Riemann sums via `integral_stepLower_eq_riemann`, take
+`N → ∞` via `Filter.Tendsto.mul`). Build: `lake build` succeeds
+(2506 jobs, 4 sorries). Trust surface impact: none (no new axioms;
+`stanley_log_supermod` not consumed). §3.4 updated (sub-α-C arc:
+**EX-6 Session C partial; Session D dispatches next** for the
+`sum_step_diff_bound` cancellation lemma + dependent assembly).
+ETA Session D: ~150–250 LoC, ~100–200k tokens. `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`
+(extended ~500 → ~1050 lines).
+
 **Last update.** mg-a6ed (cat-mg-a6ed), 2026-05-09. **EX-6 Session
 B executed: discrete FKG / AD on `(Fin (N+1))^n` + step-function
 approximation + Riemann-sum identity (statement) — landed.** §1.21
@@ -2501,6 +2554,36 @@ sub-α-C in flight.)
   `lean/OneThird.lean` (one import line),
   `docs/path-alpha-execution-arc/state.md` (§1.21 NEW + header
   "Last update" + §3.4 update + this §5 entry).
+* mg-4adf (this commit) — EX-6 Session C executed (partial):
+  closed Session B's deferred `integral_stepLower_eq_riemann`
+  sorry sorry-free via the cell-partition + finite-additivity
+  assembly (`integral_iUnion_fintype` over disjoint half-open
+  cells `C_k` of volume `1/N^n`); added `gridFnN` /
+  `fkg_discrete_pi_finN` (Riemann-form discrete FKG indexed by
+  `Fin n → Fin N`); added `stepUpper`, `le_stepUpper_self`,
+  `integral_stepUpper_eq_riemann`, `integrableOn_stepUpper_cube`,
+  `integrableOn_stepLower_cube`. Master theorems
+  `tendsto_integral_stepLower`, `continuous_fkg`, `continuous_ad`
+  signed in §8 with precise sorry-diagnosis (per Daniel feedback
+  2026-05-09: be specific in deferred-sorry diagnosis, paper vs
+  formalization). Single fundamental remaining sorry:
+  `sum_step_diff_bound` (Σ-difference bound via `Fin.succ` /
+  `Fin.castSucc` reindexing into `Fin (N+1)`, cancellation of
+  common image, residual `≤ ((N+1)^n − N^n) · M` from `Fin (N+1)
+  \ image(castSucc)` cardinality + monotone bound; ~150 LoC
+  pure Finset combinatorics, no mathlib gap). Three dependent
+  sorries (`tendsto_integral_stepLower`, `continuous_fkg`,
+  `continuous_ad`) cascade from the bound but are otherwise
+  mechanical (squeeze + `fkg_discrete_pi_finN` + Riemann
+  identities + `Filter.Tendsto.mul`). Build: `lake build`
+  succeeds (2506 jobs, 4 sorries). Trust surface unchanged
+  (no new axioms; `stanley_log_supermod` not consumed). PM next
+  step: file **EX-6 Session D** scoping ticket (the
+  `sum_step_diff_bound` Finset-bij argument + dependent assembly).
+  ETA Session D: ~150–250 LoC, ~100–200k tokens.
+  `lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`
+  (~500 → ~1050 lines), `docs/path-alpha-execution-arc/state.md`
+  (header "Last update" + this §5 entry).
 
 ---
 
