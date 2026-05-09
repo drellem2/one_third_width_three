@@ -11,7 +11,7 @@ records:
   certified it, and — for completeness of the audit trail — the
   hypothetical replacement path that a future Lean port could take.
 
-Three named project axioms appear below. The first two
+Four named project axioms appear below. The first two
 (`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`)
 are **definitively retained on the trust surface** of the
 `width3_one_third_two_thirds` headline; replacement is not on any
@@ -32,6 +32,17 @@ the discharge target of either DH-1 (mathlib upstream of Stanley
 log-supermodularity) or Option B (full in-tree port of the Stanley
 1981 AF proof) under the sub-α-C execution arc. EX-3 onward consumes
 the axiom as hypothesis until the replacement lands.
+
+The fourth axiom (`OneThird.ContinuousFKG.cellMass_AD`) is a
+**temporary project axiom** introduced under EX-6 Session F (mg-071b).
+It is **not** consumed by the existing `width3_one_third_two_thirds`
+headline; it is the discharge target of DH-4 (mathlib upstream of
+continuous Ahlswede–Daykin / Preston Theorem 5.4 in Monotone-free
+form) under the sub-α-C execution arc. EX-7 Session B onward consumes
+the axiom as hypothesis (via `continuous_ad_general`) until the
+replacement lands. The substantive content is the literature-standard
+Ahlswede–Daykin 1979 §2 Lemma 2 ("cell averages preserve AD"),
+faithfully transcribed to the Lebesgue cell-decomposition.
 
 Unless otherwise noted, every axiom below has been manually verified
 against the paper proof it axiomatizes, and a closed-form integer
@@ -674,3 +685,181 @@ so the deferral does not block the next sub-α-C execution ticket. The
 corollary will be filed by PM as a small follow-up (estimated
 ~50–150 LoC once the dual-poset bridge lemma is in place, or
 ~50 LoC once a parallel upper-set axiom is added).
+
+---
+
+## `OneThird.ContinuousFKG.cellMass_AD`
+
+**File.**
+`lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`
+§9.5.
+
+**Paper statement.** Ahlswede & Daykin 1979 §2 Lemma 2 ("cell averages
+preserve the four-function inequality"); equivalently, Preston 1974
+*Spatial birth-and-death processes* (Adv. Appl. Probab. **6**),
+Theorem 5.4 inner content; equivalently, Brightwell 1999 §4.2
+averaging step.
+
+For non-negative measurable `f₁, f₂, f₃, f₄ : (Fin n → ℝ) → ℝ`
+satisfying the pointwise four-function inequality
+
+$$
+f_1(x) f_2(y) \le f_3(x \sqcap y) f_4(x \sqcup y) \qquad \forall x, y \in [0,1]^n,
+$$
+
+the cell-mass values
+
+$$
+M_i^{(N)}(p) := \int_{C_p} f_i, \qquad C_p := \prod_i [p_i/N, (p_i+1)/N),
+$$
+
+over the half-open `N^n`-cell partition of `[0,1)^n` indexed by
+`p : (\mathrm{Fin}\, n) \to \mathrm{Fin}\, N`, satisfy the **discrete**
+Ahlswede–Daykin inequality on the index lattice `(Fin n → Fin N)`:
+
+$$
+M_1^{(N)}(p) M_2^{(N)}(q) \le M_3^{(N)}(p \sqcap q) M_4^{(N)}(p \sqcup q)
+\qquad \forall p, q.
+$$
+
+**Introduced by.** `mg-071b` (commit on branch `polecat-p071b`,
+EX-6 Session F). Per
+`docs/path-alpha-execution-arc/ex7-drops-headline-scoping.md` §3.4 +
+§4.2 (mg-2746 dcd0925), the substantive scoping finding of EX-7
+Session A is that the in-tree `OneThird.ContinuousFKG.continuous_ad`
+(mg-7d37) carries `Monotone f_i` hypotheses incompatible with the
+EX-7 polytope indicators `1_{O(Q)}` (which are sublattice
+indicators, **not** coord-monotone). Path R-A (recommended in mg-2746
+§3.4) is to extend EX-6 with `continuous_ad_general` via cell-averages
++ Lebesgue differentiation theorem; this axiom is the substantive
+inner step of that path.
+
+**QA-audited by.** TBD (filed at mg-071b polecat hand-off; QA
+follow-up to be scheduled by PM upon EX-7 Session B execution).
+
+**Status.** **Temporary project axiom**, parallel to
+`OneThird.LinearExt.stanley_log_supermod` (mg-d0fc) — introduced
+under the sub-α-C execution arc as the discharge target of **DH-4**
+(mathlib upstream of continuous Ahlswede–Daykin in Monotone-free
+form). Not consumed by the existing
+`width3_one_third_two_thirds` headline; consumed by EX-7 Session B
+onward via `continuous_ad_general`.
+
+**Trust surface.** 4th project axiom, alongside
+`brightwell_sharp_centred` (definitively retained),
+`case3Witness_hasBalancedPair_outOfScope` (definitively retained),
+and `stanley_log_supermod` (DH-1 discharge target). The axiom is
+**localised** to a single named declaration in
+`ContinuousFKG.lean` §9.5; every consumer of the master theorem
+`continuous_ad_general` (the EX-7+ chamber-AD reduction) uses the
+inequality as packaged.
+
+### Scope-match checklist
+
+| Axiom signature | Paper statement |
+|-----------------|-----------------|
+| `f_i : (Fin n → ℝ) → ℝ` | Real-valued functions on the unit cube `[0,1]^n` (with `n` the dimension). The signature uses unrestricted domain `(Fin n → ℝ)`; the cell `C_p` lies in `[0,1)^n`, so off-cube values are immaterial. |
+| `0 ≤ f_i` | Non-negativity (paper hypothesis). |
+| `∀ x y, f_1(x) * f_2(y) ≤ f_3(x ⊓ y) * f_4(x ⊔ y)` | Pointwise four-function inequality (paper hypothesis; `⊓, ⊔` are componentwise min/max on `(Fin n → ℝ)`). |
+| `N : ℕ` and `1 ≤ N` | The grid resolution (paper: `N` cell subdivisions per coordinate). |
+| `p, q : Fin n → Fin N` | Cell-index pairs in the `N^n`-cell partition. |
+| Conclusion: `cellMass N f₁ p * cellMass N f₂ q ≤ cellMass N f₃ (p ⊓ q) * cellMass N f₄ (p ⊔ q)` | The cell-AD inequality on cell-mass values; `p ⊓ q, p ⊔ q` componentwise on `Fin N` (i.e., `(p ⊓ q)_i = min(p_i, q_i)`). |
+
+The lattice operations on `(Fin n → Fin N)` and on `(Fin n → ℝ)`
+commute via the cell-index map (cf. `gridPointN_inf`,
+`gridPointN_sup` in §5 of `ContinuousFKG.lean`): for `x ∈ C_p`,
+`y ∈ C_q`, the componentwise min `x ⊓ y ∈ C_{p ⊓ q}` (since
+`min(x_i, y_i) ∈ [min(p_i, q_i)/N, (min(p_i, q_i) + 1)/N)`),
+similarly for `⊔`.
+
+### Why this is the substantive content
+
+The **continuous Ahlswede–Daykin theorem** on `[0,1]^n`
+(`continuous_ad_general` in §10 of `ContinuousFKG.lean`) follows from
+this axiom by a single application of the **discrete 4FT**
+(`Mathlib.Combinatorics.SetFamily.FourFunctions.four_functions_theorem_univ`)
+to the `cellMass`-valued functions on `(Fin n → Fin N)`, plus the
+cell-decomposition identity
+`∑ cellMass = ∫_{[0,1)^n} f` (`cellMass_sum_eq_integral_Ico`) and the
+half-open ↔ closed cube transfer (the upper-face boundary is
+Lebesgue-null). At `N = 1`, the index lattice `(Fin n → Fin 1)` is a
+singleton, the 4FT collapses to the singleton instance, and the axiom
+**is** continuous AD on the unit cube; for `N ≥ 2` the axiom strictly
+strengthens the conclusion (it provides the cell-AD pointwise on the
+full cell-grid, of which continuous AD is the `N = 1` corollary).
+
+A closed Lean proof of the cell-AD inequality requires the
+literature-standard mollification + Riemann-sum-convergence machinery
+(Ahlswede–Daykin 1979 §2 — reduce to bounded continuous f via
+truncation + convolution with a symmetric mollifier; Riemann sums on
+sample points converge uniformly to integrals for continuous f;
+discrete 4FT on sample points + uniform limit gives continuous AD on
+continuous f; pass to general L¹ via density). The DH-4 mathlib
+upstream PR target (per `lean/MATHLIB_GAPS.md` §DH-4 and
+`docs/path-alpha-execution-arc/ex7-drops-headline-scoping.md` §6.1)
+is to package both the continuous AD and the cell-AD lemmas in
+`Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`.
+
+### Scoping-finding disclosure (mg-2746 → mg-071b)
+
+The EX-7 Session A scoping deliverable (mg-2746) §4.2 estimated this
+session at **~300 LoC** including a closed proof of the cell-AD step
+(§4.2 step 3: "discrete AD on cell averages preserves the
+four-function inequality; ~50 LoC (Cauchy–Schwarz / linearity)").
+mg-071b finds this estimate **mathematically optimistic**: the
+substantive step is not Cauchy–Schwarz/linearity but the
+A-D 1979 Lemma 2 cell-averaging lemma, whose proof is recursive at
+the same dimension and requires either (a) Riemann-sum +
+mollification, (b) martingale convergence + DCT (bounded f), or
+(c) full A-D mollification machinery — each requiring
+~1000–1500 LoC of mathlib measure-theory glue.
+
+The polecat brief (mg-071b) explicitly disclosed this scoping finding
+to the mayor before commit, recommending **Option 2: cell-AD as
+named project axiom (4th)** — matching the project's existing
+disclosure pattern (Brightwell, Case3, Stanley) and landing an
+EX-7-usable `continuous_ad_general` within budget. The mayor was
+mailed at the start of the session and continues to have visibility
+on this trust-surface decision.
+
+### Replacement path (active; DH-4)
+
+The DH-4 mathlib upstream PR is the discharge target. Per
+`docs/path-alpha-execution-arc/ex7-drops-headline-scoping.md`
+§6.1–§6.5, mathlib v4.29.1 has all prerequisites
+(`MeasureTheory.Covering.Differentiation`,
+`Combinatorics.SetFamily.FourFunctions`, integral / cell / measure
+APIs); the missing piece is the assembly of the cell-AD lemma plus
+the master theorem in a Mathlib-PR-class file. EX-6 Session F closes
+the in-tree user-facing master signature; the cell-AD discharge is
+the natural follow-up either as (a) a dedicated EX-6 Session G
+(in-tree port of A-D 1979 §2 mollification proof, ~1000–1500 LoC) or
+(b) DH-4 PR upstream (with mathlib reviewer expecting the
+literature-standard form). EX-7 Session B onward consumes the axiom
+as hypothesis.
+
+### Disclosure (forum-post / publication artefact)
+
+`#print axioms continuous_ad_general` will list, alongside the
+mathlib classical-foundation triplet `{propext, Classical.choice,
+Quot.sound}`, the `OneThird.ContinuousFKG.cellMass_AD` axiom. This
+disclosure is mandatory for any forum-post / publication artefact
+that includes a proof depending on `continuous_ad_general` (e.g.,
+the EX-7 drops headline). The honest framing follows the pattern
+established for `stanley_log_supermod`: a literature-standard
+result transcribed faithfully, with an active replacement target
+under sub-α-C / DH-4.
+
+### Certification (mg-071b)
+
+A check via `#print axioms OneThird.ContinuousFKG.continuous_ad_general`
+in this commit:
+
+```
+'OneThird.ContinuousFKG.continuous_ad_general' depends on axioms:
+  [propext, Classical.choice, Quot.sound,
+   OneThird.ContinuousFKG.cellMass_AD]
+```
+
+confirms that no further project axioms are introduced by the master
+theorem assembly (only the cell-AD axiom plus the mathlib triplet).

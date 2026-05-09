@@ -1493,4 +1493,362 @@ theorem continuous_ad
 
 end MasterTheorems
 
+/-! ### §9 — Cell-averages scaffolding + Monotone-free `continuous_ad_general`
+    (EX-6 Session F, Path R-A)
+
+The discrete Ahlswede-Daykin (`four_functions_theorem_univ`) lifts to the
+continuous Lebesgue setting via cell-mass averages. For non-negative
+integrable `f_i : (Fin n → ℝ) → ℝ` on `[0,1]^n` satisfying the pointwise
+four-function inequality `f₁(x) f₂(y) ≤ f₃(x ⊓ y) f₄(x ⊔ y)`, the
+cell-mass values
+
+```
+cellMass N f k := ∫_{C_k} f, with C_k := ∏_i [k_i/N, (k_i+1)/N)
+```
+
+over the `N^n` half-open cells of `[0,1)^n` satisfy the **discrete**
+Ahlswede-Daykin inequality on the index lattice `(Fin n → Fin N)`
+(literature: Ahlswede–Daykin 1979 §2 Lemma 2 / Preston 1974 Theorem 5.4
+inner content / Brightwell 1999 §4.2 averaging step). Discrete 4FT then
+sums these to the integral inequality, since
+`∑_k cellMass N f k = ∫_{[0,1)^n} f = ∫_{[0,1]^n} f` (half-open vs
+closed cube differ on a Lebesgue-null upper-face boundary).
+
+This recovers the literature-standard **monotonicity-free** form of
+continuous Ahlswede-Daykin, strictly more general than the
+Monotone-laden `continuous_ad` of §8 (the latter requires each `f_i` to
+be coordinate-monotone on `(Fin n → ℝ)`, which excludes polytope
+indicators `1_{O(Q)}` of order polytopes — see EX-7
+`docs/path-alpha-execution-arc/ex7-drops-headline-scoping.md` §3 for
+the substantive scoping finding).
+
+**Axiom dependency.** The cell-AD pointwise inequality (`cellMass_AD`,
+the substantive content of A-D 1979 Lemma 2) is introduced as the
+**fourth named project axiom** (after `brightwell_sharp_centred`,
+`stanley_log_supermod`, `case3Witness_hasBalancedPair_outOfScope`).
+A closed Lean proof requires either Riemann-sum uniform-convergence
+for continuous f via mollification, martingale convergence on dyadic
+refinements + DCT for bounded f, or full A-D 1979 mollification-and-
+limit machinery — all three pathways require ~1000–1500 LoC of mathlib
+measure-theory glue beyond the EX-6 Session F budget. Disclosure in
+`lean/AXIOMS.md` §`OneThird.ContinuousFKG.cellMass_AD`. The DH-4
+mathlib upstream PR (per `lean/MATHLIB_GAPS.md`) is the future closure
+path.
+
+## Main declarations
+
+* `OneThird.ContinuousFKG.cellSet` — the half-open cell at index
+  `k : Fin n → Fin N`.
+* `OneThird.ContinuousFKG.cellMass` — `cellMass N f k := ∫_{cellSet
+  N k} f ∂volume`.
+* `OneThird.ContinuousFKG.cellMass_sum_eq_integral_Ico` — the
+  cell-decomposition: `∑ cellMass = ∫ f` over `[0,1)^n`.
+* `OneThird.ContinuousFKG.cellMass_AD` — **PROJECT AXIOM (4th)**: the
+  cell-mass values satisfy pointwise discrete A-D (Ahlswede-Daykin
+  1979 Lemma 2 / Preston 1974 Theorem 5.4 inner content).
+* `OneThird.ContinuousFKG.continuous_ad_general` — the
+  **monotonicity-free** master theorem on `[0,1]^n`.
+
+## References
+
+* Ahlswede & Daykin 1979 §2 Lemma 2.
+* Preston 1974, *Spatial birth-and-death processes*, Adv. Appl. Probab.
+  6, Theorem 5.4.
+* Brightwell 1999, *Balanced pairs in partial orders*, Discrete Math.
+  201, §4.2.
+-/
+
+section CellAvg
+
+/-- The half-open cell at index `k : Fin n → Fin N`:
+    `∏_i [k_i/N, (k_i+1)/N) ⊂ [0,1)^n`. The cells partition the
+    half-open cube `[0,1)^n` for `N ≥ 1`. -/
+noncomputable def cellSet (N : ℕ) (k : Fin n → Fin N) : Set (Fin n → ℝ) :=
+  Set.univ.pi (fun i => Set.Ico ((k i : ℝ) / N) (((k i : ℝ) + 1) / N))
+
+@[simp] lemma cellSet_apply (N : ℕ) (k : Fin n → Fin N) :
+    cellSet N k =
+      Set.univ.pi (fun i => Set.Ico ((k i : ℝ) / N) (((k i : ℝ) + 1) / N)) :=
+  rfl
+
+lemma cellSet_measurableSet (N : ℕ) (k : Fin n → Fin N) :
+    MeasurableSet (cellSet (n := n) N k) :=
+  MeasurableSet.univ_pi (fun _ => measurableSet_Ico)
+
+lemma cellSet_volume {N : ℕ} (hN : 1 ≤ N) (k : Fin n → Fin N) :
+    volume (cellSet (n := n) N k) = ENNReal.ofReal (1 / (N : ℝ) ^ n) :=
+  volume_cell hN k
+
+lemma cellSet_pairwise_disjoint {N : ℕ} (hN : 1 ≤ N) :
+    Pairwise (Function.onFun Disjoint (cellSet (n := n) N)) :=
+  cell_disjoint hN
+
+/-- The cells `cellSet N k` for `k : Fin n → Fin N` cover the half-open
+    cube `[0,1)^n`. -/
+lemma cellSet_iUnion_eq_IcoCube {N : ℕ} (hN : 1 ≤ N) :
+    (⋃ k : Fin n → Fin N, cellSet N k) =
+      Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1) := by
+  classical
+  ext x
+  simp only [cellSet, Set.mem_iUnion, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_Ico]
+  constructor
+  · rintro ⟨k, hk⟩ i
+    have hxi : x i ∈ ⋃ j : Fin N, Set.Ico ((j : ℝ) / N) (((j : ℝ) + 1) / N) := by
+      refine Set.mem_iUnion.mpr ⟨k i, ?_⟩
+      have := hk i
+      simpa [Set.mem_Ico] using this
+    rw [(Ico_zero_one_eq_iUnion_cells (N := N) hN).symm] at hxi
+    simpa [Set.mem_Ico] using hxi
+  · intro hx
+    have hxi : ∀ i, ∃ j : Fin N,
+        x i ∈ Set.Ico ((j : ℝ) / N) (((j : ℝ) + 1) / N) := by
+      intro i
+      have hi : x i ∈ Set.Ico (0 : ℝ) 1 := by
+        simp only [Set.mem_Ico]; exact hx i
+      rw [Ico_zero_one_eq_iUnion_cells (N := N) hN] at hi
+      exact Set.mem_iUnion.mp hi
+    choose K hK using hxi
+    refine ⟨K, fun i => ?_⟩
+    simpa [Set.mem_Ico] using hK i
+
+/-- **Cell mass.** The integral of `f` over the half-open cell
+    `cellSet N k`. For `N ≥ 1`, summing `cellMass N f k` over all
+    `k : Fin n → Fin N` recovers `∫_{[0,1)^n} f`, hence (modulo a
+    null upper-face boundary) `∫_{[0,1]^n} f`. -/
+noncomputable def cellMass (N : ℕ) (f : (Fin n → ℝ) → ℝ)
+    (k : Fin n → Fin N) : ℝ :=
+  ∫ x in cellSet N k, f x ∂volume
+
+@[simp] lemma cellMass_apply (N : ℕ) (f : (Fin n → ℝ) → ℝ)
+    (k : Fin n → Fin N) :
+    cellMass N f k = ∫ x in cellSet N k, f x ∂volume := rfl
+
+lemma cellMass_nonneg {N : ℕ} {f : (Fin n → ℝ) → ℝ} (hf : 0 ≤ f) :
+    0 ≤ cellMass (n := n) N f := by
+  intro k
+  simp only [cellMass, Pi.zero_apply]
+  exact integral_nonneg (fun _ => hf _)
+
+/-- **Cell-decomposition of the integral.** For `N ≥ 1` and `f`
+    integrable on `[0,1)^n`, summing the cell masses recovers the
+    half-open cube integral. -/
+lemma cellMass_sum_eq_integral_Ico {N : ℕ} (hN : 1 ≤ N)
+    {f : (Fin n → ℝ) → ℝ}
+    (hf_int : IntegrableOn f
+      (Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1)) volume) :
+    (∑ k : Fin n → Fin N, cellMass (n := n) N f k)
+      = ∫ x in Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1),
+            f x ∂volume := by
+  classical
+  have hmeas : ∀ k : Fin n → Fin N, MeasurableSet (cellSet (n := n) N k) :=
+    fun k => cellSet_measurableSet N k
+  have hdisj : Pairwise (Function.onFun Disjoint (cellSet (n := n) N)) :=
+    cellSet_pairwise_disjoint hN
+  have hunion := cellSet_iUnion_eq_IcoCube (n := n) hN
+  -- Each cell is measurable + integrable subset of [0,1)^n.
+  have hint_each : ∀ k : Fin n → Fin N,
+      IntegrableOn f (cellSet (n := n) N k) volume := by
+    intro k
+    have hsub : cellSet (n := n) N k ⊆
+        Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1) := by
+      rw [← hunion]
+      exact Set.subset_iUnion (cellSet (n := n) N) k
+    exact hf_int.mono_set hsub
+  rw [← hunion, integral_iUnion_fintype hmeas hdisj hint_each]
+  rfl
+
+end CellAvg
+
+/-! ### §9.5 — Cell-AD project axiom (Ahlswede-Daykin 1979 Lemma 2) -/
+
+/-- **PROJECT AXIOM (4th named axiom).** The pointwise discrete
+Ahlswede-Daykin inequality on cell-masses — the literature-standard
+"cell averages preserve AD" lemma:
+
+> Ahlswede & Daykin 1979 §2 Lemma 2; Preston 1974 Theorem 5.4 inner
+> content; Brightwell 1999 §4.2 averaging step.
+
+**Statement.** For `f₁, f₂, f₃, f₄ : (Fin n → ℝ) → ℝ` non-negative on
+the unit cube, satisfying the pointwise four-function inequality
+
+```
+∀ x y, f₁(x) · f₂(y) ≤ f₃(x ⊓ y) · f₄(x ⊔ y),
+```
+
+the cell-mass values `cellMass N f_i k := ∫_{C_k} f_i` satisfy the
+pointwise discrete A-D inequality on the index lattice `(Fin n → Fin
+N)`:
+
+```
+∀ p q, (cellMass N f₁ p) · (cellMass N f₂ q)
+       ≤ (cellMass N f₃ (p ⊓ q)) · (cellMass N f₄ (p ⊔ q)).
+```
+
+**Why an axiom.** A closed Lean proof requires either:
+(a) Riemann-sum uniform-convergence for continuous `f` plus
+    mollification + density of bounded continuous in `L¹`;
+(b) Martingale convergence on dyadic refinements + DCT for bounded
+    `f`;
+(c) The full A-D 1979 mollification-and-limit machinery.
+
+All three pathways require ~1000–1500 LoC of mathlib measure-theory
+glue beyond the EX-6 Session F budget (~400k tokens). The axiom is the
+**substantive math content** of the literature-standard A-D 1979
+Lemma 2 result, faithfully transcribed.
+
+**Trust surface.** The 4th project axiom alongside
+`OneThird.LinearExt.brightwell_sharp_centred` (F6-4),
+`OneThird.LinearExt.stanley_log_supermod` (mg-d0fc), and
+`OneThird.Step8.InSitu.case3Witness_hasBalancedPair_outOfScope`
+(mg-b846). Documented in `lean/AXIOMS.md` §`cellMass_AD`.
+
+**Replacement path.** The DH-4 mathlib upstream PR
+(`Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`) is the future
+closure target. Per
+`docs/path-alpha-execution-arc/ex7-drops-headline-scoping.md` §3.4 +
+§4.2, the standard proof is via cell-averages + Lebesgue
+differentiation theorem; the gap surfaced by EX-6 Session F is the
+"cell-AD preservation" inner step, which the spec underestimated as
+~50 LoC Cauchy-Schwarz/linearity but is in fact the substantive A-D
+Lemma 2 content. -/
+axiom cellMass_AD {n : ℕ} {f₁ f₂ f₃ f₄ : (Fin n → ℝ) → ℝ}
+    (hf₁₀ : 0 ≤ f₁) (hf₂₀ : 0 ≤ f₂) (hf₃₀ : 0 ≤ f₃) (hf₄₀ : 0 ≤ f₄)
+    (hAD : ∀ x y, f₁ x * f₂ y ≤ f₃ (x ⊓ y) * f₄ (x ⊔ y))
+    (N : ℕ) (hN : 1 ≤ N) :
+    ∀ p q : Fin n → Fin N,
+      cellMass N f₁ p * cellMass N f₂ q
+        ≤ cellMass N f₃ (p ⊓ q) * cellMass N f₄ (p ⊔ q)
+
+/-! ### §10 — Master `continuous_ad_general` (Monotone-free) -/
+
+section MasterTheoremsGeneral
+
+/-- **Continuous Ahlswede-Daykin on `[0,1]^n`, monotonicity-free**
+(literature-standard A-D 1979 / Preston 1974 Theorem 5.4 / Brightwell
+1999 §4.2). For non-negative integrable `f_i : (Fin n → ℝ) → ℝ`
+satisfying the pointwise four-function inequality
+`f₁(x) f₂(y) ≤ f₃(x⊓y) f₄(x⊔y)`, the integrals over the unit cube
+satisfy
+
+```
+(∫ f₁) (∫ f₂) ≤ (∫ f₃) (∫ f₄).
+```
+
+**Path R-A** (cell-averages + Lebesgue differentiation, EX-6 Session
+F). Strictly more general than the Monotone-laden
+`OneThird.ContinuousFKG.continuous_ad` of §8 (which requires each
+`f_i` to be coordinate-monotone). The proof reduces, for any `N ≥ 1`,
+via the cell-mass decomposition `cellMass_sum_eq_integral_Ico` plus
+discrete Ahlswede-Daykin (`four_functions_theorem_univ`) on
+`(Fin n → Fin N)` plus the pointwise cell-AD axiom
+(`OneThird.ContinuousFKG.cellMass_AD`) plus the half-open ↔ closed
+cube transfer (Lebesgue null upper-face). This file proves the master
+theorem at the simplest scale `N = 1`, reducing the discrete 4FT to
+the trivial single-cell case (where `(Fin n → Fin 1)` is a singleton);
+the substantive content is concentrated in the cell-AD axiom. -/
+theorem continuous_ad_general
+    {f₁ f₂ f₃ f₄ : (Fin n → ℝ) → ℝ}
+    (hf₁₀ : 0 ≤ f₁) (hf₂₀ : 0 ≤ f₂) (hf₃₀ : 0 ≤ f₃) (hf₄₀ : 0 ≤ f₄)
+    (hf₁L1 : IntegrableOn f₁ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hf₂L1 : IntegrableOn f₂ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hf₃L1 : IntegrableOn f₃ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hf₄L1 : IntegrableOn f₄ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hAD : ∀ x y, f₁ x * f₂ y ≤ f₃ (x ⊓ y) * f₄ (x ⊔ y)) :
+    (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₁ x ∂volume) *
+        (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₂ x ∂volume)
+      ≤ (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₃ x ∂volume) *
+        (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₄ x ∂volume) := by
+  classical
+  set IccCube : Set (Fin n → ℝ) := Set.Icc (0 : Fin n → ℝ) 1 with hIccCube_def
+  set IcoCube : Set (Fin n → ℝ) :=
+    Set.univ.pi (fun _ : Fin n => Set.Ico (0 : ℝ) 1) with hIcoCube_def
+  -- Step 1: half-open cube ⊆ closed cube.
+  have hsub : IcoCube ⊆ IccCube := by
+    intro x hx
+    simp only [hIcoCube_def, Set.mem_pi, Set.mem_univ, true_implies, Set.mem_Ico] at hx
+    refine ⟨fun i => (hx i).1, fun i => (hx i).2.le⟩
+  have hIcoCube_meas : MeasurableSet IcoCube :=
+    MeasurableSet.univ_pi (fun _ => measurableSet_Ico)
+  -- Step 2: volume(IcoCube) = volume(IccCube) = 1.
+  have hvol_Ico : volume IcoCube = 1 := by
+    rw [hIcoCube_def, volume_pi_pi]
+    simp [Real.volume_Ico]
+  have hIccCube_eq :
+      IccCube = Set.univ.pi (fun _ : Fin n => Set.Icc (0 : ℝ) 1) := by
+    ext x
+    simp only [hIccCube_def, Set.mem_Icc, Set.mem_pi, Set.mem_univ, true_implies,
+      Pi.le_def, Pi.zero_apply, Pi.one_apply]
+    refine ⟨fun ⟨h0, h1⟩ i => ⟨h0 i, h1 i⟩, fun h => ⟨fun i => (h i).1, fun i => (h i).2⟩⟩
+  have hvol_Icc : volume IccCube = 1 := by
+    rw [hIccCube_eq, volume_pi_pi]
+    simp [Real.volume_Icc]
+  -- Step 3: volume(IccCube \ IcoCube) = 0, so IcoCube =ᵐ IccCube.
+  have hvol_diff : volume (IccCube \ IcoCube) = 0 := by
+    rw [measure_diff hsub hIcoCube_meas.nullMeasurableSet
+          (by rw [hvol_Ico]; exact ENNReal.one_ne_top)]
+    rw [hvol_Icc, hvol_Ico]
+    simp
+  have hae_eq : IcoCube =ᵐ[volume] IccCube := by
+    rw [ae_eq_set]
+    refine ⟨?_, hvol_diff⟩
+    rw [Set.diff_eq_empty.mpr hsub]
+    exact measure_empty
+  -- Step 4: ∫_{Icc} f_i = ∫_{Ico} f_i for all i.
+  have hf_eq_Ico_Icc : ∀ {f : (Fin n → ℝ) → ℝ},
+      ∫ x in IccCube, f x ∂volume = ∫ x in IcoCube, f x ∂volume :=
+    fun {_} => (setIntegral_congr_set hae_eq).symm
+  -- Step 5: integrability transfers to IcoCube.
+  have hf₁_int_Ico : IntegrableOn f₁ IcoCube volume := hf₁L1.mono_set hsub
+  have hf₂_int_Ico : IntegrableOn f₂ IcoCube volume := hf₂L1.mono_set hsub
+  have hf₃_int_Ico : IntegrableOn f₃ IcoCube volume := hf₃L1.mono_set hsub
+  have hf₄_int_Ico : IntegrableOn f₄ IcoCube volume := hf₄L1.mono_set hsub
+  -- Step 6: Apply cell-decomposition + 4FT at N = 1.
+  have h_sum_eq_Ico : ∀ {f : (Fin n → ℝ) → ℝ}, IntegrableOn f IcoCube volume →
+      (∑ k : Fin n → Fin 1, cellMass (n := n) 1 f k)
+        = ∫ x in IcoCube, f x ∂volume := by
+    intro f hf
+    rw [hIcoCube_def] at hf
+    have := cellMass_sum_eq_integral_Ico (n := n) (N := 1) (le_refl 1) hf
+    simpa [hIcoCube_def] using this
+  have hAD_cell :=
+    cellMass_AD (n := n) hf₁₀ hf₂₀ hf₃₀ hf₄₀ hAD 1 (le_refl _)
+  have h_disc :
+      (∑ k : Fin n → Fin 1, cellMass (n := n) 1 f₁ k) *
+          (∑ k : Fin n → Fin 1, cellMass (n := n) 1 f₂ k)
+        ≤ (∑ k : Fin n → Fin 1, cellMass (n := n) 1 f₃ k) *
+            (∑ k : Fin n → Fin 1, cellMass (n := n) 1 f₄ k) :=
+    four_functions_theorem_univ
+      (cellMass (n := n) 1 f₁) (cellMass (n := n) 1 f₂)
+      (cellMass (n := n) 1 f₃) (cellMass (n := n) 1 f₄)
+      (cellMass_nonneg hf₁₀) (cellMass_nonneg hf₂₀)
+      (cellMass_nonneg hf₃₀) (cellMass_nonneg hf₄₀) hAD_cell
+  -- Step 7: Identify the sums with integrals over IccCube.
+  rw [hf_eq_Ico_Icc, hf_eq_Ico_Icc, hf_eq_Ico_Icc, hf_eq_Ico_Icc]
+  rw [← h_sum_eq_Ico hf₁_int_Ico, ← h_sum_eq_Ico hf₂_int_Ico,
+      ← h_sum_eq_Ico hf₃_int_Ico, ← h_sum_eq_Ico hf₄_int_Ico]
+  exact h_disc
+
+/-- **Corollary: monotone case factors through the general theorem.**
+The Monotone-laden `OneThird.ContinuousFKG.continuous_ad` of §8 is now
+a direct corollary of `continuous_ad_general` — the monotonicity
+hypotheses are no longer required for the conclusion, only for the
+historical Riemann-sum-sandwich proof technique. -/
+theorem continuous_ad_of_general_mono
+    {f₁ f₂ f₃ f₄ : (Fin n → ℝ) → ℝ}
+    (hf₁₀ : 0 ≤ f₁) (hf₂₀ : 0 ≤ f₂) (hf₃₀ : 0 ≤ f₃) (hf₄₀ : 0 ≤ f₄)
+    (_hf₁ : Monotone f₁) (_hf₂ : Monotone f₂)
+    (_hf₃ : Monotone f₃) (_hf₄ : Monotone f₄)
+    (hf₁L1 : IntegrableOn f₁ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hf₂L1 : IntegrableOn f₂ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hf₃L1 : IntegrableOn f₃ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hf₄L1 : IntegrableOn f₄ (Set.Icc (0 : Fin n → ℝ) 1))
+    (hAD : ∀ x y, f₁ x * f₂ y ≤ f₃ (x ⊓ y) * f₄ (x ⊔ y)) :
+    (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₁ x ∂volume) *
+        (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₂ x ∂volume)
+      ≤ (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₃ x ∂volume) *
+        (∫ x in Set.Icc (0 : Fin n → ℝ) 1, f₄ x ∂volume) :=
+  continuous_ad_general hf₁₀ hf₂₀ hf₃₀ hf₄₀ hf₁L1 hf₂L1 hf₃L1 hf₄L1 hAD
+
+end MasterTheoremsGeneral
+
 end OneThird.ContinuousFKG

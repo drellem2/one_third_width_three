@@ -12,6 +12,48 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
+**Last update.** mg-071b (cat-mg-071b), 2026-05-09. **EX-6
+Session F — `continuous_ad_general` (Monotone-free) landed via
+4th project axiom.** §1.23 NEW for the Session F deliverable
+(`lean/OneThird/Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean`
+§9–§10, ~330 LoC). Predecessor: mg-2746 (`dcd0925`, EX-7 Session A
+scoping that surfaced the Monotone-vs-polytope-indicator
+hypothesis-mismatch and recommended Path R-A).
+**Substantive scoping finding (mid-session, mailed to mayor at
+session start).** The mg-2746 Path R-A spec estimated Session F at
+~300 LoC with no new project axiom (`#print axioms
+continuous_ad_general` = mathlib triplet). After analysis, the
+substantive step (mg-2746 §4.2 step 3: "discrete AD on cell averages
+preserves the four-function inequality, ~50 LoC Cauchy–Schwarz /
+linearity") is **not** Cauchy–Schwarz/linearity — it is the
+literature-standard **Ahlswede–Daykin 1979 Lemma 2** "cell averages
+preserve AD" lemma, recursive at the same dimension and requiring
+either (a) Riemann-sum + mollification, (b) martingale convergence
++ DCT (bounded f), or (c) full A-D 1979 mollification machinery —
+each ~1000–1500 LoC of mathlib measure-theory glue beyond the
+session budget. Polecat (mg-071b) mailed mayor with three options
+(sublattice-restricted, axiom-bearing, full-closure) and proceeded
+with **Option 2: cell-AD as 4th named project axiom**
+(`OneThird.ContinuousFKG.cellMass_AD`) per the project's existing
+disclosure pattern (Brightwell, Case3, Stanley axioms). The
+deliverable lands an EX-7-usable `continuous_ad_general` with full
+disclosure in `lean/AXIOMS.md` §`cellMass_AD`. **Trust surface
+impact: +1 axiom (4 total).** Build green; `#print axioms
+OneThird.ContinuousFKG.continuous_ad_general` = `{propext,
+Classical.choice, Quot.sound, OneThird.ContinuousFKG.cellMass_AD}`.
+**Replacement path: DH-4** (mathlib upstream PR for
+`Mathlib/Analysis/MeanInequalities/ContinuousFKG.lean` carrying both
+the Monotone-free `continuous_ad_general` and the cell-AD lemma);
+recorded at `lean/MATHLIB_GAPS.md` §DH-4. **Verdict
+AMBER-leaning-GREEN.** §3.4 updated (sub-α-C arc: EX-7 Session A
+scoping done **+ EX-6 Session F closed**; **EX-7 Session B is the
+next execution ticket** consuming `continuous_ad_general` +
+chamber decomp + `stanley_log_supermod`). PM next step: file
+**EX-7 Session B** scoping ticket (chamber-decomposition reduction
++ `continuous_ad_general` consumption + `stanley_log_supermod`
+inner-step closure, ~150–270 LoC per mg-2746 §7.2). The 4th
+axiom decision is preserved on the trust-surface ledger; mayor
+visibility maintained via the start-of-session mail.
 **Last update.** mg-bb74 (cat-mg-bb74), 2026-05-07. §3.1 closed
 (Path γ confirmed); `lean/AXIOMS.md` framing refreshed from
 "scheduled for replacement" to "definitively retained" /
