@@ -148,6 +148,46 @@ refined to ~330–470 LoC, ~170–265k tokens (down from mg-91be §5.4's
 that needs no Stanley-axiom invocation). Trust surface unchanged
 (EX-4 introduces no new axioms). PM next step: file EX-4 Session B
 scoping ticket (direct Lean port using §6 of the deliverable).
+**Last update.** mg-2442 (cat-mg-2442), 2026-05-09. **EX-4
+Session B executed: Stanley vertex theorem ported to Lean.**
+§1.16 NEW for the Session B deliverable
+(`lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`
+extension, ~330 LoC of Lean). Both directions of Stanley 1986
+Theorem 1.2 formalised in tree against the in-tree `OrderPolytope α`
+(mg-8c66). Direction 1 lemmas:
+`OrderPolytope.indicator_upperSet_mem` (membership) and
+`OrderPolytope.indicator_upperSet_isExtreme` (extreme), using only
+mathlib's `Set.indicator`, `mem_extremePoints`, `openSegment`, and
+the convex-combination pinning argument (mg-4831 §2.3). Direction 2
+private lemmas: `perturbUp` / `perturbDown` definitions
+(level-set ±ε perturbation via `Set.indicator`), `exists_perturbation_eps`
+(positive ε via `Finset.inf'` over `Finset.univ.filter (f x ≠ c)`,
+requires `[Fintype α]`), `perturbUp_mem` / `perturbDown_mem`
+(membership under gap conditions, 6-case order-preservation per
+mg-4831 §3.5), `extremePoint_isBoolean` (every extreme point in
+`{0, 1}`-valued, contradiction via the perturbation), and
+`onePreimage_isUpperSet` (the 1-level set is an upper set under
+monotonicity). Direction 2 main: `extremePoint_eq_indicator_upperSet`.
+Master theorem `OrderPolytope.extremePoints_eq` packages both
+directions: `Set.extremePoints ℝ (OrderPolytope α) = { f | ∃ I :
+UpperSet α, f = Set.indicator (I : Set α) (1 : α → ℝ) }` (the §4.1
+mg-4831-recommended UpperSet form). Trust surface impact: **none**.
+`#print axioms` on the three exposed theorems
+(`indicator_upperSet_isExtreme`, `extremePoint_eq_indicator_upperSet`,
+`extremePoints_eq`) gives only the mathlib-standard
+`{propext, Classical.choice, Quot.sound}` triplet — **no new project
+axioms**, as predicted by mg-4831 §1 + §5. Trip-wires per mg-4831
+§6: not fired (build green; mathlib API matched cleanly with one
+post-port adjustment — coercion `(I : Set α) = I.carrier` for
+`I : UpperSet α` constructed via anonymous constructor required an
+explicit `hI_coe` rewrite step in `extremePoint_eq_indicator_upperSet`,
+~2 LoC; no structural mathlib gap fired). LoC count ~330 lands at
+the lower edge of the mg-4831 §6 estimate (~330–470 LoC). §3.4
+updated (sub-α-C arc: EX-4 done, GREEN; EX-5 chamber decomposition
+is the next execution ticket). §3.10 (DH-5) ready to surface to
+Daniel post-merge: combined EX-3 + EX-4 mathlib upstream PR
+(`Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`) is now
+realisable since both pieces are in tree.
 
 ---
 
@@ -567,6 +607,117 @@ scoping ticket (direct Lean port using §6 of the deliverable).
   verification GREEN to Daniel in evening digest and continue with
   EX-4 dispatch (Stanley vertex theorem) per mg-8c66 hand-off.
 
+### §1.16 EX-4 Session B executed — Stanley vertex theorem ported to Lean (mg-2442)
+
+* **Source.** mg-2442 (this update); the EX-4 Session A latex
+  deliverable (mg-4831, `ac56bc4`,
+  `docs/path-alpha-execution-arc/ex4-stanley-vertex-scoping.md`);
+  predecessors: mg-8c66 (`ed9f6e6`, EX-3 OrderPolytope), mg-163f
+  (`9e6edcd`, Path A), mg-91be (`bb450a4`, sub-α-C scoping). File
+  extended: `lean/OneThird/Mathlib/LinearExtension/OrderPolytope.lean`
+  (mg-8c66 base + mg-2442 extension, ~330 LoC of net additions).
+
+* **What landed.** Both directions of Stanley 1986 Theorem 1.2 in
+  Lean against the in-tree `OrderPolytope α` (mg-8c66):
+
+  - **Direction 1 (`indicator_upperSet_isExtreme`).** For any
+    `I : UpperSet α`, the `{0,1}`-indicator `1_I` is an extreme
+    point of `OrderPolytope α`. Helper:
+    `indicator_upperSet_mem` (membership). Proof: direct
+    convex-combination pinning per mg-4831 §2.3 (no `[Fintype α]`
+    needed for this direction).
+
+  - **Direction 2 (`extremePoint_eq_indicator_upperSet`, requires
+    `[Fintype α]`).** Every extreme point of `OrderPolytope α` is
+    `1_I` for some `I : UpperSet α`. Private aux lemmas:
+    `perturbUp` / `perturbDown` (level-set ±ε perturbation realised
+    via `Set.indicator`), `exists_perturbation_eps` (positive ε
+    via `Finset.inf'` over `Finset.univ.filter (f x ≠ c)`),
+    `perturbUp_mem` / `perturbDown_mem` (the 6-case
+    order-preservation table per mg-4831 §3.5),
+    `extremePoint_isBoolean` (every extreme `f` takes only values
+    in `{0, 1}`, contradiction via the perturbation argument), and
+    `onePreimage_isUpperSet` (`f^{-1}(1)` is an upper set under
+    monotonicity).
+
+  - **Master theorem `extremePoints_eq` (requires `[Fintype α]`).**
+    `Set.extremePoints ℝ (OrderPolytope α) = { f : α → ℝ |
+    ∃ I : UpperSet α, f = Set.indicator (I : Set α) (1 : α → ℝ) }`.
+    The mg-4831 §4.1-recommended UpperSet form (option 1).
+
+* **Mathlib API consumed (no gap surfaced).** `Set.extremePoints`
+  + `mem_extremePoints` + `openSegment` (Mathlib.Analysis.Convex.Extreme);
+  `Set.indicator` + `Set.indicator_of_mem` + `Set.indicator_of_notMem`
+  + `Set.indicator_nonneg`
+  (Mathlib.Algebra.Notation.Indicator and Order.Group.Indicator);
+  `UpperSet` + `IsUpperSet` + the `SetLike (UpperSet α) α` instance
+  (Mathlib.Order.UpperLower.Basic + .CompleteLattice);
+  `Finset.inf'` + `Finset.lt_inf'_iff` + `Finset.inf'_le`
+  (Mathlib.Data.Finset.Lattice.Fold). Two import additions to the
+  EX-3 file: `Mathlib.Analysis.Convex.Extreme` and
+  `Mathlib.Algebra.Order.Group.Indicator`.
+
+* **Trust surface impact: none.** `#print axioms` on the three
+  exposed theorems gives only `{propext, Classical.choice,
+  Quot.sound}` — the mathlib-standard classical-foundation
+  triplet. **No new project axioms introduced** (as predicted by
+  mg-4831 §1.14 + §5.1: EX-4 does not consume
+  `stanley_log_supermod`, since the vertex characterisation is
+  purely an extreme-point statement and not a count). The
+  `width3_one_third_two_thirds` headline and the sub-α-C arc
+  trust surfaces are both unchanged.
+
+* **Trip-wires per mg-4831 §6 (none fired).**
+  - GREEN (achieved): both directions formalised; main theorem
+    statement matches mg-4831 §4.1 recommended signature; build
+    green; no new axioms; ~330 LoC at the lower edge of the
+    mg-4831 §6 ~330–470 LoC estimate.
+  - AMBER (not fired): no auxiliary mathlib gap surfaced.
+  - RED (not fired): no decidability obstruction; the
+    `Set.indicator` and `Finset.inf'` formulations both worked
+    cleanly with `[Fintype α]` and classical decidability.
+  - **Single minor friction surfaced post-port:** the SetLike
+    coercion of an anonymous-constructor `UpperSet α` (built via
+    `⟨{x | f x = 1}, onePreimage_isUpperSet hf.1⟩`) needed an
+    explicit `(I : Set α) = {x | f x = 1}` rfl-rewrite step in
+    `extremePoint_eq_indicator_upperSet`. ~2 LoC; documented
+    in-line; not a structural issue.
+
+* **`Set.indicator` formulation note.** The perturbation
+  `f_ε^± := f ± ε · 1_{f^{-1}(c)}` was realised via
+  `Set.indicator {y | f y = c} (fun _ => ε)` rather than an
+  `if`-then-`else` term. This avoids any `Decidable (f x = c)`
+  obligation (Set.indicator is `noncomputable` via
+  `Classical.decPred` automatically) and gives a clean equational
+  formulation: `perturbUp f c ε x = f x + Set.indicator {y | f y =
+  c} (fun _ => ε) x`. The `_apply_of_eq` / `_apply_of_ne` lemmas
+  derived via `Set.indicator_of_mem` / `Set.indicator_of_notMem`
+  give point-wise unfolding.
+
+* **Sub-α-C arc next step.** EX-5 chamber decomposition is now the
+  next execution ticket. mg-163f §5.4 / mg-91be §5.5 sketched
+  EX-5 as the chamber simplices `σ_L = { f ∈ O(α) | f x_{L(1)} ≤ ··· ≤ f x_{L(n)} }`
+  for `L : LinearExt α`, with `O(α) = ⋃ σ_L` and
+  `Vol(σ_L) = 1/n!`. The vertex theorem (this commit) is **not** a
+  prerequisite for EX-5 (EX-5 uses `OrderPolytope` directly, not
+  its vertex set), but it is a prerequisite for the cleaner
+  formulations in EX-7 / EX-9.
+
+* **DH-5 ready to surface.** Per §3.10: with both EX-3 (mg-8c66)
+  and EX-4 (this commit) in tree, the combined upstream-PR
+  candidate `Mathlib/Combinatorics/Order/StanleyOrderPolytope.lean`
+  is now realisable. ~600–900 LoC of mathlib value, maintainer
+  Yaël Dillies (consistent with Mathlib.Analysis.Convex.Extreme).
+  Lower priority than DH-1 (Stanley log-supermod) and DH-4
+  (continuous FKG); PM should mention DH-5 in the next
+  Daniel digest.
+
+* **Verdict.** **GREEN.** Both directions proven; main theorem
+  matches recommended signature; trust surface unchanged
+  (`{propext, Classical.choice, Quot.sound}` only); ~330 LoC at
+  the lower edge of the Session A estimate. PM next step: file
+  EX-5 chamber decomposition scoping ticket.
+
 ### §1.11 EX-1 Option A executed — `stanley_log_supermod` landed as temp axiom
 
 * **Source.** mg-d0fc (this update);
@@ -787,12 +938,20 @@ scoping ticket (direct Lean port using §6 of the deliverable).
     **Not pursued** (Daniel did not signal sub-α-C abandonment;
     `feedback_long_arcs_are_pm_authority` retained for sub-α-C).
 * **Default for next ticket.** **EX-3 done (mg-8c66, `ed9f6e6`;
-  see §1.13). EX-4 Session A done (mg-4831, this commit; see
+  see §1.13). EX-4 Session A done (mg-4831, `ac56bc4`; see
   §1.14) — GREEN with small spec correction (LowerSet → UpperSet
   in the target signature; chamber-decomp arc downstream
-  unaffected). PM files EX-4 Session B scoping ticket**
-  (direct Lean port using §6 of the deliverable as the component
-  breakdown; ~330–470 LoC, ~170–265k tokens, 1 polecat session).
+  unaffected). EX-4 Session B done (mg-2442, this commit; see
+  §1.16) — GREEN; both directions of Stanley vertex theorem in
+  Lean as `OrderPolytope.extremePoints_eq` against the in-tree
+  `OrderPolytope α`; trust surface unchanged (`#print axioms`
+  emits only `{propext, Classical.choice, Quot.sound}`); ~330 LoC
+  at the lower edge of the mg-4831 §6 estimate. PM files EX-5
+  chamber decomposition scoping ticket** (next execution ticket
+  in the sub-α-C arc; chamber simplices `σ_L = { f ∈ O(α) |
+  f x_{L(1)} ≤ ··· ≤ f x_{L(n)} }` for `L : LinearExt α`,
+  `Vol(σ_L) = 1/n!`, `O(α) = ⋃ σ_L` per Stanley 1986 §1; first
+  consumer of `stanley_log_supermod` axiom downstream).
   EX-3 and EX-4 did **not** consume `stanley_log_supermod`
   directly (axiom is consumed starting at EX-5); the temp axiom
   remains the discharge target of either DH-1 (preferred) or
