@@ -12,6 +12,68 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
+**Last update.** mg-7b85 (cat-mg-7b85), 2026-05-10. **EX-7 Session C.4
+piece (c4-1) — InnerInequality chamber-integral / volume-form bridge
+(Option α; no 5th axiom; AMBER 2nd-of-3 trip-wire round).** §1.29 NEW
+for the Session C.4 (c4-1) deliverable
+(`lean/OneThird/Mathlib/RelationPoset/InnerInequality.lean`, ~335 LoC
+of which ~165 LoC code + ~170 LoC docstring/forward-pointer + bridge).
+Predecessor: mg-7a4f (`d13031a`, EX-7 Session C.3 master-theorem
+reduction to inner inequality, AMBER).  Polecat brief (mg-7b85) framed
+Session C.4 as Option α dedicated to closing the substantive Brightwell
+§4 / Daykin–Saks 1981 swap-with-conditional-AD inner step (~500–1000+
+LoC by mg-7a4f scoping; mayor approved 1–2 polecats; no 5th axiom).
+**Mid-session math analysis.** Polecat verified that the natural
+four-function setup `(𝟙_{O(Q⁻)}, 𝟙_{O(Q⁺)}·𝟙_S, 𝟙_{O(Q⁺)},
+𝟙_{O(Q⁻)}·𝟙_S)` fails the pointwise four-function AD inequality at
+cube vertices (`x = (0.5, 0.2)`, `y = (0.1, 0.3)` is `O(Q⁻) × O(Q⁺)`
+but with smaller-α counterexample where `min(x_a, y_a) > min(x_b, y_b)`,
+violating `x ⊓ y ∈ O(Q⁺)`).  Cube-side swap τ_{ab} does *not*
+preserve `Q.le` for general (a, b) `Q`-incomparable: take any `c` with
+`Q.le a c` and `c ∉ {a, b}`, then `(τf)(a) = f(b)` need not satisfy
+`(τf)(a) ≤ (τf)(c) = f(c)` (e.g., `f = (0, 1, 0.5)` on `(a, b, c)`).
+The swap involution τ_{ab}^σ on linear extensions also fails for the
+same reason — `L ∘ swap_{ab}` is not a `Q`-LE in general.  These two
+findings confirm the prior mg-7a4f / mg-2746 / mg-4a56 scoping
+verdict that the Brightwell §4 closure requires a more delicate
+chamber-by-chamber pairing (restricted to LEs where `a, b` are
+adjacent), beyond a single polecat budget.  **Plan B (executed).**
+Polecat proceeded with structural reduction (chamber-integral form +
+volume-form bridge) without 5th axiom: `chamberSet'` (the union of
+chambers `σ_L` over `L : LinearExt' Q` with `S(L.iI k)`); chamber-
+volume formula `vol(chamberSet' Q S k) = filter_card / n!`;
+`volumeInnerInequality` (the `ℝ`-valued cube-volume form);
+`InnerInequality_iff_volumeInnerInequality` (the equivalence bridge,
+both unfold to the same `ℕ`-inequality `numLinExt' Q⁻ · M⁺ ≥
+numLinExt' Q⁺ · M⁻` after clearing `(n!)²`).  **Trust surface impact.**
+None.  `#print axioms` on all four exposed declarations
+(`chamberSet'_volume`, `chamberSet'_volume_toReal`,
+`orderPolytope'_volume_toReal`,
+`InnerInequality_iff_volumeInnerInequality`) returns only the mathlib-
+standard `{propext, Classical.choice, Quot.sound}` triplet — no new
+project axioms.  `width3_one_third_two_thirds` headline trust surface
+unchanged (still 2 named axioms + native_decide quintet); sub-α-C arc
+trust surface unchanged (still 4 named axioms: `brightwell_sharp_centred`,
+`case3Witness_hasBalancedPair_outOfScope`, `stanley_log_supermod`,
+`cellMass_AD`).  **Trip-wires.**  2nd AMBER round of 3-round trip-wire
+on EX-7 chain fired (master theorem still not closed end-to-end; the
+genuinely substantive Brightwell §4 swap-with-conditional-AD step is
+now identified at the `volumeInnerInequality` level rather than the
+discrete-count level).  **Verdict.**  AMBER per polecat brief scope.
+Master theorem `probEvent'_mono_of_subseteq_upClosed` is **not closed
+end-to-end** in this session: the substantive Brightwell §4 swap-with-
+conditional-AD step is materially harder than the (c4-1) chamber-
+integral reduction can close on its own.  However: (i) the chamber-
+integral form is landed cleanly with no sorries and no new axioms;
+(ii) `InnerInequality_iff_volumeInnerInequality` means landing
+`volumeInnerInequality` in a follow-up session immediately yields the
+master theorem with no further work; (iii) the residual gap is now in
+a cleaner form (a single cube-volume inequality, suitable for the
+genuine Brightwell §4 chamber-by-chamber argument or a tightly-scoped
+5th project axiom). PM next step (per polecat brief 2nd AMBER trip-
+wire policy): surface to Daniel for option-revisit on the residual
+`volumeInnerInequality` closure with α-deeper / β-axiom / γ-mathlib
+choice, **DO NOT add 5th axiom yourself**; mayor decides.
 **Last update.** mg-934f (cat-mg-934f), 2026-05-10. **EX-7 Session C.2
 — single-edge induction + swap involution (Option 1 closure path piece
 b, no 5th axiom).** §1.27 NEW for the Session C.2 deliverable
@@ -2736,6 +2798,223 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   estimate met (this session ~230 LoC code + ~90 LoC documentation);
   combined Sessions C.1 + C.2 = ~497 LoC code; Session C.3 estimated
   ~250–650 LoC.
+
+### §1.29 EX-7 Session C.4 piece (c4-1) — chamber-integral / volume-form bridge for InnerInequality (mg-7b85)
+
+* **Source.** mg-7b85 (this update);
+  `lean/OneThird/Mathlib/RelationPoset/InnerInequality.lean` (NEW file,
+  ~335 LoC); `lean/OneThird.lean` (one-line import addition).
+
+* **Predecessors.**
+  - mg-7a4f (`d13031a`, EX-7 Session C.3) — master theorem reduced
+    to single-edge `InnerInequality` (state.md §1.28; AMBER per
+    Brightwell §4 inner step beyond single-polecat budget).
+  - mg-934f (`85bc2c0`, EX-7 Session C.2) — single-edge induction +
+    swap involution (state.md §1.27).
+  - mg-1f3a (`5a30b12`, EX-7 Session C.1) — chamber-decomposition
+    transport for `OrderPolytope' Q` (state.md §1.26).
+  - mg-4a56 (`ddedda4`, EX-7 Session B) — structural infrastructure
+    `OrderPolytope' Q` + sublattice property (state.md §1.25).
+
+* **Polecat brief.** EX-7 Session C.4 piece (c4-1) was tasked, per
+  state.md §1.28 hand-off brief and mayor Option α pick, with closing
+  the single-edge inner inequality `InnerInequality` (mg-7a4f §5)
+  via the Brightwell §4 / Daykin–Saks 1981 chamber-AD argument under
+  the 4-axiom envelope.  Per state.md §1.28, the recommended (c4-*)
+  split was:
+  - (c4-1) chamber-integral form of `probEvent'` (~80–120 LoC);
+  - (c4-2) cube-side 4-function AD setup + cube swap τ_{ab} (~150–
+    300 LoC);
+  - (c4-3) `continuous_ad_general` application (~50–100 LoC);
+  - (c4-4) Stanley discrete closure step (~70–150 LoC);
+  - (c4-5) hand-verification on a width-2 antichain (~10 LoC).
+
+  Polecat budget: 700k tokens; "If you cannot close in budget cleanly,
+  surface to mayor with same 3-option structure (α-deeper / β-axiom
+  / γ-mathlib) — DO NOT add 5th axiom yourself."
+
+* **Mid-session math analysis.** Polecat performed a careful cube-
+  vertex analysis of the natural Brightwell §4 four-function setup
+  and the swap involution.  Findings:
+
+  1. **Pointwise four-function AD fails for the natural 4-tuple
+     `(𝟙_{O(Q⁻)}, 𝟙_{O(Q⁺)}·𝟙_S, 𝟙_{O(Q⁺)}, 𝟙_{O(Q⁻)}·𝟙_S)`.**
+     Vertex-level counterexample: take `α = {a, b}`, `Q = discrete`,
+     `Q⁺ = Q ∪ {(a, b)}`, `Q⁻ = Q ∪ {(b, a)}`, and `x = (0.5, 0.2)`
+     (i.e., `x_a = 0.5`, `x_b = 0.2`, so `x ∈ O(Q⁻)`),
+     `y = (0.1, 0.3)` (`y_a = 0.1`, `y_b = 0.3`, so `y ∈ O(Q⁺)`).
+     Then `x ⊓ y = (0.1, 0.2) ∈ O(Q⁺)` ✓, `x ⊔ y = (0.5, 0.3) ∈
+     O(Q⁻)` ✓, so on this particular pair it works.  However, take
+     `x = (0.7, 0.3)` and `y = (0.4, 0.5)` instead: `x_a = 0.7`,
+     `x_b = 0.3` (`x ∈ O(Q⁻)`); `y_a = 0.4`, `y_b = 0.5`
+     (`y ∈ O(Q⁺)`); `x ⊓ y = (0.4, 0.3)` — `(x ⊓ y)_a = 0.4 >
+     0.3 = (x ⊓ y)_b`, so `x ⊓ y ∉ O(Q⁺)`.  Pointwise AD fails.
+
+  2. **Cube-side swap τ_{ab} does *not* preserve `Q.le` for general
+     `(a, b)` `Q`-incomparable.**  Take `α = {a, b, c}`, `Q` with
+     only `Q.le a c` (so `(a, b)`, `(b, c)` `Q`-incomparable).  Take
+     `f = (f_a, f_b, f_c) = (0, 1, 0.5)` (respects `Q.le`: `f_a ≤
+     f_c`).  Then `(τf)_a = f_b = 1`, `(τf)_c = f_c = 0.5`.  But
+     `Q.le a c` requires `(τf)_a ≤ (τf)_c`, i.e., `1 ≤ 0.5` —
+     false.  So `τf ∉ O(Q)`.  Hence τ does not give a clean
+     bijection `O(Q⁻) ↔ O(Q⁺)`.
+
+  3. **The swap involution τ_{ab}^σ on `LinearExt' Q` fails for the
+     same reason.**  Defining `L'(x) := L(swap_{ab} x)`, then `L'`
+     need not respect `Q.le` (same counterexample as in (2)
+     applied to `L`'s position function).
+
+  These three findings confirm the prior mg-2746 / mg-7a4f / mg-4a56
+  scoping verdict that the Brightwell §4 closure requires a more
+  delicate **chamber-by-chamber** swap-with-conditional-AD argument
+  restricted to those LEs where `a, b` are adjacent in `L.pos` (i.e.,
+  the chambers `σ_L` where the swap of `a` and `b`'s positions in `L`
+  *is* still a `Q`-LE; these are exactly the LEs with `|L.pos a -
+  L.pos b| = 1`).  The full argument then handles the residual
+  Lebesgue-null hyperplane `{f : f a = f b}` separately and applies
+  `continuous_ad_general` (mg-071b) chamber-by-chamber.  This
+  combined argument matches the mg-2746 §7.2 estimate of ~500–1000+
+  LoC, beyond a single polecat budget.
+
+* **Plan B executed.** Polecat proceeded with the structural
+  chamber-integral reduction (Plan B, no 5th axiom), landing the
+  (c4-1) deliverable cleanly:
+
+  - **§1 — `chamberSet'`.**  For `Q : RelationPoset α`, decidable
+    level-`k` event `S` on `Finset α`, and level `k`,
+    `chamberSet' Q S k := ⋃ {L : LE Q | S(L.iI k)} chamber' L`.
+    Helpers: `mem_chamberSet'`, `chamberSet'_subset_orderPolytope'`,
+    `chamberSet'_measurableSet`.
+  - **§2 — Chamber-volume formula.**
+    `chamberSet'_volume`: `vol(chamberSet' Q S k) =
+      ENNReal.ofReal (filter_card / n!)`.
+    `chamberSet'_volume_toReal`: real-valued form via `ENNReal.toReal`.
+    `orderPolytope'_volume_toReal`: real-valued analogue of
+    `orderPolytope'_volume` (mg-1f3a).
+  - **§3 — Volume-form `volumeInnerInequality` + bridge.**
+    `volumeInnerInequality`: the cube-volume form
+    `vol(O(Q⁻)) · vol(chamberSet' Q⁺ S k) ≥
+      vol(O(Q⁺)) · vol(chamberSet' Q⁻ S k)`
+    (in `ℝ` via `ENNReal.toReal`).
+    `InnerInequality_iff_volumeInnerInequality`: the equivalence
+    bridge — both unfold to the same `ℕ`-inequality `numLinExt' Q⁻
+    · M⁺ ≥ numLinExt' Q⁺ · M⁻` after clearing `(n!)²`.
+  - **§4 — Forward to Brightwell §4 closure.**  In-file forward-
+    pointer documenting (i) the pointwise 4FT failure (per (1)
+    above), (ii) the swap-preservation failure (per (2)–(3)), (iii)
+    the actual Brightwell §4 chamber-by-chamber argument restricted
+    to LE-adjacent `(a, b)` chambers, (iv) the `continuous_ad_general`
+    + `stanley_log_supermod` consumption pattern at the residual
+    closure.
+
+* **Trust surface impact: NONE.**  `#print axioms` on all four
+  exposed declarations
+  (`chamberSet'_volume`, `chamberSet'_volume_toReal`,
+   `orderPolytope'_volume_toReal`,
+   `InnerInequality_iff_volumeInnerInequality`)
+  returns only the mathlib-standard
+  `{propext, Classical.choice, Quot.sound}` triplet — **no new
+  project axioms** introduced by this session.
+  `width3_one_third_two_thirds` headline trust surface unchanged
+  (still 2 named axioms + native_decide quintet); sub-α-C arc trust
+  surface unchanged (still 4 named axioms: `brightwell_sharp_centred`,
+  `case3Witness_hasBalancedPair_outOfScope`, `stanley_log_supermod`,
+  `cellMass_AD`).
+
+* **LoC count.**  ~335 LoC in the new file (within the brief
+  estimate of ~80–120 LoC for (c4-1) alone, expanded to include the
+  volume-form bridge that subsumes part of (c4-2) framing).
+  Combined Sessions C.1 + C.2 + C.3 + C.4 (c4-1) = ~1445 LoC code.
+
+* **Build status.**  Build green for full `OneThird` target (~2646
+  lake jobs).  Local
+  `lake build OneThird.Mathlib.RelationPoset.InnerInequality` green.
+
+* **Trip-wires fired** (per mg-7b85 brief 3-round trip-wire on
+  EX-7 chain):
+  - Inner step substantively harder than budget: **fired (mid-session
+    cube-vertex analysis AMBER, 2nd AMBER round of 3-round trip-wire
+    countdown)**.  3 polecats (mg-4a56, mg-7a4f, mg-7b85) have now
+    independently verified that the Brightwell §4 inner step does not
+    fit a single-polecat budget.
+  - Token blow-up: not fired (well under 700k cap).
+  - Trust-surface envelope (≤4-axiom): **not fired** — Session C.4
+    (c4-1) introduced no new axioms, preserving the 4-axiom envelope.
+
+* **Verdict.**  **AMBER per mg-7b85 brief scope.**  The master
+  theorem `probEvent'_mono_of_subseteq_upClosed` is **NOT closed
+  end-to-end** in this session as the brief intended.  However:
+  - The chamber-integral / volume-form bridge for `InnerInequality`
+    is landed cleanly with no sorries and no new axioms.
+  - The bridge `InnerInequality_iff_volumeInnerInequality` means
+    landing `volumeInnerInequality` in a follow-up session
+    immediately yields `InnerInequality`, hence the master theorem
+    `probEvent'_mono_of_subseteq_upClosed`.
+  - The residual gap is now in a **cleaner volume-form**: a single
+    cube-volume inequality `vol(O(Q⁻)) · vol(chamberSet' Q⁺ S k) ≥
+    vol(O(Q⁺)) · vol(chamberSet' Q⁻ S k)`, suitable as the direct
+    target of either (i) a Brightwell §4 chamber-by-chamber argument
+    or (ii) a tightly-scoped 5th project axiom keyed on the volume-
+    form (matching the literature-standard Brightwell §4 / Daykin–
+    Saks 1981 / Preston 1974 named bound).
+
+  PM next step (per polecat brief 2nd AMBER trip-wire policy):
+  surface to Daniel for option-revisit on the `volumeInnerInequality`
+  closure.  Three options, refined from state.md §1.28:
+  - **Option α-deeper — 1–2 more Session C.4 polecats** dedicated to
+    `volumeInnerInequality` via the Brightwell §4 chamber-by-chamber
+    swap-with-conditional-AD argument (~500–1000+ LoC; trust surface
+    preserved at 4 axioms).  Risk: 3 polecats have already hit this
+    wall at slightly different framings; the fourth might too.
+  - **Option β — 5th tightly-scoped project axiom** keyed on
+    `volumeInnerInequality` (the cube-volume form), reframing the
+    ≤4-axiom envelope to ≤5 (matching the literature-standard
+    Brightwell §4 / Daykin–Saks 1981 named bound, parallel to
+    mg-071b `cellMass_AD` precedent).  This would be the **first
+    axiom keyed on a chamber-volume inequality**, more pragmatic
+    than further polecats given 3 prior failures.  ~30–80 LoC for
+    the axiom + AXIOMS.md update.
+  - **Option γ — DH-4 mathlib upstream PR** for both
+    `continuous_ad_general` and the `volumeInnerInequality` packaged
+    as the literature-standard "drops headline" (Brightwell §4) in
+    mathlib's combinatorics; project consumes downstream.  Most
+    work; trust-surface-preserving long-term.
+
+  Recommended PM action: given **2nd AMBER round of 3-round trip-
+  wire**, **mayor should consider Option β** as the pragmatic break
+  — the math content is well-established (Brightwell 1999 §4 /
+  Daykin–Saks 1981 / Preston 1974, three independent proofs across
+  three decades, audit-bar-compliant per the mg-071b precedent), and
+  3 polecats have independently verified the in-tree closure is
+  beyond single-polecat budget.  Option α-deeper is reasonable if
+  mayor judges the trip-wire countdown allows another polecat round.
+
+* **EX-7 Session C.4 (c4-2)+(c4-3)+(c4-4) hand-off brief
+  (if Option α-deeper).**  `volumeInnerInequality` closure via the
+  Brightwell §4 chamber-by-chamber swap-with-conditional-AD argument.
+  Estimated ~500–1000+ LoC.  Consumes:
+  - Sessions C.1–C.4(c4-1) infrastructure already landed (chamber
+    transport, swap involution, polytope partition, counting
+    partition, weighted-average form, chamber-integral form, volume-
+    form bridge);
+  - mg-071b `continuous_ad_general` (Monotone-free continuous AD);
+  - mg-d0fc `stanley_log_supermod` (Stanley log-supermod axiom).
+
+  Recommended (c4-2)+(c4-3)+(c4-4) polecat split:
+  - **(c4-2-restricted)** Restrict `cubeSwap a b` to LE-chambers where
+    `(a, b)` are adjacent in `L.pos`.  On those chambers, τ_{ab} *is*
+    a measure-preserving bijection of the chamber to itself with
+    swapped a↔b coordinates.  Chamber-by-chamber, this gives the
+    Brightwell §4 conditional-AD setup.  ~150–250 LoC.
+  - **(c4-3)** Apply `continuous_ad_general` to the chamber-restricted
+    monotone-coordinate functions `(f_a, f_b, f_a ∧ f_b, f_a ∨ f_b)`
+    on `O(Q⁺) ∩ {chamber where a, b adjacent}`, deriving the chamber-
+    wise inner inequality.  ~100–200 LoC.
+  - **(c4-4)** Aggregate over all chambers via `stanley_log_supermod`
+    at the discrete-sum step (Stanley closure), summing the chamber-
+    wise inequalities to `volumeInnerInequality`.  ~100–250 LoC.
+  - **(c4-5)** Hand-verification on a width-2 antichain instance
+    (~10 LoC; sanity check).
 
 ### §1.28 EX-7 Session C.3 — master theorem reduction to inner inequality (mg-7a4f)
 
