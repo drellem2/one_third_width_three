@@ -2737,6 +2737,189 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   combined Sessions C.1 + C.2 = ~497 LoC code; Session C.3 estimated
   ~250–650 LoC.
 
+### §1.28 EX-7 Session C.3 — master theorem reduction to inner inequality (mg-7a4f)
+
+* **Source.** mg-7a4f (this update);
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadlineMaster.lean`
+  (NEW file, ~613 LoC);
+  `lean/OneThird.lean` (one-line import addition).
+
+* **Predecessors.**
+  - mg-934f (`85bc2c0`, EX-7 Session C.2) — single-edge induction +
+    swap involution + polytope partition (state.md §1.27).
+  - mg-1f3a (`5a30b12`, EX-7 Session C.1) — chamber-decomposition
+    transport for `OrderPolytope' Q` (state.md §1.26).
+  - mg-4a56 (`ddedda4`, EX-7 Session B) — structural infrastructure
+    `OrderPolytope' Q` + sublattice property (state.md §1.25).
+  - mg-2746 (`dcd0925`, EX-7 Session A) — latex-first scoping
+    (state.md §1.22).
+  - mg-071b (`8b49708`, EX-6 Session F) — Monotone-free
+    `continuous_ad_general` via `cellMass_AD` axiom (state.md §1.23).
+  - mg-d0fc — `stanley_log_supermod` temp axiom (state.md §1.11).
+
+* **Polecat brief.** EX-7 Session C.3 was tasked with closing the
+  master theorem `probEvent'_mono_of_subseteq_upClosed` end-to-end
+  (Daykin–Saks 1981 Theorem 1 / Brightwell 1999 §4 drops headline) via
+  the chamber + continuous AD + Stanley log-supermod chain under the
+  mayor's `≤4-axiom` envelope (no 5th project axiom).  Per state.md
+  §1.27 forward-pointer, this is piece **(c)** of the EX-7 Session C
+  decomposition, estimated ~250–650 LoC.
+
+* **Mid-session scoping.** Polecat mailed mayor at session start with
+  scoping concern: the inner Brightwell §4 swap-induction step is
+  **substantively harder than the brief estimate**, requiring a
+  careful 4-function continuous-AD setup that does not fit naturally
+  with the polytope indicators (per mg-2746 §2.3 counterexample to
+  the natural assignment, validated in-session via cube-vertex case
+  analysis).  Two natural 4-tuples
+  `{𝟙_{O(Q')}, 𝟙_{O(Q)}·𝟙_S, 𝟙_{O(Q)}, 𝟙_{O(Q')}·𝟙_S}` and the
+  swap-symmetrised variants both fail the pointwise AD inequality
+  on cube vertices.  Closing the inner step requires the full
+  Brightwell §4 / Daykin–Saks 1981 swap-with-conditional-AD argument
+  (~500–1000+ LoC of measure-theory glue + chamber-integral
+  rewriting), beyond budget for a single polecat session.  Polecat
+  proceeded with **Plan B** (structural reduction without 5th
+  axiom) and surfaced the situation to mayor for option-revisit.
+
+* **Deliverable.** Master theorem **reduced** to a single-edge inner
+  inequality, with the reduction landed cleanly in the
+  `OneThird.RelationPoset` namespace at
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadlineMaster.lean`:
+
+  - **§1 — LE-side single-edge partition.**
+    `LinearExt'.ne_of_incomp` (`a ≠ b` from `Q`-incomparability),
+    `LinearExt'.lt_or_lt_of_ne` (trichotomy on `L.pos`), and
+    `LinearExt'.exists_addRel_lift_iff_lt` (a `Q`-LE lifts to
+    `LE(addRel Q a b _)` iff `L.lt a b`).  These give the LE-side
+    analog of the polytope-partition from mg-934f §3.
+  - **§2 — Counting partition for single-edge augmentation.**
+    `image_restrict_addRel_eq_filter_lt` (image of restrict =
+    filter on `L.lt a b`); `numLinExt'_addRel_addRel_partition`
+    (counting identity `numLinExt' Q = numLinExt' (Q⁺) + numLinExt'
+    (Q⁻)` for `Q⁺ := addRel Q a b _`, `Q⁻ := addRel Q b a _`).
+  - **§3 — Filtered counting partition for level-`k` events.**
+    `initialIdeal'_restrict` (level-`k` ideal preserved by
+    restrict); `image_restrict_filter_S_eq_filter` (filter under
+    restrict); `filter_card_addRel_addRel_partition` (the filtered
+    counting identity).
+  - **§4 — `probEvent'` weighted-average form.**
+    `probEvent'_addRel_eq_weighted_average` (probability decomposes
+    as weighted average over the two single-edge halves).
+  - **§5 — Master theorem reduction.**
+    `InnerInequality` (named `def`-Prop wrapping the substantive
+    Brightwell-§4 single-edge cross-poset filtered-count product
+    inequality `numLinExt' Q⁻ · M⁺ ≥ numLinExt' Q⁺ · M⁻`);
+    `probEvent'_mono_addRel_of_inner` (single-edge case of master,
+    derived from `InnerInequality` via §4 weighted-average +
+    `nlinarith`); `probEvent'_mono_of_subseteq_upClosed_of_inner`
+    (master theorem from `subseteq_addRel_induction` (mg-934f §1) +
+    `probEvent'_mono_addRel_of_inner` + transitivity of `≤`).
+  - **§6 — Forward to inner inequality closure.**  In-file
+    forward-pointer documenting the four-step Brightwell §4 /
+    Daykin–Saks 1981 closure path (chamber-integral reduction of
+    `M±` to volume integrals + careful 4-function setup using
+    sublattice + cube-swap symmetrisation + `continuous_ad_general`
+    application + `stanley_log_supermod` discrete closure step).
+
+* **Trust surface impact: NONE.**  `#print axioms` on all five
+  exposed theorems
+  (`numLinExt'_addRel_addRel_partition`,
+  `filter_card_addRel_addRel_partition`,
+  `probEvent'_addRel_eq_weighted_average`,
+  `probEvent'_mono_addRel_of_inner`,
+  `probEvent'_mono_of_subseteq_upClosed_of_inner`)
+  gives only the mathlib-standard
+  `{propext, Classical.choice, Quot.sound}` triplet — **no new
+  project axioms** introduced by this session.
+  `width3_one_third_two_thirds` headline trust surface unchanged
+  (still 2 named axioms + native_decide quintet); sub-α-C arc trust
+  surface unchanged (still 4 named axioms: `brightwell_sharp_centred`,
+  `case3Witness_hasBalancedPair_outOfScope`, `stanley_log_supermod`,
+  `cellMass_AD`).
+
+* **LoC count.**  ~613 LoC in the new file (within mg-7a4f brief
+  budget of 250–650 LoC; ~480 LoC pure proof code + ~130 LoC
+  docstring/forward-pointer).  Combined Sessions C.1 + C.2 + C.3 =
+  ~1110 LoC code.
+
+* **Build status.**  Build green for full `OneThird` target (~2645
+  lake jobs).  Local
+  `lake build OneThird.Mathlib.RelationPoset.DropsHeadlineMaster`
+  green.
+
+* **Trip-wires fired** (per mg-7a4f brief 3-round trip-wire on EX-7
+  chain):
+  - Inner step substantively harder than budget: **fired (mid-session
+    scoping AMBER)**.  Mailed mayor before commit; proceeded with
+    Plan B (structural reduction without 5th axiom).  3-round
+    trip-wire counter incremented to 1 amber round running.
+  - Token blow-up: not fired (well under 350k cap).
+  - Trust-surface envelope (≤4-axiom): **not fired** — Session C.3
+    introduced no new axioms, preserving the 4-axiom envelope.
+
+* **Verdict.**  **AMBER per mg-7a4f brief scope.**  The master
+  theorem `probEvent'_mono_of_subseteq_upClosed` is **NOT closed
+  end-to-end** in this session as the brief intended: the
+  substantive Brightwell §4 swap-induction inner step
+  (`InnerInequality`) is materially harder than the 250–650 LoC
+  budget allows.  However:
+  - The reduction from the master theorem to a single inner
+    inequality is landed cleanly with no sorries and no new axioms.
+  - The `probEvent'_mono_of_subseteq_upClosed_of_inner` reduction
+    means landing `InnerInequality` in a follow-up session (Session
+    C.4) immediately yields the master theorem with no further
+    work.
+  - The structural reduction is itself substantial (~613 LoC,
+    matching the upper end of the brief estimate).
+
+  PM next step (per polecat brief AMBER trip-wire policy): surface
+  to Daniel for option-revisit on the inner inequality closure.
+  Three options on the table:
+  - **Option α — Session C.4** dedicated to the inner inequality
+    via Brightwell §4 chamber-AD argument (~500–1000+ LoC, 1–2
+    polecats; trust surface preserved at 4 axioms).
+  - **Option β — 5th tightly-scoped project axiom** for the inner
+    inequality, reframing the ≤4-axiom envelope to ≤5 (matching
+    the literature-standard Brightwell §4 / Daykin–Saks 1981 named
+    bound, parallel to mg-071b `cellMass_AD` precedent).
+  - **Option γ — DH-4 mathlib upstream PR** for both
+    `continuous_ad_general` and the `InnerInequality` packaged as
+    the literature-standard "drops headline" (Brightwell §4)
+    in mathlib's combinatorics; project consumes downstream.  Most
+    work; trust-surface-preserving long-term.
+
+  Recommended PM action: file Option α as Session C.4 polecat
+  ticket; if Option α exceeds polecat budget, revisit Option β /
+  Option γ.
+
+* **EX-7 Session C.4 handoff brief (if Option α).**
+  Master theorem inner inequality.  Estimated ~500–1000 LoC.
+  Consumes:
+  - Sessions C.1 + C.2 + C.3 infrastructure already landed
+    (chamber transport, swap involution, polytope partition,
+    counting partition, weighted-average form);
+  - mg-071b `continuous_ad_general` (Monotone-free continuous AD
+    on the cube via `cellMass_AD` axiom mg-d731-verified);
+  - mg-d0fc `stanley_log_supermod` (Stanley log-supermod axiom on
+    `J(α)`, externally verified mg-e22f) at the discrete-sum
+    closure step.
+  Recommended Session C.4 split:
+  - (c4-1) chamber-integral form of `probEvent'`: re-express
+    `probEvent' Q⁺ (S∘J_k)` as `vol(O(Q⁺) ∩ {f : S(L_f.iI k)}) /
+    vol(O(Q⁺))` via mg-1f3a `chamber'_volume` +
+    `orderPolytope'_volume` + measure-additivity over chambers
+    (~80–120 LoC);
+  - (c4-2) cube-side 4-function AD setup using sublattice property
+    (mg-4a56) + cube swap τ_{ab} (mg-934f) to symmetrise the
+    integrand into an AD-compatible form (~150–300 LoC);
+  - (c4-3) application of `continuous_ad_general` to derive the
+    integral form of the inner inequality (~50–100 LoC);
+  - (c4-4) discrete closure via `stanley_log_supermod` if needed
+    at the chamber-sum step (~70–150 LoC, possibly N/A if the
+    AD argument closes directly);
+  - (c4-5) hand-verification on a width-2 antichain instance
+    (~10 LoC).
+
 ### §1.24 cellMass_AD independent verification — GREEN (mg-d731)
 
 * **Source.** mg-d731 (this update);
