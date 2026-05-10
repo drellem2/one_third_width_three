@@ -11,6 +11,7 @@ import OneThird.Mathlib.RelationPoset.Birkhoff
 import OneThird.Mathlib.RelationPoset.FKG
 import OneThird.Mathlib.RelationPoset.DropsHeadline
 import OneThird.Mathlib.RelationPoset.DropsHeadlineChamber
+import OneThird.Mathlib.RelationPoset.DropsHeadlineSwap
 import OneThird.Mathlib.LinearExtension.Fintype
 import OneThird.Mathlib.LinearExtension.Subtype
 import OneThird.Mathlib.LinearExtension.FiberSize

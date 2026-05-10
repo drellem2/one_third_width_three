@@ -12,6 +12,51 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
+**Last update.** mg-934f (cat-mg-934f), 2026-05-10. **EX-7 Session C.2
+— single-edge induction + swap involution (Option 1 closure path piece
+b, no 5th axiom).** §1.27 NEW for the Session C.2 deliverable
+(`lean/OneThird/Mathlib/RelationPoset/DropsHeadlineSwap.lean`,
+~323 LoC of which ~230 LoC code + ~90 LoC docstring/forward-pointer).
+Predecessor: mg-1f3a (`5a30b12`, EX-7 Session C.1 chamber transport).
+Polecat brief (mg-934f) framed Session C.2 as piece (b) of the
+Option 1 full closure path: structural induction lemma reducing
+`Q.Subseteq Q'` to single-edge `addRel` augmentations + cube-side
+swap involution `cubeSwap a b` + the polytope-level chamber identity
+`O(Q) = O(addRel Q a b _) ∪ O(addRel Q b a _)` modulo the Lebesgue-
+null diagonal `{f : f a = f b}`.  **Deliverable.**  Eight exposed
+theorems in the `OneThird.RelationPoset` namespace at
+`lean/OneThird/Mathlib/RelationPoset/DropsHeadlineSwap.lean`:
+`subseteq_addRel_induction` (strong-induction principle on
+`Q'.rel.card - R.rel.card`); `cubeSwap` + `cubeSwap_apply` +
+`cubeSwap_involutive` + `volume_measurePreserving_cubeSwap` (the
+cube-side swap involution as a measurable equivalence
+`(α → ℝ) ≃ᵐ (α → ℝ)` via `MeasurableEquiv.piCongrLeft`);
+`OrderPolytope'_addRel_eq_inter_le` (single-edge polytope cut:
+`O(addRel Q a b _) = O(Q) ∩ {f : f a ≤ f b}` for `(a, b)` Q-
+incomparable); `OrderPolytope'_eq_union_addRel_addRel` (the chamber
+identity at the polytope level);
+`OrderPolytope'_inter_addRel_addRel_subset_diag` +
+`volume_OrderPolytope'_inter_addRel_addRel` (the intersection lies
+in the Lebesgue-null diagonal `equalCoordSubmoduleAlpha a b` from
+mg-10d9). **Trust surface impact: none.**  `#print axioms` on all
+eight exposed theorems gives only the mathlib-standard
+`{propext, Classical.choice, Quot.sound}` triplet — **no new
+project axioms**.  `width3_one_third_two_thirds` headline trust
+surface unchanged (still 2 named axioms + native_decide quintet);
+sub-α-C arc trust surface unchanged (still 4 named axioms; ≤4-axiom
+envelope per mayor mg-4a56 preserved).  Master theorem advances to
+**EX-7 Session C.3** (master assembly via continuous AD + Stanley
+log-supermod, ~250–650 LoC).  Build green for full `OneThird`
+target (~2644 lake jobs).  3-round trip-wire on EX-7 chain (per
+brief) cleared: 0 amber rounds running (Session A AMBER-leaning-
+GREEN, Session B GREEN, Session C.1 GREEN, Session C.2 GREEN).
+§3.4 updated (sub-α-C arc: EX-7 Session C.2 done, Session C.3 is
+the next execution ticket).  PM next step: file **EX-7 Session C.3
+scoping ticket** (master theorem assembly consuming Session C.1
+chamber transport + Session C.2 single-edge induction + swap
+involution + `continuous_ad_general` (mg-071b) +
+`stanley_log_supermod` (mg-d0fc); §1.27 handoff brief is the
+Session C.3 brief).
 **Last update.** mg-1f3a (cat-mg-1f3a), 2026-05-10. **EX-7 Session C.1
 — chamber transport for `OrderPolytope' Q` (Option 1 closure path,
 no 5th axiom).** §1.26 NEW for the Session C.1 deliverable
@@ -2540,6 +2585,158 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   uses ~267 LoC + ~?100–150k tokens; Sessions C.2 + C.3 estimated
   ~450–850 LoC + ~250–400k tokens).
 
+### §1.27 EX-7 Session C.2 — single-edge induction + swap involution (mg-934f)
+
+* **Source.** mg-934f (this update);
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadlineSwap.lean`
+  (NEW file, ~323 LoC = ~230 LoC code + ~90 LoC docstring/forward-pointer);
+  `lean/OneThird.lean` (one-line import addition).
+
+* **Predecessors.**
+  - mg-1f3a (`5a30b12`, EX-7 Session C.1) — chamber-decomposition
+    transport for `OrderPolytope' Q` (state.md §1.26).
+  - mg-4a56 (`ddedda4`, EX-7 Session B) — structural infrastructure
+    `OrderPolytope' Q` + sublattice property + `rfl`-bridge
+    `OrderPolytope'_eq_asPartialOrder` (state.md §1.25).
+  - mg-2746 (`dcd0925`, EX-7 Session A) — latex-first scoping
+    (state.md §1.22).
+  - mg-071b (`8b49708`, EX-6 Session F) — Monotone-free
+    `continuous_ad_general` (state.md §1.23).
+  - mg-d0fc — `stanley_log_supermod` temp axiom (state.md §1.11).
+
+* **Polecat brief.** EX-7 Session C.2 lands piece (b) of the
+  Option 1 full closure path for `probEvent'_mono_of_subseteq_upClosed`
+  under the mayor's `≤4-axiom` envelope.  Per state.md §1.26 forward-
+  pointer, the Session C decomposition is (a) chamber-volume transport
+  (~150 LoC, mg-1f3a Session C.1 done), (b) single-edge induction +
+  swap involution (~200 LoC, this Session C.2), (c) master assembly
+  via continuous AD + Stanley (~250–650 LoC, future Session C.3).
+
+* **Deliverable.**  Eight exposed theorems in the
+  `OneThird.RelationPoset` namespace at
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadlineSwap.lean`:
+
+  - **§1 — `subseteq_addRel_induction`** (single-edge induction
+    principle).  Strong induction on `Q'.rel.card - R.rel.card`: at
+    each step, pick `(a, b) ∈ Q'.rel \ R.rel`; antisymmetry of `Q'`
+    + `R.Subseteq Q'` forces `(a, b)` to be `R`-incomparable; the
+    intermediate poset `addRel R a b _` strictly grows the relation
+    cardinality (`card_rel_lt_addRel`), decreasing the gap by ≥1.
+    Reduces a `Q.Subseteq Q'` proof obligation for any
+    `P : RelationPoset α → Prop` to a single-edge augmentation step.
+  - **§2 — `cubeSwap a b`** (cube-side swap involution).
+    `(α → ℝ) ≃ᵐ (α → ℝ)` defined as
+    `(MeasurableEquiv.piCongrLeft (fun _ : α => ℝ) (Equiv.swap a b)).symm`,
+    following the `relabelEquiv` pattern (mg-10d9 / mg-497d).  Apply
+    formula `cubeSwap a b f x = f (Equiv.swap a b x)` (`@[simp]`).
+    `cubeSwap_involutive` (`Function.Involutive` since
+    `Equiv.swap_apply_self`).  `volume_measurePreserving_cubeSwap`
+    (transport of `volume_measurePreserving_piCongrLeft`).
+  - **§3 — Polytope identities for single-edge augmentation.**
+    `OrderPolytope'_addRel_eq_inter_le`: for `(a, b)` with
+    `¬ Q.le b a`,
+    `OrderPolytope' (addRel Q a b _) = OrderPolytope' Q ∩ {f | f a ≤ f b}`
+    (set-theoretic equality; the ⟸ direction uses transitivity
+    `f x ≤ f a ≤ f b ≤ f y` for `(x, y) ∈ addedPairs Q a b`).
+    `OrderPolytope'_eq_union_addRel_addRel`: for `(a, b)` Q-
+    incomparable,
+    `OrderPolytope' Q = OrderPolytope' (addRel Q a b _) ∪ OrderPolytope' (addRel Q b a _)`
+    (using `le_total` on ℝ).
+    `OrderPolytope'_inter_addRel_addRel_subset_diag`: the
+    intersection of the two halves lies in the diagonal hyperplane
+    `equalCoordSubmoduleAlpha a b` (from mg-10d9 §11.2).
+    `volume_OrderPolytope'_inter_addRel_addRel`: the volume corollary
+    via `Measure.addHaar_submodule + measure_mono_null`.
+  - **§4 — Forward to EX-7 Session C.3.**  In-file forward pointer
+    documenting how Session C.3 (master theorem assembly) consumes
+    Sessions C.1 + C.2 + `continuous_ad_general` (mg-071b) +
+    `stanley_log_supermod` (mg-d0fc).
+
+* **Design note.**  The cube swap `cubeSwap a b` does **not**
+  generically map `OrderPolytope' (addRel Q a b _)` into
+  `OrderPolytope' (addRel Q b a _)` — that would require `Q` to be
+  `swap a b`-symmetric, which is not generic.  Instead, the chamber
+  identity is delivered at the **polytope partition level**
+  (`OrderPolytope'_eq_union_addRel_addRel`): the cube swap is
+  provided as an independent measure-preserving involution tool for
+  Session C.3's continuous-AD argument (which uses the swap to
+  symmetrise integrands inside the AD reduction — not at the polytope
+  level).  This matches the Brightwell §4.2 / Daykin–Saks 1981 actual
+  proof structure, where the swap is a tool inside the inner
+  continuous-AD step, not a polytope-level isometry.
+
+* **Trust surface impact: NONE.**  `#print axioms` on all eight
+  exposed theorems gives only the mathlib-standard
+  `{propext, Classical.choice, Quot.sound}` triplet — **no new
+  project axioms** introduced by this session.
+  `width3_one_third_two_thirds` headline trust surface unchanged
+  (still 2 named axioms `brightwell_sharp_centred` +
+  `case3Witness_hasBalancedPair_outOfScope` plus the native_decide
+  quintet); sub-α-C arc trust surface unchanged (still 4 named axioms:
+  `brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+  `stanley_log_supermod`, `cellMass_AD`).
+
+* **LoC count.**  ~323 LoC in the new file = ~230 LoC code + ~90 LoC
+  docstring/forward-pointer (within mg-934f brief budget of ~200 LoC
+  per polecat estimate; the brief estimate referred to pure code).
+
+* **Build status.**  Build green for full `OneThird` target (~2644
+  lake jobs).  Local
+  `lake build OneThird.Mathlib.RelationPoset.DropsHeadlineSwap`
+  green.
+
+* **Trip-wires not fired** (per mg-2746 §7.4 / mg-934f brief 3-round
+  trip-wire on EX-7 chain):
+  - Token blow-up: not fired (well under the 350k cap; this session
+    well under 200k due to the structural-induction + measure-
+    preserving-swap being clean transport via existing in-tree APIs
+    `addRel`, `subseteq_addRel`, `card_rel_lt_addRel`,
+    `MeasurableEquiv.piCongrLeft`, `equalCoordSubmoduleAlpha`).
+  - Chamber identity at polytope level: **not fired** — the slice
+    `O(addRel Q a b _) = O(Q) ∩ {f a ≤ f b}` and the union
+    `O(Q) = O(addRel Q a b _) ∪ O(addRel Q b a _)` proved cleanly
+    without invoking the cube swap on the polytope level (avoiding
+    the generic-Q non-symmetry obstruction).
+  - Trust-surface envelope (≤4-axiom): **not fired** — Session C.2
+    introduced no new axioms, preserving the 4-axiom envelope.
+  - The 3-round trip-wire on EX-7 chain (per polecat brief): EX-7
+    Session A (AMBER-leaning-GREEN), EX-7 Session B (GREEN per
+    Option 3), EX-7 Session C.1 (GREEN), EX-7 Session C.2 (this
+    commit, **GREEN**) — 0 amber rounds running; trip-wire counter
+    cleared.
+
+* **EX-7 Session C.3 handoff brief.**  Master theorem assembly
+  `probEvent'_mono_of_subseteq_upClosed`.  Estimated ~250–650 LoC
+  (mg-2746 §2.4 step 5 + §5.2).  Consumes:
+  - Session C.1 chamber transport (`chamber'`, `chamber'_volume`,
+    `chamber'_inter_meas_zero`, `chamber'_cover`,
+    `orderPolytope'_volume`);
+  - This session's structural induction (`subseteq_addRel_induction`)
+    + cube swap (`cubeSwap`, `volume_measurePreserving_cubeSwap`)
+    + polytope partition (`OrderPolytope'_eq_union_addRel_addRel`,
+    `volume_OrderPolytope'_inter_addRel_addRel`);
+  - mg-071b `continuous_ad_general` (Monotone-free continuous AD on
+    the cube via `cellMass_AD` axiom mg-d731-verified);
+  - mg-d0fc `stanley_log_supermod` (Stanley log-supermod axiom on
+    `J(α)`, externally verified mg-e22f) at the discrete-sum closure
+    step.
+  No new project axioms anticipated; trust surface preserved per
+  Option 1 closure path under the mayor's ≤4-axiom envelope.
+  Recommended Session C.3 split (if budget pressure surfaces): (c1)
+  chamber-side reduction `Pr_Q[E_k] = (∫_{O(Q)} 𝟙_{S(L_f.initialIdeal' k)}) / vol(O(Q))`
+  (~80–120 LoC); (c2) inner continuous-AD step on `(f a, f b)`-
+  monotone parts (~80–200 LoC); (c3) discrete chain closure via
+  Stanley log-supermod (~70–150 LoC); (c4) hand-verification on a
+  width-2 antichain instance (~10 LoC).
+
+* **Verdict.** **GREEN per mg-934f brief scope.**  Single-edge
+  induction + cube swap + polytope partition landed cleanly with no
+  new axioms; build green; trust surface unchanged; Session C.3
+  handoff brief written.  The polecat brief's ~200 LoC per polecat
+  estimate met (this session ~230 LoC code + ~90 LoC documentation);
+  combined Sessions C.1 + C.2 = ~497 LoC code; Session C.3 estimated
+  ~250–650 LoC.
+
 ### §1.24 cellMass_AD independent verification — GREEN (mg-d731)
 
 * **Source.** mg-d731 (this update);
@@ -3061,6 +3258,35 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   remain estimated ~450–850 LoC combined; EX-8 and EX-9 blocked
   behind Session C.3 closure.  3-round trip-wire on EX-7 chain
   (per mg-1f3a brief) cleared: 0 amber rounds running.
+  **EX-7 Session C.2 done (mg-934f, this commit; see §1.27) — GREEN
+  per Option 1 closure path (no 5th axiom).**  Single-edge induction
+  + cube swap + polytope partition landed in
+  `lean/OneThird/Mathlib/RelationPoset/DropsHeadlineSwap.lean`
+  (~323 LoC = ~230 LoC code + ~90 LoC docstring/forward-pointer):
+  `subseteq_addRel_induction` (strong-induction principle on
+  `Q'.rel.card - R.rel.card`); `cubeSwap` + `cubeSwap_apply` +
+  `cubeSwap_involutive` + `volume_measurePreserving_cubeSwap` (cube-
+  side swap involution as a measure-preserving measurable equivalence
+  via `MeasurableEquiv.piCongrLeft`);
+  `OrderPolytope'_addRel_eq_inter_le` (single-edge polytope cut:
+  `O(addRel Q a b _) = O(Q) ∩ {f : f a ≤ f b}`);
+  `OrderPolytope'_eq_union_addRel_addRel` (chamber identity at the
+  polytope level: `O(Q) = O(addRel Q a b _) ∪ O(addRel Q b a _)` for
+  `(a, b)` Q-incomparable);
+  `OrderPolytope'_inter_addRel_addRel_subset_diag` and
+  `volume_OrderPolytope'_inter_addRel_addRel` (the intersection lies
+  in the Lebesgue-null diagonal `equalCoordSubmoduleAlpha a b` of
+  mg-10d9 §11.2).  Trust surface impact: **none** (`#print axioms`
+  triplet `{propext, Classical.choice, Quot.sound}`; no new project
+  axioms; ≤4-axiom envelope preserved).  Master theorem
+  `probEvent'_mono_of_subseteq_upClosed` advances to **EX-7 Session
+  C.3** (master assembly via `continuous_ad_general` + Stanley log-
+  supermod + chamber transport + this session's single-edge
+  induction; ~250–650 LoC; mg-934f §1.27 handoff brief).  EX-8 and
+  EX-9 remain blocked behind Session C.3 closure.  3-round trip-wire
+  on EX-7 chain (per mg-934f brief) cleared: 0 amber rounds running
+  (Session A AMBER-leaning-GREEN, Session B GREEN, Session C.1
+  GREEN, Session C.2 GREEN).
 
 ### §3.5 DH-1 — Stanley log-supermodularity as upstream mathlib PR (refined post-mg-c7b9)
 
