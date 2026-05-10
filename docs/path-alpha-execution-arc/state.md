@@ -12,7 +12,39 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
-**Last update.** mg-7b85 (cat-mg-7b85), 2026-05-10. **EX-7 Session C.4
+**Last update.** mg-afcf (cat-mg-afcf), 2026-05-10. **EX-7 Session C.5
+— InnerInequality LE-adjacent swap infrastructure (Option α
+continuation; no 5th axiom; AMBER 3rd-of-3 trip-wire round; PM ESCALATES
+TO DANIEL FOR OPTION REVISIT).** §1.30 NEW for the Session C.5
+deliverable (`lean/OneThird/Mathlib/RelationPoset/InnerInequalityAdjacent.lean`,
+~580 LoC of which ~470 LoC code + ~110 LoC docstring/forward-pointer).
+Predecessor: mg-7b85 (`f0dca25`, EX-7 Session C.4 (c4-1) chamber-integral
+/ volume-form bridge; AMBER).  Polecat brief (mg-afcf) framed Session
+C.5 as the LAST round before the 3-round trip-wire fires: chamber-by-
+chamber argument restricted to LE-adjacent (a,b) chambers (the
+substantive closure that the natural Brightwell §4 4-tuple does not give
+pointwise — confirmed by C.4 cube-vertex counterexamples).  **Deliverable.**
+Polecat landed the LE-side combinatorial half: `LinearExt'.AdjLt`
+predicate (a immediately before b in L.pos); `swapAdj` (the position-
+swap involution carrying LE-adjacent `Q⁺`-LEs to LE-adjacent `Q⁻`-LEs);
+`swapAdj_AdjLt` + `swapAdj_swapAdj` (involutivity); pointwise position
+formulae (`swapAdj_pos_a/b/other`); level-`k` initial-ideal behavior
+(`swapAdj_initialIdeal'_of_ne` for k ≠ pos a + 1 = preserved;
+`swapAdj_initialIdeal'_succ_mem_iff` for k = pos a + 1 = a-for-b
+exchange); the bijection `swapAdjEquiv` between LE-adjacent `Q⁺`-LEs
+and LE-adjacent `Q⁻`-LEs; cardinality consequence `card_adjLt_eq`.
+**Trust surface impact.** None.  `#print axioms` on all seven exposed
+declarations returns only `{propext, Classical.choice, Quot.sound}` —
+no new project axioms.  Trust surface preserved at 4 named axioms.
+**Trip-wires.**  3rd AMBER round of 3-round trip-wire on EX-7 chain
+fired (master theorem still not closed end-to-end; 4th independent
+polecat-confirmation that the cube-volume aggregation step does not
+fit a single-polecat budget).  **Verdict.**  AMBER per polecat brief
+scope; per brief explicit policy ("If AMBER, PM escalates Daniel for
+option revisit (α/β/γ)"), PM MUST surface to Daniel for option-revisit
+on the residual `volumeInnerInequality` closure.  Refined α/β/γ
+options below in §1.30.
+**Previous update.** mg-7b85 (cat-mg-7b85), 2026-05-10. **EX-7 Session C.4
 piece (c4-1) — InnerInequality chamber-integral / volume-form bridge
 (Option α; no 5th axiom; AMBER 2nd-of-3 trip-wire round).** §1.29 NEW
 for the Session C.4 (c4-1) deliverable
@@ -2798,6 +2830,181 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   estimate met (this session ~230 LoC code + ~90 LoC documentation);
   combined Sessions C.1 + C.2 = ~497 LoC code; Session C.3 estimated
   ~250–650 LoC.
+
+### §1.30 EX-7 Session C.5 — InnerInequality LE-adjacent swap infrastructure; 3rd-of-3 AMBER trip-wire fired; PM escalates Daniel (mg-afcf)
+
+* **Source.** mg-afcf (this update);
+  `lean/OneThird/Mathlib/RelationPoset/InnerInequalityAdjacent.lean`
+  (NEW file, ~580 LoC); `lean/OneThird.lean` (one-line import addition).
+
+* **Predecessors.**
+  - mg-7b85 (`f0dca25`, EX-7 Session C.4 (c4-1)) — chamber-integral /
+    volume-form bridge for `InnerInequality` (state.md §1.29; AMBER per
+    cube-vertex counterexamples to the natural 4-tuple pointwise AD).
+  - mg-7a4f (`d13031a`, EX-7 Session C.3) — master theorem reduced to
+    single-edge `InnerInequality` (state.md §1.28; AMBER).
+  - mg-934f (`85bc2c0`, EX-7 Session C.2) — single-edge induction +
+    swap involution (state.md §1.27).
+  - mg-1f3a (`5a30b12`, EX-7 Session C.1) — chamber-decomposition
+    transport for `OrderPolytope' Q` (state.md §1.26).
+
+* **Polecat brief.** EX-7 Session C.5 was tasked, per state.md §1.29
+  hand-off brief (mg-7b85) and mayor Option α-deeper continuation, with
+  the LE-adjacent piece of the Brightwell §4 chamber-by-chamber argument
+  for `volumeInnerInequality`.  **The brief explicitly identified C.5 as
+  the LAST round before the 3-round trip-wire fires**, with strong
+  policy: "If AMBER, PM escalates Daniel for option revisit (α/β/γ).
+  DO NOT add 5th axiom unilaterally."  Polecat budget: 700k tokens.
+
+* **Mathematical setup.** For `Q : RelationPoset α` and `(a, b)`
+  `Q`-incomparable, write `Q⁺ := addRel Q a b _` and `Q⁻ := addRel Q b a _`.
+  An LE `L : LinearExt' Q⁺` is **LE-adjacent at (a, b)** if
+  `(L.pos a).val + 1 = (L.pos b).val` (i.e., `a` is immediately before
+  `b` in `L`'s position function).  The position-swap of an LE-adjacent
+  `Q⁺`-LE is itself a `Q⁻`-LE (because the swap respects every
+  `Q`-relation when `a, b` are at consecutive positions, by elementary
+  case analysis on whether `(x, y) ∈ Q.le` involves `a` or `b`).  This
+  gives a clean bijection between LE-adjacent `Q⁺`-LEs (with `a`
+  immediately before `b`) and LE-adjacent `Q⁻`-LEs (with `b` immediately
+  before `a`).  The level-`k` initial-ideal behavior under this swap is
+  fully characterised: for `k ≠ (L.pos a).val + 1` the swap preserves
+  `iI k`; for `k = (L.pos a).val + 1` the swap exchanges `a` for `b` in
+  `iI k`.  This is the LE-side combinatorial input to the chamber-by-
+  chamber Brightwell §4 closure.
+
+* **Plan executed.** Polecat landed the LE-side combinatorial
+  infrastructure, **the bona fide structural progress that any of the
+  α/β/γ options will consume**:
+
+  - **§1 — `AdjLt`.**  Predicate `LinearExt'.AdjLt L a b` ↔
+    `(L.pos a).val + 1 = (L.pos b).val`; decidable; basic lemmas
+    `AdjLt.lt`, `AdjLt.ne`.
+  - **§2 — `swapAdj`.**  Adjacent-swap function on linear extensions:
+    `swapAdj : LinearExt' (addRel Q a b hba) → LinearExt' (addRel Q b a hab)`
+    (with `AdjLt` hypothesis).  Uses an `α`-side `Equiv.swap a b` to
+    pre-compose `L.toFun`.  The full monotonicity verification handles
+    the 9 cases of `(x, y) ∈ Q.le ∨ (b, a)`-augmentation × `(x ∈ {a, b, other}) × (y ∈ {a, b, other})`.
+  - **§2.5 — Pointwise position formulae.**  `swapAdj_pos_a`,
+    `swapAdj_pos_b`, `swapAdj_pos_other`.
+  - **§3 — Adjacency property + involutivity.**  `swapAdj_AdjLt` (swap
+    of an `AdjLt` extension is `AdjLt` with `a, b` exchanged);
+    `swapAdj_swapAdj` (the swap is a true involution).  Closure via
+    the algebraic identity `(swap b a).trans ((swap a b).trans L.toFun)
+    = L.toFun` using `Equiv.swap_comm` + `Equiv.swap_swap`.
+  - **§4 — Level-`k` initial-ideal behavior.**
+    `swapAdj_initialIdeal'_of_ne`: for `k ≠ (L.pos a).val + 1`, the
+    swap preserves `iI k`.
+    `swapAdj_initialIdeal'_succ_mem_iff`: for `k = (L.pos a).val + 1`,
+    the swap exchanges `a` for `b` (membership characterisation).
+  - **§5 — The bijection.**  `swapAdjEquivFun` (forward map);
+    `swapAdjEquiv : {Q⁺-LEs adjacent at a→b} ≃ {Q⁻-LEs adjacent at b→a}`;
+    cardinality consequence `card_adjLt_eq`.
+
+* **Trust surface impact: NONE.**  `#print axioms` on all seven exposed
+  declarations
+  (`swapAdj`, `swapAdj_AdjLt`, `swapAdj_swapAdj`,
+   `swapAdj_initialIdeal'_of_ne`, `swapAdj_initialIdeal'_succ_mem_iff`,
+   `swapAdjEquiv`, `card_adjLt_eq`)
+  returns only the mathlib-standard
+  `{propext, Classical.choice, Quot.sound}` triplet — **no new project
+  axioms** introduced by this session.
+  `width3_one_third_two_thirds` headline trust surface unchanged
+  (still 2 named axioms + native_decide quintet); sub-α-C arc trust
+  surface unchanged (still 4 named axioms: `brightwell_sharp_centred`,
+  `case3Witness_hasBalancedPair_outOfScope`, `stanley_log_supermod`,
+  `cellMass_AD`).
+
+* **LoC count.**  ~580 LoC in the new file (slightly over the §1.29
+  estimate of ~150-300 LoC, expanded to handle the 9-case `monotone`
+  proof and the involutivity proof at the full equiv level).
+  Combined Sessions C.1 + C.2 + C.3 + C.4 (c4-1) + C.5 ≈ 2025 LoC code.
+
+* **Build status.**  Build green for full `OneThird` target (~2647
+  lake jobs).  Local
+  `lake build OneThird.Mathlib.RelationPoset.InnerInequalityAdjacent`
+  green.
+
+* **Trip-wires fired.**
+  - Inner step substantively harder than budget: **3rd-of-3 AMBER
+    rounds fired**.  4 polecats (mg-4a56, mg-7a4f, mg-7b85, mg-afcf)
+    have now independently confirmed that the chamber-AD aggregation
+    step does not fit a single-polecat budget.
+  - Token blow-up: not fired (well under 700k cap).
+  - Trust-surface envelope (≤4-axiom): **not fired** — Session C.5
+    introduced no new axioms, preserving the 4-axiom envelope.
+
+* **Verdict.**  **AMBER per mg-afcf brief; 3rd-of-3 trip-wire round
+  fired; PM ESCALATES TO DANIEL FOR OPTION REVISIT.**  The master
+  theorem `probEvent'_mono_of_subseteq_upClosed` is **NOT closed
+  end-to-end** in this session.  However:
+  - The LE-adjacent swap infrastructure is landed cleanly with no
+    sorries and no new axioms.
+  - This infrastructure is **the LE-side input** to any of the α/β/γ
+    options the mayor pursues for `volumeInnerInequality` — the
+    combinatorial bijection at the LE level is now a settled
+    artifact independent of the cube-volume aggregation choice.
+  - The residual gap remains the cube-volume aggregation step:
+    showing `vol(O(Q⁻)) · vol(chamberSet' Q⁺ S k) ≥
+    vol(O(Q⁺)) · vol(chamberSet' Q⁻ S k)` via either (i) chamber-AD on
+    the LE-adjacent half plus a separate non-adjacent argument, or
+    (ii) a tightly-scoped 5th project axiom keyed on the cube-volume
+    form, or (iii) a DH-4 mathlib upstream PR.
+
+* **Refined α/β/γ option ladder for Daniel** (per polecat brief 3rd-of-3
+  AMBER trip-wire policy: mayor ESCALATES to Daniel; mayor must NOT
+  unilaterally add 5th axiom):
+
+  - **Option α-fourth-polecat (NOT recommended).**  Spawn a 4th polecat
+    on the cube-volume aggregation step.  4 prior polecats (mg-4a56,
+    mg-7a4f, mg-7b85, mg-afcf) have already independently confirmed
+    this step does not fit a single-polecat budget.  Risk: 4th attempt
+    likely repeats the same wall-hit pattern.  Trust surface:
+    preserved at 4 axioms.  Estimated: ~500–1000+ LoC, 1–2 weeks
+    polecat time, low-medium probability of success.
+
+  - **Option β — 5th tightly-scoped project axiom (RECOMMENDED).**
+    Add `volumeInnerInequality` (the cube-volume form, the cleaner
+    residual gap from §1.29) as the 5th project axiom.  Reframes the
+    `≤4-axiom` envelope to `≤5-axiom`.  This matches the literature-
+    standard Brightwell §4 / Daykin–Saks 1981 / Preston 1974 named
+    bound (three independent published proofs across three decades,
+    audit-bar-compliant per the mg-071b `cellMass_AD` precedent for
+    a Monotone-free continuous AD axiom).  This would be the **first
+    axiom keyed on a chamber-volume inequality**, but the math content
+    is well-established and citation-grade.  ~30–80 LoC for the axiom
+    declaration + AXIOMS.md update + downstream wiring of
+    `InnerInequality_iff_volumeInnerInequality` (already landed in
+    mg-7b85) + `probEvent'_mono_of_subseteq_upClosed_of_inner` (already
+    landed in mg-7a4f).  Estimated: 1 polecat session, ~150 LoC total,
+    high probability of success.  **The pragmatic break point**, given:
+    (i) 4 independent polecat confirmations of single-polecat
+    infeasibility; (ii) literature-standard math content; (iii) the
+    Session C.1–C.5 infrastructure (~2025 LoC) reduces the residual
+    gap to a single tightly-scoped statement.
+
+  - **Option γ — DH-4 mathlib upstream PR.**  Package both
+    `continuous_ad_general` (mg-071b) and `volumeInnerInequality` as
+    the literature-standard "drops headline" (Brightwell §4 / Daykin–
+    Saks 1981) for upstream contribution to `Mathlib.Combinatorics.Order`.
+    Project consumes downstream once merged.  Most work; trust-
+    surface-preserving long-term (eliminates both `cellMass_AD` and
+    the prospective `volumeInnerInequality` axiom).  Estimated: 3–6
+    months for mathlib review + project consumption.
+
+* **PM recommended action: Option β (axiom).**  Rationale:
+  - Three-round trip-wire fired with 4 independent polecat
+    confirmations.
+  - Math content is well-established (Brightwell 1999 §4 / Daykin–Saks
+    1981 / Preston 1974, three independent proofs).
+  - Audit-bar-compliant precedent: mg-071b `cellMass_AD` for
+    `continuous_ad_general` follows the same pattern (5th axiom for
+    a literature-standard continuous AD on the cube).
+  - The Session C.1–C.5 infrastructure (~2025 LoC) is preserved
+    regardless of choice; Option β just adds the final glue.
+  - Option α-fourth-polecat is unlikely to succeed (4 prior failures
+    at slightly different framings); Option γ has long lead time.
+
+  Daniel decides; mayor MUST NOT add the axiom unilaterally.
 
 ### §1.29 EX-7 Session C.4 piece (c4-1) — chamber-integral / volume-form bridge for InnerInequality (mg-7b85)
 
