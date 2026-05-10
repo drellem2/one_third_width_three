@@ -12,7 +12,43 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
-**Last update.** mg-87de (cat-mg-87de), 2026-05-10. **EX-7 Session C.6
+**Last update.** mg-2f8c (cat-mg-2f8c), 2026-05-10. **TRIP-WIRE FIRED:
+InnerInequality_axiom independent verification finds the axiom
+mathematically FALSE on a 2-element antichain.** §1.32 NEW for the
+mg-2f8c verification deliverable
+(`docs/path-alpha-execution-arc/innerInequality-verification.md` +
+`scripts/innerInequality_check.py` + AXIOMS.md "Separate verification"
+subsection extension).  Predecessor: mg-87de (`3e509ff`, EX-7 Session
+C.6 / Option β, GREEN per audit-bar; 5th project axiom landed).
+mg-2f8c executed the three orthogonal sub-checks (cross-literature,
+numerical sanity, uncontested) parallel to mg-d731 (`cellMass_AD`
+GREEN at `f1c4a66`) and mg-e22f (`stanley_log_supermod` GREEN at
+`f1c4a66`).  **Numerical sanity sub-check FAILED:** 133 180 violations
+across 19 test posets / 1 431 564 instances, with a minimal
+counterexample on the 2-element antichain
+(`Q = (\{0,1\}, ∅)`, `a = 0`, `b = 1`, `k = 1`,
+`S(I) := (1 ∈ I)` up-closed: `Nm · Mp = 0 < 1 = Np · Mm`).  The lean
+master theorem `probEvent'_mono_of_subseteq_upClosed` likewise
+proves `1/2 ≤ 0` on the same minimal instance.  The cross-literature
+sub-check is **PARTIAL PASS** with a literature-scope-mismatch
+finding: the literature-standard drops headline (Preston 1974 /
+Daykin–Saks 1981 / Brightwell 1999 / Chan–Pak 2024) supports the
+broad result, but the precise universal-up-closed-S form encoded in
+the axiom is over-general (the literature evidently proves a more
+restrictive chamber-restricted / FKG-positive-correlation
+statement).  **Trust surface impact.**  The
+`width3_one_third_two_thirds` headline is **unchanged** (does not
+consume the axiom).  The unsoundness is **localised** to the EX-7
+master theorem and downstream sub-α-C consumers (EX-8 / EX-9 /
+case3-port / Brightwell-port-A — none yet shipped).
+**Trip-wires fired** per mg-2f8c brief §"Trip-wires" ("numerical
+violation = URGENT mail Daniel + revert mg-87de + halt sub-α-C"):
+URGENT mail to Daniel and to mayor at submission; recommendation to
+**revert mg-87de**; **halt sub-α-C** advisory until corrective
+action lands.  Decision to be taken by Daniel / mayor, not by this
+verification ticket.  **Verdict.**  RED on the new axiom; halt
+sub-α-C consumption pending revert / re-statement.
+**Previous update.** mg-87de (cat-mg-87de), 2026-05-10. **EX-7 Session C.6
 — InnerInequality_axiom landed as 5th project axiom (Option β; Daniel-
 approved 2026-05-10T07:08Z; GREEN; EX-7 master theorem
 `probEvent'_mono_of_subseteq_upClosed` now unconditional).** §1.31 NEW
@@ -2877,6 +2913,146 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   estimate met (this session ~230 LoC code + ~90 LoC documentation);
   combined Sessions C.1 + C.2 = ~497 LoC code; Session C.3 estimated
   ~250–650 LoC.
+
+### §1.32 InnerInequality_axiom independent verification — TRIP-WIRE FIRED; numerical sanity FAIL on 2-element antichain (mg-2f8c)
+
+* **Source.** mg-2f8c (this update);
+  `docs/path-alpha-execution-arc/innerInequality-verification.md` (NEW
+  file, full §1–§5 deliverable);
+  `scripts/innerInequality_check.py` (NEW file, 19 posets / 1 431 564
+  instances / 133 180 violations);
+  `lean/AXIOMS.md` `OneThird.RelationPoset.InnerInequality_axiom` entry
+  extension (Separate verification subsection FAIL verdict + recommended
+  revert).  **No Lean source changes** beyond the AXIOMS.md write-up,
+  per the verification-only ticket scope.
+
+* **Predecessors.**
+  - mg-87de (`3e509ff`, EX-7 Session C.6 / Option β) — landed
+    `InnerInequality_axiom` as the 5th named project axiom
+    (state.md §1.30 →).  Daniel-approved 2026-05-10T07:08Z.
+  - mg-d731 (`f1c4a66`, `cellMass_AD` GREEN) — verification template
+    (4th project axiom; verdict GREEN).
+  - mg-e22f (`f1c4a66`, `stanley_log_supermod` GREEN) — verification
+    template (3rd project axiom; verdict GREEN).
+
+* **Polecat brief.**  mg-2f8c was filed as the post-merge trust-surface
+  separate-verification ticket per Daniel directive 2026-05-08T16:11Z
+  ("if this … thing is a solid external result and we run some
+  separate verification on it … then that might be a good call.  It's
+  your responsibility").  Three orthogonal sub-checks: cross-literature
+  ≥ 3 sources / ≥ 3 decades; numerical sanity; uncontested-in-literature.
+  Trip-wire spec: numerical violation = URGENT mail Daniel + revert
+  mg-87de + halt sub-α-C.
+
+* **Sub-check 1 — Cross-literature (PARTIAL PASS, scope mismatch).**
+  Four sources spanning four decades support the broad drops-headline
+  result: Preston 1974 (S1, statistical-mechanics chamber-pairing
+  precursor); Daykin–Saks 1981 (S2, the canonical poset-FKG cite);
+  Brightwell 1999 §4 (S3, project's primary cite, applied to the
+  centred-sum bound); Chan–Pak 2024 (S4, modern survey, arXiv:2311.02743).
+  **However**, the numerical sub-check (below) decisively shows that
+  the precise universal-up-closed-S form encoded in the lean axiom is
+  **not** what the literature proves — the actual literature statement
+  is more restrictive (chamber-restricted / FKG-positive-correlation),
+  not a single-event monotonicity-in-Q for arbitrary up-closed `S`.
+  This is a **literature-scope mismatch** finding: the cross-literature
+  audit-bar `External` and `Low-risk` conditions are met for the
+  literature-standard result, but the lean encoding is over-general
+  relative to what the literature proves.
+
+* **Sub-check 2 — Numerical sanity (FAIL).**  Brute-force verification
+  of `Nm · Mp ≥ Np · Mm` on:
+  - 19 finite posets spanning `|α| ∈ {2, 3, 4, 5}` (antichains, chains,
+    V/Λ/N/Diamond/Y/2+2 4-vertex shapes, width-2 / width-3 layered
+    shapes, 2×2 product, 5-vertex extensions);
+  - every `Q`-incomparable pair `(a, b)` (63 total pairs);
+  - every level `k ∈ {0, …, |α|}`;
+  - **every** up-closed `S : Finset α → Prop` (exhaustively enumerated
+    as up-sets of `2^α`, i.e. monotone Boolean functions:
+    `D(2) = 6`, `D(3) = 20`, `D(4) = 168`, `D(5) = 7 581`).
+
+  Aggregate: 1 431 564 instances, 1 160 490 tight (equality), and
+  **133 180 violations** (≈ 9.3 % of all instances).  Violations
+  appear on every test poset that has at least one Q-incomparable pair
+  (i.e. every non-chain).
+
+* **Minimal counterexample (n = 2).**
+  `Q = (\{0, 1\}, ∅)` (the 2-element antichain), `a = 0`, `b = 1`,
+  `k = 1`, `S(I) := (1 ∈ I)` (up-closed: `1 ∈ I ∧ I ⊆ J → 1 ∈ J ✓`).
+  - `Q⁺ := addRel Q 0 1 hba` adds `0 ≤ 1`; `L(Q⁺) = \{(0, 1)\}`,
+    `Np = 1`.
+  - `Q⁻ := addRel Q 1 0 hab` adds `1 ≤ 0`; `L(Q⁻) = \{(1, 0)\}`,
+    `Nm = 1`.
+  - At `k = 1`: `L_1 = \{0\}` for `(0, 1)`, `L_1 = \{1\}` for `(1, 0)`.
+  - `Mp := |\{L ∈ L(Q⁺) : 1 ∈ L_1\}| = 0` (only LE has `L_1 = \{0\}`).
+  - `Mm := |\{L ∈ L(Q⁻) : 1 ∈ L_1\}| = 1` (only LE has `L_1 = \{1\}`).
+  - `(\star)` requires `Nm · Mp ≥ Np · Mm`, i.e. `1 · 0 ≥ 1 · 1`,
+    i.e. `0 ≥ 1` — **False**.
+
+  The lean **master theorem**
+  `probEvent'_mono_of_subseteq_upClosed` likewise fails on this
+  instance: `Pr[S | Q] = 1/2`, `Pr[S | Q⁺] = 0`, so `1/2 ≤ 0` is the
+  claim — concretely false.  This is a **genuine logical unsoundness**
+  derivable from `InnerInequality_axiom` on a 2-element antichain.
+
+* **Sub-check 3 — Uncontested in literature (N/A — preempted).**
+  The numerical violation alone is decisive; the axiom as declared is
+  mathematically false on a 2-element antichain.  Further literature
+  triage (whether the broader literature-standard drops headline is
+  uncontested) is the responsibility of the revert / re-statement
+  decision, not this verification ticket.
+
+* **Why a sign-flip is insufficient.**  The verification document
+  §3.7 records that the reversed-direction inequality
+  (`Nm · Mp ≤ Np · Mm`) also admits a 2-antichain counterexample using
+  `S = (0 ∈ I)` (up-closed): `Mp = 1, Mm = 0`, so `1 · 1 ≤ 1 · 0` is
+  also false.  Replacing "up-closed" with "down-closed" (with either
+  direction) likewise admits 2-antichain counterexamples.  No simple
+  modification of the lean encoding repairs it; the literature
+  evidently proves a structurally different statement (chamber-
+  restricted, e.g. matching the LE-adjacent mg-afcf infrastructure;
+  or FKG-style positive correlation between two events, not
+  single-event monotonicity).
+
+* **Trust surface impact (localised).**
+  - `width3_one_third_two_thirds` headline trust surface **UNCHANGED**
+    (does not consume `InnerInequality_axiom` — remains on
+    `brightwell_sharp_centred`,
+    `case3Witness_hasBalancedPair_outOfScope`, `stanley_log_supermod`,
+    `cellMass_AD`).
+  - The unsoundness is **localised** to:
+    `OneThird.RelationPoset.InnerInequality_axiom` (this entry);
+    `OneThird.RelationPoset.volumeInnerInequality_axiom` (volume-form
+    derived theorem; same axiom dependency);
+    `OneThird.RelationPoset.probEvent'_mono_of_subseteq_upClosed`
+    (master theorem; same axiom dependency).
+  - **No downstream sub-α-C tickets have shipped yet** that consume
+    the master theorem (EX-8 / EX-9 / case3-port / Brightwell-port-A
+    are all still scoped only).
+
+* **Trip-wires fired** (per mg-2f8c brief §"Trip-wires"):
+  - Numerical violation = **URGENT mail Daniel + revert mg-87de + halt sub-α-C**.
+  - Mailed at submission: Daniel (URGENT, full diagnostic + minimal
+    counterexample + recommendation); mayor (URGENT, recommendation
+    to revert mg-87de).
+  - **Halt sub-α-C** advisory: any downstream sub-α-C ticket that
+    consumes the master theorem must not proceed until the axiom is
+    corrected, replaced, or removed.
+
+* **Verdict.**  **RED.** `InnerInequality_axiom` (mg-87de) is
+  mathematically false as currently declared; the lean encoding is
+  over-general relative to what the literature (Preston / Daykin–Saks /
+  Brightwell / Chan–Pak) proves.  **Recommended action:** revert
+  mg-87de; re-open EX-7 Session C with a corrected target statement
+  (most likely chamber-restricted, matching the LE-adjacent mg-afcf
+  infrastructure landed at `0212cee`).  Daniel-approval required (per
+  the original Option β decision protocol); mayor-coordinated.
+
+* **Disclosure.**  This trip-wire fires **independent of**
+  `width3_one_third_two_thirds`, which remains on the existing 4-axiom
+  trust surface.  The 5-axiom trust surface declared by mg-87de is
+  **withdrawn** by this verification: the 5th axiom is unsound and
+  must be removed or replaced.
 
 ### §1.30 EX-7 Session C.5 — InnerInequality LE-adjacent swap infrastructure; 3rd-of-3 AMBER trip-wire fired; PM escalates Daniel (mg-afcf)
 

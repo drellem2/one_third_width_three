@@ -1108,20 +1108,67 @@ not on the headline trust surface.
 
 Per Daniel reminder 2026-05-08T16:11Z extending
 `feedback_audit_bar_for_axioms` to a stronger separate-verification
-bar for axioms claimed as external-literature transcriptions, a
-separate validation ticket will be filed post-merge per the
-mg-d731 / mg-e22f pattern, executing three orthogonal sub-checks
-for `InnerInequality_axiom`:
+bar for axioms claimed as external-literature transcriptions,
+mg-2f8c executed three orthogonal sub-checks for
+`InnerInequality_axiom`, parallel to the mg-d731 / mg-e22f
+deliverables.  **The numerical sanity sub-check FIRED a TRIP-WIRE.**
 
-| Sub-check | Status | Plan |
-|-----------|--------|------|
-| Cross-literature: ≥ 3 sources, ≥ 3 decades | **planned** | Brightwell 1999 §4 (S1, primary); Daykin–Saks 1981 (S2, parallel poset-FKG); Preston 1974 (S3, statistical-mechanics route); cite ≥ 4 additional references from Brightwell–Tetali 2003, Brightwell 1989, Holley 1974, Grimmett 1999 §2.2 / Liggett textbook for full coverage. |
-| Numerical sanity | **planned** | Brute-force verification of `N(Q⁻) · |{L ∈ L(Q⁺) : S(L_k)}| ≥ N(Q⁺) · |{L ∈ L(Q⁻) : S(L_k)}|` on small finite posets (antichains, chains, V/Λ, N, diamond, layered width-2/3 shapes; up-closed events parameterised by lower-set size cutoffs). Out-of-tree (Python rational arithmetic). |
-| Uncontested in literature | **planned** | Verify no erratum or counterexample-claiming paper exists; confirm result is applied as black box throughout the poset-combinatorics literature (Brightwell 1999 §4 / Brightwell–Tetali 2003 / Chan–Pak 2024 surveys). |
+| Sub-check | Verdict | Evidence |
+|-----------|---------|----------|
+| Cross-literature: ≥ 3 sources, ≥ 3 decades | **PARTIAL PASS** (literature-scope mismatch) | 4 sources / 4 decades (Preston 1974 / Daykin–Saks 1981 / Brightwell 1999 / Chan–Pak 2024) cover the broad drops-headline result. The precise universal-up-closed-S form encoded in this axiom is **not** what the literature proves — see §3 below for the numerical demonstration that this form is mathematically false; the literature evidently proves a more restrictive (chamber-restricted / FKG-positive-correlation) statement. |
+| Numerical sanity: 19 posets, 1 431 564 instances, **133 180 violations** | **FAIL** | `scripts/innerInequality_check.py` (mg-2f8c); brute-force verification of `Nm · Mp ≥ Np · Mm` on every `Q`-incomparable pair, every level `k`, and every up-closed `S` (`D(\|α\|)`-many up-sets exhaustively enumerated for `\|α\| ∈ {2,3,4,5}`). **Minimal counterexample: 2-element antichain.** With `Q = (\{0,1\}, ∅)`, `a = 0`, `b = 1`, `k = 1`, `S(I) := (1 ∈ I)` (up-closed): `N(Q⁺) = N(Q⁻) = 1`, `Mp = 0`, `Mm = 1`, so `Nm · Mp = 0 < 1 = Np · Mm` — the axiom proves `0 ≥ 1`, i.e. **False**. Out-of-tree (Python `int` arithmetic, exact). |
+| Uncontested in literature | **N/A — preempted by §3 FAIL** | The numerical violation alone is decisive; the axiom as declared is mathematically false on a 2-element antichain. Further literature triage is the responsibility of the revert / re-statement decision. |
 
-The separate validation ticket is **non-blocking** for the Option β
-merge (per `feedback_axiom_followup_ticket` precedent: mg-d731 was
-filed post-mg-071b merge; mg-e22f was filed post-mg-d0fc merge).
+**Trip-wires fired** (per mg-2f8c §3.6):
+
+* **Numerical violation = URGENT mail Daniel + revert mg-87de + halt sub-α-C.**
+
+The minimal counterexample shows that the lean **master theorem**
+`probEvent'_mono_of_subseteq_upClosed` is itself unsound: applied to
+`Q ⊆ Q⁺` and the same up-closed `S`, the master theorem proves
+`Pr[S \| Q] = 1/2 ≤ Pr[S \| Q⁺] = 0`, i.e. `1/2 ≤ 0` — concretely
+**false**.  This is a genuine logical unsoundness localised to the
+EX-7 master theorem and downstream sub-α-C consumers (EX-8 / EX-9 /
+case3-port / Brightwell-port-A).
+
+**Trust surface impact.**  The
+`width3_one_third_two_thirds` headline is **unchanged** — it
+does **not** consume `InnerInequality_axiom` (it remains on
+`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+`stanley_log_supermod`, `cellMass_AD`).  The unsoundness is
+**localised** to:
+
+* `OneThird.RelationPoset.InnerInequality_axiom` (this entry).
+* `OneThird.RelationPoset.volumeInnerInequality_axiom` (volume-form
+  derived theorem; same axiom dependency).
+* `OneThird.RelationPoset.probEvent'_mono_of_subseteq_upClosed`
+  (master theorem; same axiom dependency).
+* All forward-pointing sub-α-C tickets that consume the master
+  theorem (none yet shipped).
+
+**Verification deliverable.**
+`docs/path-alpha-execution-arc/innerInequality-verification.md`
+(mg-2f8c, this commit) — full §1 statement recap, §2 cross-
+literature detail, §3 numerical sanity (with minimal n=2 trace),
+§3.7 likely-root-cause analysis, §4 verdict, §5 references.
+
+**Verdict.** **RED.** `InnerInequality_axiom` (mg-87de) is
+**mathematically false as currently declared** in lean.  The lean
+encoding is over-general relative to what the literature proves
+(Preston / Daykin–Saks / Brightwell / Chan–Pak): the correct
+literature statement appears to be chamber-restricted /
+FKG-positive-correlation, not a single-event monotonicity-in-Q for
+arbitrary up-closed `S`.  Both reversed-direction and
+down-closed-`S` variants admit similar n=2 counterexamples, so a
+minor sign-flip is **insufficient** to repair the axiom.
+
+**Recommended action** (decision to be taken by Daniel / mayor, not
+by this verification ticket): **revert mg-87de** and re-open
+EX-7 Session C with a corrected target statement (most likely
+chamber-restricted, matching the LE-adjacent mg-afcf
+infrastructure).  **Halt sub-α-C** consumption of the master theorem
+until corrective action lands.  PM-mailed and Daniel-mailed at
+mg-2f8c submission.
 
 ### Certification (mg-87de)
 
