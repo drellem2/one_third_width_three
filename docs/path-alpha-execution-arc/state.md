@@ -12,7 +12,45 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
-**Last update.** mg-b4a7 (cat-mg-b4a7), 2026-05-10.  **REVERT mg-87de
+**Last update.** mg-ed38 (cat-mg-ed38), 2026-05-10.  **EX-7 Session C-redo
+Session A — chamber-restricted target scoped (latex-first; no Lean
+changes; no new axioms).**  §1.34 NEW.  Following the mg-b4a7 revert
+(§1.33) of the unsound `InnerInequality_axiom`, this scoping pass
+re-opens EX-7 Session C with a **structurally narrower** target
+matching the mg-afcf LE-adjacent infrastructure (commit `0212cee`,
+~580 LoC sound).  The target is the *single-edge inner inequality
+restricted to LE-adjacent extensions* with `S` required to be both
+*up-closed* AND *`(a, b)`-directional* (`S(K ∪ {b}) → S(K ∪ {a})` for
+`K ⊆ α \ {a, b}`).  Evidently structurally narrower than the original
+`InnerInequality` (mg-7a4f §5, retained as a sound `def`-Prop with no
+unconditional consumer post-mg-b4a7); the LaTeX proof (~3 pp) uses
+only `swapAdjEquiv` + `swapAdj_initialIdeal'_succ_mem_iff` +
+`card_adjLt_eq` from mg-afcf.  The mg-2f8c minimal counterexample
+(`α = \{0,1\}`, `Q = ∅`, `S(I) := 1 ∈ I`) is **excluded by the
+directional hypothesis** (`S(\{1\}) = ⊤` but `S(\{0\}) = ⊥`), so the
+chamber-restricted form sidesteps the unsoundness window cleanly.
+**Deliverable.** New file
+`docs/path-alpha-execution-arc/ex7-chamber-restricted-scoping.md` with
+§1 context recap, §2 statement, §3 LaTeX proof, §4 hand-verification
+(mg-2f8c minimal + 3-antichain coverage), §5 Lean signatures
+(`InnerInequalityAdj`, `innerInequalityAdj_of_upClosed_directional`,
+`DirectionalUpClosed`), §6 mathlib API check (no gap), §7 Session
+B polecat brief (~120–180 LoC, ~80–120k tokens, axiom-free), §8
+trust-surface implications (no new axioms in scoping; LE-non-adjacent
+residual is the open question for Session C-redo-C, axiomatization
+deferred), §9 sub-α-C arc status.  **No Lean code modified.**
+**Trust surface impact.**  **UNCHANGED** at 4 named project axioms
+(this is a scoping pass; per polecat brief mandate "NO new axioms in
+this scoping pass — that decision belongs to PM after Session B latex
+passes").  **Verdict.**  GREEN-on-restated-target.  PM next step:
+dispatch Session C-redo Session B polecat (per §7 brief in
+`ex7-chamber-restricted-scoping.md`) to land the chamber-restricted
+inner inequality + closure on `a8-s2-cont-execution-arc`.  Sub-α-C
+arc remains AMBER (LE-non-adjacent residual closure open) but with a
+clear forward path: Session B → Session C-redo-C (LE-non-adjacent
+recursive bubble-sort reduction, ~300–500 LoC) → master-theorem
+analogue → EX-8 / EX-9 / EX-10 chain.
+**Previous update.** mg-b4a7 (cat-mg-b4a7), 2026-05-10.  **REVERT mg-87de
 executed.**  Daniel-approved 2026-05-10T09:24Z ("you can handle it as
 you see fit"; PM picked revert).  §1.33 NEW.  Following the mg-2f8c
 verification (TRIP-WIRE FIRED; numerical sanity FAIL on the 2-element
@@ -2950,6 +2988,215 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   estimate met (this session ~230 LoC code + ~90 LoC documentation);
   combined Sessions C.1 + C.2 = ~497 LoC code; Session C.3 estimated
   ~250–650 LoC.
+
+### §1.34 EX-7 Session C-redo Session A — chamber-restricted target scoped (latex-first; no Lean changes; no new axioms) (mg-ed38)
+
+* **Source.** mg-ed38 (this update); polecat brief 2026-05-10
+  budget 350k.  Polecat brief recap: "Per mg-2f8c verification +
+  Daniel 'handle it as you see fit' + mg-b4a7 revert.  Original
+  InnerInequality (unrestricted swap) was UNSOUND.  Polecat rec from
+  mg-2f8c §3.7: re-open EX-7 Session C with chamber-restricted target
+  matching mg-afcf LE-adjacent infrastructure at 0212cee.  …  This
+  Session A scopes the chamber-restricted target BEFORE any execution
+  ticket files and BEFORE any axiom-add.  Latex-first per EX-1/EX-4
+  pattern. … State.md update mandate.  NO new axioms in this scoping
+  pass — that decision belongs to PM after Session B latex passes."
+
+* **Predecessors.**
+  - mg-b4a7 (`fe87be2`, §1.33) — REVERTED `InnerInequality_axiom`
+    after the mg-2f8c trip-wire; trust surface back to 4 named axioms.
+    Daniel approval 2026-05-10T09:24Z.  Sessions C.1–C.5 structural
+    infrastructure (~2025 LoC) **fully retained** in tree.
+  - mg-2f8c (§1.32) — independent verification fired the trip-wire:
+    133 180 violations / 19 posets / 1 431 564 instances; minimal
+    counterexample on the 2-element antichain proves `0 ≥ 1` directly
+    from the original `InnerInequality` form.
+  - mg-afcf (`0212cee`, §1.30) — EX-7 Session C.5: LE-adjacent swap
+    infrastructure (`InnerInequalityAdjacent.lean`, ~580 LoC sound;
+    `swapAdj` + `swapAdjEquiv` + `swapAdj_initialIdeal'_succ_mem_iff`
+    + `card_adjLt_eq`).  This infrastructure is the LE-side
+    combinatorial input the chamber-restricted target consumes.
+  - mg-7b85 (`f0dca25`, §1.29) — EX-7 Session C.4 piece (c4-1):
+    chamber-integral / volume-form bridge `volumeInnerInequality`
+    (sound; volume-form analogue of the original `InnerInequality`).
+  - mg-7a4f (§1.28) — EX-7 Session C.3: master-theorem reduction
+    `probEvent'_mono_of_subseteq_upClosed_of_inner` (sound; gates on
+    the inner-inequality hypothesis).
+  - mg-2746 (§1.22) — original EX-7 Session A scoping
+    (`ex7-drops-headline-scoping.md`); this redo replaces the
+    universal-up-closed-S target attempted there (now known unsound
+    per mg-2f8c).
+
+* **Deliverable.**  New file
+  `docs/path-alpha-execution-arc/ex7-chamber-restricted-scoping.md`,
+  ~750 lines:
+  - **§0** Polecat brief recap.
+  - **§1** Why pure scope-narrowing of the original target fails
+    (recap of mg-2f8c minimal counterexample on the 2-antichain;
+    sign-flip / direction-flip insufficient per mg-2f8c §3.7;
+    literature-scope mismatch — Daykin–Saks 1981 actually proves
+    poset-FKG positive correlation, Brightwell §4 uses chamber-by-
+    chamber pairing on LE-adjacent chambers, Preston 1974 is the
+    continuous-spin chamber-averaging precursor).
+  - **§2** Chamber-restricted target statement.  The directional
+    `(a, b)`-up-closed predicate `DirectionalUpClosed a b S` :=
+    `∀ K ⊆ α \ {a, b}, S(K ∪ {b}) → S(K ∪ {a})` (the "swap
+    favours `a` over `b`" condition).  The chamber-restricted inner
+    inequality `(\star^{adj})`:
+    ```
+    N^{adj}_- · M^{adj}_+,S  ≥  N^{adj}_+ · M^{adj}_-,S
+    ```
+    where the counts restrict to LE-adjacent extensions
+    (`L.AdjLt(a, b)` for `Q⁺`, `L.AdjLt(b, a)` for `Q⁻`).
+    Equivalent to `M^{adj}_+,S ≥ M^{adj}_-,S` by `card_adjLt_eq`.
+  - **§3** LaTeX proof, ~3 pp:
+    - §3.1 setup: bijection `φ := swapAdjEquiv hba hab :
+      \mathcal{A}^+ ≃ \mathcal{A}^-`.
+    - §3.2 pointwise `(\dagger)`: for every `L ∈ \mathcal{A}^+`,
+      `𝟙[S(L_k)] ≥ 𝟙[S(φ(L)_k)]`, by Case A
+      (`k ≠ (L.pos a).val + 1`, equality via
+      `swapAdj_initialIdeal'_of_ne`) and Case B
+      (`k = (L.pos a).val + 1`, strict implication via
+      `swapAdj_initialIdeal'_succ_mem_iff` + the directional `(H₂)`
+      applied to `K := L_k \ {a}`, where `K ⊆ α \ {a, b}` follows
+      from `b ∉ L_k` since `(L.pos b).val = k ≮ k`).
+    - §3.3 sum over `\mathcal{A}^+` and re-index by `φ`.
+    - §3.4 multiply by `N^{adj}_+ = N^{adj}_-` (by `card_adjLt_eq`).
+    Proof uses only mg-afcf API + standard mathlib `Equiv` /
+    `Finset.sum_bij` / `≤`-arithmetic; no measure theory; no
+    continuous AD; no `stanley_log_supermod`; no
+    `cellMass_AD`.  Constructive (no classical choice beyond
+    existing `[DecidableEq] [DecidablePred]` inputs).
+  - **§4** Hand-verification:
+    - §4.1 mg-2f8c minimal 2-antichain counterexample: `S(I) := 1 ∈ I`
+      is **NOT `(0, 1)`-directional** (`S({1}) = ⊤` but `S({0}) = ⊥`),
+      so it's excluded from the chamber-restricted target's hypothesis
+      envelope and does not falsify `(\star^{adj})`.
+    - §4.2 2-antichain with valid `S(I) := 0 ∈ I`: holds with strict
+      inequality.
+    - §4.3 3-antichain with `S(I) := \{0\} ⊆ I` and `(a, b) = (0, 1)`:
+      checked at every level `k ∈ \{0, 1, 2, 3\}`; holds (with strict
+      inequality at intermediate levels).
+    - §4.4 forward to brute-force confirmation script
+      (`scripts/innerInequalityChamberRestricted_check.py`,
+      Session B optional pre-check; ~150 LoC, ~30 min runtime on the
+      19-poset coverage from mg-2f8c).
+  - **§5** Lean signatures:
+    - `LinearExt'.DirectionalUpClosed a b S` (~5 LoC).
+    - `RelationPoset.InnerInequalityAdj Q hba hab k S` (~25 LoC).
+    - `RelationPoset.innerInequalityAdj_of_upClosed_directional`
+      closure theorem (~80–120 LoC).
+    - Bridge to volume-form `volumeInnerInequalityAdj` flagged as
+      *optional / defer to follow-up*.
+    - Master-theorem analogue **deferred** — the original
+      `probEvent'_mono_addRel_of_inner` (mg-7a4f) gates on the
+      universal `InnerInequality`; the chamber-restricted form does
+      not directly plug in (LE-non-adjacent residual closure is
+      required).  Session B does not modify
+      `DropsHeadlineMaster.lean` or `InnerInequality.lean`.
+  - **§6** Mathlib API check.  All needed APIs are in tree post-mg-afcf
+    (~580 LoC): `swapAdjEquiv`, `swapAdj_initialIdeal'_succ_mem_iff`,
+    `card_adjLt_eq`, etc.  No new mathlib gap.
+  - **§7** Session B polecat brief (machine-readable YAML at §7.6):
+    Title: "EX-7 Session C-redo Session B — chamber-restricted inner
+    inequality (Lean execution)".  Scope: extend
+    `InnerInequalityAdjacent.lean` with the three declarations + the
+    closure proof.  **Total LoC ~120–180; token budget ~80–120k;
+    axiom-free by construction.**  Acceptance: `lake build OneThird`
+    green; `#print axioms` returns the mathlib classical triplet
+    only; no new project axioms; no regression.  Trip-wires:
+    token >150k → STOP; pointwise Case B gap → STOP; mathlib
+    `Finset.sum_bij` ergonomics → AMBER +20 LoC; numerical sanity
+    finds violation → CRITICAL, mail PM + Daniel URGENT.
+  - **§8** Trust-surface implications.  No new axioms in this
+    scoping pass (per mandate); Session B is axiom-free by
+    construction (only mg-afcf API + standard mathlib).  The
+    LE-non-adjacent residual is the open question for Session
+    C-redo-C (Brightwell §4 chained-adjacent-transposition reduction;
+    ~300–500 LoC; possibly with `stanley_log_supermod` consumption at
+    recursion-depth bound).  The mg-b4a7 §1.33 brute-force-sanity-
+    check mandate "any future Option β-style axiomatization in the
+    Path α arc should mandatorily run a brute-force numerical sanity
+    check on small finite instances **before** Daniel-approval"
+    remains in force for any future axiom decision.
+  - **§9** Sub-α-C arc status post-redo-Session-A.
+
+* **Lean code modifications.**  **None.**  This is a pure scoping
+  pass.  The lean tree is byte-identical to the post-mg-b4a7 state.
+
+* **Trust surface impact.**  **UNCHANGED** at 4 named project axioms
+  (`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+  `stanley_log_supermod`, `cellMass_AD`).  Per polecat brief: "NO new
+  axioms in this scoping pass — that decision belongs to PM after
+  Session B latex passes."  `width3_one_third_two_thirds` headline
+  trust surface unchanged.  No `lean/AXIOMS.md` modifications.
+
+* **Why the chamber-restricted target sidesteps the mg-2f8c
+  unsoundness window.**  The mg-2f8c minimal counterexample uses
+  `α = \{0, 1\}`, `Q = ∅`, `a = 0`, `b = 1`, `k = 1`,
+  `S(I) := 1 ∈ I`.  Verify the directional condition:
+  - Take `K = ∅ ⊆ α \ \{a, b\} = ∅` (the only candidate).
+  - `S(K ∪ \{b\}) = S(\{1\}) = (1 ∈ \{1\}) = ⊤`.
+  - `S(K ∪ \{a\}) = S(\{0\}) = (1 ∈ \{0\}) = ⊥`.
+  - `⊤ → ⊥` is **false**, so `S` is NOT `(0, 1)`-directional.
+  Hence `S` lies outside the chamber-restricted target's hypothesis
+  envelope.  No contradiction can be derived.  This is the
+  *structural* reason the chamber-restricted form is sound while the
+  original universal form is not: the directional restriction
+  encodes precisely the asymmetry between `Q⁺ = Q + (a < b)` and
+  `Q⁻ = Q + (b < a)` that a universal-up-closed-S statement obliterates.
+
+* **What the chamber-restricted form does NOT cover.**  The
+  LE-non-adjacent residual: linear extensions where `a` and `b` are
+  at non-consecutive positions in `L.pos`.  Per Brightwell §4, the
+  residual closes by recursive bubble-sort reduction (chained
+  adjacent transpositions through intermediate elements `c` with
+  `(a, c)` or `(c, b)` `Q`-incomparable).  Estimated ~300–500 LoC,
+  possibly with `stanley_log_supermod` consumption at the
+  recursion-depth bound.  **Out of scope for Session B; deferred to
+  Session C-redo-C.**  Without this residual closure, the chamber-
+  restricted master-theorem analogue is not yet recoverable, and the
+  EX-7 master theorem remains absent from the tree (correctly, since
+  the universal form is unsound).
+
+* **Forward path for sub-α-C.**  Post Session B + Session C-redo-C +
+  master-theorem analogue, EX-8 / EX-9 / EX-10 unblock in turn.  If
+  Session C-redo-C exceeds the polecat-budget envelope (analogously
+  to the 4 confirmations at the original chamber-AD aggregation,
+  mg-4a56 / mg-7a4f / mg-7b85 / mg-afcf), an Option β-style
+  *axiomatize the residual master-theorem closure* decision may
+  surface to Daniel.  **All such decisions are deferred until after
+  Session B lands.**  Session B is axiom-free; the trust-surface
+  envelope cannot regress.
+
+* **Build / verification.**  No Lean changes; `lake build OneThird`
+  is byte-identical to the post-mg-b4a7 state (tested implicitly:
+  this scoping pass adds only docs).
+
+* **Verdict.**  **GREEN-on-restated-target.**  The chamber-restricted
+  inner inequality is mathematically sound (§4.1 hand verification on
+  the mg-2f8c counterexample confirms it is *excluded* by the
+  directional hypothesis); the LaTeX proof (§3) is short and uses
+  only in-tree mg-afcf infrastructure; the Session B execution brief
+  (§7) lands an axiom-free closure in ~120–180 LoC.  Sub-α-C arc
+  remains AMBER overall (LE-non-adjacent residual closure is the
+  remaining open question), but with a clear forward path: Session B
+  → Session C-redo-C → master-theorem analogue → EX-8/EX-9/EX-10.
+  PM next step: dispatch Session C-redo Session B polecat (per §7
+  brief).
+
+* **Disclosure.**  This scoping pass is the immediate, mandated
+  follow-up to the mg-b4a7 revert (§1.33).  It produces no Lean
+  changes and no new axioms — only a structurally-narrower target
+  statement, a short LaTeX proof, and a Session B execution brief.
+  The Daniel "handle it as you see fit" mandate is interpreted as
+  "scope a structurally narrower retry path now; defer axiomatization
+  decisions until evidence accumulates from the retry path".  Per
+  mg-b4a7 §1.33 lessons-learned (b): the brute-force numerical
+  sanity check is mandated before any future axiomatization;
+  `scripts/innerInequalityChamberRestricted_check.py` (Session B
+  optional pre-check) is the canonical mechanism.  Session B is
+  axiom-free, so the mandate doesn't trigger at Session B.
 
 ### §1.33 mg-87de REVERTED — `InnerInequality_axiom` removed from tree following mg-2f8c trip-wire (mg-b4a7)
 
