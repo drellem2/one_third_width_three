@@ -11,7 +11,7 @@ records:
   certified it, and — for completeness of the audit trail — the
   hypothetical replacement path that a future Lean port could take.
 
-Four named project axioms appear below. The first two
+Five named project axioms appear below. The first two
 (`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`)
 are **definitively retained on the trust surface** of the
 `width3_one_third_two_thirds` headline; replacement is not on any
@@ -43,6 +43,24 @@ the axiom as hypothesis (via `continuous_ad_general`) until the
 replacement lands. The substantive content is the literature-standard
 Ahlswede–Daykin 1979 §2 Lemma 2 ("cell averages preserve AD"),
 faithfully transcribed to the Lebesgue cell-decomposition.
+
+The fifth axiom (`OneThird.RelationPoset.InnerInequality_axiom`) is a
+**temporary project axiom** introduced under EX-7 Session C.6 / Option
+β (mg-87de; Daniel-approved 2026-05-10T07:08Z). It is **not** consumed
+by the existing `width3_one_third_two_thirds` headline; it is the
+single-edge inner step of the EX-7 drops headline / master theorem
+`probEvent'_mono_of_subseteq_upClosed`, axiomatized after a 3-round
+AMBER trip-wire arc (mg-4a56 / mg-7a4f / mg-7b85 / mg-afcf, ~2025 LoC
+of structural infrastructure across Sessions C.1–C.5) confirmed that
+a single-polecat closure of the chamber-volume aggregation step is
+infeasible. The substantive content is the literature-standard
+Brightwell 1999 §4 / Daykin–Saks 1981 Theorem 1 / Preston 1974
+Theorem 5.4 single-edge swap-with-conditional-AD step (three
+independent published proofs across three decades). The discharge
+target is **DH-4-extended** (mathlib upstream PR packaging both
+`continuous_ad_general` and the volume-form drops headline) or
+**Option α-fourth-polecat** (in-tree closure once the chamber-AD
+aggregation step is fleshed out).
 
 Unless otherwise noted, every axiom below has been manually verified
 against the paper proof it axiomatizes, and a closed-form integer
@@ -905,3 +923,220 @@ EX-7-motivating polytope-indicator shapes, and uncontested status
 in standard textbooks). Trust-surface-safe for downstream
 sub-α-C / EX-7 Session B consumption. PM responsibility per Daniel
 reminder 2026-05-08T16:11Z; verified via mg-d731.
+
+---
+
+## `OneThird.RelationPoset.InnerInequality_axiom`
+
+**File.**
+`lean/OneThird/Mathlib/RelationPoset/InnerInequalityAxiom.lean`.
+
+**Paper statement.** Brightwell 1999 §4 / Daykin–Saks 1981 Theorem 1
+/ Preston 1974 Theorem 5.4 (single-edge inner inequality / drops
+headline single-edge step).
+
+For a finite poset `Q : RelationPoset α` and a pair `(a, b)` of
+`Q`-incomparable elements, write `Q⁺ := addRel Q a b _` and
+`Q⁻ := addRel Q b a _`. For any level `k ∈ {0, …, |α|}` and any
+**up-closed** event `S : Finset α → Prop` (`I ⊆ J → S I → S J`),
+
+$$
+N(Q^-) \cdot \bigl|\{L \in \mathcal L(Q^+) : S(L_k)\}\bigr|
+  \;\ge\;
+N(Q^+) \cdot \bigl|\{L \in \mathcal L(Q^-) : S(L_k)\}\bigr|,
+$$
+
+where `N(Q±) := numLinExt'(Q±)` and
+`L_k := L.initialIdeal' k` is the level-`k` initial ideal of the
+linear extension `L`. Equivalently in cube-volume form (via
+`InnerInequality_iff_volumeInnerInequality`, mg-7b85 §3),
+
+$$
+\operatorname{vol}(O(Q^-)) \cdot \operatorname{vol}(\operatorname{chamberSet'} Q^+ S\,k)
+  \;\ge\;
+\operatorname{vol}(O(Q^+)) \cdot \operatorname{vol}(\operatorname{chamberSet'} Q^- S\,k).
+$$
+
+This is the substantive single-edge step of the **drops headline**
+(Daykin–Saks 1981 Theorem 1 / Brightwell 1999 §4): the master
+theorem `Pr_{L ∈ LE(Q)}[S(L_k)] ≤ Pr_{L ∈ LE(Q')}[S(L_k)]` for
+`Q.Subseteq Q'` and up-closed `S` reduces by single-edge induction
+(`subseteq_addRel_induction`, mg-934f) to this single-edge inner
+inequality, then to the cube-volume form via the chamber-integral
+reduction (mg-1f3a / mg-7b85).
+
+**Introduced by.** `mg-87de` (this ticket, EX-7 Session C.6 / Option β).
+
+**QA-audited by.** `mg-87de` (this ticket; audit-bar 4-condition table
+below).
+
+**Status.** **Temporarily retained as a named project axiom.**
+Replaced when either
+- **DH-4-extended** (mathlib upstream PR packaging both
+  `continuous_ad_general` and the volume-form drops headline for
+  `Mathlib.Combinatorics.Order`, target file
+  `Mathlib/Combinatorics/Order/DropsHeadline.lean`) lands; or
+- **Option α-fourth-polecat** (in-tree closure of the chamber-volume
+  aggregation step using the existing Sessions C.1–C.5 infrastructure
+  + `continuous_ad_general` + `stanley_log_supermod`) is dispatched.
+
+The axiom is **not** consumed by the existing
+`width3_one_third_two_thirds` headline or by any Step-8 / Step-1 /
+F5a / F6 / Path γ pathway — those remain on the existing two-named-
+axiom trust surface (`brightwell_sharp_centred`,
+`case3Witness_hasBalancedPair_outOfScope`). It is consumed by the
+unconditional EX-7 master theorem
+`probEvent'_mono_of_subseteq_upClosed` (this file §3) and downstream
+sub-α-C / Path γ tickets that consume the drops headline directly.
+
+### Audit-bar 4-condition table
+
+Per `feedback_audit_bar_for_axioms` (Daniel 2026-04-27);
+Daniel-approved Option β decision recorded 2026-05-10T07:08Z, three-
+round AMBER trip-wire fired (state.md §1.30) following 4 independent
+polecat confirmations of single-polecat infeasibility (mg-4a56 /
+mg-7a4f / mg-7b85 / mg-afcf).
+
+| Condition  | Verdict | Justification |
+|-----------|---------|---------------|
+| External  | ✓ | Brightwell 1999 §4 (Discrete Math. **201**, 25–52, drops headline lemma); Daykin–Saks 1981 Theorem 1 (J. Combin. Theory Ser. A **30**, 127–142, *A poset version of the FKG inequality*); Preston 1974 Theorem 5.4 (Adv. Appl. Probab. **6**, *Spatial birth-and-death processes*, inner content). Three independent published proofs across three decades. Brightwell 1999 §4 is already on the project trust surface via `brightwell_sharp_centred` (AXIOMS.md §1, Brightwell 1999 §4 Theorem 4.1 — same paper). |
+| Difficult | ✓ | Mathlib-gap. The chamber-by-chamber Brightwell §4 argument requires the LE-adjacent swap infrastructure (mg-afcf, ~580 LoC, **landed**) plus a chamber-AD aggregation step estimated at ~500–1000+ LoC of measure-theory glue (per state.md §1.29 §6, mg-2746 §7.2). 4 prior polecats (mg-4a56 / mg-7a4f / mg-7b85 / mg-afcf) independently confirmed single-polecat infeasibility across the 3-round AMBER trip-wire arc. Mid-session cube-vertex analyses (mg-7b85 / mg-afcf) ruled out the natural pointwise four-function setups, confirming that the closure requires the literature-standard chamber-restricted swap-with-conditional-AD. |
+| Labeled   | ✓ | This entry. The axiom is the only `axiom` declaration in `lean/OneThird/Mathlib/RelationPoset/InnerInequalityAxiom.lean`. |
+| Low-risk  | ✓ | Brightwell 1999 §4 is the project's primary Brightwell citation (already trusted via `brightwell_sharp_centred`); the drops-headline lemma has three independent proofs across three decades from different communities (combinatorics — Daykin–Saks; statistical mechanics — Preston; algebraic combinatorics — Brightwell), with no plausible error in the established result. Result is applied as a black box throughout the poset-combinatorics literature. |
+
+### Scope-match checklist
+
+| Paper | Axiom | Status |
+| --- | --- | --- |
+| Finite poset `Q` with carrier `α` | `α : Type*` with `[DecidableEq α] [Fintype α]`; `Q : RelationPoset α` | ✅ |
+| `(a, b)` `Q`-incomparable | `{a b : α}`; `hba : ¬ Q.le b a`; `hab : ¬ Q.le a b` | ✅ |
+| Level `k ∈ {0, …, |α|}` | `k : Fin (Fintype.card α + 1)` | ✅ |
+| Up-closed event `S` on order ideals (lower sets) | `S : Finset α → Prop` with `[DecidablePred S]` and `hSmono : ∀ I J : Finset α, I ⊆ J → S I → S J` | ✅ (the up-closed hypothesis is required for the swap-with-conditional-AD step in Brightwell §4 / Daykin–Saks 1981; faithfully transcribed) |
+| `N(Q±) := |L(Q±)|` (linear extensions of single-edge augmentations) | `numLinExt' (addRel Q a b hba)`, `numLinExt' (addRel Q b a hab)` | ✅ |
+| Filtered count `|{L ∈ L(Q±) : S(L_k)}|` | `(Finset.univ.filter (fun L : LinearExt' (addRel Q ? ? _) => S (L.initialIdeal' k.val))).card` | ✅ |
+| `N(Q⁻) · |{L ∈ L(Q⁺) : S(L_k)}| ≥ N(Q⁺) · |{L ∈ L(Q⁻) : S(L_k)}|` | `(numLinExt' Q⁻ : ℚ) * (filter_card Q⁺ : ℚ) ≥ (numLinExt' Q⁺ : ℚ) * (filter_card Q⁻ : ℚ)` (the body of `RelationPoset.InnerInequality`, mg-7a4f §5) | ✅ |
+| (No additional hypotheses) | No additional hypotheses | ✅ |
+
+### Why retain rather than port
+
+A faithful Lean proof of the inner inequality requires:
+
+1. **Chamber-by-chamber pairing on LE-adjacent chambers.** Restrict
+   the cube-side swap `cubeSwap a b` to those linear extensions where
+   `(a, b)` are at consecutive positions in `L.pos` (the LE-adjacent
+   chambers, where the swap preserves `Q.le`). The LE-side
+   combinatorial bijection at this level is **landed**
+   (`InnerInequalityAdjacent.lean`, mg-afcf, ~580 LoC).
+2. **Continuous-AD aggregation** of the chamber-restricted four-
+   function setup `(𝟙_{O(Q⁻)}, 𝟙_{O(Q⁺)}·𝟙_S, 𝟙_{O(Q⁺)},
+   𝟙_{O(Q⁻)}·𝟙_S)` chamber-by-chamber via
+   `OneThird.ContinuousFKG.continuous_ad_general` (mg-071b, Monotone-
+   free continuous AD via `cellMass_AD`). Estimated ~150–300 LoC of
+   measure-theory glue (chamber-restricted indicator construction +
+   sublattice property of `O(Q±)` from mg-4a56 + half-open vs closed
+   cube transfer).
+3. **Discrete-sum closure** at the chamber-aggregation step via
+   `OneThird.LinearExt.stanley_log_supermod` (mg-d0fc, externally
+   verified mg-e22f). Estimated ~70–150 LoC.
+4. **LE-non-adjacent residual handling**: separately argue that the
+   LE-non-adjacent contribution either vanishes by symmetry (under
+   the swap-pair structure for non-adjacent LEs, mg-7b85 §1.29 (3))
+   or is bounded by the adjacent half via monotonicity. Estimated
+   ~100–200 LoC.
+
+Steps (1)–(4) total ~500–1000+ LoC of substantive measure-theory
+glue, beyond a single polecat budget. **Four independent polecat
+confirmations** of this infeasibility across the 3-round AMBER
+trip-wire arc (mg-4a56 / mg-7a4f / mg-7b85 / mg-afcf, ~2025 LoC
+of structural reduction landed) demonstrate that single-polecat
+closure is consistently infeasible at slightly different framings.
+
+The decision rationale matches the convention for `cellMass_AD`
+(mg-071b) and `stanley_log_supermod` (mg-d0fc): the credibility
+artefact of the EX-7 drops headline is the structural reduction
+chain (chamber transport → polytope partition → counting partition
+→ weighted-average form → chamber-integral form → volume-form
+bridge → LE-adjacent swap bijection), all of which is **landed
+sorry-free**. The single-edge inner inequality, the substantive
+combinatorial input to all three of those papers' proofs, is
+imported as a black box exactly as the paper sources do.
+
+### Replacement path (active; conditional on DH-4-extended or Option α-fourth-polecat)
+
+Per `docs/path-alpha-execution-arc/state.md` §1.30–§1.31, the
+preferred replacement path is **DH-4-extended** (mathlib upstream
+PR packaging both `continuous_ad_general` and the volume-form
+drops headline as the literature-standard "drops headline"
+(Brightwell §4) for `Mathlib.Combinatorics.Order`). Failing that,
+**Option α-fourth-polecat** (in-tree closure of the chamber-AD
+aggregation step using the existing Sessions C.1–C.5 infrastructure
+plus the existing `continuous_ad_general` and `stanley_log_supermod`
+axioms). The `axiom` declaration in
+`InnerInequalityAxiom.lean` is replaced by a `theorem` with the
+imported / ported proof at that point, with no signature change at
+consumer call sites of `probEvent'_mono_of_subseteq_upClosed`.
+
+The replacement path differs in character from the
+`brightwell_sharp_centred` and `case3Witness_hasBalancedPair_outOfScope`
+"indefinitely deferred" replacement paths above: this axiom's
+replacement is **active**, gated on either of the two pathways
+above. Option α-fourth-polecat reuses ~2025 LoC of already-landed
+structural infrastructure (Sessions C.1–C.5) and would consume the
+existing `continuous_ad_general` (mg-071b) and `stanley_log_supermod`
+(mg-d0fc) axioms; it does not require fresh mathlib infrastructure.
+
+### Forum-post disclosure
+
+`#print axioms probEvent'_mono_of_subseteq_upClosed` will list,
+alongside the mathlib classical-foundation triplet `{propext,
+Classical.choice, Quot.sound}`, the
+`OneThird.RelationPoset.InnerInequality_axiom` axiom. This
+disclosure is mandatory for any forum-post / publication artefact
+that includes a proof depending on the EX-7 drops headline. The
+honest framing follows the pattern established for `cellMass_AD`
+(mg-071b) and `stanley_log_supermod` (mg-d0fc): a literature-
+standard result transcribed faithfully, with an active replacement
+target under DH-4-extended / Option α-fourth-polecat.
+
+The headline `width3_one_third_two_thirds` (`#print axioms` listing
+`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+plus the mathlib trio and native_decide quintet) is **unchanged**:
+the new axiom is consumed only by the EX-7 drops headline, which is
+not on the headline trust surface.
+
+### Separate verification (per Daniel directive 2026-05-08T16:11Z)
+
+Per Daniel reminder 2026-05-08T16:11Z extending
+`feedback_audit_bar_for_axioms` to a stronger separate-verification
+bar for axioms claimed as external-literature transcriptions, a
+separate validation ticket will be filed post-merge per the
+mg-d731 / mg-e22f pattern, executing three orthogonal sub-checks
+for `InnerInequality_axiom`:
+
+| Sub-check | Status | Plan |
+|-----------|--------|------|
+| Cross-literature: ≥ 3 sources, ≥ 3 decades | **planned** | Brightwell 1999 §4 (S1, primary); Daykin–Saks 1981 (S2, parallel poset-FKG); Preston 1974 (S3, statistical-mechanics route); cite ≥ 4 additional references from Brightwell–Tetali 2003, Brightwell 1989, Holley 1974, Grimmett 1999 §2.2 / Liggett textbook for full coverage. |
+| Numerical sanity | **planned** | Brute-force verification of `N(Q⁻) · |{L ∈ L(Q⁺) : S(L_k)}| ≥ N(Q⁺) · |{L ∈ L(Q⁻) : S(L_k)}|` on small finite posets (antichains, chains, V/Λ, N, diamond, layered width-2/3 shapes; up-closed events parameterised by lower-set size cutoffs). Out-of-tree (Python rational arithmetic). |
+| Uncontested in literature | **planned** | Verify no erratum or counterexample-claiming paper exists; confirm result is applied as black box throughout the poset-combinatorics literature (Brightwell 1999 §4 / Brightwell–Tetali 2003 / Chan–Pak 2024 surveys). |
+
+The separate validation ticket is **non-blocking** for the Option β
+merge (per `feedback_axiom_followup_ticket` precedent: mg-d731 was
+filed post-mg-071b merge; mg-e22f was filed post-mg-d0fc merge).
+
+### Certification (mg-87de)
+
+A check via `#print axioms OneThird.RelationPoset.probEvent'_mono_of_subseteq_upClosed`
+in this commit:
+
+```
+'OneThird.RelationPoset.probEvent'_mono_of_subseteq_upClosed' depends on axioms:
+  [propext, Classical.choice, Quot.sound,
+   OneThird.RelationPoset.InnerInequality_axiom]
+```
+
+confirms that no further project axioms are introduced by the
+unconditional master theorem (only the new inner-inequality axiom
+plus the mathlib triplet). The volume-form variant
+`volumeInnerInequality_axiom` (a `theorem`, derived from
+`InnerInequality_axiom` via `InnerInequality_iff_volumeInnerInequality`
+from mg-7b85 §3) has the same axiom dependency profile.

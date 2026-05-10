@@ -15,6 +15,7 @@ import OneThird.Mathlib.RelationPoset.DropsHeadlineSwap
 import OneThird.Mathlib.RelationPoset.DropsHeadlineMaster
 import OneThird.Mathlib.RelationPoset.InnerInequality
 import OneThird.Mathlib.RelationPoset.InnerInequalityAdjacent
+import OneThird.Mathlib.RelationPoset.InnerInequalityAxiom
 import OneThird.Mathlib.LinearExtension.Fintype
 import OneThird.Mathlib.LinearExtension.Subtype
 import OneThird.Mathlib.LinearExtension.FiberSize

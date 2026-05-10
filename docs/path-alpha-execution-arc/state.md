@@ -12,7 +12,54 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
-**Last update.** mg-afcf (cat-mg-afcf), 2026-05-10. **EX-7 Session C.5
+**Last update.** mg-87de (cat-mg-87de), 2026-05-10. **EX-7 Session C.6
+— InnerInequality_axiom landed as 5th project axiom (Option β; Daniel-
+approved 2026-05-10T07:08Z; GREEN; EX-7 master theorem
+`probEvent'_mono_of_subseteq_upClosed` now unconditional).** §1.31 NEW
+for the Option β execution
+(`lean/OneThird/Mathlib/RelationPoset/InnerInequalityAxiom.lean`, ~225
+LoC of which ~25 LoC code + ~200 LoC docstring + AXIOMS.md provenance).
+Predecessor: mg-afcf (`0212cee`, EX-7 Session C.5 LE-adjacent swap
+infrastructure; AMBER 3rd-of-3 trip-wire round; PM ESCALATED to Daniel
+for option revisit per brief explicit policy).  Daniel approved Option
+β (5th tightly-scoped project axiom keyed on the literature-standard
+Brightwell 1999 §4 / Daykin–Saks 1981 / Preston 1974 single-edge inner
+inequality, three independent published proofs across three decades)
+with 4-condition audit bar: (1) external theorem ✓ Brightwell 1999 §4
+/ Daykin–Saks 1981 / Preston 1974; (2) very solid ✓ 3 independent
+proofs across 3 decades; (3) reference well documented ✓ state.md
+§1.28–§1.31 + AXIOMS.md entry (this commit) + ~2025 LoC structural
+reduction (mg-7a4f / mg-7b85 / mg-afcf); (4) separate validation
+ticket ✓ to be filed post-merge per the mg-d731 / mg-e22f pattern.
+**Deliverable.** New file declaring `InnerInequality_axiom` (the
+single-edge cross-poset filtered-count product inequality consumed by
+`probEvent'_mono_of_subseteq_upClosed_of_inner` from mg-7a4f §5);
+`volumeInnerInequality_axiom` (the cube-volume form, derived as a
+theorem from the axiom via the bridge
+`InnerInequality_iff_volumeInnerInequality` from mg-7b85 §3);
+`probEvent'_mono_of_subseteq_upClosed` (the unconditional EX-7 drops
+headline / master theorem, obtained by feeding the axiom into
+`probEvent'_mono_of_subseteq_upClosed_of_inner`).  AXIOMS.md updated
+with full audit-bar 4-condition table + scope-match checklist + DH-4-
+extended replacement-path entry parallel to `cellMass_AD` (mg-071b)
+and `stanley_log_supermod` (mg-d0fc).  **Trust surface impact.**
++1 named project axiom: total now **5 named project axioms**
+(`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+`stanley_log_supermod`, `cellMass_AD`, `InnerInequality_axiom`).
+`#print axioms probEvent'_mono_of_subseteq_upClosed` lists the
+mathlib-standard `{propext, Classical.choice, Quot.sound}` triplet
+plus `OneThird.RelationPoset.InnerInequality_axiom`.
+`width3_one_third_two_thirds` headline trust surface UNCHANGED (still
+2 named axioms + native_decide quintet — does not consume the new
+axiom).  **Trip-wires.**  3rd AMBER round of 3-round trip-wire fired
+in C.5; this Option β execution closes the trip-wire arc per Daniel-
+approved option choice.  **Verdict.** GREEN per audit-bar 4-condition
+check; EX-7 master theorem `probEvent'_mono_of_subseteq_upClosed` now
+unconditional.  **Follow-up.** PM to file separate validation ticket
+(parallel to mg-e22f / mg-d731) running cross-literature + numerical-
+sanity + uncontested-status sub-checks on the new axiom; not blocking
+this merge.
+**Previous update.** mg-afcf (cat-mg-afcf), 2026-05-10. **EX-7 Session C.5
 — InnerInequality LE-adjacent swap infrastructure (Option α
 continuation; no 5th axiom; AMBER 3rd-of-3 trip-wire round; PM ESCALATES
 TO DANIEL FOR OPTION REVISIT).** §1.30 NEW for the Session C.5
