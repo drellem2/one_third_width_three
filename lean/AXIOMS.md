@@ -11,8 +11,23 @@ records:
   certified it, and — for completeness of the audit trail — the
   hypothetical replacement path that a future Lean port could take.
 
-Five named project axioms appear below. The first two
-(`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`)
+Five named project axiom entries appear below. **Four** are live on the
+trust surface (`brightwell_sharp_centred`,
+`case3Witness_hasBalancedPair_outOfScope`, `stanley_log_supermod`,
+`cellMass_AD`). **The fifth (`InnerInequality_axiom`, mg-87de) was
+REVERTED** by mg-b4a7 (2026-05-10) following the mg-2f8c numerical
+sanity trip-wire (133 180 violations / 19 posets / 1 431 564
+instances; minimal counterexample on the 2-element antichain proves
+`0 ≥ 1` directly from the axiom signature). The entry is retained
+below **as a historical record of the failed axiomatization attempt**
+and a cross-reference to the verification document, but the lean
+declaration and the file `InnerInequalityAxiom.lean` no longer exist
+in tree and the project's named-axiom trust surface is back to
+**4 named project axioms**. See the entry header for full revert
+context.
+
+The first two (`brightwell_sharp_centred`,
+`case3Witness_hasBalancedPair_outOfScope`)
 are **definitively retained on the trust surface** of the
 `width3_one_third_two_thirds` headline; replacement is not on any
 roadmap. Path α (mg-ff7f) and sub-α-A (mg-21a4) are both formally RED;
@@ -44,23 +59,38 @@ replacement lands. The substantive content is the literature-standard
 Ahlswede–Daykin 1979 §2 Lemma 2 ("cell averages preserve AD"),
 faithfully transcribed to the Lebesgue cell-decomposition.
 
-The fifth axiom (`OneThird.RelationPoset.InnerInequality_axiom`) is a
-**temporary project axiom** introduced under EX-7 Session C.6 / Option
-β (mg-87de; Daniel-approved 2026-05-10T07:08Z). It is **not** consumed
-by the existing `width3_one_third_two_thirds` headline; it is the
+The fifth entry (`OneThird.RelationPoset.InnerInequality_axiom`) is
+**REVERTED** (mg-b4a7, 2026-05-10) and is **NOT** part of the live
+trust surface. It was originally introduced under EX-7 Session C.6 /
+Option β (mg-87de; Daniel-approved 2026-05-10T07:08Z) as the
 single-edge inner step of the EX-7 drops headline / master theorem
-`probEvent'_mono_of_subseteq_upClosed`, axiomatized after a 3-round
-AMBER trip-wire arc (mg-4a56 / mg-7a4f / mg-7b85 / mg-afcf, ~2025 LoC
-of structural infrastructure across Sessions C.1–C.5) confirmed that
-a single-polecat closure of the chamber-volume aggregation step is
-infeasible. The substantive content is the literature-standard
-Brightwell 1999 §4 / Daykin–Saks 1981 Theorem 1 / Preston 1974
-Theorem 5.4 single-edge swap-with-conditional-AD step (three
-independent published proofs across three decades). The discharge
-target is **DH-4-extended** (mathlib upstream PR packaging both
-`continuous_ad_general` and the volume-form drops headline) or
-**Option α-fourth-polecat** (in-tree closure once the chamber-AD
-aggregation step is fleshed out).
+`probEvent'_mono_of_subseteq_upClosed`, intended as the literature-
+standard Brightwell 1999 §4 / Daykin–Saks 1981 Theorem 1 /
+Preston 1974 Theorem 5.4 single-edge swap-with-conditional-AD step.
+
+The mg-2f8c independent verification (Daniel-directive
+2026-05-08T16:11Z separate-verification bar) found that the precise
+universal-up-closed-`S` form encoded in the lean axiom is
+**mathematically false**: 133 180 violations on 19 test posets across
+1 431 564 brute-force instances, with a **minimal counterexample on
+the 2-element antichain** that derives `0 ≥ 1` (and `Pr[S | Q] = 1/2 ≤
+Pr[S | Q⁺] = 0`) directly from the axiom signature. Per the polecat
+brief's trip-wire spec ("numerical violation = URGENT mail Daniel +
+revert mg-87de + halt sub-α-C"), Daniel-approved the revert
+(2026-05-10T09:24Z, "you can handle it as you see fit"; PM picked
+revert).
+
+The entry below is **retained as a historical record** of the failed
+axiomatization attempt, the audit-bar table that was originally
+applied, and the verification finding that triggered the revert; the
+file `lean/OneThird/Mathlib/RelationPoset/InnerInequalityAxiom.lean`
+and the lean declarations `InnerInequality_axiom`,
+`volumeInnerInequality_axiom`, and `probEvent'_mono_of_subseteq_upClosed`
+no longer exist in tree (the master theorem reverts to its `_of_inner`
+reduced form in `DropsHeadlineMaster.lean`, awaiting a different
+closure path). Cross-reference:
+`docs/path-alpha-execution-arc/innerInequality-verification.md`
+(mg-2f8c) and `state.md` §1.32 (verification) / §1.33 (this revert).
 
 Unless otherwise noted, every axiom below has been manually verified
 against the paper proof it axiomatizes, and a closed-form integer
@@ -926,14 +956,64 @@ reminder 2026-05-08T16:11Z; verified via mg-d731.
 
 ---
 
-## `OneThird.RelationPoset.InnerInequality_axiom`
+## `OneThird.RelationPoset.InnerInequality_axiom` — **REVERTED (mg-b4a7)**
 
-**File.**
-`lean/OneThird/Mathlib/RelationPoset/InnerInequalityAxiom.lean`.
+> **REVERTED 2026-05-10 (mg-b4a7).**  This entry is retained as a
+> historical record only.  The axiom was introduced by mg-87de
+> (`3e509ff`, EX-7 Session C.6 / Option β, Daniel-approved
+> 2026-05-10T07:08Z) and **reverted ~10 hours later** by mg-b4a7
+> (Daniel-approved 2026-05-10T09:24Z) following the mg-2f8c
+> independent verification.  Verdict was **RED**: the universal-up-
+> closed-`S` form encoded in the lean axiom is mathematically **false**
+> on the 2-element antichain (`Q = ∅`, `a = 0`, `b = 1`, `k = 1`,
+> `S(I) = (1 ∈ I)`: `Nm·Mp = 0 < 1 = Np·Mm`, equivalently `0 ≥ 1`).
+> The lean `axiom` declaration, the file
+> `lean/OneThird/Mathlib/RelationPoset/InnerInequalityAxiom.lean`,
+> the derived `volumeInnerInequality_axiom` theorem, and the
+> unconditional master theorem `probEvent'_mono_of_subseteq_upClosed`
+> were all removed.  The master theorem reverts to its `_of_inner`
+> reduced form (`DropsHeadlineMaster.lean:548`,
+> `probEvent'_mono_of_subseteq_upClosed_of_inner`), which remains
+> sound (it gates on the inner-inequality hypothesis and was never
+> directly affected).
+>
+> **Trust surface impact.**  Back to **4 named project axioms**
+> (`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+> `stanley_log_supermod`, `cellMass_AD`).  The
+> `width3_one_third_two_thirds` headline is **unchanged** (it never
+> consumed `InnerInequality_axiom`).
+>
+> **Sub-α-C halted.**  No downstream sub-α-C ticket may consume the
+> master theorem until a different (chamber-restricted or otherwise
+> structurally narrower) closure path lands.
+>
+> **Cross-references.**
+> - Verification document:
+>   `docs/path-alpha-execution-arc/innerInequality-verification.md`
+>   (mg-2f8c) — full §1 statement recap, §2 cross-literature, §3
+>   numerical sanity (with minimal n=2 trace), §3.7 root-cause
+>   analysis, §4 verdict, §5 references.
+> - state.md §1.32 (mg-2f8c verification) and §1.33 (this revert).
+>
+> The remainder of this section preserves the original mg-87de
+> rationale (audit-bar table, scope-match checklist, replacement-path
+> discussion) and the mg-2f8c "Separate verification" subsection in
+> their original form.  **Do not consume any of the named symbols
+> below — they no longer exist in tree.**
+
+**File.**  `lean/OneThird/Mathlib/RelationPoset/InnerInequalityAxiom.lean`
+(**REMOVED** by mg-b4a7; original file existed only between commits
+`3e509ff` (mg-87de) and the mg-b4a7 revert).
 
 **Paper statement.** Brightwell 1999 §4 / Daykin–Saks 1981 Theorem 1
 / Preston 1974 Theorem 5.4 (single-edge inner inequality / drops
-headline single-edge step).
+headline single-edge step) — **as cited and intended at axiomatization
+time**; the lean encoding of this statement turned out to be
+over-general relative to what the literature actually proves (see
+mg-2f8c verification §3.7 for the likely-root-cause analysis: the
+literature evidently proves a chamber-restricted /
+FKG-positive-correlation statement, not the universal-up-closed-`S`
+monotonicity-in-Q encoded here).
 
 For a finite poset `Q : RelationPoset α` and a pair `(a, b)` of
 `Q`-incomparable elements, write `Q⁺ := addRel Q a b _` and
@@ -970,15 +1050,16 @@ reduction (mg-1f3a / mg-7b85).
 **QA-audited by.** `mg-87de` (this ticket; audit-bar 4-condition table
 below).
 
-**Status.** **Temporarily retained as a named project axiom.**
-Replaced when either
-- **DH-4-extended** (mathlib upstream PR packaging both
-  `continuous_ad_general` and the volume-form drops headline for
-  `Mathlib.Combinatorics.Order`, target file
-  `Mathlib/Combinatorics/Order/DropsHeadline.lean`) lands; or
-- **Option α-fourth-polecat** (in-tree closure of the chamber-volume
-  aggregation step using the existing Sessions C.1–C.5 infrastructure
-  + `continuous_ad_general` + `stanley_log_supermod`) is dispatched.
+**Status.** **REVERTED (mg-b4a7, 2026-05-10).** Originally landed as
+a temporary named project axiom by mg-87de (2026-05-10T07:08Z),
+removed ~10 hours later by mg-b4a7 (Daniel-approved
+2026-05-10T09:24Z) following the mg-2f8c independent-verification
+trip-wire (numerical sanity FAIL on the 2-element antichain).  No
+longer on the trust surface; lean declarations and file removed in
+tree.  See the boxed REVERTED notice at the head of this section for
+the full rationale.  (Original status text retained below for
+historical context: "Replaced when either DH-4-extended … or Option
+α-fourth-polecat is dispatched.")
 
 The axiom is **not** consumed by the existing
 `width3_one_third_two_thirds` headline or by any Step-8 / Step-1 /

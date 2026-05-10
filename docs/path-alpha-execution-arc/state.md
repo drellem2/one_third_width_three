@@ -12,7 +12,44 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
-**Last update.** mg-2f8c (cat-mg-2f8c), 2026-05-10. **TRIP-WIRE FIRED:
+**Last update.** mg-b4a7 (cat-mg-b4a7), 2026-05-10.  **REVERT mg-87de
+executed.**  Daniel-approved 2026-05-10T09:24Z ("you can handle it as
+you see fit"; PM picked revert).  §1.33 NEW.  Following the mg-2f8c
+verification (TRIP-WIRE FIRED; numerical sanity FAIL on the 2-element
+antichain — see §1.32), this update strips
+`OneThird.RelationPoset.InnerInequality_axiom` (the 5th project axiom
+landed by mg-87de) from the lean tree: the file
+`lean/OneThird/Mathlib/RelationPoset/InnerInequalityAxiom.lean` is
+**deleted**, the `OneThird.lean` import is removed, and the unconditional
+`probEvent'_mono_of_subseteq_upClosed` (and its volume-form sibling)
+no longer exist; the master theorem reverts to its `_of_inner` reduced
+form (`DropsHeadlineMaster.lean:548`, sound, gates on the inner-
+inequality hypothesis) — the post-mg-afcf state is restored, with all
+~2025 LoC of pre-axiom Sessions C.1–C.5 structural infrastructure
+retained intact.  `AXIOMS.md` marks the
+`InnerInequality_axiom` entry **REVERTED** (entry retained in full as a
+historical record per the polecat brief, with a prominent boxed REVERT
+notice at the section head, the original audit-bar table preserved,
+and a cross-reference to the mg-2f8c verification document).
+**Trust surface impact.**  Back to **4 named project axioms**
+(`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+`stanley_log_supermod`, `cellMass_AD`) — exactly the post-mg-afcf
+state from before mg-87de.  `width3_one_third_two_thirds` headline
+trust surface **unchanged** (it never consumed the reverted axiom).
+**Sub-α-C halt remains in effect:** no downstream sub-α-C ticket may
+consume the master theorem until a different (chamber-restricted or
+otherwise structurally narrower) closure path lands; the EX-7 drops
+headline goes back to "reduced to inner inequality (mg-7a4f §5),
+inner inequality awaiting closure".  **Verdict.**  GREEN on the
+revert (build green; #print axioms back to the 4-axiom envelope;
+unsoundness fully removed from the trust surface).  EX-7 Session C
+arc back to AMBER (single-polecat closure of the chamber-volume
+aggregation step infeasible per the 4 prior independent confirmations
+mg-4a56 / mg-7a4f / mg-7b85 / mg-afcf; the literature-scope mismatch
+finding from mg-2f8c §3.7 means a future Session C.6′ retry must
+target a structurally narrower statement, e.g. the chamber-restricted
+form matching the LE-adjacent mg-afcf infrastructure).
+**Previous update.** mg-2f8c (cat-mg-2f8c), 2026-05-10. **TRIP-WIRE FIRED:
 InnerInequality_axiom independent verification finds the axiom
 mathematically FALSE on a 2-element antichain.** §1.32 NEW for the
 mg-2f8c verification deliverable
@@ -2913,6 +2950,168 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   estimate met (this session ~230 LoC code + ~90 LoC documentation);
   combined Sessions C.1 + C.2 = ~497 LoC code; Session C.3 estimated
   ~250–650 LoC.
+
+### §1.33 mg-87de REVERTED — `InnerInequality_axiom` removed from tree following mg-2f8c trip-wire (mg-b4a7)
+
+* **Source.** mg-b4a7 (this update); reverts mg-87de (`3e509ff`,
+  EX-7 Session C.6 / Option β).  Daniel-approved 2026-05-10T09:24Z
+  ("you can handle it as you see fit"; PM picked revert per mg-2f8c
+  brief's trip-wire spec "numerical violation = URGENT mail Daniel +
+  revert mg-87de + halt sub-α-C").  Polecat brief budget 100k; small
+  targeted revert; no new axioms; no PM-surfacing required (strategic
+  revert per Daniel approval).
+
+* **Predecessors.**
+  - mg-2f8c (this commit's parent, §1.32) — verification ticket that
+    fired the trip-wire (133 180 violations / 19 posets / 1 431 564
+    instances; minimal counterexample on 2-element antichain proves
+    `0 ≥ 1` and `Pr[S | Q] = 1/2 ≤ Pr[S | Q⁺] = 0` directly from the
+    axiom).
+  - mg-87de (`3e509ff`, EX-7 Session C.6 / Option β) — landed
+    `InnerInequality_axiom` as the 5th project axiom; Daniel-approved
+    2026-05-10T07:08Z; **reverted by this ticket ~10 hours later**
+    after the verification.
+  - mg-afcf (`0212cee`, EX-7 Session C.5 LE-adjacent swap
+    infrastructure) — the **post-revert restoration target**; no Lean
+    code from C.5 is touched by this revert (the ~580 LoC of
+    LE-adjacent swap infrastructure stays in tree, intact).
+
+* **Deliverable (lean changes).**
+  - `lean/OneThird/Mathlib/RelationPoset/InnerInequalityAxiom.lean` —
+    **DELETED** (the entire ~225 LoC file, containing the `axiom`
+    declaration `InnerInequality_axiom`, the derived theorem
+    `volumeInnerInequality_axiom`, and the unconditional master
+    theorem `probEvent'_mono_of_subseteq_upClosed`).
+  - `lean/OneThird.lean` — one-line import of
+    `OneThird.Mathlib.RelationPoset.InnerInequalityAxiom` removed.
+  - **No other lean files modified.**  In particular,
+    `DropsHeadlineMaster.lean` is byte-identical to the post-mg-afcf
+    state (mg-87de never touched it; it always ended at the
+    `_of_inner` reduced form `probEvent'_mono_of_subseteq_upClosed_of_inner`,
+    line 548); the ~2025 LoC of pre-axiom Sessions C.1–C.5 structural
+    infrastructure is **fully retained**:
+    - `DropsHeadlineMaster.lean` — single-edge induction + reduced
+      master theorem (mg-7a4f §5; sound, gates on inner-inequality
+      hypothesis).
+    - `InnerInequality.lean` — chamber-integral / volume-form bridge
+      (mg-7b85 §3, sound).
+    - `InnerInequalityAdjacent.lean` — LE-adjacent swap infrastructure
+      (mg-afcf, sound; the combinatorial input that any correct
+      future closure will reuse).
+    - All earlier supporting infrastructure (chamber transport
+      mg-1f3a; single-edge induction + cube swap + polytope partition
+      mg-934f).
+
+* **Deliverable (docs changes).**
+  - `lean/AXIOMS.md` — `InnerInequality_axiom` entry marked
+    **REVERTED** with a prominent boxed REVERT notice at the section
+    head, the "Status" line rewritten to flag the revert, and the
+    section preamble (line ~47) and the file-level intro (line ~14)
+    updated to reflect the back-to-4-axioms trust surface.  The
+    original audit-bar 4-condition table, scope-match checklist,
+    "Why retain rather than port" rationale, "Replacement path" entry,
+    "Forum-post disclosure" entry, and the mg-2f8c "Separate
+    verification" subsection are **all retained verbatim** as a
+    historical record per the polecat brief ("do NOT delete — keep as
+    historical record with counterexample documented") and a
+    cross-reference to the mg-2f8c verification doc.
+  - `docs/path-alpha-execution-arc/state.md` — this §1.33 (NEW) and
+    the "Last update." preamble updated.  §1.32 (mg-2f8c verification)
+    is preserved verbatim; §1.30 (mg-afcf), §1.29 (mg-7b85), §1.28
+    (mg-7a4f) — the structural-reduction Sessions C.5/C.4/C.3 — are
+    all preserved verbatim (they remain the substantive basis for any
+    future Session C.6′ retry).
+
+* **Trust surface impact.**  Back to **4 named project axioms**:
+  - `OneThird.LinearExt.brightwell_sharp_centred` (definitively
+    retained on the headline trust surface);
+  - `OneThird.Step8.Case3Enum.case3Witness_hasBalancedPair_outOfScope`
+    (definitively retained on the headline trust surface);
+  - `OneThird.LinearExt.stanley_log_supermod` (temporary; mg-d0fc;
+    GREEN per mg-e22f);
+  - `OneThird.ContinuousFKG.cellMass_AD` (temporary; mg-071b;
+    GREEN per mg-d731).
+
+  This is **exactly the post-mg-afcf state** from before mg-87de
+  (`#print axioms` envelope identical).  `width3_one_third_two_thirds`
+  headline trust surface **unchanged** (it never consumed the
+  reverted axiom).  The unsoundness window opened by mg-87de was
+  ~26 hours (commit `3e509ff` 2026-05-10T08:19Z lake-side → mg-2f8c
+  verification 2026-05-10T09:00Z → Daniel approval 09:24Z → this
+  revert) and bounded to the EX-7 master theorem and downstream
+  sub-α-C consumers (none yet shipped).
+
+* **Sub-α-C halt remains in effect.**  No downstream sub-α-C ticket
+  may consume the (now non-existent) master theorem
+  `probEvent'_mono_of_subseteq_upClosed`.  The EX-7 drops headline
+  reverts to the post-mg-7a4f state: "reduced to inner inequality via
+  `probEvent'_mono_of_subseteq_upClosed_of_inner` (mg-7a4f §5),
+  inner inequality awaiting closure".  Forward-pointing scopes
+  (EX-8 / EX-9 / case3-port / Brightwell-port-A) that depend on the
+  master theorem must wait until either:
+  - **Session C.6′ retry** with a corrected (chamber-restricted /
+    structurally narrower) target statement (most plausibly matching
+    the LE-adjacent mg-afcf infrastructure, per mg-2f8c §3.7
+    root-cause analysis); or
+  - **DH-4-extended** (mathlib upstream PR) lands the literature-
+    standard volume-form drops headline; or
+  - **Option α-fourth-polecat** (in-tree closure of a corrected
+    inner-inequality statement using the existing Sessions C.1–C.5
+    infrastructure plus `continuous_ad_general` + `stanley_log_supermod`)
+    is dispatched against a corrected target.
+
+* **Why a sign-flip / direction-flip is insufficient (recap).**  Per
+  mg-2f8c verification §3.7 (preserved in the AXIOMS.md historical
+  record and §1.32): the reversed-direction inequality
+  (`Nm · Mp ≤ Np · Mm`) admits a 2-antichain counterexample using
+  `S = (0 ∈ I)`; replacing "up-closed" with "down-closed" likewise
+  admits 2-antichain counterexamples on either direction.  No simple
+  modification of the universal-up-closed-S statement repairs the
+  axiom.  Any Session C.6′ retry must target a structurally
+  different (chamber-restricted or FKG-positive-correlation)
+  statement — pure scope-narrowing within the existing schema is not
+  enough.
+
+* **Build / verification.**  `lake build OneThird` green
+  (verified by this commit; ~2647 lake jobs, one fewer than mg-87de's
+  ~2648 reflecting the deleted file).  `#print axioms` envelope
+  reverts to the post-mg-afcf 4-axiom listing exactly.  No sorries
+  introduced (the `_of_inner` reduced master theorem already gated on
+  the inner-inequality hypothesis from mg-7a4f §5; that gate is now
+  the surface-level state of the EX-7 closure attempt, exactly as it
+  was post-mg-afcf).
+
+* **Verdict.**  **GREEN on the revert.**  Trust surface restored to
+  4 named axioms; unsoundness fully removed from tree; build green;
+  ~2025 LoC of structural infrastructure (Sessions C.1–C.5)
+  retained; AXIOMS.md historical record preserved with prominent
+  REVERTED notice and full cross-references.  EX-7 Session C arc
+  back to its post-mg-afcf AMBER status (single-polecat closure of
+  the chamber-volume aggregation step is infeasible per 4
+  independent confirmations; the literature-scope mismatch flagged
+  by mg-2f8c §3.7 means a future Session C.6′ retry must target a
+  structurally narrower statement than the universal-up-closed-S
+  form attempted by mg-87de).
+
+* **Disclosure.**  This revert is **strategic, not corrective of a
+  bug introduced by Lean code**: the `_of_inner` reduction
+  (mg-7a4f §5) and the LE-adjacent swap infrastructure (mg-afcf)
+  are sound and remain in tree; the issue was that the universally-
+  quantified-over-up-closed-S statement chosen as the axiom signature
+  did not faithfully transcribe what Brightwell §4 / Daykin–Saks 1981 /
+  Preston 1974 actually prove (per mg-2f8c §3.7: a chamber-restricted
+  / FKG-positive-correlation form, not a single-event monotonicity-in-Q
+  for arbitrary up-closed S).  The mg-2f8c verification ticket caught
+  this on the first runtime brute-force pass; the polecat infrastructure
+  performed exactly as the audit-bar process intends.  Lessons: (a)
+  the audit-bar 4-condition check at mg-87de time gave a GREEN
+  verdict on a literature-scope-mismatch axiom — the
+  separate-verification numerical-sanity sub-check (Daniel directive
+  2026-05-08T16:11Z) is decisively load-bearing here, beyond the
+  4-condition check; (b) any future Option β-style axiomatization
+  in the Path α arc should mandatorily run a brute-force numerical
+  sanity check on small finite instances **before** Daniel-approval,
+  not as a post-merge follow-up.
 
 ### §1.32 InnerInequality_axiom independent verification — TRIP-WIRE FIRED; numerical sanity FAIL on 2-element antichain (mg-2f8c)
 
