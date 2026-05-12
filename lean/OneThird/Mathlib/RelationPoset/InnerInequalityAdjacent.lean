@@ -529,7 +529,245 @@ theorem card_adjLt_eq
   rw [h₁, h₂]
   exact Fintype.card_congr (swapAdjEquiv hba hab)
 
+/-! ### §6 — `DirectionalUpClosed`: the `(a, b)`-directional predicate on `S`
+
+For the chamber-restricted inner inequality (mg-c8ac / mg-ed38), the
+up-closed `S` hypothesis is **strengthened** with an additional
+directional condition: `∀ K ⊆ α \ {a, b}, S(K ∪ {b}) → S(K ∪ {a})`.  In
+words: replacing `b` with `a` (in any ideal that contains `b` but not
+`a` and shares no other restrictions) preserves `S`.  The condition is
+asymmetric in `(a, b)`: the augmentation `Q → Q⁺ = Q + (a < b)` forces
+`b` later in extensions, and this directional condition is the
+structurally-correct restriction on `S` that excludes the mg-2f8c
+counterexample `S(I) := (b ∈ I)`. -/
+
+/-- `S : Finset α → Prop` is **`(a, b)`-directional** if replacing `b`
+with `a` (in any subset `K` disjoint from `{a, b}`) preserves `S`:
+`∀ K ⊆ α \ {a, b}, S(K ∪ {b}) → S(K ∪ {a})`.  The disjointness from
+`{a, b}` is encoded as `a ∉ K ∧ b ∉ K`. -/
+def DirectionalUpClosed (a b : α) (S : Finset α → Prop) : Prop :=
+  ∀ K : Finset α, a ∉ K → b ∉ K → S (insert b K) → S (insert a K)
+
 end LinearExt'
+
+/-! ### §7 — Chamber-restricted inner inequality (LE-adjacent + directional-S)
+
+Per `docs/path-alpha-execution-arc/ex7-chamber-restricted-scoping.md`
+(mg-ed38 §2.3 + §3 + §5), this is the **chamber-restricted single-edge
+inner inequality**.  It replaces the unsound `InnerInequality` (mg-7a4f
+in `DropsHeadlineMaster.lean`; refuted by mg-2f8c on the 2-element
+antichain) with a structurally narrower target that:
+
+* Restricts both quantifications to **LE-adjacent** extensions (those
+  `L` where `(L.pos a).val + 1 = (L.pos b).val`, or the analogue for
+  `Q⁻`).  The mg-afcf LE-adjacent swap infrastructure `swapAdjEquiv`
+  bijects the LE-adjacent halves.
+* Strengthens up-closed `S` to **up-closed AND `(a, b)`-directional**.
+  The directional condition excludes the mg-2f8c minimal counterexample
+  `S(I) := (b ∈ I)` (up-closed but **NOT** `(a, b)`-directional).
+
+The closure theorem `innerInequalityAdj_of_upClosed_directional` proves
+the chamber-restricted form using only the mg-afcf swap bijection plus
+the level-`k` initial-ideal lemmas (`swapAdj_initialIdeal'_of_ne`,
+`swapAdj_initialIdeal'_succ_mem_iff`, `card_adjLt_eq`).  No measure
+theory; no continuous AD; no `stanley_log_supermod`; **no new project
+axioms**.
+
+The LE-non-adjacent residual (linear extensions with `(a, b)` at
+non-consecutive positions) is out of scope; per Brightwell §4 it
+reduces to repeated applications of `(\star^{adj})` via chained
+adjacent transpositions, deferred to a follow-up session. -/
+
+/-- **The chamber-restricted single-edge inner inequality (LE-adjacent
+form, directional-`S`).**  For `Q`-incomparable `(a, b)`, level `k`,
+and `S` that is `(a, b)`-directional up-closed:
+```
+N(Q⁻ ∩ AdjLt(b, a)) · M(Q⁺ ∩ AdjLt(a, b), S, k)
+  ≥ N(Q⁺ ∩ AdjLt(a, b)) · M(Q⁻ ∩ AdjLt(b, a), S, k).
+```
+Equivalently (by `card_adjLt_eq`), `M⁺ ≥ M⁻`. -/
+def InnerInequalityAdj
+    (Q : RelationPoset α) {a b : α}
+    (hba : ¬ Q.le b a) (hab : ¬ Q.le a b)
+    (k : Fin (Fintype.card α + 1))
+    (S : Finset α → Prop) [DecidablePred S] : Prop :=
+  ((Finset.univ.filter
+    (fun L' : LinearExt' (addRel Q b a hab) => L'.AdjLt b a)).card : ℚ) *
+  ((Finset.univ.filter
+    (fun L : LinearExt' (addRel Q a b hba) =>
+      L.AdjLt a b ∧ S (L.initialIdeal' k.val))).card : ℚ)
+  ≥
+  ((Finset.univ.filter
+    (fun L : LinearExt' (addRel Q a b hba) => L.AdjLt a b)).card : ℚ) *
+  ((Finset.univ.filter
+    (fun L' : LinearExt' (addRel Q b a hab) =>
+      L'.AdjLt b a ∧ S (L'.initialIdeal' k.val))).card : ℚ)
+
+/-- **Closure of `InnerInequalityAdj` under up-closed + directional `S`
+(mg-c8ac, EX-7 Session C-redo Session B).**  For any `Q : RelationPoset α`,
+`Q`-incomparable `(a, b)`, level `k`, and `S` satisfying both up-closed
+and `(a, b)`-directional conditions, the LE-adjacent restricted inner
+inequality holds.
+
+Proof (full latex at
+`docs/path-alpha-execution-arc/ex7-chamber-restricted-scoping.md` §3,
+mg-ed38): the mg-afcf swap bijection `swapAdjEquiv` carries the
+LE-adjacent half of `L(Q⁺)` to the LE-adjacent half of `L(Q⁻)`
+bijectively.  For each LE-adjacent `L : LinearExt' Q⁺` (or equivalently
+each LE-adjacent `L' : LinearExt' Q⁻`), compare `S(L_k)` vs.
+`S(φ(L)_k)` by splitting on `k = (L.pos a).val + 1`:
+
+* Case A (the swap doesn't change the level-`k` initial ideal,
+  `swapAdj_initialIdeal'_of_ne`) gives equality on `S`-values.
+* Case B (`k = (L.pos a).val + 1`) uses
+  `swapAdj_initialIdeal'_succ_mem_iff` to express the swap as
+  exchanging `a` for `b` in the level-`k` initial ideal; the directional
+  hypothesis on `K := L_k \ {a}` then gives the pointwise implication.
+
+Summing the indicator inequality over the LE-adjacent half (and
+re-indexing the RHS via the bijection) gives `M⁺ ≥ M⁻`.  Multiplying
+by `N^{adj}` (equal on both sides by `card_adjLt_eq`) closes
+`(\star^{adj})`.
+
+The `hSmono` (general up-closed) hypothesis is included for API parity
+with the universal-up-closed `InnerInequality`, but the proof itself
+needs only `hSdir` — Case B's argument is precisely the `S(K ∪ {b}) →
+S(K ∪ {a})` step, which is the directional condition; Case A is
+trivial. -/
+theorem innerInequalityAdj_of_upClosed_directional
+    {Q : RelationPoset α} {a b : α}
+    (hba : ¬ Q.le b a) (hab : ¬ Q.le a b)
+    (k : Fin (Fintype.card α + 1))
+    (S : Finset α → Prop) [DecidablePred S]
+    (_hSmono : ∀ I J : Finset α, I ⊆ J → S I → S J)
+    (hSdir : LinearExt'.DirectionalUpClosed a b S) :
+    InnerInequalityAdj Q hba hab k S := by
+  classical
+  -- 1. `N^{adj}_+ = N^{adj}_-` by the LE-adjacent swap bijection.
+  have hNeq : (Finset.univ.filter
+        (fun L : LinearExt' (addRel Q a b hba) => L.AdjLt a b)).card =
+      (Finset.univ.filter
+        (fun L' : LinearExt' (addRel Q b a hab) => L'.AdjLt b a)).card :=
+    LinearExt'.card_adjLt_eq hba hab
+  -- 2. `M^{adj}_-,S ≤ M^{adj}_+,S` via subtype injection through `swapAdj`.
+  have hMle :
+      (Finset.univ.filter
+        (fun L' : LinearExt' (addRel Q b a hab) =>
+          L'.AdjLt b a ∧ S (L'.initialIdeal' k.val))).card ≤
+      (Finset.univ.filter
+        (fun L : LinearExt' (addRel Q a b hba) =>
+          L.AdjLt a b ∧ S (L.initialIdeal' k.val))).card := by
+    -- Transfer both sides to `Fintype.card` on subtypes.
+    rw [show (Finset.univ.filter (fun L' : LinearExt' (addRel Q b a hab) =>
+            L'.AdjLt b a ∧ S (L'.initialIdeal' k.val))).card =
+          Fintype.card {L' : LinearExt' (addRel Q b a hab) //
+            L'.AdjLt b a ∧ S (L'.initialIdeal' k.val)} from
+        (Fintype.card_subtype _).symm,
+        show (Finset.univ.filter (fun L : LinearExt' (addRel Q a b hba) =>
+            L.AdjLt a b ∧ S (L.initialIdeal' k.val))).card =
+          Fintype.card {L : LinearExt' (addRel Q a b hba) //
+            L.AdjLt a b ∧ S (L.initialIdeal' k.val)} from
+        (Fintype.card_subtype _).symm]
+    refine Fintype.card_le_of_injective ?_ ?_
+    · -- The injection: send `⟨L', hadj ∧ hS⟩` to `⟨swapAdj L', swap_adj ∧ hS'⟩`.
+      intro L'
+      refine ⟨LinearExt'.swapAdj hab hba L'.val L'.property.1,
+              LinearExt'.swapAdj_AdjLt hab hba L'.val L'.property.1, ?_⟩
+      -- Prove `S ((swap L').iI k)` from `S (L'.iI k)`.
+      have hadj : L'.val.AdjLt b a := L'.property.1
+      have hS : S (L'.val.initialIdeal' k.val) := L'.property.2
+      by_cases hk : k.val = (L'.val.pos b).val + 1
+      · -- Case B: `k = (L'.pos b).val + 1 = (L'.pos a).val`; swap exchanges
+        -- `a` and `b` in the level-`k` initial ideal.
+        have hadj_eq : (L'.val.pos b).val + 1 = (L'.val.pos a).val := hadj
+        have hne_ba : b ≠ a := LinearExt'.AdjLt.ne hadj
+        have hb_mem : b ∈ L'.val.initialIdeal' k.val := by
+          rw [LinearExt'.mem_initialIdeal']; omega
+        have ha_notmem : a ∉ L'.val.initialIdeal' k.val := by
+          rw [LinearExt'.mem_initialIdeal']; omega
+        set K : Finset α := L'.val.initialIdeal' k.val \ {b} with hK_def
+        have hb_notK : b ∉ K := by simp [K]
+        have ha_notK : a ∉ K := by
+          simp only [K, Finset.mem_sdiff, Finset.mem_singleton, not_and]
+          intro ha _; exact ha_notmem ha
+        have hL'_eq : L'.val.initialIdeal' k.val = insert b K := by
+          apply Finset.ext
+          intro x
+          simp only [K, Finset.mem_insert, Finset.mem_sdiff,
+                     Finset.mem_singleton]
+          by_cases hxb : x = b
+          · subst hxb; simp [hb_mem]
+          · simp [hxb]
+        have hswap_eq :
+            (LinearExt'.swapAdj hab hba L'.val hadj).initialIdeal' k.val
+              = insert a K := by
+          apply Finset.ext
+          intro x
+          have hmem :
+              x ∈ (LinearExt'.swapAdj hab hba L'.val hadj).initialIdeal' k.val
+                ↔ (x = a ∨ (x ≠ b ∧ x ∈ L'.val.initialIdeal' k.val)) := by
+            have := LinearExt'.swapAdj_initialIdeal'_succ_mem_iff hab hba
+              L'.val hadj x
+            rw [← hk] at this
+            exact this
+          rw [hmem]
+          simp only [K, Finset.mem_insert, Finset.mem_sdiff,
+                     Finset.mem_singleton]
+          constructor
+          · rintro (hxa | ⟨hxb, hx⟩)
+            · exact Or.inl hxa
+            · exact Or.inr ⟨hx, hxb⟩
+          · rintro (hxa | ⟨hx, hxb⟩)
+            · exact Or.inl hxa
+            · exact Or.inr ⟨hxb, hx⟩
+        rw [hswap_eq]
+        rw [hL'_eq] at hS
+        exact hSdir K ha_notK hb_notK hS
+      · -- Case A: swap preserves the level-`k` initial ideal.
+        rw [LinearExt'.swapAdj_initialIdeal'_of_ne hab hba L'.val hadj hk]
+        exact hS
+    · -- Injectivity of `f`, via involutivity of `swapAdj` at the `toFun` level.
+      rintro ⟨L'₁, h₁⟩ ⟨L'₂, h₂⟩ hfeq
+      apply Subtype.ext
+      have hval :
+          LinearExt'.swapAdj hab hba L'₁ h₁.1
+            = LinearExt'.swapAdj hab hba L'₂ h₂.1 :=
+        congrArg Subtype.val hfeq
+      have e₁ := LinearExt'.swapAdj_swapAdj hab hba L'₁ h₁.1
+      have e₂ := LinearExt'.swapAdj_swapAdj hab hba L'₂ h₂.1
+      apply LinearExt'.ext
+      calc L'₁.toFun
+          = (LinearExt'.swapAdj hba hab
+              (LinearExt'.swapAdj hab hba L'₁ h₁.1)
+              (LinearExt'.swapAdj_AdjLt hab hba L'₁ h₁.1)).toFun := by rw [e₁]
+        _ = (LinearExt'.swapAdj hab hba L'₁ h₁.1).swapEquiv a b := rfl
+        _ = (LinearExt'.swapAdj hab hba L'₂ h₂.1).swapEquiv a b := by rw [hval]
+        _ = (LinearExt'.swapAdj hba hab
+              (LinearExt'.swapAdj hab hba L'₂ h₂.1)
+              (LinearExt'.swapAdj_AdjLt hab hba L'₂ h₂.1)).toFun := rfl
+        _ = L'₂.toFun := by rw [e₂]
+  -- 3. Combine: `N⁻ * M⁺ ≥ N⁺ * M⁻` from `N⁺ = N⁻` (in ℕ) and `M⁻ ≤ M⁺`.
+  unfold InnerInequalityAdj
+  have hN_eq' :
+      ((Finset.univ.filter
+          (fun L : LinearExt' (addRel Q a b hba) => L.AdjLt a b)).card : ℚ) =
+      ((Finset.univ.filter
+          (fun L' : LinearExt' (addRel Q b a hab) => L'.AdjLt b a)).card : ℚ) := by
+    exact_mod_cast hNeq
+  have hM_le' :
+      ((Finset.univ.filter
+          (fun L' : LinearExt' (addRel Q b a hab) =>
+            L'.AdjLt b a ∧ S (L'.initialIdeal' k.val))).card : ℚ) ≤
+      ((Finset.univ.filter
+          (fun L : LinearExt' (addRel Q a b hba) =>
+            L.AdjLt a b ∧ S (L.initialIdeal' k.val))).card : ℚ) := by
+    exact_mod_cast hMle
+  have hN_nn : (0 : ℚ) ≤
+      ((Finset.univ.filter
+          (fun L' : LinearExt' (addRel Q b a hab) => L'.AdjLt b a)).card : ℚ) :=
+    Nat.cast_nonneg _
+  rw [hN_eq']
+  exact mul_le_mul_of_nonneg_left hM_le' hN_nn
 
 end RelationPoset
 
