@@ -12,6 +12,57 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
+**Last update.** mg-f3b9 (cat-mg-f3b9), 2026-05-13.  **EX-7 Session
+C-redo Session C — universal vs directional master theorem closure-path
+scoping (consumer audit; latex-first; no Lean changes; no new axioms).**
+§1.36 NEW.  Per mg-c8ac (§1.35) trip-wire on the directional
+hypothesis: the chamber-restricted `InnerInequalityAdj` is in tree
+axiom-free, but does **not** close the universal master theorem
+`probEvent'_mono_of_subseteq_upClosed` alone; three forward paths were
+surfaced (option 1: LE-non-adjacent residual closure via Brightwell §4
+chained-adjacent-transposition reduction, ~300–500 LoC, possibly with
+`stanley_log_supermod` at the recursion-depth bound; option 2:
+directional-S master theorem, ~100–200 LoC, gated on downstream-consumer
+acceptance of the directional restriction; option 3: Option β-style
+axiomatization of the residual).  This Session C-redo Session C audits
+the EX-8 (case3-port-2) + EX-9 (Brightwell-port-A) downstream consumers
+to determine whether the directional restriction is acceptable.
+**Audit finding.**  Neither consumer is directional-S compatible:
+EX-8's natural balanced-pair witness events `S(L_k) := x ∈ L_k` and
+`S(L_k) := y ∈ L_k` are `(a, b)`-directional iff `b ≠ x` (resp. `b ≠ y`),
+which fails for the case3-port-2 chain since added edges range over
+`A × A` for the case3 width-3 antichain `A = {a₁, a₂, a₃}` and the
+witness pair `(x, y)` is naturally drawn from `A`; EX-9 Brightwell-port-A
+applies `four_functions_theorem` over the full algebra of monotone
+events on the τ-inversion product lattice (Brightwell §4.4 monotonicity
+claims (a)–(e) for `1_A, P, S, 1_{B_-}, 1_{B_+}`), and the directional
+restriction structurally breaks AD's symmetric-pair shape.  Restricting
+to directional-S would require **redesigning** both consumer applications
+(mg-75ef §3 case3-port-2 and Brightwell §4 §4.1–§4.6) — substantively
+more math work than the ~300–500 LoC LE-non-adjacent residual closure.
+**Recommendation.**  **Option 1.**  PM next step: file Session D
+execution ticket (LE-non-adjacent residual closure via Brightwell §4
+chained-adjacent-transposition reduction) per
+`docs/path-alpha-execution-arc/ex7-c-redo-c-scoping.md` §5.
+**Deliverable.**  NEW
+`docs/path-alpha-execution-arc/ex7-c-redo-c-scoping.md` (~460 lines)
+with §1 recap of mg-c8ac state.md §1.35 forward paths, §2 EX-8
+case3-port-2 consumer audit (event identification + directionality
+check + redesign feasibility), §3 EX-9 Brightwell-port-A consumer
+audit, §4 recommendation + risk surfaces (`stanley_log_supermod`
+consumption at recursion-depth bound is an in-tree-axiom risk, no new
+axioms), §5 Session D execution spec (signatures, acceptance, trip-
+wires, optional pre-check), §6 references.  **No Lean code modified.**
+**Trust surface impact.**  **UNCHANGED** at 4 named project axioms
+(`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+`stanley_log_supermod`, `cellMass_AD`); `width3_one_third_two_thirds`
+headline trust surface unchanged.  No `lean/AXIOMS.md` modification.
+No new axioms in this scoping pass per the polecat brief §5 mandate.
+**Verdict.**  **GREEN** (option 1 picked, Session D spec ready).
+The mg-b4a7 §1.33 brute-force-sanity-check mandate is honoured by §5.7
+of the scoping doc (optional pre-check by the Session D polecat); no
+axiom decisions in this scoping pass, so the mandate's
+*pre-Daniel-approval* gating does not trigger here.
 **Last update.** mg-c8ac (cat-mg-c8ac), 2026-05-12.  **EX-7 Session
 C-redo Session B done — chamber-restricted inner inequality landed
 axiom-free.**  §1.35 NEW.  Following mg-ed38's chamber-restricted
@@ -3046,6 +3097,182 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   combined Sessions C.1 + C.2 = ~497 LoC code; Session C.3 estimated
   ~250–650 LoC.
 
+### §1.36 EX-7 Session C-redo Session C — universal vs directional master theorem closure-path scoping done (consumer audit; option 1 picked) (mg-f3b9)
+
+* **Source.** mg-f3b9 (this update); polecat brief 2026-05-12 budget 150k
+  tokens.  Polecat brief recap: "Per mg-c8ac (`84b7216`) state.md §1.35:
+  chamber-restricted `InnerInequalityAdj` axiom-free in tree, but
+  **doesn't close master theorem** alone. Three forward paths:
+  (1) LE-non-adjacent residual closure (~300–500 LoC; Brightwell §4
+  chained-adjacent-transposition reduction; gives universal master),
+  (2) Directional-S master theorem (~100–200 LoC; acceptable iff EX-8/
+  EX-9 consumers have directional events for every traversed pair),
+  (3) Different axiom-or-prove split.  This Session C scoping audits
+  downstream consumers (EX-8 case3-port-2 + EX-9 Brightwell-port-A) to
+  determine if directional restriction is acceptable.  Picks option 1
+  or option 2 based on audit.  NO new axioms in scoping.  State.md
+  update mandate."
+
+* **Predecessors.**
+  - mg-c8ac (`84b7216`, §1.35) — Session C-redo Session B done;
+    `InnerInequalityAdj` + `innerInequalityAdj_of_upClosed_directional`
+    landed axiom-free in
+    `lean/OneThird/Mathlib/RelationPoset/InnerInequalityAdjacent.lean`.
+    Three forward paths surfaced for sub-α-C closure.
+  - mg-ed38 (`de032be`, §1.34) — Session C-redo Session A; introduced
+    the `DirectionalUpClosed` predicate and the chamber-restricted
+    target.
+  - mg-2f8c (§1.32) + mg-b4a7 (`fe87be2`, §1.33) — the unsoundness
+    trip-wire on the universal `InnerInequality_axiom` that motivated
+    the chamber-restricted target.
+
+* **Deliverable.**  New file
+  `docs/path-alpha-execution-arc/ex7-c-redo-c-scoping.md` (~460 lines):
+  - **§0** TL;DR.
+  - **§1** Recap of mg-c8ac state.md §1.35 forward paths.
+  - **§2** EX-8 case3-port-2 consumer audit (mg-75ef §3 + mg-5bf9 §3):
+    - §2.1 Application shape: `case3Witness L → HasBalancedPair α`;
+      subseteq chain `Q ⊂ Q'` adds case3 constraints on width-3
+      antichain `A = {a₁, a₂, a₃}`; balanced-pair witness event
+      `S_xy := {L : x <_L y}` from `Step8/FrozenPair.lean:73–84`,
+      reduced to level-k events `S(L_k) := x ∈ L_k` / `y ∈ L_k`.
+    - §2.2 Directionality check: `S(L_k) := x ∈ L_k` is
+      `(a, b)`-directional iff `b ≠ x` (target of added edge is not
+      `x`).  Same for `y`.
+    - §2.3 Master-theorem chain over case3 added edges: added edges
+      `(a_i, b_i)` lie in `A × A`; witness `(x, y)` is naturally drawn
+      from `A`; for any non-trivial case3 chain, **at least one
+      `b_i ∈ {x, y}`** → directional fails.
+    - §2.4 Salvage strategies (pick witness outside `A`; reorder added
+      edges; constructed directional event) — all **fail**: would
+      require redesigning mg-75ef §3's witness construction.
+  - **§3** EX-9 Brightwell-port-A consumer audit (Brightwell §4):
+    - §3.1 Application shape: `brightwell_sharp_centred` derivation via
+      `L(α) × Fin m` product lattice; Brightwell §4 reduces centred-sum
+      bound to (1) τ separating Pred/Succ, (2) distributive lattice on
+      product, (3) monotonicity (a)–(e) for `1_A, P, S, 1_{B_-}, 1_{B_+}`,
+      (4) AD via `four_functions_theorem`, (5) Kahn–Saks per-term bound.
+      Steps (1)–(4) are the FKG-on-LE / drops-headline consumption.
+    - §3.2 Events `S` used: rich algebra of monotone events / functions
+      on `L(α) × Fin m` (Pred / Succ position bounds + shifts).
+    - §3.3 Directionality check: `1_A` for `A = {(L, j) : L_j ⊆ Pred}`
+      requires `b ∉ Pred ∨ a ∈ Pred` (not guaranteed by Brightwell §4's
+      τ-construction); `four_functions_theorem` is symmetric-pair, no
+      directional hypothesis to import.
+    - §3.4 Salvage feasibility: Brightwell §4 is a **published**
+      combinatorial argument; restricting to directional sub-algebra
+      would invalidate AD's symmetric structure + the (a)–(e) proofs.
+      Out of scope.
+  - **§4** Recommendation: **Option 1** (LE-non-adjacent residual
+    closure ~300–500 LoC).  Tabulated reasoning: neither consumer is
+    directional-S compatible.  Directional master theorem could land as
+    auxiliary, but doesn't close EX-8/EX-9.  Option 1 preserves
+    published Brightwell §4 verbatim + mg-75ef §3 case3 framing.
+    Risk: `stanley_log_supermod` consumption at recursion-depth bound
+    (already an in-tree axiom; trust surface preserved at 4).  Hybrid:
+    directional master theorem as optional stepping stone for the
+    Session D polecat (not a substitute for option 1).
+  - **§5** Session D execution spec: title, predecessor mg-c8ac, scope
+    (3 declarations: `probEvent'_mono_addRel_adjacent`,
+    `probEvent'_mono_addRel_nonAdjacent`,
+    `probEvent'_mono_of_subseteq_upClosed`), universal `hSmono`
+    hypothesis (NOT directional), acceptance criteria (`#print axioms`
+    triplet OR + `stanley_log_supermod`; no other axiom), trip-wires
+    (token blow-up, Brightwell §4 hypothesis gap, numerical sanity
+    violation, `stanley_log_supermod` strength insufficient), optional
+    brute-force pre-check per mg-b4a7 §1.33 mandate.  Out-of-scope:
+    EX-8 / EX-9 / EX-10 consumer-side execution (deferred, blocked
+    behind Session D).
+  - **§6** References.
+
+* **Audit headline.**  **Both consumers require the universal form;
+  neither is directional-S compatible.**  Specifically:
+  - EX-8 (case3-port-2): the witness pair `(x, y)` is drawn from the
+    case3 width-3 antichain `A`, and the case3 chain adds edges within
+    `A × A`; consequently at least one added edge has `b_i ∈ {x, y}`,
+    breaking directionality for `S(L_k) := x ∈ L_k` (resp. `y ∈ L_k`).
+  - EX-9 (Brightwell-port-A): the Brightwell §4 argument uses
+    `four_functions_theorem` (symmetric-pair AD) over a rich algebra of
+    monotone events on the τ-inversion product lattice; restricting to
+    a directional sub-algebra would invalidate the published §4.4
+    monotonicity (a)–(e) framework.
+
+* **Lean code modifications.**  **None.**  This is a pure scoping pass.
+
+* **Trust surface impact.**  **UNCHANGED** at 4 named project axioms
+  (`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+  `stanley_log_supermod`, `cellMass_AD`).  Per polecat brief §5 mandate:
+  "NO new axioms in this scoping pass — that decision belongs to PM
+  after Session D's structural attempt lands or trip-wires fire."
+  `width3_one_third_two_thirds` headline trust surface unchanged.
+  No `lean/AXIOMS.md` modifications.
+
+* **Why Option 2 (directional master theorem) does NOT close sub-α-C.**
+  The directional restriction on `S` propagates through the
+  master-theorem induction chain: for `Q ⊂ Q'` with `Q' \ Q =
+  \{(a_1 < b_1), …, (a_m < b_m)\}`, the directional master theorem
+  would require `S` to be `(a_i, b_i)`-directional for **every**
+  `i ∈ {1, …, m}`.  The consumer audit (§2.3 + §3.3 of the scoping
+  doc) finds that neither EX-8 nor EX-9 satisfies this for the
+  natural event families dictated by their respective application
+  specs (mg-75ef §3 + Brightwell §4).
+
+* **Why Option 1 (LE-non-adjacent residual closure) is the right
+  forward path.**  It preserves both consumers' published / specified
+  application math verbatim (Brightwell §4.1–§4.6 + mg-75ef §3 + sub-
+  α-C scoping §5.7–§5.10); it lands the universal master theorem
+  modulo (at worst) an in-tree axiom consumption (`stanley_log_supermod`,
+  already on the trust surface); and it fits a single polecat budget
+  envelope (~250–400k tokens for ~300–500 LoC).  Per state.md §1.34's
+  forward-path analysis, Option 1 is the structurally correct closure
+  path; Option 2 is a lightweight alternative only when the consumer
+  events are uniformly directional (not the case here).
+
+* **Forward path for sub-α-C post-Session-C.**  PM next step: file
+  **EX-7 Session C-redo Session D** execution ticket (per §5 of the
+  scoping doc).  Session D's deliverable closes the universal
+  `probEvent'_mono_of_subseteq_upClosed`; once landed, EX-8
+  (case3-port-2, ~800–1200 LoC) and EX-9 (Brightwell-port-A,
+  ~500–800 LoC) unblock and can be dispatched in parallel; EX-10
+  (axiom-removal of `case3Witness_hasBalancedPair_outOfScope` +
+  `brightwell_sharp_centred`, ~100–200 LoC) follows.  Sub-α-C arc
+  remains AMBER overall (LE-non-adjacent residual closure still open),
+  but with a single execution-grade ticket as the binding constraint.
+
+* **Build / verification.**  No Lean changes; `lake build OneThird`
+  byte-identical to the post-mg-c8ac state (this scoping pass adds
+  only docs).
+
+* **Verdict.**  **GREEN** (option 1 picked, Session D execution spec
+  ready).  Per mg-f3b9 polecat brief §6 "GREEN: audit done; option
+  picked; Session D execution spec ready. PM files Session D."  No
+  trip-wires fired: token cap respected, audit fit options 1/2/3 (no
+  4th option needed), no axiomatization attempted in this scoping
+  pass.  Sub-α-C arc verdict unchanged (AMBER overall; the EX-7
+  master-theorem closure is the binding execution-grade ticket).
+
+* **Lessons.**  The directional-vs-universal trade-off is a clean
+  decision point that benefited from a structured consumer audit
+  rather than a heuristic call.  In particular, the EX-9 Brightwell
+  consumer's reliance on `four_functions_theorem` (a symmetric-pair AD
+  statement) is the structural reason directional restriction fails
+  for §4 — this is **not** a redesign-tractable gap, since the
+  symmetry is built into AD's statement.  Future scoping passes on
+  similar restriction-vs-closure forks should explicitly check whether
+  the downstream consumer uses asymmetric (single-pair) primitives or
+  symmetric (multi-pair / lattice-wide) primitives; the latter
+  generally cannot accept directional-style restrictions.
+
+* **Disclosure.**  This scoping pass closes the audit slot opened by
+  mg-c8ac (§1.35).  No Lean code modified; no new axioms; trust
+  surface unchanged.  Sub-α-C closure remains gated on Session D
+  execution (Option 1).  Daniel-approval gating on the
+  brute-force-numerical-sanity-check mandate (mg-b4a7 §1.33) does not
+  trigger here (no axiom decisions in this scoping pass); the mandate
+  applies forward to Session D's optional pre-check (per scoping doc
+  §5.7) and to any post-Session-D Option-β-style axiomatization
+  decision should Session D's structural attempt trip-wire.
+
 ### §1.35 EX-7 Session C-redo Session B done — chamber-restricted inner inequality landed axiom-free (mg-c8ac)
 
 * **Source.** mg-c8ac (this update); polecat brief 2026-05-12 budget
@@ -4853,7 +5080,36 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   remain estimated ~450–850 LoC combined; EX-8 and EX-9 blocked
   behind Session C.3 closure.  3-round trip-wire on EX-7 chain
   (per mg-1f3a brief) cleared: 0 amber rounds running.
-  **EX-7 Session C-redo Session B done (mg-c8ac, this commit; see
+  **EX-7 Session C-redo Session C done (mg-f3b9, this commit; see
+  §1.36) — GREEN (consumer audit done; option 1 picked).**  Per
+  mg-c8ac (§1.35) trip-wire on the directional hypothesis, three
+  forward paths were surfaced (option 1: LE-non-adjacent residual
+  closure ~300–500 LoC; option 2: directional-S master theorem
+  ~100–200 LoC; option 3: Option β-style axiomatization).  This
+  Session C scoping audits the EX-8 (case3-port-2) + EX-9 (Brightwell-
+  port-A) downstream consumers.  **Audit finding:** neither consumer is
+  directional-S compatible — EX-8's witness events `S(L_k) := x ∈ L_k`
+  / `y ∈ L_k` fail directionality for case3 chains adding edges
+  within the width-3 antichain `A`, and EX-9 Brightwell-port-A's
+  `four_functions_theorem` framework operates on a symmetric-pair AD
+  algebra of monotone events that doesn't admit directional restriction
+  without invalidating Brightwell §4.4's published argument.
+  **Recommendation:** option 1 (LE-non-adjacent residual closure).
+  **Deliverable:** new file
+  `docs/path-alpha-execution-arc/ex7-c-redo-c-scoping.md` (~460 lines)
+  with §1 recap + §2 EX-8 audit + §3 EX-9 audit + §4 recommendation +
+  §5 Session D execution spec + §6 references.  **No Lean code
+  modified.**  Trust surface impact: **none** (`#print axioms`
+  unchanged; 4 named project axioms preserved; no `lean/AXIOMS.md`
+  modification).  **PM files EX-7 Session C-redo Session D execution
+  ticket next** (universal `probEvent'_mono_of_subseteq_upClosed` via
+  Brightwell §4 chained-adjacent-transposition reduction; ~300–500 LoC;
+  may consume `stanley_log_supermod` at the recursion-depth bound;
+  scoping doc §5 carries the polecat brief).  EX-8 (case3-port-2,
+  ~800–1200 LoC) and EX-9 (Brightwell-port-A, ~500–800 LoC) remain
+  blocked behind Session D's closure; EX-10 (axiom-removal,
+  ~100–200 LoC) blocked behind EX-8 + EX-9.
+  **EX-7 Session C-redo Session B done (mg-c8ac, `84b7216`; see
   §1.35) — GREEN, axiom-free.**  Per mg-ed38 (§1.34) Session A
   latex-first scoping verdict GREEN-on-restated-target, this session
   lands the chamber-restricted single-edge inner inequality
