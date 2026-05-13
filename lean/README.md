@@ -29,6 +29,7 @@ Steps 1–8 compiles and discharges the main theorem
 --  OneThird.Step8.Case3Enum.case3_balanced_w2._native.native_decide.ax_1_1,
 --  OneThird.Step8.Case3Enum.case3_balanced_w3._native.native_decide.ax_1_1,
 --  OneThird.Step8.Case3Enum.case3_balanced_w4._native.native_decide.ax_1_1,
+--  OneThird.Step8.Case3Enum.case3_balanced_K4_w1._native.native_decide.ax_1_1,
 --  OneThird.Step8.OptionC.case2_certificate._native.native_decide.ax_1_1]
 ```
 
@@ -56,12 +57,14 @@ The raw `#print axioms` output — reproducible via
   math turns out to need its own axiom: report honestly via
   paper-vs-formalization diagnosis"). See `AXIOMS.md` for the
   faithful-transcription audit.
-* The five `_native.native_decide.ax_1_1` axioms are per-decision
+* The six `_native.native_decide.ax_1_1` axioms are per-decision
   instantiations of the standard `Lean.ofReduceBool` axiom underlying
   `native_decide`. They underwrite the F5a Case-3 enumeration
-  certificate (`Step8.Case3Enum.case3_certificate`, four facts at
-  `w ∈ {1, 2, 3, 4}`) and the Option-C Stage 1 K=2 closure
-  certificate (`Step8.OptionC.case2_certificate`).
+  certificate (`Step8.Case3Enum.case3_certificate`: the four original
+  K=3 facts at `w ∈ {1, 2, 3, 4}`, plus the `mg-9a4a` Window C
+  small-size K=4-w=1 extension `case3_balanced_K4_w1` at the `c ≤ 8`
+  slice) and the Option-C Stage 1 K=2 closure certificate
+  (`Step8.OptionC.case2_certificate`).
 
 Each field of the project axioms is audited against the paper in
 `lean/AXIOMS.md` with a scope-match checklist.
@@ -315,6 +318,7 @@ which emits
  OneThird.Step8.Case3Enum.case3_balanced_w2._native.native_decide.ax_1_1,
  OneThird.Step8.Case3Enum.case3_balanced_w3._native.native_decide.ax_1_1,
  OneThird.Step8.Case3Enum.case3_balanced_w4._native.native_decide.ax_1_1,
+ OneThird.Step8.Case3Enum.case3_balanced_K4_w1._native.native_decide.ax_1_1,
  OneThird.Step8.OptionC.case2_certificate._native.native_decide.ax_1_1]
 ```
 

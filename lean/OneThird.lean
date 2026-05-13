@@ -75,6 +75,7 @@ import OneThird.Step8.Case2Rotation
 import OneThird.Step8.Case3Residual
 import OneThird.Step8.Case3Enum
 import OneThird.Step8.Case3Enum.Certificate
+import OneThird.Step8.Case3Enum.K4W1
 import OneThird.Step8.Case3Enum.Correctness
 import OneThird.Step8.Case3Enum.BalancedLift
 import OneThird.Step8.Case3Enum.IrreducibleBridge

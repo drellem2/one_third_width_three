@@ -362,6 +362,28 @@ def allBalanced (w : Nat) (sizeLimit : Nat) : Bool := Id.run do
     if !enumPosetsFor w bs then return false
   return true
 
+/-- Top-level check (K-parametric, `mg-9a4a`): for every `K`-band tuple
+`bandSizes` with sum `≤ sizeLimit`, every irreducible layered config
+with an adjacent incomparable cross-pair admits a balanced pair.
+
+Generalises `allBalanced` (which is `allBalancedAtK 3`) to arbitrary
+depth `K`, so the F5a Bool certificate can range over K=3 and over
+the K=4 Window C extension of
+`docs/compatibility-geometry-pathP3-scoping.md`. -/
+def allBalancedAtK (K : Nat) (w : Nat) (sizeLimit : Nat) : Bool := Id.run do
+  for bs in bandSizesGen K sizeLimit do
+    if !enumPosetsFor w bs then return false
+  return true
+
+/-- `allBalancedAtK 3` matches the (definitionally equal) K=3-specific
+`allBalanced` — the two `Bool`-level checks share `bandSizesGen 3
+sizeLimit` as the outer loop source and `enumPosetsFor w bs` as the
+filter. Used as a `defEq` glue lemma so the K=3 entries of
+`case3_certificate` can be quoted as either `allBalanced w sizeLimit`
+(legacy) or `allBalancedAtK 3 w sizeLimit` (mg-9a4a). -/
+@[simp] lemma allBalancedAtK_three (w sizeLimit : Nat) :
+    allBalancedAtK 3 w sizeLimit = allBalanced w sizeLimit := rfl
+
 end Case3Enum
 end Step8
 end OneThird
