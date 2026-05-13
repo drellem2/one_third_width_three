@@ -12,7 +12,81 @@ this doc is what reflects **current** consensus and **current**
 open questions.
 
 **Last update.** mg-21a4 (cat-mg-21a4), 2026-05-06. Created.
-**Last update.** mg-f3b9 (cat-mg-f3b9), 2026-05-13.  **EX-7 Session
+**Last update.** mg-a1aa (cat-mg-a1aa), 2026-05-13.  **EX-7 Option (b)
+scoping — refined master via chained-adjacent-transposition (latex-first;
+no Lean changes; no new axioms; trip-wire FIRED — escalation to Daniel
+recommended).**  §1.37 NEW.  Per mg-fd0d (halted, no Lean commit)
+CRITICAL trip-wire post-mg-c8ac: the universal master theorem
+`probEvent'_mono_of_subseteq_upClosed` is mathematically FALSE
+(mg-2f8c counterexample applies; cf. §1.32).  mg-f3b9's "Option 1
+recommended" verdict (§1.36) was retroactively invalidated by mg-fd0d
+because it audited consumer-compatibility without verifying target
+truth.  Daniel approved Option (b) via "your call" reminder
+2026-05-13T~10Z.  This Option (b) scoping derives **the strongest
+provable refined master** extractable from chained-adjacent-transposition,
+without pre-committing to a target.  **Strongest universal target
+identified: (b.Q-SYMM)** — S up-closed AND for every Q-incomparable
+{x, y} and every K disjoint from {x, y}, `S(K ∪ {x}) ↔ S(K ∪ {y})`.
+**Numerical sanity check (MANDATORY, per
+`feedback_verify_target_truth_before_execution.md`): PASS.**  0
+violations on 19 posets / 3009 instances, mg-2f8c minimal
+counterexample `S(I) := (1 ∈ I)` correctly excluded.  **However, all
+3009 instances are TIGHT (equality)** — the (b.Q-SYMM) refined master
+theorem reduces to `Pr[S | Q] = Pr[S | Q']`, providing no useful
+strict-directional content for downstream consumers.  A weaker
+decomposition-dependent variant **(b.SOURCE-DIR)** is non-vacuous in
+principle but fails consumer applicability per the consumer re-audit.
+**Consumer re-audit (MANDATORY; replaces mg-f3b9 §2 + §3, which was
+flawed on target truth):** neither EX-8 case3-port-2 nor EX-9
+Brightwell-port-A admits any non-trivial event satisfying either
+refined target.  EX-8 witness events `S_x(L_k) := (x ∈ L_k)` for `x`
+in the case3 antichain `A` fail (b.Q-SYMM) on every (a_i, x) pair and
+fail (b.SOURCE-DIR) on every multi-edge chain (which case3 framing
+requires).  EX-9 Brightwell §4 indicators (`1_A, P, S, 1_{B_±}`) fail
+both refined targets — additionally, the AD application in Brightwell
+§4.4 requires the directional sub-algebra to be closed under
+meets/joins, which (b.SOURCE-DIR) is not.  **Aggregate verdict.**
+**RED on consumer applicability** for both refined targets; AMBER on
+the theoretical refined target (b.Q-SYMM) which is sound but vacuous.
+**Recommendation.**  PM **escalation to Daniel** for Option (c)
+[axiomatize a refined target — technically clean but consumer-blocked
+since (b.Q-SYMM)'s vacuous content cannot help EX-8/EX-9] OR Option (d)
+[architectural redesign of EX-8/EX-9 to avoid universal-up-closed-S
+hypothesis altogether].  Per polecat brief trip-wire: "No refined
+target survives both provability AND consumer needs: STOP and surface
+to PM."  **Deliverable.**  NEW
+`docs/path-alpha-execution-arc/ex7-option-b-scoping.md` (~1080 lines)
+with §1 recap of mg-fd0d + mg-2f8c, §2 chained-adjacent-transposition
+structural analysis (bubble-sort pivots, level-`k` per-step indicator
+implications, (b.GLOBAL) / (b.Q-SYMM) / (b.SOURCE-DIR) / (b.STEP-LOCAL)
+candidate hierarchy), §3 refined target candidates + chosen
+(b.Q-SYMM), §4 mandatory numerical sanity verification (PASS but
+all-tight), §5 mandatory consumer re-audit (RED for both EX-8 and
+EX-9), §6 PM escalation recommendation (Option c vs d), §7 trust-
+surface implications + trip-wire ledger, §8 references.  Two
+verification scripts added (`scripts/innerInequalityRefined_check.py`
+~370 LoC, `scripts/innerInequalityRefined_consumer_probe.py` ~190 LoC)
+both reusable for any future Option (c) axiomatization sanity check
+per mg-b4a7 §1.33 mandate.  **No Lean code modified.**  **Trust
+surface impact.**  **UNCHANGED** at 4 named project axioms
+(`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+`stanley_log_supermod`, `cellMass_AD`); `width3_one_third_two_thirds`
+headline trust surface unchanged.  No `lean/AXIOMS.md` modification.
+No new axioms in this scoping pass per the polecat brief §7 mandate.
+**Verdict.**  **RED on consumer applicability** (Option (b) closure
+path is insufficient regardless of provability).  Sub-α-C arc remains
+AMBER overall; the chamber-restricted `InnerInequalityAdj` (mg-c8ac)
+remains in tree axiom-free and is the strongest single-edge inner
+inequality landed.  PM next step: dispatch escalation note to Daniel
+with Option (c) vs Option (d) framing.  The mg-b4a7 §1.33 brute-force-
+sanity-check mandate is honoured by §4 of the scoping doc (any future
+Option (c) axiomatization can re-use the (b.Q-SYMM) verifier
+infrastructure).  The `feedback_verify_target_truth_before_execution.md`
+mandate (2026-05-13, post-mg-fd0d) is satisfied: the refined target
+was verified TRUE (PASS) before this scoping recommended any
+forward path; the trip-wire fired on a DIFFERENT criterion (all-tight
+vacuous), which the brief anticipated under "STOP and iterate."
+**Previous update.** mg-f3b9 (cat-mg-f3b9), 2026-05-13.  **EX-7 Session
 C-redo Session C — universal vs directional master theorem closure-path
 scoping (consumer audit; latex-first; no Lean changes; no new axioms).**
 §1.36 NEW.  Per mg-c8ac (§1.35) trip-wire on the directional
@@ -3096,6 +3170,184 @@ discrete-FKG-on-grid → divide → recognise as Riemann sums → take
   estimate met (this session ~230 LoC code + ~90 LoC documentation);
   combined Sessions C.1 + C.2 = ~497 LoC code; Session C.3 estimated
   ~250–650 LoC.
+
+### §1.37 EX-7 Option (b) scoping — refined master via chained-adjacent-transposition (consumer re-audit; PM escalation to Daniel for Option (c) vs (d)) (mg-a1aa)
+
+* **Source.** mg-a1aa (this update); polecat brief 2026-05-13 budget
+  500k tokens.  Polecat brief recap: "Per mg-fd0d (halted; no Lean
+  commit) CRITICAL trip-wire post-c8ac: the universal master theorem
+  `probEvent'_mono_of_subseteq_upClosed` is mathematically FALSE
+  (mg-2f8c counterexample applies; 133180 violations / 1431564
+  instances; 2-antichain minimal).  mg-f3b9's 'Option 1 recommended'
+  verdict was wrong because it audited consumer-compatibility without
+  verifying target truth.  Daniel approved Option (b) via 'your call'
+  reminder 2026-05-13.  This Option (b) scoping derives the strongest
+  provable master extractable from chained-adjacent-transposition,
+  without pre-committing to a target.  MANDATORY: numerical sanity
+  sub-check on refined target (target truth must be verified before
+  any structural execution — per mg-fd0d lesson).  MANDATORY: consumer
+  re-audit (mg-f3b9 was flawed).  NO new axioms in scoping.  Latex-
+  first; 500k cap."
+
+* **Predecessors.**
+  - mg-fd0d (halted; no Lean commit) — CRITICAL trip-wire post-c8ac
+    re-verifying that the universal master theorem (target of mg-f3b9
+    Option 1) is mathematically false (per mg-2f8c §3 counterexample).
+  - mg-f3b9 (`5e5ba54`, §1.36) — flawed-verdict consumer audit;
+    lower-level findings substantively retained (EX-8/EX-9 not
+    directional-S compatible), higher-level recommendation
+    invalidated by mg-fd0d.
+  - mg-c8ac (`84b7216`, §1.35) — `InnerInequalityAdj` axiom-free in
+    tree; LE-side primitive that this scoping refines.
+  - mg-ed38 (`de032be`, §1.34) — chamber-restricted target scoping;
+    `DirectionalUpClosed` predicate.
+  - mg-b4a7 (`fe87be2`, §1.33) — REVERTED universal `InnerInequality_axiom`.
+  - mg-2f8c (`8ae2aea`, §1.32) — independent verification trip-wire
+    on the universal target; minimal 2-antichain counterexample.
+
+* **What this scoping does.**  Polecat brief §1 mandate: read mg-fd0d
+  +  mg-2f8c + mg-f3b9 + mg-ed38 + Brightwell §4 carefully; derive the
+  strongest provable refined master from chained-adjacent-transposition
+  reduction; verify target truth before recommending forward path;
+  re-audit consumers under the corrected understanding.  Polecat brief
+  §2 candidates: (b.1) "Globally directional S" (strongest, least
+  useful), (b.2) "Chain-directional S" (per-decomposition), (b.3)
+  "Transposition-stable S" (weaker).  This scoping defines a concrete
+  hierarchy: (b.GLOBAL) → **(b.Q-SYMM)** → (b.SOURCE-DIR) →
+  (b.STEP-LOCAL), with explicit Lean/math statements and provability
+  analysis per chained-adjacent-transposition.
+
+* **Deliverable.**  NEW
+  `docs/path-alpha-execution-arc/ex7-option-b-scoping.md` (~1080 lines).
+  Structure:
+  - **§1** Recap of mg-fd0d critical + mg-2f8c counterexample
+    + mg-f3b9 invalidated verdict + Daniel approval of Option (b).
+  - **§2** Chained-adjacent-transposition structural analysis:
+    §2.1 LE-adjacent half (mg-c8ac) vs LE-non-adjacent residual,
+    §2.2 bubble-sort step structure (level-k pivot indicator
+    implications), §2.3 directional condition at each step,
+    §2.4 lifting to master theorem (chain `Q ⊆ Q'`),
+    §2.5 candidate hierarchy table,
+    §2.6 why (b.STEP-LOCAL) doesn't work (pivots unconstrained),
+    §2.7 `stanley_log_supermod` not needed (linear-depth recursion).
+  - **§3** Refined target candidates: §3.1 (b.Q-SYMM) statement +
+    Lean predicate sketch, §3.2 provability sketch (~400-600 LoC
+    if executed), §3.3 (b.GLOBAL) strict-stronger, §3.4
+    decomposition-dependent (b.SOURCE-DIR), §3.5 chosen target
+    selection trade-off.
+  - **§4 (MANDATORY) Numerical sanity verification.**  Method:
+    brute-force verifier `scripts/innerInequalityRefined_check.py`
+    on mg-2f8c 19-poset coverage with (b.Q-SYMM) filter on up-closed S.
+    **Result: PASS.**  0 violations across 19 posets / 63
+    Q-incomparable pairs / 3009 instances.  **BUT all 3009 instances
+    are TIGHT (equality)** — the universal refined master theorem
+    reduces to `Pr[S | Q] = Pr[S | Q']`, vacuous in inequality
+    content.  mg-2f8c minimal counterexample correctly excluded
+    by (b.Q-SYMM) (positive sanity probe).  §4.5 structural argument
+    explaining the all-tight pathology: (b.Q-SYMM)-S is invariant
+    under permutations of Q-incomp elements, forcing same `|L_k|`
+    distribution on `L(Q)` and `L(Q')` for any `Q ⊆ Q'`.
+  - **§5 (MANDATORY) Consumer re-audit (replaces mg-f3b9 §2 + §3).**
+    EX-8 case3-port-2: §5.2 witness events `S_x(L_k) := (x ∈ L_k)`
+    for `x ∈ A` (case3 antichain) fail (b.Q-SYMM) on (a_i, x) pairs;
+    fail (b.SOURCE-DIR) on every multi-edge chain (which case3
+    framing requires).  Probed numerically across 5 representative
+    case3 chains; "OK" only on the single-edge chain `Q + (a_0 < a_1)`
+    with `x = a_0` — case3 dispatch requires ≥2 added edges, so this
+    is structurally insufficient.  EX-9 Brightwell-port-A: §5.3
+    Brightwell §4 indicators (`1_A, P, S, 1_{B_±}`) fail both refined
+    targets; only trivial `T = ∅` survives (b.Q-SYMM).  Additional
+    finding: AD's `four_functions_theorem` requires meet/join closure
+    of the directional sub-algebra, which (b.SOURCE-DIR) is not
+    closed under — strengthens mg-f3b9 §3.4's "Brightwell §4
+    fundamentally requires universal" verdict.
+  - **§6 Recommendation:**  Option (b) does NOT close the EX-8/EX-9
+    consumer gap.  PM **escalation to Daniel** for **Option (c)**
+    [axiomatize (b.Q-SYMM) — technically clean per §4 PASS but
+    consumer-blocked since (b.Q-SYMM)'s vacuous content cannot help
+    EX-8/EX-9] OR **Option (d)** [architectural redesign of EX-8/EX-9
+    consumers to avoid universal-up-closed-S hypothesis altogether].
+  - **§7** Trust-surface implications (no new axioms, no Lean
+    changes, scripts added).
+  - **§8** References (predecessors, mandate docs, literature, in-tree
+    files, sister scoping deliverables).
+
+* **Numerical sanity check (MANDATORY).**  Verifier
+  `scripts/innerInequalityRefined_check.py` (~370 LoC) runs the
+  mg-2f8c 19-poset coverage with the (b.Q-SYMM) up-closed-S filter.
+  Output: 19 posets, 63 Q-incomp pairs, 3009 instances, 3009 tight
+  (equality), 0 violations.  mg-2f8c minimal counterexample
+  (`α = {0,1}`, Q empty, S(I) := (1 ∈ I)) correctly excluded.
+  Per-`|α|` coverage: n=2 (1 poset, 12 instances), n=3 (5 posets,
+  180 instances), n=4 (9 posets, 1515 instances), n=5 (4 posets,
+  1302 instances).
+
+* **Consumer probe (MANDATORY).**  Verifier
+  `scripts/innerInequalityRefined_consumer_probe.py` (~190 LoC)
+  probes (b.SOURCE-DIR) on (1) the case3 antichain `A = {0, 1, 2}`
+  with 5 case3 chains, and (2) the 4-antichain (Brightwell-port
+  proxy) with 4 source sets and 6 representative `S_T(I) := T ⊆ I`
+  events.  EX-8 result: only the trivial single-edge chain
+  `Q + (a_0 < a_1)` admits any witness (and only `x = a_0`); case3
+  multi-edge chains admit none.  EX-9 result: only trivial `T = ∅`
+  (always-⊤) and "T = full" survive any non-trivial source set;
+  Brightwell §4 indicators `1_A, P, S, 1_{B_±}` do not match these
+  extremal forms.
+
+* **Trip-wire status (per polecat brief §7).**
+  - Numerical sanity violation on refined target: **NOT FIRED** (§4
+    PASS, 0 violations).  But surfaces a *different* trip-wire:
+    target is sound but VACUOUS (all-tight); per brief: "STOP and
+    iterate — narrow the target further."  §5 iterates to
+    (b.SOURCE-DIR) and finds it consumer-incompatible.
+  - **No refined target survives both provability AND consumer
+    needs: FIRED.**  Per brief: "STOP and surface to PM — escalate
+    to Daniel for Option (c) vs (d)."  This is the active trip-wire
+    driving the §6 recommendation.
+  - Token blow-up (>80% of 500k cap): NOT FIRED (well within budget).
+  - No new project axioms in scoping: RESPECTED.
+
+* **Trust surface impact.**  **UNCHANGED** at 4 named project axioms
+  (`brightwell_sharp_centred`, `case3Witness_hasBalancedPair_outOfScope`,
+  `stanley_log_supermod`, `cellMass_AD`).  `width3_one_third_two_thirds`
+  headline trust surface unchanged.  No `lean/AXIOMS.md` modification.
+
+* **Files added/modified.**
+  - NEW `docs/path-alpha-execution-arc/ex7-option-b-scoping.md`
+    (~1080 lines).
+  - NEW `scripts/innerInequalityRefined_check.py` (~370 LoC).
+  - NEW `scripts/innerInequalityRefined_consumer_probe.py` (~190
+    LoC).
+  - MODIFIED `docs/path-alpha-execution-arc/state.md` (this entry +
+    Last update line).
+
+* **No Lean code modified.**  Per brief mandate; no edits to
+  `lean/OneThird/**`.  mg-c8ac `InnerInequalityAdj` /
+  `innerInequalityAdj_of_upClosed_directional` remain in tree
+  axiom-free; mg-7a4f `InnerInequality` `def`-Prop remains intact
+  (no consumer unconditionally instantiates it post-mg-b4a7).
+
+* **Mandate satisfactions.**
+  - `feedback_verify_target_truth_before_execution.md` (2026-05-13,
+    post-mg-fd0d): refined target verified TRUE on small finite
+    instances **before** any structural execution; numerical sanity
+    PASS at §4.2.  Mandate satisfied.
+  - `feedback_polecat_cumulative_state_doc` (2026-05-06): state.md
+    update with new §1.X (this entry) + Last update line refreshed.
+  - mg-b4a7 §1.33 brute-force-sanity-check mandate: not triggered by
+    this scoping (no axiom added).  Honoured prospectively — the
+    verifier infrastructure delivered in this commit is reusable
+    for any future Option (c) axiomatization decision.
+
+* **Verdict.**  **RED on consumer applicability** for both refined
+  targets ((b.Q-SYMM) all-tight; (b.SOURCE-DIR) consumer-blocked).
+  Option (b) closure path is **insufficient** regardless of
+  provability.  Sub-α-C arc remains AMBER overall; the chamber-
+  restricted `InnerInequalityAdj` (mg-c8ac) remains in tree axiom-
+  free as the strongest single-edge inner inequality landed.  PM
+  next step: **dispatch escalation note to Daniel with Option (c) vs
+  (d) framing** per §6 of the deliverable.  No further EX-7 polecat
+  dispatch until Daniel decision.
 
 ### §1.36 EX-7 Session C-redo Session C — universal vs directional master theorem closure-path scoping done (consumer audit; option 1 picked) (mg-f3b9)
 
