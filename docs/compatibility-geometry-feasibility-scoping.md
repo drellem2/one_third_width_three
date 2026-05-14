@@ -1,0 +1,733 @@
+# Compatibility Geometry — feasibility scoping (mg-c853)
+
+**Companion to** `docs/compatibility-geometry-manifesto.md` (Daniel's
+verbatim manifesto, 2026-05-12). This document assesses whether the
+manifesto's first-program targets are **formalizable at scoping
+resolution** — not whether they are true. Per the ticket's trip-wire,
+philosophy is not litigated; only formalizability + literature
+scaffolding + load-bearing-step location.
+
+LaTeX is used inline ($\ldots$ / display) throughout; render with
+KaTeX/MathJax or read source.
+
+---
+
+## 1. Setup and notation
+
+Let $S_n$ be the symmetric group on $[n] := \{1, \ldots, n\}$ with
+adjacent-transposition Coxeter generators
+$\{s_1, \ldots, s_{n-1}\}$, $s_i = (i, i{+}1)$, satisfying
+
+$$
+s_i^2 = e, \qquad
+s_i s_j = s_j s_i \ \text{for } |i-j| \ge 2, \qquad
+s_i s_{i+1} s_i = s_{i+1} s_i s_{i+1}.
+$$
+
+Let $\mathbb{C}[S_n]$ be the group algebra. A **poset** $P$ on $[n]$
+is a partial order with relation $<_P$. Its **linear-extension set** is
+
+$$
+\mathcal{L}(P) := \{\sigma \in S_n : i <_P j \ \Rightarrow\ \sigma^{-1}(i) < \sigma^{-1}(j)\}.
+$$
+
+The OneThird headline target `width3_one_third_two_thirds` asserts: for
+$P$ of width $\le 3$, there exist incomparable $a, b$ with
+$\Pr_{\sigma \sim \mathcal{L}(P)}[\sigma^{-1}(a) < \sigma^{-1}(b)]
+\in [1/3,\ 2/3]$.
+
+The manifesto recasts this as a **spectral/geometric fact about
+compatibility geometry**: a balanced pair is the macroscopic signature
+of surviving local commutativity in a constrained noncommutative state
+space.
+
+---
+
+## 2. First-program targets (manifesto §"The first program is internal to the symmetric group")
+
+We address each of the four sub-targets in turn: rigorous candidate
+definition, literature scaffolding, feasibility.
+
+### 2.1 Intrinsic category of local commutative contexts in $\mathbb{C}[S_n]$
+
+**Candidate definition.** Let $\Gamma$ be the **commutation graph** of
+the Coxeter system: vertex set $\{s_1, \ldots, s_{n-1}\}$, edges
+$\{s_i, s_j\}$ iff $|i-j| \ge 2$. For each clique
+$T \subseteq V(\Gamma)$, the elements of $T$ pairwise commute and
+$s_i^2 = e$, so $\langle T \rangle \cong (\mathbb{Z}/2)^{|T|}$ inside
+$S_n$. Define
+
+$$
+A_T := \mathbb{C}[\langle T \rangle] \subseteq \mathbb{C}[S_n].
+$$
+
+$A_T$ is a commutative subalgebra of dimension $2^{|T|}$. Define the
+**category of local commutative contexts**
+$\mathsf{LocComm}(S_n)$ to have:
+
+- **objects:** subalgebras $A_T$ for $T$ a clique in $\Gamma$;
+- **morphisms:** algebra inclusions $A_T \hookrightarrow A_{T'}$
+  induced by $T \subseteq T'$.
+
+$\mathsf{LocComm}(S_n)$ is the **face category** of the clique complex
+$\mathrm{Cl}(\Gamma)$ of $\Gamma$. For type $A_{n-1}$, $\Gamma$ is the
+complement of the path graph $P_{n-1}$, so $\mathrm{Cl}(\Gamma)$ is the
+**independence complex** $\mathrm{Ind}(P_{n-1})$ of the path graph —
+also known as the **Fibonacci complex** with
+$|\mathrm{Cl}(\Gamma)| = F_{n+1}$ (Fibonacci number) faces.
+
+The maximal clique size is $\lceil (n-1)/2 \rceil$ (take every other
+generator $s_1, s_3, s_5, \ldots$). This is the **effective
+commutativity dimension** of $S_n$ in the manifesto's sense — the
+maximum number of pairwise-independent local Coxeter freedoms.
+
+**Literature scaffolding.**
+
+- *Stembridge (1996, 1998), "Fully commutative elements of Coxeter
+  groups."* Fully commutative elements are those whose reduced words
+  are connected only via commutation moves (no braid moves). For
+  $S_n$ these are exactly the $321$-avoiding permutations.
+- *Fan (1998) and Stembridge — heap theory.* Heaps formalize
+  commutation classes of reduced expressions as labelled posets;
+  $\mathsf{LocComm}(S_n)$ is the "abstract heap base" prior to picking
+  any specific element.
+- *Solomon (1976), "A Mackey formula in the group ring of a Coxeter
+  group."* The descent algebra $\Sigma(W) \subseteq \mathbb{C}[W]$ —
+  a non-commutative subalgebra naturally indexed by subsets of simple
+  reflections; provides a complementary "constraint-side" perspective.
+- *Davis (2008), "The Geometry and Topology of Coxeter Groups."*
+  Chapter on the Davis complex; the nerve of a Coxeter system is
+  exactly the clique complex of the commutation graph for the right
+  Coxeter datum.
+- *Niblo–Reeves (2003).* Every Coxeter group acts on a CAT(0) cube
+  complex whose vertex set is parametrized by half-spaces. The local
+  combinatorics is exactly $\mathsf{LocComm}$.
+
+**Galois closure (in the manifesto's sense).** The natural closure
+operator on commutative subalgebras of $\mathbb{C}[S_n]$ is the
+double commutant $A \mapsto A''$ (von Neumann bicommutant). Since
+$\mathbb{C}[S_n]$ is semisimple and unital,
+$A'' = A$ iff $A$ is $\ast$-closed and weakly closed; in finite
+dimensions any unital $\ast$-subalgebra is bicommutant-closed.
+The subalgebras $A_T$ are bicommutant-closed.
+
+However, $A_T$ is **not maximal commutative** in $\mathbb{C}[S_n]$ in
+general: maximal abelian subalgebras (MASAs) of $\mathbb{C}[S_n]$
+include the Gelfand–Tsetlin algebra generated by Jucys–Murphy elements
+$X_k = \sum_{j<k}(j\,k)$, which has dimension $n!$ on the regular
+representation. The $A_T$ are MASAs of the parabolic subgroup
+$\langle T \rangle$, not of $S_n$.
+
+This **tension matters for the manifesto:** "local commutative
+contexts" can mean either
+
+(i) $A_T$ with $T$ a clique in the commutation graph (Coxeter-intrinsic
+locality), or
+
+(ii) MASAs of $\mathbb{C}[S_n]$ (representation-theoretic locality
+via Jucys–Murphy / Gelfand–Tsetlin).
+
+Interpretation (i) matches the manifesto's "independent compatible
+freedoms" and "generates tangent directions, cubical structure, and
+effective dimension." (ii) is richer but unrelated to the cubical
+picture. **We commit to (i).**
+
+**Feasibility verdict (§2.1):** PRECISE candidate; classical literature
+scaffolding; Galois closure well-defined via bicommutant.
+Formalizable in $\sim 300{-}500$ LoC of mathlib4 given existing Coxeter
+support (`Mathlib.GroupTheory.Coxeter.*`).
+
+---
+
+### 2.2 Galois correspondence between constraint systems and admissible regions
+
+**Setup.** The classical poset $\leftrightarrow$ linear-extension
+correspondence already has Galois structure on the constraint side:
+
+- **Constraint $\to$ region:** $P \mapsto \mathcal{L}(P) \subseteq S_n$.
+- **Region $\to$ constraint:** for $A \subseteq S_n$, define
+  $\mathrm{Int}(A) := \bigcap_{\sigma \in A} <_\sigma$, the intersection
+  preorder; symmetrize/antisymmetrize to get a partial order $P(A)$.
+- **Closure operator:** $A \mapsto \mathcal{L}(P(A))$. Closed sets are
+  exactly the linear-extension sets of posets.
+
+This is **the standard Galois connection between posets on $[n]$ and
+``linear-extension-closed'' subsets of $S_n$** (cf. Stanley, *Enum.
+Comb. Vol. 1*, Ch. 3; Brightwell–Winkler 1991).
+
+**The manifesto's ask: lift the algebra side to $\mathbb{C}[S_n]$.**
+
+Three candidate liftings, in increasing speculation:
+
+**(G1) Heap / Stembridge candidate.** For a poset $Q$ that is the heap
+of a fully commutative element $w \in S_n$ (321-avoiding $w$), the
+linear extensions $\mathcal{L}(Q)$ are exactly the reduced words of
+$w$ modulo commutation. The "admissible region" is the commutation
+class $[w]_c \subseteq W(s_1, \ldots, s_{n-1})^*$, equivalently the
+single element $w$ together with its heap labelling. This **is** a
+Galois pair, but its domain is restricted to **heap-realizable
+posets** — proper subset of all posets.
+
+**(G2) Specht-module / Young-diagram candidate.** When $P$ has shape
+$\lambda \vdash n$ (a Young-diagram poset), the linear extensions
+$\mathcal{L}(P) = \mathrm{SYT}(\lambda)$. The Specht module $V^\lambda$
+is the irreducible $\mathbb{C}[S_n]$-module indexed by $\lambda$, with
+$\dim V^\lambda = f^\lambda = |\mathrm{SYT}(\lambda)|$. The Galois pair
+is: Young diagram $\lambda \leftrightarrow$ Specht module $V^\lambda$
+$\subseteq \mathbb{C}[S_n]$. Restricted to "shape-posets" but
+canonical inside its restriction.
+
+**(G3) Order-polytope / chamber candidate** (most relevant to OneThird
+existing machinery). The order polytope $\mathcal{O}(P) \subset
+[0,1]^n$ has linear extensions in bijection with its $n!$-decomposition
+into Weyl chambers (Stanley 1986, *Two poset polytopes*). The
+permutohedron sits dually. The Galois pair would be
+
+$$
+P \ \longleftrightarrow\ \{\text{chambers of } \mathcal{O}(P)\}
+\ \longleftrightarrow\ \text{subspace of } \mathbb{C}[S_n]
+\text{ spanned by chamber indicators } \mathbf{1}_\sigma
+\text{ for } \sigma \in \mathcal{L}(P).
+$$
+
+The "subspace of $\mathbb{C}[S_n]$ spanned by chamber indicators" is
+generally **not** an ideal or subalgebra — closure under left
+multiplication by $S_n$ is rare. So G3 yields a Galois pair between
+$P$ and **subspaces** of $\mathbb{C}[S_n]$, not subalgebras.
+
+**Honest assessment.** No off-the-shelf Galois pair connects posets on
+$[n]$ to **subalgebras** of $\mathbb{C}[S_n]$. The closest candidates
+either restrict the domain (G1, G2) or weaken "admissible region" from
+subalgebra to subspace (G3). The manifesto would need to commit to one
+of these — most naturally G3 with the explicit weakening
+``subspace, not subalgebra'' — or invent a fourth.
+
+**A new candidate worth flagging (G4): parabolic-induction Galois.**
+For an antichain decomposition $[n] = C_1 \sqcup \cdots \sqcup C_k$ of
+$P$, the Young subgroup $S_{C_1} \times \cdots \times S_{C_k}
+\subseteq S_n$ has parabolic group algebra $A_P^{\mathrm{par}} :=
+\mathbb{C}[S_{C_1}] \otimes \cdots \otimes \mathbb{C}[S_{C_k}]
+\subseteq \mathbb{C}[S_n]$. For antichain posets $P$ this exactly
+captures $\mathcal{L}(P) = $ cosets in $S_n / A_P^{\mathrm{par}}$.
+For general $P$, $A_P^{\mathrm{par}}$ over-counts; one must
+quotient by relations encoding the order constraints. This is
+**Yang–Baxter / Lusztig parabolic restriction** territory.
+
+**Literature scaffolding.**
+
+- *Stanley (1986), "Two poset polytopes."* Order/chain polytopes;
+  triangulations into simplices indexed by $\mathcal{L}(P)$.
+- *Bonnafé–Geck (2024+), "Hecke algebras with unequal parameters" /
+  Lusztig (2003), "Hecke algebras with unequal parameters."*
+  Kazhdan–Lusztig cells provide a coarser Galois-style pairing
+  between two-sided cells and parabolic-induced modules. Tantalizing
+  but not directly poset-indexed.
+- *Reiner (1995), "Signed posets."* Type-B analogue, suggesting
+  the Galois pair is sensitive to Coxeter type.
+- *Solomon descent algebra* (cited above): a noncommutative
+  subalgebra naturally indexed by compositions of $n$; for
+  "antichain-of-chains" posets this coincides with G4.
+
+**Feasibility verdict (§2.2):** Poset side is classical and precise.
+Algebra side requires a **design choice** among G1–G4; none is
+forced. G3 (chambers/subspaces) is the most natural for connecting to
+existing OneThird chamber-decomposition machinery. The honest "Galois
+correspondence between constraint systems and admissible regions"
+the manifesto names is **not yet present in the literature**; the
+candidates exist but the canonical one has not been distinguished.
+
+---
+
+### 2.3 Local cubical geometry from commuting Coxeter moves
+
+**Candidate definition.** The **Coxeter cube complex**
+$\mathcal{X}(S_n)$ has:
+
+- 0-cells: elements of $S_n$;
+- 1-cells: edges $\{w, w s_i\}$ for $w \in S_n$, $i \in [n-1]$;
+- $k$-cells: $k$-cubes $\{w \langle T \rangle : T \subseteq V(\Gamma)
+  \text{ a clique of size } k\}$ — one for each pair $(w, T)$ where
+  the multiplication $w \cdot (\prod_{s \in T} s^{\epsilon_s})$
+  for $\epsilon_s \in \{0,1\}$ traverses $2^k$ distinct elements.
+
+Equivalently, $\mathcal{X}(S_n)$ is the **flag completion** of the
+Cayley graph of $(S_n, \{s_i\})$ where every commuting square is
+filled with a 2-cube and recursively every clique of size $k$ in the
+commutation graph is filled with a $k$-cube.
+
+For type $A_{n-1}$, max cube dimension is $\lceil (n-1)/2 \rceil$, and
+$\mathcal{X}(S_n)$ is the **1-skeleton with cubical filling** of the
+permutohedron's edge graph.
+
+**Critical theorem (Niblo–Reeves 2003 + Bestvina–Brady, refined Niblo
+2003).** $\mathcal{X}(S_n)$ admits a CAT(0) cube structure via the
+half-space / wall decomposition. For each pair $i < j$, the wall
+$W_{ij} := \{w : w^{-1}(i) > w^{-1}(j)\}$ separates the cube complex.
+Walls correspond bijectively to pairs $(i,j)$, $i < j$ — i.e. to the
+$\binom{n}{2}$ inversion-pair coordinates.
+
+For a poset $P$ on $[n]$, the **constrained cube subcomplex**
+$\mathcal{X}(P) \subseteq \mathcal{X}(S_n)$ is the full subcomplex on
+vertex set $\mathcal{L}(P)$ — keep all cells whose 0-skeleton is
+contained in $\mathcal{L}(P)$.
+
+**Key observation.** Adjacent transpositions $\sigma \to \sigma s_i$
+preserve $\mathcal{L}(P)$ iff swapping positions $i, i{+}1$ in $\sigma$
+respects $<_P$. This makes $\mathcal{X}(P)$ a **cubical sub-complex**
+where a 2-cube $\{\sigma, \sigma s_i, \sigma s_j, \sigma s_i s_j\}$
+(with $|i-j| \ge 2$) is included iff all four corners are in
+$\mathcal{L}(P)$.
+
+**Direct connection to OneThird chamber decomposition (mg-10d9).** The
+existing chamber-decomposition machinery on the order polytope
+$\mathcal{O}(\alpha)$ (commit `4eeecf7`, chamber-restricted axiom-free
+GREEN) triangulates $\mathcal{O}(\alpha)$ into chambers indexed
+exactly by linear extensions. Walls of $\mathcal{X}(S_n)$ correspond
+to facets of the chamber decomposition; crossing a wall = adjacent
+transposition = chamber-to-chamber transition. **Therefore:**
+
+$$
+\mathcal{X}(P) \cong \text{chamber complex of } \mathcal{O}(P),
+$$
+
+up to a combinatorial duality (chambers ↔ vertices, walls ↔ facets).
+This is a known equivalence between the order polytope's chamber
+decomposition and the permutohedron's vertex figure (Stanley 1986,
+Postnikov 2009), specialized to $\mathcal{L}(P)$.
+
+**Literature scaffolding.**
+
+- *Niblo–Reeves (2003).* CAT(0) cube structure on Coxeter groups.
+- *Bestvina–Brady (1997), Wise (2014).* Cubulation theory.
+- *Davis (2008).* Davis complex; nerve = clique complex of $\Gamma$.
+- *Postnikov (2009), "Permutohedra, associahedra, and beyond."*
+  Cubical structure of permutohedra and their generalizations.
+- *Reading (2005), "Lattice congruences, fans and Hopf algebras."*
+  Cubical decompositions of Cayley graphs.
+- *Bjorner–Brenti (2005), Combinatorics of Coxeter groups, Ch. 1–3.*
+- *OneThird internal: mg-10d9 chamber decomposition, commit `4eeecf7`
+  chamber-restricted GREEN.*
+
+**Feasibility verdict (§2.3):** HIGHLY PROMISING. The cube complex
+$\mathcal{X}(S_n)$ and its constrained sub-complex $\mathcal{X}(P)$
+are well-defined objects with substantial literature scaffolding
+(Niblo–Reeves, Davis, Postnikov, Reading) AND a direct identification
+with OneThird's existing chamber-decomposition machinery. This is
+the **best-positioned target** of the four.
+
+---
+
+### 2.4 Spectral invariants measuring compatibility expansion
+
+**Candidate definition.** Let $G_P := (\mathcal{L}(P), E_P)$ be the
+**linear-extension graph** of $P$: vertices are linear extensions,
+edges are $\{\sigma, \tau\}$ where $\tau = \sigma s_i$ for some $i$ and
+both $\sigma, \tau \in \mathcal{L}(P)$. Let $\Delta_P$ be the (normalized
+or unnormalized) graph Laplacian on $G_P$.
+
+The **compatibility spectral gap** of $P$ is
+
+$$
+\lambda(P) := \min\{\mu > 0 : \mu \text{ is an eigenvalue of } \Delta_P\}.
+$$
+
+**Known facts.**
+
+- For $P = $ antichain on $[n]$ (so $\mathcal{L}(P) = S_n$, $G_P$ is
+  the full adjacent-transposition Cayley graph), the spectrum is
+  determined by Diaconis–Shahshahani (1981): eigenvalues
+  $\lambda_\lambda = 2(n - n\chi^\lambda(s_1)/f^\lambda)$ indexed by
+  $\lambda \vdash n$. Spectral gap $= 2 - 2(n-1)/n = 2/n$.
+- For $P = $ chain on $[n]$, $|\mathcal{L}(P)| = 1$ and the graph is
+  trivial.
+- For intermediate $P$: Bubley–Dyer (1998) "Path coupling" gives
+  $O(n^3 \log n)$ mixing for adjacent-transposition walks restricted
+  to $\mathcal{L}(P)$. This implies $\lambda(P) = \Omega(n^{-3})$.
+- Wilson (2004) gives sharper $O(n^3)$ bounds for lozenge tilings
+  and certain card shuffles.
+- Karzanov–Khachiyan (1991): the linear-extension graph $G_P$ is
+  connected (always), and a random walk on it samples
+  $\mathcal{L}(P)$ uniformly in polynomial time.
+
+**Manifesto's claim and the gap to balance.** The manifesto's principle
+4 says "expansion is the generic state of sufficiently rich
+compatibility geometries; non-expansion signals dimensional collapse,
+product structure, or hidden rigidity." Operationally:
+
+(C) **Compatibility expansion conjecture (manifesto, restated):**
+$\lambda(P) \ge c_n$ for a universal $c_n > 0$ unless $P$ admits a
+``low-dimensional decomposition'' (= product structure $P = P_1 \times
+P_2$ or chain decomposition).
+
+(B) **Balance:** $\exists\ a, b$ incomparable in $P$ with
+$\Pr_{\sigma \sim \mathcal{L}(P)}[\sigma^{-1}(a) < \sigma^{-1}(b)]
+\in [1/3, 2/3]$.
+
+**The manifesto's chain (C) $\Rightarrow$ (B) is NOT in the
+literature.** Brightwell's 3/11 bound (1989) and Kahn–Saks's original
+1/3 bound (1984) use FKG / Ahlswede–Daykin correlation inequalities,
+not spectral methods. There is no known spectral proof of 1/3–2/3, even
+for width-2 posets.
+
+**A possible spectral proof sketch (speculative; for record).** If
+$\lambda(P) \ge c > 0$, then for any function $f: \mathcal{L}(P) \to
+\mathbb{R}$ with $\mathbb{E}[f] = 0$, $\|f\|_2^2 \le c^{-1} \cdot
+\mathcal{E}_P(f, f)$ (Poincaré inequality). Take $f_{ab}(\sigma) :=
+\mathbf{1}[\sigma^{-1}(a) < \sigma^{-1}(b)] - p_{ab}$ where
+$p_{ab} := \Pr[\sigma^{-1}(a) < \sigma^{-1}(b)]$. The Dirichlet energy
+$\mathcal{E}_P(f_{ab}, f_{ab})$ counts edges of $G_P$ where the
+$(a,b)$-order flips — which is exactly the count of $\sigma \in
+\mathcal{L}(P)$ such that swapping $a, b$ keeps you in
+$\mathcal{L}(P)$. This count is bounded by $|\mathcal{L}(P)|$ trivially
+but probably much smaller; needs argument. Then $p_{ab}(1-p_{ab})
+\le \frac{1}{|\mathcal{L}(P)|} \mathcal{E}_P / c$. If RHS $< 1/4 -
+\epsilon$, then $p_{ab}$ is bounded away from $0$ and $1$ —
+which is balance up to constants $1/3, 2/3$. The constants $1/3$
+and $2/3$ come out at the optimum.
+
+**Caveat.** Whether $\mathcal{E}_P(f_{ab}, f_{ab}) /
+|\mathcal{L}(P)|$ is small for *some* pair $(a, b)$ is itself a
+non-trivial combinatorial question. It would reduce 1/3–2/3 to a
+**counting-of-adjacent-transposition-swaps-that-flip-a-fixed-pair**
+question — possibly tractable. **This is a new sketch worth recording
+even if it doesn't close.**
+
+**Literature scaffolding.**
+
+- *Diaconis–Shahshahani (1981), "Generating a random permutation
+  with random transpositions."* Spectrum of full Cayley graph.
+- *Diaconis (1988), "Group representations in probability and
+  statistics."* Comprehensive.
+- *Bubley–Dyer (1998), "Path coupling: a technique for proving
+  rapid mixing."* Application to linear extensions.
+- *Wilson (2004), "Mixing times of lozenge tilings and card
+  shuffles."*
+- *Karzanov–Khachiyan (1991), "On the conductance of order Markov
+  chains."*
+- *Stanley (1986), "Two poset polytopes."* Volumes, mixed-volume
+  inequalities — adjacent to but not directly spectral.
+
+**Feasibility verdict (§2.4):** PRECISE candidate ($G_P$ Laplacian);
+strong literature for mixing-time bounds; **the connection from
+spectral gap to balance (1/3–2/3) is NEW and OPEN**. Genuine research,
+not formalization-only. Polecat-class formalization of *known* mixing
+bounds is feasible ($\sim 800{-}1500$ LoC); formalization of the
+spectral $\Rightarrow$ balance step requires the math to exist on paper
+first.
+
+---
+
+## 3. Path to the balance theorem
+
+The manifesto's chain:
+
+$$
+\text{rich local commutativity}
+\xrightarrow{\text{Step 1}} \text{expansion}
+\xrightarrow{\text{Step 2}} \text{balance}.
+$$
+
+**Step 1: rich local commutativity $\Rightarrow$ expansion.**
+Operationalize "rich local commutativity" as: every linear extension
+$\sigma \in \mathcal{L}(P)$ admits $\Omega(n)$ commuting Coxeter pairs
+$s_i, s_j$ (with $|i-j| \ge 2$) both of which preserve
+$\mathcal{L}(P)$. For width-$w$ posets the count of "free swaps" at any
+$\sigma$ is $\Omega(n - $ # comparabilities $)$. The CAT(0) cube
+complex $\mathcal{X}(P)$ then has high "link dimension" at every
+vertex; Niblo–Reeves and follow-up cubulation theory (Wise) imply
+**Markov-chain expansion** when link complexes are sufficiently
+connected (e.g., Garland-style local-to-global spectral arguments).
+
+Status: **plausible, with scaffolding**. Garland's method (1973)
+gives: if all 1-link spectral gaps exceed $1/2$, then the global
+1-skeleton has positive spectral gap. Applied to $\mathcal{X}(P)$
+this gives a route. Already executed in adjacent contexts (Kaufman–
+Mass 2017, Anari–Liu–Oveis Gharan–Vinzant 2019 on log-concave
+generating polynomials and high-dimensional expanders — the **trickle-
+down theorem** is the relevant Garland-type result).
+
+**Step 2: expansion $\Rightarrow$ balance.**
+The load-bearing step. Sketched in §2.4 above. **Not in literature.**
+Two possible attacks:
+
+- (i) The Poincaré-inequality sketch in §2.4: bound
+  $p_{ab}(1-p_{ab})$ via Dirichlet energy of indicator. Hardest
+  part: bound the Dirichlet energy / flip-count combinatorially.
+- (ii) Garland-style descent: if every poset of width $\le 2$ has
+  a balanced pair (KS, easy), maybe an expansion + induction lifts
+  to width $\le 3$. Requires "expansion is preserved under
+  link" — generally false but might hold for the subclass.
+
+**Load-bearing identification.** Step 2 is the genuinely-new
+mathematics. Step 1 has scaffolding (Garland, trickle-down theorem,
+log-concave generating polynomials machinery from Anari–Liu–Oveis
+Gharan–Vinzant). Step 2 requires either a new combinatorial argument
+or a new spectral inequality.
+
+**Comparison to Brightwell route.** Brightwell's 3/11 bound uses
+Ahlswede–Daykin on the chain polytope of $P$ (the partner of the
+order polytope under Stanley's transfer map). The AD route is the
+incumbent. The manifesto's spectral route would be an **independent
+proof**, potentially with better constants (the 1/3–2/3 conjecture
+itself; current best is 0.276... by Brightwell–Felsner–Trotter 1995).
+
+---
+
+## 4. Second worked example (per ticket §2.3)
+
+A Grothendieck-style abstraction requires multiple worked examples
+before the right category crystallizes. The manifesto's primary
+example is $\mathbb{C}[S_n]$ (type $A$ Coxeter). We sketch a second.
+
+**Selected candidate: Hecke algebra $H_n(q)$ at generic $q$.**
+
+**Why.** $H_n(q)$ is the canonical Iwahori–Hecke deformation of
+$\mathbb{C}[S_n]$, generated by $T_1, \ldots, T_{n-1}$ subject to
+
+$$
+(T_i - q)(T_i + 1) = 0, \quad T_i T_j = T_j T_i \ (|i-j| \ge 2),
+\quad T_i T_{i+1} T_i = T_{i+1} T_i T_{i+1}.
+$$
+
+At $q = 1$ this is $\mathbb{C}[S_n]$. At generic $q$ it's semisimple
+with the same module structure (Specht modules deformed).
+
+**Transfer assessment.**
+
+- **Local commutativity (§2.1):** $T_i T_j = T_j T_i$ for
+  $|i-j| \ge 2$ — same commutation graph $\Gamma$. The subalgebras
+  $A_T^q := \langle T_i : i \in T \rangle$ are commutative for $T$
+  a clique. $A_T^q \cong \otimes_{i \in T} \mathbb{C}[T_i]
+  \cong (\mathbb{C}[q,q^{-1}])^{2^{|T|}}$ via $(T_i-q)(T_i+1)=0$.
+  **Transfers cleanly.**
+- **Galois correspondence (§2.2):** Specht-module side (G2) deforms:
+  $V^\lambda_q$ is the $H_n(q)$-Specht module. Heap side (G1)
+  also deforms (Stembridge–Fan q-heap theory). G3 (chamber/subspace)
+  is identical combinatorially. **Transfers.**
+- **Local cubical geometry (§2.3):** Identical cube complex
+  $\mathcal{X}(S_n)$ — Hecke deformation doesn't change Cayley graph
+  combinatorics, only the algebra weights on cells.
+- **Spectral invariants (§2.4):** Hecke-Plancherel measure
+  (q-analogue of Plancherel). Spectral analysis of q-Cayley-graph
+  Laplacian: open in generality but Diaconis–Hanlon (1992) "Eigen
+  analysis for some examples of the Metropolis algorithm" gives
+  q-analogues for special cases.
+
+**Verdict for second example.** Hecke $H_n(q)$ **passes the
+abstraction transfer test**: all four manifesto sub-targets deform.
+The abstraction is therefore not Coxeter-A-specific.
+
+**A second test: hyperoctahedral / type-B.** Coxeter group $B_n =
+\mathbb{Z}/2 \wr S_n$ (signed permutations). Commutation graph
+includes a length-2 edge (relation $s_0 s_1 s_0 s_1 = s_1 s_0 s_1
+s_0$). The Local commutative contexts category extends (Reiner 1995
+signed posets supply the constraint side). Linear extension graph
+$G_P$ defined for signed posets. **Likely transfers**, but with
+modified Coxeter-graph and modified constants.
+
+**A failed example: partition algebra $P_n(\delta)$.**
+Diagram algebra with non-Coxeter generators (set-partition cup and
+cap diagrams). Commutation relations exist but the cubical /
+permutation-balance interpretation does not — no underlying group.
+The abstraction **does not transfer** here, which is informative:
+the manifesto's framework is **Coxeter-system-flavored**, not
+universal across all "noncommutative ambient algebras." This narrows
+the manifesto's scope.
+
+**Implication for §2 of the manifesto.** The "second program: replace
+posets with intrinsic compatibility geometries associated functorially
+to noncommutative algebras" should be **scoped to noncommutative
+algebras with a distinguished generating Coxeter-style relation
+structure** — not all noncommutative algebras. This is a substantive
+narrowing of Daniel's "long-term goal."
+
+---
+
+## 5. Connection back to OneThird's `width3_one_third_two_thirds`
+
+If the manifesto framework crystallizes, three plausible specialization
+paths to the OneThird headline:
+
+**Path P1: Spectral route.** Establish (C) $\Rightarrow$ (B) (the
+expansion $\Rightarrow$ balance step, §2.4 / §3). Specialize to
+width-$\le 3$ posets. This would be a **genuinely new proof of
+1/3–2/3 for width 3**, independent of Kahn–Saks and Brightwell.
+
+- *Status of load-bearing math:* OPEN.
+- *Lean port estimate (conditional on paper proof):* 2500–4000 LoC.
+  Components: $G_P$ + Laplacian (~500), spectral-gap → mixing → 1/3
+  bound (~1500), width-3 case analysis (~1000).
+- *Polecat decomposition:* needs $\ge 5$ polecat sessions plus
+  specialist input.
+
+**Path P2: AD-replacement route.** Use the Galois correspondence
+(§2.2) to recast Ahlswede–Daykin / FKG arguments in OneThird's
+`step8.tex` as **intrinsic statements about constraint subalgebras
+of $\mathbb{C}[S_n]$**. This would not change the final theorem but
+would replace the residual `brightwell_sharp_centred` axiom
+(mg-38cf, `BrightwellAxiom.lean`) with a noncommutative-algebra
+statement.
+
+- *Status:* depends on Galois G3 (chamber-subspace) crystallizing.
+- *Lean port estimate:* 1500–2500 LoC if G3 works; would replace the
+  ~700–1100 LoC Brightwell axiom port that was deferred (mg-b699).
+- *Risk:* may just re-package AD without insight.
+
+**Path P3: Case 3 axiom replacement.** The residual Case 3 axiom
+(`Case3Residual.lean`, mg-b846): "every layered $K=2$ width-3 poset
+has a balanced pair." If the manifesto's principle 4 ("non-expansion
+signals dimensional collapse, product structure, or hidden rigidity")
+gives a classification of low-compatibility-dimension posets — and
+layered $K=2$ width-3 is exactly the boundary case — then the Case 3
+axiom becomes a **structural classification statement**, possibly
+provable by enumeration of the constrained cube complex.
+
+- *Status:* most concrete path. Cube complex $\mathcal{X}(P)$ for
+  layered $K=2$ width-3 has dimension $\le 2$; explicit enumeration
+  might suffice.
+- *Lean port estimate:* 500–1500 LoC + computer-verified enumeration.
+- *Polecat decomposition:* 2–3 sessions.
+
+**P3 is the highest-leverage near-term path.** It targets the
+single remaining structural axiom in the OneThird formalization
+with a *concrete* enumerative tool. Even if the full manifesto
+framework does not crystallize, P3 is independently valuable:
+chamber-cube enumeration of width-3 layered $K=2$ posets is a
+finite combinatorial task that supports OneThird's main theorem.
+
+---
+
+## 6. Verdict
+
+**AMBER-specialist, trending GREEN-promising.**
+
+### What is precise and formalizable at scoping resolution
+
+- §2.1 Intrinsic category $\mathsf{LocComm}(S_n)$ (clique complex of
+  Coxeter commutation graph) — PRECISE.
+- §2.3 Coxeter cube complex $\mathcal{X}(S_n)$ and constrained
+  sub-complex $\mathcal{X}(P)$ — PRECISE; **direct identification
+  with OneThird's chamber decomposition machinery**.
+- §2.4 Linear-extension graph Laplacian and compatibility spectral
+  gap $\lambda(P)$ — PRECISE; substantial mixing-time literature.
+
+### What requires a design choice (not literature-resolved)
+
+- §2.2 Galois correspondence on the algebra side. Four candidates
+  (G1 heap / G2 Specht / G3 chamber-subspace / G4 parabolic). G3
+  best fits the manifesto rhetoric but yields **subspaces, not
+  subalgebras**, which is a weakening from the stated claim.
+
+### What is genuinely new mathematics
+
+- Step 2 of §3 (expansion $\Rightarrow$ balance). Not in literature.
+  A sketch via Poincaré inequality is given in §2.4, but the
+  Dirichlet-energy / flip-count bound it requires is itself a new
+  combinatorial input.
+
+### What narrows the manifesto's scope
+
+- §2.3 second example: partition algebra fails the abstraction
+  transfer; Hecke and type-B succeed. The "intrinsic compatibility
+  geometries associated functorially to noncommutative algebras"
+  (manifesto §2) should be **scoped to Coxeter-style noncommutative
+  algebras**, not all noncommutative algebras.
+
+### Why AMBER not GREEN
+
+The load-bearing step (expansion $\Rightarrow$ balance) is open
+math that lies beyond polecat-class scope and beyond standard
+combinatorics expertise — it draws on high-dimensional expander
+theory (Anari–Liu–Oveis Gharan–Vinzant, Kaufman–Mass) and spectral
+combinatorics in a way that requires specialist input. Without that
+specialist input, the program stalls at §3 Step 2.
+
+### Why trending GREEN-promising
+
+(a) Three of four first-program targets have **precise candidates with
+literature scaffolding**.
+
+(b) §2.3 (cubical geometry) is **directly identified with existing
+OneThird chamber-decomposition machinery** — meaning the manifesto
+framework is not a parallel universe but a generalization of work
+already in `lean/OneThird/`.
+
+(c) **Path P3** (Case 3 axiom replacement via cube enumeration) is a
+**concrete, polecat-tractable near-term deliverable** that does not
+require Step 2 to be resolved. Even if the full manifesto program
+parks, P3 alone returns near-term value to OneThird.
+
+(d) The second worked example (Hecke) **passes the transfer test**,
+which is the canonical Grothendieck-style validation that the
+abstraction is real, not Coxeter-A-specific.
+
+### Recommended next actions (PM-level)
+
+1. **Preserve manifesto** — done in this ticket.
+2. **Park §3 Step 2** until specialist input is available. Add a
+   `compat-geom-expansion-to-balance.md` placeholder issue.
+3. **Spawn a follow-up scoping ticket for Path P3** (Case 3 axiom
+   replacement by enumerative chamber-cube analysis of layered $K=2$
+   width-3 posets). This is the **highest-leverage near-term path**
+   and is independently valuable.
+4. **Decide on separate repo $compat-geom$.** PM recommends
+   **NOT YET** — stay in `one_third_width_three` until Path P3 is
+   scoped. A separate repo is appropriate only once the program
+   demonstrates non-trivial mathematical content beyond OneThird's
+   existing scope, which Path P3 alone does not yet justify. Daniel's
+   call.
+5. **Sub-α-C continues** without pivot per ticket §"PM operates the
+   lightweight start option."
+
+---
+
+## 7. Open questions / honest unknowns
+
+For full transparency, items this polecat could not resolve in one
+session:
+
+(Q1) Is the manifesto's "Galois correspondence" intended to be a
+classical (poset/lattice) Galois closure, an abstract (category-
+theoretic) adjunction, or a Grothendieck-topology-style descent
+correspondence? Each gives a different candidate G1–G4 ranking.
+
+(Q2) Does the cube complex $\mathcal{X}(P)$ inherit CAT(0) structure
+from $\mathcal{X}(S_n)$? Full sub-complexes generally do not, but
+convex sub-complexes do (Sageev). When is $\mathcal{X}(P)$ convex?
+Possibly always (linear-extension sets are convex in Bruhat order),
+but verification is needed.
+
+(Q3) Is there a known direct relation between Brightwell's
+correlation arguments (Ahlswede–Daykin on chain polytopes) and the
+Garland-style local-to-global spectral arguments on cube complexes?
+A bridge would short-circuit Step 2.
+
+(Q4) What is the right "compatibility dimension" — clique number
+of $\Gamma$ restricted to $\mathcal{L}(P)$? Or width of $P$?
+Or some hybrid involving Cartier–Foata commutation classes? The
+manifesto says "effective dimension" without specifying.
+
+(Q5) Does the framework generalize to **infinite** Coxeter systems
+or only to finite reflection groups? If only finite, the "long-term
+goal of a bottom-up theory of geometry itself" (manifesto closing
+paragraph) is overstated; finite reflection groups don't reach
+general geometry.
+
+These are noted, not resolved.
+
+---
+
+## 8. Token-budget report
+
+This document was authored in a single polecat session at
+$\sim$ ~600 lines of substantive content. The 500k token cap was not
+approached. No trip-wires fired.
+
+Manifesto preserved byte-for-byte in
+`docs/compatibility-geometry-manifesto.md`.
+
+---
+
+*Authored by polecat mg-c853, branch `polecat-cat-mg-c853` → target
+`compat-geom-scoping`. Predecessor: none (new research direction).
+2026-05-13.*
