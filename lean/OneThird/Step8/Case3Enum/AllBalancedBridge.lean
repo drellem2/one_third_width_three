@@ -254,5 +254,57 @@ theorem allBalanced_imp_enumPosetsFor
     rw [hsf] at h
     cases h
 
+/-! ### §6 — K-parametric variant (`mg-9a4a` Window C) -/
+
+/-- Imperative→functional reduction for `allBalancedAtK`, the
+K-parametric generalisation of `allBalanced` (`mg-9a4a`). The outer
+loop source is `bandSizesGen K sizeLimit`; the body matches
+`allBalancedBody` on the nose, so the reduction is again `unfold + rfl`. -/
+private theorem allBalancedAtK_eq_forIn_fst (K w sizeLimit : Nat) :
+    allBalancedAtK K w sizeLimit =
+      match (forIn (m := Id) (bandSizesGen K sizeLimit)
+        (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+        (fun bs r => allBalancedBody w bs r)).fst with
+      | none => true
+      | some a => a := by
+  unfold allBalancedAtK allBalancedBody
+  rfl
+
+/-- K-parametric outer-loop Bool→Prop bridge (`mg-9a4a` Window C).
+
+Identical statement to `allBalanced_imp_enumPosetsFor` but with the
+band count `K` an explicit parameter. Used by
+`enumPosetsFor_eq_true_of_inScope` to extract `enumPosetsFor`
+witnesses from the K=4 entries of `case3_certificate`. -/
+theorem allBalancedAtK_imp_enumPosetsFor
+    (K w sizeLimit : Nat) (h : allBalancedAtK K w sizeLimit = true)
+    (bs : List Nat) (hbs : bs ∈ bandSizesGen K sizeLimit) :
+    enumPosetsFor w bs = true := by
+  -- Structurally identical to `allBalanced_imp_enumPosetsFor`.
+  rw [allBalancedAtK_eq_forIn_fst] at h
+  have hcase := allBalanced_forIn_fst_cases w (bandSizesGen K sizeLimit)
+  rcases hcase with hnone | hsf
+  · have h_no_done : ∀ b ∈ bandSizesGen K sizeLimit,
+        allBalancedBody w b
+          (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit) ≠
+        pure (ForInStep.done (⟨some false, PUnit.unit⟩ :
+                                MProd (Option Bool) PUnit)) := by
+      intro b hb hbody
+      have h_some_false :
+          (forIn (m := Id) (bandSizesGen K sizeLimit)
+                (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)
+                (fun bs r => allBalancedBody w bs r)).fst = some false :=
+        (allBalanced_forIn_fst_some_false_iff w _).mpr ⟨b, hb, hbody⟩
+      rw [hnone] at h_some_false
+      cases h_some_false
+    have h_no := h_no_done bs hbs
+    by_contra hep
+    rw [Bool.not_eq_true] at hep
+    apply h_no
+    exact (allBalancedBody_done_iff w bs
+      (⟨none, PUnit.unit⟩ : MProd (Option Bool) PUnit)).mpr hep
+  · rw [hsf] at h
+    cases h
+
 end Step8.Case3Enum
 end OneThird

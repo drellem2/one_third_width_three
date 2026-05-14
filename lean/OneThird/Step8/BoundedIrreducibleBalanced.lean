@@ -1473,50 +1473,71 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedDecidableInType false
 
 /-- Whether the parameter tuple `(w, card, K)` lies inside F5a's
-Bool-certified scope
+Bool-certified scope (post-`mg-9a4a` Window C narrowing, small
+size-limit variant).
 
-  `(w, sizeLimit) ∈ {(1, 9), (2, 7), (3, 7), (4, 7)}`, `K = 3`
+The certified scope is the disjunction
+
+  * `K = 3 ∧ w ∈ {1, …, 4} ∧ (w = 1 → card ≤ 9) ∧ (w ≥ 2 → card ≤ 7)`
+    — the original `case3_balanced_w{1,2,3,4}` slices of `mg-307c`,
+    unchanged.
+  * `K = 4 ∧ w = 1 ∧ card ≤ 8` — the Window C K=4 small-size
+    extension (`mg-9a4a`, covering the 50 K=4-w=1 band-tuples with
+    `c ≤ 8`; the larger K=4-w=1 slice and the K=3 c-sliver remain
+    axiomatic — see `docs/compatibility-geometry-pathP3-scoping.md`
+    §5.1 and the K4W1 file header for the narrowing accounting).
 
 from `OneThird.Step8.Case3Enum.case3_certificate`. Used by the
-`bounded_irreducible_balanced` theorem below to flag the cases in
+`bounded_irreducible_balanced_inScope` theorem to flag the cases in
 which the Bool certificate directly witnesses the Prop-level
-conclusion. -/
+conclusion. Negating it (`¬ InCase3Scope`) narrows the residual
+`case3Witness_hasBalancedPair_outOfScope` axiom's parameter range
+without eliminating it; see
+`docs/compatibility-geometry-pathP3-scoping.md` §3 for the axiom
+narrowing audit. -/
 def InCase3Scope (w card K : ℕ) : Prop :=
-  K = 3 ∧ 1 ≤ w ∧ w ≤ 4 ∧
-    (w = 1 → card ≤ 9) ∧ (2 ≤ w → card ≤ 7)
+  (K = 3 ∧ 1 ≤ w ∧ w ≤ 4 ∧
+    (w = 1 → card ≤ 9) ∧ (2 ≤ w → card ≤ 7)) ∨
+  (K = 4 ∧ w = 1 ∧ card ≤ 8)
 
-/-- `InCase3Scope` is decidable: a conjunction / implication of `Nat`
+/-- `InCase3Scope` is decidable: a disjunction of conjunctions of `Nat`
 equalities and inequalities. Required so that
 `bounded_irreducible_balanced_hybrid` can branch on the predicate via
 `by_cases`. -/
 instance (w card K : ℕ) : Decidable (InCase3Scope w card K) := by
   unfold InCase3Scope; infer_instance
 
-/-- Every `(w, card, K)` in Case-3 scope has `w ∈ {1, 2, 3, 4}`. -/
+/-- Every `(w, card, K)` in Case-3 scope has `w ∈ {1, 2, 3, 4}`. The
+K=4 branch forces `w = 1`; the K=3 branch admits the full four-way
+split. -/
 lemma InCase3Scope.w_mem {w card K : ℕ} (h : InCase3Scope w card K) :
     w = 1 ∨ w = 2 ∨ w = 3 ∨ w = 4 := by
-  obtain ⟨_, h1, h4, _, _⟩ := h
-  -- `1 ≤ w ∧ w ≤ 4` and a four-way split on `w`.
-  rcases Nat.lt_or_ge w 2 with hlt | hge
-  · exact Or.inl (by omega)
-  rcases Nat.lt_or_ge w 3 with hlt | hge
-  · exact Or.inr (Or.inl (by omega))
-  rcases Nat.lt_or_ge w 4 with hlt | hge
-  · exact Or.inr (Or.inr (Or.inl (by omega)))
-  · exact Or.inr (Or.inr (Or.inr (by omega)))
+  rcases h with ⟨_, h1, h4, _, _⟩ | ⟨_, hw1, _⟩
+  · -- K=3 branch: 1 ≤ w ∧ w ≤ 4 splits four ways.
+    rcases Nat.lt_or_ge w 2 with hlt | hge
+    · exact Or.inl (by omega)
+    rcases Nat.lt_or_ge w 3 with hlt | hge
+    · exact Or.inr (Or.inl (by omega))
+    rcases Nat.lt_or_ge w 4 with hlt | hge
+    · exact Or.inr (Or.inr (Or.inl (by omega)))
+    · exact Or.inr (Or.inr (Or.inr (by omega)))
+  · -- K=4 branch: w = 1 directly.
+    exact Or.inl hw1
 
 /-- Under `InCase3Scope w card K`, the Case-3 Bool certificate's size
-cap applies: `card ≤ 9` (when `w = 1`) or `card ≤ 7` (when `w ≥ 2`),
-each of which is at most `9`. -/
+cap applies: `card ≤ 9` on the K=3 branch (the original
+`case3_balanced_w1` cap is the loosest at `≤ 9`; the `w ≥ 2` cap is
+`≤ 7`) and `card ≤ 8` on the K=4-w=1 branch (the `mg-9a4a` small-size
+variant) — uniformly bounded by `9`. -/
 lemma InCase3Scope.card_le_nine {w card K : ℕ} (h : InCase3Scope w card K) :
     card ≤ 9 := by
-  obtain ⟨_, hw1, _, hcap1, hcap2⟩ := h
-  rcases Nat.lt_or_ge w 2 with hlt | hge
-  · -- `1 ≤ w < 2` forces `w = 1`; apply the `w = 1` cap.
-    have hw : w = 1 := by omega
-    exact hcap1 hw
-  · -- `2 ≤ w` applies the tighter `≤ 7` cap.
-    have : card ≤ 7 := hcap2 hge
+  rcases h with ⟨_, hw1, _, hcap1, hcap2⟩ | ⟨_, _, hcard⟩
+  · -- K=3 branch.
+    rcases Nat.lt_or_ge w 2 with hlt | hge
+    · have hw : w = 1 := by omega
+      exact hcap1 hw
+    · have : card ≤ 7 := hcap2 hge; omega
+  · -- K=4 branch: card ≤ 8 ≤ 9.
     omega
 
 end CertificateWitness

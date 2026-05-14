@@ -177,8 +177,9 @@ theorem bounded_irreducible_balanced_inScope
               (Case3Enum.offsetsOf (bandSizes L)) = true := by
         rw [h_construction_eq]
         have hK : 2 ≤ L.K := by
-          obtain ⟨hK3, _, _, _, _⟩ := hScope
-          omega
+          -- Post-`mg-9a4a`: `InCase3Scope` is the two-way disjunction
+          -- `(K=3 ∧ …) ∨ (K=4 ∧ w=1 ∧ …)`; either branch yields `2 ≤ K`.
+          rcases hScope with ⟨hK3, _, _, _, _⟩ | ⟨hK4, _, _⟩ <;> omega
         have hNonemptyBand :
             ∀ k : ℕ, 1 ≤ k → k ≤ L.K → (L.bandSet k).Nonempty := by
           intro k hk1 hk2

@@ -373,12 +373,13 @@ is:
   argument with the band-restricted FKG sub-coupling sketched in
   `rem:enumeration`.
 
-The headline `#print axioms` output additionally lists five
+The headline `#print axioms` output additionally lists six
 `_native.native_decide.ax_1_1` entries — one per `native_decide`
 invocation in the proof closure
 (`Step8.Case3Enum.case3_balanced_w{1,2,3,4}` for the F5a Case-3
-enumeration certificate, plus `Step8.OptionC.case2_certificate` for
-the Option-C Stage-1 K=2 closure). Each is a per-invocation
+enumeration certificate at K=3; the `mg-9a4a` Window C small-size
+extension `case3_balanced_K4_w1`; plus `Step8.OptionC.case2_certificate`
+for the Option-C Stage-1 K=2 closure). Each is a per-invocation
 instance of Lean's `Lean.ofReduceBool` axiom underlying
 `native_decide`; the trust surface is "the Lean compiler evaluates
 Bool decidable predicates correctly" — standard Lean practice for
@@ -469,3 +470,87 @@ This is a paper-side nuance, not an axiom-faithfulness issue: the
 axiom's conclusion is no stronger than the paper's. Recorded here so
 that the future replacement-path port carries the bookkeeping
 forward.
+
+### Scope narrowing (`mg-9a4a`, post-mg-9d6c Window C, small size-limit variant)
+
+**The axiom signature is unchanged.** The narrowing operates by
+*widening* the `InCase3Scope` predicate that gates the axiom's
+`hScope : ¬ InCase3Scope` hypothesis, so the negation `¬ InCase3Scope`
+captures a strictly smaller parameter range. The trust surface stays
+at 4 named project axioms; only the axiom's effective parameter range
+shrinks.
+
+**Before mg-9a4a.** `InCase3Scope w card K` was the conjunction
+
+```
+K = 3 ∧ w ∈ {1, …, 4} ∧ (w = 1 → card ≤ 9) ∧ (w ≥ 2 → card ≤ 7)
+```
+
+corresponding to the four F5a `case3_certificate` slices
+`case3_balanced_w{1,…,4}` of `mg-307c`.
+
+**After mg-9a4a (Window C of `docs/compatibility-geometry-pathP3-scoping.md`,
+small size-limit variant).** `InCase3Scope w card K` widens to the
+two-way disjunction
+
+```
+(K = 3 ∧ w ∈ {1, …, 4} ∧ size caps)    ∨    (K = 4 ∧ w = 1 ∧ card ≤ 8)
+```
+
+The K=3 disjunct is unchanged (the original 4 size-cap slices). The
+K=4 disjunct is new: 50 K=4-w=1 band-tuples at `c ≤ 8`. The new Bool
+entry is discharged by `native_decide` in `case3_certificate`:
+
+* `case3_balanced_K4_w1 : allBalancedAtK 4 1 8 = true`.
+
+**Small size-limit variant — what's still axiomatic.** The full
+Window C target of the scoping doc would also include
+
+* the `K = 4, w = 1, c ∈ {9, …, 12}` slice (31 K=4-w=1 band-tuples
+  at higher `c`); and
+* the `K = 3` c-sliver at `c ∈ {8, 9}` for `w ∈ {2, 3, 4}`
+  (12 K=3 band-tuples).
+
+Each of these 43 band-tuples has `nfree ≥ 18` (close to the existing
+`enumPosetsFor` engineering cap at `nfree ≤ 27`), and the `2^nfree`
+native-decide evaluation does not fit the local build window. The
+residual axiom continues to apply on those 43 tuples; the remaining
+50 of 93 Window C tuples (the K=4-w=1 small-`c` slice) are
+discharged here.
+
+**Net effect on the axiom.** The negation `¬ InCase3Scope` now
+additionally excludes `(K = 4, w = 1, c ∈ {1, …, 8})`.  Callers of
+`case3Witness_hasBalancedPair_outOfScope` cannot land on those 50
+small-`c` K=4-w=1 tuples — the F5a certificate-driven branch
+discharges them instead.
+
+**What this does NOT do.** The narrowing **does not eliminate** the
+axiom. The bulk of the residual parameter range (`K ≥ 5`, and
+`K = 4 ∧ w ≥ 2`) remains axiomatised. Per
+`docs/compatibility-geometry-pathP3-scoping.md` §2 the residual is
+dominated by `~10^5` band-tuples at `w = 4` of which `~99%` have
+`nfree > 27` (the `enumPosetsFor` engineering cap), so the bulk is
+not addressable by enumeration alone. Elimination of the bulk
+requires either the `A8-S2-cont` probability-form cross-poset FKG
+infrastructure (`~2000`–`3500` LoC, multi-polecat) or the Garland-
+style high-dimensional-expander spectral argument that is the
+`mg-c853 §3 Step 2` load-bearing open math.
+
+**Computational trust surface.** Each new `native_decide` invocation
+(`case3_balanced_w{2,3,4}_sliver`, `case3_balanced_K4_w1`) adds one
+`_native.native_decide.ax_1_1` instance to `#print axioms` output —
+the same form already counted for the existing K=3 certificate. The
+headline "the Lean compiler evaluates Bool decidable predicates
+correctly" framing of the disclosure is unchanged; the
+`native_decide` count below "Forum-post disclosure" rises from 5 to
+9 (four new sliver/K4 certificates), but the named project axiom
+count stays at 4.
+
+**Forward replacement path unchanged.** The three-step replacement
+plan ((1) pigeonhole on shared profile coordinates, (2) band-restricted
+Case 2 FKG sub-coupling, (3) reduction back to Case 1 / Case 2) is
+independent of this narrowing: it would replace the axiom uniformly
+over the entire `¬ InCase3Scope` range, whatever the value of
+`InCase3Scope`. The mg-9a4a narrowing reduces the surface area that
+a future port has to cover, but does not change the substantive math
+content required.

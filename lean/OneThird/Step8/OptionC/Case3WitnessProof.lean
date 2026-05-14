@@ -153,10 +153,21 @@ private lemma case2_discharge_of_injective
   exact absurd (hInj hb_eq) hne
 
 /-- Specialisation of `case3_certificate` together with
-`allBalanced_imp_enumPosetsFor` and `bandSizes_mem_bandSizesGen` to
-produce the `enumPosetsFor LB.w (bandSizes LB) = true` Bool fact
-required by `bounded_irreducible_balanced_inScope` whenever
-`InCase3Scope` holds and bands are non-empty. -/
+`allBalanced_imp_enumPosetsFor` / `allBalancedAtK_imp_enumPosetsFor`
+and `bandSizes_mem_bandSizesGen` to produce the
+`enumPosetsFor LB.w (bandSizes LB) = true` Bool fact required by
+`bounded_irreducible_balanced_inScope` whenever `InCase3Scope` holds
+and bands are non-empty.
+
+Post-`mg-9a4a` Window C (small size-limit variant), `InCase3Scope`
+is the two-way disjunction
+
+  * `K = 3 ∧ w ∈ {1,…,4} ∧ size caps` (original K=3 cert via
+    `case3_balanced_w{1,…,4}`).
+  * `K = 4 ∧ w = 1 ∧ card ≤ 8`        (the `mg-9a4a` K=4 small-size
+                                      extension `case3_balanced_K4_w1`).
+
+So the dispatch first splits K=3 vs K=4, then on `w` inside K=3. -/
 private lemma enumPosetsFor_eq_true_of_inScope
     {β : Type*} [PartialOrder β] [Fintype β] [DecidableEq β]
     (LB : LayeredDecomposition β)
@@ -164,43 +175,57 @@ private lemma enumPosetsFor_eq_true_of_inScope
     (hNonemptyB : ∀ k : ℕ, 1 ≤ k → k ≤ LB.K → 1 ≤ Step8.bandSize LB k) :
     Step8.Case3Enum.enumPosetsFor LB.w (Step8.bandSizes LB) = true := by
   classical
-  -- Save the four-way `w` split before destructuring `hScope`.
-  have hw_split := InCase3Scope.w_mem hScope
-  -- Unpack scope: K = 3, w ∈ {1,2,3,4}, with size cap.
-  obtain ⟨hK3, _hw1, _hw4, hcap1, hcap2⟩ := hScope
-  -- Pick the right (w, sizeLimit) entry of `case3_certificate`.
-  rcases Step8.Case3Enum.case3_certificate with ⟨hw1cert, hw2cert, hw3cert, hw4cert⟩
-  -- Split on `LB.w` to obtain the matching `allBalanced` fact and size cap.
-  rcases hw_split with hw | hw | hw | hw
-  · -- w = 1: sizeLimit = 9.
-    have hCard : Fintype.card β ≤ 9 := hcap1 hw
-    have hCard' : Fintype.card β ≤ 9 := hCard
-    have hMem : Step8.bandSizes LB ∈ Step8.Case3Enum.bandSizesGen LB.K 9 := by
-      exact Step8.bandSizes_mem_bandSizesGen LB 9 hCard hNonemptyB
-    rw [hK3] at hMem
-    rw [hw]
-    exact Step8.Case3Enum.allBalanced_imp_enumPosetsFor 1 9 hw1cert _ hMem
-  · -- w = 2: sizeLimit = 7.
-    have hCard : Fintype.card β ≤ 7 := hcap2 (by omega)
-    have hMem : Step8.bandSizes LB ∈ Step8.Case3Enum.bandSizesGen LB.K 7 :=
-      Step8.bandSizes_mem_bandSizesGen LB 7 hCard hNonemptyB
-    rw [hK3] at hMem
-    rw [hw]
-    exact Step8.Case3Enum.allBalanced_imp_enumPosetsFor 2 7 hw2cert _ hMem
-  · -- w = 3: sizeLimit = 7.
-    have hCard : Fintype.card β ≤ 7 := hcap2 (by omega)
-    have hMem : Step8.bandSizes LB ∈ Step8.Case3Enum.bandSizesGen LB.K 7 :=
-      Step8.bandSizes_mem_bandSizesGen LB 7 hCard hNonemptyB
-    rw [hK3] at hMem
-    rw [hw]
-    exact Step8.Case3Enum.allBalanced_imp_enumPosetsFor 3 7 hw3cert _ hMem
-  · -- w = 4: sizeLimit = 7.
-    have hCard : Fintype.card β ≤ 7 := hcap2 (by omega)
-    have hMem : Step8.bandSizes LB ∈ Step8.Case3Enum.bandSizesGen LB.K 7 :=
-      Step8.bandSizes_mem_bandSizesGen LB 7 hCard hNonemptyB
-    rw [hK3] at hMem
-    rw [hw]
-    exact Step8.Case3Enum.allBalanced_imp_enumPosetsFor 4 7 hw4cert _ hMem
+  -- Pick the right entry of `case3_certificate`.
+  rcases Step8.Case3Enum.case3_certificate with
+    ⟨hw1cert, hw2cert, hw3cert, hw4cert, hK4w1cert⟩
+  -- Two-way split on `InCase3Scope`.
+  rcases hScope with ⟨hK3, _hw_pos, _hw_le, hcap1, hcap2⟩
+                   | ⟨hK4, hw1, hcard8⟩
+  · -- K=3 branch: four-way split on `w`.
+    have hw_split : LB.w = 1 ∨ LB.w = 2 ∨ LB.w = 3 ∨ LB.w = 4 := by
+      rcases Nat.lt_or_ge LB.w 2 with hlt | hge
+      · exact Or.inl (by omega)
+      rcases Nat.lt_or_ge LB.w 3 with hlt | hge
+      · exact Or.inr (Or.inl (by omega))
+      rcases Nat.lt_or_ge LB.w 4 with hlt | hge
+      · exact Or.inr (Or.inr (Or.inl (by omega)))
+      · exact Or.inr (Or.inr (Or.inr (by omega)))
+    rcases hw_split with hw | hw | hw | hw
+    · -- w = 1: sizeLimit = 9 (case3_balanced_w1).
+      have hCard : Fintype.card β ≤ 9 := hcap1 hw
+      have hMem : Step8.bandSizes LB ∈ Step8.Case3Enum.bandSizesGen LB.K 9 :=
+        Step8.bandSizes_mem_bandSizesGen LB 9 hCard hNonemptyB
+      rw [hK3] at hMem
+      rw [hw]
+      exact Step8.Case3Enum.allBalanced_imp_enumPosetsFor 1 9 hw1cert _ hMem
+    · -- w = 2: sizeLimit = 7 (case3_balanced_w2).
+      have hCard : Fintype.card β ≤ 7 := hcap2 (by omega)
+      have hMem : Step8.bandSizes LB ∈ Step8.Case3Enum.bandSizesGen LB.K 7 :=
+        Step8.bandSizes_mem_bandSizesGen LB 7 hCard hNonemptyB
+      rw [hK3] at hMem
+      rw [hw]
+      exact Step8.Case3Enum.allBalanced_imp_enumPosetsFor 2 7 hw2cert _ hMem
+    · -- w = 3: sizeLimit = 7 (case3_balanced_w3).
+      have hCard : Fintype.card β ≤ 7 := hcap2 (by omega)
+      have hMem : Step8.bandSizes LB ∈ Step8.Case3Enum.bandSizesGen LB.K 7 :=
+        Step8.bandSizes_mem_bandSizesGen LB 7 hCard hNonemptyB
+      rw [hK3] at hMem
+      rw [hw]
+      exact Step8.Case3Enum.allBalanced_imp_enumPosetsFor 3 7 hw3cert _ hMem
+    · -- w = 4: sizeLimit = 7 (case3_balanced_w4).
+      have hCard : Fintype.card β ≤ 7 := hcap2 (by omega)
+      have hMem : Step8.bandSizes LB ∈ Step8.Case3Enum.bandSizesGen LB.K 7 :=
+        Step8.bandSizes_mem_bandSizesGen LB 7 hCard hNonemptyB
+      rw [hK3] at hMem
+      rw [hw]
+      exact Step8.Case3Enum.allBalanced_imp_enumPosetsFor 4 7 hw4cert _ hMem
+  · -- K=4 branch: w = 1, sizeLimit = 8 (case3_balanced_K4_w1).
+    have hMem : Step8.bandSizes LB ∈ Step8.Case3Enum.bandSizesGen LB.K 8 :=
+      Step8.bandSizes_mem_bandSizesGen LB 8 hcard8 hNonemptyB
+    rw [hK4] at hMem
+    rw [hw1]
+    exact Step8.Case3Enum.allBalancedAtK_imp_enumPosetsFor 4 1 8 hK4w1cert _
+      hMem
 
 /-! ### §2 — Main proof: `Case3Witness_proof`
 
