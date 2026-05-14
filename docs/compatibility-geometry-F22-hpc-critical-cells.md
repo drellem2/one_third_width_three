@@ -1,12 +1,14 @@
 # Compat-Geom — F22-HPC: cell-tracking the F14/F17 cofiber Morse reduction — the explicit critical cells of M_rel^eq (mg-43fb)
 
-**Branch:** `polecat-cat-mg-43fb`.
+**Branch:** `polecat-cat-mg-43fb` (Session 1); `polecat-cat-mg-0c5d` (Session 2).
 **Parent:** mg-a2cb (F21, GREEN-needs-hpc-anchor) §8 — F21 named this Tier-3 anchor ticket precisely.
 **Chain:** F10 → F17 (mg-4d3a, `M_rel^eq`) → F18 (mg-d039) → F19 → F20 → F21 (mg-a2cb, Prop F21.1) → **F22-HPC (mg-43fb)**.
 **Type:** Tier-3 HPC enumeration / reduction computation — cell-tracking through F17's F14 order-ideal reduction. **No new axioms; no Lean changes; no (co)homology datapoint touching the trust surface.** Multi-session; cumulative state in `docs/state-F22-HPC.md`.
 **Daniel directives:** 2026-05-14T05:18Z (finish the induction internally; no external collaboration); 2026-05-14T17:23Z (milestone 1 — full gap-free width-3 proof, no sketches or gaps); 2026-05-14T20:32Z (PROCEED — authorised the Tier-3 anchor).
 
-**Verdict: GREEN-partial.** F22-HPC Session 1 builds the cell-tracking infrastructure and **materialises the two critical `(n−1)`-cells of F17's perfect `S_n`-equivariant cofiber Morse matching `M_rel^eq`** — as explicit chains in `PPF_{n+1}` — for **`n = 3, 4, 5`**, via the F17-structural (closure-operator, memory-efficient) terminal reduction seeded with the known exact `c*_3, c*_4, c*_5`. **(CM-rel) is checked on the anchor data and CONFIRMED at `n = 3, 4, 5`**: every materialised critical cell has a **width-2 ordinal-sum-of-antichains top poset with a size-2 block** (`OSA(1,1,2)`, `OSA(1,2,1,1)`, `OSA(1,2,2,1)`) and **every internal per-step Kahn–Saks `Pr` lies in `[3/11, 8/11]`**. The `n = 5` cell `c_D` has top poset `OSA(1,2,2,1)` — one of F20's 12 genuine-`G_6` candidates. Session 1 also establishes a **precise, load-bearing finding** (§5): F17's `M_rel^eq` critical cells carry `c*_n`'s *internal* structure, **not** `c*_{n+1}`'s — they are **not** in the `S_{n+1}`-orbit of the F21-recorded chamber-Morse `c*_{n+1}`. So F21.1's "`c*_{n+1}` is **(the descent of)** a critical cell of `M_rel^eq`" is confirmed to need the **F18 cross-boundary cancellation as a genuine cell-transforming step** — not a "pick the survivor" identification. Pinning the genuine `c*_6, c*_7` (resolving F20's 12-candidate short list) is therefore the continuation gate: `n = 6, 7` need either `c*_6 / c*_7` as the terminal seed (the very unknowns), the non-materialising intrinsic structural cell-tracking (genuinely HPC — `Δ(A_5)` already has `1.35·10¹³` cells), **or** the cross-boundary-cancellation tower. Trust-surface impact: **none**.
+> **Session 2 (mg-0c5d) verdict: RED-tripwire.** The cross-boundary cancellation was implemented and run materialised at `n = 3`: it produces `D-lift(c*_n)` (an `M_rel^eq` critical cell), **not** the recorded `c*_{n+1}` — which is structurally never a cross-boundary survivor. F21.1's "(the descent of)" is a genuine, essential, HPC-class, canonically under-specified operation; the naive survivor tower *refutes* (CM-rel) at `n = 6`. The genuine `c*_6, c*_7` are **not** produced. See the **Session 2** section below (after §8) and `docs/state-F22-HPC.md` §5. Surfaced immediately per the ticket protocol.
+
+**Verdict: GREEN-partial.** *(Session 1.)* F22-HPC Session 1 builds the cell-tracking infrastructure and **materialises the two critical `(n−1)`-cells of F17's perfect `S_n`-equivariant cofiber Morse matching `M_rel^eq`** — as explicit chains in `PPF_{n+1}` — for **`n = 3, 4, 5`**, via the F17-structural (closure-operator, memory-efficient) terminal reduction seeded with the known exact `c*_3, c*_4, c*_5`. **(CM-rel) is checked on the anchor data and CONFIRMED at `n = 3, 4, 5`**: every materialised critical cell has a **width-2 ordinal-sum-of-antichains top poset with a size-2 block** (`OSA(1,1,2)`, `OSA(1,2,1,1)`, `OSA(1,2,2,1)`) and **every internal per-step Kahn–Saks `Pr` lies in `[3/11, 8/11]`**. The `n = 5` cell `c_D` has top poset `OSA(1,2,2,1)` — one of F20's 12 genuine-`G_6` candidates. Session 1 also establishes a **precise, load-bearing finding** (§5): F17's `M_rel^eq` critical cells carry `c*_n`'s *internal* structure, **not** `c*_{n+1}`'s — they are **not** in the `S_{n+1}`-orbit of the F21-recorded chamber-Morse `c*_{n+1}`. So F21.1's "`c*_{n+1}` is **(the descent of)** a critical cell of `M_rel^eq`" is confirmed to need the **F18 cross-boundary cancellation as a genuine cell-transforming step** — not a "pick the survivor" identification. Pinning the genuine `c*_6, c*_7` (resolving F20's 12-candidate short list) is therefore the continuation gate: `n = 6, 7` need either `c*_6 / c*_7` as the terminal seed (the very unknowns), the non-materialising intrinsic structural cell-tracking (genuinely HPC — `Δ(A_5)` already has `1.35·10¹³` cells), **or** the cross-boundary-cancellation tower. Trust-surface impact: **none**.
 
 **Deliverables (this session):**
 - `scripts/compat_geom_F22_hpc_cell_tracking.py` — the cell-tracking upgrade of the F14-reduction scripts (pure-Python stdlib, exact arithmetic, runtime ≈ 0.1 s for `n = 3,4,5`; the `n = 3` materialised cross-check ≈ 0.1 s).
@@ -244,6 +246,63 @@ The genuine HPC load, if sub-goal 1's cross-boundary cancellation itself proves 
 ### 8.1 Trust-surface impact
 
 **None.** F22-HPC Session 1 introduces no new axioms, makes no Lean changes, runs no (co)homology HPC datapoint. It is the explicit cell-tracking of the F14/F17 reduction (elementary order-complex combinatorics + exact arithmetic) plus a small materialised cross-check at `n = 3`. The in-tree Lean `width3_one_third_two_thirds` 4-axiom artifact is untouched. Route (iii) / mg-b345 stays parked.
+
+---
+
+# Session 2 (mg-0c5d) — the F18 cross-boundary cancellation tracking — **RED-tripwire**
+
+**Branch:** `polecat-cat-mg-0c5d`. **Verdict: RED-tripwire** (surfaced immediately, per the ticket protocol — mail to `mayor` and `human`, 2026-05-14).
+
+Session 2 implemented the F18 cross-boundary Forman cancellation at the cell level and ran it **materialised at `n = 3`** (`Δ_4`, ≈ `1.5·10⁴` cells — exact, reproducible: `scripts/compat_geom_F22_hpc_cell_tracking.py` Section 10, building on the mg-3839/mg-6295 cofiber-Morse infrastructure `scripts/compat_geom_cofiber_morse_n3n4.py`). The `n = 3` run is the built-in trip-wire, and it pins down precisely what the cross-boundary cancellation does — and what it does **not** do.
+
+## §S2.1 What the cross-boundary cancellation actually does
+
+Assemble `M_4 = M_3 ⊔ M_rel^eq` on `Δ_4` (`M_3` = perfect chamber-Morse matching on `Δ_3`, critical cell `c*_3`; `M_rel^eq` = perfect cofiber matching on `C_∗(Δ_4, Δ_3)`, critical cells `c_D, c_U`). Critical vector `(0,1,2,0)`. Run the cross-boundary Forman cancellation `(0,1,2,0) → (0,0,1,0)`:
+
+- The cancellation cancels `c*_3` against **one** of `{c_D, c_U}` along a **unique gradient `V`-path** (length 22) — a valid Forman cancellation. The result `M_4` is **perfect and acyclic**.
+- By Forman's cancellation theorem, the **other** critical `2`-cell survives **UNCHANGED**. The materialised survivor is **`D-lift(c*_3)` exactly** (`|L|`-profile `(6,3,2)`) — i.e. Session 1's `c_D@3`, the closure-operator lift.
+
+This is structural and `n`-uniform: `M_rel^eq`'s two critical `(n−1)`-cells are *exactly* `{D-lift(c*_n), U-lift(c*_n)}` (F17 §4 + Session 1 §1), and the cross-boundary cancellation leaves the un-cancelled one unchanged. **So the survivor is always a closure-operator lift of `c*_n`.**
+
+## §S2.2 The survivor is NOT `c*_{n+1}`
+
+The F2/F5-recorded `c*_{n+1}` is **not** of closure-operator-lift shape: its bottom poset has nonempty restriction to `[n]` (e.g. `c*_4`'s bottom `{1<2,3<0,3<2}` has `{1<2}` inside `[3]`). A closure-operator lift's bottom is an *apex* `ω_n ∈ S↓` with `restriction = ∅`. Hence the recorded `c*_{n+1}` can **never** be a cross-boundary survivor — for *any* `M_rel^eq`. `c*_4`'s `|L|`-profile `(5,3,2) ≠ (6,3,2)` = the survivor's; different `S_4`-orbits.
+
+## §S2.3 The catastrophe — the naive "survivor tower" fails (CM-rel)
+
+If one took the genuine tower to be the naive **survivor tower** `c*_{n+1} := D-lift(c*_n)` (the cross-boundary survivor, iterated), then:
+
+| `n` | `|L|`-profile | per-step `Pr` | internal per-step `Pr` | (CM-rel)? |
+|----:|---|---|---|:---:|
+| 3 | `(3,2)` | `2/3` | `2/3` | ✓ |
+| 4 | `(6,3,2)` | `1/2, 2/3` | `2/3` | ✓ |
+| 5 | `(24,6,3,2)` | `1/4, 1/2, 2/3` | `1/2, 2/3` | ✓ |
+| 6 | `(120,24,6,3,2)` | `1/5, 1/4, 1/2, 2/3` | **`1/4`**, `1/2, 2/3` | **✗** |
+| 7 | `(720,120,24,6,3,2)` | `1/6,…` | **`1/5, 1/4`**, `1/2, 2/3` | **✗** |
+
+The iterated MoveB **apex steps** (`1/4, 1/5, …`) become *internal* per-step `Pr`'s one level up, and fall **below** the BFT-sharp interval `[3/11, 8/11]`. So the naive survivor tower **refutes (CM-rel) at `n ≥ 6`**. The naive tower is therefore *not* the genuine tower — confirming that the "descent" is **essential**, not cosmetic.
+
+## §S2.4 The "descent" is real, essential, HPC-class, and under-specified
+
+The materialised `n = 3` run confirms F21.1's parenthetical "**(the descent of)**" is a *genuine* operation: the recorded `c*_4` **is** reachable from the survivor `D-lift(c*_3)` by a gradient `V`-path **inside the perfect `M_4`** (path length 27). The descent absorbs the bad MoveB apex step into a BFT-sharp first step (recorded `c*_5` has first step `7/15`, not the closure-lift's `1/4` — that is exactly how the descent dodges the §S2.3 catastrophe).
+
+But:
+- **The descent target is not canonically pinned.** Among the `212` `2`-cells reachable from the survivor by a gradient `V`-path, `151` are all-BFT-sharp; the minimum `|L|`-profile among those is `(5,3,2)` — *equal to* recorded `c*_4`'s profile — but the min-profile all-BFT-sharp cells span **4 distinct `S_4`-orbits`. Recorded `c*_4` is one of them, not uniquely distinguished by min-profile + BFT-sharpness. (This is precisely F21 §5.2's own "lower-bound argument" — the (CM-struct)(i)+(ii) constraints under-determine `c*_n`.)
+- **The descent is HPC-class.** Unlike the cross-boundary cancellation (which is structural — the survivor is a closed-form closure-operator lift), the descent is a gradient-`V`-path move **inside the full `Δ_{n+1}`**. It requires `M_{n+1}` materialised: feasible at `n = 3` (`Δ_4`, `1.5·10⁴` cells), HPC at `n ≥ 4` (`Δ_5` ≈ `3.3·10⁸` cells, `Δ_6` ≈ … ). The cross-boundary cancellation does **not** bypass the HPC; it reduces "find `c*_{n+1}`" to "the descent of `D-lift(c*_n)`", which is still HPC.
+
+## §S2.5 Diagnosis and verdict
+
+> **The cross-boundary Forman cancellation produces `D-lift(c*_n)` — an `M_rel^eq` critical cell — not the recorded `c*_{n+1}`. F21.1's "(the descent of)" is a genuine, essential, separate operation that is (a) canonically under-specified and (b) HPC-class for `n ≥ 4`. The `n = 4` trip-wire as scoped ("the cross-boundary cancellation of `c*_4` must descend to the known `c*_5`") therefore cannot pass: the cancellation alone yields `D-lift(c*_4)`, not `c*_5`.**
+
+This is **RED-tripwire** in the precise sense of the F22-HPC verdict matrix — "*the n=4 cross-boundary cancellation does not descend to the known c*_5: the F21.1 descent picture is [incomplete]*". It is **not** RED-cm-rel-false: (CM-rel) is *not* refuted on the genuine `c*_6, c*_7` — those are simply *not produced*, because the descent rule is not pinned. (The naive survivor tower *would* refute it — §S2.3 — but that tower is not the genuine tower.) It is **not** GREEN-cells-materialised, and **not** AMBER-budget-capped: the bound is structural (the descent gap), not budgetary — the `n = 3` materialised trip-wire ran in `< 1 s`.
+
+**Consequence for the program.** F21.1's *core* (`c*_{n+1}` is the descent of an `M_rel^eq` critical cell) stands; what Session 2 establishes is that "(the descent of)" is **load-bearing in a stronger sense than Session 1 framed it**: it is not merely "the survivor reads off as `c*_{n+1}`", and it is not a cheap by-product of the cross-boundary cancellation. The genuine continuation gate is **the descent rule** — see `docs/state-F22-HPC.md` §5 for the three continuation routes (pin the descent canonically; accept it as HPC on `Δ_{n+1}`; or re-scope the anchor's deliverable to *the precise characterisation of the descent gap*).
+
+## §S2.6 Deliverables (Session 2)
+
+- `scripts/compat_geom_F22_hpc_cell_tracking.py` **Section 10** — the F18 cross-boundary cancellation tracking: `materialised_cross_boundary_n3()` (the `n = 3` trip-wire, exact, reproducible), `naive_closure_lift_tower()` (the `c*_{n+1} := D-lift(c*_n)` tower + the (CM-rel) catastrophe check), `run_cross_boundary_tracking()` (driver). Runtime `< 1 s`.
+- This Session-2 section + `docs/state-F22-HPC.md` §5–§6 (cumulative ledger).
+- **Trust-surface impact: none.** No new axioms, no Lean changes, no (co)homology HPC datapoint. Pure-Python stdlib, exact arithmetic.
 
 ---
 

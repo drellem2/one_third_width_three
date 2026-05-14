@@ -132,8 +132,109 @@ seeds F23, not a proof of the `n`-uniform statement.
 
 ---
 
-## §4. Verdict ledger
+## §5. Session 2 — 2026-05-14 (polecat mg-0c5d) — RED-tripwire
+
+**Goal:** implement the F18 cross-boundary Forman cancellation tracking;
+run the `n = 4` trip-wire; produce the genuine `c*_6, c*_7`; confirm
+(CM-rel) at `n = 6, 7`.
+
+**Outcome: RED-tripwire.** The cross-boundary cancellation was implemented
+at the cell level and run **materialised at `n = 3`** (`Δ_4`, ≈ 1.5·10⁴
+cells — exact, reproducible; `scripts/compat_geom_F22_hpc_cell_tracking.py`
+Section 10). The trip-wire pins down precisely what the cross-boundary
+cancellation does — and it does **not** descend to `c*_{n+1}`.
+
+### Established (rock-solid, materialised at `n = 3`)
+
+1. **`M_rel^eq`'s two critical `(n−1)`-cells are exactly
+   `{D-lift(c*_n), U-lift(c*_n)}`** — the closure-operator lifts (F17 §4 +
+   Session 1 §1). Nothing else can be a critical cell of the F17-structural
+   `M_rel^eq`.
+2. **The cross-boundary Forman cancellation cancels `c*_n` against ONE of
+   them** along a *unique* gradient `V`-path (length 22 at `n = 3`); by
+   Forman's cancellation theorem the **other survives UNCHANGED** as the
+   single critical cell of the perfect `M_{n+1}`. So **the survivor is
+   always a closure-operator lift**. At `n = 3` the materialised run gives
+   survivor `= D-lift(c*_3)` exactly (`|L|`-profile `(6,3,2)`), perfect,
+   acyclic.
+3. **The recorded `c*_{n+1}` (F2/F5) is NOT a closure-operator lift** — its
+   bottom poset has nonempty restriction to `[n]` — so it can **never** be a
+   cross-boundary survivor, for *any* `M_rel^eq`. `c*_4`'s `|L|`-profile
+   `(5,3,2) ≠ (6,3,2)` = the survivor's.
+4. **The naive "survivor tower" `c*_{n+1} := D-lift(c*_n)` FAILS (CM-rel) at
+   `n ≥ 6`.** The iterated MoveB apex steps accumulate as *internal*
+   per-step `Pr`'s `1/4, 1/5, …` which fall **below** `[3/11, 8/11]`. So the
+   survivor-only tower is not a valid (CM-rel) anchor past `n = 5`.
+5. **The "descent" is real and essential.** The recorded `c*_4` **is**
+   reachable from the survivor by a gradient `V`-path *inside the perfect
+   `M_4`* (path length 27). The descent absorbs the bad MoveB apex step into
+   a BFT-sharp first step (recorded `c*_5` has first step `7/15`, not the
+   closure-lift's `1/4`).
+6. **The descent target is NOT canonically pinned** by simple extremal
+   rules: it lies among the min-`|L|`-profile all-BFT-sharp reachable cells
+   (profile `(5,3,2)` at `n = 3→4`), but those span **4 `S_4`-orbits** —
+   recorded `c*_4` is one of them, not uniquely distinguished. (F21 §5.2's
+   own lower-bound argument already said (CM-struct)(i)+(ii) don't pin
+   `c*_n`.) And — unlike the cross-boundary cancellation — the descent
+   **requires `M_{n+1}` materialised** (a gradient `V`-path move in the full
+   `Δ_{n+1}`), i.e. it is **HPC-class for `n ≥ 4`**.
+
+### Diagnosis
+
+F21.1's *core* ("`c*_{n+1}` is **(the descent of)** a critical cell of
+`M_rel^eq`") is literally correct — but the parenthetical "(the descent of)"
+is a **genuine, essential, separate operation**, *not* folded into the cheap
+cross-boundary cancellation. The cross-boundary cancellation produces
+`D-lift(c*_n)`; the descent (a gradient `V`-path move inside the full
+`Δ_{n+1}`) carries that to `c*_{n+1}`. The cross-boundary cancellation does
+**not bypass the HPC** — it reduces "find `c*_{n+1}`" to "the descent of
+`D-lift(c*_n)`", which is still HPC for `n ≥ 4` and (worse) under-specified
+canonically. The `n = 4` trip-wire as scoped ("the cross-boundary
+cancellation of `c*_4` must descend to the known `c*_5`") therefore cannot
+pass: the cancellation alone yields `D-lift(c*_4)`, not `c*_5`.
+
+### NOT done / blocked
+
+- **The genuine `c*_6, c*_7` are NOT produced.** Producing them needs the
+  *descent* rule pinned down canonically — which (per finding 6 + F21 §5.2)
+  appears to require the `S_{n+1}`-equivariant chamber-Morse criticality
+  condition, i.e. the very Tier-3 HPC obstruction F20/F21 flagged. The
+  cross-boundary cancellation does not remove it.
+- **(CM-rel) at `n = 6, 7` not confirmed** — it is a property of `c*_6,
+  c*_7`, which are not produced. (The *naive* survivor tower would
+  *refute* it at `n = 6` — finding 4 — but the naive tower is not the
+  genuine tower.)
+- **Surfaced immediately** (per the ticket's RED-tripwire instruction): mail
+  to `mayor` and to `human`, 2026-05-14.
+
+### Continuation plan (for the next session / re-scope)
+
+The honest continuation gate is **the descent rule**. Three routes:
+1. **Pin the descent canonically.** Characterise the descent as a specific,
+   `S_{n+1}`-equivariant, deterministic gradient-`V`-path procedure on
+   `M_{n+1}` (e.g. "absorb the apex step by the lex-min BFT-sharp
+   `V`-path move" — but finding 6 shows min-profile + BFT alone leave
+   4 orbits, so more structure is needed). This is a structural research
+   question, not a computation.
+2. **Accept the descent is HPC.** If the descent genuinely needs `M_{n+1}`
+   materialised, then `c*_6, c*_7` need `Δ_6` (`1.29·10⁵` vertices) /
+   `Δ_7` materialised — the Tier-3 HPC the cross-boundary route was hoped
+   to avoid. Multi-session HPC, F14/F9-S2 memory precedents, but on the
+   *descent* not the cancellation.
+3. **Re-scope.** Recognise that F21.1's induction, to be a *closed-form*
+   recursion, needs the descent to be a closed-form cell transform — which
+   it is not (yet). The anchor's deliverable may have to be the *precise
+   characterisation of the descent gap*, not the cells.
+
+`scripts/compat_geom_F22_hpc_cell_tracking.py` Section 10 has the
+cross-boundary cancellation tracking + the `n = 3` materialised trip-wire +
+the closure-lift catastrophe check, all reproducible.
+
+---
+
+## §6. Verdict ledger
 
 | Session | Date | Verdict | Headline |
 |---|---|---|---|
 | 1 | 2026-05-14 | **GREEN-partial** | `M_rel^eq` critical cells materialised `n = 3,4,5` (F17-structural route); (CM-rel) confirmed on them; the F21.1 "(the descent of)" finding pins the cross-boundary-cancellation continuation gate. Genuine `c*_6, c*_7` not pinned. |
+| 2 | 2026-05-14 | **RED-tripwire** | Cross-boundary cancellation implemented + run materialised at `n = 3`. It produces `D-lift(c*_n)` (an `M_rel^eq` critical cell), **not** `c*_{n+1}`. The recorded `c*_{n+1}` is not closure-lift-shaped, so it is never a survivor. The "descent" (F21.1's parenthetical) is real, essential, HPC-class, and canonically under-specified; the naive survivor tower *refutes* (CM-rel) at `n = 6`. Genuine `c*_6, c*_7` not produced. Surfaced immediately. |

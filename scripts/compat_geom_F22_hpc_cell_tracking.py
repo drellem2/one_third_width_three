@@ -773,6 +773,341 @@ def materialised_morse_count(n):
 
 
 # ===========================================================================
+# Section 10.  THE F18 CROSS-BOUNDARY FORMAN CANCELLATION TRACKING.
+#              (F22-HPC Session 2 -- mg-0c5d)
+#
+#  F21 Proposition F21.1: the genuine chamber-Morse c*_{n+1} is "(the descent
+#  of)" a critical (n-1)-cell of M_rel^eq, via the assembly
+#       M_{n+1}  =  ( M_n  u  M_rel^eq )  +  cross-boundary Forman cancellation.
+#
+#  Session 2 implements that cross-boundary cancellation at the cell level and
+#  runs it MATERIALISED at n = 3 (Delta_4, ~1.5e4 cells -- exact, reproducible).
+#  The n = 3 run is the built-in TRIP-WIRE and it pins down, precisely, what
+#  the cross-boundary cancellation does -- and what it does NOT do.
+#
+#  RESULT (Session 2 verdict: RED-tripwire; see s.5 of the doc).
+#   (a) M_rel^eq's two critical (n-1)-cells are exactly { D-lift(c*_n),
+#       U-lift(c*_n) } -- the closure-operator lifts (F17 + Session 1 s.1).
+#   (b) The cross-boundary Forman cancellation cancels c*_n against ONE of them
+#       along a UNIQUE gradient V-path; by Forman's cancellation theorem the
+#       OTHER one survives UNCHANGED as the single critical cell of the perfect
+#       M_{n+1}.  So the survivor is ALWAYS a closure-operator lift.  At n = 3
+#       the materialised run gives survivor = D-lift(c*_3) exactly.
+#   (c) The recorded c*_{n+1} (F2/F5) is NOT a closure-operator lift (its
+#       bottom poset has nonempty restriction to [n]); so it can NEVER be a
+#       cross-boundary survivor, for ANY M_rel^eq.  The cross-boundary
+#       cancellation ALONE does not produce the recorded c*_{n+1}.
+#   (d) The naive "survivor tower" c*_{n+1} := D-lift(c*_n) FAILS (CM-rel) at
+#       n >= 6: the iterated MoveB apex steps accumulate as internal per-step
+#       Pr's 1/4, 1/5, ... which fall BELOW 3/11.
+#   (e) The "descent" is real and essential: the recorded c*_{n+1} IS reachable
+#       from the survivor by a gradient V-path inside the perfect M_{n+1}, and
+#       the descent absorbs the bad apex step into a BFT-sharp first step.  But
+#       the descent target is NOT canonically pinned by simple extremal rules
+#       (it lies among the min-|L|-profile all-BFT-sharp reachable cells, which
+#       span several S_{n+1}-orbits), and -- unlike the cross-boundary
+#       cancellation -- the descent REQUIRES materialising M_{n+1}, i.e. it is
+#       HPC-class for n >= 4.  F21.1's "(the descent of)" is therefore a
+#       genuine, essential, HPC-class operation, not folded into the cheap
+#       cross-boundary cancellation.
+# ===========================================================================
+
+def _import_cofiber_n3n4():
+    """Lazy import of the mg-3839/mg-6295 cofiber-Morse infrastructure
+    (greedy matching, gradient V-paths, Forman cancellation, acyclicity)."""
+    import compat_geom_cofiber_morse_n3n4 as CM
+    return CM
+
+
+def _profile(chain, m):
+    """|L|-profile of a chain of posets on [m]."""
+    return tuple(count_linear_extensions(transitive_closure(P), m)
+                 for P in chain)
+
+
+def _per_step_pr(chain, m):
+    p = _profile(chain, m)
+    return [Fraction(p[k + 1], p[k]) for k in range(len(p) - 1)]
+
+
+def materialised_cross_boundary_n3():
+    """The n = 3 cross-boundary cancellation, MATERIALISED on Delta_4.
+
+    Builds M_3 (chamber-Morse on Delta_3), a perfect S_3-equivariant-faithful
+    cofiber matching M_rel^eq on C_*(Delta_4, Delta_3), assembles
+    M_4 = M_3 u M_rel^eq (critical vector (0,1,2,0)), then RUNS the
+    cross-boundary Forman cancellation (0,1,2,0) -> (0,0,1,0).
+
+    Returns a dict with: the materialised survivor, the cross-boundary
+    V-path, and the descent data (whether the recorded c*_4 is reachable
+    from the survivor by a gradient V-path inside the perfect M_4)."""
+    CM = _import_cofiber_n3n4()
+    PPF_3 = CM.make_PPF(3)
+    PPF_4 = CM.make_PPF(4)
+    sub = CM.iota_3_image(PPF_3)
+    es3, ab3 = CM.refinement_above_map(PPF_3)
+    es4, ab4 = CM.refinement_above_map(PPF_4)
+    ch3 = CM.all_chains_by_dim(es3, ab3)
+    ch4 = CM.all_chains_by_dim(es4, ab4)
+    rel = CM.relative_cells_by_dim(ch4, sub)
+
+    # M_3: a perfect chamber-Morse matching on Delta_3, critical (0,1).
+    m3, _, _, _ = CM.greedy_matching(ch3, include_empty=True)
+    cr3 = CM.critical_by_dim(m3, ch3, include_empty=True)
+    cstar3 = cr3[1][0]                       # the critical 1-cell c*_3
+
+    # M_rel^eq: a perfect cofiber matching on C_*(Delta_4, Delta_3).
+    mrel, _, _, _ = CM.greedy_matching(rel, include_empty=False)
+    rcs = set()
+    for d in rel:
+        rcs.update(rel[d])
+    CM.forman_cancel_to_target(mrel, rel, rcs, (0, 0, 2, 0, 0), [])
+    crel = {d: [c for c in rel[d] if mrel[c] is None] for d in sorted(rel)}
+
+    # assemble M_4 = M_3 u M_rel^eq on Delta_4
+    matched_4 = {}
+    for c, p in m3.items():
+        matched_4[c] = p
+    for d in ch4:
+        for c in ch4[d]:
+            if c not in matched_4:
+                matched_4[c] = None
+    if () not in matched_4:
+        matched_4[()] = None
+    for c, p in mrel.items():
+        matched_4[c] = p
+    cell_set4 = set()
+    for d in ch4:
+        cell_set4.update(ch4[d])
+    crit_pre = CM.critical_by_dim(matched_4, ch4, include_empty=True)
+    cv_pre = tuple(len(crit_pre.get(d, [])) for d in range(5))
+
+    # the cross-boundary Forman cancellation (0,1,2,0) -> (0,0,1,0)
+    crit2_pre = list(crit_pre[2])
+    xb_path = None
+    cancelled = None
+    for tau in crit2_pre:
+        gp = CM.gradient_paths_from(tau, matched_4, cell_set4)
+        for sig, paths in gp.items():
+            if (matched_4.get(sig) is None and len(sig) == 2
+                    and len(paths) == 1):
+                xb_path = paths[0]
+                cancelled = tau
+                break
+        if xb_path:
+            break
+    CM.forman_cancel_to_target(matched_4, ch4, cell_set4, (0, 0, 1, 0, 0), [])
+    crit_post = CM.critical_by_dim(matched_4, ch4, include_empty=True)
+    cv_post = tuple(len(crit_post.get(d, [])) for d in range(5))
+    survivor = tuple(crit_post[2][0]) if cv_post == (0, 0, 1, 0, 0) else None
+    acyclic = CM.is_acyclic(matched_4, ch4, include_empty=True)[0]
+
+    # the survivor IS the D-type closure-operator lift of c*_3?
+    cD, cU, _ = lift_cstar_to_M_rel([transitive_closure(P) for P in cstar3], 3)
+    surv_is_D = (survivor == tuple(cD))
+    surv_is_U = (survivor == tuple(cU))
+
+    # the DESCENT: is the recorded c*_4 reachable from the survivor by a
+    # gradient V-path inside the perfect M_4?  (a 2-cell -> 2-cell path)
+    cstar4 = tuple(transitive_closure(P) for P in C_STAR[4]["hasse"])
+    cstar4_orbit = set()
+    for perm in permutations(range(4)):
+        cstar4_orbit.add(tuple(frozenset((perm[a], perm[b]) for (a, b) in P)
+                               for P in cstar4))
+
+    reached = {}
+    if survivor is not None:
+        def _grad_2to2(tau_star):
+            def dfs(cell, path):
+                for i in range(len(cell)):
+                    sigma = cell[:i] + cell[i + 1:]
+                    if sigma not in cell_set4:
+                        continue
+                    partner = matched_4.get(sigma)
+                    if partner is None:
+                        continue
+                    if (len(partner) == len(cell) and partner != cell
+                            and partner not in path):
+                        if partner not in reached:
+                            reached[partner] = path + [sigma, partner]
+                            dfs(partner, path + [sigma, partner])
+            dfs(tau_star, [tau_star])
+        _grad_2to2(survivor)
+    descent_reachable = any(tuple(c) in cstar4_orbit for c in reached)
+    # characterise the descent target among the reachable cells
+    allcells = ([survivor] if survivor else []) + list(reached.keys())
+    bft = []
+    for c in allcells:
+        prs = _per_step_pr(c, 4)
+        if all(BFT_LO <= x <= BFT_HI for x in prs):
+            bft.append(c)
+    minprof = min((_profile(c, 4) for c in bft), default=None)
+    mp_cells = [c for c in bft if _profile(c, 4) == minprof]
+    mp_orbits = set()
+    for c in mp_cells:
+        mp_orbits.add(frozenset(
+            tuple(frozenset((perm[a], perm[b]) for (a, b) in P) for P in c)
+            for perm in permutations(range(4))))
+    recorded_in_mp = any(tuple(c) in cstar4_orbit for c in mp_cells)
+
+    return {
+        "cstar3": tuple(transitive_closure(P) for P in cstar3),
+        "cv_pre": cv_pre, "cv_post": cv_post, "acyclic": acyclic,
+        "xb_path_len": len(xb_path) if xb_path else None,
+        "cancelled": cancelled, "survivor": survivor,
+        "survivor_is_D_lift": surv_is_D, "survivor_is_U_lift": surv_is_U,
+        "survivor_profile": _profile(survivor, 4) if survivor else None,
+        "recorded_cstar4_profile": _profile(cstar4, 4),
+        "n_reachable": len(allcells),
+        "descent_reachable": descent_reachable,
+        "n_bft_reachable": len(bft),
+        "descent_minprofile": minprof,
+        "descent_minprofile_n_orbits": len(mp_orbits),
+        "recorded_among_minprofile": recorded_in_mp,
+    }
+
+
+def naive_closure_lift_tower(maxn=7):
+    """The naive 'survivor tower'  c*_{n+1} := D-lift(c*_n)  -- the cell the
+    cross-boundary cancellation produces if NO descent is applied.
+
+    Returns per-n: the chain, the |L|-profile, the per-step Pr's, and the
+    (CM-rel) read.  KEY FINDING: (CM-rel) FAILS at n >= 6 -- the iterated
+    MoveB apex steps accumulate as internal per-step Pr's 1/4, 1/5, ...
+    which fall below the BFT-sharp interval [3/11, 8/11]."""
+    rows = []
+    # base: c*_3
+    chain = [transitive_closure(P) for P in C_STAR[3]["hasse"]]
+    n = 3
+    rows.append(_tower_row(chain, n))
+    while n < maxn:
+        cD, cU, _ = lift_cstar_to_M_rel(chain, n)
+        chain = [transitive_closure(P) for P in cD]   # the D-lift survivor
+        n += 1
+        rows.append(_tower_row(chain, n))
+    return rows
+
+
+def _tower_row(chain, n):
+    """One row of the naive survivor tower at level n (chain on [n])."""
+    m = n
+    prof = _profile(chain, m)
+    prs = _per_step_pr(chain, m)
+    # the chain is  c*_n = D-lift(c*_{n-1}) = (apex, x_0, ..., x_{n-3});
+    # step 0 is c*_n's OWN MoveB apex step (excluded from 'internal');
+    # the remaining steps are the 'internal' per-step Pr's.
+    internal = prs[1:] if n >= 4 else prs
+    internal_bft = all(BFT_LO <= x <= BFT_HI for x in internal)
+    top = chain[-1]
+    top_osa = osa_signature(top, m)
+    top_w = poset_width(top, m)
+    top_ok = (top_osa is not None and top_w == 2
+              and any(s == 2 for s in top_osa))
+    return {
+        "n": n, "chain": chain, "profile": prof,
+        "per_step_pr": prs, "internal_pr": internal,
+        "internal_bft": internal_bft,
+        "top_osa": top_osa, "top_is_w2_osa_size2": top_ok,
+        "cm_rel_ok": internal_bft and top_ok,
+    }
+
+
+def run_cross_boundary_tracking():
+    """Driver for Section 10 -- the F18 cross-boundary cancellation tracking
+    + the n = 3 materialised trip-wire + the closure-lift catastrophe check."""
+    banner("SECTION 10:  the F18 cross-boundary Forman cancellation tracking "
+           "(Session 2)")
+    print("""
+  F21.1:  M_{n+1} = ( M_n u M_rel^eq ) + cross-boundary Forman cancellation,
+  and the genuine c*_{n+1} is '(the descent of)' a critical (n-1)-cell of
+  M_rel^eq.  Session 2 runs the cross-boundary cancellation MATERIALISED at
+  n = 3 -- the built-in trip-wire -- and pins down what it does.
+""")
+
+    # ---- the materialised n = 3 trip-wire --------------------------------
+    print("  [trip-wire n=3]  materialised cross-boundary cancellation on "
+          "Delta_4:")
+    t0 = time.time()
+    r = materialised_cross_boundary_n3()
+    print(f"    M_3 u M_rel^eq critical vector  = {r['cv_pre']}  "
+          f"(c*_3 ; c_D, c_U)")
+    print(f"    cross-boundary V-path length    = {r['xb_path_len']}  "
+          f"(unique gradient V-path -- a valid Forman cancellation)")
+    print(f"    M_4 critical vector after cxl   = {r['cv_post']}  "
+          f"(perfect; acyclic: {r['acyclic']})")
+    print(f"    survivor |L|-profile            = {r['survivor_profile']}")
+    print(f"    survivor == D-lift(c*_3) ?      = {r['survivor_is_D_lift']}   "
+          f"== U-lift(c*_3) ? = {r['survivor_is_U_lift']}")
+    print(f"    => the survivor IS the closure-operator lift -- NOT a "
+          f"transformed cell.")
+    print()
+    print(f"    recorded c*_4 (F2) |L|-profile  = "
+          f"{r['recorded_cstar4_profile']}   "
+          f"(survivor profile {r['survivor_profile']} -- DIFFERENT)")
+    print(f"    recorded c*_4 is NOT a closure-operator lift, so it can never "
+          f"be a")
+    print(f"    cross-boundary survivor -- for ANY M_rel^eq.")
+    print()
+    print(f"    THE DESCENT:  recorded c*_4 reachable from the survivor by a")
+    print(f"    gradient V-path inside the perfect M_4 ? "
+          f"{r['descent_reachable']}")
+    print(f"      reachable 2-cells from survivor        = {r['n_reachable']}")
+    print(f"      all-BFT-sharp among them               = "
+          f"{r['n_bft_reachable']}")
+    print(f"      min |L|-profile among BFT-sharp ones   = "
+          f"{r['descent_minprofile']}  "
+          f"(= recorded c*_4 profile: "
+          f"{r['descent_minprofile'] == r['recorded_cstar4_profile']})")
+    print(f"      ... spanning {r['descent_minprofile_n_orbits']} "
+          f"S_4-orbits  (recorded c*_4 is one of them: "
+          f"{r['recorded_among_minprofile']})")
+    print(f"      => the descent target is NOT canonically pinned by "
+          f"min-profile + BFT-sharpness alone.")
+    print(f"    ({time.time()-t0:.1f}s)")
+
+    # ---- the closure-lift 'survivor tower' + the (CM-rel) catastrophe ----
+    print()
+    print("  [catastrophe check]  the naive survivor tower  "
+          "c*_{n+1} := D-lift(c*_n):")
+    rows = naive_closure_lift_tower(maxn=7)
+    for row in rows:
+        n = row["n"]
+        print(f"    c*_{n}: |L|-profile {row['profile']}   "
+              f"per-step Pr {[str(x) for x in row['per_step_pr']]}")
+        print(f"           INTERNAL per-step Pr "
+              f"{[str(x) for x in row['internal_pr']]}  "
+              f"all-BFT-sharp: {row['internal_bft']}   "
+              f"top OSA{row['top_osa']}   (CM-rel): {row['cm_rel_ok']}")
+    print()
+    print("    => the naive survivor tower FAILS (CM-rel) at n >= 6: the "
+          "iterated")
+    print("       MoveB apex steps (1/4, 1/5, ...) become internal steps and "
+          "fall")
+    print("       BELOW [3/11, 8/11].  The 'descent' is ESSENTIAL -- it "
+          "absorbs the")
+    print("       apex step into a BFT-sharp first step (recorded c*_5 has "
+          "first")
+    print("       step 7/15, not 1/4).")
+
+    print()
+    print("  VERDICT (Section 10 / Session 2): RED-tripwire.")
+    print("   The cross-boundary Forman cancellation produces D-lift(c*_n) "
+          "(an")
+    print("   M_rel^eq critical cell), NOT the recorded c*_{n+1}.  F21.1's "
+          "'(the")
+    print("   descent of)' is a genuine, essential, HPC-class operation: it "
+          "needs")
+    print("   M_{n+1} materialised (a gradient V-path move in the full "
+          "Delta_{n+1}),")
+    print("   and its canonical form is under-specified.  The cross-boundary")
+    print("   cancellation does NOT bypass the HPC -- it reduces 'find "
+          "c*_{n+1}'")
+    print("   to 'the descent of D-lift(c*_n)', which is still HPC for n >= "
+          "4.")
+    return r, rows
+
+
+# ===========================================================================
 # Section 9.  Driver.
 # ===========================================================================
 
@@ -980,6 +1315,9 @@ def main():
     print("     a critical cell of M_rel^eq' needs the F18 cross-boundary")
     print("     cancellation as a genuine cell-transforming step -- the")
     print("     n=6,7 continuation gate.")
+
+    # ---- Section 10: F22-HPC Session 2 -- the cross-boundary cancellation ----
+    run_cross_boundary_tracking()
 
     print(f"\n[done] total runtime: {time.time()-t_start:.1f}s")
     return 0
