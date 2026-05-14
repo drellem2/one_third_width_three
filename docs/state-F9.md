@@ -4,12 +4,18 @@
 session boundaries. Ledger of what is done vs deferred across the
 multi-session (500k cap) F9 ticket.
 
-**Branch:** `compat-geom-F9-constructive-lift`.
+**Branches:** Session 1 — `compat-geom-F9-constructive-lift` (mg-9e88);
+Session 2 — `compat-geom-F9-S2-n7-pattern` (mg-14a0).
 **Goal (mg-9e88):** build the inductive lift ω_bal^(n) ↦ ω_bal^(n+1)
 constructively, step by step, via the Plan H empirical-correction
 strategy (mg-e8d5) generalized to the step n → n+1, and track the
 structure of ψ^(n) across n to find a pattern that closes (I5)
 *without* X_n identification.
+
+**Outcome (after Session 2):** the direct Plan-H route closes (I5) at
+n=5,6 but **provably does not generalize** — the bad-coface count is
+super-polynomial and ψ^(n)'s shape is n-specific. See the Session-2
+ledger entry below and `docs/compatibility-geometry-F9-session-2.md`.
 
 ---
 
@@ -76,45 +82,62 @@ the n=7 datapoint. Per mg-9e88 spec, GREEN triggers Session 2 at n=7.
   cross-pattern is sound. F9 uses F7's Hasse c*_5 as the n=5 anchor
   (the actual mg-e8d5 cell).
 
-### Session 2 — n=7 — PENDING (conditional on Session 1 GREEN; it is)
+### Session 2 — n=7 — 2026-05-14 (this polecat, mg-14a0) — DONE
 
 **Goal:** test whether the §5.2 mechanism is *predictive* at n=7 and
 whether the bad-coface count fits a low-degree polynomial.
 
-**Decisive computation (cheap — does NOT need a full n=7 Plan H solve
-up front):**
+**Completed:**
 
-1. Build candidate c*_7 = ι_6-lift of the F9 c*_6 + lex-min step-5
-   cover; verify Stab(c*_7) ⊆ A_7.
-2. Enumerate the immediate cofaces of c*_7 — in particular the proper
-   up-set of its top poset P_5 — and **record u_7**. The sequence
-   u_5 = 4, u_6 = 54, u_7 = ? is the polynomial-vs-exponential
-   discriminator.
-3. Predict ψ^(7) from the mechanism (one diagonal wing orbit per bad
-   coface, ±1) and verify d(ω_naïve⁷ + ψ⁷) = 0 on the bad set — test
-   whether the mechanism *predicts*, not merely *describes*.
+| Item | Status | Output |
+|------|--------|--------|
+| Trip-wire (a): n=5 + n=6 reproduce Session 1 | ✅ PASS | reproduced *through the new `solve_psi_fast` code path* — n=5: 10 bad, 10×36 rank 10, supp 1200; n=6: 64 bad, 64×314 rank 64, supp 46080; both pairing +1 |
+| Trip-wire (b): ω_naïve^(7) well-defined | ✅ PASS | Stab(c*_7) = {id} ⊂ A_7, \|S_7·c*_7\| = 5040 |
+| Trip-wire (c): ι_6-lift c*_6 → c*_7 well-defined | ✅ PASS | first 5 posets of c*_7 *are* c*_6; P_5 = P_4 ∪ {(0,5)}, single-pair cover, proper, antisymmetric |
+| Build c*_7, set up Plan H at n=7 | ✅ | rank profile (3,5,6,8,9,10); 1607 immediate cofaces (by pos {0:6,1:2,3:2,6:1597}); **all 1607 F7-bad** |
+| **Critical count: \|F7-bad cofaces at n=7\|** | ✅ | **B_7 = 1607**; u_7 = 1597 (10→64→1607; u: 4→54→1597) |
+| S_7-equivariance reduction + solve ψ^(7) over ℚ | ✅ | 9642 wings, 9074 orbits (9016 sign-supp); system **1607×9016 rank 1607** (full row rank); 1607 nonzero orbits; \|supp(ψ⁷)\| = 8 099 280 |
+| Verify d(ω_naïve⁷+ψ⁷)=0 on bad set + pairing | ✅ | **1607/1607 zero**; ⟨ω_naïve⁷+ψ⁷, c*_7⟩ = +1 |
+| Pattern check (mechanism persistence) | ✅ | (M1) full row rank ✓; (M2) one orbit per bad coface ✓; **(M3) near-diagonal — DEGRADES**: anomalies 0→1→**211**; new ψ-coeff **+2** ({−2,−1,+1,+2}) |
+| Count-function extrapolation (+ 4th datapoint u_8) | ✅ | u_8 = 65099 (count-only); 3-pt quadratic predicts u_8 = 4633, actual 65099 (**14×**) → **decisively super-polynomial** |
+| Script `scripts/posn_constructive_lift_n7.py` | ✅ | parameterized; imports Session-1 machinery; memory-efficient `solve_psi_fast` |
+| Doc `docs/compatibility-geometry-F9-session-2.md` | ✅ | full Session-2 write-up |
+| State `docs/state-F9.md` | ✅ | this update |
 
-**Decision rule:**
-- u_7 fits a low-degree polynomial AND mechanism predicts ψ^(7)
-  correctly → upgrade to **GREEN-pattern-detected**; Session 3 writes
-  the general-n extrapolation.
-- u_7 super-polynomial OR mechanism fails to predict → empirical
-  correction has no clean closed form → that is the fallback datum
-  (F9-fallback / X_n route, parked per Daniel); report + surface to PM.
+**Session-2 verdict: AMBER-pattern-shifts.** The F9 empirical Plan-H
+pattern is **n=5/n=6-specific**. Plan H at n=7 *is* solvable (ψ^(7)
+constructed + verified — **not** RED-pattern-breaks), and the *skeleton*
+(M1)+(M2) survives, but **two findings fix the verdict**:
 
-**Pickup instructions:**
-- `scripts/posn_constructive_lift_n6.py` already runs at arbitrary n
-  (n=5 and n=6 share one code path: `run_plan_h(n, chain, label)`).
-  Add a `c_star_7_chain()` and call `run_plan_h(7, c7, ...)`.
-- 7! = 5040; orbit decomposition and Gaussian elimination scale as
-  before — expected well within Session-2 budget (≤200k tokens).
-- Consider renaming the script `posn_constructive_lift.py` if it
-  becomes genuinely multi-n, or add `posn_constructive_lift_n7.py`.
+- **Finding A — the count is decisively super-polynomial.** B_n = 10,
+  64, 1607 and u_n = 4, 54, 1597, 65099 — strictly increasing ratios.
+  The 3-point quadratic interpolant (the only low-degree polynomial
+  consistent with n≤7) predicts u_8 = 4633; the actual u_8 = 65099,
+  **14× larger**. Polynomial growth is ruled out.
+- **Finding B — the near-diagonal structure (M3) shifts meaningfully.**
+  Per-bad-coface faces-in-supp(ψ): {1:1396, **2:211**} — 211 of 1607
+  (13%) off-diagonal vs 0 (n=5) and 1 (n=6); new coefficient +2. The
+  Session-1 "isolated low-order corrections" qualifier fails at n=7.
 
-### Session 3 — polish — PENDING (conditional on Session 2)
+Both disjuncts of the state-ledger decision rule fire → **F9-fallback
+datum**: the direct constructive Plan-H route does **not** close (I5)
+at general n. The parked X_n / specialist route (F8'' mg-b345) is now
+*indicated, not optional*. Surfaced to PM via mg-mail.
 
-**Goal (≤100k):** general-n proof or general-n empirical extrapolation
-table; methodology-paper-grade write-up of the Plan H inductive lift.
+### Session 3 — polish — SUPERSEDED by the Session-2 verdict
+
+The originally-scoped Session 3 ("general-n proof or extrapolation
+table of the Plan H lift") is **moot for the constructive direction**:
+Session 2 shows there is no general-n closed form to prove — the count
+is super-polynomial and ψ^(n)'s shape is n-specific. The honest next
+steps (PM/roadmap decision, **not** a Session-3 continuation of this
+ticket):
+- un-park the X_n / Quillen-fiber specialist route (F8'' mg-b345) —
+  Session 2 shows it is necessary; **or** a different non-empirical
+  angle on (I5);
+- write up F9 Sessions 1+2 for the methodology paper as a documented
+  obstruction (direct Plan-H route closes (I5) at n=5,6 but provably
+  does not generalize).
 
 ---
 
@@ -122,26 +145,43 @@ table; methodology-paper-grade write-up of the Plan H inductive lift.
 
 | Session | Cap | Used (est.) | Status |
 |---------|----:|------------:|--------|
-| 1 (this) | ≤200k | ~180k | DONE |
-| 2 (n=7) | ≤200k | — | PENDING |
-| 3 (polish) | ≤100k | — | PENDING |
+| 1 | ≤200k | ~180k | DONE (GREEN-Plan-H-at-n=6) |
+| 2 (n=7, this) | ≤200k | ~110k | DONE (AMBER-pattern-shifts) |
+| 3 (polish) | ≤100k | — | SUPERSEDED — see Session-2 verdict |
 
 ---
 
-## Open questions / followups
+## Open questions / followups — RESOLVED / updated by Session 2
 
-- **Q1.** What is u_7 = \|proper up-set of P_5(c*_7)\|? (u_5 = 4,
-  u_6 = 54.) This single number decides polynomial-vs-exponential.
-- **Q2.** Is the §5.2 mechanism *predictive* — does "one diagonal wing
-  orbit per bad coface, ±1" reconstruct ψ^(7) without solving the full
-  system? Session 1 only established it is *descriptive* at n ≤ 6.
-- **Q3.** Why does the single off-diagonal (the −2 at n=6) occur at the
-  position-1 bad coface specifically? Is the off-diagonal count
-  bounded (0 at n=5, 1 at n=6 — does it stay O(1)?) or growing?
-- **Q4.** Global cocycle (Plan B Forman tail) at n=6 — still deferred,
-  consistent with mg-e8d5 and F8'-HPC §6.3. Not on the F9 critical
-  path; F9's lever is the *mechanism*, not the global completion.
-- **Q5.** If Session 2 confirms the pattern: does the mechanism +
-  bad-coface-count closed form actually *yield* the inductive lift
-  ω_bal^(n) ↦ ω_bal^(n+1) (i.e. close (I5) constructively), or only
-  the per-n local correction? Session 3 question.
+- **Q1 — RESOLVED.** u_7 = 1597 (u_5 = 4, u_6 = 54). A fourth datapoint
+  u_8 = 65099 was computed (count-only). The sequence is **decisively
+  super-polynomial**: the 3-point quadratic interpolant predicts
+  u_8 = 4633, actual = 65099 (14×). Polynomial growth is ruled out.
+- **Q2 — RESOLVED (negative).** The §5.2 mechanism is **not**
+  predictive at n=7. (M1) full row rank and (M2) one-orbit-per-bad-coface
+  *do* survive, but (M3) near-diagonality does **not**: the off-diagonal
+  "anomaly" count is 0 → 1 → 211 and a new ψ-coefficient +2 appears. The
+  mechanism is descriptive at n ≤ 6, not a closed form.
+- **Q3 — RESOLVED.** The off-diagonal count is **not** O(1): 0, 1, 211.
+  It grows substantially with n. (Why specifically 211 — i.e. the precise
+  combinatorics of bad-coface wing-orbit sharing at n=7 — is not pursued;
+  the program-level question is answered.)
+- **Q4.** Global cocycle (Plan B Forman tail) — still deferred,
+  consistent with mg-e8d5 / F8'-HPC §6.3. No longer on any F9 critical
+  path: the F9 lever (the mechanism) is shown n-specific.
+- **Q5 — RESOLVED (negative).** The mechanism does **not** yield the
+  inductive lift ω_bal^(n) ↦ ω_bal^(n+1): there is no closed-form
+  bad-coface count (super-polynomial) and no closed-form ψ^(n) shape
+  (n-specific). (I5) does **not** close constructively via the direct
+  Plan-H empirical route.
+
+## Programmatic conclusion (Sessions 1+2)
+
+The direct constructive Plan-H route — attempted per the Daniel
+2026-05-14T05:18Z directive — **closes (I5) at n=5 and n=6 but provably
+does not generalize**. Next steps are a PM/roadmap decision, **not** a
+Session-3 continuation of this multi-session ticket:
+- un-park the X_n / Quillen-fiber specialist route (F8'' mg-b345), now
+  *indicated*; or pursue a different non-empirical angle on (I5);
+- write up F9 Sessions 1+2 for the methodology paper as a documented
+  obstruction.
