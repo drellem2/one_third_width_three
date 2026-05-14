@@ -22,3 +22,12 @@
 lean/.lake/
 lean/build/
 lean/lake-packages/
+
+# Compat-Geom scratch / cache artifacts
+scripts/_n6_cache/
+scripts/_*.log
+scripts/__pycache__/
+__pycache__/
+
+# Pogo workspace metadata
+.pogo/
