@@ -28,6 +28,7 @@ scripts/_n6_cache/
 scripts/_*.log
 
 # Python bytecode cache
+scripts/__pycache__/
 __pycache__/
 *.pyc
 
