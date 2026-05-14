@@ -41,6 +41,20 @@ This **resolves mg-3219** (Out(S_6) audit at n=6) — see
 `docs/compatibility-geometry-F8prime-HPC.md` §4 for the per-pair
 table.
 
+> **mg-3219 follow-up (2026-05-14, branch `compat-geom-out-s6-audit-n6`).**
+> The deep Out(S_6) audit is now executed: see
+> `docs/compatibility-geometry-out-s6-audit-n6.md` +
+> `scripts/posn_n6_out_s6_audit.py`. Verdict **GREEN-Out-robust** — it
+> builds an *explicit* outer automorphism (no longer cited folklore),
+> confirms χ̃(Fix) is Out-invariant on all 11 classes, and disentangles
+> the n=5/n=6 sign flip as the degree-parity factor (−1)^{n−2}, NOT an
+> Out effect. That audit also flags a documentation slip in this doc /
+> `posn_n6_hpc.py`: the stated n=5 identity "+sgn" and the universal
+> "+(1/|S_n|)·Σ" Burnside formula are even-n-only; the correct general
+> form is χ̃(Fix(σ)) = (−1)^{n−2}·m_sgn·sgn(σ). The n=6 result here is
+> **unaffected** (n=4 calib + n=6 result are both even n). See Q1 note
+> below; one-line correction recommended as cleanup.
+
 ### How session 2 should pick this up
 
 If session 2 (next polecat with `--depends-on=mg-3bf3`) wants to

@@ -27,5 +27,9 @@ lean/lake-packages/
 scripts/_n6_cache/
 scripts/_*.log
 
+# Python bytecode cache
+__pycache__/
+*.pyc
+
 # Pogo workspace metadata
 .pogo/
