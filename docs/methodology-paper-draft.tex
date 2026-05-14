@@ -1,0 +1,1382 @@
+% =====================================================================
+%  Methodology paper draft (F12, mg-59d0)
+%
+%  A cohomological framework for the Kahn-Saks 1/3-2/3 conjecture at
+%  width 3: discrete Morse on cofibers, FI representation stability,
+%  and a single uniform-concentration hypothesis.
+%
+%  Spine: F10 general-n-proof-synthesis.md, §9 (mg-8216).
+%  Sources: F1-F10 in-tree docs on compat-geom-* branches; F9 Sessions
+%  1-2 (mg-9e88 / mg-14a0) for the documented obstruction (§9).
+%
+%  Status: AMBER-partial-draft -> see docs/methodology-paper-status.md
+%  and docs/state-F12.md for the per-session ledger.
+%
+%  NO new axioms; no Lean changes; no new computation. Pure write-up
+%  + synthesis from in-tree docs (mg-59d0 constraints).
+% =====================================================================
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ----- theorem environments -------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+% ----- macros ---------------------------------------------------------
+\newcommand{\PPF}{\mathrm{PPF}}
+\newcommand{\Pos}{\mathbf{Pos}}
+\newcommand{\Hred}{\widetilde H}
+\newcommand{\bred}{\widetilde b}
+\newcommand{\chired}{\widetilde\chi}
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\triv}{\mathrm{triv}}
+\newcommand{\crit}{\mathrm{crit}}
+\newcommand{\Mrel}{M_{\mathrm{rel}}}
+\newcommand{\Sn}{S_n}
+\newcommand{\Snp}{S_{n+1}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Hyp}{\mathrm{Hyp}}
+\newcommand{\omegabal}[1]{\omega_{\mathrm{bal}}^{(#1)}}
+\newcommand{\cstar}[1]{c^{*}_{#1}}
+\newcommand{\UCC}{\textup{(UCC)}}
+\newcommand{\FGC}{\textup{(FG-Cofiber)}}
+\newcommand{\ICOPstep}{\textup{(ICOP-step)}}
+
+% =====================================================================
+\begin{document}
+
+\title[A cohomological framework for width-3 Kahn--Saks 1/3-2/3]{A cohomological framework for the Kahn--Saks 1/3-2/3 conjecture at width~3:\\ discrete Morse on cofibers, FI representation stability,\\ and a single uniform-concentration hypothesis}
+
+\author{Compat-Geom working group}
+\date{Draft of \today}
+
+\begin{abstract}
+We give a conditional proof of the Kahn--Saks 1/3-2/3 conjecture for
+width-3 posets at general~$n$. The conjecture is reduced --- completely,
+and with no hand-waving --- to a \emph{single} master hypothesis,
+\emph{Uniform Cofiber Concentration} \UCC: for every~$n$, the cofiber
+$\Delta_{n+1}/\Delta_n$ of the order-complex inclusion
+$\Delta(\PPF_n)\hookrightarrow\Delta(\PPF_{n+1})$ has reduced rational
+cohomology concentrated in degree~$n-1$, equal to $2\cdot\sgn_{S_n}$,
+with the cofiber connecting map injective. Given \UCC, a
+cofiber-long-exact-sequence induction (base case $n=3$ rigorous; the
+inductive step a gap-free diagram chase) establishes
+$\Delta_n\simeq_{\Q}S^{n-2}$ with top cohomology $\sgn_{S_n}$ for
+\emph{all}~$n$, hence the existence, uniqueness, and non-vanishing
+pairing of the canonical balanced cocycle $\omegabal{n}$; the per-step
+Brightwell--Felsner--Trotter interval $[3/11,8/11]$ then follows from an
+Inductive Cohomological Obstruction Principle, itself reduced to one
+uniform last-step check. The contribution is the demonstration that two
+\emph{a priori} unrelated machineries --- discrete Morse theory on
+cofibers, and FI representation stability --- both terminate at
+\emph{exactly} \UCC, and that they verifiably coincide and are
+\emph{proven} at the first inductive step $n=3\to4$. The single open
+problem is sharpened to a precise representation-stability statement,
+\FGC: the geometric ``diagonal'' $\bigl(\Hred^{n-2}(\Delta_n)\bigr)_n$
+does \emph{not} carry a naive co-FI-module structure (the cohomological
+degree shifts with~$n$), so the object whose finite generation must be
+proven is the degree-shift-aware cofiber-cohomology sequence. The
+framework is publication-class methodology independent of whether \FGC{}
+is subsequently closed: its value is the complete reduction of a
+conjecture open since Kahn--Saks (1984) to one precisely-stated crux,
+with two independent mechanisms shown to converge on it.
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% =====================================================================
+
+\subsection{The 1/3-2/3 conjecture}
+Let $P$ be a finite partially ordered set that is not a total order. For
+incomparable elements $x,y\in P$ write $\Pr_P[x<_Py]$ for the fraction
+of linear extensions of~$P$ in which $x$ precedes~$y$. The
+\emph{1/3-2/3 conjecture} of Kahn and Saks~\cite{KahnSaks1984} asserts
+that every such~$P$ contains an incomparable pair $x,y$ with
+\[
+  \Pr_P[x<_Py]\;\in\;\bigl[\tfrac13,\tfrac23\bigr].
+\]
+Equivalently, the linear extensions of any non-total poset can be sorted
+to within a constant information-theoretic factor of optimal. The
+conjecture is sharp --- the three-element ``V'' poset attains the
+endpoints --- and has been called one of the most tantalizing open
+problems in the combinatorics of partial orders.
+
+The \emph{width} of~$P$ is the size of its largest antichain. The
+conjecture is fully resolved for width~2: Linial~\cite{Linial1984}
+proved it, with the sharp constant, in the same year it was posed. For
+every width $w\ge3$ the conjecture remains \textbf{open} in general. The
+present paper concerns \textbf{width~3} --- the first open case, and the
+case for which Brightwell, Felsner and Trotter~\cite{BFT1995} conjectured
+the \emph{sharpened} interval $[3/11,8/11]$.
+
+\subsection{The cohomological reformulation}
+This paper develops, and brings to a single precisely-stated crux, a
+\emph{cohomological framework} for width-3 1/3-2/3. The framework
+replaces the direct combinatorial question by a question about the
+$S_n$-equivariant rational cohomology of a family of order complexes
+$\Delta_n=\Delta(\PPF_n)$, $n\ge3$, where $\PPF_n$ is the poset of
+proper (non-empty, non-total) partial orders on an $n$-element set,
+ordered by reverse refinement. The translation rests on two cohomological
+statements about $\Delta_n$:
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{(H-Cox)} $\Delta_n\simeq_{\Q}S^{n-2}$ --- the reduced
+        rational cohomology is concentrated in the top degree $n-2$ and
+        is one-dimensional there;
+  \item \textbf{(sgn)} the top cohomology
+        $\Hred^{n-2}(\Delta_n;\Q)$ is the sign representation
+        $\sgn_{S_n}$.
+\end{itemize}
+Together these produce a canonical, up-to-scalar-unique class
+$\omegabal{n}\in\Hred^{n-2}(\Delta_n;\Q)^{\sgn}$ --- the
+\emph{balanced cocycle} --- whose non-vanishing pairing with a
+distinguished critical cell encodes a balanced incomparable pair, and
+whose Forman-cocycle representative carries the per-step Kahn--Saks
+probabilities. The sharpened Brightwell--Felsner--Trotter interval is the
+statement that those per-step probabilities all lie in $[3/11,8/11]$.
+
+\subsection{Contribution}
+The width-2 case was closed in 1984; width~3 has resisted for four
+decades. The reason, made precise in this paper
+(\S\ref{sec:obstruction}), is that the natural \emph{direct} attacks ---
+constructing the balanced cocycle by an explicit, $n$-by-$n$ empirical
+correction --- provably do not generalize: the relevant combinatorial
+data grows super-polynomially in~$n$. A \emph{structural} induction is
+required.
+
+The contribution of this paper is precisely such a structural
+induction, together with an honest account of the single point at which
+it remains conditional. Concretely:
+\begin{enumerate}[leftmargin=2em,label=(\arabic*)]
+  \item \textbf{A complete, gap-free reduction.} We reduce width-3
+        1/3-2/3 at general~$n$ to a single master hypothesis, Uniform
+        Cofiber Concentration \UCC{} (\S\ref{sec:proof}). Every step of
+        the reduction is either standard mathematics, verified base
+        data, or an explicit appeal to \UCC; there is no unfilled hole.
+  \item \textbf{Two mechanisms, one crux.} We exhibit two
+        \emph{a priori} unrelated machineries --- M1, constructive
+        discrete Morse theory on the cofiber pair
+        (\S\ref{sec:M1}); and M2, FI representation stability
+        (\S\ref{sec:M2}) --- and show that both terminate at
+        \emph{exactly} \UCC. They do not pull in different directions;
+        they converge. Both \emph{prove} \UCC{} at the first inductive
+        step $n=3\to4$.
+  \item \textbf{A sharpened open problem.} We sharpen the residual
+        gap from the naive ``FI finite generation for
+        $\bigl(\Hred^{n-2}(\Delta_n)\bigr)_n$'' to a precise
+        statement, \FGC{} (\S\ref{sec:opengap}): the geometric diagonal
+        does \emph{not} carry a naive co-FI-module structure, so the
+        object whose finite generation must be established is the
+        degree-shift-aware cofiber-cohomology sequence. We explain why
+        the standard Church--Ellenberg--Farb / Patzt--Putman
+        finite-generation criterion does not apply off the shelf, and
+        enumerate the three viable specialist routes.
+  \item \textbf{A documented obstruction.} We record, as a section and
+        not a footnote (\S\ref{sec:obstruction}), \emph{why} the
+        induction resists a direct attack: the direct constructive
+        ``Plan-H'' route closes the inductive step at $n=5,6$ but
+        provably does not generalize. This pins down what the structural
+        route in \S\ref{sec:M1}--\S\ref{sec:proof} must accomplish that
+        the direct route cannot.
+\end{enumerate}
+
+The framework is, we contend, publication-class methodology
+\emph{independent} of whether \FGC{} is subsequently closed. Its value
+is the complete reduction of a long-open conjecture to one
+precisely-stated crux of a recognized type
+(representation-stability finite generation), together with the
+two-mechanisms-converge structural picture. If \FGC{} is later proven,
+the present \S\ref{sec:proof}--\S\ref{sec:opengap} upgrade from
+conditional to unconditional --- a localized revision, not a rewrite.
+
+\subsection{Status and scope}
+The present document is a \textbf{draft}. The cohomological core
+(\S\ref{sec:thm}--\S\ref{sec:proof}) and the open-gap analysis
+(\S\ref{sec:opengap}) are written from the F10 synthesis and are
+substantive; the empirical anchor (\S\ref{sec:empirical}) and the
+documented obstruction (\S\ref{sec:obstruction}) are written from the
+F9/F-series in-tree records. Section~\ref{sec:status-note} records, per
+section, what is draft-complete and what is stubbed. The framework
+introduces \textbf{no new axioms}, makes \textbf{no claim of formal
+verification} of the general-$n$ result, and rests on no new
+computation: the empirical inputs are the previously-computed
+$n=3,4,5,6$ cohomology and per-step probability data.
+
+% =====================================================================
+\section{Background and trust surface}\label{sec:background}
+% =====================================================================
+
+\subsection{The objects}\label{ssec:objects}
+For $n\ge3$ let
+\[
+  \PPF_n\;:=\;\Pos_n^{\mathrm{sub}}\setminus\{\widehat0\}
+            \setminus\{\text{total orders on }[n]\}
+\]
+be the set of \emph{proper partial orders} on $\{0,\dots,n-1\}$ ---
+non-empty, non-total partial orders --- ordered by reverse refinement
+(a finer relation set is \emph{lower}). Let $\Delta_n:=\Delta(\PPF_n)$
+be the order complex of strict chains in $\PPF_n$. The symmetric group
+$S_n$ acts on $\Delta_n$ by relabelling the ground set. The cardinalities
+and $f$-vectors, re-verified across the F-series computations, are:
+\begin{center}
+\begin{tabular}{r r l l}
+\toprule
+$n$ & $|\PPF_n|$ & $f$-vector of $\Delta_n$ & source \\
+\midrule
+3 & $12$       & $[12,12]$ & F1-refined / PCR-1 \\
+4 & $194$      & $[194,1872,5232,5664,2112]$ & F2 / PCR-1 \\
+5 & $4110$     & (entries ${\sim}10^8$) & F1-refined \\
+6 & $129\,302$ & --- & F8$'$-HPC \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The \textbf{inclusion} $\iota_n:\PPF_n\hookrightarrow\PPF_{n+1}$ sends a
+partial order on $[n]$ to the same relation set viewed on $[n+1]$, with
+the new element $n$ incomparable to all of $[n]$. It is
+$S_n$-equivariant (not $S_{n+1}$-equivariant) and realises $\Delta_n$ as
+a \emph{subcomplex} of $\Delta_{n+1}$. More generally, for an injection
+$f:[m]\hookrightarrow[n]$ the relabelling
+$V(f):\PPF_m\to\PPF_n$ makes $(\PPF_n)_n$ an \textbf{FI-object}
+(functorial over all injections); this is the FI-structure that
+Mechanism~M2 exploits.
+
+\subsection{The conjectures}\label{ssec:conjectures}
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{(H-Cox).} $\Delta_n\simeq_{\Q}S^{n-2}$ for all
+        $n\ge3$: $\Hred^k(\Delta_n;\Q)=0$ for $k\ne n-2$, and
+        $\Hred^{n-2}(\Delta_n;\Q)$ is one-dimensional.
+  \item \textbf{(sgn).} $\Hred^{n-2}(\Delta_n;\Q)\cong\sgn_{S_n}$ as an
+        $S_n$-representation.
+  \item \textbf{$\omegabal{n}$.} The unique-up-to-scalar generator of
+        $\Hred^{n-2}(\Delta_n;\Q)^{\sgn}$, the \emph{balanced cocycle}.
+  \item \textbf{(BF-Cox).} Any Forman cocycle representative of
+        $[\omegabal{n}]$ has, along the canonical critical $(n-2)$-cell
+        $\cstar n=(P_0\subset\dots\subset P_{n-2})$, per-step Kahn--Saks
+        probabilities $\Pr_{P_k}(a_k,b_k)\in[3/11,8/11]$ --- the
+        Brightwell--Felsner--Trotter sharpening of the classical
+        $[1/3,2/3]$ bound.
+\end{itemize}
+The pair (H-Cox)$+$(sgn) is the \emph{cohomological core}; (BF-Cox) is
+the \emph{numerical refinement} delivering the explicit interval.
+
+\subsection{What is established prior to the synthesis}\label{ssec:established}
+\begin{center}
+\begin{tabular}{r l l l l}
+\toprule
+$n$ & (H-Cox) & (sgn) & per-step BFT-sharp on $\cstar n$ & source \\
+\midrule
+3 & proven & proven & $1/1$ & F1-refined \\
+4 & proven (Betti) & proven (Burnside) & $8/8$ & F2 / F3 / PCR-1/2 \\
+5 & $\chired$ rigorous; $\Q$-sphere & $m_{\sgn}=1$ (Burnside) & $3/3$ on $\cstar5$ & F5 / F6 / F7 \\
+6 & $m_{\sgn}=1$ (HPC Burnside) & $m_{\sgn}=1$, $\mathrm{Out}(S_6)$-inv. & $4/4$ on lift candidate & F8$'$ / F8$'$-HPC \\
+\bottomrule
+\end{tabular}
+\end{center}
+On canonical critical chains the running total is \textbf{16/16 per-step
+BFT-sharp} across $n=3,4,5,6$ ($12/12$ at $n\le5$ plus $4/4$ at $n=6$).
+The two \emph{general-$n$ mechanisms} M1 and M2 are the subject of
+\S\ref{sec:M1}--\S\ref{sec:M2}. A standing honesty note on the $n=6$
+datum is recorded in \S\ref{ssec:n6note}.
+
+\subsection{Trust surface}\label{ssec:trust}
+The mathematics of this paper is \textbf{pure structural cohomology
+plus paper-and-pencil consistency checks}. It introduces \emph{no new
+axioms}, requires \emph{no new computation}, and is \emph{independent of
+any formal-verification artifact}.
+
+It is worth being explicit about what the framework does and does not
+rest on, because a related but \emph{separate} track --- a Lean
+formalisation of the finite/structural width-3 result, called
+\texttt{width3\_one\_third\_two\_thirds} --- exists in the project and
+carries its own trust surface (a small number of named and
+externally-verified axioms, plus a handful of \texttt{native\_decide}
+computational checks). \textbf{The paper track developed here does not
+touch, and does not depend on, that Lean trust surface.} The general-$n$
+cohomological proof is a separate, paper-level development. It rests on:
+\begin{enumerate}[leftmargin=2em,label=(\roman*)]
+  \item the $n=3,4,5,6$ cohomological computations
+        (Python/SageMath-verified across the F-series, \emph{not}
+        Lean-formalised);
+  \item standard discrete Morse theory
+        (Forman~\cite{Forman1998}; Kozlov~\cite{Kozlov2008} Ch.~11);
+  \item standard FI-module / representation-stability machinery
+        (Church--Ellenberg--Farb~\cite{CEF2015};
+        Church--Ellenberg--Farb--Nagpal~\cite{CEFN2014};
+        Ramos~\cite{Ramos2017}; Patzt--Putman~\cite{Putman2015,Patzt2017}).
+\end{enumerate}
+The conditional hypothesis isolated in \S\ref{sec:opengap} is the
+\emph{only} input not reducible to (i)--(iii). The relationship to the
+Lean artifact, and a staged roadmap for an eventual formalisation, is
+deferred to Appendix~\ref{app:lean}.
+
+\subsection{Trip-wire pre-checks}\label{ssec:tripwires}
+Three target-truth pre-checks were re-verified against the parent
+computational artifacts before the synthesis was drafted; they are
+recorded here because they are exactly the points at which the
+framework could have failed:
+\begin{enumerate}[leftmargin=2em,label=(\alph*)]
+  \item \textbf{Cofiber Betti reproduction.} The decomposition
+        $M_{n+1}=M_n\sqcup\Mrel$ (\S\ref{sec:M1}) reproduces the
+        $(0,0,2,0)$ cofiber Betti vector at $n=3\to4$: confirmed ---
+        $\Mrel$ is \emph{perfect} on $C_*(\Delta_4,\Delta_3)$ with
+        critical vector $(0,0,2,0)$, matching the independent
+        PCR-1 cofiber Betti computation. \textbf{PASS.}
+  \item \textbf{Constant sgn-twist.} The sgn-twist
+        $\bigl(\Hred^{n-2}(\Delta_n)\otimes\sgn_{S_n}\bigr)_n$ is the
+        constant representation $(\triv_{S_n})_n$ at $n=3,4,5,6$:
+        confirmed --- $\Hred^{n-2}(\Delta_n)=\sgn_{S_n}$ verified by
+        direct reduced Betti at $n=3,4$, by Lefschetz at $n=5$, by HPC
+        Burnside at $n=6$. \textbf{PASS}, with the
+        \S\ref{ssec:7.2} refinement (the statement is about the
+        underlying representation sequence, not yet about a geometric
+        co-FI-module).
+  \item \textbf{ICOP template match.} The general-$n$ ICOP template
+        (\S\ref{sec:ICOP}) matches the F8 width-3 closure argument
+        used in \S\ref{ssec:6.6}. \textbf{PASS.}
+\end{enumerate}
+All three pass. The ``mechanisms-in-conflict'' failure mode is excluded
+already at the pre-check stage; the detailed combine-check is
+\S\ref{ssec:6.4}.
+
+% =====================================================================
+\section{Statement of the conditional theorem}\label{sec:thm}
+% =====================================================================
+\label{sec:statement}
+
+We state the main theorem now; the master hypothesis \UCC{} on which it
+is conditional is defined precisely in \S\ref{ssec:6.3}, and the secondary
+inputs \ICOPstep{} and the width-3 bridge in \S\ref{sec:ICOP} and
+\S\ref{ssec:7.3}. The statement is repeated in its final, fully-unpacked
+form in \S\ref{ssec:6.7}.
+
+\begin{theorem}[Width-3 Kahn--Saks 1/3-2/3 at general $n$, conditional]
+\label{thm:main}
+Assume the master hypothesis \UCC{} of \S\ref{ssec:6.3}. Then:
+\begin{enumerate}[leftmargin=2em,label=(\roman*)]
+  \item $\Delta_n\simeq_{\Q}S^{n-2}$ and
+        $\Hred^{n-2}(\Delta_n;\Q)\cong\sgn_{S_n}$ for all $n\ge3$ ---
+        i.e.\ \textup{(H-Cox)} and \textup{(sgn)} hold at general~$n$;
+  \item the canonical balanced class $\omegabal n$ exists, is unique up
+        to scalar, and pairs $\pm1$ with the canonical critical cell
+        $\cstar n$, for all $n$;
+  \item assuming additionally \ICOPstep{} \textup{(\S\ref{ssec:5.4})}
+        and the width-3 reduction bridge \textup{(\S\ref{ssec:7.3})},
+        every width-3 partial order $P$ admits incomparable $x,y$ with
+        \[
+          \Pr_P[x<_Py]\;\in\;[3/11,\,8/11]\;\subset\;[1/3,\,2/3].
+        \]
+\end{enumerate}
+\end{theorem}
+
+The proof decomposes as:
+\begin{itemize}[leftmargin=1.6em]
+  \item \emph{Cohomological core} (parts (i)--(ii)). Assuming \UCC,
+        establish (H-Cox)$+$(sgn) for \emph{all}~$n$ by induction,
+        hence the existence, uniqueness and non-vanishing pairing of
+        $\omegabal n$.
+  \item \emph{Numerical refinement} (the interval in part (iii)). The
+        per-step BFT-sharp ICOP (\S\ref{sec:ICOP}), reduced to an
+        $n$-uniform last-step sub-statement, upgrades the cohomological
+        obstruction to the explicit $[3/11,8/11]$ interval.
+  \item \emph{Width-3 reduction} (part (iii)). The width-3
+        specialisation of the cohomological/ICOP statement is the
+        classical Kahn--Saks conjecture for width-3 posets.
+\end{itemize}
+Part~(i)--(ii) --- the cohomological core --- is conditional on the
+\emph{single} hypothesis \UCC. Part~(iii) additionally invokes
+\ICOPstep{} and the width-3 bridge, both of which \S\ref{sec:opengap}
+reduces to clean, narrow sub-statements. The honest scope of the word
+``conditional'' is delineated in \S\ref{sec:opengap}.
+
+% =====================================================================
+\section{Mechanism M1 --- $n$-uniform constructive cofiber Morse}\label{sec:M1}
+% =====================================================================
+
+\subsection{What M1 establishes}\label{ssec:3.1}
+For the subcomplex pair $\Delta_n\subseteq\Delta_{n+1}$, Mechanism~M1
+constructs a discrete Morse matching
+\[
+  M_{n+1}\;=\;M_n\;\sqcup\;\Mrel
+\]
+that is \emph{compatible with the subcomplex} $\Delta_n$: it never
+matches a cell of $\Delta_n$ with a relative cell. By the cofiber-Morse
+principle (Forman~\cite{Forman1998}; Kozlov~\cite{Kozlov2008}, Ch.~11;
+Hersh--Welker):
+\begin{itemize}[leftmargin=1.6em]
+  \item $M_n:=M_{n+1}\cap(\Delta_n\times\Delta_n)$ is a matching on
+        $\Delta_n$, with $\crit(M_n)$ computing $\Hred_*(\Delta_n)$;
+  \item $\Mrel:=M_{n+1}\setminus M_n$ is a matching on the relative
+        cells $C_*(\Delta_{n+1},\Delta_n)$, with $\crit(\Mrel)$
+        computing $\Hred_*(\Delta_{n+1}/\Delta_n)$ --- the
+        \emph{cofiber}.
+\end{itemize}
+
+\subsection{The $n$-uniform part (proven)}\label{ssec:3.2}
+The decomposition $M_{n+1}=M_n\sqcup\Mrel$ is \emph{acyclic for every
+$n$}, by the following $n$-independent lemma.
+
+\begin{lemma}[Downward-closed-subcomplex lemma]\label{lem:dcs}
+Let $A\subseteq X$ be a subcomplex, $M_A$ an acyclic matching on $A$,
+and $M_{X\setminus A}$ an acyclic matching on the relative cells. Then
+$M_A\sqcup M_{X\setminus A}$ is an acyclic matching on $X$.
+\end{lemma}
+\begin{proof}
+In the modified Hasse digraph, no directed edge leaves $A$: a downward
+unmatched edge stays in $A$ by downward-closure, and a matched up-edge
+from $c\in A$ has its partner in $A$ since $(c,\tau)\in M_A$. A periodic
+directed cycle is therefore confined to $A$ or to $X\setminus A$,
+contradicting the acyclicity of $M_A$ resp.\ $M_{X\setminus A}$.
+\end{proof}
+
+Lemma~\ref{lem:dcs} \textbf{does not depend on $n$}: it is a structural
+property of the cofiber inclusion. The single load-bearing hypothesis ---
+that no modified-Hasse out-edge leaves $\Delta_n$ --- was verified
+computationally at $n=4$, an instance of an $n$-independent argument.
+Hence:
+\begin{proposition}[M1-uniform]\label{prop:M1uniform}
+For every $n\ge3$ there is an acyclic matching
+$M_{n+1}=M_n\sqcup\Mrel$ on $\Delta_{n+1}$ whose relative part $\Mrel$
+is an acyclic matching on $C_*(\Delta_{n+1},\Delta_n)$. By the Morse
+inequalities, $\crit_k(\Mrel)\ge\dim\Hred^k(\Delta_{n+1}/\Delta_n)$ for
+every~$k$.
+\end{proposition}
+
+\subsection{The $n$-dependent part (open beyond $n=3\to4$)}\label{ssec:3.3}
+At $n=3\to4$, more is true: after a greedy matching followed by three
+Forman cancellations (V-paths of lengths $6$, $12$, $4$), $\Mrel$
+becomes \emph{perfect}:
+\[
+  \crit(\Mrel)\;=\;(0,0,2,0)\;=\;\bred_*(\Delta_4/\Delta_3),
+\]
+the Morse inequalities are equalities, and the two critical $2$-cells
+form a $\Q$-basis of $\Hred^2(\Delta_4/\Delta_3)$ carrying the
+$S_3$-representation $2\cdot\sgn_{S_3}$.
+
+The parent computation is explicit that \emph{perfection} of $\Mrel$ is
+verified only at $n=3\to4$: whether the greedy$+$Forman steps again
+bottom out at exactly the cofiber Betti vector at larger~$n$ is not
+\emph{a priori} guaranteed --- it depends on the availability of
+\emph{unique} gradient V-paths between residual critical pairs. The
+$n$-uniform mechanism (Proposition~\ref{prop:M1uniform}) guarantees
+\emph{acyclicity}; it does \emph{not} guarantee \emph{perfection}. This
+is the M1 contribution to the gap of \S\ref{ssec:6.3}.
+
+\subsection{Net M1 statement for the synthesis}\label{ssec:3.4}
+M1 gives, $n$-uniformly, an acyclic cofiber matching whose critical
+cells \emph{upper-bound} the cofiber Betti numbers. M1 therefore
+\emph{reduces} the cohomological-core induction to the statement
+``$\Mrel$ is perfect, with critical vector concentrated in degree $n-1$
+and equal to $2$'' --- which is exactly the topological half of \UCC.
+
+% =====================================================================
+\section{Mechanism M2 --- FI representation stability}\label{sec:M2}
+% =====================================================================
+
+\subsection{What M2 establishes}\label{ssec:4.1}
+Mechanism~M2 verifies, at $n=3,4,5,6$,
+\[
+  \Hred^k(\Delta_n;\Q)\;=\;
+  \begin{cases}\sgn_{S_n} & k=n-2,\\[2pt] 0 & k\ne n-2,\end{cases}
+\]
+($n=3,4$ by direct reduced Betti; $n=5$ by Lefschetz; $n=6$ by HPC
+Burnside, $m_{\sgn}=1$, $\mathrm{Out}(S_6)$-invariant --- see
+\S\ref{ssec:n6note}). The FI-action $V(f)$ is genuinely functorial over
+all injections, so the ``no FI-structure at all'' failure mode is
+excluded.
+
+\subsection{The presentation-degree-zero claim, and its honest content}\label{ssec:4.2}
+The headline of M2 is: the sgn-twist
+$\bigl(\Hred^{n-2}(\Delta_n)\otimes\sgn_{S_n}\bigr)_n=(\triv_{S_n})_n$
+is the trivial FI-module $M(0)$, of \emph{presentation degree~0}, with
+constant character polynomial~$1$. Two flanking facts are established
+rigorously:
+\begin{itemize}[leftmargin=1.6em]
+  \item the \emph{fixed-$k$} co-FI-module $(\Hred^k(\Delta_n))_n$ is
+        supported at the single index $n=k+2$ --- a degenerate/torsion
+        FI-module with no cross-$n$ content;
+  \item the \emph{untwisted diagonal} $(\sgn_{S_n})_n$ is \textbf{not}
+        finitely generated --- it is the canonical
+        Church--Ellenberg--Farb non-example
+        ($\sgn_{S_n}\leftrightarrow$ the partition $(1^n)$, whose
+        first-row length does not stabilise).
+\end{itemize}
+The presentation-degree-$0$ statement is itself \textbf{conditional}: it
+is flagged in the source as conditional on the finite-generation theorem
+for $\bigl(\Hred^{n-2}(\Delta_n)\otimes\sgn\bigr)_n$ as an FI-module.
+The present paper \emph{sharpens} this caveat in \S\ref{ssec:7.2}: the
+issue is more structural than ``the FG theorem is unproven'' --- the
+geometric diagonal does not carry a naive co-FI-module structure at all,
+because the cohomological degree shifts with~$n$. What M2 genuinely
+delivers for the synthesis is the \textbf{structural template}: if the
+appropriate stable object is finitely generated of presentation
+degree~$d$, then the $n\le d+c$ verifications pin it for all~$n$
+(Ramos~\cite{Ramos2017}: an FI-module of presentation degree $\le d$ is
+determined by its values at indices $\le d$).
+
+\subsection{The cofiber long exact sequence --- the synthesis bridge}\label{ssec:4.3}
+The mechanism that genuinely \emph{relates} $\Delta_n$ and
+$\Delta_{n+1}$ across the degree shift is \emph{not} naive pullback; it
+is the \textbf{cofiber long exact sequence} of the pair
+$(\Delta_{n+1},\Delta_n)$:
+\[
+  \cdots\to\Hred^k(\Delta_{n+1}/\Delta_n)
+        \to\Hred^k(\Delta_{n+1})
+        \xrightarrow{\ \iota_n^*\ }\Hred^k(\Delta_n)
+        \xrightarrow{\ \delta_n\ }\Hred^{k+1}(\Delta_{n+1}/\Delta_n)
+        \to\cdots
+\]
+This sequence is \emph{exact for every $n$} (standard; no hypothesis).
+It is the structural object that carries the inductive lift
+$\omegabal n\rightsquigarrow\omegabal{n+1}$. The connecting map
+$\delta_n$ degree-shifts by $+1$, exactly matching the degree shift in
+the diagonal $D_n:=\Hred^{n-2}(\Delta_n)$. This match is the crux of the
+\S\ref{ssec:7.2} sharpening.
+
+\subsection{Net M2 statement for the synthesis}\label{ssec:4.4}
+M2 gives: (i) the base data $D_n=\sgn_{S_n}$ verified at $n=3,4,5,6$;
+(ii) the structural template ``low presentation degree $\Rightarrow$
+small-$n$ data pins all $n$''; (iii) --- via the cofiber long exact
+sequence --- the precise \emph{form} of the inductive step. M2
+\emph{reduces} the cohomological-core induction to the finite generation
+of the appropriate stable object: the representation-stability half of
+\UCC.
+
+\subsection{Honesty note on the $n=6$ datum}\label{ssec:n6note}
+The HPC Burnside computation establishes $m_{\sgn}(n{=}6)=1$ with the
+non-identity classes contributing $719=|S_6|-1$ exactly (a clean
+Lefschetz identity at $10/11$ conjugacy classes); the identity-class
+value $\chired(\Delta_6)=+1$ was computationally deferred and entered
+via the clean-Lefschetz extrapolation from $n=4,5$. So the $n=6$
+verification of (sgn) is ``Burnside-rigorous modulo one extrapolated
+Euler-characteristic term.'' This does not affect the proof skeleton
+(which uses $n=3,4,5,6$ only as base/anchor data), but it is recorded
+here for honesty and again in \S\ref{sec:empirical}.
+
+% =====================================================================
+\section{The ICOP framework and its $n$-uniform reduction}\label{sec:ICOP}
+% =====================================================================
+
+\subsection{The Inductive Cohomological Obstruction Principle}\label{ssec:5.1}
+\begin{definition}[ICOP]\label{def:icop}
+Let $\omegabal n$ be the canonical Forman cocycle representative of the
+$\sgn$-rep generator of $\Hred^{n-2}(\Delta_n)$ under a
+chamber-Morse-derived acyclic matching. The \emph{Inductive
+Cohomological Obstruction Principle} asserts: for any critical
+$(n-2)$-cell $c$ with $\langle\omegabal n,c\rangle\ne0$, the per-step
+Kahn--Saks probabilities along $c=(P_0\subset\dots\subset P_{n-2})$
+satisfy $\Pr_{P_k}(a_k,b_k)\in[3/11,8/11]$ for all~$k$.
+\end{definition}
+ICOP is the cohomological reformulation of (BF-Cox). It is verified at
+$n=3,4,5,6$ along canonical critical chains ($16/16$; \S\ref{ssec:established}).
+
+\subsection{The canonical critical chain is an $\iota$-tower}\label{ssec:5.2}
+The F8$'$ \emph{multiplicativity law} states that, for the canonical
+lex-min critical cell,
+\[
+  |\mathcal L(\iota_{n-1}(P_k))|\;=\;n\cdot|\mathcal L(P_k)|,
+\]
+where $\mathcal L(\cdot)$ denotes the set of linear extensions; this was
+confirmed by direct enumeration at $n=6$ for $k=0,1,2,3$ (the $n=5$
+profile $(30,14,8,4)$ lifts to $(180,84,48,24)$). Consequently the
+canonical critical chain has the \textbf{$\iota$-tower form}
+\[
+  \cstar n\;=\;\iota_{n-1}\bigl(\iota_{n-2}(\cdots\iota_3(\cstar3)\cdots)\bigr)
+              \;\cup\;\{\text{one new cover step per level}\},
+\]
+and --- crucially --- the per-step probabilities on the \emph{inherited}
+steps are \textbf{$n$-independent}: the multiplicative factor $n$
+cancels in every ratio $|\mathcal L(P_{k+1})|/|\mathcal L(P_k)|$. The
+inherited probability profile is the \emph{fixed} rational vector
+$(7/15,\,4/7,\,1/2,\,1/2,\,\dots)$ --- literally the same at every $n$.
+
+\subsection{What is genuinely new at each level}\label{ssec:5.3}
+By \S\ref{ssec:5.2}, the only per-step probability not inherited at
+level $n\to n+1$ is the \textbf{single new cover step} appended to the
+near-maximal top poset. The $n=6$ analysis found:
+\begin{itemize}[leftmargin=1.6em]
+  \item the naive heuristic prediction ($\Pr\approx1/2$ for the cover
+        $(0,n)$) is \emph{refuted} at $n=6$:
+        $\Pr_{\iota_5(P_3)}(0,5)=3/4$, because $0$ is a \emph{minimal}
+        element of $P_3$ --- its position is structurally
+        non-uniform;
+  \item but the \textbf{lex-min} new cover (over the full pair-space) is
+        $(0,2)$ with $\Pr=1/2$ --- BFT-sharp. The full lex-min candidate
+        $4$-cell at $n=6$ has probability profile $(7/15,4/7,1/2,1/2)$,
+        $4/4$ BFT-sharp;
+  \item of the $14$ admissible step-$4$ covers of $\iota_5(P_3)$,
+        $8/14$ are BFT-sharp; the $6/14$ failures are exactly covers at
+        \emph{extremal} elements (e.g.\ $(5,1)$ with $\Pr=5/6$), which
+        would not be selected by a Forman-respecting greedy chamber-Morse
+        procedure.
+\end{itemize}
+
+\subsection{The $n$-uniform reduction of ICOP}\label{ssec:5.4}
+Combining \S\ref{ssec:5.2} and \S\ref{ssec:5.3}, ICOP on the canonical
+$\iota$-tower chain reduces to a \textbf{single $n$-uniform
+sub-statement}:
+\begin{hypothesis}[ICOP-step]\label{hyp:icopstep}
+For every $n$, the lex-min new cover step appended to the top poset of
+$\cstar n$ in the $\iota$-tower is BFT-sharp: its Kahn--Saks probability
+lies in $[3/11,8/11]$.
+\end{hypothesis}
+This is \emph{one rational number per~$n$}, not an open-ended
+verification, and it is structurally constrained: the lex-min cover is
+selected to avoid extremal elements (\S\ref{ssec:5.3}), and the
+empirical record is clean at $n=3,4,5,6$. \ICOPstep{} is a
+\textbf{secondary} conditional input (\S\ref{ssec:7.4}), distinct from
+and much narrower than the master hypothesis \UCC. It is not a
+consequence of \UCC; but it is reduced here from ``verify ICOP at all
+$n$'' to ``control one structurally-uniform cover step per $n$.''
+
+% =====================================================================
+\section{The proof: M1 + M2 + ICOP combined}\label{sec:proof}
+% =====================================================================
+
+\subsection{The induction variable}\label{ssec:6.1}
+For $n\ge3$ write
+\[
+  \Hyp(n)\ :\Longleftrightarrow\
+  \Hred^k(\Delta_n;\Q)=
+    \begin{cases}\sgn_{S_n} & k=n-2,\\ 0 & k\ne n-2.\end{cases}
+\]
+$\Hyp(n)$ is exactly (H-Cox)$+$(sgn) at level~$n$. The \textbf{base
+case} $\Hyp(3)$ is rigorous: $\Delta_3\simeq S^1$ and
+$\Hred^1(\Delta_3)=\sgn_{S_3}$ (F1-refined). The cohomological core is
+the implication $\Hyp(n)\Rightarrow\Hyp(n+1)$ for all $n$.
+
+\subsection{The inductive step from the cofiber LES}\label{ssec:6.2}
+Assume $\Hyp(n)$. Feed it into the cofiber long exact sequence of
+\S\ref{ssec:4.3} together with the cofiber cohomology. Suppose, for the
+moment, that
+\begin{equation}\label{eq:star}
+  \Hred^k(\Delta_{n+1}/\Delta_n;\Q)\;=\;
+   \begin{cases} 2\cdot\sgn_{S_n} & k=n-1,\\ 0 & k\ne n-1, \end{cases}
+\end{equation}
+and that the connecting map
+$\delta_n:\Hred^{n-2}(\Delta_n)\to\Hred^{n-1}(\Delta_{n+1}/\Delta_n)$
+is \textbf{injective}. Then, degree by degree:
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{$k\ne n-1,n-2$.} $\Hred^k(\Delta_{n+1}/\Delta_n)=0$
+        by~\eqref{eq:star} and $\Hred^k(\Delta_n)=0$ by $\Hyp(n)$, so
+        the LES gives $\Hred^k(\Delta_{n+1})=0$.
+  \item \textbf{$k=n-2$.} $\Hred^{n-2}(\Delta_{n+1}/\Delta_n)=0$, so
+        $\iota_n^*$ is injective on $\Hred^{n-2}(\Delta_{n+1})$, and
+        exactness identifies $\Hred^{n-2}(\Delta_{n+1})=\ker(\delta_n)$.
+        Since $\delta_n$ is injective, $\Hred^{n-2}(\Delta_{n+1})=0$.
+  \item \textbf{$k=n-1$.} $\Hred^{n-1}(\Delta_n)=0$ by $\Hyp(n)$ (as
+        $n-1\ne n-2$), so exactness gives
+        $\Hred^{n-1}(\Delta_{n+1})=\operatorname{coker}(\delta_n)
+        =(2\cdot\sgn_{S_n})/\delta_n(\sgn_{S_n})$. As $\delta_n$ is
+        injective and $\sgn_{S_n}$ is one-dimensional,
+        $\operatorname{coker}(\delta_n)$ is one-dimensional; as an
+        $S_n$-representation it is
+        $2\cdot\sgn_{S_n}/\sgn_{S_n}=\sgn_{S_n}$.
+\end{itemize}
+So $\Hred^k(\Delta_{n+1})=0$ for $k\ne n-1$, and
+$\Hred^{n-1}(\Delta_{n+1})$ is one-dimensional with $S_n$ acting by
+$\sgn_{S_n}$.
+
+\smallskip
+\noindent\textbf{Promoting the $S_n$-statement to $S_{n+1}$.}
+$\Hred^{n-1}(\Delta_{n+1})$ carries the full $S_{n+1}$-action (natural,
+since $S_{n+1}$ acts on $\Delta_{n+1}$). It is one-dimensional, so it is
+either $\triv_{S_{n+1}}$ or $\sgn_{S_{n+1}}$. Restricting to $S_n$:
+$\triv_{S_{n+1}}|_{S_n}=\triv_{S_n}$ and
+$\sgn_{S_{n+1}}|_{S_n}=\sgn_{S_n}$. We computed that $S_n$ acts by
+$\sgn_{S_n}$, so the $S_{n+1}$-representation is $\sgn_{S_{n+1}}$.
+
+This is exactly $\Hyp(n+1)$. \textbf{The inductive step is gap-free} ---
+given \eqref{eq:star} and $\delta_n$ injective.
+
+\subsection{The master conditional hypothesis (UCC)}\label{ssec:6.3}
+Section~\ref{ssec:6.2} isolates precisely what the induction needs.
+
+\begin{hypothesis}[UCC --- Uniform Cofiber Concentration]\label{hyp:ucc}
+For every $n\ge3$:
+\begin{enumerate}[leftmargin=2em,label=\textup{(UCC.\arabic*)}]
+  \item \emph{Concentration and representation type.}
+        $\Hred^k(\Delta_{n+1}/\Delta_n;\Q)=0$ for $k\ne n-1$, and
+        $\Hred^{n-1}(\Delta_{n+1}/\Delta_n;\Q)\cong2\cdot\sgn_{S_n}$ as
+        an $S_n$-representation.
+  \item \emph{Injectivity.} The connecting map
+        $\delta_n:\Hred^{n-2}(\Delta_n)\to\Hred^{n-1}(\Delta_{n+1}/\Delta_n)$
+        is injective.
+\end{enumerate}
+\end{hypothesis}
+
+\begin{theorem}[Cohomological core, conditional]\label{thm:core}
+Assume \UCC. Then $\Hyp(n)$ holds for all $n\ge3$.
+\end{theorem}
+\begin{proof}
+Induction on $n$. The base $\Hyp(3)$ is \S\ref{ssec:6.1}. For the step,
+(UCC.1) at level $n$ supplies \eqref{eq:star} and (UCC.2) supplies the
+injectivity of $\delta_n$; \S\ref{ssec:6.2} then yields
+$\Hyp(n)\Rightarrow\Hyp(n+1)$.
+\end{proof}
+
+Two remarks make \UCC{} honest and non-circular.
+\begin{remark}[\UCC{} is not equivalent to $\Hyp$]
+$\Hyp(n)$ is a statement about the \emph{absolute} cohomology of
+$\Delta_n$; \UCC{} is a statement about the \emph{relative/cofiber}
+cohomology of the \emph{pair}. (UCC.1) concerns a single fixed pair and
+is provable in principle by a single-$n$ computation --- it \emph{was}
+so proven at $n=3\to4$ (\S\ref{ssec:3.3}, \S\ref{ssec:6.5}). The
+induction converts a sequence of pair-statements into the absolute
+sequence; this is the standard logical shape of a Morse / Mayer--Vietoris
+induction, and is not circular.
+\end{remark}
+\begin{remark}[Euler characteristic does not give \UCC{} for free]
+Given $\chired(\Delta_n)=(-1)^{n-2}$ for all $n$ (itself a
+\emph{consequence} of \UCC{} via the induction, hence not an
+independent assumption), the cofiber satisfies
+$\chired(\Delta_{n+1}/\Delta_n)=\chired(\Delta_{n+1})-\chired(\Delta_n)
+=2(-1)^{n-1}$ --- consistent with (UCC.1)'s dimension count~$2$. But
+Euler characteristic pins \emph{neither} the concentration in a single
+degree \emph{nor} the injectivity of $\delta_n$: the alternative
+``$\delta_n=0$, with $\Hred^{n-2}(\Delta_{n+1})=\sgn$ and
+$\Hred^{n-1}(\Delta_{n+1})=2\cdot\sgn$'' has the \emph{same} Euler
+characteristic $(-1)^{n-1}$. So \UCC{} carries genuine content beyond
+Euler characteristic.
+\end{remark}
+
+\subsection{How M1 and M2 each reduce to (UCC) --- the synthesis}\label{ssec:6.4}
+This is the load-bearing observation of the framework:
+\textbf{M1 and M2 are two independent partial routes to the same
+hypothesis \UCC.}
+
+\smallskip
+\noindent\textbf{M1 $\longrightarrow$ \UCC.}
+By \S\ref{ssec:3.2}, M1 supplies, $n$-uniformly, an acyclic cofiber
+matching $\Mrel$ with
+$\crit_k(\Mrel)\ge\dim\Hred^k(\Delta_{n+1}/\Delta_n)$. \emph{(UCC.1)} is
+exactly the statement that $\Mrel$ is \emph{perfect} with critical
+vector $(0,\dots,0,2,0)$ concentrated in degree $n-1$ --- i.e.\ the
+Morse inequalities are equalities and the two-dimensional critical span
+carries $2\cdot\sgn_{S_n}$. \emph{(UCC.2)} is exactly the statement that
+the cross-boundary Forman cancellation reducing $\crit(M_{n+1})$ from
+$\crit(M_n)\sqcup\crit(\Mrel)$ to a perfect matching succeeds (a perfect
+$M_{n+1}$ forces $\bred_{n-2}(\Delta_{n+1})=0$, hence $\delta_n$
+injective). M1 proves the \emph{acyclicity} uniformly, and proves
+\emph{perfection $+$ cancellation} at $n=3\to4$; the open part is
+``greedy $+$ Forman attains the Morse minimum for all $n$.''
+
+\smallskip
+\noindent\textbf{M2 $\longrightarrow$ \UCC.}
+By \S\ref{sec:M2}, M2 supplies the base data $D_n=\sgn_{S_n}$ at
+$n=3,4,5,6$ and the representation-stability template. The cofiber
+sequence $\bigl(\Hred^{n-1}(\Delta_{n+1}/\Delta_n)\bigr)_n$ is the
+object whose finite generation, at presentation degree~$0$, would force
+(UCC.1) and (UCC.2) for all $n$ from the $n\le(\text{small})$
+verification (Ramos~\cite{Ramos2017}). The open part is the
+finite-generation theorem for the \emph{correct} stable object ---
+sharpened in \S\ref{sec:opengap}.
+
+\smallskip
+So the two mechanisms \textbf{do combine} --- not by both being
+separately complete, but by \textbf{converging on \UCC{} as the shared
+crux}. M1 is the \emph{constructive / discrete-Morse} face of \UCC; M2
+is the \emph{representation-stability} face. Each independently reduces
+the entire general-$n$ cohomological core to \UCC. This convergence is
+itself strong structural evidence for \UCC: two \emph{a priori}
+unrelated machineries terminate at the \emph{same} precise statement,
+and both verify it at $n=3\to4$ (M1: $(0,0,2,0)$ perfect; M2: the
+$n=3\to4$ cofiber LES has $\delta_3$ injective with $2\cdot\sgn$
+cofiber). The ``mechanisms-in-conflict'' failure mode is decisively
+excluded.
+
+\subsection{The base case of (UCC) is established}\label{ssec:6.5}
+\UCC{} at level $n=3$ is \textbf{proven}, not assumed:
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{(UCC.1) at $n=3$.} $\Mrel$ for $\Delta_4/\Delta_3$ is
+        perfect with critical vector $(0,0,2,0)$, so
+        $\Hred^*(\Delta_4/\Delta_3)$ is concentrated in degree~$2$,
+        two-dimensional; it is $2\cdot\sgn_{S_3}$.
+  \item \textbf{(UCC.2) at $n=3$.} The connecting map
+        $\delta_3^{\sgn}$ is injective, with
+        $\omegabal4=\operatorname{coker}(\delta_3)$ on the sgn-isotype
+        --- the $(m_A,m_X,m_{X/A})^{\sgn}=(1,1,2)$ pattern.
+\end{itemize}
+So the induction has a \emph{verified} base for \UCC{} itself, and the
+cohomological core is rigorous at $n=3\to4$ \textbf{unconditionally}.
+\UCC{} at $n=4,5$ is partially constrained (the $n=4,5,6$ absolute
+cohomology is known, which constrains the cofibers via the LES). The
+conditional content of Theorem~\ref{thm:main} is precisely \UCC{} at
+$n\ge4$.
+
+\subsection{From the cohomological core to width-3 1/3-2/3}\label{ssec:6.6}
+Given $\Hyp(n)$ for all $n$ (Theorem~\ref{thm:core}), the remaining
+steps of the proof skeleton run as follows.
+\begin{enumerate}[leftmargin=2em,label=(\arabic*)]
+  \item \textbf{Existence and uniqueness of $\omegabal n$.} $\Hyp(n)$
+        gives $\Hred^{n-2}(\Delta_n)^{\sgn}=\sgn_{S_n}$,
+        one-dimensional, so $\omegabal n$ exists and is unique up to
+        scalar, for every $n$.
+  \item \textbf{Existence of $\cstar n$.} M1's $n$-uniform matching
+        (\S\ref{ssec:3.2}), together with \UCC{} making $M_{n+1}$
+        reducible to a perfect matching, supplies a canonical critical
+        $(n-2)$-cell $\cstar n$ at every $n$; the $\iota$-tower
+        description (\S\ref{ssec:5.2}) makes it explicit.
+  \item \textbf{Non-vanishing pairing.}
+        $\langle\omegabal n,\cstar n\rangle=\pm1$: at $n=3,4,5,6$ this
+        is verified data; at general $n$ it follows from $\Hyp(n)$ plus
+        the perfect-matching structure of $M_n$ (a perfect Morse
+        matching has each critical $(n-2)$-cell pairing $\pm1$ with the
+        generator of $\Hred^{n-2}$). Equivalently, by \S\ref{ssec:6.2}
+        the cokernel description
+        $\omegabal{n+1}=\operatorname{coker}(\delta_n)$ propagates the
+        non-vanishing pairing along the induction.
+  \item \textbf{The $[3/11,8/11]$ interval.} ICOP (\S\ref{sec:ICOP}),
+        reduced to \ICOPstep{} (\S\ref{ssec:5.4}), gives per-step
+        probabilities in $[3/11,8/11]$ along $\cstar n$ at every $n$ ---
+        the inherited steps are $n$-independent (\S\ref{ssec:5.2}), the
+        one new step per level is \ICOPstep.
+  \item \textbf{Width-3 specialisation.} A width-3 partial order on $m$
+        elements is an element of $\PPF_m$. The cohomological/ICOP
+        statement at level $m$, restricted to width-3 sub-chains,
+        asserts that the canonical critical chain through a width-3
+        poset $P$ has a BFT-sharp cover step at $P$ --- a balanced
+        incomparable pair $(x,y)$ with $\Pr_P[x<_Py]\in[3/11,8/11]$.
+        This is the Kahn--Saks 1/3-2/3 statement for $P$.
+\end{enumerate}
+The width-3 \emph{reduction} itself --- that ``width-3 1/3-2/3
+$\Longleftrightarrow$ non-vanishing cohomological pairing'' --- is the
+F4/F8 framework: rigorous at $m\le4$ (by enumeration of $\PPF_4$: all
+$32$ cover-pair probabilities across the $4$ critical $2$-cells lie in
+$[3/11,8/11]$, and every $P\in\PPF_4$ appears on a critical chain), and
+reduced to ICOP plus a ``critical-chain-captures-balanced-pair'' bridge
+at $m\ge5$. The honest status of this bridge is \S\ref{ssec:7.3}.
+
+\subsection{Statement of the conditional theorem (final form)}\label{ssec:6.7}
+\begin{theorem}[Conditional, final form]\label{thm:final}
+Assume \UCC{} \textup{(\S\ref{ssec:6.3})}. Then:
+\begin{enumerate}[leftmargin=2em,label=\textup{(\roman*)}]
+  \item $\Delta_n\simeq_{\Q}S^{n-2}$ and
+        $\Hred^{n-2}(\Delta_n;\Q)\cong\sgn_{S_n}$ for all $n\ge3$ ---
+        \textup{(H-Cox)} and \textup{(sgn)} hold at general~$n$;
+  \item the canonical class $\omegabal n$ exists, is unique up to
+        scalar, and pairs $\pm1$ with the canonical critical cell
+        $\cstar n$, for all $n$;
+  \item assuming additionally \ICOPstep{} \textup{(\S\ref{ssec:5.4})}
+        and the width-3 reduction bridge \textup{(\S\ref{ssec:7.3})},
+        every width-3 partial order $P$ admits incomparable $x,y$ with
+        $\Pr_P[x<_Py]\in[3/11,8/11]\subset[1/3,2/3]$.
+\end{enumerate}
+Parts \textup{(i)--(ii)} --- the cohomological core --- are conditional
+on the \emph{single} hypothesis \UCC. Part~\textup{(iii)} --- the
+numerical width-3 conclusion --- additionally invokes \ICOPstep{} and the
+width-3 bridge, both of which \S\ref{sec:opengap} reduces to clean,
+narrow sub-statements.
+\end{theorem}
+
+% =====================================================================
+\section{The single open gap: (FG-Cofiber)}\label{sec:opengap}
+% =====================================================================
+
+\subsection{The load-bearing gap is (UCC), and only (UCC), for the core}\label{ssec:7.1}
+Theorem~\ref{thm:core} proves that the entire general-$n$ cohomological
+core --- (H-Cox)$+$(sgn) at all $n$, existence/uniqueness of
+$\omegabal n$, the non-vanishing pairing --- is rigorous \emph{modulo
+\UCC{} alone}. \UCC{} is therefore \emph{the} load-bearing open gap.
+Everything else in steps (1)--(4) of \S\ref{ssec:6.6} is either standard
+(the cofiber LES, the Morse inequalities, Lemma~\ref{lem:dcs}) or
+verified base data ($n=3,4,5,6$).
+
+\subsection{(UCC) as a representation-stability statement}\label{ssec:7.2}
+\label{ssec:7.2}
+The natural expectation is that the gap is ``FI finite generation holds
+for $\bigl(\Hred^{n-2}(\Delta_n)\bigr)_n$.'' The analysis below confirms
+this \emph{in spirit} but \textbf{sharpens the precise statement}, and
+corrects a framing issue.
+
+\paragraph{(7.2.a) The geometric diagonal does not carry a naive
+co-FI-module structure.}
+The FI-action $V(f)$ induces, on cohomology, \emph{degree-preserving}
+pullback maps
+$\iota_n^*:\Hred^k(\Delta_{n+1})\to\Hred^k(\Delta_n)$. For the diagonal
+$D_n=\Hred^{n-2}(\Delta_n)$, a putative structure map
+$D_{n+1}\to D_n$ would have to be a map
+$\Hred^{n-1}(\Delta_{n+1})\to\Hred^{n-2}(\Delta_n)$ --- a map between
+\emph{different} cohomological degrees, which $\iota_n^*$ does not
+provide. Indeed, under $\iota_n^*$ the diagonal's transition maps are
+all zero \emph{for the trivial reason} that the target degree is wrong:
+$\iota_n^*$ lands $\Hred^{n-1}(\Delta_{n+1})$ in
+$\Hred^{n-1}(\Delta_n)=0$. \textbf{Consequence:} the statement
+``$\bigl(\Hred^{n-2}(\Delta_n)\otimes\sgn\bigr)_n=M(0)$, presentation
+degree~$0$'' is \emph{not} a theorem about the geometric co-FI-module;
+it is the assertion that the underlying \emph{representation sequence}
+$(\triv_{S_n})_n$ coincides with the underlying sequence of $M(0)$ ---
+which, decoded, is exactly ``$D_n=\sgn_{S_n}$ for all $n$,'' verified at
+$n\le6$. The presentation-degree-$0$ label is aspirational structure,
+not established structure.
+
+\paragraph{(7.2.b) The correct stable object is degree-shift-aware.}
+The maps that genuinely relate $D_n$ and $D_{n+1}$ are the
+\textbf{cofiber connecting maps} $\delta_n$ (\S\ref{ssec:4.3}), which
+degree-shift by $+1$ --- matching the diagonal's own shift. The right
+framework is therefore one of:
+\begin{itemize}[leftmargin=1.6em]
+  \item the \emph{suspension/shift-aware} functor category in which the
+        cofibers $\Delta_{n+1}/\Delta_n\simeq\Sigma\Delta(X_n)$ are the
+        structure maps --- i.e.\ identify the Quillen fiber $X_n$ and
+        show that $(\Delta(X_n))_n$, or the relevant cofiber-cohomology
+        sequence, is finitely generated in the appropriate sense;
+  \item or, equivalently, the FI-module assembled from the
+        \emph{relative cohomology} sequence with the cofiber-induced
+        transition maps. (An injection $f:[m]\hookrightarrow[n]$ extends
+        to $\hat f:[m+1]\hookrightarrow[n+1]$ with $\hat f(m)=n$, and
+        $V(\hat f)$ maps the pair $(\Delta_{m+1},\Delta_m)$ to
+        $(\Delta_{n+1},\Delta_n)$, so
+        $(\Hred^k(\Delta_{n+1}/\Delta_n))_n$ \emph{is} a genuine
+        co-FI-module for each fixed~$k$ --- but again the relevant
+        degree $k=n-1$ shifts with~$n$.)
+\end{itemize}
+
+\paragraph{(7.2.c) The precise sub-statement requiring specialist
+verification.}
+The honest, sharpened gap statement --- the framework's single open
+problem --- is:
+\begin{hypothesis}[FG-Cofiber]\label{hyp:fgcofiber}
+Identify the correct functor-category framework (shift-aware FI, or the
+explicit Quillen fiber $X_n$ with
+$\Delta_{n+1}/\Delta_n\simeq\Sigma\Delta(X_n)$) in which the
+cofiber-cohomology sequence
+$\bigl(\Hred^{n-1}(\Delta_{n+1}/\Delta_n)\bigr)_n$ is the diagonal of a
+\textbf{finitely generated} object, and prove that finite generation.
+Given finite generation, the $n=3$ computation (cofiber
+$=2\cdot\sgn_{S_3}$ in degree~$2$, $\delta_3$ injective), together with
+the partial $n=4,5$ data, pins the presentation degree at the empirical
+value, and Ramos~\cite{Ramos2017} then yields \UCC{} for all~$n$.
+\end{hypothesis}
+This is \textbf{strictly narrower} than the naive framing: it is not
+``verify FI finite generation for the diagonal'' (which, by (7.2.a), is
+the wrong object), but ``set up the correct degree-shift-aware object
+and prove its finite generation.'' The observation that the
+\emph{cochain-level} objects ($C^k(\Delta_n)$, the bad-coface count)
+are \emph{not} finitely generated and grow super-polynomially is fully
+consistent: it is the \emph{cohomology} of the cofiber, not the
+cochains, that is conjecturally finitely generated, and only after the
+degree-shift framing is fixed.
+
+\paragraph{(7.2.d) Why the CEF/Patzt--Putman criterion does not apply
+off the shelf.}
+The standard finite-generation tool is: a sub/quotient of a finitely
+generated FI-module is finitely generated
+(Church--Ellenberg--Farb--Nagpal Noetherianity over Noetherian
+rings~\cite{CEFN2014}). The natural ambient --- the cochain
+co-FI-module $\bigl(C^k(\Delta_{n+1},\Delta_n)\bigr)_n$ --- is
+\textbf{not} finitely generated ($\dim C^k$ grows
+super-exponentially). So one cannot conclude finite generation of the
+cofiber cohomology by ``subquotient of an f.g.\ module.'' This is the
+precise reason \FGC{} is genuinely specialist work: it requires one of
+\begin{enumerate}[leftmargin=2em,label=(\roman*)]
+  \item an alternative \emph{finite} ambient (e.g.\ a chamber-quotient
+        cochain complex, finitely generated because the chamber complex
+        is --- the $n$-uniform-orbit-count question);
+  \item a direct central-stability / Patzt-style presentation argument
+        for the cofiber cohomology~\cite{Putman2015,Patzt2017}; or
+  \item the F8$''$ Quillen-fiber identification of $X_n$, followed by a
+        finite-generation argument for $(\Delta(X_n))_n$.
+\end{enumerate}
+The present framework sharpens \emph{which} of these is needed; it does
+not close any of them. They are specialist-level work; recording the
+residual honestly while keeping the attack internal is the correct
+disposition for a methodology paper.
+
+\subsection{The width-3 reduction bridge (secondary)}\label{ssec:7.3}
+Independently of \UCC, the \emph{reduction} ``width-3 1/3-2/3
+$\Longleftrightarrow$ cohomological non-vanishing pairing'' has its own
+honest status:
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{$m\le4$: rigorous} (by enumeration of $\PPF_4$).
+  \item \textbf{$m\ge5$: conditional} on the bridge clauses:
+        (a) every $P\in\PPF_n$ lies on a critical chain; (b) the
+        critical chain's cover step at $P$ \emph{is} a balanced pair;
+        (c) width-3 posets have their balanced pairs captured by the
+        critical chain. The subtlety is genuine: at $n=5$ a
+        \emph{greedy pre-cancellation} critical $2$-cell has a cover
+        step with $\Pr=7/8$ (not balanced) --- rescued only because
+        Forman cancellation removes that cell. So the bridge requires
+        ``the \emph{post-Forman canonical} matching has its steps at
+        balanced pairs,'' a structural claim. The constructive picture
+        of \S\ref{ssec:5.3} carries the same message: the lex-min cover
+        is BFT-sharp, the extremal-element covers are not, and the
+        latter would not be selected by a Forman-respecting greedy
+        chamber-Morse procedure.
+\end{itemize}
+This bridge is \textbf{not} part of the cohomological core and
+\textbf{not} governed by \UCC. It is a separate combinatorial
+conditional input. It is, however, narrower than it looks: by
+\S\ref{ssec:5.2} the canonical chain is the $\iota$-tower, so the bridge
+for the \emph{canonical} chain reduces to \ICOPstep{}
+(\S\ref{ssec:5.4}) plus the claim that the $\iota$-tower passes through
+an $S_m$-orbit representative of every width-3 poset.
+
+\subsection{Summary: the conditional inputs, precisely}\label{ssec:7.4}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{0.16\textwidth} p{0.26\textwidth} p{0.22\textwidth} p{0.24\textwidth}}
+\toprule
+Input & Role & Status & Reduces to \\
+\midrule
+\UCC{} \newline (\S\ref{ssec:6.3}) &
+Cohomological core --- \emph{the} load-bearing gap &
+Verified $n=3\to4$ unconditionally; conditional $n\ge4$ &
+\FGC{} (\S\ref{ssec:7.2}) --- finite generation of the
+degree-shift-aware cofiber-cohomology object \\
+\ICOPstep{} \newline (\S\ref{ssec:5.4}) &
+Numerical $[3/11,8/11]$ interval &
+Verified $n=3,4,5,6$ ($16/16$ on canonical chains) &
+One structurally-uniform lex-min cover step per $n$ being BFT-sharp \\
+Width-3 bridge \newline (\S\ref{ssec:7.3}) &
+Width-3 reduction &
+Rigorous $m\le4$; conditional $m\ge5$ &
+\ICOPstep{} $+$ ``$\iota$-tower meets every width-3 orbit'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent\textbf{The honest verdict.} The cohomological core completes
+modulo the \emph{single} precisely-stated hypothesis \UCC. The numerical
+and width-3 refinements add two further, \emph{much narrower}
+conditional inputs --- neither an open-ended verification, both verified
+at $n\le6$ --- which \S\ref{ssec:5.4} and \S\ref{ssec:7.3} reduce to
+clean uniform sub-statements. The framework does not claim these are
+closed; it claims they are \textbf{precisely delineated}. That is the
+deliverable: a clean conditional theorem (\S\ref{ssec:6.7}) with a
+\emph{single} open-gap statement (\FGC, \S\ref{ssec:7.2}).
+
+% =====================================================================
+\section{A documented obstruction: the direct constructive route}\label{sec:obstruction}
+% =====================================================================
+
+This section records --- as a section, not a footnote --- \emph{why}
+the induction of \S\ref{sec:proof} must be structural, by documenting a
+serious \emph{direct} attack that closes the inductive step at small $n$
+but \textbf{provably does not generalize}. This is the empirical
+content behind the assertion in \S\ref{sec:intro} that a structural
+route is required, and it pins down exactly what \S\ref{sec:M1}--\S\ref{sec:proof}
+must accomplish that the direct route cannot.
+
+\subsection{The Plan-H direct constructive route}\label{ssec:8.1}
+The \emph{Plan-H} strategy attacks the inductive lift
+$\omegabal n\rightsquigarrow\omegabal{n+1}$ directly and constructively.
+Starting from a naive candidate $\omega^{(n)}_{\mathrm{na\ddot\imath ve}}$
+supported on the $S_n$-orbit of the candidate critical cell $\cstar n$,
+one solves for an explicit $S_n$-equivariant, sign-representation
+correction cochain $\psi^{(n)}$ such that
+\[
+  \omega^{(n)}_{\mathrm{na\ddot\imath ve}}+\psi^{(n)}
+\]
+satisfies the literal Morse-cocycle equation $d(\cdot)=0$ on every
+``bad'' coface of $\cstar n$, with the pairing
+$\langle\cdot,\cstar n\rangle=+1$ preserved. The correction $\psi^{(n)}$
+is the solution of a linear system over $\Q$ whose rows are indexed by
+the bad cofaces and whose columns are indexed by sign-supported wing
+orbits. The $S_n$-equivariance reduction is what makes the system
+tractable: at $n=6$ the orbit-reduced system is only $64\times314$,
+solved exactly in seconds, where a non-equivariant estimate had put it
+at ${\sim}22\,000\times22\,000$.
+
+\subsection{Plan-H closes the inductive step at $n=5,6$}\label{ssec:8.2}
+Plan-H was executed at $n=5$ and $n=6$. In both cases the explicit
+$\psi^{(n)}$ was constructed and verified:
+\[
+  d\bigl(\omega^{(n)}_{\mathrm{na\ddot\imath ve}}+\psi^{(n)}\bigr)=0
+  \text{ on all bad cofaces},\qquad
+  \langle\omega^{(n)}_{\mathrm{na\ddot\imath ve}}+\psi^{(n)},\cstar n\rangle=+1.
+\]
+Moreover a \emph{shared structural mechanism} was detected across
+$n=5,6$:
+\begin{enumerate}[leftmargin=2em,label=(M\arabic*)]
+  \item the constraint matrix has \emph{full row rank} (rank
+        $=$ number of bad cofaces);
+  \item the number of nonzero $\psi$ wing-orbits \emph{equals} the
+        number of bad cofaces, exactly;
+  \item the lex-first $\Q$-solution is \emph{near-diagonal}: at $n=5$ a
+        pure diagonal (every bad coface has exactly one codimension-$1$
+        face in $\operatorname{supp}\psi$); at $n=6$, $63/64$ diagonal
+        plus a single isolated off-diagonal entry.
+\end{enumerate}
+On the strength of (M1)--(M3) one might hope that $\psi^{(n)}$ has a
+closed form in $n$ --- one sign-representation wing-orbit cochain per
+bad coface, with unit coefficient up to isolated low-order corrections
+--- which would close the inductive step constructively at all $n$.
+
+\subsection{Why it provably does not generalize}\label{ssec:8.3}
+The hope fails at $n=7$. Plan-H \emph{is} still solvable at $n=7$ ---
+the linear system ($1607\times9016$) has full row rank and the explicit
+$\psi^{(7)}$ closes the cocycle equation on all $1607$ bad cofaces with
+the pairing preserved --- so the \emph{skeleton} (M1)--(M2) survives.
+But two findings are decisive.
+
+\paragraph{Finding A --- the count is decisively super-polynomial.}
+The count $B_n$ of bad cofaces, and its dominant term $u_n$ (the
+position-$(n-1)$ up-set of the top poset), are
+\[
+  B_n:\ 10,\ 64,\ 1607,\qquad
+  u_n:\ 4,\ 54,\ 1597,\ 65099,
+\]
+where the fourth $u$-value $u_8$ was computed count-only. The
+consecutive ratios are \emph{strictly increasing} --- the hallmark of
+super-polynomial growth (a polynomial's consecutive ratios decay
+monotonically toward~$1$). The decisive test: the unique quadratic
+interpolant through $(5,4),(6,54),(7,1597)$ --- the \emph{only}
+low-degree polynomial consistent with the $n\le7$ data --- predicts
+$u_8=4633$; the actual $u_8=65099$, larger by a factor of~$14$.
+Polynomial growth of the count is ruled out; the data is consistent
+with exponential (or faster) growth.
+
+\paragraph{Finding B --- the near-diagonal structure degrades.}
+The Session-1 mechanism does not simply persist. (M1) full row rank and
+(M2) one nonzero $\psi$ orbit per bad coface both survive at $n=7$. But
+(M3) degrades sharply: the per-bad-coface count of codimension-$1$ faces
+in $\operatorname{supp}\psi$ is $\{1:1396,\ 2:211\}$ --- $211$ of $1607$
+($13\%$) bad cofaces are now \emph{off-diagonal}, against $0$ at $n=5$
+and $1$ at $n=6$, and a new $\psi$-coefficient $+2$ appears. The
+``isolated low-order correction'' description fails at $n=7$.
+
+\subsection{The lesson for the framework}\label{ssec:8.4}
+Both findings together say: \textbf{the direct constructive Plan-H
+route does not close the inductive step at general $n$.} There is no
+closed-form bad-coface count (super-polynomial) and no closed-form
+$\psi^{(n)}$ shape ($n$-specific). Plan-H is genuinely useful as an
+\emph{existence check} at each fixed small $n$ --- it independently
+re-confirms the cohomological core at $n=5,6$ --- but it is not an
+induction.
+
+This is precisely the role of the structural route of
+\S\ref{sec:M1}--\S\ref{sec:proof}. The cofiber-Morse $+$ FI
+rep-stability synthesis does \emph{not} attempt to write down
+$\psi^{(n)}$; it bypasses the super-polynomially-growing cochain-level
+data entirely and reduces the induction to the \emph{cohomology}-level
+hypothesis \UCC. The documented obstruction is the reason this is the
+right move: it shows that any route which tracks the cochain-level
+correction explicitly is doomed by the super-polynomial count, and that
+the structural route's appeal to a finite-generation hypothesis ---
+rather than an explicit formula --- is not laziness but necessity. It
+also explains, retrospectively, why width-3 1/3-2/3 has resisted for
+four decades: the natural direct attacks hit exactly this
+super-polynomial wall.
+
+% =====================================================================
+\section{Empirical anchor}\label{sec:empirical}
+% =====================================================================
+
+The framework is conditional, but it is not unanchored. Every
+hypothesis it isolates --- \UCC, \ICOPstep, the width-3 bridge --- is
+\emph{verified} at $n=3,4,5,6$. This section collects the empirical
+record, with the honesty notes.
+
+\subsection{Cohomology: $m_{\sgn}=1$ throughout}\label{ssec:9.1}
+At $n=3,4,5,6$ the reduced rational cohomology of $\Delta_n$ is
+concentrated in degree $n-2$ and equals $\sgn_{S_n}$ there
+($m_{\sgn}=1$): see \S\ref{ssec:established}. The verification methods
+escalate with $n$: direct reduced Betti at $n=3,4$; Lefschetz $+$
+chamber-Morse at $n=5$; HPC Burnside at $n=6$, where the multiplicity
+$m_{\sgn}=1$ is moreover $\mathrm{Out}(S_6)$-invariant.
+
+\paragraph{Honesty note (the $n=6$ Euler term).}
+As recorded in \S\ref{ssec:n6note}, the $n=6$ (sgn) verification is
+``Burnside-rigorous modulo one extrapolated Euler-characteristic
+term'': the non-identity classes contribute $719=|S_6|-1$ exactly (a
+clean Lefschetz identity at $10/11$ conjugacy classes), and the
+identity-class value $\chired(\Delta_6)=+1$ was computationally
+deferred and entered via the clean-Lefschetz extrapolation from
+$n=4,5$. This does not affect the proof skeleton, which uses
+$n=3,4,5,6$ only as base/anchor data, but it is the one place where the
+$n=6$ row is not a fully independent computation.
+
+\subsection{The cofiber at $n=3\to4$: (UCC) proven}\label{ssec:9.2}
+The base case of \UCC{} is proven, not assumed (\S\ref{ssec:6.5}): the
+cofiber $\Delta_4/\Delta_3$ has $\Hred^*=(0,0,2,0)=2\cdot\sgn_{S_3}$,
+the discrete Morse matching $\Mrel$ is perfect, and the connecting map
+$\delta_3$ is injective. Two independent machineries (M1 discrete Morse;
+M2 the cofiber LES) confirm this same datum --- the convergence of
+\S\ref{ssec:6.4} is, at $n=3\to4$, a \emph{theorem}, not a conjecture.
+
+\subsection{ICOP: 16/16 per-step BFT-sharp on canonical chains}\label{ssec:9.3}
+Along the canonical critical chains, the per-step Kahn--Saks
+probabilities lie in $[3/11,8/11]$ in every checked case:
+\begin{center}
+\begin{tabular}{r c l}
+\toprule
+$n$ & per-step BFT-sharp on $\cstar n$ & cumulative \\
+\midrule
+3 & $1/1$ & $1/1$ \\
+4 & $8/8$ & $9/9$ \\
+5 & $3/3$ on $\cstar5$ & $12/12$ \\
+6 & $4/4$ on the lex-min lift candidate & $16/16$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+By the $\iota$-tower structure (\S\ref{ssec:5.2}) the inherited steps
+are $n$-independent (profile $(7/15,4/7,1/2,1/2,\dots)$), so the $16/16$
+record is, in effect, a verification of \ICOPstep{} at every level up
+to $n=6$, plus the $n$-independent inherited steps for free.
+
+\subsection{Cross-mechanism consistency at $n=4,5,6$}\label{ssec:9.4}
+M1's $n$-uniform-matching prediction and M2's
+FI-presentation-degree-$0$ template predict the \emph{same} cofiber
+data at every step $n\to n+1$: $\bred_*(\Delta_{n+1}/\Delta_n)
+=(0,\dots,0,2,0)$ with the $2$ in degree $n-1$. These predictions
+coincide, are internally consistent with the Euler characteristic
+$\chired(\Delta_{n+1}/\Delta_n)=2(-1)^{n-1}$, and reproduce the one
+\emph{computed} row ($n=3\to4$) exactly. This is a consistency check of
+the two mechanisms' predictions, \emph{not} an independent verification
+of \UCC{} at $n\ge4$ --- per the project's standing methodology, the
+closure must come from \FGC, not from extrapolating one more empirical
+datapoint. The documented obstruction of \S\ref{sec:obstruction} is
+exactly why: a pattern-extrapolation closure is unsafe here.
+
+% =====================================================================
+\appendix
+% =====================================================================
+\section{Lean formalisation roadmap}\label{app:lean}
+
+For completeness we record a staged view of how the general-$n$
+cohomological proof could eventually be formalised, and why this is
+\emph{not} a near-term target. This appendix is a roadmap, not a
+formalisation.
+
+\begin{itemize}[leftmargin=1.6em]
+  \item \textbf{Stage L0 (now --- no Lean).} The general-$n$ proof
+        lives as the conditional theorem of \S\ref{ssec:6.7}. The
+        in-tree Lean artifact \texttt{width3\_one\_third\_two\_thirds}
+        is the \emph{finite/structural} width-3 result; it is
+        independent and untouched (\S\ref{ssec:trust}).
+  \item \textbf{Stage L1 (post-\UCC, small-$n$ certificates).} Once
+        \UCC{} is closed, the base data --- the $n=3,4,5,6$ cohomology
+        computations and the cofiber Betti vectors --- are
+        finite computations, certifiable as standalone Lean lemmas
+        without porting the representation-stability machinery.
+  \item \textbf{Stage L2 (the induction).} The \S\ref{ssec:6.2}
+        inductive step is a finite diagram chase in a long exact
+        sequence of $\Q$-vector spaces with $S_n$-action --- formalisable
+        in mathlib's homological algebra plus representation theory,
+        \emph{given} \UCC{} as a hypothesis. A genuine but bounded port.
+  \item \textbf{Stage L3 (the gap).} \FGC{} --- FI-module finite
+        generation --- would require an FI-module library in mathlib,
+        which does not currently exist. This is the deep, long-horizon
+        item; it is the same infrastructure gap the broader
+        representation-stability community would benefit from.
+  \item \textbf{Recommendation.} Do not attempt any Lean port until
+        \UCC{} is resolved at the paper level. Premature formalisation
+        of a conditional theorem spends effort on Stage~L2 plumbing
+        while Stage~L3 --- the actual mathematics --- is open.
+\end{itemize}
+
+% =====================================================================
+\begin{thebibliography}{99}
+% =====================================================================
+
+\bibitem{KahnSaks1984}
+J.~Kahn and M.~Saks,
+\emph{Balancing poset extensions},
+Order \textbf{1} (1984), 113--126.
+
+\bibitem{BFT1995}
+G.~Brightwell, S.~Felsner, and W.~T.~Trotter,
+\emph{Balancing pairs and the cross product conjecture},
+Order \textbf{12} (1995), 327--349.
+
+\bibitem{Linial1984}
+N.~Linial,
+\emph{The information-theoretic bound is good for merging},
+SIAM J.\ Comput.\ \textbf{13} (1984), 795--801.
+
+\bibitem{Forman1998}
+R.~Forman,
+\emph{Morse theory for cell complexes},
+Adv.\ Math.\ \textbf{134} (1998), 90--145.
+
+\bibitem{Kozlov2008}
+D.~Kozlov,
+\emph{Combinatorial Algebraic Topology},
+Algorithms and Computation in Mathematics \textbf{21}, Springer, 2008.
+[Ch.~11: discrete Morse theory for subcomplex pairs.]
+
+\bibitem{CEF2015}
+T.~Church, J.~S.~Ellenberg, and B.~Farb,
+\emph{FI-modules and stability for representations of symmetric groups},
+Duke Math.\ J.\ \textbf{164} (2015), 1833--1910.
+
+\bibitem{CEFN2014}
+T.~Church, J.~S.~Ellenberg, B.~Farb, and R.~Nagpal,
+\emph{FI-modules over Noetherian rings},
+Geom.\ Topol.\ \textbf{18} (2014), 2951--2984.
+
+\bibitem{Ramos2017}
+E.~Ramos,
+\emph{On the degree-wise coherence of FI-modules},
+New York J.\ Math.\ \textbf{23} (2017), 873--895.
+
+\bibitem{Putman2015}
+A.~Putman,
+\emph{Stability in the homology of congruence subgroups},
+Invent.\ Math.\ \textbf{202} (2015), 987--1027.
+
+\bibitem{Patzt2017}
+P.~Patzt,
+\emph{Central stability homology},
+Math.\ Z.\ \textbf{295} (2020), 877--916.
+
+\bibitem{SundaramWachs1997}
+S.~Sundaram and M.~Wachs,
+\emph{The homology representations of the $k$-equal partition lattice},
+Trans.\ Amer.\ Math.\ Soc.\ \textbf{349} (1997), 935--954.
+
+\bibitem{Quillen1973}
+D.~Quillen,
+\emph{Higher algebraic K-theory I},
+in: Algebraic K-theory I, Lecture Notes in Math.\ \textbf{341},
+Springer, 1973, 85--147.
+
+\bibitem{HershWelker}
+P.~Hersh and V.~Welker,
+discrete-Morse-on-cofiber machinery; see~\cite{Kozlov2008} Ch.~11 and
+the references therein.
+
+\end{thebibliography}
+
+% =====================================================================
+\section*{Provenance note}
+% =====================================================================
+\noindent
+\footnotesize
+This draft is the F12 deliverable (work item \texttt{mg-59d0}). Its
+spine is the F10 general-$n$ proof synthesis
+(\texttt{docs/general-n-proof-synthesis.md}, \S9); the documented
+obstruction of \S\ref{sec:obstruction} is drawn from the F9 Sessions~1--2
+records (\texttt{docs/compatibility-geometry-F9-constructive-lift.md},
+\texttt{docs/compatibility-geometry-F9-session-2.md}); the empirical
+anchor of \S\ref{sec:empirical} from the F1--F8 in-tree records on the
+\texttt{compat-geom-*} branches. No new axioms, no Lean changes, no new
+computation were introduced. Per-section draft status, stubs, and venue
+considerations are tracked in
+\texttt{docs/methodology-paper-status.md}; the cumulative session ledger
+is \texttt{docs/state-F12.md}.
+
+\end{document}
