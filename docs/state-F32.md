@@ -1,9 +1,9 @@
 # State F32 — Union-Closed → 1/3-2/3 bridge program (mg-c9d9) — cumulative state
 
 **Ticket:** mg-c9d9 (F32-scope, scoping session). **Branch:** `polecat-cat-mg-c9d9`. **Parent:** Daniel reminder 2026-05-16T11:29:58Z articulating a 10-step proof program at `~/files/union_closed_1323_proof_steps.txt` to bridge from union-closed (Frankl-Holds via UC10+UC12+UC11+UC13+UC14 chain, all merged 2026-05-16) to 1/3-2/3 via canonical 3-antichain families. Cross-repo: the program *invokes* Frankl-Holds (which lives on `union_closed` repo) but lives on the 1/3-2/3 side (this repo, `one_third_width_three`).
-**Type:** Multi-session F-series arc. Session 1 = scoping; execution sessions to follow if scoping GREEN/AMBER.
-**Status:** scoping session 1 in progress (this document).
-**Verdict (after session 1):** **AMBER-one-lemma-tractability-uncertain** — Phase A numerical-constants verify (gap `\approx 0.00896` bits, real); L1 (acyclicity) essentially proved in scoping; L2/L3/L4 carry execution risk with L3 and L4 binding. Recommended next action: file two Phase 1 sub-tickets (L4-α-lit, L3-B-UC) as concurrent polecats; pause for evaluation.
+**Type:** Multi-session F-series arc. Session 1 = scoping; Session 2 = F32-L4-α-lit (Phase 1.1 literature search); execution sessions to follow if scoping GREEN/AMBER.
+**Status:** Session 2 (this entry) Phase 1.1 L4 literature search complete.
+**Verdict (after session 2):** **AMBER-L4-needs-scope-correction-before-derivation** — Session 1 AMBER-one-lemma-tractability-uncertain stands but is refined: ERZ97 identified as literature source of `\log_2(4/3)` (closes F32-scope §3.4.5 Source-2 gap, constant correct and sharp in global form); the literature form is global on `\log_2 e(P)` NOT per-3-antichain local as F32 needs; **F32 Lemma C local form as written is FALSE in general minimal counterexamples** (concrete refutation: one strongly-biased pair in a 3-antichain collapses entropy `\ll \log_2(9/2)`); Phase A 0.00896-bit gap unchanged. Recommended next action: file F32-L4-corrected-scope (re-scope Lemma C, single-session 100-200k) **before** L4-β-derive proper; L3-B-UC (Phase 1.2 cross-repo) unaffected; L2 sub-tickets continue to be deferred.
 
 ---
 
@@ -131,13 +131,105 @@ F32 is purely combinatorial-probabilistic: Frankl-Holds applied to `F(P)`, entro
 
 ### Mayor action items (post-session-1)
 
-1. **File F32-L4-α-lit sub-ticket** (this repo, single-session, 150-250k tokens).
-2. **File F32-L3-B-UC sub-ticket** (union_closed repo, single-session, 200-300k tokens, cross-repo).
+1. **File F32-L4-α-lit sub-ticket** (this repo, single-session, 150-250k tokens). **[DONE — Session 2 below, mg-50e2.]**
+2. **File F32-L3-B-UC sub-ticket** (union_closed repo, single-session, 200-300k tokens, cross-repo). **[Still pending.]**
 3. **Run concurrent.** Both are single-session paper-and-pencil + literature.
 4. **Pause after Phase 1.** Mayor reviews verdicts:
    - GREEN-GREEN → proceed to L2-C-rep (Phase 3.1).
    - GREEN-RED → file L3-C-injection (Phase 2.2); defer L2 until L3 resolves.
    - RED-GREEN → file L4-β-derive (Phase 2.1); defer L2 until L4 resolves.
    - RED-RED → escalate to Daniel for program redirection.
+
+---
+
+## Session 2 — 2026-05-16 (F32-L4-α-lit / Phase 1.1 literature search, complete)
+
+**Ticket:** mg-50e2 (F32-L4-α-lit). **Branch:** `polecat-cat-mg-50e2`. **Deliverable doc:** `docs/compatibility-geometry-F32-L4-alpha-lit.md` (new).
+
+### Inputs read
+
+- `docs/compatibility-geometry-F32-uc-bridge-scope.md` (mg-c9d9, AMBER-merged Session 1) — §3.4 (L4 tractability), §3.4.5 (Source-2 gap = the load-bearing question this session answers), §3.4.4 (global ERZ doesn't save), §1.2 (C1-C4 contradiction), §4.3 (Phase 1 strict-order recommendation), §5.1 (D.1 failure mode).
+- `docs/state-F32.md` Session 1 entry (above).
+- `~/files/union_closed_1323_proof_steps.txt` — Daniel's Step 8 ("Compare to ERZ 3-Antichain Bit Bound") + Step 9 ("Prove the Counting/Entropy Contradiction") — original framing.
+- **Literature** (full survey enumerated in F32-L4-alpha-lit.md §1):
+  - Chan-Pak survey (arXiv:2311.02743v2) "Linear extensions of finite posets" — §3.1 Prop 3.1 `[ERZ97]`, §3.6 (Theorem 3.16 Kahn-Kim entropy), §3.7 (Theorem 3.17 Brightwell-Tetali).
+  - Aires-Kahn (arXiv:2510.26134) "Variance vs. range for linear extensions" — newest unconditional bound `\delta(P) \ge (5 - \sqrt 5)/10 \approx 0.345`.
+  - Kahn-Saks 1984; Kahn-Linial 1991; Brightwell-Felsner-Trotter 1995; Kahn-Kim 1995; Brightwell-Tetali 2003; Sidorenko 1991; Sha-Kleitman 1986; Cardinal-et-al. 2013; Chan-Pak-Panova 2022.
+  - Moitra "On entropy and extensions of posets"; Olson 2017 survey (arXiv:1706.04985).
+
+### Findings, ordered
+
+#### F32.S2.1 — ERZ source IDENTIFIED: Ewacha-Rival-Zaguia 1997 (closes F32-scope §3.4.5 Source-2 gap)
+
+- **Citation.** Ewacha, Rival, Zaguia (1997), "Approximating the number of linear extensions", *TCS* 175(2), pp. 271-282. Cited as `[ERZ97]` in Chan-Pak survey Proposition 3.1.
+- **Statement.** `2^k (3/4)^{\ell + m} \le e(P) \le 2^k`, where `k = ` # incomparable pairs (`A_2`), `\ell = ` # induced `A_3` (3-antichain) subposets, `m = ` # induced `(C_2 + C_1)` subposets.
+- **Entropy form.** `k - (\ell + m) \log_2(4/3) \le \log_2 e(P) \le k`.
+- **The constant `\log_2(4/3)`** is the per-(`A_3` + `C_2+C_1`)-substructure penalty in the ERZ lower bound. **Resolves F32-scope §3.4.5's "no specific cited source" gap** — F32-scope was tentatively pessimistic; the source exists and is well-cited.
+
+#### F32.S2.2 — Constant `\log_2(4/3)` is SHARP in the global ERZ form
+
+- Tight at `e(A_3) = 6 = 2^3 (3/4)^1` (`k = 3, \ell = 1, m = 0`).
+- Tight at `e(C_2 + C_1) = 3 = 2^2 (3/4)^1` (`k = 2, \ell = 0, m = 1`).
+- Sharpness proof: any `c < \log_2(4/3)` is refuted by `\log_2 6 \ge 3 - c \Rightarrow c \ge \log_2(8/6) = \log_2(4/3)`.
+- No alternative literature ERZ-style result gives a tighter per-substructure penalty.
+
+#### F32.S2.3 — Form mismatch: ERZ97 is GLOBAL, F32 needs LOCAL
+
+- ERZ97: bound on `\log_2 e(P)` (total joint entropy).
+- F32 Lemma C: per-individual-`A` lower bound on `H(\sigma_L|_A)`.
+- Marginalisation of ERZ97 to a single `A` (§5.2 of deliverable doc) gives `H(\sigma_L|_A) \ge 3 - (\ell + m) \log_2(4/3)`, which is **vacuous** for `\ell + m \ge 8` (i.e., any non-trivial poset). For `P = A_3` itself the bound is tight at `\log_2 6` (trivial).
+- This confirms F32-scope §3.4.4: global ERZ does not save the program.
+
+#### F32.S2.4 — Scope error: F32 Lemma C local form is FALSE as written
+
+- F32-scope §1.2 (C4) / §3.4 Lemma C says: "every 3-antichain `A` in a minimal counterexample has `H(\sigma_L|_A) > \log_2(9/2) \approx 2.170`".
+- **Counterexample** (deliverable doc §3.3-§3.4): consider a minimal counterexample `P` containing a 3-antichain `\{a, b, c\}` with `\Pr_L[a < b] = 0.9` (allowed: minimal counterexample requires `\Pr \notin [1/3, 2/3]`, and 0.9 satisfies this). Other pairs `\{a, c\}, \{b, c\}` can also be strongly biased. The induced distribution on the 6 orderings has one ordering at probability `\sim 0.9` and entropy `\approx 0.7` bits, **far below** `\log_2(9/2)`.
+- The local form requires hypothesis strengthening (e.g., "no pair in any 3-antichain is `\Pr > 0.9`") or quantifier weakening (e.g., "some `A` has `H \ge \log_2(9/2)`").
+- **This is a substantive scope error in F32 that the polecat surfaces.** F32-scope §3.4 acknowledged "non-standard" / "possibly circular" but did not articulate this concrete refutation.
+
+#### F32.S2.5 — Phase A gap UNCHANGED
+
+- `\Delta_{\mathrm{can}} = \log_2 6 - [1 + \tfrac{1}{2}\log_2 5] = 0.42400` bits ✓
+- `\Delta_{\mathrm{ERZ}} = \log_2(4/3) = 0.41504` bits ✓ (now literature-sourced from ERZ97)
+- Gap = `0.00896` bits, positive ✓
+- No Phase A redo triggered (constant matches F32-scope assumption).
+
+#### F32.S2.6 — Verdict registration
+
+**AMBER-no-literature-local-form-derive-needed.**
+
+- Citation found at right constant (ERZ97).
+- Constant sharp in global form.
+- Form is global, not per-`A` local as F32 needs.
+- Local form as F32-scope wrote it is literally false (counterexample F32.S2.4).
+- Phase A gap unchanged.
+- Follow-on recovery: F32-L4-corrected-scope (re-scope Lemma C, 100-200k single-session) → then F32-L4-β-derive (Phase 2.1, 400-800k multi-session) targeting the corrected lemma.
+
+Why AMBER and not RED:
+1. ERZ97 IS the literature source (F32-scope §3.4.5 gap resolved).
+2. Constant is correct and sharp.
+3. Phase A gap intact.
+4. Recovery path exists with structural inspiration (ERZ97 per-substructure penalty mechanism).
+
+Why not GREEN:
+1. Literature form is global, not local.
+2. F32 Lemma C as written is false; reformulation required before derivation can proceed.
+
+### Session 2 deliverables
+
+- **`docs/compatibility-geometry-F32-L4-alpha-lit.md`** (new) — full literature survey, ERZ97 identification + sharpness, gap-analysis local-vs-global, scope-error refutation of Lemma C as written, L4-β-derive prospects, follow-on recommendations.
+- **`docs/state-F32.md`** (this entry) — Session 2 ledger.
+
+### Session 2 verdict
+
+**AMBER-no-literature-local-form-derive-needed.** L4 path forward is reformulate-then-derive, not literature-close.
+
+### Mayor action items (post-session-2)
+
+1. **File F32-L4-corrected-scope** (single-session, 100-200k tokens) — re-scope Lemma C in light of Session 2 F32.S2.4 counterexample. **Must precede L4-β-derive.**
+2. **F32-L3-B-UC** (Phase 1.2, union_closed repo, 200-300k) — still pending; should be filed concurrently with the L4-corrected-scope as both inform the next phase.
+3. **Continue to defer L2 sub-tickets** per F32-scope §4.3. L4 reformulation status governs L2 unblocking.
+4. **Re-evaluate F32 verdict trajectory:** Session 1 AMBER → Session 2 AMBER-L4-needs-scope-correction. The Lemma C scope error suggests the F32 program may require more than minor adjustment — re-scoping should confirm whether the bridge program is salvageable on width-3 or whether a fundamentally different `F(P)` is needed.
+5. **No Daniel escalation at this point** — the program is degraded but not walled. Daniel-articulated 10-step program may need a Step-9 rewrite (Lemma C reformulation), but Steps 1-8 + Step 10 remain intact pending L2/L3.
 
 ---
