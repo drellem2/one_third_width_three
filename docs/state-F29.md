@@ -195,3 +195,71 @@ F30's outputs: `\Phi` constructed on all chains; cochain-map verified; `c_{\math
 
 - 2026-05-16 (claim) — claimed mg-c3fe at 2026-05-16T00:50:00+01:00; registered `pogo schedule` mail-check on `*/10 * * * *` (id `mail-check-mg-c3fe`).
 - 2026-05-16 (session 2) — read F29 doc (full, 712 lines) + state-F29 (full, 121 lines) + F28 partial + mg-26fc §4.4 + mg-c3fe ticket body; wrote F30 calculation doc + state-F29 session 2 entries; ready to commit.
+
+---
+
+## Session 3 — 2026-05-16 (F31 = mg-01ce execution, complete)
+
+### Inputs read
+
+- **`docs/compatibility-geometry-F30-chain-level-phi.md`** (full, 604 lines) — F30 calculation doc. §1.3 (`\Phi` formula (1.3.4)), §1.5 (`S_n`-orbit awareness), §2 (cochain-map verification), §2.3 (equivariance contradiction — chain-level vanishing argument (2.3.1)–(2.3.5)), §3 (`c_{\mathrm{BC}}(P) = 0`), §3.5 (explicit `n = 4` computation), §4 (NS-a vs NS-b), §4.3 (injectivity gap — the F31 target), §5 (dissolve check unconditional), §6.3 (F31-OP scope).
+- **`docs/compatibility-geometry-F29-cech-bias-cohomology.md`** (partial, §0 setup, §1.3 stabiliser action, §2.1–§2.3 Čech cover, §3.2–§3.4 single-pair → orbit-Čech 2-cocycle, §4.2 walled augmentation, §5.2 NS-a/NS-b dichotomy, §6 U1-collision check).
+- **`docs/state-F29.md`** sessions 1 + 2 (197 lines).
+- **mg-01ce ticket body** (full).
+
+### Findings, ordered
+
+#### F31.1 — `\Phi_*` pinned precisely (F31 §1)
+
+Source: `\check H^2_{\mathrm{sgn}}(\{\widetilde U_\alpha\}, F_{\mathrm{bias}}^{\mathrm{orb}})` — orbit-sgn-isotype of the multi-pair Čech 2-cohomology with bias-orbit sheaf coefficients. Target: `H^{n-2}(\Delta_n, \mathbb{Q}) = \mathrm{sgn}_{S_n}` (F17+F18, 1-dimensional, generator `[\omega_{bal}^{(n)}]`). Coefficient: rational. `S_n`-action: chain-level (`S_n`-a) and cocycle-level (`S_n`-b) with `\Phi` commuting per F30 §2.3 (E-3). Crucial decomposition: `H^{n-2}_{\mathrm{triv}} = 0`, `H^{n-2}_{\mathrm{sgn}} = \mathrm{sgn}_{S_n}`. F31 question reduces to `(\Phi_*)_{\mathrm{sgn}}` injective on `[\widetilde\psi_{\mathrm{BC}}^{(2)}]`.
+
+#### F31.2 — Bad-cut Čech class chain-local content (F31 §2)
+
+From F29 §3.4 + F30 §1.5: `\widetilde\psi_{\mathrm{BC}}^{(2)}[c, i, j] = \mathrm{sgn}(e_i) \cdot \tfrac{1}{2} - \mathrm{sgn}(e_j) \cdot b_{P_{i+1}}(a_j, b_j)` ((2.4.1)). Two structural blindnesses of `\Phi`: (O-1) blind to non-chain-cover-pair stratum inputs, (O-2) blind to cross-refinement intersection-data. Both blindnesses are intrinsic to chain-level cup-product-style cochain maps.
+
+#### F31.3 — Lemma 3.2.1 (chain-locality forces kernel)
+
+**The load-bearing lemma.** Let `K_{\mathrm{chain-loc}} := \{[\widetilde\psi] \in \check H^2_{\mathrm{sgn}} : \widetilde\psi[c, i, j] \text{ depends only on chain-cover-pair data and chain-relabel-invariant bias values}\}`. Then `K_{\mathrm{chain-loc}} \subseteq \ker(\Phi_*)`.
+
+Proof: for `\widetilde\psi \in K_{\mathrm{chain-loc}}`, chain-relabel-invariance forces `\Phi(\widetilde\psi)` trivially-`S_n`-equivariant. But `[\widetilde\psi] \in \check H^2_{\mathrm{sgn}}` makes `[\Phi(\widetilde\psi)]` sgn-equivariant. Both isotypes simultaneously, with `H^{n-2}_{\mathrm{triv}} = 0` (F17+F18), forces `[\Phi(\widetilde\psi)] = 0`.
+
+#### F31.4 — Bad-cut class is in `K_{\mathrm{chain-loc}}` (Cor 3.2.2)
+
+The bad-cut class's chain-local value (F31.2 (2.4.1)) is built from `\mathrm{sgn}(e_i), \mathrm{sgn}(e_j)` (chain-cover-pair labels) and `b_{P_{i+1}}(a_j, b_j)` (chain-relabel-invariant bias). Hence `[\widetilde\psi_{\mathrm{BC}}^{(2)}] \in K_{\mathrm{chain-loc}} \subseteq \ker(\Phi_*)`. F30's chain-level vanishing (F30 §2.3 (2.3.1)–(2.3.5)) is exactly Lemma 3.2.1 applied to the bad-cut class.
+
+#### F31.5 — Three injectivity routes converge to RED (F31 §3.1–§3.5)
+
+(a) Direct: `[\widetilde\psi_{\mathrm{BC}}^{(2)}] \in \ker(\Phi_*)` by F31.3 + F31.4. Injectivity fails. (b) Categorical / LES: no natural LES connects `\check H^2` and `H^{n-2}` via `\Phi`; route doesn't apply. (c) Combinatorial basis: `(\Phi_*)_{\mathrm{sgn}}` is the zero map on `K_{\mathrm{chain-loc}}`; basis-non-degeneracy fails. All three routes wall in the same place: chain-locality of `\Phi` + `H^{n-2}_{\mathrm{triv}} = 0`.
+
+#### F31.6 — Three refinements all wall (F31 §3.6)
+
+(R-A) Richer Čech cover — chain-locality persists. (R-B) Stabiliser-orbit — F17+F18 anchor breaks. (R-C) Twisted-coefficient — F17+F18 anchor breaks (and re-introduces U1 in twisted-coefficient dialect). None gives AMBER-with-refinement. RED is honest.
+
+#### F31.7 — Distinguishing chain-locality from U1 (F31 §4.4)
+
+F31's obstruction is **chain-locality** (`\Phi` blind to non-chain-local Čech data), not **refinement-functoriality** (mg-26fc U1 across all prior dialects). F30's unconditional dissolve of U1 (F30 §5) remains valid post-F31; F31 introduces *no* factoriality (only polynomial-size pair-sets used) and *no* functoriality regress (only chain-relabel-equivariance, not refinement-comparison). The chain-locality obstruction is the *trade-off* of Daniel's "not functorially" directive at the cohomology-level: the directive's strength (chain-level non-functorial construction) is also its failure mode (chain-local invariance forces trivial-isotype landing, kills sgn-image).
+
+#### F31.8 — Verdict: RED-injectivity-fails-chain-locality-obstruction
+
+F-series chain F17 + F18 + F29 + F30 + F31 → walled at F31. The Čech-bias program is the *fifth* route to milestone-1 part (iii) at general `n`; F31 walls it at the injectivity step. Four routes walled prior (Route A HPC, Route B small-γ tail, F27 literal-hybrid, F28 sheaf-morphism); F31 adds the fifth wall. Per ticket body, this re-activates the methodology-paper close + milestone-1 redefinition decision (Daniel escalation territory).
+
+### Deliverables (session 3)
+
+- `docs/compatibility-geometry-F31-phi-star-injectivity.md` — F31 analysis doc (~ 600 lines), with §0 setup + §1 `\Phi_*` pin + §2 bad-cut class identification + §3 three-route injectivity attempt + §4 no-factoriality/no-functoriality regress check + §5 establishes/doesn't + §6 verdict + §7 references.
+- `docs/state-F29.md` (this update) — session 3 entries.
+
+### Trust surface
+
+**Unchanged.** Paper-and-pencil structural analysis only. No Lean changes, no new axioms, no HPC, no numerical computation. F-series cohomological core (parts (i)–(ii), unconditional post F17+F18), F17, F18, F19–F23 (parked), mg-b345 (parked), Lean `width3_one_third_two_thirds` 4-axiom artifact, methodology paper draft, main.tex + step1–8.tex all unchanged. **F30's unconditional dissolve of U1 remains valid post-F31** — F31's chain-locality obstruction is structurally distinct from U1's refinement-functoriality wall.
+
+### Open scope items
+
+- **Milestone-1 redefinition decision.** Daniel-escalation territory; outside F31 scope. Mayor should issue the redefinition mail upon F31 archival.
+- **Methodology paper close.** The in-tree alternative to a full width-3 proof, documenting the five-routes-walled landscape, becomes the operational consequence of F31 RED.
+- **Width-3 bridge (F10 §7.4)** — unchanged from F30; not addressed by F31. Even if a sixth route were identified, this bridge would remain a separate open piece.
+- **F-series cohomological core parts (i)–(ii)** — unconditional post F17+F18; F31 RED *does not* retract or modify these.
+
+### Protocol log
+
+- 2026-05-16 (claim) — claimed mg-01ce at 2026-05-16T01:11:43Z (UTC; local 02:11:43); registered `pogo schedule` mail-check on `*/10 * * * *` (id `mail-check-mg-01ce`).
+- 2026-05-16 (session 3) — read F30 doc (full, 604 lines) + F29 doc partial + state-F29 sessions 1–2 + mg-01ce ticket body; wrote F31 analysis doc + state-F29 session 3 entries; ready to commit.
