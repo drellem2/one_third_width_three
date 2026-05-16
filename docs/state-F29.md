@@ -2,8 +2,9 @@
 
 **Ticket:** mg-70b0. **Branch:** `polecat-cat-mg-70b0`. **Parent:** Daniel two Apple-reminder messages 2026-05-15T23:20Z + 2026-05-15T23:38Z (post-F28 AMBER direction). Also F28 (mg-d0fa, **AMBER-framework-unclear**) — F28 walled the *functorial-sheaf-morphism* dialect of mg-26fc U1; F29 pursues the **chain-level / non-functorial** Daniel-articulated mechanism.
 **Type:** paper-and-pencil structural scoping; no HPC; no Lean; no new axioms; no computation.
-**Status:** multi-session-able; session 1 delivered.
+**Status:** multi-session; sessions 1 + 2 delivered.
 **Verdict (after session 1):** **AMBER-one-load-bearing-residual** — the Daniel-articulated Čech-bias mechanism operationalises at the Čech-2-cocycle level; the chain-level cochain map `\Phi` (F29-OP) is the one load-bearing residual; F30 is the polecat-attackable target. U1-dialect-collision structurally dissolved, conditional on F30 operational delivery.
+**Verdict (after session 2, F30 = mg-c3fe):** **AMBER-NS-b-pinned-injectivity-residual** — F29-OP delivered operationally: chain-level `\Phi` on all chains, cocycle preservation, `c_{\mathrm{BC}}(P) = 0`, no hidden functoriality, (NS-b) pinned. F31 named residual: `\Phi_*` injectivity on the bad-cut Čech class. U1-dialect-collision dissolved unconditionally in the chain-level dialect (F29's conditional dissolve promoted to unconditional by F30 §5).
 
 ---
 
@@ -119,3 +120,78 @@ The remaining session work, if F29 is reopened pre-F30:
 (i) Refine §3's Čech 2-cocycle definition for specific small `n` examples (e.g., `n = 4` width-3 γ-counterexamples) to surface concrete obstructions or surprises.
 (ii) Explore alternative readings of "bias on subposet" — e.g., a *different* sub-up-set than `↑P`, or a different stratification than (Č-1).
 (iii) Sharpen the (NS-a) branch — if `\Phi` cannot land in `H^{n-2}(\Delta_n, \mathbb{Q})` cleanly, perhaps it lands in a strictly larger module (`\mathrm{sgn}` plus extra content), and F17+F18 forbids this directly.
+
+---
+
+## Session 2 — 2026-05-16 (F30 = mg-c3fe execution, complete)
+
+### Inputs read
+
+- **`docs/compatibility-geometry-F29-cech-bias-cohomology.md`** (full, 712 lines) — the F29 scoping doc. §3 (Čech 2-cocycle construction), §4.3 (chain-level `\mathrm{eval}^{(x, y)}` formula), §5.2 (NS-a/NS-b dichotomy), §5.3 (heuristic orbit-sgn cancellation), §5.4 (bookkeeping catch — `\mathrm{eval}^{(x, y)}` is identically zero on `\Delta_n` for `n \ge 4` under the §5.4 reading), §5.5 (F29-OP residual statement), §6.2 (dissolve criterion D-α, D-β, D-γ), §6.3 (F29's conditional dissolve assessment), F29.7 (heuristic argument).
+- **`docs/state-F29.md`** (session 1 ledger, 121 lines).
+- **`docs/compatibility-geometry-F28-sheaf-cohomology-on-POSET.md`** (partial, §2.2 cocycle formula for `\omega_{bal}^{(n)}`, §5.1 walled-augmentation, §7.6 functorial-sheaf-morphism gap) — for the cohomology anchor and the F28 vs F29 dialect comparison.
+- **`docs/compatibility-geometry-structural-analogy-scoping.md`** (§4.4 U1, U2, U3) — for the U1-dialect-collision check baseline.
+- **mg-c3fe ticket body** (full) — F30 scope, hard constraints, verdict tags.
+
+### Findings, ordered
+
+#### F30.1 — The F29 §4.3 sparse formula has identically zero support
+
+F29 §4.3's `\mathrm{eval}^{(x, y)}` requires `(x, y)` to be the cover relation added at every step `P_i \lessdot P_{i+1}` of a chain `c \in \Delta_n`. In `PPF_n`, saturated chains have pairwise-distinct cover relations (once a cover relation is added, it cannot be re-added). So `\mathrm{eval}^{(x, y)}(c) \ne 0` requires `e_0 = e_1 = \cdots = e_{n - 3} = (x, y)`, impossible for `n \ge 4`. **`\mathrm{eval}^{(x, y)}` is identically zero on `\Delta_n` for `n \ge 4`** under the F29 §5.4 strict reading. F30 takes the F29 §4.3 (R1) alternative reading ("substitute `(x, y)` into the `\omega_{bal}` formula at every step, regardless of the chain's actual cover relations") as the conceptual starting point and *generalises* it.
+
+#### F30.2 — The chain-level `\Phi` formula (F30 §1.3)
+
+`\Phi` is defined on saturated `(n - 2)`-chains `c = (P_0 \lessdot \cdots \lessdot P_{n - 2})` of `\Delta_n` with cover relations `e_i = (a_i, b_i)` and per-step probabilities `\pi_k = \Pr_{P_k}[a_k <_{P_k} b_k]`:
+
+`\Phi(\widetilde\psi)(c) := \sum_{0 \le i < j \le n - 3} \widetilde\psi[c, i, j] \cdot \Omega_{ij}(c)`
+
+where `\widetilde\psi[c, i, j] := \widetilde\psi((e_i, U_\le^{e_i}), (e_j, U_\parallel^{e_j}); P_{i+1})` is the Čech 2-cocycle's value at the chain's resolved-`e_i` + parallel-`e_j` stratum-pair, and `\Omega_{ij}(c) := \prod_{k \notin \{i, j\}} \pi_k` is the `(n - 4)`-degree `\omega_{bal}^{(n)}`-style remainder. This is a chain-level (not sheaf-morphism) cup-product-style assembly using the chain's *own* cover-relations as stratum-labels — extends `\mathrm{eval}^{(x, y)}` from a fixed-`(x, y)` sparse subcomplex to all chains by varying the tracked pair with the chain.
+
+#### F30.3 — `\Phi` is a chain-level cochain map (F30 §2)
+
+Cocycle-to-cocycle (§2.1): chain-arithmetic face-cancellation in `C^*(\Delta_n, \mathbb{Q})` using only `d_{\check C} \widetilde\psi = 0` and the saturated-chain face structure. Non-saturated faces vanish under the (E-1) extension convention. Coboundary-to-coboundary (§2.2): by analogous 1-cochain construction. `S_n`-equivariance (§2.3): chain-level `\Phi(\widetilde\psi_{\mathrm{BC}}^{(x, y)})(g \cdot c) = \Phi(\widetilde\psi_{\mathrm{BC}}^{(x, y)})(c)` from relabel-equivariance of bias + probability; orbit-sum compatibility gives `\mathrm{sgn}(g)`-twist on the orbit-summed cochain.
+
+#### F30.4 — `c_{\mathrm{BC}}(P) = 0` from chain-level vanishing (F30 §3)
+
+§2.3 (2.3.5): `\Phi(\widetilde\psi_{\mathrm{BC}}^{\mathrm{orb}})(c)` is *both* `S_n`-trivially-equivariant (from chain-level relabel-equivariance) *and* `\mathrm{sgn}_{S_n}`-equivariant (from orbit-sum convention). The two readings agree only if `\Phi(\widetilde\psi_{\mathrm{BC}}^{\mathrm{orb}})(c) \equiv 0` as a cochain on `\Delta_n`. Hence `[\Phi(\widetilde\psi_{\mathrm{BC}}^{\mathrm{orb}})] = 0` in `H^{n - 2}(\Delta_n, \mathbb{Q})`, i.e. **`c_{\mathrm{BC}}(P) = 0`** for every width-3 γ-counterexample on `n \ge 4` elements. F29 §5.3 heuristic upgraded to F30 chain-level computation; F29 §5.4 bookkeeping catch resolved.
+
+#### F30.5 — (NS-b) pinned (F30 §4)
+
+`c_{\mathrm{BC}}(P) = 0` is the statement `\Phi_*([\widetilde\psi_{\mathrm{BC}}^{(2)}]) = 0` in `H^{n - 2}(\Delta_n, \mathbb{Q})`. Under the F29 §5.2 dichotomy, (NS-b) is the heuristically-pinned branch (consistent with F29 §F29.7). (NS-a) is structurally vacuous in the chain-level dialect — F17+F18 doesn't constrain `F_{\mathrm{bias}}^{\mathrm{orb}}` cohomology directly without the §4.2-walled augmentation, so "F_{\mathrm{bias}}^{\mathrm{orb}}` has more cohomology than constant `Q`" is not a contradiction.
+
+#### F30.6 — No hidden functoriality (F30 §5)
+
+Dissolve criterion (D-α)–(D-γ) verified unconditionally:
+- (D-α) chain-level: `\Phi`'s formula uses only chain-intrinsic data (poset, cover-relations, per-step probabilities, Čech-cocycle values at chain's own cover-relation labels) — no refinement-restriction maps.
+- (D-β) cocycle preservation: chain-arithmetic, uses only `d_{\check C} \widetilde\psi = 0`.
+- (D-γ) no hidden functoriality: the orbit-sgn cancellation uses `S_n`-relabelling-equivariance (automatic combinatorial property), not refinement-functoriality. Three risk-points (C-α, C-β, C-γ) examined and ruled out.
+
+F29's conditional dissolve promoted to unconditional in the chain-level dialect.
+
+#### F30.7 — The F31 named residual: `\Phi_*` injectivity
+
+The sharp contradiction `(NS-b) \implies \widetilde\psi_{\mathrm{BC}}^{(2)} \text{ forced exact} \implies` bad cut does not exist requires `\Phi_*` injectivity on the bad-cut Čech class. F30 does not deliver this — `\Phi`'s formula uses the chain's own cover-relations as 2-cocycle stratum-pair inputs, so different cocycles agreeing on chain-local inputs but differing on cross-chain inputs are conflated. F31 should characterise `\ker(\Phi_*)` and rule out `\widetilde\psi_{\mathrm{BC}}^{(2)}` lying inside.
+
+#### F30.8 — Verdict: AMBER-NS-b-pinned-injectivity-residual
+
+F30's outputs: `\Phi` constructed on all chains; cochain-map verified; `c_{\mathrm{BC}}(P) = 0` rigorously; no hidden functoriality; (NS-b) pinned. The closure step (NS-b → bad-cut nonexistence) requires the F31 injectivity step. Verdict aligns with the ticket-specified AMBER tag (F30 delivers the F29 §5.5 residual but the milestone-1 part (iii) closure requires one more step).
+
+### Deliverables (session 2)
+
+- `docs/compatibility-geometry-F30-chain-level-phi.md` — the F30 calculation doc (~700 lines), with §0 setup + §1 `\Phi` construction + §2 cochain-map verification + §3 `c_{\mathrm{BC}}(P) = 0` + §4 NS-a vs NS-b + §5 dissolve check + §6 establishes/doesn't (incl. F31 target) + §7 verdict + §8 references.
+- `docs/state-F29.md` (this update) — session 2 entries.
+
+### Trust surface
+
+**Unchanged.** Paper-and-pencil calculation only. No Lean changes, no new axioms, no HPC, no numerical computation. F-series cohomological core (parts (i)–(ii), UNCONDITIONAL post F17+F18), F17, F18, F19–F23 (parked), mg-b345 (parked), Lean `width3_one_third_two_thirds` 4-axiom artifact, methodology paper draft, main.tex + step1–8.tex unchanged.
+
+### Open scope items
+
+- **F31 target:** `\Phi_*` injectivity on the bad-cut Čech class — chain-level kernel analysis. Polecat-attackable single-session, budget ≈ 200k–400k tokens.
+- **Width-3 bridge connection (F10 §7.4):** still open at general `n`. F30 (+ eventually F31) gives a cohomological obstruction at general `n`; connecting to the width-3 conjecture statement is an additional step not delivered.
+- **Cross-thread: union-closed emulation** — F30's chain-level template is the operationally-lightest concrete framework union-closed can emulate, per Daniel directive 2026-05-15T20:22Z.
+
+### Protocol log
+
+- 2026-05-16 (claim) — claimed mg-c3fe at 2026-05-16T00:50:00+01:00; registered `pogo schedule` mail-check on `*/10 * * * *` (id `mail-check-mg-c3fe`).
+- 2026-05-16 (session 2) — read F29 doc (full, 712 lines) + state-F29 (full, 121 lines) + F28 partial + mg-26fc §4.4 + mg-c3fe ticket body; wrote F30 calculation doc + state-F29 session 2 entries; ready to commit.
