@@ -1,9 +1,9 @@
 # State F32 — Union-Closed → 1/3-2/3 bridge program (mg-c9d9) — cumulative state
 
 **Ticket:** mg-c9d9 (F32-scope, scoping session). **Branch:** `polecat-cat-mg-c9d9`. **Parent:** Daniel reminder 2026-05-16T11:29:58Z articulating a 10-step proof program at `~/files/union_closed_1323_proof_steps.txt` to bridge from union-closed (Frankl-Holds via UC10+UC12+UC11+UC13+UC14 chain, all merged 2026-05-16) to 1/3-2/3 via canonical 3-antichain families. Cross-repo: the program *invokes* Frankl-Holds (which lives on `union_closed` repo) but lives on the 1/3-2/3 side (this repo, `one_third_width_three`).
-**Type:** Multi-session F-series arc. Session 1 = scoping; Session 2 = F32-L4-α-lit (Phase 1.1 literature search); execution sessions to follow if scoping GREEN/AMBER.
-**Status:** Session 2 (this entry) Phase 1.1 L4 literature search complete.
-**Verdict (after session 2):** **AMBER-L4-needs-scope-correction-before-derivation** — Session 1 AMBER-one-lemma-tractability-uncertain stands but is refined: ERZ97 identified as literature source of `\log_2(4/3)` (closes F32-scope §3.4.5 Source-2 gap, constant correct and sharp in global form); the literature form is global on `\log_2 e(P)` NOT per-3-antichain local as F32 needs; **F32 Lemma C local form as written is FALSE in general minimal counterexamples** (concrete refutation: one strongly-biased pair in a 3-antichain collapses entropy `\ll \log_2(9/2)`); Phase A 0.00896-bit gap unchanged. Recommended next action: file F32-L4-corrected-scope (re-scope Lemma C, single-session 100-200k) **before** L4-β-derive proper; L3-B-UC (Phase 1.2 cross-repo) unaffected; L2 sub-tickets continue to be deferred.
+**Type:** Multi-session F-series arc. Session 1 = scoping; Session 2 = F32-L4-α-lit (Phase 1.1 literature search); Session 4 = F32-width3 (per Daniel 14:33Z directive); execution sessions paused per Session 4 close recommendation.
+**Status:** Session 4 (this entry) F32-width3 specialisation feasibility complete; F32 closure recommendation pending Daniel review.
+**Verdict (after session 4):** **AMBER-mixed-Phase2-RED-binding — recommend close F32 per Daniel "on hold unless we learn more" directive (2026-05-16T14:33Z).** Session 1 AMBER-one-lemma-tractability-uncertain → Session 2 AMBER-L4-needs-scope-correction-before-derivation → Session 4 AMBER-mixed-Phase2-RED-binding (width-3 specialisation does NOT dissolve the L3 1/8-obstruction, which is structurally intrinsic to F(P) indexing by Q not L; Phase 1 L4 dissolution is partial via external Aires-Kahn input not F32-internal; Phase 3 L2 simplification absent). No execution sub-tickets recommended; Daniel's "on hold" directive should be respected.
 
 ---
 
@@ -231,5 +231,86 @@ Why not GREEN:
 3. **Continue to defer L2 sub-tickets** per F32-scope §4.3. L4 reformulation status governs L2 unblocking.
 4. **Re-evaluate F32 verdict trajectory:** Session 1 AMBER → Session 2 AMBER-L4-needs-scope-correction. The Lemma C scope error suggests the F32 program may require more than minor adjustment — re-scoping should confirm whether the bridge program is salvageable on width-3 or whether a fundamentally different `F(P)` is needed.
 5. **No Daniel escalation at this point** — the program is degraded but not walled. Daniel-articulated 10-step program may need a Step-9 rewrite (Lemma C reformulation), but Steps 1-8 + Step 10 remain intact pending L2/L3.
+
+---
+
+## Session 4 — 2026-05-16 (F32-width3 specialisation feasibility, complete)
+
+**Ticket:** mg-1861 (F32-width3). **Branch:** `polecat-cat-mg-1861`. **Deliverable doc:** `docs/compatibility-geometry-F32-width3-feasibility.md` (new).
+**Note on numbering:** Session 3 corresponds to the cross-repo F32-L3-B-UC sub-ticket on `union_closed` (mg-7550), which is referenced by mg-1861's body as AMBER-merged. This Session 4 entry covers the width-3 specialisation per Daniel 14:33Z directive ("try F32 in width 3 specifically").
+
+### Inputs read
+
+- `docs/compatibility-geometry-F32-uc-bridge-scope.md` (mg-c9d9, AMBER-merged) — §3.2 (L2 four-candidate analysis), §3.3 (L3 1/8-obstruction derivation, especially (3.3.2.4)–(3.3.2.6)), §3.4 (L4 local-vs-global), §4.4 (width-3 beachhead recommendation).
+- `docs/compatibility-geometry-F32-L4-alpha-lit.md` (mg-50e2, AMBER-merged) — §1.11 (Aires-Kahn 2025 width-bounded asymptotic), §1.12 (ERZ97 source), §3.3–§3.6 (0.9-bias counterexample to general Lemma C).
+- `docs/state-F32.md` Sessions 1+2 (above).
+- `~/files/union_closed_1323_proof_steps.txt` (Daniel 2026-05-16T11:29Z) — original 10-step program; Steps 1–10.
+- Width-3 specific literature lookups: Aires-Kahn 2025 (arXiv:2510.26134) Theorem 1.6; Linial 1984 (width-2 + N-free); Brightwell 1989 (semiorders); Brightwell-Felsner-Trotter 1995; Olson 2017 survey (arXiv:1706.04985); Stanley *Enumerative Combinatorics II*.
+
+### Findings, ordered
+
+#### F32.S4.1 — Phase 1 (L4 in width-3): AMBER-partial
+
+The L4-α-lit 0.9-bias counterexample to general Lemma C is *partially* dissolved by width-3 via Aires-Kahn 2025 asymptotic (`δ(P) → 1/2` as `π(P) → ∞` for fixed width). Quantitative: for width-3, `π(P) < 36 C_3^2` is needed for `δ < 1/3` (i.e., for a minimal counterexample to exist). So width-3 minimal counterexamples (if they exist) are *small posets* (bounded `n ≈ 10`).
+
+For small-π regime, the 0.9-bias construction is plausibly realisable (mechanism (M-2): add elements `y_i < b, y_i || a, c` to bias `\{a, b\}`; each `y_i` creates auxiliary 3-antichains `\{a, c, y_i\}` requiring minimality). The compounding constraint structure is tight but not obviously refutable.
+
+The F32 program's own machinery for L4 (sub-poset reduction, F32-scope §3.4.3) has the *same difficulty* in width-3 as in general width. Removing an element from a width-3 minimal counterexample either decreases width to 2 (Linial closes, doesn't contradict minimality) or preserves width 3 (sub-poset's biases not controlled).
+
+**F32.S4.1 verdict: AMBER-partial. Width-3 helps the L4 question only via external input (Aires-Kahn); F32-internal mechanism unchanged.**
+
+#### F32.S4.2 — Phase 2 (L3 1/8-obstruction in width-3): RED-no-dissolution
+
+The 1/8 obstruction comes from `M(L) := |\{Q : P \le Q \le L\}|` over-counting via the naive `2^k` estimate. The actual count is `\le 2^k`, reduced by transitivity constraints.
+
+For width-3 with `\ell` 3-antichains: heuristic `M(L) \approx 2^k \cdot (7/8)^\ell` (per-triangle transitive-subset correction: 7 transitive subsets out of `2^3 = 8`). Ratio `M_A(L) / M(L) \approx 1/7` (not `1/8`).
+
+**Empirically verified on `P = A_3`:** 19 distinct partial-order extensions; `\Sigma e(Q) = 42`; for canonical `L = abc`, `\Sigma_{Q : A \in S(Q)} e(Q) = 1`; ratio `1/42 = (1/7) \cdot (1/6) = (1/7) \cdot \Pr_L[L = abc]`. Confirms 1/7 factor.
+
+But `1/7 < 1` is still vacuous: weighted-UCC `\ge 1/2` translates to `\Pr_L \ge 7`, infeasible.
+
+**The structural barrier is intrinsic to `F(P)` indexing by `Q` (not `L`) and the consequent over-counting of `Q`'s per `L`.** Width-3 affects only the per-triangle correction factor (`7/8`), not this underlying structure. No natural width-3-specific alternative weighting bypasses.
+
+**F32.S4.2 verdict: RED-no-dissolution. The 1/8 obstruction is structurally width-independent. Width-3 sharpens marginally to 1/7 but does NOT dissolve.**
+
+#### F32.S4.3 — Phase 3 (L2 in width-3): AMBER-no-clean-simplification
+
+`|U|` (3-antichain count) in width-3 is `O(n^3)`, same asymptotic order as general width (one element from each of 3 chains in Dilworth decomposition). Width-3 does NOT reduce `|U|` structurally.
+
+Per-candidate:
+
+- **L2-A (no extras in minimal counterexample):** natural-candidate failure mechanism (`Q_1` has `a<b`, `Q_2` has `b<c`, TC gives `a<c`) uses no width-3-specific structure. Still likely false.
+- **L2-B (`\ll`-consistent restriction):** requires L1+ (transitivity of `\ll` across antichains). Plausibly true via probabilistic-transitivity argument à la Kahn-Saks 1984, but the argument generalises to any width — no width-3-specific shortcut.
+- **L2-C (representation lemma):** transitive-closure overflow risk (TC creating extra canonical triples) unchanged in width-3. Canonical edges of `T \subseteq U` create new comparabilities the same way as in general width.
+- **L2-D (upward closure + L3-B):** blocked by Phase 2 (L3-B RED in width-3).
+
+**F32.S4.3 verdict: AMBER-no-clean-simplification. Width-3 does NOT structurally simplify L2.**
+
+#### F32.S4.4 — Phase 4: combined verdict + Daniel recommendation
+
+**AMBER-mixed-Phase2-RED-binding.** Phase 2 (RED) is structurally binding. Phase 1 (AMBER, partial dissolution via external Aires-Kahn input) and Phase 3 (AMBER, no simplification) do not compensate.
+
+**Daniel's "obvious reasons" for width-3 demandingness (O.1, O.2, O.3 in deliverable §4.3) are all TRUE structural features** (every 3-antichain is a maximum antichain; canonical orientation more determined via Dilworth lattice; linear extensions bounded combinatorially). **But the F32 obstructions are orthogonal to these features.** The L3 obstruction is about `Q ↔ L` counting (not antichain rigidity); L4 is about per-antichain entropy (not maximality); L2 is about realisability of `F(P)` (not `|U|` size).
+
+**Recommendation:** **Close F32 per Daniel's "on hold unless we learn more or have a new idea" directive (2026-05-16T14:33Z).** No execution sub-tickets (L4-width3, L3-width3, L2-width3) recommended; they would inherit Phase 2's structural RED.
+
+Optional alternative for Daniel: file a separate scoping ticket (F33?) for "width-3 1/3-2/3 via Aires-Kahn 2025 direct + small-π exhaustive enumeration" — independent of F32 bridge program. Different program, scope separately.
+
+### Session 4 deliverables
+
+- **`docs/compatibility-geometry-F32-width3-feasibility.md`** (new) — Phase 1 (L4 width-3 dissolution check) + Phase 2 (L3 1/8 dissolution check) + Phase 3 (L2 simplification check) + Phase 4 (combined verdict) + hard-constraint compliance + references.
+- **`docs/state-F32.md`** (this Session 4 entry) — cumulative ledger.
+
+### Session 4 verdict
+
+**AMBER-mixed-Phase2-RED-binding.** Width-3 specialisation does NOT provide the structural traction Daniel hypothesised. F32 should close per "on hold" directive.
+
+### Mayor action items (post-session-4)
+
+1. **Surface this verdict to Daniel** via mail (`mg mail send human` from the polecat). Daniel's call on whether to (a) close F32 as recommended, (b) file F33 (Aires-Kahn-direct width-3 route), or (c) pursue some other reformulation.
+2. **No execution sub-tickets to file.** F32-L4-corrected-scope (Session 2's recommendation) is also moot — even with corrected Lemma C, Phase 2 L3 1/8-obstruction stands.
+3. **Archive F32-series docs** (F32-scope, F32-L4-α-lit, F32-width3-feasibility) as the structural record of the attempt.
+4. **F31 RED (chain-locality wall, mg-01ce) re-becomes the active milestone-1 part (iii) status** — F32 was the candidate bypass; with F32 closing, milestone-1 part (iii) reverts to F31's RED + Daniel's methodology-paper-close / milestone-1-redefinition options (per F30/F31 doc references).
+5. **No Daniel-escalation-as-emergency** — the program degraded gracefully through Sessions 1 → 2 → 4, each surfacing a load-bearing concern that the next session addressed and that ultimately walled. The 10-step Daniel program remains a coherent outline; closure is recommendation, not crisis.
 
 ---
