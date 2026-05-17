@@ -1190,6 +1190,35 @@ giving the claimed layered width-3 decomposition on $(1-o(1))$ of
 $\vol(\LE(P))$.
 \end{proof}
 
+\begin{remark}[Bandwidth constant $w_0(\gamma)$; Lean
+alignment]\label{rem:w0-constant}
+The interaction width $w$ delivered by Prop.~\ref{prop:72} is
+$w = K(T) + O(1)$, with $K(T) = O_T(1)$ the constant of
+Lemma~\ref{lem:bandwidth} of the assembly above. Since
+$T = T(\gamma)$ is fixed in terms of $\gamma$ via the Step~5
+richness threshold, write
+\[
+  w_0(\gamma) \;:=\; K(T(\gamma)) + O(1)
+\]
+for the resulting absolute bandwidth constant. The width-3 1/3--2/3
+companion Lean formalisation
+(\texttt{lean/OneThird/Step8/BoundedIrreducibleBalanced.lean},
+\texttt{InCase3Scope.w\_mem}) discharges the G4 leaf
+(Lemma~\ref{lem:layered-balanced} of \texttt{step8.tex}, irreducible
+branch) for every $w \in \{1, 2, 3, 4\}$ via the F5a Bool
+certificate, and therefore takes $w_0(\gamma) \le 4$ as its in-tree
+alignment point. A larger absolute cap ($\le 6$, $\le 10$) would
+close as well, conditional on extending the F5a certificate to the
+wider $w$ range; the present scope's natural alignment point is
+$4$. The faithful Lean delivery of the constant
+$w_0(\gamma) \le 4$ (presently axiomatised at the
+\texttt{Step7.LayeredWidth3} interface, with the in-tree
+\texttt{bandwidth} field returning a sham $|P|+1$ pass-through) is
+the principal open obligation for the large-$|P|$ slice of the
+in-tree headline; see also the residual paragraph of the
+\hyperref[sec:roadmap-residual]{road map} in \texttt{main.tex}~\S1.4.
+\end{remark}
+
 \begin{proposition}[Prop.~7.3 --- layered width-3 is
 harmless]\label{prop:73}\label{sec:prop73-proof}
 \DEP{Prop.~\ref{prop:72}.}

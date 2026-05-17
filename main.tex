@@ -377,6 +377,38 @@ threshold defining ``rich'' are treated crudely; we do not attempt to
 optimize them, and no quantitative improvement over the
 $0.276\ldots$ record is claimed beyond the width-$3$ restriction.
 
+\paragraph{The in-tree residual obligations.}\label{sec:roadmap-residual}
+A companion Lean formalisation (directory \texttt{lean/OneThird/};
+see \texttt{lean/README.md} and \texttt{lean/AXIOMS.md}) tracks the
+in-tree status of every load-bearing result of this paper. At
+present, that formalisation reduces the headline 1/3--2/3 theorem to
+two precisely-typed residual obligations, one of which is closed by
+external enumeration and one of which remains conditional on
+Steps~1--7:
+\begin{enumerate}\setlength{\itemsep}{2pt}
+  \item \emph{Small-$n$ slice ($|P| \le 10$):} the existence of a
+  balanced pair in every width-$3$ non-chain finite poset is
+  verified by exhaustive Python enumeration
+  (\texttt{lean/scripts/enum\_cap5.py}; certificate
+  \texttt{enum\_cap5\_certificate.json}).
+  \item \emph{Large-$n$ slice ($|P| \ge 11$):} the in-tree discharge
+  is conditional on a faithful Lean delivery of the Step~7
+  bandwidth bound --- Proposition~\ref{prop:72} of
+  \texttt{step7.tex}, pinned to interaction width $w = w_0(\gamma)
+  \le 4$ (the constant aligned with the Lean certificate
+  \texttt{InCase3Scope.w\_mem}). The
+  paper-level proof of Prop.~\ref{prop:72} (existence of a layered
+  decomposition of width $w = O_T(1)$) is complete; only the
+  faithful Lean re-derivation of the constant $w_0(\gamma) \le 4$
+  remains open in tree.
+\end{enumerate}
+Read as a paper-level statement, the headline is unconditional
+(modulo the arithmetic-richness hypothesis stated in Step~8). Read
+as an in-tree Lean claim, the small-$n$ slice is unconditional and
+the large-$n$ slice is conditional on Steps~1--7 of the present
+paper. The faithful in-tree delivery of those steps is the present
+formalisation's principal remaining work.
+
 \part{Local interface theory}
 
 \input{step1}

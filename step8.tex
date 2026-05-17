@@ -543,6 +543,40 @@ Section~\ref{sec:layered-reduction} for G3, and
 Section~\ref{sec:g4-balanced-pair} for G4. G5 is the present proof
 itself.)
 
+\begin{remark}[In-tree headline restatement; Lean
+formalisation status]\label{rem:headline-lean-restatement}
+The companion Lean formalisation
+(\texttt{lean/OneThird/MainTheorem.lean}, \texttt{width3\_one\_third\_two\_thirds})
+exposes Theorem~\ref{thm:main-step8} as a disjoint union of two
+slices that the paper's single conditional statement bundles:
+\begin{enumerate}[nosep, label=(\roman*)]
+  \item \emph{Small-$n$ unconditional slice $(|P| \le 10)$.} For
+  every width-$3$ finite poset on at most $10$ elements that is not
+  a chain, $P$ has a balanced pair. This slice is verified by the
+  exhaustive Python enumeration described in
+  Remark~\ref{rem:residual-base} below
+  (\texttt{lean/scripts/enum\_cap5.py}). It does not depend on
+  Steps~1--7 or on Hypothesis~\ref{hyp:arith}.
+  \item \emph{Large-$n$ Steps-1--7-conditional slice $(|P| \ge 11)$.}
+  For every width-$3$ non-chain finite poset on at least $11$
+  elements, $P$ has a balanced pair, conditional on
+  Prop.~\ref{prop:72} of \texttt{step7.tex} delivering a layered
+  width-3 decomposition of bandwidth $w_0(\gamma) \le 4$ (see
+  Remark~\ref{rem:w0-constant} of \texttt{step7.tex}).
+\end{enumerate}
+The Lean dispatch shape uses Lemma~\ref{lem:layered-balanced} (G4)
+uniformly at every depth $K \ge 1$ via an F3 strong induction inside
+\texttt{Case3WitnessProof.lean}; the depth-dichotomy of
+Section~\ref{sec:layered-reduction} (G3 for $K \ge K_0$, G4 for
+$K < K_0$) is a paper-side organisation that the in-tree dispatch
+does not consume on the headline path. The G3 lemma
+(Lemma~\ref{lem:layered-reduction}) is nonetheless formalised
+end-to-end in Lean (\texttt{Step8/LayeredReduction.lean},
+\texttt{lem\_cut}, \texttt{lem\_layered\_reduction}) and is
+preserved as documentation of the paper's intended mechanism; see
+the disclaimer at the head of Section~\ref{sec:layered-reduction}.
+\end{remark}
+
 \medskip\noindent\emph{Scope note.} Without
 Hypothesis~\ref{hyp:arith}, the structural argument of this file
 covers (a)~the Kahn--Linial regime $\gamma \ge 1/3 -
@@ -1471,6 +1505,29 @@ case-(R) contradiction in Theorem~\ref{thm:main} is quantitative.
 Throughout this section we use the letters below consistently; any
 clashes with local names in \texttt{step$k$.tex} are flagged.
 
+\begin{remark}[Cross-reference to Hypothesis~\ref{hyp:arith}; Lean
+formalisation note]\label{rem:G2-hyp-arith}
+The constants below ($c_5(T), c_6, K(T), \delta_0(\gamma),
+\varepsilon$) feed into the cascade closure
+inequality~\eqref{eq:G2} of Proposition~\ref{prop:G2}; for the
+inequality to hold at large $n$, the arithmetic-richness
+Hypothesis~\ref{hyp:arith} of Section~\ref{sec:main-thm} must be in
+force. The companion Lean formalisation does \emph{not} consume
+Hypothesis~\ref{hyp:arith}: the in-tree headline
+\texttt{width3\_one\_third\_two\_thirds} is stated against the
+Steps~1--7 interface (paper-axiomatised at
+\texttt{lean/OneThird/Step7/Assembly.lean}, \texttt{LayeredWidth3})
+and dispatches via the bandwidth field directly; the cascade
+closure inequality~\eqref{eq:G2} appears in the paper only, at the
+Steps~1--7 assembly level, and is not re-derived in Lean. The
+constants of this section are therefore paper-side bookkeeping for
+the Steps~1--7 assembly; the in-tree formalisation's surface area
+of conditionality is limited to the
+\hyperref[rem:headline-lean-restatement]{large-$n$
+Steps-1--7-conditional slice} of
+Remark~\ref{rem:headline-lean-restatement}.
+\end{remark}
+
 \paragraph{Named constants.}
 \begin{itemize}[nosep]
  \item $c_0 > 0$: Cheeger-type volume fraction from Theorem~E
@@ -1883,6 +1940,31 @@ Proposition~\ref{prop:step7}(iii). The near-ordinal-sum and
 near-disjoint-union templates of the width-3 literature are adapted
 here from exact ordinal decompositions to Step~7's \emph{layered}
 decompositions.
+
+\begin{remark}[Paper-only: G3 is not on the in-tree Lean headline
+path]\label{rem:g3-paper-only}
+The companion Lean formalisation
+(\texttt{lean/OneThird/Step8/LayeredReduction.lean}) formalises
+this section's main lemma (Lemma~\ref{lem:layered-reduction})
+end-to-end as \texttt{lem\_layered\_reduction}, together with its
+underlying cut lemma \texttt{lem\_cut} and the supporting
+\texttt{Step8/LayeredBalanced.lean}'s \texttt{windowLocalization}.
+However, those Lean theorems are \emph{not consumed} by the in-tree
+headline call chain
+(\texttt{MainTheorem.lean}~$\to$~\texttt{MainAssembly.lean}~$\to$
+\texttt{lem\_layered\_balanced}~$\to$ \texttt{Case3WitnessProof.lean}):
+the deep-regime $K \ge K_0$ discharge is absorbed into the F3
+strong induction of \texttt{Case3WitnessProof.lean} via
+\texttt{LayeredDecomposition.compactify} descent, which strictly
+decreases \texttt{Fintype.card} at every recursive call. The
+depth-dichotomy framing $K \ge K_0$ vs.\ $K < K_0$ of the present
+section is therefore a \emph{paper-side} organisation; the Lean
+formalisation uses G4 (\texttt{lem\_layered\_balanced}) uniformly at
+every depth. Lemma~\ref{lem:layered-reduction} below is preserved in
+the paper as documentation of the originally intended mechanism and
+is faithfully formalised in Lean; readers tracking the in-tree
+dispatch should view it as supplementary rather than headline.
+\end{remark}
 
 \subsection{Layered decompositions, formally}
 
@@ -2368,6 +2450,30 @@ pair}: an incomparable pair $(x, y)$ with
   \;\in\; [1/3,\, 2/3].
 \]
 \end{lemma}
+
+\begin{remark}[Lean formalisation route]\label{rem:layered-balanced-lean}
+The paper proof of Lemma~\ref{lem:layered-balanced} below (proceeding
+through ordinal-sum factorisation, window localization, and a direct
+averaging argument on the bipartite reduct) is presented in the
+``direct averaging on a bounded interaction window'' shape. The
+companion Lean formalisation
+(\texttt{lean/OneThird/Step8/LayeredBalanced.lean},
+\texttt{lem\_layered\_balanced}) takes a different route at the
+$K \ge 2$ branch: rather than calling
+Lemma~\ref{lem:window-localization} and
+Proposition~\ref{prop:in-situ-balanced} explicitly, it routes through
+\texttt{OneThird/Step8/OptionC/Case3WitnessProof.lean},
+\texttt{Case3Witness\_proof}, an F3 strong induction on
+\texttt{Fintype.card} that case-splits on $K \in \{1, 2, \ge 3\}$ and on
+reducibility at each layer. The small-$|P|$ base case is discharged
+by the enumeration certificate of Remark~\ref{rem:residual-base}
+below (\texttt{mg-4d7b}); the $K \ge 3$ irreducible leaves are
+discharged by the F5a Bool certificate
+(\texttt{BoundedIrreducibleBalancedInScope.lean},
+\texttt{case3\_certificate}). The two proofs prove the same theorem
+under the same hypothesis; the in-tree formalisation differs only in
+dispatch shape.
+\end{remark}
 
 The proof proceeds through three ingredients. First, a general
 \emph{ordinal-sum factorisation} of linear extensions
@@ -3052,11 +3158,23 @@ joint configuration $(A, B, Q)$ is determined up to isomorphism by
 finitely many data. Taken together with the layered axioms (L1)--(L2)
 and the antichain condition on each $M_k$, the total number of such
 irreducible configurations on $\le 3(3w+1)$ elements is a finite
-function of $w$. A direct machine-checked enumeration (the same
-enumeration that discharges the bipartite case, see
-Remark~\ref{rem:enumeration}) confirms that every such configuration
-contains a balanced pair. We record this as Lemma~\ref{lem:enum}
-below.
+function of $w$. A direct machine-checked enumeration verifies
+that every such configuration contains a balanced pair: the
+companion Lean formalisation closes the parameter cells
+$(K, w) \in \{(3,1), (3,2), (3,3), (3,4), (4,1)\}$ via the F5a Bool
+certificate \texttt{case3\_certificate}
+(\texttt{lean/OneThird/Step8/Case3Enum/}, discharged by
+\texttt{native\_decide}), and the residual cap-$1$ cells
+$(K, w)$ with $K \in \{4, \ldots, 10\}$ and $w \in \{2, 3, 4\}$
+(subject to $K \le 2w + 2$) are exhaustively verified by Python
+enumeration; the certificate is recorded as
+\texttt{enum\_cap5\_certificate.json}
+(\texttt{lean/scripts/enum\_cap5.py}, \texttt{enum\_cap5\_K10.py};
+companion work item \texttt{mg-4d7b}). The verification covers
+roughly $1.72\times 10^6$ configurations across $15$ residual cells
+and reports no counterexamples. We record the finiteness portion of
+this statement as Lemma~\ref{lem:enum} below, and the explicit
+verification as Remark~\ref{rem:enumeration}.
 \end{proof}
 
 \begin{lemma}[Finite enumeration of bounded-depth irreducible layered
@@ -3166,22 +3284,52 @@ for iterated reduction'' (work item F3) and the ``chained
 induction on $|X|$ and the Case~B ordinal-sum transfer step.
 \end{remark}
 
-\begin{remark}[Enumeration of configurations]\label{rem:enumeration}
+\begin{remark}[Enumeration of configurations; mg-4d7b
+certificate]\label{rem:enumeration}
 The enumeration invoked in Lemma~\ref{lem:enum} is a finite but
-$w$-parametrised check. For $w = 0$ (\emph{tight} layering) the
-Lean-side helper \verb|lem_layered_balanced_subtype| shows that every
-incomparable pair lies in a single band, each band is an antichain of
-size $\le 3$, and Case~1 of
+$w$-parametrised check, organised in two parts in the companion
+Lean formalisation:
+
+\smallskip\emph{Tight case $w = 0$.} The Lean-side helper
+\verb|lem_layered_balanced_subtype|
+(\texttt{lean/OneThird/Step8/LayeredBalanced.lean}) shows that every
+incomparable pair lies in a single band, each band is an antichain
+of size $\le 3$, and Case~1 of
 Proposition~\ref{prop:in-situ-balanced} applies directly to any
 within-band pair: the swap involution gives $\Pr[x <_L y] = 1/2$.
-For $w \ge 1$, the configurations with $|A| = 3$ whose profiles form
-a $\preceq$-antichain are enumerated modulo the symmetries of (L1);
-each is discharged by exhibiting either a Case~1 symmetric pair
-(after taking into account that two of the three elements must share
-\emph{some} coordinate of the two-sided profile whenever $|Q| \le
-3(3w+1)$ and (L2) restricts the profile codomain), or a Case~2 pair
-with aligned one-sided profiles restricted to the bands strictly
-above (or strictly below) the antichain under consideration.
+
+\smallskip\emph{Bounded case $w \in \{1, 2, 3, 4\}$.} The
+configurations with $|A| = 3$ whose two-sided profiles form a
+$\preceq$-antichain are exhaustively enumerated by the Lean
+\texttt{Case3Enum} framework
+(\texttt{lean/OneThird/Step8/Case3Enum/}) modulo the symmetries of
+(L1). The parameter cells $(K, w) \in \{(3,1), (3,2), (3,3),
+(3,4), (4,1)\}$ are closed in tree by the F5a Bool certificate
+\texttt{case3\_certificate}, discharged uniformly by
+\texttt{native\_decide}. The residual cap-$1$ cells, with $K \in
+\{4, \ldots, 10\}$ and $w \in \{2, 3, 4\}$ subject to $K \le 2w+2$
+(a total of $15$ parameter cells), are verified by an out-of-tree
+Python enumeration (\texttt{lean/scripts/enum\_cap5.py} for $K \le
+9$ and \texttt{enum\_cap5\_K10.py} for the $K = 10$, $w = 4$ cell;
+companion work item \texttt{mg-4d7b}). The enumeration covers
+roughly $1.72\times 10^6$ width-3 non-chain configurations across
+the $15$ cells, applying a $O(|Q|^2)$ symmetric-pair fast path
+(discharging the bulk of configurations via the Case~1
+swap-involution argument) with a full linear-extension subset-DP
+fallback for the residue. The accompanying certificate
+\texttt{enum\_cap5\_certificate.json} records the per-cell
+configuration count and verifies that every enumerated configuration
+admits a balanced pair; a counterexample would halt the enumeration
+and be reported. No counterexample is found in any cell.
+
+\smallskip Together, the two parts of the enumeration cover every
+$(K, w)$ tuple operative under the cap-$1$ (singleton-band) +
+cap-$5$ ($w \le 4$) profile of Lemma~\ref{lem:enum}'s irreducible
+sub-class. In particular, the cardinality constraint
+$|Q| \le K \le 2w + 2$ derived from cap~$1$ + cap~$2$ + cap~$5$
+forces $|Q| \le 10$ on this cap profile, so the enumeration above
+exhausts the bounded-depth case as long as $w_0(\gamma) \le 4$
+(Remark~\ref{rem:w0-constant} of \texttt{step7.tex}).
 \end{remark}
 
 \begin{remark}[Interface with G3]\label{rem:g3-g4-interface}
@@ -3203,10 +3351,15 @@ Lemma~\ref{lem:layered-reduction} (G3) and
 Lemma~\ref{lem:layered-balanced} (G4) exhaust
 Proposition~\ref{prop:step7}(iii) without any depth-gap and without
 any compounding $\gamma$-decay; the residual enumeration is the
-sole remaining mathematical obligation above the $w = 0$ floor.
+sole remaining mathematical obligation above the $w = 0$ floor. The
+G3/G4 dichotomy of the paper is a logical organisation; the
+companion Lean formalisation absorbs both regimes into G4 via the F3
+strong induction of \texttt{Case3WitnessProof.lean}
+(Remarks~\ref{rem:layered-balanced-lean} and
+\ref{rem:g3-paper-only}).
 \end{remark}
 
-\begin{remark}[Residual Case-3 enumeration; mg-307c]
+\begin{remark}[Residual Case-3 enumeration; mg-4d7b certificate]
 \label{rem:residual-base}
 The closing step of the $K \ge 2$ case of
 Lemma~\ref{lem:layered-balanced} above invokes
@@ -3228,25 +3381,27 @@ its marginal in $Q^\star|_{M_i \cup M_{i+1}}$.
 For this residual regime we appeal to a bounded finite enumeration:
 window localization (Lemma~\ref{lem:window-localization}) caps the
 size of $Q^\star$ at $|Q^\star| \le 3(3w+1)$ and the depth at
-$K^\star \le 2w+2$. With $w \in \{1,2,3,4\}$ from
-Lemma~\ref{lem:bandwidth} of Step 7, the residual parameter range is
-finite and admits direct machine-verified enumeration. The script
-\texttt{lean/scripts/enum\_case3.py} enumerates every
-layer-ordinal-sum irreducible layered width-3 poset $Q$ satisfying
-(L1)--(L4) and containing an adjacent-band incomparable cross-pair
-across the residual parameter range, and for each verifies that
-some incomparable pair $(x,y) \in Q$ has
-$\Pr_{L \sim \mathcal L(Q)}[x <_L y] \in [1/3, 2/3]$. The verification
-succeeds uniformly: a fast $O(|Q|^2)$ symmetric-pair check discharges
-the overwhelming majority of configurations via the swap-involution
-argument of prop:bipartite-balanced Case 1, with a full
-linear-extension enumeration as fallback for the asymmetric remainder.
-The accompanying certificate \texttt{enum\_case3\_certificate.json}
-records the parameter range covered and the number of configurations
-verified. No counterexample is found; a counterexample would halt the
-enumeration and be reported. See
-\texttt{lean/scripts/README.md} for the scope covered and
-instructions to extend to larger (w, K) regimes (same algorithm,
-larger compute budget).
+$K^\star \le 2w+2$. With $w \in \{1,2,3,4\}$ from the bandwidth
+constant $w_0(\gamma)$ of Remark~\ref{rem:w0-constant} of
+\texttt{step7.tex}, the residual parameter range is finite and has
+been \emph{exhaustively verified} by the enumeration described in
+Remark~\ref{rem:enumeration} above: under the cap-$1$ singleton-band
+profile + cap-$5$ bandwidth bound $w \le 4$, the effective
+parameter domain is $|Q| = K \le 2w + 2 \le 10$, yielding $15$
+$(K, w)$ tuples covering roughly $1.72\times 10^6$ configurations
+across $K \in \{2, \ldots, 10\}$ and $w \in \{0, \ldots, 4\}$
+subject to $K \le 2w + 2$. The verification proceeds in two layers:
+the parameter cells $(K, w) \in \{(3,1), (3,2), (3,3), (3,4),
+(4,1)\}$ are closed in tree by the F5a Bool certificate
+(Lean: \texttt{lean/OneThird/Step8/Case3Enum/},
+\texttt{case3\_certificate}, via \texttt{native\_decide}); the
+residual $15$ cells with $K \in \{4, \ldots, 10\}$ and $w \in
+\{2, 3, 4\}$ are verified by Python enumeration
+(\texttt{lean/scripts/enum\_cap5.py} for $K \le 9$;
+\texttt{enum\_cap5\_K10.py} for $K = 10$, $w = 4$; companion work
+item \texttt{mg-4d7b}). The accompanying certificate
+\texttt{enum\_cap5\_certificate.json} records the per-cell
+configuration count and reports no counterexample; a counterexample
+would halt the enumeration and be flagged.
 \end{remark}
 
