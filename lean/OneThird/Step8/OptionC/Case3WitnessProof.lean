@@ -256,6 +256,17 @@ K-dispatch documented in the file header. -/
 theorem Case3Witness_proof.{u} : Step8.Case3Witness.{u} := by
   classical
   -- Strong induction on `Fintype.card β`, generalising over `β`.
+  -- **Cap 5 (`mg-d5a0`, `LB.w ≤ 4`).** Threaded through the strong
+  -- induction; preserved on `compactify` descent by
+  -- `LayeredDecomposition.compactify_w_eq`, so the recursion call
+  -- supplies `LB'.w ≤ 4` from `LB.w ≤ 4` directly. The hypothesis
+  -- is *not* consumed by the K = 1 contradiction, the K = 2
+  -- `option_c_K2_closure` dispatch, or the K ≥ 3
+  -- `bounded_irreducible_balanced_hybrid` dispatch — it is purely a
+  -- threading obligation on this end. The architectural debt lives
+  -- in the *consumer-side* `lem_layered_balanced` K ≥ 2 dispatch
+  -- (`LayeredBalanced.lean:668`), where `canonicalLayered α` cannot
+  -- satisfy cap 5.
   suffices h : ∀ n : ℕ, ∀ (β : Type u) [PartialOrder β] [Fintype β]
       [DecidableEq β] (LB : Step8.LayeredDecomposition β),
       Fintype.card β ≤ n →
@@ -263,17 +274,18 @@ theorem Case3Witness_proof.{u} : Step8.Case3Witness.{u} := by
       LB.K ≤ 2 * LB.w + 2 →
       Fintype.card β ≤ 6 * LB.w + 6 →
       (∀ k : ℕ, 1 ≤ k → k ≤ LB.K → (LB.bandSet k).Nonempty) →
+      LB.w ≤ 4 →
       HasWidthAtMost β 3 →
       ¬ IsChainPoset β →
       2 ≤ Fintype.card β →
       HasBalancedPair β by
-    intro β _ _ _ LB hInj hKw hCardw hNonempty hW3 hNC h2
+    intro β _ _ _ LB hInj hKw hCardw hNonempty hLBw hW3 hNC h2
     exact h (Fintype.card β) β LB (le_refl _) hInj hKw hCardw hNonempty
-      hW3 hNC h2
+      hLBw hW3 hNC h2
   intro n
   induction n using Nat.strong_induction_on with
   | _ n ih =>
-    intros β _ _ _ LB hcard_le hInj hKw hCardw hNonempty hW3 hNC h2
+    intros β _ _ _ LB hcard_le hInj hKw hCardw hNonempty hLBw hW3 hNC h2
     -- Case split on `LB.K`.
     rcases Nat.lt_or_ge LB.K 2 with hK1 | hK2
     · -- K ≤ 1: actually K = 1 since `1 ≤ LB.K` (any element provides this
@@ -411,11 +423,17 @@ theorem Case3Witness_proof.{u} : Step8.Case3Witness.{u} := by
                  (⟨y, hyL⟩ : ↥D.Lower), Finset.mem_univ _, hxne⟩
               rw [Finset.card_univ] at this
               exact this
+            -- Cap 5 propagates via `compactify_w_eq`.
+            have hLBw' : LB'.w ≤ 4 := by
+              have hweq := LayeredDecomposition.compactify_w_eq LB D.Lower
+              show LB'.w ≤ 4
+              calc LB'.w = LB.w := hweq
+                _ ≤ 4 := hLBw
             -- Apply IH.
             have hcard_le' : Fintype.card ↥D.Lower < n := by omega
             have hbp_lower : HasBalancedPair ↥D.Lower :=
               ih (Fintype.card ↥D.Lower) hcard_le' ↥D.Lower LB'
-                (le_refl _) hInj' hKw' hCardw' hNonempty' hW3' hNC' h2'
+                (le_refl _) hInj' hKw' hCardw' hNonempty' hLBw' hW3' hNC' h2'
             -- Lift to β.
             exact D.hasBalancedPair_lift_lower hbp_lower
           · -- Recurse on D.Upper. (Symmetric to D.Lower.)
@@ -485,10 +503,16 @@ theorem Case3Witness_proof.{u} : Step8.Case3Witness.{u} := by
                  (⟨y, hyU⟩ : ↥D.Upper), Finset.mem_univ _, hxne⟩
               rw [Finset.card_univ] at this
               exact this
+            -- Cap 5 propagates via `compactify_w_eq`.
+            have hLBw' : LB'.w ≤ 4 := by
+              have hweq := LayeredDecomposition.compactify_w_eq LB D.Upper
+              show LB'.w ≤ 4
+              calc LB'.w = LB.w := hweq
+                _ ≤ 4 := hLBw
             have hcard_le' : Fintype.card ↥D.Upper < n := by omega
             have hbp_upper : HasBalancedPair ↥D.Upper :=
               ih (Fintype.card ↥D.Upper) hcard_le' ↥D.Upper LB'
-                (le_refl _) hInj' hKw' hCardw' hNonempty' hW3' hNC' h2'
+                (le_refl _) hInj' hKw' hCardw' hNonempty' hLBw' hW3' hNC' h2'
             exact D.hasBalancedPair_lift_upper hbp_upper
         · -- Irreducible: apply `bounded_irreducible_balanced_hybrid`.
           push_neg at hRedSome

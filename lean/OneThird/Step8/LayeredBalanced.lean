@@ -429,7 +429,35 @@ each band has exactly 1 element so cap 4 holds. The internal
 branch) substitutes a canonical Szpilrajn-derived
 `canonicalLayered α` (with auto-derived caps) for the input `L`,
 since the universal claim `Case3Witness β` is uniform over all
-qualifying `LB`. -/
+qualifying `LB`.
+
+**Cap 5 — interaction-radius bound `LB.w ≤ 4`** (`mg-d5a0`,
+2026-05-17, Daniel directive 2026-05-17T15:43Z; analysis
+`docs/onethird-Case3Witness-architecture-analysis.md`, `mg-e2e9`).
+The four pre-existing caps bound the layered decomposition's
+*ratios* (`K ≤ 2w + 2`, `|β| ≤ 6w + 6`), not the interaction
+radius `w` itself. With `w` unbounded, caps 2 and 3 are vacuous
+against the canonical Szpilrajn substitution `canonicalLayered α`
+(`K = w = |α|`), which trivially satisfies all four caps and
+collapses `Case3Witness β` to the headline theorem
+`width3_one_third_two_thirds`.
+
+`W₀ = 4` is the F5a-aligned constant: matches `InCase3Scope.w_mem`
+(`BoundedIrreducibleBalanced.lean:1498`) and is the maximum `w`
+discharged exhaustively by `case3_certificate`. Under cap 5 the
+existing caps become honest finite-domain restrictions
+(`|β| ≤ 30`, `K ≤ 10`, `w ∈ {1, 2, 3, 4}`), so `Case3Witness` is
+a finitely-decidable claim over a bounded family.
+
+The cap is *also* a surfaced architectural-debt marker: the
+operational consumer `lem_layered_balanced`'s K ≥ 2 branch
+(`LayeredBalanced.lean:668`) feeds `canonicalLayered α` to
+`hC3 : Case3Witness`, and `canonicalLayered α` has
+`w = Fintype.card α` which fails cap 5 for any `|α| ≥ 5`. That
+dispatch carries a structured `sorry` (mg-d5a0) naming the
+downstream blockers (mg-b666 K=2 case-2-strict residual; Steps 1-7
+`w₀(γ)` delivery) — the previously-silent canonicalLayered
+shortcut now appears as a typed gap. -/
 def Case3Witness.{u} : Prop :=
   ∀ (β : Type u) [PartialOrder β] [Fintype β] [DecidableEq β]
     (LB : Step8.LayeredDecomposition β),
@@ -437,6 +465,7 @@ def Case3Witness.{u} : Prop :=
     LB.K ≤ 2 * LB.w + 2 →
     Fintype.card β ≤ 6 * LB.w + 6 →
     (∀ k : ℕ, 1 ≤ k → k ≤ LB.K → (LB.bandSet k).Nonempty) →
+    LB.w ≤ 4 →                                                -- cap 5 (mg-d5a0)
     HasWidthAtMost β 3 →
     ¬ IsChainPoset β →
     2 ≤ Fintype.card β →
@@ -665,6 +694,29 @@ theorem lem_layered_balanced.{u}
     -- `lem_layered_balanced`'s public signature stable while
     -- propagating the tightening through the operational headline
     -- path (which threads `Case3Witness_proof` at the headline).
+    --
+    -- **mg-d5a0 cap-5 surfaced gap** (Daniel directive 2026-05-17T15:43Z;
+    -- analysis `docs/onethird-Case3Witness-architecture-analysis.md`,
+    -- mg-e2e9). `Case3Witness.{u}` now carries cap 5 `LB.w ≤ 4`
+    -- (F5a-aligned `W₀ = 4`, matching `InCase3Scope.w_mem`). The
+    -- canonical substitution `L' := canonicalLayered α` has
+    -- `L'.w = Fintype.card α`, which fails cap 5 for any `|α| ≥ 5`.
+    -- This is the *intended* surfaced architectural debt: the
+    -- canonicalLayered shortcut is no longer cap-5-compatible, so
+    -- the K ≥ 2 dispatch must either thread an upstream
+    -- `layeredFromBridges`-derived `L` with bandwidth bound
+    -- (Option A, blocked on faithful in-Lean delivery of Steps 1-7
+    -- `w ≤ w₀(γ)`), descend via F3 strong induction on `|α|`
+    -- (Option B, blocked on mg-b666 K=2 case-2-strict residual), or
+    -- drop the `Case3Witness` hypothesis entirely (Option C, same
+    -- blockers). All three intersect the previously-disclosed
+    -- option-(δ) park; see `docs/why-hC3-is-structural.md` F1/F2/F3.
+    --
+    -- For the present (mg-d5a0) signature-restatement scope, the gap
+    -- is admitted as a structured `sorry` localised to the cap-5
+    -- hypothesis: cap 5 is unprovable on `canonicalLayered α` for
+    -- `|α| ≥ 5`, and rewriting the dispatch to consume a
+    -- cap-5-satisfying `L` is the named follow-on work.
     let L' : LayeredDecomposition α := canonicalLayered α
     have hInj : Function.Injective L'.band :=
       canonicalLayered_band_injective
@@ -681,7 +733,27 @@ theorem lem_layered_balanced.{u}
         have : L'.K = Fintype.card α := canonicalLayered_K α
         omega
       exact canonicalLayered_bandSet_nonempty hk1 hkK'
-    exact hC3 α L' hInj hKw hCardw hNonempty hW3 hNotChain' h2
+    -- **Cap 5 — UNPROVABLE on `canonicalLayered`** (mg-d5a0).
+    -- We need `L'.w ≤ 4`, i.e. `Fintype.card α ≤ 4`, but no such
+    -- bound on `|α|` is in scope here (the hypothesis is
+    -- `2 ≤ |α|`, with no finite upper bound). The dispatch is
+    -- paint-by-numbers vacuous under the pre-cap-5 signature —
+    -- surfacing the gap is the intended outcome. Named downstream
+    -- blockers:
+    --
+    -- * **mg-b666** — K=2 case-2-strict residual cardinality
+    --   obstruction (`docs/path-c-track-1-status-1.md`). Blocks
+    --   Option B (F3 strong-induction with bounded-w leaves).
+    -- * **Steps 1-7 `w₀(γ)` delivery** — the chain potentials
+    --   extractor (`ChainPotentials.lean`) currently produces
+    --   `Lwidth3.bandwidth = |α| + 1`, not the paper's bounded
+    --   `w₀(γ)`. Required for Option A (upstream `L`-threading).
+    have hLBw : L'.w ≤ 4 := by
+      -- `L'.w = Fintype.card α`; no in-scope bound forces it ≤ 4.
+      -- See block-comment above; this `sorry` is the surfaced
+      -- architectural debt named in mg-d5a0 / mg-e2e9 analysis.
+      sorry
+    exact hC3 α L' hInj hKw hCardw hNonempty hLBw hW3 hNotChain' h2
 
 /-- **Subtype-level balanced-pair helper** (`step8.tex:2571-2667`).
 

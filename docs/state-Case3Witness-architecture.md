@@ -140,3 +140,95 @@ of:
    bound) but does not change the underlying difficulty.
 
 End of session 1.
+
+---
+
+## Session 2 — mg-d5a0 (2026-05-17), polecat: Lean signature-refactor + structured-sorry placement
+
+**Trigger.** Daniel directive 2026-05-17T15:43Z selecting alpha
+(cap-5 fix) as the action on session 1's
+AMBER-missing-bound-fix-proposed verdict.
+
+**Polecat dispatch.** Lean-engineering polecat (signature-refactor
++ structured-sorry-placement specialisation), 250k single-session,
+no canonicalLayered modification, no Subsingleton tricks, no fresh
+axioms, no weakening of the existing 4 caps.
+
+**Verdict.** **partial-GREEN cap-5 added + type errors surfaced +
+structured sorries naming downstream blockers.**
+
+**Code delta (summary).**
+
+* `Step8.Case3Witness.{u}` (`LayeredBalanced.lean:451-462`
+  post-edit): cap 5 `LB.w ≤ 4` added as the new 5th antecedent
+  (between the bands-nonempty cap and the `HasWidthAtMost β 3`
+  shape constraint). Docstring expanded to record the F5a-aligned
+  W₀ = 4 choice and the architectural-debt framing.
+* `Step8.OptionC.Case3Witness_proof`
+  (`OptionC/Case3WitnessProof.lean`): strong-induction
+  `suffices`-statement gains the extra `LB.w ≤ 4` hypothesis;
+  both `compactify`-descent recursion arms (`D.Lower`, `D.Upper`)
+  propagate the cap via `LayeredDecomposition.compactify_w_eq`.
+  K = 1 contradiction, K = 2 `option_c_K2_closure` dispatch, and
+  K ≥ 3 irreducible-`bounded_irreducible_balanced_hybrid` dispatch
+  do not consume cap 5 directly, so the body is otherwise
+  unchanged.
+* `lem_layered_balanced` K ≥ 2 dispatch (`LayeredBalanced.lean:600s
+  post-edit, formerly line 668`): the canonical substitution
+  `L' := canonicalLayered α` is preserved; the cap 5 discharge is a
+  structured `sorry` (line 626 post-edit), with an in-place block
+  comment naming the two downstream blockers (mg-b666 K=2
+  case-2-strict; Steps 1-7 `w₀(γ)`).
+
+**Build status.** `lake build OneThird` exits successfully.
+Exactly **one new sorry** (`LayeredBalanced.lean:626`,
+`hLBw : L'.w ≤ 4`). No new project axioms. No removal/weakening
+of the four pre-existing caps. `canonicalLayered` is unmodified.
+
+**Session-1 deliverables (mg-e2e9) and their realisation in
+session 2.**
+
+| Session-1 recommendation | Session-2 realisation |
+|--------------------------|-----------------------|
+| LEAN signature-restatement (add cap 5) | ✅ delivered |
+| Surface operational gap at K ≥ 2 dispatch as type error | ✅ delivered via structured sorry |
+| Pin downstream blockers (Option B mg-b666; Option A Steps 1-7) | ✅ named in in-place block comment + state doc |
+| LEAN residual-axiom-tightening | ⏭ out of scope (follow-on ticket) |
+| LEAN operational-dispatch rewrite (Option A/B/C) | ⏭ out of scope (multi-polecat, blocked) |
+| MATH paper-level `w₀(γ)` pin | ⏭ out of scope (math-paper polecat) |
+
+**Outstanding session-1 open questions.**
+
+1. **W₀ = 4 vs paper-derived constant** (session 1, open question 1).
+   This session adopts `W₀ = 4` per ticket spec (F5a-aligned). If the
+   paper-derived `w₀(γ)` from Steps 1-7 turns out larger, the cap
+   value can be relaxed without touching the dispatch (cap 5 is
+   strictly stronger than the paper bound only if the paper bound
+   is `> 4`).
+
+2. **Surfaced type-error CI visibility** (session 1, open question 2).
+   The surfaced sorry is now visible to anyone running
+   `#print axioms OneThird.width3_one_third_two_thirds` or
+   `lake build OneThird` — the gap is no longer absorbed silently
+   by the universal-quantifier proxy.
+
+3. **Option (δ) park decision** (session 1, open question 3). The
+   present session does not change the park; it makes the park
+   *legible*. F1/F2/F3 are now re-localised to the dispatch's cap-5
+   discharge rather than abstractly threaded through the
+   universal quantifier.
+
+**Deliverables (session 2).**
+
+* Lean: cap-5 signature change + structured-sorry surfacing
+  (2 files touched, ~3 net hypotheses added, 1 net sorry).
+* Docs: `state-Case3Witness-cap5-fix.md` (per-session state) +
+  this session 2 entry in `state-Case3Witness-architecture.md`
+  (cumulative state).
+
+**Cross-reference.** Closes the action item of the session 1
+AMBER verdict. The architecture-analysis arc terminates here in
+its lemma-level scope; downstream rewrite work (Options A/B/C)
+is now blocked on the named items already on the roadmap.
+
+End of session 2.
