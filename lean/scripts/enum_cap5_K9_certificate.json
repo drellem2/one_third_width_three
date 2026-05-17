@@ -1,0 +1,25 @@
+{
+  "description": "mg-4d7b \u2014 Case3Witness cap-5 enumeration certificate",
+  "script": "enum_cap5.py",
+  "scope": "All (\u03b2, LB) where \u03b2 is a width-\u22643 non-chain finite poset and LB : LayeredDecomposition \u03b2 satisfies caps 1\u20135 of Step8.Case3Witness.{u}.  Cap 1+4 \u21d2 band singletons; cap 2+5 \u21d2 K = |\u03b2| \u2264 10.",
+  "filters": {
+    "require_width3": true,
+    "require_non_chain": true,
+    "require_irreducible": false,
+    "require_adjacent_incomp": false,
+    "require_closure_canonical": true
+  },
+  "per_cell": [
+    {
+      "K": 9,
+      "w": 4,
+      "nfree": 26,
+      "masks_tried": 67108864,
+      "accepted": 1469416,
+      "balanced": 1469416,
+      "elapsed_s": 741.75
+    }
+  ],
+  "status": "pass",
+  "elapsed_s": 741.75
+}

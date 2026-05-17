@@ -1,0 +1,223 @@
+{
+  "description": "mg-4d7b \u2014 Case3Witness cap-5 enumeration certificate",
+  "script": "enum_cap5.py",
+  "scope": "All (\u03b2, LB) where \u03b2 is a width-\u22643 non-chain finite poset and LB : LayeredDecomposition \u03b2 satisfies caps 1\u20135 of Step8.Case3Witness.{u}.  Cap 1+4 \u21d2 band singletons; cap 2+5 \u21d2 K = |\u03b2| \u2264 10.",
+  "filters": {
+    "require_width3": true,
+    "require_non_chain": true,
+    "require_irreducible": false,
+    "require_adjacent_incomp": false,
+    "require_closure_canonical": true
+  },
+  "per_cell": [
+    {
+      "K": 2,
+      "w": 0,
+      "nfree": 0,
+      "masks_tried": 1,
+      "accepted": 0,
+      "balanced": 0,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 2,
+      "w": 1,
+      "nfree": 1,
+      "masks_tried": 2,
+      "accepted": 1,
+      "balanced": 1,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 2,
+      "w": 2,
+      "nfree": 1,
+      "masks_tried": 2,
+      "accepted": 1,
+      "balanced": 1,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 2,
+      "w": 3,
+      "nfree": 1,
+      "masks_tried": 2,
+      "accepted": 1,
+      "balanced": 1,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 2,
+      "w": 4,
+      "nfree": 1,
+      "masks_tried": 2,
+      "accepted": 1,
+      "balanced": 1,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 3,
+      "w": 1,
+      "nfree": 2,
+      "masks_tried": 4,
+      "accepted": 3,
+      "balanced": 3,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 3,
+      "w": 2,
+      "nfree": 3,
+      "masks_tried": 8,
+      "accepted": 6,
+      "balanced": 6,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 3,
+      "w": 3,
+      "nfree": 3,
+      "masks_tried": 8,
+      "accepted": 6,
+      "balanced": 6,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 3,
+      "w": 4,
+      "nfree": 3,
+      "masks_tried": 8,
+      "accepted": 6,
+      "balanced": 6,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 4,
+      "w": 1,
+      "nfree": 3,
+      "masks_tried": 8,
+      "accepted": 7,
+      "balanced": 7,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 4,
+      "w": 2,
+      "nfree": 5,
+      "masks_tried": 32,
+      "accepted": 24,
+      "balanced": 24,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 4,
+      "w": 3,
+      "nfree": 6,
+      "masks_tried": 64,
+      "accepted": 38,
+      "balanced": 38,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 4,
+      "w": 4,
+      "nfree": 6,
+      "masks_tried": 64,
+      "accepted": 38,
+      "balanced": 38,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 5,
+      "w": 2,
+      "nfree": 7,
+      "masks_tried": 128,
+      "accepted": 88,
+      "balanced": 88,
+      "elapsed_s": 0.0
+    },
+    {
+      "K": 5,
+      "w": 3,
+      "nfree": 9,
+      "masks_tried": 512,
+      "accepted": 222,
+      "balanced": 222,
+      "elapsed_s": 0.01
+    },
+    {
+      "K": 6,
+      "w": 2,
+      "nfree": 9,
+      "masks_tried": 512,
+      "accepted": 316,
+      "balanced": 316,
+      "elapsed_s": 0.02
+    },
+    {
+      "K": 5,
+      "w": 4,
+      "nfree": 10,
+      "masks_tried": 1024,
+      "accepted": 313,
+      "balanced": 313,
+      "elapsed_s": 0.01
+    },
+    {
+      "K": 6,
+      "w": 3,
+      "nfree": 12,
+      "masks_tried": 4096,
+      "accepted": 1279,
+      "balanced": 1279,
+      "elapsed_s": 0.09
+    },
+    {
+      "K": 6,
+      "w": 4,
+      "nfree": 14,
+      "masks_tried": 16384,
+      "accepted": 2582,
+      "balanced": 2582,
+      "elapsed_s": 0.2
+    },
+    {
+      "K": 7,
+      "w": 3,
+      "nfree": 15,
+      "masks_tried": 32768,
+      "accepted": 7322,
+      "balanced": 7322,
+      "elapsed_s": 0.59
+    },
+    {
+      "K": 7,
+      "w": 4,
+      "nfree": 18,
+      "masks_tried": 262144,
+      "accepted": 21415,
+      "balanced": 21415,
+      "elapsed_s": 3.25
+    },
+    {
+      "K": 8,
+      "w": 3,
+      "nfree": 18,
+      "masks_tried": 262144,
+      "accepted": 41949,
+      "balanced": 41949,
+      "elapsed_s": 5.94
+    },
+    {
+      "K": 8,
+      "w": 4,
+      "nfree": 22,
+      "masks_tried": 4194304,
+      "accepted": 177627,
+      "balanced": 177627,
+      "elapsed_s": 54.63
+    }
+  ],
+  "status": "pass",
+  "elapsed_s": 64.74
+}
