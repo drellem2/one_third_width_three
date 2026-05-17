@@ -232,3 +232,111 @@ its lemma-level scope; downstream rewrite work (Options A/B/C)
 is now blocked on the named items already on the roadmap.
 
 End of session 2.
+
+---
+
+## Session 3 — mg-4d7b (2026-05-17), polecat: cap-5 enumeration (computation)
+
+**Trigger.** Daniel directive 2026-05-17T20:55Z verbatim:
+
+> "jesus if it's 10^4-10^6 then let's get a polecat to enumerate it
+> top priority. if that's truly the only gap left for a proof then
+> let's do the enumeration now. if it can be done in a lean-ready
+> way for later that's great too. then if i understand correctly
+> width 3 math is COMPLETE and that makes our job much easier, esp
+> if the only sorry is basically this enumeration."
+
+**Polecat dispatch.** Computation polecat with enumeration +
+brute-force-verification specialisation. ~800k multi-phase budget
+(sub-split allowed per ticket body).
+
+**Scope.** Phases A-E per ticket body. Under all five Case3Witness
+caps + cap 1 (injective) + cap 4 (nonempty), the universal
+`∀ β, ∀ LB` restricts to **finite posets β with 2 ≤ |β| ≤ 10**
+admitting a singletons-band `LayeredDecomposition` of interaction
+width w ∈ {0..4}, width ≤ 3, non-chain. Phases A-B reduce to
+verifying `HasBalancedPair β` for every such β.
+
+**Verdict.** **GREEN-enumeration-substrate-shipped /
+AMBER-headline-dispatch-still-blocked.**
+
+* Phases A-B: ✅ — all (K, w) cells in cap-5 scope enumerated and
+  verified balanced via `lean/scripts/enum_cap5.py` (single-thread)
+  and `lean/scripts/enum_cap5_K10.py` (parallel). **No
+  counterexamples found** across the full scope, confirming the
+  Linial 1984 width-3 case on this concrete enumeration.
+* Phase C: ✅ partial — Lean native_decide cells for K = 2 (w ∈
+  {0, 1}), K = 4 (w ∈ {2, 3, 4}), K = 5..8 (w ∈ relevant) added to
+  `lean/OneThird/Step8/Case3Enum/Cap5Singletons.lean`; K = 9 w = 4
+  in dedicated file (`Cap5SingletonsK9.lean`, not imported into
+  `OneThird.lean` due to native_decide top-of-budget); K = 10 w = 4
+  certified externally (no Lean-level axiom introduced).
+* Phase D: ✅ implicit — LB witnesses are the bitmask + band
+  encoding; no separate construction needed for the proof obligation.
+* Phase E: ❌ remains blocked — `LayeredBalanced.lean:751`
+  structured sorry on `hLBw : L'.w ≤ 4` for `L' :=
+  canonicalLayered α` is the named operational gap; closing it
+  requires Steps 1-7 `w₀(γ)` delivery (Option A) or mg-b666 K=2
+  case-2-strict residual (Option B) per session-2 disclosure.
+
+**Architectural framing — what enumeration accomplishes.**
+
+Before this session: `Case3Witness` (post-cap-5) was a
+finitely-decidable Prop with effective content, but not yet
+*proved* in Lean. Session 2 surfaced the structured `sorry` at the
+operational dispatch; the `Case3Witness` Prop itself was held as a
+hypothesis to be discharged later.
+
+After this session: the enumeration *demonstrates* `Case3Witness`
+holds on every (K, w, mask)-indexed config in scope (no
+counterexamples). The Lean-level discharge of `Case3Witness` as a
+theorem (via the native_decide cells + Bool↔Prop bridge) is the
+named follow-up (`mg-4d7b-followup-case3witness-prop`); the
+*substrate* (the per-cell native-decide certificates) is in place.
+
+The operational dispatch sorry (`LayeredBalanced.lean:751`)
+remains. Closing the headline theorem
+`width3_one_third_two_thirds` requires either:
+
+* the *dispatch* to be rewritten to consume a cap-5-satisfying L
+  (Options A/B/C, all blocked on the previously-disclosed items), or
+* an alternative argument for `|α| > 10` width-3 non-chain posets
+  (e.g., Linial 1984 directly, packaged as a separate axiom).
+
+**Files shipped (session 3).**
+
+* `lean/scripts/enum_cap5.py` — full cap-5 scope enumerator (K = 2..9).
+* `lean/scripts/enum_cap5_K10.py` — parallel K = 10 cell driver.
+* `lean/scripts/enum_cap5_K2to8_certificate.json` — K = 2..8 cert.
+* `lean/scripts/enum_cap5_certificate.json` — K = 9 cert (one cell).
+* `lean/scripts/enum_cap5_K10_certificate.json` — K = 10 cert
+  (one cell, parallel-worker per-shard counts).
+* `lean/OneThird/Step8/Case3Enum/Cap5Singletons.lean` — per-cell
+  native_decide for K = 2, 4..8.
+* `lean/OneThird/Step8/Case3Enum/Cap5SingletonsK9.lean` — K = 9
+  native_decide (separate file, not imported into `OneThird.lean`).
+* `docs/state-Case3Witness-cap5-enumeration.md` — per-session state
+  for this enumeration arc.
+* `docs/state-Case3Witness-architecture.md` — session 3 entry (this).
+* `lean/OneThird.lean` — added `Cap5Singletons` import (K = 9
+  intentionally left out per file header).
+
+**No new axioms.** No `LayeredBalanced.lean` source changes. The
+existing structured `sorry` at line 751 (mg-d5a0) is unchanged.
+
+**Cross-reference.**
+
+* `docs/state-Case3Witness-cap5-enumeration.md` — full session log
+  for the enumeration computation (mg-4d7b session 1).
+* `lean/scripts/enum_case3.py` (mg-307c) — earlier K = 3 enumerator
+  this session extends to the full cap-5 K range.
+* `lean/OneThird/Step8/Case3Enum/Certificate.lean` (mg-307c +
+  mg-9a4a) — the existing F5a certificate this session augments.
+
+**Parallel work.** Concurrent with mg-0cbf post-cap-5 tractability
+analysis (paper-only). mg-0cbf may identify a uniform F5a-based
+argument (Option D1) that shelves mg-4d7b. If so, this session's
+enumeration substrate stands as a sanity check on the proof
+correctness for small instances.
+
+End of session 3.

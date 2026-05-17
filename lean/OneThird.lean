@@ -76,6 +76,13 @@ import OneThird.Step8.Case3Residual
 import OneThird.Step8.Case3Enum
 import OneThird.Step8.Case3Enum.Certificate
 import OneThird.Step8.Case3Enum.K4W1
+import OneThird.Step8.Case3Enum.Cap5Singletons
+-- `Cap5SingletonsK9` is intentionally **not** imported here: the
+-- `native_decide` for K=9 w=4 (2^26 ≈ 67M masks) is at the top of
+-- the per-file build budget and is built on demand via
+-- `lake build OneThird.Step8.Case3Enum.Cap5SingletonsK9`. See
+-- `docs/state-Case3Witness-cap5-enumeration.md` for the per-cell
+-- tractability tiering rationale.
 import OneThird.Step8.Case3Enum.Correctness
 import OneThird.Step8.Case3Enum.BalancedLift
 import OneThird.Step8.Case3Enum.IrreducibleBridge
