@@ -14,10 +14,24 @@ and this file is wrong — fix it.
 
 * The headline theorem is `OneThird.width3_one_third_two_thirds`
   (`lean/OneThird/MainTheorem.lean:56`). It is **AMBER**: one
-  structured `sorry` and two project axioms, named below.
+  structured `sorry` (relocated to `MainAssembly.lean` integration
+  point post-mg-234e) and one named project axiom (plus Brightwell
+  is gone from the headline deps as of mg-8c72's Case3Witness_proof
+  landing).
 * The proof is **layered-decomposition based**, descending through
   `lem_layered_balanced` → (`Case3Witness_proof` ∘ `bounded_irreducible_balanced_hybrid`)
   with Bool-certificate leaves verified by `native_decide`.
+* **mg-234e caller's-L rewire** (Option D-narrow per mg-0cbf §5e;
+  spec mg-ac13 §5.4): `lem_layered_balanced` K ≥ 2 dispatch now
+  takes the five `Case3Witness` cap-antecedents as explicit
+  hypotheses on the caller's `L` (no more `canonicalLayered α`
+  substitution), so the cap-5 sorry that lived at
+  `LayeredBalanced.lean:755` is CLOSED at that site. The
+  architectural gap (Steps 1–7's `w₀(γ) ≤ 4` paper-axiomatised
+  delivery, mg-ac13 §5.4 forward action 5) is now correctly
+  localised at `mainTheoremInputsOf.caseC_canonicalLayered` in
+  `MainAssembly.lean` as a structured `sorry`, where the upstream
+  `Step7.LayeredWidth3` interface is the intended source.
 * The architecture has a **real substantive backbone in the
   |α| ≤ 10 slice** (F3 strong induction inside `Case3Witness_proof`
   + mg-4d7b enumeration). The **|α| ≥ 11 slice is conditional** on
@@ -49,15 +63,20 @@ of `α`.
    `bandwidth = |α| + 1` (sham); faithful delivery of `w₀(γ) ≤ 4` is
    the long-arc residual (R-broad below).
 2. **Step 8 G4 (paper `lem:layered-balanced`, Lean `lem_layered_balanced`,
-   `LayeredBalanced.lean:626`).** Given the layered `L`, dispatch on
-   `L.K`:
+   `LayeredBalanced.lean:626`).** Given the layered `L` plus the five
+   Candidate A'' cap hypotheses (`hInj`, `hKw`, `hCardw`, `hNonempty`,
+   `hLw : L.w ≤ 4`), dispatch on `L.K`:
    * `K = 1` — bands forced antichain ≤ 3 elts; close by
      `bipartite_balanced_enum`. **SUBSTANTIVE-AND-FORMALIZED.**
    * `K ≥ 2` — apply `Case3Witness_proof.{u}` (the K-strong-induction
-     dispatcher). **CURRENTLY VACUOUS-COVER** because the in-tree body
-     discards the caller's `L` and substitutes `canonicalLayered α`
-     (`K = w = |α|`), failing cap 5 — the structured `sorry` at
-     `LayeredBalanced.lean:755` (mg-d5a0). See §3 pitfall #3.
+     dispatcher) directly on the caller's `L`. **SUBSTANTIVE post-mg-234e**
+     (was VACUOUS-COVER pre-mg-234e). The K ≥ 2 dispatch threads the
+     caps to `hC3 α L hInj hKw hCardw hNonempty hLw …`; the cap-5
+     sorry that lived at `LayeredBalanced.lean:755` is CLOSED at
+     this site. The integration debt (Steps 1–7's `w₀(γ) ≤ 4`
+     paper-axiomatised delivery) is now correctly localised at
+     `mainTheoremInputsOf.caseC_canonicalLayered` in
+     `MainAssembly.lean`. See §3 pitfall #3.
 3. **Case3Witness_proof internal F3 strong induction**
    (`OptionC/Case3WitnessProof.lean:256`, `Nat.strong_induction_on`
    at line 286). Descends on `Fintype.card β`. Five caps on `LB`:
@@ -112,7 +131,8 @@ inputs or hypothesis is structurally unreachable). **T** = TODO-sorry.
 | `Step8.mainAssembly` (`step5_choice` collapse) | `MainAssembly.lean:277` | M (both branches → `caseC`) |
 | `Step8.mainTheoremInputsOf` | `MainAssembly.lean:238` | S (bundle), but `caseR_to_caseC` = `layeredFromBridges` is **V** because `bandwidth = |α|+1` upstream |
 | `Step8.lem_layered_balanced` K=1 | `LayeredBalanced.lean:626/646-680` | S (antichain ≤ 3 elts → `bipartite_balanced_enum`) |
-| `Step8.lem_layered_balanced` K≥2 | `LayeredBalanced.lean:681-755` | **V + T** (`canonicalLayered` substitution, cap-5 `sorry` at line 755 — mg-d5a0) |
+| `Step8.lem_layered_balanced` K≥2 | `LayeredBalanced.lean:681-720` | **S post-mg-234e** (caller's L directly threaded to `Case3Witness_proof` with five Candidate A'' cap hypotheses; cap-5 sorry CLOSED at this site — was V+T pre-mg-234e) |
+| `Step8.mainTheoremInputsOf.caseC_canonicalLayered` | `MainAssembly.lean` (post-mg-234e) | **T** (relocated cap-5 sorry at integration point: `canonicalLayered α` has `w = |α|`, fails `L.w ≤ 4` cap; Steps 1–7 paper-axiomatised delivery is the intended source per mg-ac13 §5.4 forward action 5) |
 | `Step8.OptionC.Case3Witness_proof.{u}` | `OptionC/Case3WitnessProof.lean:256` | S (Nat.strong_induction on `\|β\|`) |
 | ↳ K=1 base | `:290-297` (`absurd_K1_of_injective`) | S (numeric contradiction) |
 | ↳ K=2 reducible | `:303-307` (`isChain_of_K2_reducible_under_injective`) | S (forces chain) |
@@ -273,19 +293,33 @@ The **right framing is**:
    accepting the form. mg-ac13 §3 builds 3-disjoint-chains-of-10
    as the refutation of mg-2970 R2 (pitfall #2.3).
 
-### Pitfall #3 — `canonicalLayered α` substitution makes layered hypotheses fiction
+### Pitfall #3 — `canonicalLayered α` substitution (CLOSED at K≥2 dispatch as of mg-234e; gap relocated to integration point)
 
-`lem_layered_balanced` K≥2 branch (`LayeredBalanced.lean:681-755`)
-**discards the caller's `L`** and substitutes
-`canonicalLayered α := Szpilrajn linear extension with K = w = |α|`
-(`LayeredBalanced.lean:498`). The caller-provided `L`'s bandwidth
-`L.w ≤ 4` (if any) is never consumed there; cap 5 cannot be
-discharged on `canonicalLayered α` for `|α| ≥ 5` → structured `sorry`
-at `LayeredBalanced.lean:755`.
+**Status post-mg-234e:** `lem_layered_balanced` K ≥ 2 branch
+(`LayeredBalanced.lean:681-720`) **now consumes the caller's `L`
+directly** with the five `Case3Witness` cap-antecedents
+(`hInj`, `hKw`, `hCardw`, `hNonempty`, `hLw : L.w ≤ 4`) passed as
+explicit hypotheses. The cap-5 sorry that lived at
+`LayeredBalanced.lean:755` is CLOSED at that site.
 
-Operationally this means: anything the headline appears to "buy" by
-threading an L through the layered API is **fiction at the K≥2 call
-site** until that branch is rewritten to consume the caller's `L`.
+**The architectural gap moved up, not away.** The integration point
+`mainTheoremInputsOf.caseC_canonicalLayered` in `MainAssembly.lean`
+still uses `canonicalLayered α` (`K = w = |α|`) to derive caps 1–4
+cleanly, and admits cap 5 (`L.w ≤ 4`) as a structured `sorry` —
+the Steps 1–7 paper-axiomatised delivery gap, per mg-ac13 §5.4
+forward action 5. This is the *correct* localisation: the missing
+piece is "Steps 1–7's `prop:72 + rem:w0-constant` cascade
+delivering an `L : LayeredDecomposition α` with `L.w ≤ 4` for α
+arising as a minimal γ-counterexample". The `Step7.LayeredWidth3`
+structure is the placeholder; faithful Lean port is multi-year
+(per mg-ac13 §5.3 Daniel "shouldn't even go there yet").
+
+**Pre-mg-234e history.** Prior to mg-234e, the K ≥ 2 branch
+discarded the caller's `L` and substituted `canonicalLayered α`
+internally, hiding the cap-5 gap inside the dispatch as a
+structured `sorry` at `LayeredBalanced.lean:755`. Operationally
+this meant: anything the headline appeared to "buy" by threading
+an L through the layered API was **fiction at the K≥2 call site**.
 Per mg-74d2 §1, the only place layered structure is genuinely
 consumed downstream is the F5a Bool-certificate encoding leaf
 (`bounded_irreducible_balanced_inScope` via `cross_band_lt_upward`
@@ -293,10 +327,11 @@ for `predMaskOf` upper-triangularity) — and that's an encoding
 artefact, not a structural insight about α.
 
 **Practical implication.** If a ticket says "use L's bandwidth to
-discharge X at the headline," verify the K≥2 dispatch consumes L
-(grep for `let L' := canonicalLayered`). Most likely it doesn't, and
-the work is to rewrite `lem_layered_balanced` first (Option D-narrow
-per mg-0cbf §5e).
+discharge X at the headline," the K ≥ 2 dispatch NOW consumes L
+honestly; the work is to supply an `L` with `L.w ≤ 4` at
+`mainTheoremInputsOf.caseC_canonicalLayered`. The intended source
+is the `Step7.LayeredWidth3` paper-axiom interface; the in-tree
+`canonicalLayered α` placeholder fails cap 5 by design.
 
 ### Pitfall #4 — Verify "not implemented" / "doesn't exist" claims
 
@@ -320,7 +355,10 @@ named symbol or `ls` the path. Example checks before action:
 * Headline + assembly: `MainTheorem.lean:56`,
   `MainAssembly.lean:238/277/320`.
 * `lem_layered_balanced` + `canonicalLayered`:
-  `LayeredBalanced.lean:498/626/755`.
+  `LayeredBalanced.lean:498/626`. Pre-mg-234e cap-5 sorry at
+  `LayeredBalanced.lean:755` is CLOSED. Relocated cap-5 sorry
+  post-mg-234e at `MainAssembly.lean`
+  `caseC_canonicalLayered`.
 * `Case3Witness_proof`: `OptionC/Case3WitnessProof.lean:256/286`.
 * Marker theorems: `LayerOrdinal.lean:370/472`,
   `BoundedIrreducibleBalanced.lean:1626/1681`.

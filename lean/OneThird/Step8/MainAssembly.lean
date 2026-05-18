@@ -130,10 +130,12 @@ structure MainTheoremInputs (α : Type*) [PartialOrder α]
   indecomposable (or the conclusion follows directly). -/
   decompReductionOrConclude :
     OneThird.Mathlib.Poset.Indecomposable α ∨ HasBalancedPair α
-  /-- Case (C): the layered-decomposition packaged conclusion. -/
-  caseC : ∀ (_ : LayeredDecomposition α), HasBalancedPair α
-  /-- Case (R): richness is reduced to case (C) via Step 6+7. -/
-  caseR_to_caseC : LayeredDecomposition α
+  /-- Case (C): the packaged conclusion. After mg-234e's caller's-L
+  rewire, this folds in the layered decomposition and its caps —
+  both Step 5 branches in `mainAssembly` produce the same
+  `HasBalancedPair α` conclusion via `caseC`, so factoring out the
+  `caseR_to_caseC` layered witness is redundant. -/
+  caseC : HasBalancedPair α
   /-- The Step 5 dichotomy hypothesis: either richness or collapse. -/
   step5_choice : Bool
 
@@ -215,26 +217,55 @@ bandwidth) rather than the prior sham `Fintype.card α + bandwidth`;
 see the docstring of `LayeredBridges.layeredFromBridges` for the
 comparison. -/
 
-/-- **The `MainTheoremInputs` bundle, discharged.**
+/-- **mg-234e helper — caller-side balanced-pair construction.**
 
-Given `2 ≤ |α|` and the non-chain hypothesis, we construct every field
-of `MainTheoremInputs α γ_n γ_d`:
+After mg-234e's caller's-L rewire, `lem_layered_balanced` takes
+the five Candidate A'' caps as explicit hypotheses. This helper
+constructs an `L : LayeredDecomposition α` with caps 1–4 derivable
+from `canonicalLayered α`, then invokes `lem_layered_balanced`
+with a structured `sorry` for cap 5 (`L.w ≤ 4`).
 
-* `caseC` — `lem_layered_balanced` (GAP G4) closes any layered
-  decomposition to a balanced pair;
-* `caseR_to_caseC` — the bridge-derived `layeredFromBridges` witness
-  (`Bridge.step5` ∘ `Bridge.step6` ∘ `Bridge.step7_layered`),
-  rebuilt in `OneThird.Step8.LayeredBridges` with
-  `w := Lwidth3.bandwidth` (verbatim from Step 7) rather than the
-  prior sham `Fintype.card α + bandwidth`, and surfacing F7a
-  (`ChainLiftData`) and F6b (`exc_perturb`) as structural imports;
-* `step5_choice` — both branches of the dichotomy land in `caseC`,
-  so we pick `true` by convention;
-* `decompReductionOrConclude` — we take the right disjunct, using
-  `lem_layered_balanced` applied to `layeredFromBridges`.
+Per mg-ac13 §5.4 forward action 5, the proper source of an `L`
+with `L.w ≤ 4` is the `Step7.LayeredWidth3` paper-axiomatised
+interface — KEEP paper-axiomatised; no faithful Lean port
+attempted in this scope. The `sorry` here is the surfaced Steps
+1–7 cascade gap, *correctly localised* at the integration point
+rather than hidden inside the K ≥ 2 dispatch (where it lived
+pre-mg-234e as part of the `canonicalLayered α` substitution
+shortcut, mg-d5a0). -/
+noncomputable def caseC_canonicalLayered.{u}
+    {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
+    (h2 : 2 ≤ Fintype.card α)
+    (hNotChain : ¬ OneThird.IsChainPoset α)
+    (hW3 : HasWidthAtMost α 3)
+    (hC3 : Step8.Case3Witness.{u}) : HasBalancedPair α := by
+  let L : LayeredDecomposition α := canonicalLayered α
+  have hInj : Function.Injective L.band :=
+    canonicalLayered_band_injective
+  have hKw : L.K ≤ 2 * L.w + 2 := by
+    change Fintype.card α ≤ 2 * Fintype.card α + 2
+    omega
+  have hCardw : Fintype.card α ≤ 6 * L.w + 6 := by
+    change Fintype.card α ≤ 6 * Fintype.card α + 6
+    omega
+  have hNonempty : ∀ k : ℕ, 1 ≤ k → k ≤ L.K →
+      (L.bandSet k).Nonempty := by
+    intro k hk1 hkK
+    have hkK' : k ≤ Fintype.card α := by
+      have : L.K = Fintype.card α := canonicalLayered_K α
+      omega
+    exact canonicalLayered_bandSet_nonempty hk1 hkK'
+  -- **mg-234e — Steps 1–7 paper-axiomatisation gap** (relocated
+  -- from `LayeredBalanced.lean:755`, mg-d5a0). `canonicalLayered α`
+  -- has `L.w = Fintype.card α`, failing `L.w ≤ 4` for `|α| ≥ 5`.
+  -- Per mg-ac13 §5.4 forward action 5, the proper source of an
+  -- `L` with `L.w ≤ 4` is the `Step7.LayeredWidth3` paper-axiom
+  -- interface — KEEP paper-axiomatised; no faithful Lean port
+  -- attempted in this scope.
+  have hLw : L.w ≤ 4 := by sorry
+  exact lem_layered_balanced L h2 hNotChain hW3 hInj hKw hCardw
+    hNonempty hLw hC3
 
-This discharges the `sorry` of `width3_one_third_two_thirds_assembled`
-in the `|α| ≥ 2` branch. -/
 noncomputable def mainTheoremInputsOf.{u}
     {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
     (γ_n γ_d : ℕ) (h2 : 2 ≤ Fintype.card α)
@@ -243,9 +274,8 @@ noncomputable def mainTheoremInputsOf.{u}
     (hC3 : Step8.Case3Witness.{u}) :
     MainTheoremInputs α γ_n γ_d where
   decompReductionOrConclude :=
-    Or.inr (lem_layered_balanced layeredFromBridges h2 hNotChain hW3 hC3)
-  caseC := fun L => lem_layered_balanced L h2 hNotChain hW3 hC3
-  caseR_to_caseC := layeredFromBridges
+    Or.inr (caseC_canonicalLayered h2 hNotChain hW3 hC3)
+  caseC := caseC_canonicalLayered h2 hNotChain hW3 hC3
   step5_choice := true
 
 /-! ### §2 — Main assembly -/
@@ -267,26 +297,29 @@ conclude that `P` has a balanced pair.
 The proof shape mirrors the paper:
 
 1. **Step 5 dichotomy** (`step5_choice`): case (R) or case (C).
-2. **Case (C)**: apply `caseC` directly to the layered piece.
-3. **Case (R)**: convert to case (C) via `caseR_to_caseC`, then
-   apply `caseC`.
+2. **Case (C)**: apply `caseC` directly.
+3. **Case (R)**: same — after mg-234e the case (R) layered
+   conversion is folded into `caseC` itself.
 
-The two regime-`Bool` and layered-decomposition fields of
-`MainTheoremInputs` package the structural choices that the paper
-extracts mechanically from the cascade. -/
+The `step5_choice` Bool field of `MainTheoremInputs` records the
+Step 5 branch, but post-mg-234e both branches dispatch to the same
+`caseC`-packaged conclusion (the cascade-side layered conversion
+is internalised in `caseC`). -/
 theorem mainAssembly
     (γ_n γ_d : ℕ) (_h2 : 2 ≤ Fintype.card α)
     (_hP : HasWidthAtMost α 3) (_hNonChain : ¬ IsChainPoset α)
     (I : MainTheoremInputs α γ_n γ_d) :
     HasBalancedPair α := by
   -- Step 5 dichotomy: case (C) (collapse) or case (R) (richness).
+  -- After mg-234e (caseR_to_caseC folded into caseC), both branches
+  -- collapse to the same conclusion.
   cases I.step5_choice with
   | true =>
     -- Case (R): richness → layered decomposition via Step 6/7.
-    exact I.caseC I.caseR_to_caseC
+    exact I.caseC
   | false =>
     -- Case (C): collapse, layered decomposition directly.
-    exact I.caseC I.caseR_to_caseC
+    exact I.caseC
 
 /-- **Small-`n` regime branch** (`step8.tex:827-874`,
 `rem:small-n`).

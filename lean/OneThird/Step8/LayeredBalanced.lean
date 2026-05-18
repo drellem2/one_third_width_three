@@ -622,13 +622,32 @@ itself: the `Case3Witness` ∀-family covers every width-3 layered
 non-chain β uniformly, so the direct application closes the branch
 with no residual sub-goals. (This short-circuits the F3 recursion
 at the top call; the recursion is materialised inside `hC3` at
-discharge time via F5a-ℓ's enumeration certificate.) -/
+discharge time via F5a-ℓ's enumeration certificate.)
+
+**mg-234e — caller's-L rewire** (Option D-narrow per mg-0cbf §5e;
+spec in `docs/coherence-collapse-case-extraction.md` §5.4). The K ≥ 2
+dispatch now consumes the **caller's** `L`, threading the five
+`Case3Witness` cap-antecedents (`hInj`, `hKw`, `hCardw`,
+`hNonempty`, `hLw`) as explicit hypotheses rather than rebuilding
+a singleton-band `canonicalLayered α` substitute that fails cap 5
+for `|α| ≥ 5`. This closes the prior structured `sorry` (mg-d5a0)
+at this site by surfacing the cap-5 obligation as a typed
+requirement on the caller — the architectural debt now lives at
+the integration point (`mainTheoremInputsOf`, `MainAssembly.lean`),
+where the upstream Step 7 paper-axiomatised interface
+(`Step7.LayeredWidth3`, per mg-ac13 §5.4 forward action 5) is the
+intended source. -/
 theorem lem_layered_balanced.{u}
     {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
     (L : LayeredDecomposition α)
     (h2 : 2 ≤ Fintype.card α)
     (hNotChain : ¬ OneThird.IsChainPoset α)
     (hW3 : HasWidthAtMost α 3)
+    (hInj : Function.Injective L.band)
+    (hKw : L.K ≤ 2 * L.w + 2)
+    (hCardw : Fintype.card α ≤ 6 * L.w + 6)
+    (hNonempty : ∀ k : ℕ, 1 ≤ k → k ≤ L.K → (L.bandSet k).Nonempty)
+    (hLw : L.w ≤ 4)
     (hC3 : Case3Witness.{u}) :
     OneThird.HasBalancedPair α := by
   classical
@@ -684,76 +703,21 @@ theorem lem_layered_balanced.{u}
     -- `bounded_irreducible_balanced` dispatch (see `Case3Witness`
     -- docstring).
     --
-    -- **Candidate A'' adaptation** (`mg-8c72`). The tightened
-    -- `Case3Witness` predicate carries four cap-antecedents
-    -- (Injective band map, `K ≤ 2w + 2`, `|β| ≤ 6w + 6`, non-empty
-    -- bands). The universal claim is uniform over qualifying `LB`,
-    -- so we may discharge the K ≥ 2 branch with a *canonical*
-    -- Szpilrajn-derived layered decomposition `canonicalLayered α`
-    -- (caps proved in-place) rather than the input `L`. This keeps
-    -- `lem_layered_balanced`'s public signature stable while
-    -- propagating the tightening through the operational headline
-    -- path (which threads `Case3Witness_proof` at the headline).
-    --
-    -- **mg-d5a0 cap-5 surfaced gap** (Daniel directive 2026-05-17T15:43Z;
-    -- analysis `docs/onethird-Case3Witness-architecture-analysis.md`,
-    -- mg-e2e9). `Case3Witness.{u}` now carries cap 5 `LB.w ≤ 4`
-    -- (F5a-aligned `W₀ = 4`, matching `InCase3Scope.w_mem`). The
-    -- canonical substitution `L' := canonicalLayered α` has
-    -- `L'.w = Fintype.card α`, which fails cap 5 for any `|α| ≥ 5`.
-    -- This is the *intended* surfaced architectural debt: the
-    -- canonicalLayered shortcut is no longer cap-5-compatible, so
-    -- the K ≥ 2 dispatch must either thread an upstream
-    -- `layeredFromBridges`-derived `L` with bandwidth bound
-    -- (Option A, blocked on faithful in-Lean delivery of Steps 1-7
-    -- `w ≤ w₀(γ)`), descend via F3 strong induction on `|α|`
-    -- (Option B, blocked on mg-b666 K=2 case-2-strict residual), or
-    -- drop the `Case3Witness` hypothesis entirely (Option C, same
-    -- blockers). All three intersect the previously-disclosed
-    -- option-(δ) park; see `docs/why-hC3-is-structural.md` F1/F2/F3.
-    --
-    -- For the present (mg-d5a0) signature-restatement scope, the gap
-    -- is admitted as a structured `sorry` localised to the cap-5
-    -- hypothesis: cap 5 is unprovable on `canonicalLayered α` for
-    -- `|α| ≥ 5`, and rewriting the dispatch to consume a
-    -- cap-5-satisfying `L` is the named follow-on work.
-    let L' : LayeredDecomposition α := canonicalLayered α
-    have hInj : Function.Injective L'.band :=
-      canonicalLayered_band_injective
-    have hKw : L'.K ≤ 2 * L'.w + 2 := by
-      change Fintype.card α ≤ 2 * Fintype.card α + 2
-      omega
-    have hCardw : Fintype.card α ≤ 6 * L'.w + 6 := by
-      change Fintype.card α ≤ 6 * Fintype.card α + 6
-      omega
-    have hNonempty : ∀ k : ℕ, 1 ≤ k → k ≤ L'.K →
-        (L'.bandSet k).Nonempty := by
-      intro k hk1 hkK
-      have hkK' : k ≤ Fintype.card α := by
-        have : L'.K = Fintype.card α := canonicalLayered_K α
-        omega
-      exact canonicalLayered_bandSet_nonempty hk1 hkK'
-    -- **Cap 5 — UNPROVABLE on `canonicalLayered`** (mg-d5a0).
-    -- We need `L'.w ≤ 4`, i.e. `Fintype.card α ≤ 4`, but no such
-    -- bound on `|α|` is in scope here (the hypothesis is
-    -- `2 ≤ |α|`, with no finite upper bound). The dispatch is
-    -- paint-by-numbers vacuous under the pre-cap-5 signature —
-    -- surfacing the gap is the intended outcome. Named downstream
-    -- blockers:
-    --
-    -- * **mg-b666** — K=2 case-2-strict residual cardinality
-    --   obstruction (`docs/path-c-track-1-status-1.md`). Blocks
-    --   Option B (F3 strong-induction with bounded-w leaves).
-    -- * **Steps 1-7 `w₀(γ)` delivery** — the chain potentials
-    --   extractor (`ChainPotentials.lean`) currently produces
-    --   `Lwidth3.bandwidth = |α| + 1`, not the paper's bounded
-    --   `w₀(γ)`. Required for Option A (upstream `L`-threading).
-    have hLBw : L'.w ≤ 4 := by
-      -- `L'.w = Fintype.card α`; no in-scope bound forces it ≤ 4.
-      -- See block-comment above; this `sorry` is the surfaced
-      -- architectural debt named in mg-d5a0 / mg-e2e9 analysis.
-      sorry
-    exact hC3 α L' hInj hKw hCardw hNonempty hLBw hW3 hNotChain' h2
+    -- **mg-234e — caller's-L rewire** (Option D-narrow per mg-0cbf
+    -- §5e; spec in `docs/coherence-collapse-case-extraction.md`
+    -- §5.4). The five `Case3Witness` cap-antecedents
+    -- (`hInj : Function.Injective L.band`, `hKw : L.K ≤ 2 * L.w + 2`,
+    -- `hCardw : |α| ≤ 6 * L.w + 6`, `hNonempty`, `hLw : L.w ≤ 4`)
+    -- are now passed in directly by the caller, so we apply `hC3`
+    -- on the caller's `L` itself rather than rebuilding a
+    -- singleton-band `canonicalLayered α` substitute (which had
+    -- `w = |α|` and failed cap 5 for `|α| ≥ 5`, surfacing the
+    -- mg-d5a0 structured `sorry` that lived here pre-mg-234e).
+    -- The architectural debt now lives at the integration point
+    -- (`mainTheoremInputsOf`, `MainAssembly.lean`), where the
+    -- upstream `Step7.LayeredWidth3` paper-axiomatised interface
+    -- (mg-ac13 §5.4 forward action 5) is the intended source.
+    exact hC3 α L hInj hKw hCardw hNonempty hLw hW3 hNotChain' h2
 
 /-- **Subtype-level balanced-pair helper** (`step8.tex:2571-2667`).
 
@@ -781,6 +745,12 @@ theorem lem_layered_balanced_subtype.{u}
     {x y : α} (hxy : x ∥ y)
     (hxyMid : x ∈ D.Mid ∧ y ∈ D.Mid)
     (hW3 : HasWidthAtMost α 3)
+    (hInj : Function.Injective L.band)
+    (hKw : L.K ≤ 2 * L.w + 2)
+    (hCardw : Fintype.card α ≤ 6 * L.w + 6)
+    (hNonemptyMid : ∀ k : ℕ, 1 ≤ k → k ≤ (L.restrict D.Mid).K →
+      ((L.restrict D.Mid).bandSet k).Nonempty)
+    (hLw : L.w ≤ 4)
     (hC3 : Case3Witness.{u}) :
     OneThird.HasBalancedPair ↥D.Mid := by
   classical
@@ -806,8 +776,27 @@ theorem lem_layered_balanced_subtype.{u}
     · exact hxy.2 h
   have hW3_mid : HasWidthAtMost ↥D.Mid 3 :=
     hasWidthAtMost_subtype hW3 D.Mid
-  -- Apply `lem_layered_balanced` on the restricted decomposition.
-  exact lem_layered_balanced (L.restrict D.Mid) h2_mid hNC_mid hW3_mid hC3
+  -- Caps on `L.restrict D.Mid`. `restrict` preserves `K` (`K_restrict`)
+  -- and `w` (`w_restrict`) and composes `band` with `Subtype.val`,
+  -- so `hInj`, `hKw`, `hLw` lift directly; `hCardw` uses
+  -- `Fintype.card ↥D.Mid ≤ Fintype.card α`; cap 4 (`hNonemptyMid`)
+  -- is supplied by the caller because `restrict` can produce empty
+  -- bands on the sub-poset (unlike `compactify` which removes
+  -- empty bands and re-indexes).
+  have hInjMid : Function.Injective (L.restrict D.Mid).band := by
+    intro a b hab
+    have : L.band a.val = L.band b.val := hab
+    exact Subtype.ext (hInj this)
+  have hKwMid : (L.restrict D.Mid).K ≤ 2 * (L.restrict D.Mid).w + 2 := by
+    rw [LayeredDecomposition.K_restrict, LayeredDecomposition.w_restrict]
+    exact hKw
+  have hCardwMid : Fintype.card ↥D.Mid ≤ 6 * (L.restrict D.Mid).w + 6 := by
+    rw [LayeredDecomposition.w_restrict]
+    exact le_trans (Fintype.card_subtype_le _) hCardw
+  have hLwMid : (L.restrict D.Mid).w ≤ 4 := by
+    rw [LayeredDecomposition.w_restrict]; exact hLw
+  exact lem_layered_balanced (L.restrict D.Mid) h2_mid hNC_mid hW3_mid
+    hInjMid hKwMid hCardwMid hNonemptyMid hLwMid hC3
 
 /-! ### §5 — Chained balanced-pair lift (`lem:chained-lift`) -/
 
@@ -930,9 +919,14 @@ theorem layered_implies_balanced.{u}
     (h2 : 2 ≤ Fintype.card α)
     (hNotChain : ¬ OneThird.IsChainPoset α)
     (hW3 : HasWidthAtMost α 3)
+    (hInj : Function.Injective L.band)
+    (hKw : L.K ≤ 2 * L.w + 2)
+    (hCardw : Fintype.card α ≤ 6 * L.w + 6)
+    (hNonempty : ∀ k : ℕ, 1 ≤ k → k ≤ L.K → (L.bandSet k).Nonempty)
+    (hLw : L.w ≤ 4)
     (hC3 : Case3Witness.{u}) :
     OneThird.HasBalancedPair α :=
-  lem_layered_balanced L h2 hNotChain hW3 hC3
+  lem_layered_balanced L h2 hNotChain hW3 hInj hKw hCardw hNonempty hLw hC3
 
 end Step8
 end OneThird
