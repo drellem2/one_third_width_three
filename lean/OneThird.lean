@@ -54,6 +54,7 @@ import OneThird.Step6.OverlapCounting
 import OneThird.Step6.Assembly
 import OneThird.Step7.SignedThreshold
 import OneThird.Step7.SignConsistency
+import OneThird.Step7.TripleVisibility
 import OneThird.Step7.Cocycle
 import OneThird.Step7.Potential
 import OneThird.Step7.SingleThreshold
