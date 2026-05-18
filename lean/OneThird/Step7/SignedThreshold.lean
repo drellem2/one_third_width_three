@@ -364,5 +364,252 @@ theorem signed_threshold_exists
     have := h 0
     simpa using this
 
+/-! ### §7 — Grounded form: from a Step 2 staircase to signed-threshold
+
+This section closes the *grounding* gap left by §§ 1-6: there the
+input was the abstract collapsed half-plane `affineHalfPlane sigTil
+tauBar D` (the paper's `\hat M_e`), with no link back to the Step 2
+staircase `M_e` that produces it. Here we expose the connection.
+
+The paper's `eq:affine-staircase` writes Step 2's per-fiber staircase
+in the affine form
+`M_e = {(i, j) ∈ D : i + σ̃·j ≤ φ(i - σ̃·j)}`,
+where `σ̃ ∈ {±1}` is the staircase type (Step 3
+`local_sign_exists`) and `φ : ℤ → ℤ` is the transverse-axis
+column-threshold function (Step 2
+`PerFiber.exists_staircase_per_fiber` + Step 3 `IsStaircaseType`).
+The collapsed `\hat M_e := affineHalfPlane σ̃ τ̄ D` replaces `φ`
+by its median `τ̄`, at a symmetric-difference cost bounded by the
+*transverse spread* of `φ` on the transverse range `V_e`.
+
+We formalise three pieces:
+
+* `affineStaircase σTil φ D` — the Step 2 staircase in the paper's
+  affine form (concrete `Finset (ℤ × ℤ)` parametric in `(σ̃, φ, D)`).
+* `affineStaircase_const_eq_affineHalfPlane` — when `φ` is constant
+  with value `tauBar`, `affineStaircase σTil (fun _ => tauBar) D
+  = affineHalfPlane σTil tauBar D` (the `spread(φ) = 0` extreme of
+  the collapse).
+* `affineStaircase_symmDiff_affineHalfPlane_le_spread` — the
+  cleared-denominator symmetric-difference bound: the size of
+  `affineStaircase σTil φ D Δ affineHalfPlane σTil tauBar D` is
+  bounded by `∑_{p ∈ D} 1{φ(p.1 - σ̃·p.2) ≠ tauBar}`, which in turn
+  is bounded by `|D|` (trivially) and, more sharply, by
+  `(transverse spread of φ on D) · |D|` (paper's spread bound).
+
+The downstream consumer (`signed_threshold_grounded`) chains these
+with `signed_threshold_normal_form` to deliver a signed-threshold
+half-plane equality `M_e ≈ signedHalfPlane σ_e τ_e D'` modulo a
+bounded symmetric-difference set, which is the `O(ε_2)` error term
+of `lem:signed-threshold` in the cleared-denominator form.
+
+The grounding is *non-quantitative* in the spread bound: we record
+that the symmetric difference is point-wise *zero* on the
+constant-`φ` (`spread = 0`) sub-region of `D`, and bounded by `|D|`
+in general. The quantitative `spread = O(ε₂ · t_e)` bound — i.e.,
+the cleared-denominator BK-boundary count argument of the paper
+(`step7.tex:171-181`) — is a separate Step 2/Step 7 conductance
+hypothesis recorded as `AffineStaircaseSpreadHyp` below; it is
+*consumed* by the grounded form, not re-derived.
+-/
+
+section Grounded
+
+variable {D : Finset (ℤ × ℤ)}
+
+/-- **Affine-form Step 2 staircase** (`step7.tex:147-150`,
+`eq:affine-staircase`).
+
+The set `{(i, j) ∈ D : i + σ̃·j ≤ φ(i - σ̃·j)}` parametric in
+the staircase type `σTil ∈ Sign`, the per-transverse-line
+column-threshold function `φ : ℤ → ℤ`, and the grid `D`. This is
+the **concrete input shape** for `lem:signed-threshold`: Step 2's
+`PerFiber.per_fiber_staircase` produces, for each rich good fiber
+`e`, an `IsStaircasePlus`-staircase that rewrites into this affine
+form via the change of variables in `eq:affine-staircase`. -/
+def affineStaircase (σTil : Sign) (φ : ℤ → ℤ) (D : Finset (ℤ × ℤ)) :
+    Finset (ℤ × ℤ) :=
+  D.filter (fun p => p.1 + σTil.toInt * p.2 ≤ φ (p.1 - σTil.toInt * p.2))
+
+lemma mem_affineStaircase {σTil : Sign} {φ : ℤ → ℤ}
+    {D : Finset (ℤ × ℤ)} {p : ℤ × ℤ} :
+    p ∈ affineStaircase σTil φ D ↔
+      p ∈ D ∧ p.1 + σTil.toInt * p.2 ≤ φ (p.1 - σTil.toInt * p.2) := by
+  unfold affineStaircase
+  rw [Finset.mem_filter]
+
+lemma affineStaircase_subset (σTil : Sign) (φ : ℤ → ℤ)
+    (D : Finset (ℤ × ℤ)) :
+    affineStaircase σTil φ D ⊆ D := Finset.filter_subset _ _
+
+/-- **Constant-`φ` collapse** (`step7.tex:155-179`).
+
+When the transverse-axis column-threshold function `φ` is the
+constant `tauBar`, the affine staircase equals the affine half-plane
+`affineHalfPlane σTil tauBar D` exactly (no symmetric-difference
+error). This is the `spread(φ) = 0` extreme of the paper's
+median-replacement step. -/
+theorem affineStaircase_const_eq_affineHalfPlane
+    (σTil : Sign) (tauBar : ℤ) (D : Finset (ℤ × ℤ)) :
+    affineStaircase σTil (fun _ => tauBar) D =
+      affineHalfPlane σTil tauBar D := by
+  ext p
+  rw [mem_affineStaircase, mem_affineHalfPlane]
+
+/-- **Pointwise spread predicate**: at the point `p ∈ D`, the
+column-threshold function `φ` deviates from the candidate
+constant `tauBar` enough to flip the half-plane membership of `p`
+between `affineStaircase σTil φ D` and `affineHalfPlane σTil tauBar D`.
+
+Equivalently, `min(φ v, tauBar) < i + σTil·j ≤ max(φ v, tauBar)`
+where `v := i - σTil·j`. The complement (`flipped = false` for `p`)
+records that `p`'s membership is **stable** under the replacement
+`φ ↦ tauBar`. -/
+def isFlippedBy (σTil : Sign) (φ : ℤ → ℤ) (tauBar : ℤ)
+    (p : ℤ × ℤ) : Prop :=
+  let v := p.1 - σTil.toInt * p.2
+  let h := p.1 + σTil.toInt * p.2
+  ¬ ((h ≤ φ v) ↔ (h ≤ tauBar))
+
+instance (σTil : Sign) (φ : ℤ → ℤ) (tauBar : ℤ) (p : ℤ × ℤ) :
+    Decidable (isFlippedBy σTil φ tauBar p) := by
+  unfold isFlippedBy
+  infer_instance
+
+/-- The symmetric-difference set `affineStaircase Δ affineHalfPlane`
+is exactly the set of points of `D` where the column-threshold `φ` at
+the transverse line through `p` *flips* the half-plane membership of
+`p` relative to the candidate constant `tauBar`. -/
+theorem affineStaircase_symmDiff_eq_flipped
+    (σTil : Sign) (φ : ℤ → ℤ) (tauBar : ℤ) (D : Finset (ℤ × ℤ)) :
+    symmDiff (affineStaircase σTil φ D) (affineHalfPlane σTil tauBar D)
+      = D.filter (fun p => isFlippedBy σTil φ tauBar p) := by
+  classical
+  ext p
+  simp only [Finset.mem_symmDiff, mem_affineStaircase,
+    mem_affineHalfPlane, Finset.mem_filter, isFlippedBy]
+  constructor
+  · rintro (⟨⟨hpD, h1⟩, h2⟩ | ⟨⟨hpD, h1⟩, h2⟩)
+    · refine ⟨hpD, ?_⟩
+      intro heq
+      apply h2
+      refine ⟨hpD, ?_⟩
+      rw [heq] at h1; exact h1
+    · refine ⟨hpD, ?_⟩
+      intro heq
+      apply h2
+      refine ⟨hpD, ?_⟩
+      rw [← heq] at h1; exact h1
+  · rintro ⟨hpD, hne⟩
+    by_cases h : p.1 + σTil.toInt * p.2 ≤ φ (p.1 - σTil.toInt * p.2)
+    · -- staircase: yes. half-plane: must be no, since they disagree.
+      left
+      refine ⟨⟨hpD, h⟩, ?_⟩
+      rintro ⟨_, hhp⟩
+      apply hne
+      exact iff_of_true h hhp
+    · -- staircase: no. half-plane: must be yes.
+      right
+      have hhp : p.1 + σTil.toInt * p.2 ≤ tauBar := by
+        by_contra hhpno
+        apply hne
+        exact iff_of_false h hhpno
+      refine ⟨⟨hpD, hhp⟩, ?_⟩
+      rintro ⟨_, hsno⟩; exact h hsno
+
+/-- **Symmetric-difference is bounded by the count of flipped points**
+(`step7.tex:171-181`, cleared-denominator).
+
+The cardinality of `affineStaircase Δ affineHalfPlane` equals the
+number of points of `D` flipped by the replacement `φ ↦ tauBar`. -/
+theorem affineStaircase_symmDiff_card
+    (σTil : Sign) (φ : ℤ → ℤ) (tauBar : ℤ) (D : Finset (ℤ × ℤ)) :
+    (symmDiff (affineStaircase σTil φ D)
+        (affineHalfPlane σTil tauBar D)).card =
+      (D.filter (fun p => isFlippedBy σTil φ tauBar p)).card := by
+  rw [affineStaircase_symmDiff_eq_flipped]
+
+/-- **Trivial cardinality bound**: the symmetric difference is
+bounded above by `|D|` (every flipped point lies in `D`). -/
+theorem affineStaircase_symmDiff_le_D
+    (σTil : Sign) (φ : ℤ → ℤ) (tauBar : ℤ) (D : Finset (ℤ × ℤ)) :
+    (symmDiff (affineStaircase σTil φ D)
+        (affineHalfPlane σTil tauBar D)).card ≤ D.card := by
+  rw [affineStaircase_symmDiff_card]
+  exact Finset.card_le_card (Finset.filter_subset _ _)
+
+/-- **Spread hypothesis** (`step7.tex:171-181`, cleared-denominator
+form of paper's `spread(φ_e) ≤ O(ε₂·t_e)`).
+
+The number of `p ∈ D` whose membership is flipped by replacing
+`φ` with the constant `tauBar` is bounded by `spread_n · |D|` (in
+the cleared-denominator form `1 · #flipped ≤ spread_n · |D|`).
+
+In the paper, `spread_n` plays the role of `O(ε₂)` after the
+`|D| = |fib_e| ≈ t_e²` and `|V_e| = O(t_e)` reductions: the BK-boundary
+argument gives `spread(φ_e) ≤ O(ε₂·t_e)`, and the flipped-point count
+is at most `spread(φ_e) · |V_e| ≤ O(ε₂·t_e²) = O(ε₂)·|D|`.
+
+This is recorded here as an **input hypothesis**; the upstream Step 2
+BK-boundary derivation (paper `step7.tex:158-170`) is the substance
+that *produces* this bound and is the next-level engineering target. -/
+def AffineStaircaseSpreadHyp (σTil : Sign) (φ : ℤ → ℤ) (tauBar : ℤ)
+    (D : Finset (ℤ × ℤ)) (spread_n spread_d : ℕ) : Prop :=
+  spread_d * (D.filter (fun p => isFlippedBy σTil φ tauBar p)).card ≤
+    spread_n * D.card
+
+/-- **Symmetric-difference under the spread hypothesis** —
+cleared-denominator. Combines `affineStaircase_symmDiff_card` with
+the spread hypothesis to deliver
+`spread_d · |M_e Δ \hat M_e| ≤ spread_n · |D|`. -/
+theorem affineStaircase_symmDiff_le_spread
+    (σTil : Sign) (φ : ℤ → ℤ) (tauBar : ℤ) (D : Finset (ℤ × ℤ))
+    (spread_n spread_d : ℕ)
+    (hSpread : AffineStaircaseSpreadHyp σTil φ tauBar D spread_n spread_d) :
+    spread_d *
+        (symmDiff (affineStaircase σTil φ D)
+          (affineHalfPlane σTil tauBar D)).card ≤
+      spread_n * D.card := by
+  rw [affineStaircase_symmDiff_card]
+  exact hSpread
+
+/-- **`lem:signed-threshold` — grounded form** (`step7.tex:124-230`).
+
+Given a Step 2 affine staircase `M_e = affineStaircase σTil φ D`,
+a candidate constant threshold `tauBar` (the paper's `τ̄_e`,
+chosen as the median of `φ` on the transverse range `V_e`), and the
+cleared-denominator spread hypothesis bounding the
+symmetric-difference cost of the median collapse, conclude that there
+exist signed-threshold data `(σ_e, τ_e)` and a (possibly reflected)
+grid `D'` such that, after applying the single-axis reflection
+`reflectJ` in the `σTil = true` case, the **collapsed** staircase
+`affineHalfPlane σTil tauBar D` equals the signed half-plane
+`signedHalfPlane σ_e τ_e D'`. The full staircase `M_e` thus
+agrees with `signedHalfPlane σ_e τ_e D'` modulo a symmetric difference
+of cleared-denominator size `≤ spread_n · |D| / spread_d`.
+
+This is the cleared-denominator form of the paper's
+`1_S(L) = 1{σ_e·(j(L)-i(L)) ≥ τ_e} + O(ε_2)` conclusion of
+`lem:signed-threshold` (`step7.tex:130-134`). -/
+theorem signed_threshold_grounded
+    (σTil : Sign) (φ : ℤ → ℤ) (tauBar : ℤ) (D : Finset (ℤ × ℤ))
+    (spread_n spread_d : ℕ)
+    (hSpread : AffineStaircaseSpreadHyp σTil φ tauBar D spread_n spread_d) :
+    ∃ (sigE : Sign) (tauE : ℤ) (ψ : (ℤ × ℤ) → (ℤ × ℤ))
+      (D' : Finset (ℤ × ℤ)),
+      (affineHalfPlane σTil tauBar D).image ψ =
+        signedHalfPlane sigE tauE D' ∧
+      spread_d *
+          (symmDiff (affineStaircase σTil φ D)
+            (affineHalfPlane σTil tauBar D)).card ≤
+        spread_n * D.card := by
+  obtain ⟨sigE, tauE, ψ, D', hψ⟩ :=
+    signed_threshold_exists σTil tauBar D
+  exact ⟨sigE, tauE, ψ, D', hψ,
+    affineStaircase_symmDiff_le_spread σTil φ tauBar D spread_n spread_d
+      hSpread⟩
+
+end Grounded
+
 end Step7
 end OneThird

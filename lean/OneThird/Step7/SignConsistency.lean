@@ -1005,5 +1005,288 @@ theorem refinedSign_agree_on_overlap
 
 end OverlapAgree
 
+/-! ### §6 — Grounded form: from Step 6 `cor:pointwise` to sign consistency
+
+This section closes the *grounding* gap left by §§ 1-5: there the
+inputs `Ω : Finset LinExt` (coherent set), `s : LinExt → Sign`
+(reference sign), and the cleared-denominator hypotheses
+`DoubleCountHyp`, `OutsideMassHyp` were abstract parameters. Here
+we wire them to Step 6's concrete `cor_pointwise` output
+(`OneThird.Step6.cor_pointwise`, `Step6/Assembly.lean:520`).
+
+The bridge takes Step 6's `R t_n t_d`-bound on the `I²`-weighted
+"bad" set of linear extensions and produces, via `majoritySign` as
+the canonical reference `s` and the complement of the bad set as
+`Ω`, the cleared-denominator `DoubleCountHyp` consumed by
+`total_mismatch_bound` and `flipped_weight_bound`.
+
+The companion `OutsideMassHyp` (which the paper records as a
+separate Step 6 second-moment / visibility input,
+`step7.tex:302-306`) is supplied as a polymorphic hypothesis: in
+the polished pipeline it follows from `cor_pointwise` combined
+with the `lem:triple-visibility` second-moment bound, but at this
+S7-A interface we accept it as an input parameter.
+
+The main grounded theorem is `sign_consistency_grounded`: it
+combines `cor_pointwise` + `OutsideMassHyp` + `total_mismatch_bound`
++ `flipped_weight_bound` into a single statement, with `Ω`
+specialised to `coherentSet` and `s` to `majoritySign`, giving the
+cleared-denominator form of `lem:sign-consistency` conditions (1)
+and (2). -/
+
+section Grounded
+
+variable {Pair LinExt : Type*} [DecidableEq Pair] [DecidableEq LinExt]
+
+/-- **Bad set** for `cor:pointwise` (`step6.tex:587-713`).
+
+The set of linear extensions `L ∈ LP` whose minority count is "too
+large" relative to the visibility: `t_n · I(L) ≤ t_d · m(L)`.
+`cor_pointwise` bounds the `I²`-weighted mass of this set by
+`t_d · R / t_n`. -/
+def badSet (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (σ : Pair → Sign) (LP : Finset LinExt) (t_n t_d : ℕ) :
+    Finset LinExt :=
+  LP.filter (fun L => t_n * OneThird.Step5.visibility richStar Fstar L ≤
+                       t_d * OneThird.Step6.minorityCount richStar Fstar σ L)
+
+/-- **Coherent set**: the complement of `badSet` within `LP`.
+
+`L ∈ coherentSet` iff `L ∈ LP` and `t_d · m(L) < t_n · I(L)`, i.e.,
+the local minority count is strictly less than the `t_n/t_d`-fraction
+of the visibility. This is the cleared-denominator analog of the
+paper's `Ω ⊆ LE(P)` (`step7.tex:243-260`). -/
+def coherentSet (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (σ : Pair → Sign) (LP : Finset LinExt) (t_n t_d : ℕ) :
+    Finset LinExt :=
+  LP \ badSet richStar Fstar σ LP t_n t_d
+
+lemma mem_coherentSet {richStar : Finset Pair}
+    {Fstar : Pair → Finset LinExt} {σ : Pair → Sign}
+    {LP : Finset LinExt} {t_n t_d : ℕ} {L : LinExt} :
+    L ∈ coherentSet richStar Fstar σ LP t_n t_d ↔
+      L ∈ LP ∧
+        t_d * OneThird.Step6.minorityCount richStar Fstar σ L <
+          t_n * OneThird.Step5.visibility richStar Fstar L := by
+  unfold coherentSet badSet
+  rw [Finset.mem_sdiff, Finset.mem_filter]
+  constructor
+  · rintro ⟨hLP, hnot⟩
+    refine ⟨hLP, ?_⟩
+    by_contra hge
+    push_neg at hge
+    exact hnot ⟨hLP, hge⟩
+  · rintro ⟨hLP, hlt⟩
+    refine ⟨hLP, ?_⟩
+    rintro ⟨_, hge⟩
+    exact absurd hge (not_le.mpr hlt)
+
+lemma coherentSet_subset (richStar : Finset Pair)
+    (Fstar : Pair → Finset LinExt) (σ : Pair → Sign)
+    (LP : Finset LinExt) (t_n t_d : ℕ) :
+    coherentSet richStar Fstar σ LP t_n t_d ⊆ LP :=
+  Finset.sdiff_subset
+
+/-- **Coherent-set pointwise bound**: for `L ∈ coherentSet`,
+the cleared-denominator inequality `t_d · m(L) ≤ t_n · I(L)`
+holds (immediate from the strict inequality in `mem_coherentSet`). -/
+lemma coherentSet_minority_bound (richStar : Finset Pair)
+    (Fstar : Pair → Finset LinExt) (σ : Pair → Sign)
+    (LP : Finset LinExt) (t_n t_d : ℕ)
+    {L : LinExt} (hL : L ∈ coherentSet richStar Fstar σ LP t_n t_d) :
+    t_d * OneThird.Step6.minorityCount richStar Fstar σ L ≤
+      t_n * OneThird.Step5.visibility richStar Fstar L := by
+  rw [mem_coherentSet] at hL
+  exact le_of_lt hL.2
+
+/-- **Bridge: `mismatchCount` sum via `majoritySign` equals
+`minorityCount` sum over the coherent set** (`step7.tex:296-300`).
+
+Combines `mismatch_sum_eq_incidence` with
+`majority_disagree_eq_minority` (Step 6) to identify the
+double-counting integrand with the per-`L` minority count. -/
+theorem mismatch_sum_majority_eq_minority_sum
+    (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (Ω : Finset LinExt) (σ : Pair → Sign) :
+    ∑ α ∈ richStar,
+        mismatchCount Fstar Ω σ (OneThird.Step6.majoritySign richStar Fstar σ) α
+      = ∑ L ∈ Ω, OneThird.Step6.minorityCount richStar Fstar σ L := by
+  classical
+  rw [mismatch_sum_eq_incidence]
+  apply Finset.sum_congr rfl
+  intro L _
+  exact OneThird.Step6.majority_disagree_eq_minority richStar Fstar σ L
+
+/-- **Grounded `DoubleCountHyp` from `cor_pointwise`**
+(`step7.tex:289-296`, cleared-denominator).
+
+Given Step 6's pointwise visibility (`Fstar α ⊆ LP` for each
+`α ∈ richStar`) and the definition of `coherentSet` as the
+complement of `cor_pointwise`'s "bad" set, the cleared-denominator
+`DoubleCountHyp` holds with `η_n = t_n`, `η_d = t_d`, and
+`M₀ = ∑_LP visibility(L)`.
+
+Concretely: `t_d · ∑_α mismatchCount(α) ≤ t_n · ∑_LP I(L) = t_n · M₀`
+where the mismatchCount is taken against `coherentSet` (= Ω) and
+`majoritySign` (= s). -/
+theorem doubleCountHyp_grounded
+    (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (LP : Finset LinExt)
+    (σ : Pair → Sign) (t_n t_d : ℕ) :
+    DoubleCountHyp richStar Fstar
+        (coherentSet richStar Fstar σ LP t_n t_d) σ
+        (OneThird.Step6.majoritySign richStar Fstar σ) t_n t_d
+        (∑ L ∈ LP, OneThird.Step5.visibility richStar Fstar L) := by
+  classical
+  -- Unfold the DoubleCountHyp.
+  change t_d * ∑ α ∈ richStar,
+      mismatchCount Fstar
+        (coherentSet richStar Fstar σ LP t_n t_d) σ
+        (OneThird.Step6.majoritySign richStar Fstar σ) α ≤
+    t_n * ∑ L ∈ LP, OneThird.Step5.visibility richStar Fstar L
+  -- Bridge through the minority count.
+  rw [mismatch_sum_majority_eq_minority_sum]
+  -- Now: t_d · ∑_{L ∈ coherentSet} m(L) ≤ t_n · ∑_LP I(L).
+  -- Pointwise on coherentSet: t_d · m(L) ≤ t_n · I(L).
+  have hpt :
+      ∀ L ∈ coherentSet richStar Fstar σ LP t_n t_d,
+        t_d * OneThird.Step6.minorityCount richStar Fstar σ L ≤
+          t_n * OneThird.Step5.visibility richStar Fstar L := by
+    intro L hL
+    exact coherentSet_minority_bound richStar Fstar σ LP t_n t_d hL
+  have hsum :
+      t_d * ∑ L ∈ coherentSet richStar Fstar σ LP t_n t_d,
+            OneThird.Step6.minorityCount richStar Fstar σ L ≤
+        t_n * ∑ L ∈ coherentSet richStar Fstar σ LP t_n t_d,
+            OneThird.Step5.visibility richStar Fstar L := by
+    rw [Finset.mul_sum, Finset.mul_sum]
+    exact Finset.sum_le_sum hpt
+  -- Restrict: coherentSet ⊆ LP.
+  have hrestrict :
+      ∑ L ∈ coherentSet richStar Fstar σ LP t_n t_d,
+          OneThird.Step5.visibility richStar Fstar L ≤
+        ∑ L ∈ LP, OneThird.Step5.visibility richStar Fstar L := by
+    apply Finset.sum_le_sum_of_subset_of_nonneg
+      (coherentSet_subset richStar Fstar σ LP t_n t_d)
+    intros; exact Nat.zero_le _
+  exact hsum.trans (Nat.mul_le_mul_left _ hrestrict)
+
+/-- **Grounded `OutsideMassHyp` interface** (`step7.tex:301-306`).
+
+Cleared-denominator placeholder for the paper's
+"`∫_{Ω^c} |Rich_L| dμ ≤ √δ · M₀`" claim. The paper derives this from
+either (a) Step 6 pointwise control of `Ω`-complement mass, or (b)
+the `lem:triple-visibility` second-moment bound.
+
+At the S7-A grounded interface we *accept* this as an input
+hypothesis bundle, with `η_n_out, η_d_out, M₀_out` the
+cleared-denominator scaling. The downstream consumer of
+`sign_consistency_grounded` discharges it from one of (a)/(b). -/
+def OutsideMassGroundedHyp
+    (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (LP : Finset LinExt) (σ : Pair → Sign) (t_n t_d : ℕ)
+    (η_n_out η_d_out M₀_out : ℕ) : Prop :=
+  OutsideMassHyp richStar Fstar
+    (coherentSet richStar Fstar σ LP t_n t_d) η_n_out η_d_out M₀_out
+
+/-- **`lem:sign-consistency` — grounded form, condition (1)
+(flipped weight)** (`step7.tex:240-256`, `step7.tex:307-314`).
+
+Combines `cor_pointwise` (Step 6) with the cleared-denominator
+double-counting infrastructure of `§§ 1-4` to deliver the
+**flipped-weight bound** of `lem:sign-consistency` condition (1):
+the total `μ`-mass of refined-sign-flipped interfaces is at most
+`4 · (t_n / t_d) · M₀` (paper's "`flipped weight ≤ 4√δ · M₀`",
+`step7.tex:314`).
+
+Inputs:
+
+* Step 6's `cor_pointwise` shape (recorded as the definition of
+  `coherentSet`); the user passes only `LP, σ, t_n, t_d`.
+* The grounded `OutsideMassGroundedHyp` for the `Ω`-complement
+  mass control.
+
+Outputs: the cleared-denominator flipped-weight bound. -/
+theorem sign_consistency_grounded_flipped_weight
+    (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (LP : Finset LinExt) (σ : Pair → Sign) (t_n t_d : ℕ)
+    (hOut : OutsideMassGroundedHyp richStar Fstar LP σ t_n t_d
+        t_n t_d (∑ L ∈ LP, OneThird.Step5.visibility richStar Fstar L)) :
+    t_d * ∑ α ∈ flippedSet richStar Fstar
+            (coherentSet richStar Fstar σ LP t_n t_d) σ
+            (OneThird.Step6.majoritySign richStar Fstar σ),
+        mu Fstar α ≤
+      4 * t_n * (∑ L ∈ LP, OneThird.Step5.visibility richStar Fstar L) :=
+  flipped_weight_bound richStar Fstar
+    (coherentSet richStar Fstar σ LP t_n t_d) σ
+    (OneThird.Step6.majoritySign richStar Fstar σ)
+    t_n t_d (∑ L ∈ LP, OneThird.Step5.visibility richStar Fstar L)
+    (doubleCountHyp_grounded richStar Fstar LP σ t_n t_d)
+    hOut
+
+/-- **`lem:sign-consistency` — grounded form, condition (2)
+(refined-set Markov bound)** (`step7.tex:316-325`).
+
+The mass of non-refined interfaces `Rich⋆ \ E⋆` is bounded by
+`2 · (δ₁_d/δ₁_n) · (t_n/t_d) · M₀` (cleared-denominator).
+
+This is the paper's "`|Rich⋆ \ E⋆| · mass ≤ δ^{1/4} · M₀`"
+(`step7.tex:322`) after the `δ^{1/4} · δ^{1/2} = δ^{3/4}` coefficient
+absorption documented in `notRefined_mass_bound`. -/
+theorem sign_consistency_grounded_notRefined
+    (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (LP : Finset LinExt) (σ : Pair → Sign)
+    (t_n t_d δ₁_n δ₁_d : ℕ)
+    (hδ : δ₁_n ≤ δ₁_d)
+    (hOut : OutsideMassGroundedHyp richStar Fstar LP σ t_n t_d
+        t_n t_d (∑ L ∈ LP, OneThird.Step5.visibility richStar Fstar L)) :
+    δ₁_n * t_d * ∑ α ∈ richStar \ refinedSet richStar Fstar
+            (coherentSet richStar Fstar σ LP t_n t_d) σ
+            (OneThird.Step6.majoritySign richStar Fstar σ) δ₁_n δ₁_d,
+        mu Fstar α ≤
+      2 * δ₁_d * t_n * (∑ L ∈ LP, OneThird.Step5.visibility richStar Fstar L) :=
+  notRefined_mass_bound richStar Fstar
+    (coherentSet richStar Fstar σ LP t_n t_d) σ
+    (OneThird.Step6.majoritySign richStar Fstar σ)
+    t_n t_d δ₁_n δ₁_d (∑ L ∈ LP, OneThird.Step5.visibility richStar Fstar L)
+    (doubleCountHyp_grounded richStar Fstar LP σ t_n t_d)
+    hOut hδ
+
+/-- **`lem:sign-consistency` — grounded form, condition (2)
+(overlap compatibility, union bound)** (`step7.tex:339-357`).
+
+For an active pair `(e, f) ∈ refinedSet × refinedSet`, the
+disagreement on the overlap is bounded by the union bound of the
+individual `refinedDisagreeSet` cardinalities. This specialises
+`overlap_agree_of_active_pair` to the grounded `coherentSet` /
+`majoritySign` choice. -/
+theorem sign_consistency_grounded_overlap_agree
+    (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (LP : Finset LinExt) (σ : Pair → Sign) (t_n t_d : ℕ) (e f : Pair) :
+    ((Fstar e ∩ Fstar f).filter (fun L =>
+          refinedSign Fstar
+              (coherentSet richStar Fstar σ LP t_n t_d) σ
+              (OneThird.Step6.majoritySign richStar Fstar σ) e ≠
+            OneThird.Step6.majoritySign richStar Fstar σ L ∨
+          refinedSign Fstar
+              (coherentSet richStar Fstar σ LP t_n t_d) σ
+              (OneThird.Step6.majoritySign richStar Fstar σ) f ≠
+            OneThird.Step6.majoritySign richStar Fstar σ L)).card ≤
+      ((mu Fstar e - dominantCount Fstar
+          (coherentSet richStar Fstar σ LP t_n t_d) σ
+          (OneThird.Step6.majoritySign richStar Fstar σ) e) +
+        outsideCount Fstar
+          (coherentSet richStar Fstar σ LP t_n t_d) e) +
+      ((mu Fstar f - dominantCount Fstar
+          (coherentSet richStar Fstar σ LP t_n t_d) σ
+          (OneThird.Step6.majoritySign richStar Fstar σ) f) +
+        outsideCount Fstar
+          (coherentSet richStar Fstar σ LP t_n t_d) f) :=
+  overlap_agree_of_active_pair Fstar
+    (coherentSet richStar Fstar σ LP t_n t_d) σ
+    (OneThird.Step6.majoritySign richStar Fstar σ) e f
+
+end Grounded
+
 end Step7
 end OneThird
