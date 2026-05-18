@@ -380,6 +380,18 @@ named symbol or `ls` the path. Example checks before action:
   `Mathlib/LinearExtension/Subtype.lean:1065/1152/1227`.
 * Compactify (cap propagation): `LayeredDecomposition/Compactify.lean`.
 * Axiom inventory: `lean/AXIOMS.md`.
+* S7 grounded forms (S7-pilot scaffolding, NOT on headline path
+  pre-S7-F): `Step7/SignedThreshold.lean` `§7 Grounded`,
+  `Step7/SignConsistency.lean` `§6 Grounded`,
+  `Step7/TripleVisibility.lean` `§4 Grounded` (mg-4584, mg-9331);
+  `Step7/Cocycle.lean` `§6 Grounded` (`cocycle_grounded`,
+  `cocycle_grounded_good_weight_lb`),
+  `Step7/Potential.lean` `§7 Grounded` (`bfsSumPot`,
+  `bfsPotentialData`, `potential_grounded`,
+  `lem_potential_grounded_bundled`) (mg-1069). All produce
+  cleared-denominator `(1 − o(1))`-fraction bounds taking
+  upstream Step 2 / Step 5 / Step 6 Lean outputs as concrete
+  input.
 
 **Paper.** `main.tex` §1.4 road map; `step7.tex:1175-1193`
 (`prop:72`); `step8.tex:2404-2418` (`lem:ordinal-factorisation`);
@@ -419,6 +431,21 @@ named symbol or `ls` the path. Example checks before action:
   cap-light extension: non-singleton-band enumeration per
   `(K, w, band-sizes)` cell; structural argument for TIER B
   (`nfree > 25`) cells.
+* `docs/state-S7-A-G1-G2-Session1.md` (mg-4584) — S7 pilot first
+  execution sub-arc; `signed_threshold_grounded` (G1) and grounded
+  sign-consistency (G2) wired to Step 2 staircase + Step 6
+  `cor_pointwise`.
+* `docs/state-S7-B-G3-Session1.md` (mg-9331) — S7 pilot second
+  execution sub-arc; `triple_visibility_grounded` (G3) wired to
+  Step 5 second-moment + Jensen-for-ℕ.
+* `docs/state-S7-C-G4-G5-Session1.md` (mg-1069) — S7 pilot third
+  execution sub-arc; `cocycle_grounded` (G4) +
+  `potential_grounded` / `lem_potential_grounded_bundled` (G5)
+  wired to S7-A signed-threshold + S7-B triple-visibility outputs.
+  `bfsSumPot` BFS-spanning-tree potential construction is concrete
+  (`pot z := ∑ e ∈ path z, signedWeight e`).
+* `docs/OneThird-Steps-1-7-Lean-port-scoping.md` (mg-6ab8) — Steps
+  1-7 multi-month Lean-port scoping; Phase E option B selected.
 * `docs/why-hC3-is-structural.md` — F1/F2/F3 obstructions; option-(δ)
   park rationale.
 

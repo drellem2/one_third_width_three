@@ -4,6 +4,7 @@ Released under the MIT License.
 -/
 import OneThird.Step7.SignedThreshold
 import OneThird.Step7.SignConsistency
+import OneThird.Step7.TripleVisibility
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Finset.Image
@@ -755,6 +756,260 @@ theorem good_triple_weight_lb
     hPush hSumBud htMax hKform
 
 end Summed
+
+/-! ### §6 — Grounded form: from triple-visibility + signed-threshold
+to cocycle bad-weight
+
+This section instantiates the abstract `TripleData` bundle of §1 with
+the concrete combinatorial data delivered by:
+
+* **S7-B (`triple_visibility_grounded`).** The triple-overlap mass
+  `w_T = |F*_α ∩ F*_β ∩ F*_γ|` and the total-mass lower bound
+  `c³ · |LP| ≤ ∑_T w_T` (part (a)+(b) of `lem:triple-visibility`).
+* **S7-A (`signed_threshold_grounded`).** The per-fiber signed-
+  threshold `τ_e` and the symmetric-difference spread budget that
+  governs the Step-2 budget hypothesis `BudgetHyp` in cleared-
+  denominator form.
+
+The geometric content (the `ℤ²`-action pushforward lower bound of
+`step7.tex:eq:pushforward-lb`) remains an abstract input
+(`PushforwardHyp`); the paper derives it from Step 1's
+`cor:triple-overlap` cube structure.  This is the same compositional
+shape as the S7-B grounded form, which keeps the abstract
+`Finset.pow_sum_le_card_mul_sum_pow` (Jensen) as its analytic
+kernel and grounds only the upstream connection.
+
+The grounded conclusion delivers paper `lem:cocycle`'s
+`(1 - o(1))`-fraction statement in the cleared-denominator form
+
+  `b_d · c_w · ⌊K₀/2⌋² · ∑_{bad T} w_T ≤ c_d · tMax · b_n · M³`
+
+over triples in `richStar³ ⊆ Pair × Pair × Pair`, with
+`tripleFib T := tripleOverlap Fstar T.1 T.2.1 T.2.2` and
+`weight T := tripleOverlapMass Fstar T.1 T.2.1 T.2.2`.
+
+Downstream (`Potential.lean` §7 grounded), the bad-triple weight
+bound is consumed by the Markov-style bad-edge bound
+(`step7.tex:687-693`). -/
+
+section Grounded
+
+variable {Pair LinExt : Type*} [DecidableEq Pair] [DecidableEq LinExt]
+
+/-- **Grounded `TripleData` from triple-overlap visibility data**
+(`step7.tex:1387-1389` + `step7.tex:498-503`).
+
+Wires the abstract `TripleData` bundle to the concrete S7-B
+triple-overlap sets `tripleOverlap Fstar α β γ` and masses
+`tripleOverlapMass Fstar α β γ`, leaving the cocycle-specific
+parameters (`uCoord`, `vCoord`, `cocycleDefect`, `fiberBound`) as
+abstract inputs supplied by the upstream Step-1 + S7-A
+signed-threshold layer.
+
+Concretely:
+
+* `tripleFib T = F*_α ∩ F*_β ∩ F*_γ` for `T = (α, β, γ)`.
+* `weight T = |F*_α ∩ F*_β ∩ F*_γ| = w_T` of `step7.tex:1387`.
+* `uCoord T, vCoord T : LinExt → ℤ` from S7-A signed-threshold
+  shifted coordinates `d_{xy} - τ_{xy}` (`step7.tex:498`).
+* `cocycleDefect T = K_T = τ_{xz} - τ_{xy} - τ_{yz} - Δ₀` of
+  `step7.tex:503`.
+* `fiberBound T = t²`-style upper bound from Step 1
+  (`step7.tex:598-599`).
+
+The function is defined polymorphically over an ambient
+`Triple := Pair × Pair × Pair` so it composes cleanly with the
+`tripleOverlap` definitions of `TripleVisibility.lean`. -/
+def tripleDataOfVisibility
+    (Fstar : Pair → Finset LinExt)
+    (uC vC : (Pair × Pair × Pair) → LinExt → ℤ)
+    (cD : (Pair × Pair × Pair) → ℤ)
+    (fB : (Pair × Pair × Pair) → ℕ) :
+    TripleData (Pair × Pair × Pair) LinExt where
+  tripleFib T := tripleOverlap Fstar T.1 T.2.1 T.2.2
+  uCoord := uC
+  vCoord := vC
+  cocycleDefect := cD
+  weight T := tripleOverlapMass Fstar T.1 T.2.1 T.2.2
+  fiberBound := fB
+
+@[simp] lemma tripleDataOfVisibility_tripleFib
+    (Fstar : Pair → Finset LinExt)
+    (uC vC : (Pair × Pair × Pair) → LinExt → ℤ)
+    (cD : (Pair × Pair × Pair) → ℤ)
+    (fB : (Pair × Pair × Pair) → ℕ)
+    (T : Pair × Pair × Pair) :
+    (tripleDataOfVisibility Fstar uC vC cD fB).tripleFib T =
+      tripleOverlap Fstar T.1 T.2.1 T.2.2 := rfl
+
+@[simp] lemma tripleDataOfVisibility_weight
+    (Fstar : Pair → Finset LinExt)
+    (uC vC : (Pair × Pair × Pair) → LinExt → ℤ)
+    (cD : (Pair × Pair × Pair) → ℤ)
+    (fB : (Pair × Pair × Pair) → ℕ)
+    (T : Pair × Pair × Pair) :
+    (tripleDataOfVisibility Fstar uC vC cD fB).weight T =
+      tripleOverlapMass Fstar T.1 T.2.1 T.2.2 := rfl
+
+/-- **Active-triple weight lower bound, grounded form**
+(`step7.tex:1387-1395` + `step7.tex:404-408`).
+
+The total weight over the full `richStar³`-product of triples is
+bounded below by the S7-B `triple_overlap_mass_lower_bound`:
+
+  `c³ · |LP| ≤ ∑_{T ∈ richStar³} weight T`.
+
+This is the input that the abstract `ActiveTripleBound` consumes in
+the cleared form `η_n · totalMass ≤ η_d · weight T` (instantiated
+with `η_n = c³`, `η_d = (number of triples) = |richStar|³`,
+`totalMass = |LP|` per the paper's `|LP|` reference).
+
+The proof composes the `tripleDataOfVisibility` weight reduction
+with `triple_overlap_mass_lower_bound`. -/
+theorem tripleDataOfVisibility_total_weight_lb
+    (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (LP : Finset LinExt) (c : ℕ)
+    (uC vC : (Pair × Pair × Pair) → LinExt → ℤ)
+    (cD : (Pair × Pair × Pair) → ℤ)
+    (fB : (Pair × Pair × Pair) → ℕ)
+    (hsub : ∀ α ∈ richStar, Fstar α ⊆ LP)
+    (hfirst : c * LP.card ≤ ∑ α ∈ richStar, (Fstar α).card) :
+    c ^ 3 * LP.card ≤
+      ∑ T ∈ richStar ×ˢ richStar ×ˢ richStar,
+        (tripleDataOfVisibility Fstar uC vC cD fB).weight T := by
+  -- Rewrite the goal to use `tripleOverlapMass` directly.
+  have hrw : ∀ T ∈ richStar ×ˢ richStar ×ˢ richStar,
+      (tripleDataOfVisibility Fstar uC vC cD fB).weight T =
+        tripleOverlapMass Fstar T.1 T.2.1 T.2.2 := by
+    intro T _; rfl
+  rw [Finset.sum_congr rfl hrw]
+  exact triple_overlap_mass_lower_bound richStar Fstar LP c hsub hfirst
+
+/-- **`lem:cocycle` — grounded form** (`step7.tex:391` + `step7.tex:626-639`).
+
+Bundled cleared-denominator form of paper `lem:cocycle`'s
+`(1 - o(1))`-fraction statement, threaded through the S7-A
+signed-threshold + S7-B triple-visibility outputs.
+
+**Input axes.**
+
+1. **Triple-overlap data.** A subset of `Pair × Pair × Pair` parametrising
+   active triples (typically `richStar³`).  Each `T = (α, β, γ)` is
+   bundled into `tripleDataOfVisibility` via `tripleOverlap` /
+   `tripleOverlapMass`.
+
+2. **S7-B richness input** (`hsub`, `hfirst`): supplied by
+   `triple_visibility_grounded` part (a)/(b).  Yields the total
+   triple-mass lower bound `c³ · |LP| ≤ ∑_T weight T` via
+   `tripleDataOfVisibility_total_weight_lb`.
+
+3. **S7-A signed-threshold data** (`uC`, `vC`, `cD`, `fB`): per-
+   triple shifted coordinates `u_T, v_T : LinExt → ℤ`, cocycle
+   defect `K_T : ℤ`, and fiber bound `fB T : ℕ`.  Supplied by
+   `signed_threshold_grounded` applied to each pairwise fiber.
+
+4. **Step-1 pushforward** (`hPush`): the cleared-denominator
+   `ℤ²`-action lower bound on coordinate fibers
+   (`step7.tex:eq:pushforward-lb`).  Abstract input; derived
+   upstream from `cor:triple-overlap`.
+
+5. **Step-2 budget** (`hSumBud`, `htMax`): the cleared-denominator
+   summed symmetric-difference bound from `lem:signed-threshold`
+   (`step7.tex:eq:three-rules`).
+
+6. **`K-form bound`** (`hKform`): bad triples have cocycle defect
+   `≥ K₀` packaged as a natural number; absorbs the symmetry
+   `K ↔ -K` of `step7.tex:515-516`.
+
+**Output.**
+
+The bad-triple weight bound
+
+  `b_d · c_w · ⌊K₀/2⌋² · ∑_{bad T} w_T ≤ c_d · tMax · b_n · M³`,
+
+which under any rich-regime parameter choice
+`(b_n / b_d) ≈ ε_2`, `(c_d · tMax / c_w) ≈ C t²`, `K₀² ≫ ε_2 · t²`
+gives `∑_{bad T} w_T = o(M³)`.  By the active-triple-mass lower
+bound `(c³ / |richStar|³) · |LP| ≤ weight T` (consequence of
+`tripleDataOfVisibility_total_weight_lb`), this in turn yields the
+paper-faithful `(1 - o(1))`-fraction conclusion. -/
+theorem cocycle_grounded
+    (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (LP : Finset LinExt) (c : ℕ)
+    (uC vC : (Pair × Pair × Pair) → LinExt → ℤ)
+    (cD : (Pair × Pair × Pair) → ℤ)
+    (fB : (Pair × Pair × Pair) → ℕ)
+    (K₀ : ℕ) (hK₀ : 0 < K₀)
+    (c_w c_d b_n b_d tMax M3 : ℕ)
+    (hsub : ∀ α ∈ richStar, Fstar α ⊆ LP)
+    (hfirst : c * LP.card ≤ ∑ α ∈ richStar, (Fstar α).card)
+    (hPush : PushforwardHyp (tripleDataOfVisibility Fstar uC vC cD fB)
+      c_w c_d)
+    (hSumBud : SummedBudgetHyp (tripleDataOfVisibility Fstar uC vC cD fB)
+      (richStar ×ˢ richStar ×ˢ richStar) b_n b_d M3)
+    (htMax : ∀ T ∈ richStar ×ˢ richStar ×ˢ richStar,
+      (tripleDataOfVisibility Fstar uC vC cD fB).fiberBound T ≤ tMax)
+    (hKform : ∀ T ∈ badTriples (tripleDataOfVisibility Fstar uC vC cD fB)
+        (richStar ×ˢ richStar ×ˢ richStar) K₀,
+      ∃ K : ℕ, K₀ ≤ K ∧
+        (tripleDataOfVisibility Fstar uC vC cD fB).cocycleDefect T = (K : ℤ)) :
+    -- (1) Total triple weight LB from S7-B Richness:
+    (c ^ 3 * LP.card ≤
+      ∑ T ∈ richStar ×ˢ richStar ×ˢ richStar,
+        (tripleDataOfVisibility Fstar uC vC cD fB).weight T) ∧
+    -- (2) Bad-triple weight bound from §5 `lem_cocycle`:
+    (b_d * (c_w * ((K₀ / 2) * (K₀ / 2)) *
+        ∑ T ∈ badTriples (tripleDataOfVisibility Fstar uC vC cD fB)
+            (richStar ×ˢ richStar ×ˢ richStar) K₀,
+          (tripleDataOfVisibility Fstar uC vC cD fB).weight T) ≤
+      (c_d * tMax) * (b_n * M3)) := by
+  refine ⟨?_, ?_⟩
+  · exact tripleDataOfVisibility_total_weight_lb richStar Fstar LP c
+      uC vC cD fB hsub hfirst
+  · exact lem_cocycle (tripleDataOfVisibility Fstar uC vC cD fB)
+      (richStar ×ˢ richStar ×ˢ richStar) K₀ hK₀
+      c_w c_d b_n b_d tMax M3 hPush hSumBud htMax hKform
+
+/-- **`lem:cocycle` good-triple weight LB — grounded form**
+(`step7.tex:641-643`, contrapositive of `cocycle_grounded`).
+
+The good-triple weight (cocycle defect `< K₀`) is at least
+`totalW - ∑_{bad} weight T`, where `totalW = ∑_T weight T` is the
+total active-triple mass.  Under the same hypotheses as
+`cocycle_grounded` plus a total-weight identification, the good
+fraction is `(1 - o(1))` once `(b_n / b_d) · (c_d · tMax / c_w) /
+K₀² ≪ 1` and the active-triple `totalW ≥ Ω(M³)`. -/
+theorem cocycle_grounded_good_weight_lb
+    (richStar : Finset Pair) (Fstar : Pair → Finset LinExt)
+    (uC vC : (Pair × Pair × Pair) → LinExt → ℤ)
+    (cD : (Pair × Pair × Pair) → ℤ)
+    (fB : (Pair × Pair × Pair) → ℕ)
+    (K₀ : ℕ) (hK₀ : 0 < K₀)
+    (c_w c_d b_n b_d tMax M3 totalW : ℕ)
+    (hPush : PushforwardHyp (tripleDataOfVisibility Fstar uC vC cD fB)
+      c_w c_d)
+    (hSumBud : SummedBudgetHyp (tripleDataOfVisibility Fstar uC vC cD fB)
+      (richStar ×ˢ richStar ×ˢ richStar) b_n b_d M3)
+    (htMax : ∀ T ∈ richStar ×ˢ richStar ×ˢ richStar,
+      (tripleDataOfVisibility Fstar uC vC cD fB).fiberBound T ≤ tMax)
+    (hKform : ∀ T ∈ badTriples (tripleDataOfVisibility Fstar uC vC cD fB)
+        (richStar ×ˢ richStar ×ˢ richStar) K₀,
+      ∃ K : ℕ, K₀ ≤ K ∧
+        (tripleDataOfVisibility Fstar uC vC cD fB).cocycleDefect T = (K : ℤ))
+    (htotal : ∑ T ∈ richStar ×ˢ richStar ×ˢ richStar,
+        (tripleDataOfVisibility Fstar uC vC cD fB).weight T = totalW) :
+    b_d * (c_w * ((K₀ / 2) * (K₀ / 2)) *
+        (totalW -
+          ∑ T ∈ (richStar ×ˢ richStar ×ˢ richStar) \
+              badTriples (tripleDataOfVisibility Fstar uC vC cD fB)
+                (richStar ×ˢ richStar ×ˢ richStar) K₀,
+            (tripleDataOfVisibility Fstar uC vC cD fB).weight T)) ≤
+      (c_d * tMax) * (b_n * M3) :=
+  good_triple_weight_lb (tripleDataOfVisibility Fstar uC vC cD fB)
+    (richStar ×ˢ richStar ×ˢ richStar) K₀ hK₀
+    c_w c_d b_n b_d tMax M3 totalW hPush hSumBud htMax hKform htotal
+
+end Grounded
 
 end Step7
 end OneThird
