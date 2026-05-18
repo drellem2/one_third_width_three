@@ -386,11 +386,20 @@ two precisely-typed residual obligations, one of which is closed by
 external enumeration and one of which remains conditional on
 Steps~1--7:
 \begin{enumerate}\setlength{\itemsep}{2pt}
-  \item \emph{Small-$n$ slice ($|P| \le 10$):} the existence of a
-  balanced pair in every width-$3$ non-chain finite poset is
-  verified by exhaustive Python enumeration
+  \item \emph{Small-$n$ slice ($|P| \le 10$):} the paper-level proof
+  is unconditional via the strong induction in
+  Lemma~\ref{lem:layered-balanced} (Section~\ref{sec:g4-balanced-pair}).
+  The in-tree Lean dispatch verifies the singleton-band sub-slice
+  ($P$ admitting a width-$\le 4$ singleton-band layered
+  decomposition) by exhaustive Python enumeration
   (\texttt{lean/scripts/enum\_cap5.py}; certificate
-  \texttt{enum\_cap5\_certificate.json}).
+  \texttt{enum\_cap5\_certificate.json}). Coverage of the remaining
+  width-$3$ non-chain $|P| \le 10$ configurations (e.g.\ reducible
+  posets like $A \oplus B$ with $A,B$ width-$3$ antichains, whose
+  minimum singleton-band bandwidth exceeds $4$) requires either an
+  extended enumeration or a Lean port of
+  Lemma~\ref{lem:layered-balanced} that drops the singleton-band
+  restriction (companion work item \texttt{mg-2970}).
   \item \emph{Large-$n$ slice ($|P| \ge 11$):} the in-tree discharge
   is conditional on a faithful Lean delivery of the Step~7
   bandwidth bound --- Proposition~\ref{prop:72} of

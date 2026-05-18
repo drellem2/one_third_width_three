@@ -142,15 +142,26 @@ their `_h*` are decorative); 3 V (incl. cap-5 sorry call site); 1 T
 (mg-4d7b enumeration, `lem_cut`/`windowLocalization`/`lem_layered_reduction`,
 bare F3 framework).
 
-**The headline reduces to one residual.** Per mg-5c32, the in-tree
-state factors as `LayeredResidual_narrow ∧ LayeredResidual_broad`
-(see §3 pitfall #2 for the precise statement and the trap to avoid):
-* **R-narrow** (`2 ≤ |α| ≤ 10`): discharged by mg-4d7b enumeration
-  (Python certificate; partial Lean port at `Cap5Singletons.lean`).
-  Closing R-narrow drops the `case3Witness_hasBalancedPair_outOfScope`
-  axiom on the `|α| ≤ 10` slice.
-* **R-broad** (`|α| ≥ 11`): discharged by faithful Lean delivery of
-  Steps 1–7's `w₀(γ) ≤ 4` (paper `prop:72`).
+**The headline reduces to two residuals.** Per mg-2970 (correcting
+mg-5c32 — see §3 pitfall #2), the in-tree state factors as
+`R1_paper_faithful ∧ R2_exists_bounded_bandwidth`:
+* **R1** (paper-faithful uncapped `lem:layered-balanced`): Lean port
+  of `step8.tex:3199-3253`, taking `(α, L)` with only `L.w ≤ 4` (no
+  cap 1, no cap 2, no cap 3 — drops the call-shape caps of the
+  existing `Case3Witness_proof.{u}`). Discharges
+  `HasBalancedPair α` via the paper's strong induction on `|α|`. The
+  current `Case3Witness_proof.{u}` is a *restriction* of R1 covering
+  only the cap-1-cap-5 sub-slice (`|α| ≤ 10` AND admits singleton-band
+  bandwidth-`≤ 4` L).
+* **R2** (existence of bandwidth-`≤ 4` layered decomposition): for
+  every width-3 non-chain finite α, `∃ L, L.w ≤ 4`. Discharged for
+  `|α| ≤ 10` by direct construction (iterated ordinal-sum
+  decomposition); for `|α| ≥ 11` by paper's `prop:72` + Steps 1-7
+  (`w₀(γ) ≤ 4`).
+* See `docs/width3-residual-statement.md` (mg-2970) for the full
+  satisfiability proofs, Lean signatures, and a worked example of
+  why the cardinality split lives inside R2's discharge (not inside
+  the residual statement).
 
 ---
 
@@ -189,36 +200,68 @@ signature.
 `Case3Witness.{u}` (`LayeredBalanced.lean:461`) carries five caps
 (see §1). They are an **API surface** of the universal statement
 `Case3Witness_proof` discharges, **not** the right shape for the
-residual the headline reduces to. (mg-5c32 first-drafted
-`LayeredResidual` with all five caps and produced an over-constrained
-statement that is *unsatisfiable for `|α| ≥ 11`*: under caps 1+4 bands
-are singletons (`K=|β|`); caps 2+5 force `|β| ≤ 10`.)
+residual the headline reduces to.
 
-The right residual is **two-part** because the caps interact with
-`|α|`:
+**Two historical over-claims to avoid** (mg-5c32 hit both; mg-2970
+diagnosed and corrected — see `docs/width3-residual-statement.md`
+§1):
+
+1. **Stapling caps 1+4+2+5 together gives an unsatisfiable residual
+   at `|α| ≥ 11`.** Cap 1 (`Function.Injective L.band`) + cap 4
+   (nonempty bands) ⇒ singleton bands ⇒ `|α| = L.K`. Caps 2+5 ⇒
+   `L.K ≤ 10`. Together: no L satisfying all five caps exists at
+   `|α| ≥ 11`. mg-5c32's `LayeredResidual` (§0 single-part) AND
+   `LayeredResidual_broad` (§3c two-part) both made this error.
+
+2. **Claiming mg-4d7b enumeration discharges the `|α| ≤ 10` slice
+   over-claims mg-4d7b's scope.** mg-4d7b enumerates the
+   **cap-1-cap-5 sub-slice** only (β admitting a singleton-band L
+   with bandwidth `≤ 4`). For width-3 non-chain α with `|α| ≤ 10`
+   and *no* such L (canonical counterexample: `α = 3-antichain ⊕
+   3-antichain`, `|α| = 6`, minimum singleton-band bandwidth = 5),
+   mg-4d7b's enumeration does not cover α even though α has a
+   balanced pair (here `(a₁, a₂)` are symmetric, `Pr = 1/2`). The
+   `|α| ≤ 10` slice requires a *strict superset* of mg-4d7b's
+   enumeration OR a paper-faithful uncapped `lem:layered-balanced`.
+
+The **right residual is R1 + R2** (mg-2970 form):
 
 ```lean
-def LayeredResidual_narrow : Prop :=
-  ∀ α [PartialOrder α] [Fintype α] [DecidableEq α],
-    HasWidthAtMost α 3 → ¬ IsChainPoset α →
-    2 ≤ Fintype.card α → Fintype.card α ≤ 10 →
-    HasBalancedPair α       -- discharged by mg-4d7b enumeration
+def R1_paper_faithful.{u} : Prop :=
+  ∀ (α : Type u) [PartialOrder α] [Fintype α] [DecidableEq α]
+    (L : Step8.LayeredDecomposition α),
+    HasWidthAtMost α 3 → ¬ IsChainPoset α → 2 ≤ Fintype.card α →
+    L.w ≤ 4 →
+    HasBalancedPair α
+    -- paper proof: step8.tex:3199-3253 strong induction on |α|
+    -- (Case A K=1 trivial, Case B reducible IH-recurse, Case C
+    -- irreducible window-localize → prop:in-situ-balanced).
+    -- The current Case3Witness_proof.{u} is a restricted version
+    -- (additionally requires caps 1, 2, 3, 4); R1 drops those.
 
-def LayeredResidual_broad : Prop :=
-  ∀ α [PartialOrder α] [Fintype α] [DecidableEq α],
-    HasWidthAtMost α 3 → ¬ IsChainPoset α → 11 ≤ Fintype.card α →
-    ∃ L : Step8.LayeredDecomposition α,
-      Function.Injective L.band ∧
-      L.K ≤ 2 * L.w + 2 ∧
-      Fintype.card α ≤ 6 * L.w + 6 ∧
-      (∀ k, 1 ≤ k → k ≤ L.K → (L.bandSet k).Nonempty) ∧
-      L.w ≤ 4           -- discharged by faithful Steps 1–7 w₀(γ) ≤ 4
+def R2_exists_bounded_bandwidth.{u} : Prop :=
+  ∀ (α : Type u) [PartialOrder α] [Fintype α] [DecidableEq α],
+    HasWidthAtMost α 3 → ¬ IsChainPoset α → 2 ≤ Fintype.card α →
+    ∃ (L : Step8.LayeredDecomposition α), L.w ≤ 4
+    -- discharged by:
+    --   |α| ≤ 10  : direct construction (Mirsky / iterated ordinal-sum)
+    --   |α| ≥ 11  : paper's prop:72 + Steps 1-7 (currently sham)
 ```
 
-**Before stating "the residual is X", check whether X is satisfiable
-at the headline's full `|α|` range under all the caps you wrote
-down.** If it isn't, you've stapled API hypotheses to a residual that
-should drop some of them and split on cardinality.
+The cardinality split lives inside R2's discharge, *not* inside the
+residual statement. Caps 1, 2, 3, 4 from `Case3Witness.{u}` are
+**dropped** because they are call-shape artefacts of the cap-1-aligned
+F5a Bool certificate encoding, not paper-side requirements of the
+bandwidth-bounded-to-balanced-pair derivation.
+
+**Before stating "the residual is X", do both checks:**
+1. **Satisfiability.** Is X satisfiable at the headline's full `|α|`
+   range under all the caps you wrote down? If not, you've stapled
+   API hypotheses to a residual that should drop some.
+2. **Discharge-coverage.** If you cite an existing artefact (mg-4d7b,
+   `case3_certificate`, …) as the discharge, verify that artefact's
+   actual scope matches your residual's stated scope. mg-4d7b
+   ≠ "all width-3 non-chain α with `|α| ≤ 10`".
 
 ### Pitfall #3 — `canonicalLayered α` substitution makes layered hypotheses fiction
 

@@ -552,11 +552,23 @@ slices that the paper's single conditional statement bundles:
 \begin{enumerate}[nosep, label=(\roman*)]
   \item \emph{Small-$n$ unconditional slice $(|P| \le 10)$.} For
   every width-$3$ finite poset on at most $10$ elements that is not
-  a chain, $P$ has a balanced pair. This slice is verified by the
-  exhaustive Python enumeration described in
-  Remark~\ref{rem:residual-base} below
-  (\texttt{lean/scripts/enum\_cap5.py}). It does not depend on
-  Steps~1--7 or on Hypothesis~\ref{hyp:arith}.
+  a chain, $P$ has a balanced pair. \emph{Paper-level:}
+  unconditional via the strong induction in
+  Lemma~\ref{lem:layered-balanced} below
+  (Section~\ref{sec:g4-balanced-pair}); does not depend on
+  Steps~1--7 or on Hypothesis~\ref{hyp:arith}. \emph{In-tree Lean
+  dispatch:} verifies the singleton-band cap-$w \le 4$ sub-slice
+  ($P$ admitting a width-$\le 4$ singleton-band layered
+  decomposition) by exhaustive Python enumeration
+  (\texttt{lean/scripts/enum\_cap5.py}; certificate
+  \texttt{enum\_cap5\_certificate.json}; see
+  Remark~\ref{rem:residual-base}). Coverage of the remaining
+  configurations (e.g.\ reducible $|P| = 6$ posets like $A \oplus B$
+  with $A,B$ width-$3$ antichains, whose minimum singleton-band
+  bandwidth equals $5$) requires either an extended enumeration or
+  a Lean port of Lemma~\ref{lem:layered-balanced} that drops the
+  singleton-band restriction (companion work item
+  \texttt{mg-2970}).
   \item \emph{Large-$n$ Steps-1--7-conditional slice $(|P| \ge 11)$.}
   For every width-$3$ non-chain finite poset on at least $11$
   elements, $P$ has a balanced pair, conditional on
