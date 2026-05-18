@@ -142,26 +142,31 @@ their `_h*` are decorative); 3 V (incl. cap-5 sorry call site); 1 T
 (mg-4d7b enumeration, `lem_cut`/`windowLocalization`/`lem_layered_reduction`,
 bare F3 framework).
 
-**The headline reduces to two residuals.** Per mg-2970 (correcting
-mg-5c32 — see §3 pitfall #2), the in-tree state factors as
-`R1_paper_faithful ∧ R2_exists_bounded_bandwidth`:
-* **R1** (paper-faithful uncapped `lem:layered-balanced`): Lean port
-  of `step8.tex:3199-3253`, taking `(α, L)` with only `L.w ≤ 4` (no
-  cap 1, no cap 2, no cap 3 — drops the call-shape caps of the
-  existing `Case3Witness_proof.{u}`). Discharges
-  `HasBalancedPair α` via the paper's strong induction on `|α|`. The
-  current `Case3Witness_proof.{u}` is a *restriction* of R1 covering
-  only the cap-1-cap-5 sub-slice (`|α| ≤ 10` AND admits singleton-band
-  bandwidth-`≤ 4` L).
-* **R2** (existence of bandwidth-`≤ 4` layered decomposition): for
-  every width-3 non-chain finite α, `∃ L, L.w ≤ 4`. Discharged for
-  `|α| ≤ 10` by direct construction (iterated ordinal-sum
-  decomposition); for `|α| ≥ 11` by paper's `prop:72` + Steps 1-7
-  (`w₀(γ) ≤ 4`).
-* See `docs/width3-residual-statement.md` (mg-2970) for the full
-  satisfiability proofs, Lean signatures, and a worked example of
-  why the cardinality split lives inside R2's discharge (not inside
-  the residual statement).
+**The headline reduces to Step 8 in full + Steps 1-7 axiomatic
+interface.** (mg-2970's `R1 + R2` framing SUPERSEDED by mg-ac13 — see
+§3 pitfall #2 and `docs/coherence-collapse-case-extraction.md`.)
+* **Step 8 (R1-equivalent)** = Lean port of paper's
+  `lem:layered-balanced` (`step8.tex:2453, 3199-3253`), taking
+  `(α, L)` with only `L.w ≤ 4` (no cap 1, no cap 2, no cap 3 —
+  drops the call-shape caps of the existing `Case3Witness_proof.{u}`).
+  Discharges `HasBalancedPair α` via the paper's strong induction on
+  `|α|`. The current `Case3Witness_proof.{u}` is a *restriction* of
+  this covering only the cap-1-cap-5 sub-slice (`|α| ≤ 10` AND admits
+  singleton-band bandwidth-`≤ 4` L). **This IS the entire Step 8
+  engineering target — NOT a narrow residual.**
+* **Steps 1-7 (R2-equivalent, AXIOMATIC interface)** = paper's
+  `prop:72` (`step7.tex:1173`) plus the upstream cascade. Delivers
+  `L : LayeredDecomposition α` with `L.w ≤ w₀(γ) ≤ 4` *for α arising
+  as a minimal γ-counterexample in the (R)+(coherent) regime*. The
+  current Lean tree axiomatises this at `Step7.LayeredWidth3`
+  (`Step7/Assembly.lean:302-348`). **NOT a free-standing existence
+  claim over all width-3 non-chain α** — see pitfall #2 below for
+  why mg-2970's universal-quantifier R2 is false.
+* See `docs/coherence-collapse-case-extraction.md` (mg-ac13) for
+  the structural extraction of the "narrower property" delivered by
+  the coherence-collapse case, the 3-disjoint-chains counterexample
+  refuting mg-2970 R2 in its full cap-light form, and the
+  proof-technique known-ness verdict.
 
 ---
 
@@ -195,16 +200,16 @@ bijection (`Mathlib/LinearExtension/Subtype.lean:~700/1065/1152`).
 talking about** and verify it by reading the proof body, not just the
 signature.
 
-### Pitfall #2 — Don't transcribe Case3Witness's caps as the residual
+### Pitfall #2 — Don't transcribe Case3Witness's caps as the residual; don't quantify R2's `∃ L` universally over width-3 non-chain α
 
 `Case3Witness.{u}` (`LayeredBalanced.lean:461`) carries five caps
 (see §1). They are an **API surface** of the universal statement
 `Case3Witness_proof` discharges, **not** the right shape for the
 residual the headline reduces to.
 
-**Two historical over-claims to avoid** (mg-5c32 hit both; mg-2970
-diagnosed and corrected — see `docs/width3-residual-statement.md`
-§1):
+**Three historical over-claims to avoid** (mg-5c32 hit the first
+two; mg-2970 corrected those but introduced a third; mg-ac13 closes
+the third — see `docs/coherence-collapse-case-extraction.md`):
 
 1. **Stapling caps 1+4+2+5 together gives an unsatisfiable residual
    at `|α| ≥ 11`.** Cap 1 (`Function.Injective L.band`) + cap 4
@@ -218,50 +223,55 @@ diagnosed and corrected — see `docs/width3-residual-statement.md`
    **cap-1-cap-5 sub-slice** only (β admitting a singleton-band L
    with bandwidth `≤ 4`). For width-3 non-chain α with `|α| ≤ 10`
    and *no* such L (canonical counterexample: `α = 3-antichain ⊕
-   3-antichain`, `|α| = 6`, minimum singleton-band bandwidth = 5),
-   mg-4d7b's enumeration does not cover α even though α has a
-   balanced pair (here `(a₁, a₂)` are symmetric, `Pr = 1/2`). The
-   `|α| ≤ 10` slice requires a *strict superset* of mg-4d7b's
-   enumeration OR a paper-faithful uncapped `lem:layered-balanced`.
+   3-antichain`, `|α| = 6`, minimum singleton-band bandwidth = 5,
+   but admits w=0 L with two size-3 bands), mg-4d7b's enumeration
+   does not cover α even though α has a balanced pair (here
+   `(a₁, a₂)` are symmetric, `Pr = 1/2`).
 
-The **right residual is R1 + R2** (mg-2970 form):
+3. **Quantifying R2's `∃ L with L.w ≤ 4` universally over width-3
+   non-chain α gives a FALSE statement.** Counterexample (mg-ac13
+   §3): `α =` 3 disjoint chains of length 10 (|α| = 30, width 3,
+   non-chain). Every layered decomposition of this α has bandwidth
+   ≥ 9 (each chain spans 10 distinct band indices by (L1)+(L4),
+   and cross-chain incomparable pairs force `|band(x) − band(y)|
+   ≤ w` by (L3), giving `w ≥ 9`). So `∀ width-3 non-chain α, ∃ L
+   with L.w ≤ 4` is FALSE. The proper Lean shape for "Steps 1-7's
+   bandwidth bound" is the **axiomatic interface**
+   `Step7.LayeredWidth3` (`Step7/Assembly.lean:302-348`), which
+   only applies to α that arise as minimal γ-counterexamples in the
+   (R)+(coherent) regime — not to all width-3 non-chain α. **Do
+   not chase R2 as a free-standing universal-existence Lean lemma;
+   it is false in that form.**
 
-```lean
-def R1_paper_faithful.{u} : Prop :=
-  ∀ (α : Type u) [PartialOrder α] [Fintype α] [DecidableEq α]
-    (L : Step8.LayeredDecomposition α),
-    HasWidthAtMost α 3 → ¬ IsChainPoset α → 2 ≤ Fintype.card α →
-    L.w ≤ 4 →
-    HasBalancedPair α
-    -- paper proof: step8.tex:3199-3253 strong induction on |α|
-    -- (Case A K=1 trivial, Case B reducible IH-recurse, Case C
-    -- irreducible window-localize → prop:in-situ-balanced).
-    -- The current Case3Witness_proof.{u} is a restricted version
-    -- (additionally requires caps 1, 2, 3, 4); R1 drops those.
+The **right framing is**:
 
-def R2_exists_bounded_bandwidth.{u} : Prop :=
-  ∀ (α : Type u) [PartialOrder α] [Fintype α] [DecidableEq α],
-    HasWidthAtMost α 3 → ¬ IsChainPoset α → 2 ≤ Fintype.card α →
-    ∃ (L : Step8.LayeredDecomposition α), L.w ≤ 4
-    -- discharged by:
-    --   |α| ≤ 10  : direct construction (Mirsky / iterated ordinal-sum)
-    --   |α| ≥ 11  : paper's prop:72 + Steps 1-7 (currently sham)
-```
+* **Step 8** = Lean port of `lem:layered-balanced` (`step8.tex:2453`):
+  `∀ (α, L) with HasWidthAtMost α 3 ∧ ¬IsChainPoset α ∧ 2 ≤ |α| ∧
+  L.w ≤ 4, HasBalancedPair α`. This IS the entire engineering target
+  (Daniel's "R1 is the entire conjecture" complaint is structurally
+  correct — see mg-ac13 §5.1). Proof-technique is known
+  (paper-proved strong induction + cited FKG + finite enumeration
+  base case); the in-tree gap is engineering, not math.
+* **Steps 1-7** = paper-axiomatised `Step7.LayeredWidth3` interface,
+  delivering `L : LayeredDecomposition α` with `L.w ≤ 4` for α
+  arising as a minimal γ-counterexample in the (R)+(coherent)
+  regime. **Not** universally quantified over width-3 non-chain α.
 
-The cardinality split lives inside R2's discharge, *not* inside the
-residual statement. Caps 1, 2, 3, 4 from `Case3Witness.{u}` are
-**dropped** because they are call-shape artefacts of the cap-1-aligned
-F5a Bool certificate encoding, not paper-side requirements of the
-bandwidth-bounded-to-balanced-pair derivation.
-
-**Before stating "the residual is X", do both checks:**
-1. **Satisfiability.** Is X satisfiable at the headline's full `|α|`
-   range under all the caps you wrote down? If not, you've stapled
-   API hypotheses to a residual that should drop some.
-2. **Discharge-coverage.** If you cite an existing artefact (mg-4d7b,
-   `case3_certificate`, …) as the discharge, verify that artefact's
-   actual scope matches your residual's stated scope. mg-4d7b
-   ≠ "all width-3 non-chain α with `|α| ≤ 10`".
+**Before stating "the residual is X", do three checks:**
+1. **Satisfiability under caps.** Is X satisfiable at the headline's
+   full `|α|` range under all the caps you wrote down? If not,
+   you've stapled API hypotheses to a residual that should drop
+   some (pitfall #1).
+2. **Discharge-coverage of cited artefacts.** If you cite an
+   existing artefact (mg-4d7b, `case3_certificate`, …) as the
+   discharge, verify that artefact's actual scope matches your
+   residual's stated scope. mg-4d7b ≠ "all width-3 non-chain α
+   with `|α| ≤ 10`" (pitfall #2).
+3. **Universal-quantifier truthfulness.** If your residual quantifies
+   universally over width-3 non-chain α with an `∃ L` conclusion,
+   construct an explicit counterexample to refute it before
+   accepting the form. mg-ac13 §3 builds 3-disjoint-chains-of-10
+   as the refutation of mg-2970 R2 (pitfall #2.3).
 
 ### Pitfall #3 — `canonicalLayered α` substitution makes layered hypotheses fiction
 
@@ -334,11 +344,18 @@ named symbol or `ls` the path. Example checks before action:
 
 **Predecessor audits and state docs (read in order of relevance):**
 
+* `docs/coherence-collapse-case-extraction.md` (mg-ac13) — paper-first
+  extraction of the "narrower property" delivered by the coherence-collapse
+  case; technique-known verdict; 3-disjoint-chains counterexample
+  refuting mg-2970 R2's universal-existence form. **SUPERSEDES
+  mg-2970's `R1+R2` framing.**
 * `docs/onethird-proof-outline-audit.md` (mg-82fc) — per-step proof-tree
   tag table; the **most thorough** source for the §2 table here.
-* `docs/width3-residual-statement.md` (mg-5c32) — the
-  `LayeredResidual_{narrow,broad}` extraction. **The two-part split
-  is the right shape — do not single-part it.**
+* `docs/width3-residual-statement.md` (mg-2970) — `R1_paper_faithful +
+  R2_exists_bounded_bandwidth` re-extraction. **SUPERSEDED by mg-ac13:
+  R1 IS Step 8 in full (not a narrow residual); R2 in its universal-∃
+  form is FALSE (mg-ac13 §3 counterexample).** Retain for cross-reference
+  to its corrections of mg-5c32, not as the headline residual statement.
 * `docs/layered-form-vs-coherence-architecture-audit.md` (mg-74d2) —
   the canonicalLayered-bypass diagnosis; per-lemma R-leaf/R-numeric/M
   audit.
@@ -364,8 +381,12 @@ mg-6f04). Update it in the **same commit** as any change that:
 * Lands or drops a project axiom (`AXIOMS.md` diff).
 * Closes a `sorry` or introduces one (`grep -rn sorry lean/`).
 * Restates the headline (`MainTheorem.lean`).
-* Re-extracts the residual (mg-5c32-class work) — §3 pitfall #2's
-  template must be edited to match the new residual shape.
+* Re-extracts the residual (mg-5c32-/mg-2970-/mg-ac13-class work) —
+  §3 pitfall #2's template must be edited to match the new residual
+  shape. **Daniel's "vacuity-discovery" pattern has hit 6 times as of
+  mg-ac13** (mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970, mg-ac13);
+  default to skeptical paper-first reading, not API-surface
+  transcription.
 * Rewires `lem_layered_balanced` or `mainTheoremInputsOf`
   (Option D-narrow / D-broad-class work).
 * Refactors `Case3Witness` signature (caps changed) or
