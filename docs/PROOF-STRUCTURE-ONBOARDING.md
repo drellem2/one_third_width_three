@@ -106,8 +106,17 @@ of `α`.
      - **out-of-scope** (K∈{4 w≥2, 5..10} cells) →
        `case3Witness_hasBalancedPair_outOfScope` AXIOM
        (`Case3Residual.lean:208`). Math content **verified by mg-4d7b**
-       (Python enumeration of ~1.72M+ configs, no counterexamples;
-       partial Lean port at `Case3Enum/Cap5Singletons.lean`).
+       (Python enumeration of ~1.72M+ configs in the cap-1
+       singleton-band sub-slice, no counterexamples; partial Lean
+       port at `Case3Enum/Cap5Singletons.lean`). **Cap-light
+       extension by mg-be48** (`docs/state-Case3Witness-cap-light-enumeration.md`)
+       extends Python enumeration to **non-singleton bands** (cap 1
+       dropped, caps 2-5 + L1a retained) for cells with `nfree ≤ 25`
+       (TIER A); the very densest cells (`nfree > 25`, e.g.
+       K=4 w=1 `[3,3,3,3]`) remain in TIER B and rely on the
+       structural argument that they are either ordinal-sum
+       reducible (Case B lift) or admit a within-band symmetric
+       pair (Pr = 1/2).
 5. **External axioms.** `LinearExt.brightwell_sharp_centred`
    (Brightwell–Tetali sharp 1/3 lower bound; `AXIOMS.md:21`).
 
@@ -144,7 +153,7 @@ inputs or hypothesis is structurally unreachable). **T** = TODO-sorry.
 | ↳ ↳ in-scope | `bounded_irreducible_balanced_inScope` (`BoundedIrreducibleBalancedInScope.lean:97`) ∘ `case3_certificate` (`Case3Enum/Certificate.lean:71`) | **S + SC** (G1'/G3a/G3b/G3c/B1'/B2/B3 bridges + 5-cell `native_decide`) |
 | ↳ ↳ out-of-scope: Case 1 | `hasBalancedPair_of_ambient_profile_match` (mg-f92d) | S (`Equiv.swap` profile symmetry) |
 | ↳ ↳ out-of-scope: Case 2 | `case2_discharge_of_injective` | V (cap 1 makes Case 2 unreachable — vacuous by design) |
-| ↳ ↳ out-of-scope: Case 3 | `case3Witness_hasBalancedPair_outOfScope` (`Case3Residual.lean:208`) | **SP** (axiom faithful to `step8.tex:3033-3047` + `rem:enumeration`; math verified by mg-4d7b enumeration on 15 cells, ~1.72M+ configs, NO COUNTEREXAMPLES) |
+| ↳ ↳ out-of-scope: Case 3 | `case3Witness_hasBalancedPair_outOfScope` (`Case3Residual.lean:208`) | **SP** (axiom faithful to `step8.tex:3033-3047` + `rem:enumeration`; math verified by mg-4d7b enumeration on 15 cells, ~1.72M+ configs in singleton-band sub-slice, **+ mg-be48 cap-light extension** to non-singleton bands within TIER A scope, NO COUNTEREXAMPLES across either) |
 | `LinearExt.brightwell_sharp_centred` | `Mathlib/LinearExtension/BrightwellAxiom.lean` | **SE** (Brightwell–Tetali) |
 | `Step8.bounded_irreducible_balanced` (no `_inScope`) | `BIB.lean:1626` | M (pure identity; all `_h*` underscored) |
 | `Step8.hasBalancedPair_of_layered_strongInduction[_width3]` | `LayerOrdinal.lean:370/472` | M (bare F3 framework; L unused; recursion on `Fintype.card α` only) — **NC** (not invoked on headline) |
@@ -404,7 +413,12 @@ named symbol or `ls` the path. Example checks before action:
 * `docs/onethird-Case3Witness-post-cap-5-tractability-analysis.md`
   (mg-0cbf) — Option D-narrow / D-broad framing.
 * `docs/state-Case3Witness-cap5-enumeration.md` (mg-4d7b) — Python
-  enumeration certificate; per-(K,w) cell counts.
+  enumeration certificate; per-(K,w) cell counts (singleton-band
+  sub-slice).
+* `docs/state-Case3Witness-cap-light-enumeration.md` (mg-be48) —
+  cap-light extension: non-singleton-band enumeration per
+  `(K, w, band-sizes)` cell; structural argument for TIER B
+  (`nfree > 25`) cells.
 * `docs/why-hC3-is-structural.md` — F1/F2/F3 obstructions; option-(δ)
   park rationale.
 
