@@ -41,6 +41,16 @@ and this file is wrong — fix it.
   and residual over-constraint (mg-5c32). Read §3 BEFORE adding API
   surface from one place to another or restating residuals from
   Case3Witness's call shape.
+* **mg-5fbd S7-F bridge audit (RED, 7th vacuity discovery)**:
+  the `MainAssembly.lean:265` sorry is **architecturally
+  unclosable in-place**. See §3 pitfall #5 + `docs/state-S7-F-bridge-Session1.md`.
+  The S7-A–E pilot grounded forms (mg-4584/9331/1069/d135/516f)
+  remain valid Step 7 internal scaffolding; the closure of the
+  sorry requires multi-month upstream Steps 1-6 cascade port
+  plus architectural refactor of `width3_one_third_two_thirds_assembled`
+  to proof-by-contradiction. Status-quo (retain the sorry with
+  AXIOMS.md-analog disclosure) is the recommended forward
+  action.
 
 ---
 
@@ -355,6 +365,61 @@ named symbol or `ls` the path. Example checks before action:
 * `grep -n 'sorry' lean/OneThird/Step8/LayeredBalanced.lean` — only
   the one cap-5 sorry should appear; if more, the tree has regressed.
 
+### Pitfall #5 — The `caseC_canonicalLayered` cap-5 sorry is not closable in-place (mg-5fbd, 7th vacuity discovery)
+
+**Status post-mg-5fbd:** The cap-5 sorry at
+`MainAssembly.lean:265` (relocated from `LayeredBalanced.lean:755`
+by mg-234e per pitfall #3) is **architecturally unclosable** by any
+"better `L`" choice. The S7-F bridge (mg-5fbd) audit confirms.
+Reasons:
+
+1. **Five-cap unsatisfiability for `|α| ≥ 11`.** `Case3Witness`'s
+   caps 1+4 force singleton bands (`L.K = |α|`); cap 2 + cap 5
+   force `L.K ≤ 2·4+2 = 10`. So `|α| ≥ 11` ⇒ no `L` satisfies
+   all five caps. (Mirror of pitfall #2.1 at the integration site,
+   not at residual-extraction.)
+2. **Even within `|α| ≤ 10`, five-cap unsatisfiability for
+   specific α.** Take `α = 3 disjoint chains of length 3`
+   (`|α| = 9`, width 3, non-chain). cap 1 forces singletons
+   (`L.K = 9`), cap 2 forces `L.w ≥ 4`, cap 5 forces `L.w = 4`,
+   (L2) forces 10 ground-set pairs at band-distance ≥ 5 to be
+   `<_P`-comparable, but `P` has only 9 comparable pairs (all
+   within-chain). Contradiction; no `L` exists. (Specialisation
+   of pitfall #2.3's 3-disjoint-chains-of-10 to `|α| ≤ 10`.)
+3. **The paper's `lem:layered-from-step7` (`step8.tex:1913-2106`)
+   does not claim coverage of arbitrary width-3 non-chain α.**
+   It requires (a) Dilworth A ⊔ B ⊔ C input, (b) Step 5(C) or
+   Step 7(ii) cascade-output hypotheses, (c) the conclusion lives
+   on `P|_{X∖X^exc}` not `P`. These are paper-side inputs that
+   hold only for **α arising as a minimal γ-counterexample in
+   the (R)+(coherent) regime** — i.e., the paper's
+   proof-by-contradiction setup.
+4. **Current Lean `width3_one_third_two_thirds_assembled` is
+   direct construction, not proof-by-contradiction.** No
+   contradiction hypothesis is threaded through to
+   `caseC_canonicalLayered`, so the bridge's input hypotheses
+   cannot be derived at the call site.
+
+**Practical implication.** Closing the `MainAssembly.lean:265`
+sorry honestly requires *all three* of:
+
+* the S7-F bridge construction itself (substantial, but not a
+  blocker — would be the smaller half);
+* Lean port of Steps 1-6 cascade outputs to supply the bridge's
+  input hypotheses concretely (multi-month per mg-6ab8 Option A,
+  6-9M tokens);
+* architectural refactor of `MainAssembly.lean` from direct
+  construction to proof-by-contradiction (so the cascade
+  hypotheses can be derived from `¬ HasBalancedPair α`).
+
+**This is the 7th vacuity discovery** (after mg-e2e9, mg-74d2,
+mg-5c32, mg-82fc, mg-2970, mg-ac13). Forward options per
+`docs/state-S7-F-bridge-Session1.md` §6: (C') status-quo
+retain the sorry with documented disclosure, (B') narrow-locally-
+close via a new project axiom in `AXIOMS.md`, (A') full multi-
+month refactor + cascade port. Recommendation per Daniel
+mg-ac13 §5.3 stance: **(C') status-quo**.
+
 ---
 
 ## §4. Cross-reference index (terse)
@@ -471,8 +536,16 @@ named symbol or `ls` the path. Example checks before action:
   + `lem_bandwidth_le_four` + `lem_bandwidth_le_four_bundled`
   wired to S7-C BFS potential + S7-D giant-component walk witness
   + Step 5 parametric var-budget / `c_T`-richness. Ships the
-  **load-bearing `bandwidth ≤ 4`** result for S7-F bridge
-  consumption.
+  **load-bearing `bandwidth ≤ 4`** result, but on the `Pair`
+  space as a `LayeredWidth3 richPairs` packaging — *not* a
+  `LayeredDecomposition α` on the ground set.
+* `docs/state-S7-F-bridge-Session1.md` (mg-5fbd) — S7 pilot
+  sixth and final execution sub-arc; **RED 7th vacuity
+  discovery**. Phase D Checkpoint 3 audit + bridge call-site
+  architectural pitfall (cap-5 unsatisfiability at
+  `caseC_canonicalLayered` per §3 pitfall #5). Recommendation:
+  Option (C') RED-STAY-PUT — retain the sorry with documented
+  disclosure. No Lean changes in this session.
 * `docs/OneThird-Steps-1-7-Lean-port-scoping.md` (mg-6ab8) — Steps
   1-7 multi-month Lean-port scoping; Phase E option B selected.
 * `docs/why-hC3-is-structural.md` — F1/F2/F3 obstructions; option-(δ)
