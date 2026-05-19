@@ -58,6 +58,7 @@ import OneThird.Step7.TripleVisibility
 import OneThird.Step7.Cocycle
 import OneThird.Step7.Potential
 import OneThird.Step7.SingleThreshold
+import OneThird.Step7.GiantComponent
 import OneThird.Step7.Bandwidth
 import OneThird.Step8.FrozenPair
 import OneThird.Step8.OneElemPerturb

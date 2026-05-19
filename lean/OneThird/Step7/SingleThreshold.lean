@@ -315,5 +315,292 @@ def FiberThresholdData.ofPotential
 
 end Bridge
 
+/-! ### §7 — Grounded form: single global threshold from S7-C BFS potential
+
+This section grounds `lem:single-c` against the concrete BFS-tree
+potential `bfsPotentialData` (S7-C output, `Potential.lean §7`).
+The grounding pattern mirrors `Potential.lean`'s `potential_grounded`
+/ `lem_potential_grounded_bundled`:
+
+* `fiberThresholdDataOfBFS` — concrete `FiberThresholdData`
+  instantiated from `bfsPotentialData` via the §6 bridge.
+* `single_c_grounded` — composes `lem_single_c` (Diameter-3
+  closure) with `single_c_weight_lb` (cleared bad-edge weight
+  bound), using the upstream S7-C BFS-tree potential to supply
+  `c_e := signedWeight e`.
+* `lem_single_c_grounded_bundled` — single-call paper-statement
+  bundle matching `step7.tex:817-829`:
+  1. Every walk-witnessed edge is `3 K₁`-close to the reference
+     `c := signedWeight refEdge` (i.e. `|c_e - c| ≤ 3 K₁`).
+  2. Bad-edge weight `e_d · ∑_{bad} w_e ≤ e_n · M₀`
+     (cleared `(1 - o(1))`-fraction).
+
+**Paper grounding (`step7.tex:838-942`).**
+
+The per-fiber threshold `c_e` is identified with the S7-A
+signed-threshold label `signedWeight e = σ̃_e · τ_e` via the
+S7-C cocycle/potential output `signedWeight e =
+a(tgt e) - a(src e) + O(1)` (paper `step7.tex:838-841` with
+`O(1)` = `C₁` from `lem_potential_grounded_bundled`'s
+sign-agreement-on-good-edges).  The `O(1)` correction is absorbed
+into the `K₁` tolerance of `PairClosenessHyp` at the call site:
+on the `Ω_{ef}`-active sub-region, low-conductance Cheeger gives
+`|c_e - c_f| ≤ K₁`, which the §5 `lem_single_c` then promotes
+along length-3 walks through the giant component to
+`|c_e - c| ≤ 3 K₁` (paper `step7.tex:921-935`).  The exceptional
+mass — pairs not in `goodPairs`, and edges not in `edgesWalk` —
+is absorbed by the `single_c_weight_lb` bound, matching the
+paper's `(1 - o(1))`-quantifier (paper `step7.tex:935-942`).
+
+**Downstream consumers.**
+
+* `Bandwidth.lean lem_bandwidth` consumes the unified threshold
+  `c := signedWeight refEdge` through the BFS-tree potential
+  `pot := bfsSumPot signedWeight path`, since the bandwidth
+  `K(T) + O(1)` of `prop:72` (`step7.tex:1018-1027`) is the
+  rich-pair-large-gradient count under the `c`-thresholded
+  potential.
+* `Assembly.lean prop_71` already composes the abstract
+  `FiberThresholdData.ofPotential` bridge with `lem_potential` to
+  produce the combined `(1 - o(1))` description; the grounded
+  form here promotes that composition to use the concrete BFS
+  potential without changing the prop_71 signature. -/
+
+section Grounded
+
+variable {Vertex Edge : Type*} [DecidableEq Vertex] [DecidableEq Edge]
+
+/-- **Grounded `FiberThresholdData` from BFS-tree potential**
+(`step7.tex:838-841`).
+
+Specialisation of `FiberThresholdData.ofPotential` to the S7-C
+BFS-tree potential `bfsPotentialData`.  The per-fiber threshold
+`c_e := signedWeight e = σ̃_e · τ_e` is the S7-A signed-threshold
+label exactly; the `O(1) = C₁` correction relating it to
+`pot (tgt e) - pot (src e)` is absorbed into the `K₁` tolerance
+of `PairClosenessHyp` at the call site (the `pairwise-closeness`
+of paper `step7.tex:858-908`). -/
+def fiberThresholdDataOfBFS
+    (src tgt : Edge → Vertex)
+    (signedWeight : Edge → ℤ)
+    (edgeWeight : Edge → ℕ)
+    (path : Vertex → List Edge) :
+    FiberThresholdData Edge :=
+  FiberThresholdData.ofPotential
+    (bfsPotentialData src tgt signedWeight edgeWeight path)
+
+@[simp] lemma fiberThresholdDataOfBFS_c
+    (src tgt : Edge → Vertex)
+    (signedWeight : Edge → ℤ)
+    (edgeWeight : Edge → ℕ)
+    (path : Vertex → List Edge) (e : Edge) :
+    (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).c e =
+      signedWeight e := rfl
+
+@[simp] lemma fiberThresholdDataOfBFS_edgeWeight
+    (src tgt : Edge → Vertex)
+    (signedWeight : Edge → ℤ)
+    (edgeWeight : Edge → ℕ)
+    (path : Vertex → List Edge) (e : Edge) :
+    (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).edgeWeight
+        e = edgeWeight e := rfl
+
+/-- **Grounded `lem:single-c` — diameter-3 globalisation**
+(`step7.tex:910-942`).
+
+Cleared-denominator output of the paper's `lem:single-c`
+conclusion, instantiated against the BFS-tree potential:
+
+  `edges ⊆ goodEdges refEdge edges (3 K₁)`,
+
+i.e. every edge in `edges` admits a length-`≤ 3` walk to the
+reference whose per-hop closeness yields `|signedWeight e -
+signedWeight refEdge| ≤ 3 K₁`.
+
+**Input axes.**
+
+* `goodPairs` — Cheeger-good active pairs (cleared from upstream
+  Step 6 low conductance, paper `step7.tex:893-905`).
+* `K₁` — per-pair closeness tolerance.
+* `hPair` — pairwise closeness on every `goodPair`
+  (`PairClosenessHyp`).
+* `hWalk` — every edge in `edges` admits a length-3 walk through
+  `goodPairs` (`WalkWitness3`, paper `step7.tex:912-925`).
+
+**Output.**  The globalised threshold bound (3 K₁-goodness)
+delivered by `FiberThresholdData.lem_single_c`. -/
+theorem single_c_grounded
+    (src tgt : Edge → Vertex)
+    (signedWeight : Edge → ℤ)
+    (edgeWeight : Edge → ℕ)
+    (path : Vertex → List Edge)
+    (refEdge : Edge) (edges : Finset Edge)
+    (goodPairs : Finset (Edge × Edge)) (K₁ : ℕ)
+    (hPair : (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).PairClosenessHyp
+      goodPairs K₁)
+    (hWalk : FiberThresholdData.WalkWitness3 refEdge edges goodPairs) :
+    edges ⊆ (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).goodEdges
+      refEdge edges (3 * K₁) :=
+  (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).lem_single_c
+    refEdge edges goodPairs K₁ hPair hWalk
+
+/-- **Grounded `lem:single-c` — bad-edge weight bound**
+(`step7.tex:935-942`).
+
+Cleared-denominator `(1 - o(1))`-fraction form: under
+`PairClosenessHyp` + `WalkWitness3` (on a subset
+`edgesWalk ⊆ edges`) plus the cleared exceptional-mass bound
+`e_d · ∑_{edges ∖ edgesWalk} w ≤ e_n · M₀`, the bad-edge weight
+satisfies
+
+  `e_d · ∑_{badEdges refEdge edges (3 K₁)} edgeWeight e ≤ e_n · M₀`. -/
+theorem single_c_grounded_weight_lb
+    (src tgt : Edge → Vertex)
+    (signedWeight : Edge → ℤ)
+    (edgeWeight : Edge → ℕ)
+    (path : Vertex → List Edge)
+    (refEdge : Edge) (edges edgesWalk : Finset Edge)
+    (goodPairs : Finset (Edge × Edge)) (K₁ : ℕ)
+    (hPair : (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).PairClosenessHyp
+      goodPairs K₁)
+    (hWalk : FiberThresholdData.WalkWitness3 refEdge edgesWalk goodPairs)
+    (hWalkSub : edgesWalk ⊆ edges)
+    (e_n e_d M₀ : ℕ)
+    (hExc : e_d * ∑ e ∈ edges \ edgesWalk, edgeWeight e ≤ e_n * M₀) :
+    e_d * ∑ e ∈ (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).badEdges
+        refEdge edges (3 * K₁), edgeWeight e ≤ e_n * M₀ := by
+  have h := (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path
+    ).single_c_weight_lb refEdge edges edgesWalk goodPairs K₁ hPair
+    hWalk hWalkSub e_n e_d M₀ (by simpa using hExc)
+  simpa using h
+
+/-- **`lem:single-c` — contrapositive good-edge form**
+(`step7.tex:935-942`).
+
+Equivalent restatement of `single_c_grounded_weight_lb`: under the
+same hypotheses, the good-edge weight is at least
+`totalW - (e_n / e_d) · M₀`.
+
+This matches paper `step7.tex:935-942`: `(1 - o(1))`-fraction
+of interfaces `e ∈ E⋆` have `1_S(L) = 1_{H ≥ c} + o(1)` on
+`fib_e ∖ B_e`, equivalently `|c_e - c| ≤ 3 K₁` on the giant
+component. -/
+theorem single_c_grounded_good_weight_lb
+    (src tgt : Edge → Vertex)
+    (signedWeight : Edge → ℤ)
+    (edgeWeight : Edge → ℕ)
+    (path : Vertex → List Edge)
+    (refEdge : Edge) (edges edgesWalk : Finset Edge)
+    (goodPairs : Finset (Edge × Edge)) (K₁ : ℕ)
+    (hPair : (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).PairClosenessHyp
+      goodPairs K₁)
+    (hWalk : FiberThresholdData.WalkWitness3 refEdge edgesWalk goodPairs)
+    (hWalkSub : edgesWalk ⊆ edges)
+    (e_n e_d M₀ totalW : ℕ)
+    (hExc : e_d * ∑ e ∈ edges \ edgesWalk, edgeWeight e ≤ e_n * M₀)
+    (htotal : ∑ e ∈ edges, edgeWeight e = totalW) :
+    e_d * (totalW - ∑ e ∈ (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight
+        path).goodEdges refEdge edges (3 * K₁), edgeWeight e) ≤ e_n * M₀ := by
+  classical
+  set D := fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path
+  have hbad := single_c_grounded_weight_lb src tgt signedWeight edgeWeight
+    path refEdge edges edgesWalk goodPairs K₁ hPair hWalk hWalkSub
+    e_n e_d M₀ hExc
+  -- edges = goodEdges ∪ badEdges, disjoint.
+  have hunion := D.goodEdges_union_badEdges refEdge edges (3 * K₁)
+  have hdisj := D.goodEdges_disjoint_badEdges refEdge edges (3 * K₁)
+  -- ∑ edges = ∑ goodEdges + ∑ badEdges.
+  have hsplit :
+      ∑ e ∈ edges, edgeWeight e =
+        ∑ e ∈ D.goodEdges refEdge edges (3 * K₁), edgeWeight e +
+          ∑ e ∈ D.badEdges refEdge edges (3 * K₁), edgeWeight e := by
+    conv_lhs => rw [← hunion]
+    exact Finset.sum_union hdisj
+  -- totalW - ∑ good = ∑ bad.
+  have hgood_le_total :
+      ∑ e ∈ D.goodEdges refEdge edges (3 * K₁), edgeWeight e ≤ totalW := by
+    rw [← htotal]
+    exact Finset.sum_le_sum_of_subset_of_nonneg
+      (D.goodEdges_subset refEdge edges (3 * K₁))
+      (fun _ _ _ => Nat.zero_le _)
+  have hbad_eq :
+      totalW -
+          ∑ e ∈ D.goodEdges refEdge edges (3 * K₁), edgeWeight e =
+        ∑ e ∈ D.badEdges refEdge edges (3 * K₁), edgeWeight e := by
+    have := hsplit
+    omega
+  rw [hbad_eq]
+  exact hbad
+
+/-- **Bundled S7-D grounded conclusion for G6** (`step7.tex:817-829`,
+paper-statement packaging).
+
+Single conjunction packaging the three core deliverables of the
+S7-D G6 grounded form for downstream consumption by
+`lem:budget-var` / `lem:bandwidth` / `prop:71` / `prop:72`:
+
+1. **Walk-witnessed 3K₁-closeness** (`step7.tex:910-935`): every
+   edge in `edges` is `3 K₁`-close to the reference, i.e.
+   `|signedWeight e - signedWeight refEdge| ≤ 3 K₁`.
+2. **Bad-edge weight bound** (`step7.tex:935-942`):
+   `e_d · ∑_{bad e} edgeWeight e ≤ e_n · M₀` (cleared
+   `(1 - o(1))`-fraction).
+3. **Good-edge weight lower bound** (`step7.tex:935-942`,
+   contrapositive): `e_d · (totalW - ∑_{good e} edgeWeight e)
+   ≤ e_n · M₀`.
+
+Constants:
+
+* `K₁` — per-pair closeness tolerance from Cheeger
+  (paper `step7.tex:893-905`).
+* `e_n / e_d` — exceptional fraction `o(1)` from Step 6 low
+  conductance (paper `step7.tex:893-897`).
+* `M₀ = totalW` — total active-pair / interface mass. -/
+theorem lem_single_c_grounded_bundled
+    (src tgt : Edge → Vertex)
+    (signedWeight : Edge → ℤ)
+    (edgeWeight : Edge → ℕ)
+    (path : Vertex → List Edge)
+    (refEdge : Edge) (edges edgesWalk : Finset Edge)
+    (goodPairs : Finset (Edge × Edge)) (K₁ : ℕ)
+    (hPair : (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).PairClosenessHyp
+      goodPairs K₁)
+    (hWalkAll : FiberThresholdData.WalkWitness3 refEdge edges goodPairs)
+    (hWalkSub_witness : FiberThresholdData.WalkWitness3 refEdge edgesWalk goodPairs)
+    (hWalkSub : edgesWalk ⊆ edges)
+    (e_n e_d M₀ totalW : ℕ)
+    (hExc : e_d * ∑ e ∈ edges \ edgesWalk, edgeWeight e ≤ e_n * M₀)
+    (htotal : ∑ e ∈ edges, edgeWeight e = totalW) :
+    -- (1) Walk-witnessed 3K₁-closeness:
+    (∀ e ∈ edges,
+      |signedWeight refEdge - signedWeight e| ≤ (3 * K₁ : ℤ)) ∧
+    -- (2) Bad-edge weight bound:
+    (e_d * ∑ e ∈ (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path).badEdges
+        refEdge edges (3 * K₁), edgeWeight e ≤ e_n * M₀) ∧
+    -- (3) Good-edge weight lower bound (contrapositive):
+    (e_d * (totalW - ∑ e ∈ (fiberThresholdDataOfBFS src tgt signedWeight edgeWeight
+        path).goodEdges refEdge edges (3 * K₁), edgeWeight e) ≤ e_n * M₀) := by
+  classical
+  refine ⟨?_, ?_, ?_⟩
+  · -- 3K₁-closeness from `single_c_grounded`.
+    intro e he
+    have hgood := single_c_grounded src tgt signedWeight edgeWeight path
+      refEdge edges goodPairs K₁ hPair hWalkAll he
+    set D := fiberThresholdDataOfBFS src tgt signedWeight edgeWeight path
+    rw [D.mem_goodEdges] at hgood
+    -- hgood.2 : |D.pairDefect refEdge e| ≤ 3 K₁
+    simpa [D, FiberThresholdData.pairDefect, fiberThresholdDataOfBFS_c]
+      using hgood.2
+  · -- Bad-edge weight bound.
+    exact single_c_grounded_weight_lb src tgt signedWeight edgeWeight path
+      refEdge edges edgesWalk goodPairs K₁ hPair hWalkSub_witness hWalkSub
+      e_n e_d M₀ hExc
+  · -- Good-edge weight LB.
+    exact single_c_grounded_good_weight_lb src tgt signedWeight edgeWeight
+      path refEdge edges edgesWalk goodPairs K₁ hPair hWalkSub_witness
+      hWalkSub e_n e_d M₀ totalW hExc htotal
+
+end Grounded
+
 end Step7
 end OneThird

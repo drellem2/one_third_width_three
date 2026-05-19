@@ -388,7 +388,15 @@ named symbol or `ls` the path. Example checks before action:
   `cocycle_grounded_good_weight_lb`),
   `Step7/Potential.lean` `§7 Grounded` (`bfsSumPot`,
   `bfsPotentialData`, `potential_grounded`,
-  `lem_potential_grounded_bundled`) (mg-1069). All produce
+  `lem_potential_grounded_bundled`) (mg-1069);
+  `Step7/SingleThreshold.lean` `§7 Grounded`
+  (`fiberThresholdDataOfBFS`, `single_c_grounded`,
+  `lem_single_c_grounded_bundled`),
+  `Step7/GiantComponent.lean` (full file:
+  `BipartiteRichness`, `degB_sum_split_bound`,
+  `commonB_neighbour_of_rich_rows`, `endpoint_walk3`,
+  `lem_giant_component_grounded`,
+  `lem_giant_component_grounded_bundled`) (mg-d135). All produce
   cleared-denominator `(1 − o(1))`-fraction bounds taking
   upstream Step 2 / Step 5 / Step 6 Lean outputs as concrete
   input.
@@ -444,6 +452,12 @@ named symbol or `ls` the path. Example checks before action:
   wired to S7-A signed-threshold + S7-B triple-visibility outputs.
   `bfsSumPot` BFS-spanning-tree potential construction is concrete
   (`pot z := ∑ e ∈ path z, signedWeight e`).
+* `docs/state-S7-D-G6-G9-Session1.md` (mg-d135) — S7 pilot fourth
+  execution sub-arc; `single_c_grounded` (G6) +
+  `lem_giant_component_grounded` (G9) wired to S7-C
+  `bfsPotentialData` and the bipartite-richness reverse-Markov
+  + diameter-3 closure (`Pair := A × B` specialisation;
+  `BipartiteRichness` bundle).
 * `docs/OneThird-Steps-1-7-Lean-port-scoping.md` (mg-6ab8) — Steps
   1-7 multi-month Lean-port scoping; Phase E option B selected.
 * `docs/why-hC3-is-structural.md` — F1/F2/F3 obstructions; option-(δ)
