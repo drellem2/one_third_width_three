@@ -396,10 +396,18 @@ named symbol or `ls` the path. Example checks before action:
   `BipartiteRichness`, `degB_sum_split_bound`,
   `commonB_neighbour_of_rich_rows`, `endpoint_walk3`,
   `lem_giant_component_grounded`,
-  `lem_giant_component_grounded_bundled`) (mg-d135). All produce
+  `lem_giant_component_grounded_bundled`) (mg-d135);
+  `Step7/Prop71_Prop72_LemBandwidth.lean` (full file:
+  `prop_71_grounded`, `prop_71_grounded_good_weight_lb`,
+  `prop_72_grounded`, `lem_bandwidth_le_four`,
+  `lem_bandwidth_le_four_bundled`,
+  `prop71_prop72_lemBandwidth_grounded`) (mg-516f). All produce
   cleared-denominator `(1 − o(1))`-fraction bounds taking
   upstream Step 2 / Step 5 / Step 6 Lean outputs as concrete
-  input.
+  input. The S7-E `lem_bandwidth_le_four_bundled` ships the
+  **load-bearing `bandwidth ≤ 4`** for S7-F bridge consumption
+  (per mg-6ab8 §7.1 spec; instantiates abstract `prop_72` at
+  `c₀ := 4`, paper `rem:w0-constant`).
 
 **Paper.** `main.tex` §1.4 road map; `step7.tex:1175-1193`
 (`prop:72`); `step8.tex:2404-2418` (`lem:ordinal-factorisation`);
@@ -458,6 +466,13 @@ named symbol or `ls` the path. Example checks before action:
   `bfsPotentialData` and the bipartite-richness reverse-Markov
   + diameter-3 closure (`Pair := A × B` specialisation;
   `BipartiteRichness` bundle).
+* `docs/state-S7-E-prop71-prop72-Session1.md` (mg-516f) — S7 pilot
+  fifth execution sub-arc; `prop_71_grounded` + `prop_72_grounded`
+  + `lem_bandwidth_le_four` + `lem_bandwidth_le_four_bundled`
+  wired to S7-C BFS potential + S7-D giant-component walk witness
+  + Step 5 parametric var-budget / `c_T`-richness. Ships the
+  **load-bearing `bandwidth ≤ 4`** result for S7-F bridge
+  consumption.
 * `docs/OneThird-Steps-1-7-Lean-port-scoping.md` (mg-6ab8) — Steps
   1-7 multi-month Lean-port scoping; Phase E option B selected.
 * `docs/why-hC3-is-structural.md` — F1/F2/F3 obstructions; option-(δ)

@@ -107,6 +107,7 @@ import OneThird.Step8.SmallN
 import OneThird.Step8.ChainPotentials
 import OneThird.Step8.LayeredBridges
 import OneThird.Step7.Assembly
+import OneThird.Step7.Prop71_Prop72_LemBandwidth
 import OneThird.Step8.MainAssembly
 import OneThird.Bridge
 
