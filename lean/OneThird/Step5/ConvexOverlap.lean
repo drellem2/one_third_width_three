@@ -302,5 +302,338 @@ theorem convex_overlap_structural
   · exact fun i j hj => richRow_subset_interval alpha beta gamma delta T i j hj
   · exact fun i hne => convex_overlap_row_card_le alpha beta gamma delta T i hne
 
+/-! ### Step 3 (2D): the overlap region is an order-convex staircase
+
+The structural heart of `lem:convex-overlap` (`step5.tex:402-422`,
+`rem:G2-structural`): the criterion region
+`R = {(i, j) : SatisfiesCrit … i j}` is **order-convex** in
+`Fin p × Fin q` — the paper's "doubly monotone staircase", an
+order-convex region wedged between two nondecreasing graphs. This part
+is unconditional interval geometry. -/
+
+/-- The **criterion row** at index `i` as a `Finset (Fin q)`: the set of
+`j` for which `(i, j)` satisfies the arithmetic criterion
+`eq:G2-criterion`. By `rich_implies_crit` the rich row is contained in
+it (`richRow_subset_critRow`), so banding `critRow` bands `richRow`. -/
+noncomputable def critRow
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) (T : ℤ)
+    (i : Fin p) : Finset (Fin q) :=
+  open Classical in
+  Finset.univ.filter (fun j => SatisfiesCrit alpha beta gamma delta T i j)
+
+lemma mem_critRow {alpha beta : Fin p → ℤ} {gamma delta : Fin q → ℤ}
+    {T : ℤ} {i : Fin p} {j : Fin q} :
+    j ∈ critRow alpha beta gamma delta T i ↔
+      SatisfiesCrit alpha beta gamma delta T i j := by
+  unfold critRow
+  classical
+  simp
+
+/-- **`richRow ⊆ critRow`.** Under the paper hypothesis `T ≥ 1`, every
+rich entry satisfies the arithmetic criterion (`rich_implies_crit`), so
+the rich row is contained in the criterion row. -/
+theorem richRow_subset_critRow
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) {T : ℤ}
+    (hT : 1 ≤ T) (i : Fin p) :
+    richRow alpha beta gamma delta T i ⊆
+      critRow alpha beta gamma delta T i := by
+  intro j hj
+  rw [mem_richRow] at hj
+  rw [mem_critRow]
+  exact rich_implies_crit hT hj
+
+/-- **`step5.tex:421-422` (2D order-convexity of the overlap region).**
+The criterion region `R = {(i, j) : SatisfiesCrit … i j}` is
+order-convex in `Fin p × Fin q`: if the two "opposite corners"
+`(i₂, j₁)` and `(i₁, j₂)` satisfy the criterion and `i₁ ≤ i ≤ i₂`,
+`j₁ ≤ j ≤ j₂`, then so does `(i, j)`. This is the paper's doubly
+monotone staircase — `R` is order-convex, wedged between two
+nondecreasing graphs. -/
+theorem crit_orderConvex_2d
+    {alpha beta : Fin p → ℤ} {gamma delta : Fin q → ℤ} {T : ℤ}
+    (hα : Monotone alpha) (hβ : Monotone beta)
+    (hγ : Monotone gamma) (hδ : Monotone delta)
+    {i₁ i i₂ : Fin p} {j₁ j j₂ : Fin q}
+    (hi1 : i₁ ≤ i) (hi2 : i ≤ i₂) (hj1 : j₁ ≤ j) (hj2 : j ≤ j₂)
+    (hc1 : SatisfiesCrit alpha beta gamma delta T i₂ j₁)
+    (hc2 : SatisfiesCrit alpha beta gamma delta T i₁ j₂) :
+    SatisfiesCrit alpha beta gamma delta T i j := by
+  refine ⟨?_, ?_⟩
+  · -- `α i + T ≤ δ j + 1`, propagated from corner `(i₂, j₁)`.
+    have h1 : alpha i ≤ alpha i₂ := hα hi2
+    have h2 : delta j₁ ≤ delta j := hδ hj1
+    linarith [hc1.1]
+  · -- `γ j + T ≤ β i + 1`, propagated from corner `(i₁, j₂)`.
+    have h1 : beta i₁ ≤ beta i := hβ hi1
+    have h2 : gamma j ≤ gamma j₂ := hγ hj2
+    linarith [hc2.2]
+
+/-- **Columns of the overlap region are order-convex** (`step5.tex:418`).
+Symmetric to `critRow_orderConvex`: fixing `j`, the set of `i` with
+`SatisfiesCrit … i j` is order-convex in `Fin p`. Together with
+`critRow_orderConvex` this is the "doubly monotone staircase". -/
+theorem critCol_orderConvex
+    {alpha beta : Fin p → ℤ} {gamma delta : Fin q → ℤ} {T : ℤ}
+    (hα : Monotone alpha) (hβ : Monotone beta)
+    {i₁ i i₂ : Fin p} {j : Fin q} (h1 : i₁ ≤ i) (h2 : i ≤ i₂)
+    (hc1 : SatisfiesCrit alpha beta gamma delta T i₁ j)
+    (hc2 : SatisfiesCrit alpha beta gamma delta T i₂ j) :
+    SatisfiesCrit alpha beta gamma delta T i j := by
+  refine ⟨?_, ?_⟩
+  · have hai : alpha i ≤ alpha i₂ := hα h2
+    linarith [hc2.1]
+  · have hbi : beta i₁ ≤ beta i := hβ h1
+    linarith [hc1.2]
+
+/-! ### Step 4: the row endpoints `L_i`, `U_i` are nondecreasing in `i`
+
+`step5.tex:416-417`: with `α, β` nondecreasing, the left/right endpoints
+of the criterion row move nondecreasingly. The proofs use only the
+criterion and the monotonicity of the four endpoint families — no
+explicit initial/final-segment bookkeeping. -/
+
+/-- **`step5.tex:416-417` (`L_i` nondecreasing).** The left endpoint of
+the criterion row — its minimum index — is nondecreasing in `i`. -/
+theorem critRow_min'_mono
+    {alpha beta : Fin p → ℤ} {gamma delta : Fin q → ℤ} {T : ℤ}
+    (hα : Monotone alpha) (hγ : Monotone gamma)
+    {i i' : Fin p} (hi : i ≤ i')
+    (hne : (critRow alpha beta gamma delta T i).Nonempty)
+    (hne' : (critRow alpha beta gamma delta T i').Nonempty) :
+    (critRow alpha beta gamma delta T i).min' hne ≤
+      (critRow alpha beta gamma delta T i').min' hne' := by
+  have hmcrit := mem_critRow.mp (Finset.min'_mem _ hne)
+  have hm'crit := mem_critRow.mp (Finset.min'_mem _ hne')
+  by_cases hmem : (critRow alpha beta gamma delta T i').min' hne' ∈
+      critRow alpha beta gamma delta T i
+  · exact Finset.min'_le _ _ hmem
+  · rw [mem_critRow] at hmem
+    rcases not_and_or.mp hmem with hnA | hnB
+    · -- `¬(α i + T ≤ δ m' + 1)` contradicts `α i ≤ α i'` + crit at `i'`.
+      exfalso
+      have h1 := hm'crit.1
+      have h2 := hα hi
+      have h3 := not_le.mp hnA
+      linarith
+    · -- `¬(γ m' + T ≤ β i + 1)` forces `γ m < γ m'`, hence `m < m'`.
+      have hcmp : gamma ((critRow alpha beta gamma delta T i).min' hne) <
+          gamma ((critRow alpha beta gamma delta T i').min' hne') := by
+        have h1 := hmcrit.2
+        have h2 := not_le.mp hnB
+        linarith
+      exact le_of_lt (not_le.mp (fun h => absurd (hγ h) (not_le.mpr hcmp)))
+
+/-- **`step5.tex:416-417` (`U_i` nondecreasing).** The right endpoint of
+the criterion row — its maximum index — is nondecreasing in `i`. -/
+theorem critRow_max'_mono
+    {alpha beta : Fin p → ℤ} {gamma delta : Fin q → ℤ} {T : ℤ}
+    (hβ : Monotone beta) (hδ : Monotone delta)
+    {i i' : Fin p} (hi : i ≤ i')
+    (hne : (critRow alpha beta gamma delta T i).Nonempty)
+    (hne' : (critRow alpha beta gamma delta T i').Nonempty) :
+    (critRow alpha beta gamma delta T i).max' hne ≤
+      (critRow alpha beta gamma delta T i').max' hne' := by
+  have hMcrit := mem_critRow.mp (Finset.max'_mem _ hne)
+  have hM'crit := mem_critRow.mp (Finset.max'_mem _ hne')
+  by_cases hmem : (critRow alpha beta gamma delta T i).max' hne ∈
+      critRow alpha beta gamma delta T i'
+  · exact Finset.le_max' _ _ hmem
+  · rw [mem_critRow] at hmem
+    rcases not_and_or.mp hmem with hnA | hnB
+    · -- `¬(α i' + T ≤ δ M + 1)` forces `δ M < δ M'`, hence `M < M'`.
+      have hcmp : delta ((critRow alpha beta gamma delta T i).max' hne) <
+          delta ((critRow alpha beta gamma delta T i').max' hne') := by
+        have h1 := hM'crit.1
+        have h2 := not_le.mp hnA
+        linarith
+      exact le_of_lt (not_le.mp (fun h => absurd (hδ h) (not_le.mpr hcmp)))
+    · -- `¬(γ M + T ≤ β i' + 1)` contradicts `β i ≤ β i'` + crit at `i`.
+      exfalso
+      have h1 := hMcrit.2
+      have h2 := hβ hi
+      have h3 := not_le.mp hnB
+      linarith
+
+/-! ### Step 4 (assembly): the band around a nondecreasing envelope
+
+`step5.tex:424-443`: the rich set lies in a band of width `W⋆` (the
+maximum criterion-row width) around a nondecreasing envelope `f`. The
+envelope is the running maximum of the row minima, automatically
+monotone; on every non-empty row it agrees with the row minimum. -/
+
+/-- The left endpoint `L_i` of the criterion row as an integer (`0` on
+empty rows). -/
+noncomputable def critRowMin
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) (T : ℤ)
+    (i : Fin p) : ℤ :=
+  if h : (critRow alpha beta gamma delta T i).Nonempty
+  then (((critRow alpha beta gamma delta T i).min' h).val : ℤ)
+  else 0
+
+/-- The width `U_i − L_i` of the criterion row (`0` on empty rows). -/
+noncomputable def critRowWidth
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) (T : ℤ)
+    (i : Fin p) : ℕ :=
+  if h : (critRow alpha beta gamma delta T i).Nonempty
+  then ((critRow alpha beta gamma delta T i).max' h).val -
+       ((critRow alpha beta gamma delta T i).min' h).val
+  else 0
+
+/-- The global band width `W⋆ = max_i (U_i − L_i)` (`step5.tex:425`). -/
+noncomputable def bandWidth
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) (T : ℤ) : ℕ :=
+  Finset.univ.sup (fun i => critRowWidth alpha beta gamma delta T i)
+
+/-- The nondecreasing band envelope `f` (`step5.tex:428-432`): the
+running maximum of the row minima. Monotone by construction. -/
+noncomputable def bandEnvelope
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) (T : ℤ)
+    (i : Fin p) : ℤ :=
+  (Finset.univ.filter (· ≤ i)).sup' ⟨i, by simp⟩
+    (fun i' => critRowMin alpha beta gamma delta T i')
+
+lemma critRowMin_nonneg
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) (T : ℤ)
+    (i : Fin p) : 0 ≤ critRowMin alpha beta gamma delta T i := by
+  unfold critRowMin
+  split
+  · positivity
+  · exact le_rfl
+
+lemma critRowMin_eq
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) (T : ℤ)
+    {i : Fin p} (h : (critRow alpha beta gamma delta T i).Nonempty) :
+    critRowMin alpha beta gamma delta T i =
+      (((critRow alpha beta gamma delta T i).min' h).val : ℤ) := by
+  unfold critRowMin
+  rw [dif_pos h]
+
+lemma critRowMin_le_of_le
+    {alpha beta : Fin p → ℤ} {gamma delta : Fin q → ℤ} {T : ℤ}
+    (hα : Monotone alpha) (hγ : Monotone gamma)
+    {x i : Fin p} (hxi : x ≤ i)
+    (hi : (critRow alpha beta gamma delta T i).Nonempty) :
+    critRowMin alpha beta gamma delta T x ≤
+      critRowMin alpha beta gamma delta T i := by
+  by_cases hx : (critRow alpha beta gamma delta T x).Nonempty
+  · rw [critRowMin_eq _ _ _ _ _ hx, critRowMin_eq _ _ _ _ _ hi]
+    have := critRow_min'_mono hα hγ hxi hx hi
+    exact_mod_cast Fin.le_def.mp this
+  · rw [critRowMin, dif_neg hx, critRowMin_eq _ _ _ _ _ hi]
+    positivity
+
+lemma bandEnvelope_monotone
+    {alpha beta : Fin p → ℤ} {gamma delta : Fin q → ℤ} {T : ℤ} :
+    Monotone (bandEnvelope alpha beta gamma delta T) := by
+  intro i i' hii
+  unfold bandEnvelope
+  apply Finset.sup'_le
+  intro x hx
+  rw [Finset.mem_filter] at hx
+  exact Finset.le_sup' _ (by
+    rw [Finset.mem_filter]
+    exact ⟨Finset.mem_univ x, le_trans hx.2 hii⟩)
+
+lemma bandEnvelope_eq
+    {alpha beta : Fin p → ℤ} {gamma delta : Fin q → ℤ} {T : ℤ}
+    (hα : Monotone alpha) (hγ : Monotone gamma)
+    {i : Fin p} (hi : (critRow alpha beta gamma delta T i).Nonempty) :
+    bandEnvelope alpha beta gamma delta T i =
+      critRowMin alpha beta gamma delta T i := by
+  unfold bandEnvelope
+  apply le_antisymm
+  · apply Finset.sup'_le
+    intro x hx
+    rw [Finset.mem_filter] at hx
+    exact critRowMin_le_of_le hα hγ hx.2 hi
+  · exact Finset.le_sup' _ (by
+      rw [Finset.mem_filter]
+      exact ⟨Finset.mem_univ i, le_refl i⟩)
+
+/-- **`lem:convex-overlap`, conclusion (b) — the band** (`step5.tex:424-443`).
+
+The rich set lies in a band of width `W⋆ = bandWidth` around the
+nondecreasing envelope `f = bandEnvelope`: every rich `(i, j)` has
+`f i − W⋆ ≤ j ≤ f i + W⋆`. The envelope `f` is monotone and `W⋆` is the
+maximum criterion-row width — the band is *not* the trivial whole-range
+band (whose width would be `q`). -/
+theorem convex_overlap_band
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) {T : ℤ}
+    (hT : 1 ≤ T) (hα : Monotone alpha) (hγ : Monotone gamma) :
+    ∃ (f : Fin p → ℤ) (K : ℤ), 0 ≤ K ∧ Monotone f ∧
+      ∀ (i : Fin p) (j : Fin q),
+        j ∈ richRow alpha beta gamma delta T i →
+          f i - K ≤ (j : ℤ) ∧ (j : ℤ) ≤ f i + K := by
+  refine ⟨bandEnvelope alpha beta gamma delta T,
+    (bandWidth alpha beta gamma delta T : ℤ),
+    by positivity, bandEnvelope_monotone, ?_⟩
+  intro i j hj
+  have hjc : j ∈ critRow alpha beta gamma delta T i :=
+    richRow_subset_critRow alpha beta gamma delta hT i hj
+  have hne : (critRow alpha beta gamma delta T i).Nonempty := ⟨j, hjc⟩
+  have hfi : bandEnvelope alpha beta gamma delta T i =
+      (((critRow alpha beta gamma delta T i).min' hne).val : ℤ) := by
+    rw [bandEnvelope_eq hα hγ hne, critRowMin_eq _ _ _ _ _ hne]
+  have hjmin : ((critRow alpha beta gamma delta T i).min' hne).val ≤ (j : ℕ) :=
+    Fin.le_def.mp (Finset.min'_le _ _ hjc)
+  have hjmax : (j : ℕ) ≤ ((critRow alpha beta gamma delta T i).max' hne).val :=
+    Fin.le_def.mp (Finset.le_max' _ _ hjc)
+  have hminmax : ((critRow alpha beta gamma delta T i).min' hne).val ≤
+      ((critRow alpha beta gamma delta T i).max' hne).val :=
+    Fin.le_def.mp
+      (Finset.min'_le _ _ (Finset.max'_mem _ hne))
+  have hwid : ((critRow alpha beta gamma delta T i).max' hne).val -
+      ((critRow alpha beta gamma delta T i).min' hne).val ≤
+      bandWidth alpha beta gamma delta T := by
+    have he : critRowWidth alpha beta gamma delta T i =
+        ((critRow alpha beta gamma delta T i).max' hne).val -
+        ((critRow alpha beta gamma delta T i).min' hne).val := by
+      unfold critRowWidth
+      rw [dif_pos hne]
+    rw [← he]
+    exact Finset.le_sup (Finset.mem_univ i)
+  refine ⟨?_, ?_⟩
+  · rw [hfi]
+    have hK : (0 : ℤ) ≤ (bandWidth alpha beta gamma delta T : ℤ) := by positivity
+    have hjz : (((critRow alpha beta gamma delta T i).min' hne).val : ℤ) ≤
+        (j : ℤ) := by exact_mod_cast hjmin
+    linarith
+  · rw [hfi]
+    have hub : ((critRow alpha beta gamma delta T i).max' hne).val ≤
+        ((critRow alpha beta gamma delta T i).min' hne).val +
+          bandWidth alpha beta gamma delta T := by omega
+    have hjz : (j : ℤ) ≤
+        (((critRow alpha beta gamma delta T i).min' hne).val : ℤ) +
+          (bandWidth alpha beta gamma delta T : ℤ) := by
+      have : (j : ℕ) ≤ ((critRow alpha beta gamma delta T i).min' hne).val +
+          bandWidth alpha beta gamma delta T := le_trans hjmax hub
+      exact_mod_cast this
+    linarith
+
+/-- **`lem:convex-overlap` — the dichotomy** (`step5.tex:362-372`,
+`step5.tex:440-443`).
+
+For any absolute density constant `c` and any rich-pair count
+`richCount`, *either* the rich set has positive density (conclusion
+(a), `step5.tex:364`) *or* it is banded around a nondecreasing envelope
+(conclusion (b), `convex_overlap_band`). Conclusion (b) in fact holds
+unconditionally; the case split records the paper's framing where (a)
+is the operative branch in the high-density regime.
+
+This is the load-bearing structural output consumed by the Step 5
+single-triple dichotomy (`prop_single_triple`, `Dichotomy.lean`). -/
+theorem convex_overlap
+    (alpha beta : Fin p → ℤ) (gamma delta : Fin q → ℤ) {T : ℤ}
+    (hT : 1 ≤ T) (hα : Monotone alpha) (hγ : Monotone gamma)
+    (c richCount : ℕ) :
+    (c * (p * q) ≤ richCount) ∨
+    (∃ (f : Fin p → ℤ) (K : ℤ), 0 ≤ K ∧ Monotone f ∧
+      ∀ (i : Fin p) (j : Fin q),
+        j ∈ richRow alpha beta gamma delta T i →
+          f i - K ≤ (j : ℤ) ∧ (j : ℤ) ≤ f i + K) := by
+  by_cases hdense : c * (p * q) ≤ richCount
+  · exact Or.inl hdense
+  · exact Or.inr (convex_overlap_band alpha beta gamma delta hT hα hγ)
+
 end Step5
 end OneThird
