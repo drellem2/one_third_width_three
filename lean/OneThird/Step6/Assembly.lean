@@ -6,6 +6,7 @@ import OneThird.Step6.Incoherence
 import OneThird.Step6.OverlapCounting
 import OneThird.Step6.RichnessBound
 import OneThird.Step6.ErrorControl
+import OneThird.Step4.Assembly
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Finset.Prod
@@ -214,6 +215,122 @@ theorem lem_sum_step4
     _ = c_d * M * boundary.card := by ring
 
 end G7
+
+/-! ### §2a — G7 consumes the grounded Step 4 output (S4-C consumability)
+
+The abstract `lem_sum_step4` above sums the Step 4 per-pair bound against
+the overlap-counting multiplicity over an opaque edge type `Edge`.  This
+section is the **S4-C consumability check**: it confirms that the
+*grounded* Step 4 witness family — `Step4.witnessFamilyOfPairs`, built on
+the genuine BK boundary `Step4.bkBoundary S` of `bkGraph α` — feeds
+`lem_sum_step4` directly.  The grounded per-pair input is stated on the
+witness-family cardinality `|E_{α,β}|` (the quantity the S4-B per-pair
+bound `prop_G5_witnessFamily` actually lower-bounds) and converted to the
+abstract `pairWeight` via the S4-C grounding bridge
+`Step4.pairWeight_witnessFamilyOfPairs`. -/
+
+section G7Grounded
+
+set_option linter.unusedDecidableInType false
+
+variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
+variable {ι Pair : Type*} [DecidableEq Pair]
+
+/-- **G7 consumes the grounded Step 4 output (`step6.tex:270`, S4-C
+consumability check).**
+
+Step 6's `lem_sum_step4` sums the Step 4 per-pair bound `w_{α,β}` against
+the overlap-counting multiplicity `M`.  This theorem confirms the
+grounded Step 4 witness family `Step4.witnessFamilyOfPairs` — on the
+genuine BK boundary `Step4.bkBoundary S` — is consumable directly:
+
+* `hmult` — the overlap-counting multiplicity (`lem:G6` / the Step 1
+  swap-pair pinning consequence): every BK edge of `∂_BK S` lies in at
+  most `M` of the grounded witness families;
+* `hPerPair` — the Step 4 per-pair bound, stated on the grounded
+  witness-family cardinality `|E_{α,β}|` (which the S4-B
+  `prop_G5_witnessFamily` lower-bounds).
+
+Conclusion: the summed Step-4 bound on the genuine BK boundary,
+`c_n · ∑_{bad active} w_{α,β} ≤ c_d · M · |∂_BK S|`. -/
+theorem lem_sum_step4_grounded
+    (S : Finset (OneThird.LinearExt α))
+    (squares : Pair → Pair → Finset ι)
+    (crn : Pair → Pair → ι → OneThird.Step4.BKSquare α)
+    (inInc : Pair → Pair → ι → Prop) [∀ a b, DecidablePred (inInc a b)]
+    (richPairs : Finset Pair) (M c_n c_d : ℕ) (w : Pair → Pair → ℕ)
+    (badSet : Finset (Pair × Pair))
+    (hbadSub : badSet ⊆ richPairs ×ˢ richPairs)
+    (hmult : ∀ e ∈ OneThird.Step4.bkBoundary S,
+      OneThird.Step4.witnessCount richPairs
+        (OneThird.Step4.witnessFamilyOfPairs S squares crn inInc) e ≤ M)
+    (hPerPair : ∀ p ∈ badSet,
+      c_n * w p.1 p.2 ≤
+        c_d * (OneThird.Step4.witnessFamilyOfPairs S squares crn inInc
+                p.1 p.2).card) :
+    c_n * ∑ p ∈ badSet, w p.1 p.2
+      ≤ c_d * M * (OneThird.Step4.bkBoundary S).card := by
+  refine lem_sum_step4 richPairs
+    (OneThird.Step4.witnessFamilyOfPairs S squares crn inInc)
+    (OneThird.Step4.bkBoundary S) M c_n c_d w badSet hbadSub hmult ?_
+  intro p hp
+  rw [OneThird.Step4.pairWeight_witnessFamilyOfPairs]
+  exact hPerPair p hp
+
+/-- **S4-C consumability — non-vacuity.**
+
+At the genuine width-3 non-chain grid poset `Fin 3 × Fin 3`, the grounded
+`lem_sum_step4_grounded` fires on a one-pair, one-bad-active-pair index
+carrying the genuine BK conflict square `gridSquare`:
+
+* `badSet` is non-empty (the one bad active pair) and the per-pair weight
+  `w = 1` is strictly positive;
+* the per-pair bound is discharged by the genuine non-empty witness
+  family — a real BK cut edge from `gridSquare`;
+* `lem_sum_step4_grounded` delivers `1 · ∑ w ≤ 1 · 1 · |∂_BK S|` with a
+  strictly positive left-hand side. -/
+theorem lem_sum_step4_grounded_nonvacuous :
+    1 ≤ ∑ p ∈ ({((), ())} : Finset (Unit × Unit)),
+          (fun _ _ => (1 : ℕ)) p.1 p.2 ∧
+    1 * ∑ p ∈ ({((), ())} : Finset (Unit × Unit)),
+          (fun _ _ => (1 : ℕ)) p.1 p.2
+      ≤ 1 * 1 *
+          (OneThird.Step4.bkBoundary
+            ({OneThird.gridLinExt} :
+              Finset (OneThird.LinearExt (Fin 3 × Fin 3)))).card := by
+  obtain ⟨_, _, hconf, _, _, _⟩ := OneThird.Step4.witnessGrounded_nonvacuous
+  set S : Finset (OneThird.LinearExt (Fin 3 × Fin 3)) :=
+    {OneThird.gridLinExt} with hS
+  set wit := OneThird.Step4.witnessFamilyOfPairs S
+    (fun _ _ => ({()} : Finset Unit)) (fun _ _ _ => OneThird.Step4.gridSquare)
+    (fun _ _ _ => (True : Prop)) with hwit
+  -- The grounded witness family is non-empty: a genuine BK cut edge.
+  have hne : (wit () ()).Nonempty := by
+    rw [hwit]
+    unfold OneThird.Step4.witnessFamilyOfPairs
+    exact OneThird.Step4.witnessFamily_nonempty_of_conflict (S := S)
+      (squares := {()}) (crn := fun _ => OneThird.Step4.gridSquare)
+      (inIncoherent := fun _ => True) (i := ())
+      (Finset.mem_singleton_self ()) trivial hconf
+  have hpos : 1 ≤ (wit () ()).card := Finset.card_pos.mpr hne
+  refine ⟨by simp, ?_⟩
+  -- Overlap-counting multiplicity: every BK edge is in at most M = 1 family.
+  have hmult : ∀ e ∈ OneThird.Step4.bkBoundary S,
+      OneThird.Step4.witnessCount ({()} : Finset Unit) wit e ≤ 1 := by
+    intro e _
+    unfold OneThird.Step4.witnessCount
+    calc ((({()} : Finset Unit) ×ˢ ({()} : Finset Unit)).filter
+            (fun p => e ∈ wit p.1 p.2)).card
+        ≤ (({()} : Finset Unit) ×ˢ ({()} : Finset Unit)).card :=
+          Finset.card_filter_le _ _
+      _ = 1 := by simp
+  exact lem_sum_step4_grounded S (fun _ _ => ({()} : Finset Unit))
+    (fun _ _ _ => OneThird.Step4.gridSquare) (fun _ _ _ => True)
+    ({()} : Finset Unit) 1 1 1 (fun _ _ => 1)
+    ({((), ())} : Finset (Unit × Unit))
+    (by simp) hmult (fun p _ => by simpa using hpos)
+
+end G7Grounded
 
 /-! ### §3 — `thm:step6` (`step6.tex:481`) -/
 
