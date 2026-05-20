@@ -281,6 +281,120 @@ theorem reflectBoth_L1Adj {n m : ℤ} {p q : ℤ × ℤ} :
     L1Adj (reflectBoth n m p) (reflectBoth n m q) ↔ L1Adj p q := by
   unfold L1Adj; rw [reflectBoth_l1dist]
 
+/-! ### §3b. HV-convex subsets of `ℤ × ℤ`
+
+Plain order-convexity (`IsOrdConvex`) is **not** preserved by the axis
+reflections of §3. Counterexample: `D = {(0,0), (1,0), (0,1)}` is
+order-convex, but `reflectFst 1` sends it to `{(1,0), (0,0), (1,1)}`,
+which is not — the order-interval `[(0,0), (1,1)]` is no longer
+contained. The reflection-stable weakening is **HV-convexity**: every
+horizontal line (row) and every vertical line (column) the set meets is
+an integer interval. HV-convexity is implied by order-convexity and
+*is* preserved by all four axis orientations. This is what the
+four-orientation WLOG reduction of `step2.tex` Step 2 genuinely needs:
+the paper states that step in terms of order-convexity, which is the
+imprecision tracked by work item `mg-6db2`. -/
+
+/-- A finset `D ⊆ ℤ²` is **HV-convex** if every row and every column of
+`D` is an integer interval: any lattice point horizontally between two
+points of `D` sharing its row belongs to `D`, and likewise vertically.
+This is the reflection-stable weakening of `IsOrdConvex` used by the
+four-orientation reduction in Step 2. -/
+structure IsHVConvex (D : Finset (ℤ × ℤ)) : Prop where
+  /-- Every row of `D` is an interval. -/
+  row : ∀ {i j₁ j₂ j : ℤ}, (i, j₁) ∈ D → (i, j₂) ∈ D → j₁ ≤ j → j ≤ j₂ →
+    (i, j) ∈ D
+  /-- Every column of `D` is an interval. -/
+  col : ∀ {i₁ i₂ i j : ℤ}, (i₁, j) ∈ D → (i₂, j) ∈ D → i₁ ≤ i → i ≤ i₂ →
+    (i, j) ∈ D
+
+/-- **Order-convex ⟹ HV-convex.** Rows and columns are special
+order-intervals, so an order-convex region is HV-convex. The converse
+fails (see the counterexample above). -/
+theorem IsOrdConvex.isHVConvex {D : Finset (ℤ × ℤ)}
+    (hD : IsOrdConvex (D : Set (ℤ × ℤ))) : IsHVConvex D where
+  row {i j₁ j₂ j} h₁ h₂ hj₁ hj₂ := by
+    have h : ((i, j) : ℤ × ℤ) ∈ (D : Set (ℤ × ℤ)) :=
+      hD.mem_of_between (by exact_mod_cast h₁) (by exact_mod_cast h₂)
+        ⟨le_refl i, hj₁⟩ ⟨le_refl i, hj₂⟩
+    exact_mod_cast h
+  col {i₁ i₂ i j} h₁ h₂ hi₁ hi₂ := by
+    have h : ((i, j) : ℤ × ℤ) ∈ (D : Set (ℤ × ℤ)) :=
+      hD.mem_of_between (by exact_mod_cast h₁) (by exact_mod_cast h₂)
+        ⟨hi₁, le_refl j⟩ ⟨hi₂, le_refl j⟩
+    exact_mod_cast h
+
+/-- Membership in the `reflectFst`-image: `reflectFst` is an involution,
+so `p` lies in the image iff its reflection lies in `D`. -/
+lemma mem_image_reflectFst {D : Finset (ℤ × ℤ)} {n : ℤ} {i j : ℤ} :
+    ((i, j) : ℤ × ℤ) ∈ D.image (reflectFst n) ↔ ((n - i, j) : ℤ × ℤ) ∈ D := by
+  rw [Finset.mem_image]
+  constructor
+  · rintro ⟨⟨a, b⟩, hab, heq⟩
+    obtain ⟨e1, e2⟩ := Prod.mk.inj heq
+    rw [← e1, ← e2]
+    simpa using hab
+  · intro h
+    exact ⟨(n - i, j), h, by simp [reflectFst_apply]⟩
+
+/-- Membership in the `reflectSnd`-image. -/
+lemma mem_image_reflectSnd {D : Finset (ℤ × ℤ)} {m : ℤ} {i j : ℤ} :
+    ((i, j) : ℤ × ℤ) ∈ D.image (reflectSnd m) ↔ ((i, m - j) : ℤ × ℤ) ∈ D := by
+  rw [Finset.mem_image]
+  constructor
+  · rintro ⟨⟨a, b⟩, hab, heq⟩
+    obtain ⟨e1, e2⟩ := Prod.mk.inj heq
+    rw [← e1, ← e2]
+    simpa using hab
+  · intro h
+    exact ⟨(i, m - j), h, by simp [reflectSnd_apply]⟩
+
+/-- Membership in the `reflectBoth`-image. -/
+lemma mem_image_reflectBoth {D : Finset (ℤ × ℤ)} {n m : ℤ} {i j : ℤ} :
+    ((i, j) : ℤ × ℤ) ∈ D.image (reflectBoth n m) ↔
+      ((n - i, m - j) : ℤ × ℤ) ∈ D := by
+  rw [Finset.mem_image]
+  constructor
+  · rintro ⟨⟨a, b⟩, hab, heq⟩
+    obtain ⟨e1, e2⟩ := Prod.mk.inj heq
+    rw [← e1, ← e2]
+    simpa using hab
+  · intro h
+    exact ⟨(n - i, m - j), h, by simp [reflectBoth_apply]⟩
+
+/-- **HV-convexity is `reflectFst`-stable.** -/
+theorem isHVConvex_image_reflectFst {D : Finset (ℤ × ℤ)} {n : ℤ}
+    (hD : IsHVConvex D) : IsHVConvex (D.image (reflectFst n)) where
+  row {i j₁ j₂ j} h₁ h₂ hj₁ hj₂ := by
+    rw [mem_image_reflectFst] at h₁ h₂ ⊢
+    exact hD.row h₁ h₂ hj₁ hj₂
+  col {i₁ i₂ i j} h₁ h₂ hi₁ hi₂ := by
+    rw [mem_image_reflectFst] at h₁ h₂ ⊢
+    exact hD.col h₂ h₁ (by omega) (by omega)
+
+/-- **HV-convexity is `reflectSnd`-stable.** -/
+theorem isHVConvex_image_reflectSnd {D : Finset (ℤ × ℤ)} {m : ℤ}
+    (hD : IsHVConvex D) : IsHVConvex (D.image (reflectSnd m)) where
+  row {i j₁ j₂ j} h₁ h₂ hj₁ hj₂ := by
+    rw [mem_image_reflectSnd] at h₁ h₂ ⊢
+    exact hD.row h₂ h₁ (by omega) (by omega)
+  col {i₁ i₂ i j} h₁ h₂ hi₁ hi₂ := by
+    rw [mem_image_reflectSnd] at h₁ h₂ ⊢
+    exact hD.col h₁ h₂ hi₁ hi₂
+
+/-- **HV-convexity is `reflectBoth`-stable.** Together with the two
+single-axis cases, this shows HV-convexity is invariant under the whole
+Klein-four group of axis reflections — the reflection-stability the
+four-orientation argument relies on. -/
+theorem isHVConvex_image_reflectBoth {D : Finset (ℤ × ℤ)} {n m : ℤ}
+    (hD : IsHVConvex D) : IsHVConvex (D.image (reflectBoth n m)) where
+  row {i j₁ j₂ j} h₁ h₂ hj₁ hj₂ := by
+    rw [mem_image_reflectBoth] at h₁ h₂ ⊢
+    exact hD.row h₂ h₁ (by omega) (by omega)
+  col {i₁ i₂ i j} h₁ h₂ hi₁ hi₂ := by
+    rw [mem_image_reflectBoth] at h₁ h₂ ⊢
+    exact hD.col h₂ h₁ (by omega) (by omega)
+
 /-! ### §4. `YoungDiagram` as a staircase region in `ℤ²`
 
 Mathlib's `YoungDiagram` is, definitionally, a finite lower set of

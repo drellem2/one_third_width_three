@@ -51,18 +51,28 @@ correct, do not build): the **full Cheeger inequality** (`λ₂ ≤ 2Φ`,
 mg-893b Theorem-E resolution (2026-04-18) replaced the
 pair-Poincaré / spectral argument with elementary averaging.
 
-**F6a SHIPPED-SINCE-AUDIT (2026-05-20, mg-28fe).** The **F6a
-single-orientation quantitative core** is now in tree:
-`OneThird/Step2/WeakGrid.lean` §2 ships `weak_grid_quantitative`, the
-genuine `δ = 4ε/c` form of `lem:weak-grid` (`step2.tex` proof
-Steps 1–6) for a single pre-chosen staircase orientation, `0`-`sorry`.
+**F6 SHIPPED-SINCE-AUDIT (2026-05-20, mg-28fe + mg-6b23).** The Step 2
+weak grid stability lemma `lem:weak-grid` is now **complete** in tree.
+
+* **F6a (mg-28fe)** — `OneThird/Step2/WeakGrid.lean` §2 ships
+  `weak_grid_quantitative`, the genuine `δ = 4ε/c` form of
+  `lem:weak-grid` (`step2.tex` proof Steps 1–6) for a single
+  pre-chosen staircase orientation, with the Step 1–2 cleanup as
+  hypotheses, `0`-`sorry`.
+* **F6b (mg-6b23)** — `OneThird/Step2/WeakGridFull.lean` discharges the
+  cleanup hypotheses (`exRows_card_le_gridBdy_card`,
+  `exCols_card_le_gridBdy_card`, via the `vertColBdy` column transpose
+  of the `RowDecomp` machinery) and ships `weak_grid`: the **completed
+  `lem:weak-grid`** with no auxiliary hypotheses, `0`-`sorry`. The
+  HV-convex layer (`IsHVConvex` + reflection-stability) is in
+  `Grid2D.lean` §3b; the four-orientation reduction
+  (`weak_grid_covariant` + the three reflected forms) is in
+  `WeakGridFull.lean` §5. Finding: the paper's four-orientation `min`
+  WLOG is not load-bearing — the `+` orientation satisfies the cleanup
+  bounds unconditionally (see `docs/state-F6b-weak-grid-Session1.md`).
+
 The trivial `δ ≤ 1` placeholder `weak_grid_bound` is retained only for
-its current consumers and is superseded by `weak_grid_quantitative`.
-Still genuinely open in buckets C/D/F: **F6b** — the four-orientation
-reflection reduction that discharges F6a's `hrow` / `hcol`
-single-orientation cleanup hypotheses (paper Step 2's `min`
-argument), which is where the HV-convex / reflection-stability
-threading lives (see `docs/state-F6a-weak-grid-Session1.md` §3).
+its current consumers and is superseded by `weak_grid`.
 
 Terminology convention below:
 
@@ -226,7 +236,7 @@ consumers in Steps 6–7.
 | F3 | Lower sets / `IsLowerSet` | IN MATHLIB | `Mathlib.Order.UpperLower.Basic`. |
 | F4 | Monotone staircase region of a 2D grid (lower set in `≤₊` or `≤₋`) | PARTIAL | `Mathlib.Combinatorics.Young.YoungDiagram` is exactly a finite lower set of `ℕ × ℕ` with substantial API: cells, row/column lengths, corners. This is very close to the "staircase" object of `step2.tex` Definition 2.1. Adapting to `[0,t]² ⊂ ℤ²` with the four orientations (`±` of each axis) is a short wrapper. **Difficulty: low.** The existing Young-diagram infrastructure is a lucky hit. |
 | F5 | Grid edge boundary `∂_D A` (Definition `def:grid-bdy` in `step2.tex`) | NOT IN MATHLIB | One definition on top of F4: `{(u,v) : u ∈ A, v ∈ D\A, \|u−v\|₁ = 1}`. **Difficulty: low.** |
-| F6 | Weak grid stability lemma (`\|A△M\| ≤ δ\|D\|` when `∂_D A ≤ εt`) | NOT IN MATHLIB | **This is the Step 2 core content** (`lem:weak-grid` in `step2.tex:135`) and is the first non-trivial Mathlib contribution required. The proof is currently written out in `step2.tex` across ~200 lines and is elementary (row/column cleanup + monotone rearrangement + anchor reduction). **Difficulty: medium.** Not research-deep, but 500–1000 lines of Lean, with 6–8 auxiliary lemmas (`lem:row-decomp`, `cor:most-rows-intervals`, `lem:1d-components`, etc. all enumerated in `step2.tex` §3–4). |
+| F6 | Weak grid stability lemma (`\|A△M\| ≤ δ\|D\|` when `∂_D A ≤ εt`) | **SHIPPED** (mg-28fe + mg-6b23) | `lem:weak-grid` (`step2.tex:121`) is **complete** in tree: `OneThird/Step2/WeakGridFull.lean` ships `weak_grid` — order-convex `D ⊆ [0,t]²`, `\|D\| ≥ ct²`, `A ⊆ D`, `∂_D A ≤ εt` ⟹ a genuine `+`-staircase `M` with `\|A△M\| ≤ (4ε/c)\|D\|`, no auxiliary hypotheses, `0`-`sorry`. F6a (`weak_grid_quantitative`, the Steps 3–6 core) + F6b (the Step 1–2 cleanup discharge via the `vertColBdy` column transpose, the HV-convex layer, the four-orientation reduction). See the F6 SHIPPED note in §2. |
 | F7 | Triple-overlap / Z³ cube corollary | NOT IN MATHLIB | The Step 1 Corollary 4.x feeding Step 7's cocycle lemma. Specific to this project; no generic Mathlib hook. Formalization cost is bounded by the LaTeX writeup (~4 pages in `step1.tex`). **Difficulty: medium.** |
 
 **Assessment.** F4–F5 are light thanks to `YoungDiagram`. F6 (Step 2
