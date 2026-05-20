@@ -45,6 +45,7 @@ import OneThird.Step2.PerFiberGrounded2
 import OneThird.Step3.LocalSign
 import OneThird.Step3.CommonAxes
 import OneThird.Step3.Step3Theorem
+import OneThird.Step3.LocalSignGrounded
 import OneThird.Step4.RectangleModel
 import OneThird.Step4.DensityRegularization
 import OneThird.Step4.Step4Theorem
