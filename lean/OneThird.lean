@@ -41,6 +41,7 @@ import OneThird.Step2.WeakGridFull
 import OneThird.Step2.PerFiber
 import OneThird.Step2.Conclusion
 import OneThird.Step2.PerFiberGrounded
+import OneThird.Step2.PerFiberGrounded2
 import OneThird.Step3.LocalSign
 import OneThird.Step3.CommonAxes
 import OneThird.Step3.Step3Theorem
