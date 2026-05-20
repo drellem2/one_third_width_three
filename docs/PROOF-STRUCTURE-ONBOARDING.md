@@ -539,6 +539,18 @@ mg-5c32, mg-82fc, mg-2970, mg-ac13, mg-5fbd).
   **load-bearing `bandwidth ≤ 4`** for S7-F bridge consumption
   (per mg-6ab8 §7.1 spec; instantiates abstract `prop_72` at
   `c₀ := 4`, paper `rem:w0-constant`).
+  `Step7/GroundSet.lean` (full file, **piece 2 of the Option A'
+  FULL REFACTOR**: `BKVertex`, `BKEdge`, `BKEdge.bkGraph_adj`,
+  `prop_72_groundSet`, `lem_bandwidth_le_four_groundSet`,
+  `lem_bandwidth_le_four_bundled_groundSet`, `prop_71_groundSet`,
+  `prop71_prop72_lemBandwidth_groundSet`) (mg-4ce6) — concretises
+  the parametric S7-E grounded forms to the concrete BK-graph
+  carrier types `Vertex := LinearExt α`, `Edge := BKEdge α`,
+  `Pair := α × α`, so the S7-F bridge (P3) and `MainAssembly`
+  refactor (P4) consume concrete objects. The Steps 5–6
+  budget/richness constants + proofs stay parametric
+  (`hBud`/`hRich` hypotheses) — they are piece 1's deliverable;
+  see `docs/state-S7-Conc-Session1.md`.
 
 **Paper.** `main.tex` §1.4 road map; `step7.tex:1175-1193`
 (`prop:72`); `step8.tex:2404-2418` (`lem:ordinal-factorisation`);
