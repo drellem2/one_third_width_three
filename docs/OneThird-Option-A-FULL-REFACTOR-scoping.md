@@ -893,7 +893,8 @@ piece 3 → **piece 6** → piece 4-body.
 
 **Hold-the-line risks.**
 
-1. **Base-case coverage gap (the mg-G4-D note above).** The
+1. **Base-case coverage gap (the mg-G4-D note above).
+   ⚠ MATERIALISED — mg-fdc2, 2026-05-20.** The
    `Case3Witness_proof` singleton-band restriction means the C2
    bounded base is not a drop-in. Probability the cap-light
    extension needs its own sub-arc ~35%, magnitude +300k-600k.
@@ -901,6 +902,24 @@ piece 3 → **piece 6** → piece 4-body.
    non-singleton bands within TIER A (`nfree ≤ 25`); confirm
    TIER A spans all `|β| ≤ 39` width-3 non-chain posets at
    mg-G4-D kickoff, before coding.
+
+   **Update (mg-fdc2, Checkpoint 6 gate).** Risk 1 has
+   materialised — and is *worse* than this estimate. The first
+   Piece 6 execution attempt found it is **not a "needs its own
+   sub-arc" cost overrun but a hard blocker**: `Case3Witness_proof`
+   requires band injectivity in *every* branch, and the only
+   in-tree discharge of the non-singleton-band irreducible base
+   case (`bounded_irreducible_balanced_hybrid`'s out-of-scope
+   branch) needs `Case2Witness L → HasBalancedPair β`, available
+   only via the **provably-false** `Case2FKGSubClaim`. The
+   cap-light mg-be48 enumeration is a *Python* certificate, not a
+   Lean discharge, so it does not close the gap either.
+   Additionally `windowLocalization` / `lem_layered_reduction`
+   (the named inductive-step "wiring" lemmas) are **vacuous
+   placeholders**. Piece 6 cannot be executed against the
+   §4.2 §G routing. Full diagnosis + forward options (G1
+   formalise honestly / G2 disclosed base-case axiom / G3
+   status-quo) in `docs/state-Piece6-FullStep8G4-Session1.md`.
 2. **`lem_cut` / `windowLocalization` re-targeting.** These NC
    lemmas were built for the abandoned size-minimal framing
    (mg-805c); re-targeting them onto the strong-induction

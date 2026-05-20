@@ -65,6 +65,20 @@ and this file is wrong — fix it.
   (`docs/state-MA-Sig-Session1.md` §10, instantiated against the
   3-disjoint-chains counterexample class). mg-d8c7 is now a
   **6-piece** decomposition. See §3 pitfall #6.
+* **mg-fdc2 Piece 6 Session 1 (RED, base-case coverage gap)**:
+  the first attempt to execute Piece 6 (`lem_layered_balanced_full`,
+  the full Step 8 G4) found the scoped routing **unbuildable**.
+  `Case3Witness_proof` cannot serve as the base case — it requires
+  band injectivity (cap 1) in every branch, and the re-pinned
+  Piece 6 input `L` is deliberately non-injective (mg-faf8 dropped
+  cap 1). The non-singleton-band irreducible base case has **no
+  in-tree discharge** (`Case2Witness L → HasBalancedPair β` is
+  available only via the provably-false `Case2FKGSubClaim`). And
+  the named "wiring" lemmas `windowLocalization` /
+  `lem_layered_reduction` are **vacuous placeholders** (the former
+  takes `q := probLT x y`; the latter returns its own input
+  field). This is the scoping doc §2.6 risk 1 / Checkpoint 6 gate
+  firing. See §3 pitfall #7 + `docs/state-Piece6-FullStep8G4-Session1.md`.
 
 ---
 
@@ -513,6 +527,71 @@ See `docs/state-MA-Sig-Session1.md` §4.4 check (B) + §10 for the
 template (the corrected contract's satisfiability verification,
 instantiated against the 3-disjoint-chains counterexample class).
 
+### Pitfall #7 — Piece 6's base case is not `Case3Witness_proof`, and two of its "wiring" lemmas are vacuous (mg-fdc2, Checkpoint-6 gate)
+
+**Status: RED — Piece 6 (`lem_layered_balanced_full`) not buildable
+as scoped.** The mg-fdc2 ticket scoped Piece 6 as "`Case3Witness_proof`
+becomes the base case; the inductive step wires `lem_cut`,
+`windowLocalization`, `lem_layered_reduction`". Both halves fail:
+
+1. **`Case3Witness_proof` requires band injectivity (cap 1) in
+   every branch** (`OptionC/Case3WitnessProof.lean`: K=1 via
+   `absurd_K1_of_injective`; K=2-reducible via
+   `isChain_of_K2_reducible_under_injective`; K≥3-reducible via the
+   `compactify` injectivity propagation; K≥3-irreducible via
+   `case2_discharge_of_injective`). The re-pinned Piece 6 signature
+   **deliberately drops cap 1** — its input `L` has bands of size
+   `≤ 3`, *not* singletons (mg-faf8, `state-MA-Sig-Session1.md`
+   §10.3). A non-singleton-band `L` cannot in general be converted
+   to a singleton-band `L'` with `L'.w ≤ 4` (e.g. 3 disjoint
+   chains of lengths 4,3,3, `|β| = 10`). So `Case3Witness_proof`'s
+   domain is a *strict* sub-slice of Piece 6's, and the recursion
+   (which only shrinks `|β|`, never manufactures injectivity)
+   cannot bridge the two.
+
+2. **The non-singleton-band irreducible base case has no in-tree
+   discharge.** The only in-tree discharge of an irreducible poset,
+   `bounded_irreducible_balanced_hybrid`, needs (out-of-scope
+   branch) a `Case2Witness L → HasBalancedPair β` discharge. For
+   non-injective `L` that is available only via
+   `case2Witness_balanced_under_FKG`, which requires
+   `Case2FKGSubClaim L` — **provably false** (`OptionC/K2Closure.lean:21`).
+   No route exists.
+
+3. **`windowLocalization` and `lem_layered_reduction` are vacuous
+   placeholders.** `windowLocalization` (`LayeredBalanced.lean:103`)
+   proves `∃ q, probLT x y = q ∧ …` by `q := probLT x y` — it
+   carries the window *size* bound and **no marginal-invariance
+   content**. `lem_layered_reduction` (`LayeredReduction.lean:491`)
+   is `W.conclusion` where `ReductionWitness` carries `conclusion`
+   as an *input field* — it returns its own input. Only `lem_cut`
+   is substantive. "Wiring" the placeholders = the vacuous routing
+   the ticket forbids.
+
+**Practical implication.** Do not dispatch a Piece 6 coding ticket
+against the mg-faf8 §4.2 §G routing. Honest closure needs *new
+formalization*, not wiring: (a) the genuine window-localization
+marginal-invariance lift (a `2w`-padded-window `OrdinalDecomp` +
+`tripleEquiv`), and (b) a discharge of irreducible width-3
+non-chain **non-singleton-band** bounded posets — a real
+`prop:in-situ-balanced` Case 2 FKG port (the provably-false
+`Case2FKGSubClaim` must be replaced by a correct narrower FKG
+statement) or a new disclosed project axiom. Case A (`K=1`) and
+Case B (reducible) *are* genuinely buildable today. Full analysis,
+per-case buildability table, and forward options (G1/G2/G3) in
+`docs/state-Piece6-FullStep8G4-Session1.md`.
+
+**Standing lesson.** This is the 9th gap discovery of the OneThird
+arc (after mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970, mg-ac13,
+mg-5fbd, mg-0bd1). Unlike #6/#8 it is not a *false signature* — the
+proposition is true — it is a *buildability gap*: the in-tree
+"inductive infrastructure" turned out to be placeholders, and the
+named base case is a theorem about a strictly smaller class.
+**When a ticket says "wire lemma X into the headline", read X's
+proof body before scoping the wiring** — a lemma can be in tree,
+typed, and named after a paper result while carrying none of that
+result's content.
+
 ---
 
 ## §4. Cross-reference index (terse)
@@ -659,6 +738,16 @@ instantiated against the 3-disjoint-chains counterexample class).
   full Step 8 G4 port (a 6th piece). Recommendation: re-scope
   (re-pin MA-Sig §4.2, add piece 6) before any P3/P4 Lean work.
   No Lean changes in that session.
+* `docs/state-Piece6-FullStep8G4-Session1.md` (mg-fdc2) — FULL
+  REFACTOR Piece 6 (`lem_layered_balanced_full`, full Step 8 G4)
+  first execution attempt; **RED — base-case coverage gap**. The
+  scoped routing is unbuildable: `Case3Witness_proof` needs band
+  injectivity the re-pinned input `L` does not carry, and the
+  named "wiring" lemmas `windowLocalization` /
+  `lem_layered_reduction` are vacuous placeholders. This is the
+  scoping doc §2.6 risk 1 / Checkpoint 6 gate firing. §3
+  pitfall #7. Forward options G1 (formalise honestly) / G2
+  (disclosed base-case axiom) / G3 (status-quo). No Lean changes.
 * `docs/state-MA-Sig-Session1.md` (mg-a22b, re-pinned mg-faf8) —
   the Option A' FULL REFACTOR signature contract. §4.2 §E/§G,
   §4.3, §4.4 are the pinned cascade API; **§9** records the

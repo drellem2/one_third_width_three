@@ -861,6 +861,24 @@ sub-tickets (mg-MA-G4-Full, mg-MA-MinCex, mg-MA-ThmE,
 mg-MA-Cascade, mg-MA-Body, mg-Int-A, mg-Int-B) reference the
 §4.2-§4.3 signatures.
 
+> **⚠ Piece 6 status (mg-fdc2, 2026-05-20).** The §4.2 §G
+> `lem_layered_balanced_full` signature is **still a correct,
+> satisfiable proposition** (§10.6 unaffected). But the first
+> execution attempt (mg-fdc2) found the **proof routing**
+> unbuildable: `Case3Witness_proof` cannot be the base case (it
+> requires band injectivity the re-pinned input `L` deliberately
+> lacks), and the named inductive-step lemmas `windowLocalization`
+> / `lem_layered_reduction` are vacuous placeholders. Honest
+> closure needs new formalization (a genuine window
+> marginal-invariance lift + a non-singleton-band
+> `prop:in-situ-balanced` Case 2 port) or a new disclosed
+> base-case axiom — a re-scoping decision. See
+> `docs/state-Piece6-FullStep8G4-Session1.md` §7 (options
+> G1/G2/G3) and `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #7.
+> No §4.2 §G *signature* re-pin is required; what changed is the
+> Piece 6 *execution plan* (mg-MA-G4-Full must be split per
+> §7 of the Piece 6 state doc).
+
 Update this file in the **same commit** as any of the following:
 
 - A Phase 2/4 sub-ticket lands and its actual signature drifts
