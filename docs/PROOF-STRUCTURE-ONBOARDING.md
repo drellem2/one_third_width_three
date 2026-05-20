@@ -108,6 +108,22 @@ and this file is wrong — fix it.
   gating, and Piece 1's cascade-port completion (ground G6 + wire
   `ε₂`; compose the cascade) is unfinished. See
   `docs/state-S6-QA-Checkpoint2-Session1.md`.
+* **mg-fc78 S1-G2-Report (GREEN hard gate, 2026-05-20)**: the
+  Checkpoint-2 follow-on item 1 — the **HARD GATE for Piece 2**. The
+  `IsGoodFiber` `def:good-fiber` re-port is **done**: `rawFiber`
+  (`LocalCoords.lean`) is now the both-sign external-ordering class
+  (the single-sign split was the genuine bug, **not** G2 — G2 *is* the
+  paper rectangle-convexity and is kept), and G3 carries the diagonal
+  sign-flip edge. `goodFiberSet a0 a1` is now **provably non-empty**:
+  `interface_part_iv_goodFiber_nonempty` (`Interface.lean` §6) proves
+  `goodFiberSet a0 a1 = Finset.univ` on `Antichain3` — sorry-free,
+  axiom-free, the exact flip of the S1-E refutation. The empty-good-set
+  blocker the S6-QA Checkpoint-2 audit flagged ("all grounded cascade
+  output downstream is fiction") is **removed at the definition layer**.
+  The third scope item (genuine `O(t²)` `bounded_interaction`) is
+  block-and-reported as a sub-split — it needs the
+  `lem:bounded-interaction` strip-counting port. See §3 pitfall #8 and
+  `docs/state-S1-G2-Report-Session1.md`.
 
 ---
 
@@ -621,63 +637,56 @@ proof body before scoping the wiring** — a lemma can be in tree,
 typed, and named after a paper result while carrying none of that
 result's content.
 
-### Pitfall #8 — The S1 `IsGoodFiber` G2 clause is rectangle-convexity, which inverts the good/bad partition (mg-c2d7, 10th vacuity discovery)
+### Pitfall #8 — The S1 `goodFiberSet` was empty: the bug was the single-sign `rawFiber`, not G2 (mg-c2d7 diagnosis, mg-fc78 RESOLVED)
 
-**Status: RED — the Checkpoint-1 AMBER gap is a definition-layer
-bug, not an assembly gap.** The S1-E ticket (mg-c2d7) was scoped by
-the Checkpoint-1 audit (mg-8b95 §8.1) as an *assembly-only*
-follow-on: "the strip count and `collinear_fiber_card_le` are in
-tree — what is missing is the assembly". Executing it found:
+**Status: RESOLVED by mg-fc78.** S1-E (mg-c2d7) discovered — and
+machine-checked on `Antichain3` — that the landed S1-A `IsGoodFiber`
+port made `goodFiberSet x y` **empty** for every rich pair with
+`t ≥ 1` (`interface_part_iv_faithfulness_defect`). Working *without*
+`step1.tex`, S1-E attributed this to "G2 = rectangle-convexity is too
+strong". **mg-fc78, with paper access, corrected the diagnosis and
+fixed it:**
 
-1. **The strip-count machinery is NOT in tree** — only
-   `incompLocus_ordConvex`, `card_externalFinset`,
-   `collinear_fiber_card_le` (pitfall #4 again).
+1. **G2 *is* rectangle-convexity — and that is faithful.** `step1.tex`
+   `def:good-fiber` `cond:G2` literally reads *"`(i,j)` lies in the
+   rectangle `[i₀,i₁]×[j₀,j₁]`"*. The S1-A port of G2 is correct and
+   was **kept unchanged**.
 
-2. **The S1-A `IsGoodFiber` order-convexity clause (G2,
-   `LocalCoords.lean:209-214`) is too strong.** G2 demands the
-   coordinate image `π_{x,y}(F)` be **rectangle-convex** in `ℕ²`
-   (for `p ≤ q` in the image, the whole axis-aligned rectangle
-   `[p,q]` is in the image). But a genuine constant-sign raw fiber's
-   image is a **triangle**: `signMarker = true` forces
-   `iCoord ≤ jCoord` (the image sits in `{(i,j) : i ≤ j}`), and a
-   triangle is never a rectangle for `t ≥ 1`. So G2 **rejects every
-   genuine two-dimensional fiber** and accepts only the degenerate
-   collinear ones — it **inverts** the paper's good/bad partition
-   (the paper's *bad* fibers are the collinear ones).
+2. **The genuine bug was the raw fiber.** The S1-A `rawFiber x y L₀ ε`
+   was **single-sign**. A single-sign coordinate image lies in the
+   triangle `{i ≤ j}` (sign `+`) resp. `{j ≤ i}` (sign `−`) — never
+   rectangle-convex for `t ≥ 1`, so G2 rejected it. The paper's
+   `F_{x,y}(E)` is the external-ordering class over **both** signs
+   (`step1.tex:114-121`); its image is a genuine rectangle straddling
+   the diagonal. G3 likewise needed the diagonal sign-flip edge
+   (`step1.tex:163-166` + Output-interface line 702).
 
-3. **Consequence.** For every rich pair with `t ≥ 1` the landed
-   `goodFiberSet x y` is **empty** and `badSet x y = 𝓛(P)`. The
-   operative part-(iv) content `|Bad| ≪ |F|` is not *undelivered* —
-   under the landed definition it is **false**. Machine-checked
-   concretely on `Antichain3`:
-   `interface_part_iv_faithfulness_defect` (`Interface.lean` §6,
-   `goodFiberSet a0 a1 = ∅`, `badSet a0 a1 = 𝓛(P)`, no `sorry`/`axiom`).
+3. **The re-port (mg-fc78).** `LocalCoords.lean`: `rawFiber` is now the
+   both-sign external class (the `ε` parameter dropped); `IsGoodFiber`
+   G3 carries the sign-flip disjunct; G2 unchanged. `goodFiberSet` is
+   now **provably non-empty** — `interface_part_iv_goodFiber_nonempty`
+   (`Interface.lean` §6) proves `goodFiberSet a0 a1 = Finset.univ` on
+   `Antichain3`, the exact flip of the S1-E refutation, sorry-free and
+   axiom-free. The good fiber's image is the genuine 2-D square
+   `{0,1}²`.
 
-**Practical implication.** The Checkpoint-1 gap is closed not by an
-assembly ticket but by **re-porting the `IsGoodFiber` G2 clause** in
-S1-A `LocalCoords.lean` to the paper's genuine `def:good-fiber`
-order-convexity (staircase / BK-move-graph convexity, **not**
-product-order rectangle-convexity) — a small but upstream, gating
-ticket, requiring paper access (`step1.tex` is not in the repo).
-Only then can the part-(iv) bad-set bound / `bounded_interaction`
-upgrade / density corollaries be assembled honestly. S1-E delivered
-the machine-checked refutation + the sound general lemmas
-(`rawFiber_eq_of_externalEquiv`, `mem_goodFiberSet`,
-`goodFiber_image_no_unit_square[']`, the sign↔coordinate lemmas) and
-**block-and-reported** the four quantitative items — shipping a
-conditional `bounded_interaction` whose hypothesis is unsatisfiable
-on the current definitions would be pitfall #6 recurring. Full
-analysis: `docs/state-S1-E-Session1.md`.
+**Still open (sub-split):** the part-(iv) bad-set cardinality bound and
+the genuine `bounded_interaction` `O((t_{xy}+t_{uv})²)` — these need
+the `lem:bounded-interaction` strip-counting machinery, which is *not*
+in tree and whose paper proof is a sketch. mg-fc78 block-and-reported
+this third scope item rather than shipping a fake; see
+`docs/state-S1-G2-Report-Session1.md` §4-§5.
 
-**Standing lesson.** This is the **10th** gap discovery of the
-OneThird arc (after mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970,
-mg-ac13, mg-5fbd, mg-0bd1, mg-fdc2). The recurring meta-error:
-**an audit that scopes a follow-on as "just assembly" without
-computing the objects.** mg-8b95 noted part (ii) is "tautological"
-but never evaluated `goodFiberSet` on a concrete poset — had it
-done so it would have found it empty. **When a definition's whole
-point is "X is the bulk", instantiate it and check `X ≠ ∅` before
-building on it.**
+**Standing lesson.** Two lessons. (a) The mg-8b95 meta-error: **an
+audit that scopes a follow-on as "just assembly" without computing the
+objects** — had it evaluated `goodFiberSet` on a concrete poset it
+would have found it empty. **When a definition's whole point is "X is
+the bulk", instantiate it and check `X ≠ ∅`.** (b) The mg-c2d7
+meta-error: **diagnosing a port defect without the paper source.** S1-E
+declared `step1.tex` "not in the repo" and guessed the fix; the paper
+*was* in the repo root all along, and the literal definition put the
+bug in a different clause. **Before attributing a port bug to a
+specific clause, read the paper clause.**
 
 ---
 

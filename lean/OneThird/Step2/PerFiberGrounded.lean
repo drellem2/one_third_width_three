@@ -369,14 +369,17 @@ theorem fiberBKBdy_card_eq_gridBdy_card {x y : α}
       have : L'' = p.2 :=
         localCoord_injOn hF hsign hL''F hp2F (toGrid_injective hL''eq)
       exact hp2S (this ▸ hL''S)
-    · -- the move is a unit grid move
-      have hg3 := (hF.2.2 p.1 hp1F p.2 hp2F).mp hadj
-      have hmove := hg3.2
-      change L1Adj _ _
-      unfold L1Adj
-      have := (unitMove_iff_l1dist (iCoord x y p.1) (jCoord x y p.1)
-        (iCoord x y p.2) (jCoord x y p.2)).mp hmove
-      simpa [localCoord] using this
+    · -- the move is a unit grid move (the G3 sign-flip branch is ruled
+      -- out by the constant sign `ε₀` of the fiber `F`)
+      rcases (hF.2.2 p.1 hp1F p.2 hp2F).mp hadj with ⟨_, hmove⟩ | ⟨hflip, _⟩
+      · change L1Adj _ _
+        unfold L1Adj
+        have := (unitMove_iff_l1dist (iCoord x y p.1) (jCoord x y p.1)
+          (iCoord x y p.2) (jCoord x y p.2)).mp hmove
+        simpa [localCoord] using this
+      · exfalso
+        rw [hsign p.1 hp1F, hsign p.2 hp2F] at hflip
+        exact absurd hflip (by cases ε₀ <;> simp)
   · -- injectivity
     intro p hp q hq hpq
     rw [mem_fiberBKBdy] at hp hq
@@ -415,7 +418,8 @@ theorem fiberBKBdy_card_eq_gridBdy_card {x y : α}
         (iCoord x y L') (jCoord x y L')).mpr (by simpa only [localCoord] using hl1)
     have hsgn : signMarker x y L = signMarker x y L' := by
       rw [hsign L hLF, hsign L' hL'F]
-    have hadj : BKAdj L L' := (hF.2.2 L hLF L' hL'F).mpr ⟨hsgn, hmove⟩
+    have hadj : BKAdj L L' :=
+      (hF.2.2 L hLF L' hL'F).mpr (Or.inl ⟨hsgn, hmove⟩)
     refine ⟨(L, L'), ?_, ?_⟩
     · rw [mem_fiberBKBdy]
       exact ⟨⟨Finset.mem_inter.mpr ⟨hLF, hLS⟩,
@@ -509,7 +513,9 @@ theorem isGoodFiber_singleton (x y : α) (L : LinearExt α) :
     subst L₁; subst L₂
     constructor
     · intro hadj; exact absurd hadj (BKAdj.irrefl L)
-    · rintro ⟨_, h⟩; omega
+    · rintro (⟨_, h⟩ | ⟨hf, _⟩)
+      · omega
+      · exact absurd hf (by cases signMarker x y L <;> simp)
 
 /-- A 2×2 axis-aligned grid block, the concrete order-convex domain
 used to exercise the planar `lem:weak-grid` non-vacuously. -/

@@ -129,27 +129,33 @@ inside a good fiber the BK edges are exactly the unit grid moves of
 encodes this with the raw adjacency `BKAdj`; the lemma below restates it
 against `(bkGraph α).Adj`, making the grounding on the graph explicit. -/
 
-/-- **Good-fiber edges are BK-graph edges = unit grid moves**
-(paper Def. `def:good-fiber` clause (G3), `step1.tex:127-130`, grounded
+/-- **Good-fiber edges are BK-graph edges = unit grid moves + sign flip**
+(paper Def. `def:good-fiber` clause (G3), `step1.tex:123-127`, grounded
 on `bkGraph α`).
 
 For a good fiber `F` and two of its members `L₁, L₂`, the pair is an
-edge of the Bubley–Karzanov graph `bkGraph α` **iff** the two share a
-sign and their local coordinates differ by a single unit grid step
-`±e₁` or `±e₂`. -/
+edge of the Bubley–Karzanov graph `bkGraph α` **iff** either the two
+share a sign and their local coordinates differ by a single unit grid
+step `±e₁` / `±e₂`, or they carry opposite sign with `π_{x,y}`
+unchanged on the diagonal `i = j` (the `{x, y}`-swap of paper part
+(iii) case (b)). -/
 theorem goodFiber_bkGraph_adj_iff {x y : α} {F : Finset (LinearExt α)}
     (hF : IsGoodFiber x y F) {L₁ L₂ : LinearExt α}
     (h₁ : L₁ ∈ F) (h₂ : L₂ ∈ F) :
     (bkGraph α).Adj L₁ L₂ ↔
-      (signMarker x y L₁ = signMarker x y L₂ ∧
-       ((iCoord x y L₁ = iCoord x y L₂ + 1 ∧
-             jCoord x y L₁ = jCoord x y L₂) ∨
-        (iCoord x y L₂ = iCoord x y L₁ + 1 ∧
-             jCoord x y L₁ = jCoord x y L₂) ∨
-        (jCoord x y L₁ = jCoord x y L₂ + 1 ∧
-             iCoord x y L₁ = iCoord x y L₂) ∨
-        (jCoord x y L₂ = jCoord x y L₁ + 1 ∧
-             iCoord x y L₁ = iCoord x y L₂))) :=
+      ((signMarker x y L₁ = signMarker x y L₂ ∧
+        ((iCoord x y L₁ = iCoord x y L₂ + 1 ∧
+              jCoord x y L₁ = jCoord x y L₂) ∨
+         (iCoord x y L₂ = iCoord x y L₁ + 1 ∧
+              jCoord x y L₁ = jCoord x y L₂) ∨
+         (jCoord x y L₁ = jCoord x y L₂ + 1 ∧
+              iCoord x y L₁ = iCoord x y L₂) ∨
+         (jCoord x y L₂ = jCoord x y L₁ + 1 ∧
+              iCoord x y L₁ = iCoord x y L₂))) ∨
+       (signMarker x y L₁ = ! signMarker x y L₂ ∧
+        iCoord x y L₁ = iCoord x y L₂ ∧
+        jCoord x y L₁ = jCoord x y L₂ ∧
+        iCoord x y L₁ = jCoord x y L₁)) :=
   bkGraph_adj.trans (hF.2.2 L₁ h₁ L₂ h₂)
 
 /-! ### §3 — Part (i): coordinate map, grounded -/
@@ -195,7 +201,7 @@ fibers are the classes of an equivalence relation, and `Bad_{x,y}` is
 the complement of `F_{x,y}`), so it needs no width hypothesis. -/
 theorem localInterface_rawFiber_groundSet (x y : α) :
     ((Finset.univ : Finset (LinearExt α)).biUnion
-        (fun L₀ => rawFiber x y L₀ (signMarker x y L₀)) = Finset.univ) ∧
+        (fun L₀ => rawFiber x y L₀) = Finset.univ) ∧
     (goodFiberSet x y ∪ badSet x y = Finset.univ) ∧
     (Disjoint (goodFiberSet x y) (badSet x y)) :=
   ⟨rawFiber_biUnion_univ x y, goodFiberSet_union_badSet x y,
@@ -225,7 +231,7 @@ theorem localInterface_groundSet
          (Finset.range (commonNbhdLength x y + 1)) ×ˢ
            (Finset.range (commonNbhdLength x y + 1))) ∧
     ((Finset.univ : Finset (LinearExt α)).biUnion
-        (fun L₀ => rawFiber x y L₀ (signMarker x y L₀)) = Finset.univ ∧
+        (fun L₀ => rawFiber x y L₀) = Finset.univ ∧
      goodFiberSet x y ∪ badSet x y = Finset.univ ∧
      Disjoint (goodFiberSet x y) (badSet x y)) :=
   ⟨localInterface_coordMap_groundSet hP T x y hxy,

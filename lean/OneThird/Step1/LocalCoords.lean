@@ -27,7 +27,9 @@ out of scope for this file (tracked separately as S1.c).
   `i(L), j(L), π_{x,y}(L)`.
 * `ExternalEquiv x y` — the external-ordering equivalence on linear
   extensions (proven to be reflexive, symmetric, transitive).
-* `rawFiber x y L₀ ε` — the raw fiber at representative `L₀` and sign `ε`.
+* `rawFiber x y L₀` — the raw fiber at representative `L₀`: the
+  external-ordering class of `L₀`, spanning **both** signs
+  (paper `def:good-fiber`).
 * `IsGoodFiber x y F` — the good-fiber predicate (G1 + G2 + G3).
 * `goodFiberSet`, `badSet` — good and bad parts of `L(P)`.
 
@@ -39,9 +41,24 @@ out of scope for this file (tracked separately as S1.c).
 * `ExternalEquiv.refl`, `.symm`, `.trans`, `externalSetoid` — the
   external equivalence is indeed an equivalence relation.
 * `rawFiber_biUnion_univ` — the raw fibers cover every linear
-  extension: `⋃_{L₀} rawFiber x y L₀ (signMarker x y L₀) = univ`.
-* `IsGoodFiber.card_le_sq` — a good raw fiber has at most
-  `(t(x, y) + 1)^2` elements.
+  extension: `⋃_{L₀} rawFiber x y L₀ = univ`.
+* `rawFiber_eq_of_externalEquiv` — raw fibers are external-equivalence
+  classes.
+* `mem_goodFiberSet` — membership in the good-fiber set.
+* `IsGoodFiber.card_le_sq` — a constant-sign good fiber has at most
+  `(t(x, y) + 1)^2` elements; `IsGoodFiber.card_le_two_sq` — a
+  both-sign good raw fiber has at most `2·(t(x, y) + 1)^2`.
+
+## S1-G2 re-port (mg-fc78)
+
+The raw fiber and the G3 clause were re-ported to the genuine paper
+`def:good-fiber` (`step1.tex:114-133`).  The previous S1-A port made
+`rawFiber` a *single-sign* slice; combined with the genuine
+rectangle-convexity clause G2 this made `goodFiberSet` provably empty
+for every rich pair (S1-E, mg-c2d7).  The paper's raw fiber is the
+external-ordering class over **both** signs; G3 carries the diagonal
+sign-flip edge.  See `rawFiber`, `IsGoodFiber`, and
+`OneThird/Step1/Interface.lean` §6.
 -/
 
 namespace OneThird
@@ -148,59 +165,92 @@ noncomputable def externalSetoid (x y : α) : Setoid (LinearExt α) where
 
 /-! ## Raw fibers -/
 
-/-- Raw fiber of `(x, y)` at representative `L₀` and sign `ε`: all
-linear extensions externally equivalent to `L₀` and having sign `ε`. -/
-noncomputable def rawFiber (x y : α) (L₀ : LinearExt α) (ε : Bool) :
+/-- Raw fiber of `(x, y)` at representative `L₀` (paper Def.
+`def:good-fiber`, `step1.tex:114-120`): the **external-ordering class**
+of `L₀` — every linear extension externally equivalent to `L₀`.
+
+A raw fiber `F_{x,y}(E)` spans **both signs**.  `step1.tex:121`
+partitions `F_{x,y}(E)` *further* by the sign `σ`, but the raw fiber
+itself, and its coordinate image `D_{x,y}(E) := π_{x,y}(F_{x,y}(E))`
+(clause G2), range over both signs.  This is load-bearing: the
+order-convexity clause G2 is rectangle-convexity in `ℤ²`
+(`def:good-fiber` `cond:G2`), and a *single-sign* image lies in the
+triangle `{(i,j) : i ≤ j}` (sign `+`) resp. `{(i,j) : j ≤ i}`
+(sign `−`) — never rectangle-convex for `t ≥ 1`.  A raw fiber over both
+signs has the full rectangle as its image (the sign-`+` triangle and
+sign-`−` triangle glued along the diagonal), and that *is* order-convex
+for a good external class.
+
+(A single-sign `rawFiber` was the S1-A faithfulness defect diagnosed by
+S1-E, work item mg-c2d7: it made `goodFiberSet` empty for every rich
+pair.  See `OneThird/Step1/Interface.lean` §6.) -/
+noncomputable def rawFiber (x y : α) (L₀ : LinearExt α) :
     Finset (LinearExt α) := by
   classical
-  exact
-    Finset.univ.filter
-      (fun L => ExternalEquiv x y L L₀ ∧ signMarker x y L = ε)
+  exact Finset.univ.filter (fun L => ExternalEquiv x y L L₀)
 
-lemma mem_rawFiber {x y : α} {L₀ L : LinearExt α} {ε : Bool} :
-    L ∈ rawFiber x y L₀ ε ↔
-      ExternalEquiv x y L L₀ ∧ signMarker x y L = ε := by
+lemma mem_rawFiber {x y : α} {L₀ L : LinearExt α} :
+    L ∈ rawFiber x y L₀ ↔ ExternalEquiv x y L L₀ := by
   classical
   unfold rawFiber
   simp
 
-/-- Any linear extension is in its "own" raw fiber — the one anchored
-at itself with its own sign. -/
+/-- Any linear extension is in its "own" raw fiber — the external
+class anchored at itself. -/
 lemma self_mem_rawFiber (x y : α) (L : LinearExt α) :
-    L ∈ rawFiber x y L (signMarker x y L) := by
-  classical
-  rw [mem_rawFiber]
-  exact ⟨ExternalEquiv.refl x y L, rfl⟩
+    L ∈ rawFiber x y L :=
+  mem_rawFiber.mpr (ExternalEquiv.refl x y L)
 
-/-- **Raw fiber partition** (covering half): the raw fibers at the
-self-anchored sign cover every linear extension. This is the first
-half of the partition statement of part (ii) of `thm:interface`;
-disjointness of the good part modulo sign + external class is the
-remaining half, handled at the level of good fibers. -/
+/-- A raw fiber depends only on the external-ordering class of its
+anchor: externally equivalent anchors give the **same** raw fiber.
+This is the genuine — non-tautological — content behind part (ii)'s
+"the raw fibers are equivalence classes". -/
+lemma rawFiber_eq_of_externalEquiv {x y : α} {L L₀ : LinearExt α}
+    (h : ExternalEquiv x y L L₀) : rawFiber x y L₀ = rawFiber x y L := by
+  ext L'
+  simp only [mem_rawFiber]
+  exact ⟨fun he => he.trans h.symm, fun he => he.trans h⟩
+
+/-- **Raw fiber partition** (covering half): the raw fibers cover every
+linear extension. This is the first half of the partition statement of
+part (ii) of `thm:interface`; disjointness of the good part modulo
+external class is the remaining half, handled at the level of good
+fibers. -/
 lemma rawFiber_biUnion_univ (x y : α) :
     (Finset.univ : Finset (LinearExt α)).biUnion
-      (fun L₀ => rawFiber x y L₀ (signMarker x y L₀)) = Finset.univ := by
+      (fun L₀ => rawFiber x y L₀) = Finset.univ := by
   classical
   apply Finset.eq_univ_of_forall
   intro L
   rw [Finset.mem_biUnion]
   exact ⟨L, Finset.mem_univ _, self_mem_rawFiber x y L⟩
 
-/-- Sign is constant on a raw fiber: `signMarker = ε` for every
-element of `rawFiber x y L₀ ε`. -/
-lemma signMarker_of_mem_rawFiber {x y : α} {L₀ L : LinearExt α} {ε : Bool}
-    (hL : L ∈ rawFiber x y L₀ ε) : signMarker x y L = ε :=
-  (mem_rawFiber.mp hL).2
-
 /-! ## Good fibers -/
 
-/-- A raw fiber is *good* (Def. `def:good-fiber`) if:
+/-- A raw fiber is *good* (Def. `def:good-fiber`, `step1.tex:114-133`) if:
 
-* (G1) the coordinate map (together with the sign) is injective;
-* (G2) its coordinate image is order-convex in `ℕ²`;
-* (G3) internal BK edges are exactly unit grid moves with preserved
-  sign.
--/
+* **(G1)** the coordinate map together with the sign is injective —
+  `(i, j, σ)` determines `L` (`cond:G1`);
+* **(G2)** its coordinate image `D_{x,y}(E)` is **order-convex in `ℤ²`**
+  (`cond:G2`): for image points `p ≤ q` (componentwise) the entire
+  axis-aligned rectangle `[p, q]` lies in the image.  Because the raw
+  fiber spans both signs (see `rawFiber`), the image is a genuine
+  rectangle straddling the diagonal, and order-convexity is the honest
+  discriminator of the good external classes;
+* **(G3)** internal BK edges are exactly the **unit grid moves** with
+  preserved sign **together with the diagonal sign-flip edge**
+  (`cond:G3` + paper part (iii) case (b), `step1.tex:163-166`; the
+  Output-interface line "BK edges inside each good raw fiber are exactly
+  unit grid moves in `(i,j)`, plus at most one sign-flip edge at
+  `i = j`").  Two members `L₁, L₂` are BK-adjacent iff either
+  they share a sign and `π_{x,y}` differs by `±e₁` / `±e₂`, or they
+  carry **opposite** sign with `π_{x,y}` unchanged and on the diagonal
+  `i = j` (the `{x, y}`-swap of part (iii) case (b)).
+
+The sign-flip disjunct of G3 is essential and was the omission, together
+with the single-sign `rawFiber`, behind the S1-E faithfulness defect
+(mg-c2d7): a both-sign raw fiber always carries sign-flip BK edges, so
+the single-sign G3 was unsatisfiable on it. -/
 noncomputable def IsGoodFiber (x y : α) (F : Finset (LinearExt α)) : Prop :=
   (∀ L₁ ∈ F, ∀ L₂ ∈ F,
       localCoord x y L₁ = localCoord x y L₂ →
@@ -214,15 +264,19 @@ noncomputable def IsGoodFiber (x y : α) (F : Finset (LinearExt α)) : Prop :=
         r ∈ F.image (localCoord x y)) ∧
   (∀ L₁ ∈ F, ∀ L₂ ∈ F,
       BKAdj L₁ L₂ ↔
-        (signMarker x y L₁ = signMarker x y L₂ ∧
-         ((iCoord x y L₁ = iCoord x y L₂ + 1 ∧
-               jCoord x y L₁ = jCoord x y L₂) ∨
-          (iCoord x y L₂ = iCoord x y L₁ + 1 ∧
-               jCoord x y L₁ = jCoord x y L₂) ∨
-          (jCoord x y L₁ = jCoord x y L₂ + 1 ∧
-               iCoord x y L₁ = iCoord x y L₂) ∨
-          (jCoord x y L₂ = jCoord x y L₁ + 1 ∧
-               iCoord x y L₁ = iCoord x y L₂))))
+        ((signMarker x y L₁ = signMarker x y L₂ ∧
+          ((iCoord x y L₁ = iCoord x y L₂ + 1 ∧
+                jCoord x y L₁ = jCoord x y L₂) ∨
+           (iCoord x y L₂ = iCoord x y L₁ + 1 ∧
+                jCoord x y L₁ = jCoord x y L₂) ∨
+           (jCoord x y L₁ = jCoord x y L₂ + 1 ∧
+                iCoord x y L₁ = iCoord x y L₂) ∨
+           (jCoord x y L₂ = jCoord x y L₁ + 1 ∧
+                iCoord x y L₁ = iCoord x y L₂))) ∨
+         (signMarker x y L₁ = ! signMarker x y L₂ ∧
+          iCoord x y L₁ = iCoord x y L₂ ∧
+          jCoord x y L₁ = jCoord x y L₂ ∧
+          iCoord x y L₁ = jCoord x y L₁)))
 
 namespace IsGoodFiber
 
@@ -282,24 +336,70 @@ theorem IsGoodFiber.card_le_sq
         Finset.card_le_card himg_sub
     _ = (t + 1) ^ 2 := hprod_card
 
-/-- Specialization of `IsGoodFiber.card_le_sq` to a good raw fiber:
-the cardinality bound `(t(x,y) + 1)^2` holds because sign is
-automatically constant on any raw fiber. -/
-theorem IsGoodFiber.rawFiber_card_le
-    {x y : α} {L₀ : LinearExt α} {ε : Bool}
-    (hF : IsGoodFiber x y (rawFiber x y L₀ ε)) :
-    (rawFiber x y L₀ ε).card ≤ (commonNbhdLength x y + 1) ^ 2 :=
-  hF.card_le_sq (ε := ε) (fun _ hL => signMarker_of_mem_rawFiber hL)
+omit [DecidableEq α] in
+/-- **Good raw-fiber cardinality bound (both signs)**: a good fiber `F`
+has at most `2·(t(x, y) + 1)^2` elements.  G1 makes `(i, j, σ)`
+determine `L`, and `(i, j, σ)` ranges over `{0,…,t}² × {+, −}`.  This is
+the honest both-sign refinement of `card_le_sq` — a raw fiber spans
+both signs, so the bound carries the factor `2`. -/
+theorem IsGoodFiber.card_le_two_sq
+    {x y : α} {F : Finset (LinearExt α)} (hF : IsGoodFiber x y F) :
+    F.card ≤ 2 * (commonNbhdLength x y + 1) ^ 2 := by
+  classical
+  set t := commonNbhdLength x y with ht
+  set Cod : Finset ((ℕ × ℕ) × Bool) :=
+    ((Finset.range (t + 1)) ×ˢ (Finset.range (t + 1))) ×ˢ
+      (Finset.univ : Finset Bool) with hCod
+  have hinj : Set.InjOn (fun L => (localCoord x y L, signMarker x y L))
+      (↑F : Set (LinearExt α)) := by
+    intro L₁ hL₁ L₂ hL₂ h
+    obtain ⟨hc, hs⟩ := Prod.mk.inj h
+    exact hF.1 L₁ hL₁ L₂ hL₂ hc hs
+  have himg_sub : F.image (fun L => (localCoord x y L, signMarker x y L))
+      ⊆ Cod := by
+    intro p hp
+    simp only [Finset.mem_image] at hp
+    rcases hp with ⟨L, _, rfl⟩
+    simp only [hCod, Finset.mem_product, Finset.mem_range, Finset.mem_univ,
+      and_true]
+    exact ⟨Nat.lt_succ_of_le (localCoord_fst_le x y L),
+           Nat.lt_succ_of_le (localCoord_snd_le x y L)⟩
+  have hcard : Cod.card = 2 * (t + 1) ^ 2 := by
+    simp only [hCod, Finset.card_product, Finset.card_range, Finset.card_univ,
+      Fintype.card_bool, pow_two]
+    exact Nat.mul_comm _ 2
+  calc F.card
+      = (F.image (fun L => (localCoord x y L, signMarker x y L))).card :=
+        (Finset.card_image_of_injOn hinj).symm
+    _ ≤ Cod.card := Finset.card_le_card himg_sub
+    _ = 2 * (t + 1) ^ 2 := hcard
 
 /-! ## Good and bad sets -/
 
-/-- Good fiber set `F_{x,y}`: the union of all good raw fibers. -/
+/-- Good fiber set `F_{x,y}` (paper Def. `def:good-fiber`,
+`step1.tex:128-132`): the union of all good raw fibers. -/
 noncomputable def goodFiberSet (x y : α) : Finset (LinearExt α) := by
   classical
   exact
     Finset.univ.filter
-      (fun L => ∃ L₀, IsGoodFiber x y (rawFiber x y L₀ (signMarker x y L))
-                      ∧ L ∈ rawFiber x y L₀ (signMarker x y L))
+      (fun L => ∃ L₀, IsGoodFiber x y (rawFiber x y L₀)
+                      ∧ L ∈ rawFiber x y L₀)
+
+/-- Membership characterisation of the good-fiber set: `L` is good iff
+it lies in *some* good raw fiber. -/
+lemma mem_goodFiberSet {x y : α} {L : LinearExt α} :
+    L ∈ goodFiberSet x y ↔
+      ∃ L₀, IsGoodFiber x y (rawFiber x y L₀) ∧ L ∈ rawFiber x y L₀ := by
+  classical
+  unfold goodFiberSet
+  rw [Finset.mem_filter]
+  exact ⟨fun h => h.2, fun h => ⟨Finset.mem_univ _, h⟩⟩
+
+/-- A linear extension whose own raw fiber is good lies in the
+good-fiber set. -/
+lemma mem_goodFiberSet_of_isGoodFiber {x y : α} {L : LinearExt α}
+    (hF : IsGoodFiber x y (rawFiber x y L)) : L ∈ goodFiberSet x y :=
+  mem_goodFiberSet.mpr ⟨L, hF, self_mem_rawFiber x y L⟩
 
 /-- Bad set `Bad_{x, y}` of a rich pair: complement of `goodFiberSet`. -/
 noncomputable def badSet (x y : α) : Finset (LinearExt α) :=

@@ -78,36 +78,47 @@ set-theoretic density statements proved in this file (containments
 and trivial cardinality bounds) and the commuting-square/cube
 verifications of `Overlap.lean` are unconditional.
 
-### ⚠ AMENDED (S1-E, mg-c2d7) — the scaffold upgrade is BLOCKED
+### ⚠ AMENDED (S1-G2-Report, mg-fc78) — the empty-`goodFiberSet`
+### blocker is REMOVED; the genuine `O(t²)` bound is a sub-split
 
-The Checkpoint-1 audit (mg-8b95) scoped S1-E to *replace* the vacuous
-`bounded_interaction` (`|Int| ≤ |𝓛(P)|`) with the genuine
-`O((t_{xy}+t_{uv})^2)` bound and to deliver `cor:overlap` (b) /
-`cor:triple-overlap` (d).  Executing S1-E (work item mg-c2d7) found
-this is **not deliverable on the current definitions**, and the
-`bounded_interaction` / `regularOverlap_density` /
-`regularTripleOverlap_density` scaffolds below are **left as-is**:
+S1-E (mg-c2d7) reported the scaffold upgrade BLOCKED because the
+`IsGoodFiber` port made `goodFiberSet` provably empty for every rich
+pair, so the interaction locus `Int_{xy,uv} ⊆ Ω = goodFiberSet x y ∩
+goodFiberSet u v` lived in an empty `Ω`.
 
-* The interaction locus `Int_{xy,uv}` lives inside the pairwise
-  overlap `Ω = goodFiberSet x y ∩ goodFiberSet u v`.  Step 1's
-  `IsGoodFiber` order-convexity clause (G2, `LocalCoords.lean`) is too
-  strong — it rejects every genuine two-dimensional raw fiber — so for
-  any rich pair with `t ≥ 1` the *good* fiber set is empty and `Ω` is
-  empty.  This is proved concretely in
-  `OneThird/Step1/Interface.lean` §6
-  (`interface_part_iv_faithfulness_defect`,
-  `goodFiberSet_a0_a1_eq_empty`).
-* A genuine `O((t_{xy}+t_{uv})^2)` bound on `|Int|` therefore cannot
-  be assembled until the `IsGoodFiber` G2 clause is re-ported to the
-  paper's genuine order-convexity notion — which is in S1-A
-  (`LocalCoords.lean`), **outside the S1-E file scope**.
-* Shipping a *conditional* `bounded_interaction` whose structural
-  hypothesis is unsatisfiable on the current definitions would be a
-  fresh content-free scaffold (`PROOF-STRUCTURE-ONBOARDING.md` §3
-  pitfall #6), so S1-E does **not** do that.
+**mg-fc78 removes that blocker.**  The `def:good-fiber` re-port
+(`LocalCoords.lean`: both-sign `rawFiber`, G3 sign-flip disjunct; G2
+kept as the paper rectangle-convexity) makes `goodFiberSet` genuinely
+non-empty — `OneThird/Step1/Interface.lean` §6,
+`interface_part_iv_goodFiber_nonempty` proves
+`goodFiberSet a0 a1 = Finset.univ` on `Antichain3`, the exact flip of
+the former `interface_part_iv_faithfulness_defect`.  So `Ω` is no
+longer structurally empty and a *conditional* upgrade would no longer
+have an unsatisfiable hypothesis.
 
-S1-E is a block-and-report.  See `docs/state-S1-E-Session1.md` for the
-full analysis and forward options.
+The `bounded_interaction` / `regularOverlap_density` /
+`regularTripleOverlap_density` scaffolds below are nonetheless **still
+left as-is**, for a *different* reason:
+
+* The genuine `|Int_{xy,uv}| = O((t_{xy}+t_{uv})²)` bound is
+  `lem:bounded-interaction` (`step1.tex:397-427`).  Its proof confines
+  `Int` to `O(1)` strips, each a union of `O(t)` raw fibers of size
+  `O(t)` — the part-(iv) **strip-decomposition machinery**, which is
+  **not in tree** (only `incompLocus_ordConvex`, `card_externalFinset`,
+  `collinear_fiber_card_le` exist).
+* That port is a substantial separate formalization; the paper proof
+  of `lem:bounded-interaction` is itself a sketch.  Per the mg-fc78
+  non-triviality bar — *genuine quantitative bounds, not content-free
+  inequalities* — it is recommended as a **sub-split follow-on**
+  rather than shipped as a fake `O(t²)`.
+* `regularOverlap_density` / `regularTripleOverlap_density` remain
+  genuine set-theoretic containments (`|Ω∖Ω°| ≤ |Int|`); they become
+  the headline `(1−o(1))` density once `bounded_interaction` is
+  genuine.
+
+See `docs/state-S1-G2-Report-Session1.md` §4 for the full analysis.
+S1-E's `docs/state-S1-E-Session1.md` records the original (now
+superseded) diagnosis.
 
 The bridge from *regular-overlap membership* (`regularOverlap` /
 `regularTripleOverlap`, i.e. interaction-locus exclusion) to the
