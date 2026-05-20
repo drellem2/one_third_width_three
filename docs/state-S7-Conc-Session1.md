@@ -212,9 +212,18 @@ up under concretisation; the cumulative count remains at 7
 
 The remaining piece-2 work — genuinely blocked on piece 1:
 
-* **mg-S7-Conc-B** — extract `c_n, c_d, M₀` from the Step 5
-  `thm:step5` (R)-branch grounded form. **Needs:** a Step 5
-  grounded form exporting concrete richness constants. Not in tree.
+* **mg-S7-Conc-B** — **DONE (mg-8f9c, 2026-05-21).** Piece 1 has
+  landed (S5 wave mg-d4bb / mg-be3e; Checkpoint 2 passed mg-496b),
+  so the Step 5 grounded forms exist. `c_n, c_d, M₀` extracted in
+  `lean/OneThird/Step7/RichnessConstants.lean`: the genuine
+  constants are `c_n = 1`, `c_d = 2`, `M₀ = |LP|` — the
+  post-activation density `c'_T = c₅⋆/2` of `step5.tex:721-738`.
+  The per-pair richness `RichnessHyp` is projected from the **G4**
+  grounded form `Step5.fiber_mass_grounded` (per-pair clause), not
+  from `thm_step5_grounded`'s aggregate `Step5Richness`. The
+  constants project cleanly into the parametric S7-E signature
+  (exhibited by `lem_bandwidth_le_four_bundled_of_step5_richness`).
+  See `docs/state-S7-Conc-B-Session1.md`.
 * **mg-S7-Conc-C** — extract `b_n, b_d` from the Step 6
   `thm:step6` + `cor:pointwise` grounded form. **Needs:** a Step 6
   grounded form exporting concrete budget constants. Not in tree.

@@ -803,6 +803,18 @@ specific clause, read the paper clause.**
   budget/richness constants + proofs stay parametric
   (`hBud`/`hRich` hypotheses) — they are piece 1's deliverable;
   see `docs/state-S7-Conc-Session1.md`.
+  `Step7/RichnessConstants.lean` (full file, **piece 2 sub-arc
+  mg-S7-Conc-B**: `richnessHyp_of_fiber_mass_grounded`,
+  `richnessHyp_groundSet_of_step5`,
+  `lem_bandwidth_le_four_bundled_of_step5_richness`,
+  `richnessHyp_concrete`) (mg-8f9c) — extracts the Step 5 richness
+  constants `c_n = 1`, `c_d = 2`, `M₀ = |LP|` from the landed
+  Step 5 G4 grounded form `Step5.fiber_mass_grounded` (per-pair
+  clause), discharging the `hRich : RichnessHyp` hypothesis. The
+  per-pair richness is projected from the **G4** grounded form,
+  not from `thm_step5_grounded`'s aggregate `Step5Richness`; the
+  constants project cleanly into the parametric S7-E signature.
+  See `docs/state-S7-Conc-B-Session1.md`.
 
 **Paper.** `main.tex` §1.4 road map; `step7.tex:1175-1193`
 (`prop:72`); `step8.tex:2404-2418` (`lem:ordinal-factorisation`);
