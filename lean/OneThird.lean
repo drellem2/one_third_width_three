@@ -37,6 +37,7 @@ import OneThird.Step2.OneD
 import OneThird.Step2.RowDecomp
 import OneThird.Step2.FiberAvg
 import OneThird.Step2.WeakGrid
+import OneThird.Step2.WeakGridFull
 import OneThird.Step2.PerFiber
 import OneThird.Step2.Conclusion
 import OneThird.Step3.LocalSign
