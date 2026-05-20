@@ -124,6 +124,29 @@ and this file is wrong — fix it.
   block-and-reported as a sub-split — it needs the
   `lem:bounded-interaction` strip-counting port. See §3 pitfall #8 and
   `docs/state-S1-G2-Report-Session1.md`.
+* **mg-aa02 S6-G6-Ground (GREEN, 2026-05-20)**: the Checkpoint-2
+  follow-on item 2. The two unfinished Step 6 grounding pieces the
+  S6-QA Checkpoint-2 audit flagged (§3.1) are **both closed** in
+  `lean/OneThird/Step6/MostGoodGrounded.lean` (NEW, sorry-free,
+  axiom-free). **(1) G6 `lem:most-good` grounded:** `lem_most_good_grounded`
+  runs the `step6.tex:154` Markov argument on the genuine BK boundary
+  `globalBKBdy S` of `bkGraph α`; the `S`-good split (`sGoodInterfaces`,
+  `step6.tex` `def:S-good`) is a computed `Finset.filter` on the `ε₂`
+  threshold, so the Markov antecedent `hBadMass` is **derived**, not a
+  free hypothesis as in the abstract `Step6.lem_most_good`.
+  **(2) The S2 `ε₂` bookkeeping wired into Step 6:** before mg-aa02,
+  `ε₂` appeared in zero Step 6 files; `MostGoodGrounded.lean` now
+  imports `OneThird.Step2.PerFiberGrounded2` and
+  `lem_most_good_grounded_of_thm_step2` consumes `step2.tex` `thm:step2`
+  directly — the `ε₂ ↔ C₂'` reconciliation S2-B §2 deferred to
+  Checkpoint 2 (boundary-good ⇒ error-good ⇒ `Rich∖Rich⋆ ⊆ badFibers`,
+  G6 bad-mass bound = S2's `K·κ/η`). `ε₂` / `fiberStaircaseRate` now
+  thread into the Step 6 per-fiber aggregation. Non-vacuous at
+  `Fin 3 × Fin 3` (Route A, genuinely non-empty `Rich∖Rich⋆`) and
+  `Antichain3` (Route B, genuine `thm:step2` consumption,
+  `ε₂ = fiberStaircaseRate 1 1 1 1`). The cascade end-to-end
+  recomposition (audit §6.1 item 3) remains the open Checkpoint-2
+  follow-on item. See `docs/state-S6-G6-Ground-Session1.md`.
 
 ---
 
