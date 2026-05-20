@@ -61,33 +61,41 @@ source).**
 
 ## §0. Verdict (top-of-page) — **GREEN-scoping-delivered**
 
-> **⚠ AMENDED (mg-0bd1, 2026-05-20).** The piece-3 execution
-> attempt surfaced an **8th vacuity discovery**: the MA-Sig §4.2 §E
-> bridge signature is unsatisfiable for large α, and this 5-piece
-> decomposition is **missing a 6th piece** — the full Step 8 G4
-> port (`lem:layered-balanced`, `step8.tex:3071-3124`). §2.3
-> (piece 3) and §4.1's listing of `lem_layered_balanced` as
-> "already-in-tree, usable" are both affected: the in-tree
-> `lem_layered_balanced` is the bounded `|β| ≤ 30` base case, not
-> the Step-8 endpoint. Re-scope before executing P3/P4. See
-> `docs/state-S7-F-bridge-Session2.md` §5-§8 and
+> **⚠ AMENDED (mg-0bd1) → CORRECTED (mg-faf8, 2026-05-20).** The
+> piece-3 execution attempt (mg-0bd1) surfaced an **8th vacuity
+> discovery**: the MA-Sig §4.2 §E bridge signature was
+> structurally unsatisfiable for large α, and this decomposition
+> was **missing a 6th piece** — the full Step 8 G4 port
+> (`lem:layered-balanced`, statement `step8.tex:2453-2464`, proof
+> `3211-3266`). **mg-faf8 has now applied the re-scope:** the
+> MA-Sig contract is re-pinned (`docs/state-MA-Sig-Session1.md`
+> §4.2 §E/§G, satisfiability-verified in its §10), and **Piece 6
+> is recorded below as §2.6** — this is now a **6-piece**
+> decomposition. The §0 budget table, §1.3 map, §3 critical
+> path/budget, §4.1, and §7 sub-tickets are amended in place to
+> match. See `docs/state-S7-F-bridge-Session2.md` §5-§8,
+> `docs/state-MA-Sig-Session1.md` §9-§10, and
 > `docs/PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #6.
 
-Five pieces of the Option A' FULL REFACTOR scoped end-to-end. **No
-paper-side gap surfaced** under default-skeptical re-read (the
-cumulative 7-step vacuity-discovery pattern hits the *Lean call-site
-architecture* at piece 4, not at any paper construction). The
-refactor is **structurally feasible**: every input the new
-proof-by-contradiction setup needs is supplied by an
-already-scoped upstream piece (Steps 1-6 cascade, S7-A-E grounded
-forms, S7-F bridge, `exc_perturb`, `ChainLiftData`).
+**Six pieces** of the Option A' FULL REFACTOR scoped end-to-end
+(originally five; **Piece 6 added by mg-faf8** per the mg-0bd1
+8th vacuity discovery — see the AMENDED→CORRECTED banner above
+and §2.6). **No paper-side gap surfaced** under default-skeptical
+re-read; the 8th vacuity hit the *MA-Sig pinned signature shape*
+(a contract artefact), not any paper construction — paper
+`lem:layered-from-step7` and `lem:layered-balanced` are both
+sound. The refactor is **structurally feasible**: every input the
+new proof-by-contradiction setup needs is supplied by an
+already-scoped piece (Steps 1-6 cascade, S7-A-E grounded forms,
+S7-F bridge, full Step 8 G4, `exc_perturb`, `ChainLiftData`).
 
 **Cumulative budget projection (Phase B; see §3.2).** Executive
-estimate: **7.5M-12.0M tokens cumulative, 32-45 polecat dispatches,
-5-7 months calendar** at 1 polecat-per-day cadence. This sits
-inside the `mg-d8c7` ticket-body envelope ("~7-12M / 5-7 months")
-and matches `mg-5fbd` §6.1 Option (A') enumeration. The decomposition
-is:
+estimate (post-mg-faf8, including Piece 6): **8.3M-14.6M tokens
+cumulative, 37-57 polecat dispatches, 6-7 months calendar** at 1
+polecat-per-day cadence. This sits at/just above the `mg-d8c7`
+ticket-body envelope ("~7-12M / 5-7 months"); the +0.8M-1.6M
+Piece 6 delta is the cost of the mg-0bd1 correction. The
+decomposition is:
 
 | Piece | Polecat sessions | Token budget | Source |
 |---|---:|---:|---|
@@ -96,7 +104,8 @@ is:
 | 3. S7-F bridge (`lem:layered-from-step7`) | 4-6 | 1.0M-1.5M | mg-6ab8 §7.1 mg-S7-F + mg-5fbd §6.1 |
 | 4. MainAssembly proof-by-contradiction refactor | 4-6 | 0.8M-1.5M | new (§2.4 below) |
 | 5. Integration: close `MainAssembly.lean:265` sorry + retire `Step7.LayeredWidth3` paper-axiom | 1-2 | 0.2M-0.5M | new (§2.5 below) |
-| **Total** | **34-51** | **7.5M-13.0M** | (mid 9.5M / 6 months) |
+| 6. Full Step 8 G4 port (`lem_layered_balanced_full`) | 3-6 | 0.8M-1.6M | new (§2.6 below) — added mg-faf8 per mg-0bd1 |
+| **Total** | **37-57** | **8.3M-14.6M** | (mid 10.3M / 6-7 months) |
 
 The largest single contributor remains **Steps 1-6 cascade port**
 (piece 1) at 5.0M-8.5M / 22-32 sessions, dominated by Step 7's
@@ -107,7 +116,12 @@ S7-A-E pilot has *already landed*, so what remains is concretisation
 (the "set it up right" content of the 07:13Z directive), at 1.0M-2.0M
 total — a small fraction of the cumulative budget but the **only
 pieces that cannot be parallelised** with the upstream cascade
-port.
+port. **Piece 6** (full Step 8 G4) is the opposite: it has **no
+upstream cascade dependency** (consumes only a
+`LayeredDecomposition` with `L.w ≤ 4`; its inductive machinery
+`lem_cut` / `windowLocalization` / `lem_layered_reduction` is
+already in tree), so it parallelises freely with piece 1 and is
+*not* on the critical path (§3.1).
 
 **Risk watchlist (Phase D + §6).** Three new risks beyond mg-6ab8 §8:
 
@@ -235,23 +249,34 @@ The proof (`step8.tex:553-755`) proceeds:
    pair (step 1).
 
 The Lean refactor needs to mirror this **proof shape**, not the
-current direct-construction shape. The five pieces of mg-d8c7 are
-the engineering content of that mirroring.
+current direct-construction shape. The six pieces of mg-d8c7
+(five original + Piece 6 added mg-faf8) are the engineering
+content of that mirroring.
 
-### §1.3. The five pieces — quick map
+### §1.3. The six pieces — quick map
 
 | Piece | Engineering content | Maps to paper step |
 |---|---|---|
 | 1 | Lean port of Steps 1-6 grounded forms | `step{1..6}.tex` proofs |
 | 2 | Concretise S7-A-E grounded forms on ground-set α | bridges paper Step 6 ↔ S7-A-E grounded form inputs |
-| 3 | S7-F bridge: `prop:72` output → `LayeredDecomposition α` on `X∖X^exc` | `lem:layered-from-step7` (`step8.tex:2009-2089`) |
+| 3 | S7-F bridge: `prop:72` output → `LayeredDecomposition α` on `X∖X^exc` (emits only `\|X^exc\| ≤ C_exc T`, band-nonempty, `L.w ≤ 4`) | `lem:layered-from-step7` (`step8.tex:2009-2089`) |
 | 4 | `width3_one_third_two_thirds_assembled` proof-by-contradiction refactor | `thm:main-step8` proof setup |
 | 5 | Integration: close `MainAssembly.lean:265` sorry, retire `Step7.LayeredWidth3` paper-axiom | `thm:main-step8` final assembly |
+| 6 | Full Step 8 G4 port: `lem_layered_balanced_full` — strong induction on `\|β\|`, consumes only `L.w ≤ 4` | `lem:layered-balanced` (`step8.tex:2453-2464` / proof `3211-3266`) |
 
 Pieces 1 + 2 + 3 are *bottom-up* (upstream cascade ports). Piece 4
 is *top-down* (signature design + contradiction threading). Piece 5
-is the *integration*. The dependency order on the critical path is
-4-signature → 1 → 2 → 3 → 4-body → 5 (see §3.1).
+is the *integration*. **Piece 6** (added mg-faf8) is *stand-alone*:
+the full Step 8 G4, consuming only a `LayeredDecomposition` with
+`L.w ≤ 4` — no upstream cascade dependency. Logically it sits
+between piece 3 (the S7-F bridge, which produces the layered
+decomposition) and piece 4-body (which lifts the resulting
+balanced pair back to `α`): piece 3 → **piece 6** → piece 4-body.
+But because it has no cascade dependency it can be **dispatched
+early, in parallel with piece 1**, and is *not* on the critical
+path. The dependency order on the critical path is
+4-signature → 1 → 2 → 3 → 4-body → 5 (see §3.1), with piece 6
+running off to the side.
 
 ---
 
@@ -426,12 +451,25 @@ top of an already-grounded abstract scaffold.
 
 ### §2.3. Piece 3 — S7-F bridge (`lem:layered-from-step7`)
 
+> **⚠ AMENDED (mg-faf8).** Per the mg-0bd1 8th vacuity discovery,
+> piece 3's bridge **must not** emit the five `Case3Witness` caps
+> — that conclusion shape is unsatisfiable for large α. The
+> bridge emits only **three** caps: `|X^exc| ≤ C_exc T`,
+> band-nonempty, and `L.w ≤ 4` (MA-Sig §4.2 §E, re-pinned;
+> `docs/state-MA-Sig-Session1.md` §10). Its downstream consumer
+> is **Piece 6** (`lem_layered_balanced_full`, §2.6), **not** the
+> bounded `lem_layered_balanced`. The §2.3 text below predates
+> the re-pin: read "the input shape `lem_layered_balanced`
+> consumes" as "the input shape **Piece 6** consumes", and ignore
+> any implication that the bridge transcribes `Case3Witness`'s
+> five caps.
+
 **Substantive content.** Lean port of the paper's
 `lem:layered-from-step7` (`step8.tex:2009-2089`): the *structural
 ground-set lift* from "layered on the Pair space `(1-o(1))`-mass"
 (piece 2's `L_{S7E}`) to "exact `def:layered` on the ground set
-`X \setminus X^{exc}`" (the input shape `lem_layered_balanced`
-consumes).
+`X \setminus X^{exc}`" (the input shape Piece 6 — re-pinned
+mg-faf8, was `lem_layered_balanced` — consumes).
 
 Concretely, given:
 
@@ -565,12 +603,12 @@ caseC_canonicalLayered` from **direct construction** to
     -- (4) Steps 1-7 cascade: rich-or-collapse + threshold-of-potential
     have hCascade : Step5R α' ∨ Step5C α' :=
       stepsOneToSevenCascade hP' hLowCond hMin
-    -- (5) lem:layered-from-step7
-    obtain ⟨Xexc, L, hLw, hLift⟩ :=
+    -- (5) lem:layered-from-step7  [re-pinned mg-faf8: 3 caps]
+    obtain ⟨Xexc, L, hXexc, hNonempty, hLw⟩ :=
       lem_layered_from_step7 hP' hCascade
-    -- (6) lem:layered-balanced on the subposet
+    -- (6) PIECE 6 — full Step 8 G4 — on the subposet
     have hBP' : HasBalancedPair (α' \ Xexc) :=
-      lem_layered_balanced L _ _ _ _ _ _ _ hLw _
+      lem_layered_balanced_full L _ _ _ hLw
     -- (7) exc_perturb lift to full α'
     have hBP'' : HasBalancedPair α' :=
       excPerturbLift hBP' Xexc.card_le_C
@@ -599,9 +637,12 @@ The architectural deltas:
    data.
 6. **Wire `lem_layered_from_step7`** (piece 3) on the cascade output
    to produce `(X^{exc}, L : LayeredDecomposition (α' \ X^{exc}),
-   hLw : L.w ≤ 4, hLift : exc_perturb-compatible)`.
-7. **Apply `lem_layered_balanced`** (already in tree, post-mg-234e
-   `LayeredBalanced.lean:626/681`) on the subposet `α' \ X^{exc}`.
+   |X^exc| ≤ C_exc T, band-nonempty, hLw : L.w ≤ 4)` — **re-pinned
+   mg-faf8: three caps, not five.**
+7. **Apply `lem_layered_balanced_full`** (**PIECE 6** — full Step 8
+   G4, §2.6; **not yet in tree**, NOT the bounded
+   `lem_layered_balanced`) on the subposet `α' \ X^{exc}`,
+   consuming only `hLw : L.w ≤ 4`.
 8. **Lift via `exc_perturb`** (already in tree, `ExcPerturb.lean:351`)
    to `HasBalancedPair α'`.
 9. **Contradict** the minimal-counterexample assumption.
@@ -745,6 +786,144 @@ The single non-trivial risk is item 2's sub-option choice (5A vs.
 
 **Tag.** rigorous-and-narrow. Pure integration / cleanup.
 
+### §2.6. Piece 6 — full Step 8 G4 (`lem_layered_balanced_full`)
+
+**Added by mg-faf8** (2026-05-20) per the mg-0bd1 8th vacuity
+discovery (`docs/state-S7-F-bridge-Session2.md`;
+`docs/PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #6). The original
+5-piece decomposition listed the in-tree `lem_layered_balanced`
+in §4.1 as "already-in-tree, usable" — the Step-8 endpoint that
+piece 3's bridge feeds. mg-0bd1 proved that wrong: the in-tree
+`lem_layered_balanced` / `Case3Witness` is — per its own
+docstring (`LayeredBalanced.lean:447-450`) — the **bounded
+`|β| ≤ 30`, `K ≤ 10` base sub-slice** of Step 8 G4, not the full
+G4. Pinning the bridge to feed it forced the bridge conclusion to
+emit `Case3Witness`'s five caps, two of which (band injectivity +
+`L.K ≤ 2 L.w + 2`) bound `|α| ≤ 10 + C_exc T` — false for large
+minimal γ-counterexamples. The repair is **a sixth piece**: the
+faithful Lean port of the *full* Step 8 G4.
+
+**Substantive content.** Lean port of paper `lem:layered-balanced`
+(statement `step8.tex:2453-2464`; proof `step8.tex:3211-3266`):
+
+```lean
+theorem lem_layered_balanced_full.{u}
+    {β : Type u} [PartialOrder β] [Fintype β] [DecidableEq β]
+    (L : LayeredDecomposition β)
+    (h2 : 2 ≤ Fintype.card β)
+    (hNotChain : ¬ IsChainPoset β)
+    (hW3 : HasWidthAtMost β 3)
+    (hLw : L.w ≤ 4) :          -- ONLY the interaction-width cap
+    HasBalancedPair β
+```
+
+For every finite width-3 non-chain poset `β` with `2 ≤ |β|`
+admitting a `LayeredDecomposition L` with `L.w ≤ 4`, `β` has a
+balanced pair. **No band-injectivity, no `L.K` bound, no `|β|`
+bound** — paper `lem:layered-balanced` carries none of them. The
+proof is a **strong induction on `|β|`** (`step8.tex:3211-3266`):
+
+* **base `|β| = 2`** — non-chain ⇒ the two elements are
+  incomparable, `Pr = 1/2` by the transposition automorphism;
+* **Case A (`K = 1`)** — `β` is a single antichain, every pair
+  `Pr = 1/2`;
+* **Case B (layer-ordinal-reducible)** — `β = β₁ ⊕ β₂`; recurse
+  on the non-chain factor, lift via
+  `Corollary cor:reducibility-transfer` (in tree as the
+  marginal-invariance `probLT_restrict_eq`);
+* **Case C (irreducible, `K ≥ 2`)** — window-localise to
+  `W = W(i,j)`, `|W| ≤ 3(3w+1)`; sub-case **C1** (`W ⊊ β`)
+  recurses on `P|_W`; sub-case **C2** (`W = β`) is the
+  **bounded base case** `|β| ≤ 3(3w+1) ≤ 39` (for `w ≤ 4`),
+  depth `K ≤ 3w+1`, discharged by `prop:in-situ-balanced`.
+
+**The in-tree `Case3Witness_proof` / `lem_layered_balanced` is
+the C2 bounded base case** — *not* the whole of Piece 6. It is
+itself a strong induction with `native_decide` enumeration leaves
+covering the bounded slice. Piece 6 is therefore *largely wiring
+already-built infrastructure into the headline path*: the
+inductive-step lemmas `lem_cut`, `windowLocalization`,
+`lem_layered_reduction` are already substantive Lean (currently
+tagged **NC** "not consumed" in `PROOF-STRUCTURE-ONBOARDING.md`
+§2 — they are exactly the missing inductive machinery), plus the
+ordinal-reducibility transfer and the FKG / second-moment leaf of
+`prop:in-situ-balanced`.
+
+**Polecat budget.** 3-6 sessions, **0.8M-1.6M tokens** (mg-0bd1
+§5 estimate by analogy with the mg-d8c7 per-piece budgets).
+
+**Sub-arc decomposition** (recommendation; one sub-ticket
+`mg-MA-G4-Full` or split into the four below):
+
+- **mg-G4-A (induction skeleton):** state `lem_layered_balanced_full`;
+  set up `Nat.strong_induction_on |β|`; dispatch base / Case A /
+  Case B / Case C. ~1 session, 200k-300k.
+- **mg-G4-B (Case B — ordinal reducibility):** wire
+  `lem_layered_reduction` + `probLT_restrict_eq` marginal
+  invariance for the reducible factor lift. ~1 session, 200k-300k.
+- **mg-G4-C (Case C1 — window recursion):** wire `lem_cut` +
+  `windowLocalization`; recurse on `P|_W` (`|W| < |β|`). ~1-2
+  sessions, 250k-450k.
+- **mg-G4-D (Case C2 — bounded base):** discharge `|β| ≤ 3(3w+1)`
+  via the in-tree `Case3Witness_proof` machinery. **NOTE — the
+  base-case coverage gap:** `Case3Witness_proof` covers only the
+  cap-1 *singleton-band* sub-slice of `|β| ≤ 39`
+  (`PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #2.2: e.g.
+  `3-antichain ⊕ 3-antichain`, `|β| = 6`, has no singleton-band
+  width-`≤ 4` `L`). Piece 6's bounded base must additionally
+  cover **non-singleton-band** bounded posets — either via the
+  **mg-be48 cap-light enumeration extension**
+  (`docs/state-Case3Witness-cap-light-enumeration.md`, already
+  enumerates non-singleton bands for `nfree ≤ 25` cells) or a
+  direct `prop:in-situ-balanced` port. ~1-2 sessions, 250k-550k.
+
+**Upstream dependencies.** **None on the cascade.** Piece 6
+consumes only an abstract `L : LayeredDecomposition β` with
+`L.w ≤ 4`. Its inductive machinery (`lem_cut`,
+`windowLocalization`, `lem_layered_reduction`,
+`Case3Witness_proof`, `probLT_restrict_eq`) is **already in
+tree**. Piece 6 can be dispatched **immediately, in parallel
+with piece 1** (mg-0bd1 §8 Option (R2)).
+
+**Downstream consumers.** Piece 3's S7-F bridge (re-pinned per
+MA-Sig §4.2 §E to emit `L.w ≤ 4`) feeds Piece 6; Piece 6's
+output `HasBalancedPair {a // a ∉ Xexc}` feeds `excPerturbLift`
+in piece 4-body. So the consumption chain is
+piece 3 → **piece 6** → piece 4-body.
+
+**Hold-the-line risks.**
+
+1. **Base-case coverage gap (the mg-G4-D note above).** The
+   `Case3Witness_proof` singleton-band restriction means the C2
+   bounded base is not a drop-in. Probability the cap-light
+   extension needs its own sub-arc ~35%, magnitude +300k-600k.
+   **Mitigation:** mg-be48's enumeration already covers
+   non-singleton bands within TIER A (`nfree ≤ 25`); confirm
+   TIER A spans all `|β| ≤ 39` width-3 non-chain posets at
+   mg-G4-D kickoff, before coding.
+2. **`lem_cut` / `windowLocalization` re-targeting.** These NC
+   lemmas were built for the abandoned size-minimal framing
+   (mg-805c); re-targeting them onto the strong-induction
+   headline path may surface signature drift. Probability ~25%,
+   magnitude +200k-400k.
+3. **Window-recursion termination.** Case C1 recurses on `P|_W`
+   with `|W| < |β|`; the strict-descent measure must be threaded
+   cleanly through `Nat.strong_induction_on`. Mechanical but
+   fragile. Probability ~15%, magnitude +150k.
+
+**Satisfiability.** Confirmed: `lem_layered_balanced_full` is a
+faithful transcription of paper `lem:layered-balanced`, which is
+a sound theorem with a paper proof. It consumes only `L.w ≤ 4`
+(plus width-3, non-chain, `2 ≤ |β|`) — no unsatisfiable cap
+combination. See `docs/state-MA-Sig-Session1.md` §10.6 for the
+satisfiability check of the §4.2 §G consumer signature.
+
+**Tag.** rigorous-but-substantial. Proof technique is known
+(paper-proved strong induction); the in-tree gap is engineering,
+not math (`PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #2: *"the
+in-tree gap is engineering, not math"*). The single non-trivial
+risk is the base-case coverage gap (risk 1).
+
 ---
 
 ## §3. Phase B — end-to-end decomposition
@@ -781,20 +960,31 @@ The single non-trivial risk is item 2's sub-option choice (5A vs.
    │   mg-S7-F-A (X^exc) / -B (sync) / -C (band assembly)              │
    │   mg-S7-F-D (chain-removal subtype lift)                          │
    │   mg-S7-F-Z (integration + QA)                                    │
+   │   [emits L.w ≤ 4 + band-nonempty + |X^exc| ≤ C_exc T per         │
+   │    MA-Sig §4.2 §E re-pinned by mg-faf8]                           │
    └────────────┬──────────────────────────────────────────────────────┘
-                │                  ↑
-                │                  │ mandatory hold-the-line audit
-                │                  │   (analog of mg-5fbd Phase D Checkpoint 3)
-                ▼
+                │
+                ▼ (piece 3 → piece 6 → piece 4-Body)
    ┌───────────────────────────────────────────────────────────────────┐
    │ piece 4-Body — refactor body          (3-4 sessions, 0.6-1.2M)    │
    │   mg-MA-MinCex / mg-MA-ThmE / mg-MA-Cascade / mg-MA-Body          │
+   │   ↑ consumes piece 6's HasBalancedPair output                    │
    └────────────┬──────────────────────────────────────────────────────┘
-                │
+                │                  ↑ mandatory hold-the-line audit
+                │                    (analog of mg-5fbd Checkpoint 3)
                 ▼
    ┌───────────────────────────────────────────────────────────────────┐
    │ piece 5 — integration                 (1-2 sessions, 0.2-0.5M)    │
    │   mg-Int-A (cleanup) / mg-Int-B (axioms audit + ONBOARDING)       │
+   └───────────────────────────────────────────────────────────────────┘
+
+   ┌─── OFF THE CRITICAL PATH (dispatch in parallel with piece 1) ────┐
+   │ piece 6 — full Step 8 G4              (3-6 sessions, 0.8-1.6M)    │
+   │   mg-MA-G4-Full  (or mg-G4-A / -B / -C / -D)                      │
+   │   NO upstream cascade dependency — consumes only an abstract     │
+   │   LayeredDecomposition with L.w ≤ 4. Inductive machinery        │
+   │   (lem_cut, windowLocalization, lem_layered_reduction) already  │
+   │   in tree. Logically consumed: piece 3 → piece 6 → piece 4-Body.│
    └───────────────────────────────────────────────────────────────────┘
 ```
 
@@ -803,8 +993,19 @@ The single non-trivial risk is item 2's sub-option choice (5A vs.
 - piece 4-Sig → everything else (piece 4-Sig fixes downstream signatures).
 - piece 1 → piece 2 (S7-A-E concretisation needs Steps 5 + 6 grounded).
 - piece 2 → piece 3 (bridge needs `L_{S7E}` input).
-- piece 3 → piece 4-Body (refactor body needs bridge to consume).
+- piece 3 → **piece 6** → piece 4-Body (the bridge's
+  `LayeredDecomposition` output is consumed by piece 6's full
+  Step 8 G4; piece 6's `HasBalancedPair` output is consumed by
+  piece 4-body's `excPerturbLift`).
 - piece 4-Body → piece 5 (integration is residual cleanup).
+
+**Piece 6 is NOT on the critical path** despite the logical
+edge above: it has no upstream cascade dependency, so it can be
+built any time before piece 4-Body needs it — recommended
+dispatch is **early, in parallel with piece 1** (mg-0bd1 §8
+Option (R2)). The piece 3 → piece 6 logical edge is satisfied
+because piece 6's *signature* (consume `L.w ≤ 4`) is fixed by
+MA-Sig §4.2 §G; piece 6 needs no piece-3 *artefact* to be built.
 
 **Parallel arcs:**
 
@@ -818,6 +1019,11 @@ The single non-trivial risk is item 2's sub-option choice (5A vs.
   days calendar.**
 - **PA-4.** mg-MA-MinCex and mg-MA-ThmE can run in parallel after
   piece 4-Sig. **Saves ~2-3 days calendar.**
+- **PA-5 (added mg-faf8).** Piece 6 (mg-MA-G4-Full) runs **fully
+  in parallel with piece 1** — it has no cascade dependency. Its
+  3-6 sessions are entirely absorbed; **0 net calendar cost** as
+  long as it lands before piece 4-Body. **Saves the full piece-6
+  duration off the sequential total.**
 
 **Parallelisation gain:** mid-estimate 5-6 weeks of calendar
 savings off the strict-sequential 7-month baseline. **Realistic
@@ -825,12 +1031,14 @@ calendar with parallelism: 5-6 months.**
 
 ### §3.2. Cumulative budget projection
 
-Sequential session count (no parallelism, summing per-piece mids):
-27 (piece 1) + 4 (piece 2) + 5 (piece 3) + 5 (piece 4) + 1 (piece 5)
-= **42 sessions** (mid).
+Sequential session count (no parallelism, summing per-piece mids;
+post-mg-faf8 including piece 6):
+27 (piece 1) + 4 (piece 2) + 5 (piece 3) + 5 (piece 4) + 1
+(piece 5) + 4 (piece 6) = **46 sessions** (mid).
 
 Parallelism reduction: ~8-10 sessions absorbed into parallel waves
-of piece 1. **Realistic: 34-36 sessions** at the mid-estimate.
+of piece 1, **plus piece 6's ~4 sessions fully absorbed** (PA-5).
+**Realistic: 34-38 sessions** at the mid-estimate.
 
 | Piece | Session mid | Token mid | Token range |
 |---|---:|---:|---:|
@@ -840,19 +1048,23 @@ of piece 1. **Realistic: 34-36 sessions** at the mid-estimate.
 | 3 (S7-F bridge) | 5 | 1.25M | 1.0M-1.5M |
 | 4-Body | 4 | 1.0M | 0.6M-1.2M |
 | 5 (integration) | 1 | 0.35M | 0.2M-0.5M |
-| **Mid-estimate** | **42** (raw) / **34-36** (parallel) | **10.0M** | **7.5M-13.0M** |
+| 6 (full Step 8 G4) — added mg-faf8 | 4 | 1.2M | 0.8M-1.6M |
+| **Mid-estimate** | **46** (raw) / **34-38** (parallel) | **11.3M** | **8.3M-14.6M** |
 
-**Calendar at 1 polecat/day:** raw 42 sessions = 8.5 weeks
-single-track; with parallelism, **5-6 months** end-to-end including
-inter-step QA pauses + checkpoint audits + sub-split contingency.
+**Calendar at 1 polecat/day:** raw 46 sessions = 9 weeks
+single-track; with parallelism (piece 6 absorbed alongside
+piece 1), **6 months** end-to-end including inter-step QA pauses
++ checkpoint audits + sub-split contingency.
 
-**Planning ceiling (worst-case + contingency):** **12M-13M tokens /
-40-45 sessions / 7 months** — matches the `mg-d8c7` ticket-body
-envelope.
+**Planning ceiling (worst-case + contingency):** **13M-14.5M
+tokens / 42-48 sessions / 7 months** — at/just above the
+`mg-d8c7` ticket-body envelope; the overshoot is the mg-0bd1
+correction cost (piece 6).
 
 ### §3.3. Strategic checkpoints (hold-the-line)
 
-Five suggested go/no-go checkpoints (extends mg-6ab8 §4.3's three):
+Six suggested go/no-go checkpoints (extends mg-6ab8 §4.3's three;
+Checkpoint 6 added mg-faf8):
 
 - **Checkpoint 0 (after piece 4-Sig lands, ~week 1).** Audit:
   does the proof-by-contradiction signature thread `hyp:arith`
@@ -875,6 +1087,16 @@ Five suggested go/no-go checkpoints (extends mg-6ab8 §4.3's three):
   the shape the refactor body consumes? Specifically, is
   `lem_layered_from_step7` invokable on `(α, hMin, hCascade)`
   without intermediate adapters?
+- **Checkpoint 6 (Piece 6 — before mg-G4-D / the C2 bounded base
+  starts; added mg-faf8).** Audit: does the in-tree bounded
+  machinery cover the **full** `|β| ≤ 3(3w+1) ≤ 39` width-3
+  non-chain slice, or only the cap-1 singleton-band sub-slice?
+  `Case3Witness_proof` covers only the latter
+  (`PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #2.2). Confirm the
+  mg-be48 cap-light enumeration's TIER A (`nfree ≤ 25`) spans the
+  rest, or scope a `prop:in-situ-balanced` port, **before**
+  coding mg-G4-D. This is the §2.6 risk 1 gate — the one place
+  Piece 6 could surface a 9th vacuity.
 
 ---
 
@@ -903,12 +1125,21 @@ Inheriting mg-6ab8 §5.1 + adding piece-specific items:
   forms (mg-4584, mg-9331, mg-1069, mg-d135, mg-516f). Consumed
   by piece 2.
 - **`Step8/LayeredBalanced.lean:626/681`** (post-mg-234e) —
-  `lem_layered_balanced` with caller's-`L` rewire. Consumed by
-  piece 4.
+  `lem_layered_balanced` with caller's-`L` rewire. **AMENDED
+  (mg-faf8):** this is **NOT** the Step-8 endpoint — it is the
+  bounded `|β| ≤ 30` / `K ≤ 10` base sub-slice (its own docstring,
+  `LayeredBalanced.lean:447-450`). It is **usable only as the
+  bounded base case inside Piece 6** (§2.6), not as the §4.2 §E
+  bridge's consumer. The Step-8 endpoint `lem_layered_balanced_full`
+  is **NOT** already in tree — it is Piece 6's deliverable. (This
+  line was the §4.1 error mg-0bd1 §0/§5 flagged.)
 - **`Step8/OptionC/Case3WitnessProof.lean:256`** — the F3 strong
-  induction inside `Case3Witness_proof`. Consumed by piece 4
-  (its conclusion `HasBalancedPair (α \ X^{exc})` for the layered
-  subposet flows from `lem_layered_balanced` invocation).
+  induction inside `Case3Witness_proof`. **AMENDED (mg-faf8):**
+  consumed by **Piece 6** as the C2 bounded-base discharge (paper
+  `step8.tex:3260-3263`), *not* directly by piece 4. It covers
+  the cap-1 singleton-band sub-slice of `|β| ≤ 39`; Piece 6's
+  base case must extend it to non-singleton bands (§2.6 mg-G4-D,
+  risk 1).
 
 ### §4.2. NEW infrastructure required (in scope)
 
@@ -1005,13 +1236,18 @@ sequencing**: when to file which sub-tickets.
   reference. **Output is paper-and-pencil; no Lean code lands in
   this ticket** (analog of mg-d8c7 itself).
 
-**Phase 2: Cascade port (weeks 2-14, 22-32 tickets in waves).**
+**Phase 2: Cascade port + Piece 6 (weeks 2-14, 23-36 tickets in
+waves).**
 
 Wave 1 dispatched immediately after Phase 1 lands (week 2):
 - mg-MathlibCheeger (1-2 tickets, parallel sub-arc).
 - mg-S1-A, mg-S1-B, mg-S1-C, mg-S1-D (4 tickets, parallel).
 - mg-S5-A, mg-S5-B, mg-S5-C, mg-S5-D, mg-S5-E (5 tickets,
   parallel).
+- **mg-MA-G4-Full** — **Piece 6** (full Step 8 G4; added mg-faf8).
+  1-4 tickets, **fully parallel** — no cascade dependency (§2.6,
+  §7.3a). Dispatched here purely for calendar absorption; it only
+  needs to land before Phase 4's mg-MA-Body.
 
 Wave 2 (weeks 5-7, after S1 land + mathlib infra):
 - mg-MathlibWeakGrid (1 ticket, parallel).
@@ -1039,13 +1275,17 @@ After piece 2 lands + checkpoint 3 audit:
 
 **Phase 4: Refactor body + integration (weeks 21-26, 5-7 tickets).**
 
-After checkpoint 4 passes:
+After checkpoint 4 passes (and after Piece 6 / mg-MA-G4-Full has
+landed — it should have, from its Phase 2 parallel dispatch):
 - mg-MA-MinCex, mg-MA-ThmE (parallel) → mg-MA-Cascade →
   mg-MA-Body (4 tickets, with one parallelisation step).
+  `mg-MA-Body` calls `lem_layered_balanced_full` (Piece 6) — not
+  the bounded `lem_layered_balanced` — and drops the
+  `hC3 : Case3Witness` threading (MA-Sig §4.3, re-pinned mg-faf8).
 - mg-Int-A, mg-Int-B (2 tickets, sequential).
 
-**Total dispatch:** 34-51 tickets across 4 phases / 5-7 months
-calendar.
+**Total dispatch:** 35-55 tickets across 4 phases / 6-7 months
+calendar (post-mg-faf8, including Piece 6).
 
 ### §5.3. Strategic checkpoints (re-stated)
 
@@ -1073,7 +1313,7 @@ the start guards against 7M+ tokens of misdirected downstream work.
 
 | # | Risk | Probability | Magnitude | Mitigation |
 |---:|---|---:|---|---|
-| 1 | Piece 4-Sig surfaces unanticipated architectural gap (8th vacuity-discovery on the Lean signature) | 15% | +500k-2M and possible re-scoping | Checkpoint 0 audit before piece 1 starts; 1-session pre-flight |
+| 1 | ~~Piece 4-Sig surfaces unanticipated architectural gap (8th vacuity-discovery on the Lean signature)~~ **MATERIALISED (mg-0bd1).** The 8th vacuity surfaced on the MA-Sig §4.2 §E *bridge* signature (not piece 4-Sig's headline signature): the five-cap conclusion was unsatisfiable for large α. **Resolved (mg-faf8):** re-pinned to three caps + added Piece 6 (§2.6). | realised | +0.8M-1.6M (Piece 6) — absorbed in the §3.2 table | RESOLVED. Standing mitigation for *future* such gaps: every `∃`-with-caps signature must pass a satisfiability check, not just a type-check (MA-Sig §4.4 check (B); §10). |
 | 2 | Cheeger / spectral-gap mathlib gap exceeds 2.5M | 25% | +500k-1M | Sub-arc kickoff in wave 1; copy-and-tweak fallback |
 | 3 | `Theorem E` (Step8/TheoremE.lean) is marker, not substantive — grounding needs its own sub-arc | 30% | +500k-800k | Audit at mg-MA-Sig (Checkpoint 0) |
 | 4 | Step 7 G4 cocycle O(1) propagation surfaces a missing fineness hypothesis from S6 | 25% | +500k | Checkpoint 3 before piece 3 starts |
@@ -1133,6 +1373,41 @@ through mg-S6-B, mg-S1234-QA, mg-S6-QA, mg-MathlibCheeger,
 mg-MathlibWeakGrid are unchanged from mg-6ab8 §7. The dispatch
 order is per §5.2 above.)
 
+### §7.2a. Phase 2 (parallel) — Piece 6, full Step 8 G4 (added mg-faf8)
+
+#### mg-MA-G4-Full — full Step 8 G4 port (`lem_layered_balanced_full`)
+
+```
+Title: OneThird-MA-G4-Full: Lean port of the FULL Step 8 G4
+       (paper lem:layered-balanced, step8.tex:2453-2464 / proof
+       3211-3266) — lem_layered_balanced_full: strong induction on
+       |β|, consuming ONLY L.w ≤ 4. Piece 6 of the mg-d8c7 scope.
+Depends: NOTHING on the cascade. Consumes only an abstract
+         LayeredDecomposition with L.w ≤ 4. Inductive machinery
+         (lem_cut, windowLocalization, lem_layered_reduction,
+         Case3Witness_proof, probLT_restrict_eq) already in tree.
+         Signature fixed by MA-Sig §4.2 §G (re-pinned mg-faf8).
+         Dispatchable immediately, in parallel with piece 1.
+Tags: onethird, lean-port, full-refactor, scoped-by-mg-d8c7,
+      piece-6, step8-g4, 8th-vacuity-fix
+Repo: one_third_width_three; default to main
+Body: 1-4 tickets (mg-G4-A induction skeleton / mg-G4-B Case B
+      ordinal reducibility / mg-G4-C Case C1 window recursion /
+      mg-G4-D Case C2 bounded base). Target file
+      lean/OneThird/Step8/LayeredBalancedFull.lean (new).
+      mg-G4-D MUST extend the C2 bounded base beyond the cap-1
+      singleton-band sub-slice (Case3Witness_proof covers only
+      that) to non-singleton-band |β| ≤ 39 posets — via the
+      mg-be48 cap-light enumeration or a direct
+      prop:in-situ-balanced port; this is the piece's single
+      non-trivial risk (§2.6 risk 1).
+      Budget per ticket: 200-550k, 1-2 sessions.
+      Aggregate: 0.8M-1.6M, 3-6 sessions.
+      Verdict: GREEN if lem_layered_balanced_full closes with no
+      new project axiom and no sorry; RED if the C2 base-case
+      coverage gap surfaces a 9th vacuity.
+```
+
 ### §7.3. Phase 3 — S7 concretisation + bridge
 
 #### mg-S7-Conc-A through mg-S7-Conc-D — S7-A-E ground-set concretisation
@@ -1167,6 +1442,13 @@ Body: 5 tickets covering the bridge construction. mg-S7-F-A:
       -C: band assembly producing LayeredDecomposition (X\X^{exc})
       with L.w ≤ 4. -D: chain-removal subtype lift extension to
       Mathlib/LinearExtension/Subtype.lean. -Z: integration + QA.
+      RE-PINNED mg-faf8: the bridge conclusion emits EXACTLY THREE
+      caps — |X^{exc}| ≤ C_exc T, band-nonempty, L.w ≤ 4 (MA-Sig
+      §4.2 §E). It MUST NOT transcribe Case3Witness's five caps
+      (band injectivity / L.K ≤ 2 L.w+2 / card bound) — those are
+      unsatisfiable for large α (mg-0bd1). The bridge's consumer
+      is Piece 6 (lem_layered_balanced_full), not the bounded
+      lem_layered_balanced.
       Budget per ticket: 200-500k, 1-2 sessions.
       Aggregate: 1.0M-1.5M, 4-6 sessions.
       MANDATORY hold-the-line audit (analog of mg-5fbd Phase D
@@ -1185,9 +1467,10 @@ Title: OneThird-MA-{MinCex,ThmE,Cascade,Body}: implement the
        width3_one_third_two_thirds_assembled per the mg-MA-Sig
        signature contract; thread minimal-counterexample +
        Theorem E + Steps 1-7 cascade output through to
-       lem_layered_from_step7 + lem_layered_balanced +
-       exc_perturb_lift
-Depends: mg-MA-Sig (signature contract); pieces 1, 2, 3 all landed.
+       lem_layered_from_step7 + lem_layered_balanced_full (Piece 6)
+       + exc_perturb_lift
+Depends: mg-MA-Sig (signature contract); pieces 1, 2, 3, AND 6
+         all landed.
 Body: 4 tickets covering the refactor body. mg-MA-MinCex: build
       pickMinimalCounterexample (Nat.find on Fintype.card). mg-MA-ThmE:
       wire Step8/TheoremE.lean output to LowConductanceOn predicate
@@ -1195,7 +1478,12 @@ Body: 4 tickets covering the refactor body. mg-MA-MinCex: build
       stepsOneToSevenCascade : LowConductanceOn → Step5R ∨ Step5C.
       mg-MA-Body: rewrite width3_one_third_two_thirds_assembled per
       the new proof-by-contradiction shape; delete mainAssembly,
-      mainTheoremInputsOf, caseC_canonicalLayered.
+      mainTheoremInputsOf, caseC_canonicalLayered. RE-PINNED
+      mg-faf8: mg-MA-Body calls lem_layered_balanced_full (Piece 6),
+      NOT the bounded lem_layered_balanced; it drops the hInj/hKw/
+      hCardw args and the hC3 : Case3Witness threading, and the
+      hC3 parameter from width3_one_third_two_thirds[_assembled]
+      (MA-Sig §4.3).
       Budget per ticket: 200-500k, 1-2 sessions.
       Aggregate: 0.6M-1.2M, 3-4 sessions.
 ```
@@ -1229,6 +1517,9 @@ Phase 2 Wave 1 (weeks 2-4, ALL parallel):
   mg-S1-A, mg-S1-B, mg-S1-C, mg-S1-D
   mg-S5-A, mg-S5-B, mg-S5-C, mg-S5-D, mg-S5-E
   mg-MathlibCheeger (sub-arc; possibly 2 sequential tickets)
+  mg-MA-G4-Full  (PIECE 6, added mg-faf8; no cascade dependency,
+                  fully parallel — just needs to land before
+                  Phase 4's mg-MA-Body)
 
 Phase 2 Wave 2 (weeks 5-7):
   mg-MathlibWeakGrid (parallel with the rest of wave 2)
@@ -1249,8 +1540,9 @@ Phase 3 (weeks 13-20):
   mg-S7-F-A ∥ mg-S7-F-B → mg-S7-F-C → mg-S7-F-D → mg-S7-F-Z
 
 Phase 4 (weeks 21-26):
-  [checkpoint 4 audit]
+  [checkpoint 4 audit — also confirm mg-MA-G4-Full / Piece 6 landed]
   mg-MA-MinCex ∥ mg-MA-ThmE → mg-MA-Cascade → mg-MA-Body
+    (mg-MA-Body consumes Piece 6's lem_layered_balanced_full)
   mg-Int-A → mg-Int-B
 ```
 
@@ -1271,6 +1563,9 @@ Phase 4 (weeks 21-26):
   (the piece-3 target).
 - `paper/step8.tex:2244-2262` — paper's invocation of
   `lem:layered-from-step7` in the layered-reduction context.
+- `paper/step8.tex:2453-2464` — `lem:layered-balanced` statement;
+  `paper/step8.tex:3211-3266` — its proof (strong induction on
+  `|β|`). **The piece-6 target (added mg-faf8).**
 - `paper/step7.tex:1175-1193` — `prop:72`.
 - `paper/step7.tex:1018-1056` — `lem:bandwidth ≤ 4` (S7-E target).
 
@@ -1284,7 +1579,12 @@ Phase 4 (weeks 21-26):
   `mainAssembly` + `width3_one_third_two_thirds_assembled` (piece 4
   rewrites).
 - `lean/OneThird/Step8/LayeredBalanced.lean:626/681` — post-mg-234e
-  `lem_layered_balanced` (piece 4 invokes).
+  `lem_layered_balanced` (**Piece 6's bounded base case** —
+  re-pinned mg-faf8; *not* directly piece-4's invocation).
+- `lem_layered_balanced_full` — **Piece 6 deliverable, NOT yet in
+  tree.** Target file `lean/OneThird/Step8/LayeredBalancedFull.lean`
+  (new). The full Step 8 G4 (paper `lem:layered-balanced`); piece
+  4-body invokes this.
 - `lean/OneThird/Step8/LayeredBalanced.lean:461-472` —
   `Case3Witness.{u}` (the five-cap structure; pieces 4 + 5 may
   retain or refactor as needed).
@@ -1349,7 +1649,10 @@ Phase 4 (weeks 21-26):
   collapse extraction), mg-6ab8 (Steps 1-7 scoping; selected
   Option B pilot), mg-4584/9331/1069/d135/516f (S7-A-E pilot
   execution), mg-5fbd (S7-F bridge audit; RED 7th vacuity
-  discovery), **mg-d8c7 (this scoping)**.
+  discovery), mg-d8c7 (this scoping), mg-a22b (MA-Sig Phase 1
+  signature contract), mg-0bd1 (S7-F bridge Session 2; RED 8th
+  vacuity discovery), **mg-faf8 (MA-Sig re-pin + Piece 6 recorded
+  here — §2.6)**.
 
 ---
 
@@ -1367,22 +1670,35 @@ Update this file in the **same commit** as any of the following:
   contradicts §2.x; update the relevant row and the §3.2 aggregate.
 - A risk in §6 materialises; update the probability + mitigation.
 - A §3.3 / §5.3 checkpoint triggers a re-scope.
-- An 8th vacuity-discovery surfaces (most likely site: piece 4
-  mg-MA-Sig signature design); update §2.4 with the new finding
-  and §6 with the re-scoped recommendation.
+- A further vacuity-discovery surfaces; update the relevant §2.x
+  with the new finding and §6 with the re-scoped recommendation.
 
-Daniel's "vacuity-discovery pattern has hit 7 times as of mg-5fbd"
-(mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970, mg-ac13, mg-5fbd);
-**default to skeptical paper-first reading**, not abstract-scaffold
-optimism. The Option A' FULL REFACTOR's structural feasibility
-rests on the paper-side `thm:main-step8` proof being clean and on
-the architectural shift not surfacing a new gap.
+**Update history.** The 8th vacuity-discovery (mg-0bd1) surfaced
+on the MA-Sig §4.2 §E bridge signature and was corrected by
+mg-faf8: the bridge is re-pinned to three caps, and **Piece 6**
+(full Step 8 G4) is recorded as §2.6 — this is now a 6-piece
+decomposition.
+
+Daniel's "vacuity-discovery pattern has hit **8 times** as of
+mg-0bd1" (mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970, mg-ac13,
+mg-5fbd, mg-0bd1); **default to skeptical paper-first reading**,
+not abstract-scaffold optimism — and, per the mg-0bd1 lesson,
+**check every pinned `∃`-with-caps signature for satisfiability,
+not merely type-compatibility** (`docs/state-MA-Sig-Session1.md`
+§4.4 check (B), §10). The Option A' FULL REFACTOR's structural
+feasibility rests on the paper-side `thm:main-step8` /
+`lem:layered-balanced` / `lem:layered-from-step7` proofs being
+clean (they are) and on the architectural shift not surfacing a
+further gap.
 
 If this file is wrong, edit it directly. Source-of-truth is the
 Lean tree and `step{1..8}.tex`; this scoping is summary-of-plan.
 
 **Forward-action mail draft (for the polecat to send after this
-scoping lands).**
+scoping lands).** *[Historical — mg-d8c7's original draft. Scope
+figures superseded by the mg-faf8 re-pin: now **6 pieces /
+35-57 dispatches / 8.3M-14.6M tokens / 6-7 months** — see §0
+table and §3.2.]*
 
 ```
 Subject: mg-d8c7 Option A' FULL REFACTOR scoping landed
@@ -1397,6 +1713,7 @@ superseded). Scope:
 
   5 pieces / 34-51 polecat dispatches / 7.5M-13M tokens /
   5-7 months calendar.
+  [SUPERSEDED mg-faf8: 6 pieces / 35-57 / 8.3M-14.6M / 6-7 months]
 
 The single load-bearing architectural piece (piece 4 — MainAssembly
 proof-by-contradiction refactor) is what makes pieces 1-3 invokable

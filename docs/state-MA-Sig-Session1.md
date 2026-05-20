@@ -42,14 +42,35 @@ correspond to the same content. Citations below use the
 
 ---
 
-> **⚠ SUPERSEDED IN PART (mg-0bd1, 2026-05-20).** The §4.2 §E
-> bridge signature and §4.2 §G `lem_layered_balanced` pinning
-> below carry an **8th vacuity-discovery defect**: the five-cap
-> bridge conclusion is unsatisfiable for large α. The §0 verdict's
-> "no 8th vacuity-discovery" claim held only for *type-checking*
-> (§4.4), not *satisfiability*. See **§9** (added this session)
-> and `docs/state-S7-F-bridge-Session2.md` for the correction and
-> the re-pin recommendation. Read §9 before consuming §4.2.
+> **⚠ CORRECTED (mg-faf8, 2026-05-20).** The §4.2 §E bridge
+> signature and §4.2 §G consumer pinning **have been re-pinned**
+> to fix the 8th vacuity-discovery defect found by mg-0bd1: the
+> original five-cap bridge conclusion was structurally
+> unsatisfiable for large α. As re-pinned:
+>
+> * **§4.2 §E** — the bridge `lem_layered_from_step7` now emits
+>   only **three** caps (`Xexc.card ≤ C_exc T`, band-nonempty,
+>   `L.w ≤ 4`). The three Case3Witness API artefacts (band
+>   injectivity, `L.K ≤ 2 L.w + 2`, the `card − Xexc` bound) are
+>   **dropped**. It also gains an explicit hypothesis
+>   `hCex : IsGammaCounterexample α γ` pinning the bridge's domain
+>   to the γ-counterexample regime (surfaced by the §10
+>   satisfiability check).
+> * **§4.2 §G** — the downstream consumer is now **Piece 6**
+>   (`lem_layered_balanced_full`, the full Step 8 G4), which
+>   consumes only `L.w ≤ 4`. The bounded-base `lem_layered_balanced`
+>   is no longer on the §E→§G boundary; it becomes the bounded
+>   base case *inside* Piece 6's strong induction.
+> * **§4.3 / §4.4** — updated to match.
+> * **§10** (added this session) — the corrected contract is
+>   **satisfiability-verified**, including against the mg-0bd1
+>   counterexample class (the 3-disjoint-chains family).
+>
+> §9 records the original mg-0bd1 finding and preserves the
+> superseded five-cap form (also in `docs/state-S7-F-bridge-Session2.md`
+> §0). The §0 verdict below predates the correction — read §9–§10
+> alongside it; its "no 8th vacuity-discovery" claim held only for
+> *type-checking* (old §4.4), never *satisfiability*.
 
 ## §0. Verdict — **GREEN-signature-types-cleanly + Theorem-E-substantive**
 
@@ -241,9 +262,17 @@ theorem width3_one_third_two_thirds.{u}
     : HasBalancedPair α
 ```
 
-The `hC3 : Step8.Case3Witness.{u}` parameter is retained unchanged
-(it is consumed by `lem_layered_balanced` at the end of the cascade;
-see §4).
+**RE-PINNED mg-faf8.** The `hC3 : Step8.Case3Witness.{u}`
+parameter is **dropped** from both the headline
+`width3_one_third_two_thirds` and the inner
+`width3_one_third_two_thirds_assembled` (§4.3). Under the corrected
+contract the end-of-cascade consumer is **Piece 6**
+(`lem_layered_balanced_full`, §4.2 §G), which consumes only
+`L.w ≤ 4`; the `Case3Witness` proposition is discharged
+*internally* by Piece 6's strong-induction base case
+(`Case3Witness_proof.{u}` invoked there as a closed term, not
+threaded as a hypothesis). Pre-mg-faf8 the contract retained
+`hC3` because the consumer was the bounded `lem_layered_balanced`.
 
 ### §3.2. Decision 2 — Minimal-counterexample bundle shape: **`Nat.strongRecOn` on `Fintype.card α`**
 
@@ -284,8 +313,7 @@ Concrete Lean shape:
 theorem width3_one_third_two_thirds_assembled.{u}
     {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
     (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
-    (hC3 : Step8.Case3Witness.{u})
-    (hArith : HypothesisArithmetic) :
+    (hArith : HypothesisArithmetic) :          -- hC3 DROPPED (mg-faf8)
     HasBalancedPair α := by
   induction h : Fintype.card α using Nat.strong_induction_on
     generalizing α with
@@ -421,14 +449,22 @@ theorem stepsOneToSevenCascade
     Step5R α γ (hArith.T γ) ∨ Step5C α (hArith.T γ)
 
 -- §E. lem:layered-from-step7 (NEW — piece 3 deliverable).
+-- RE-PINNED mg-faf8: emits only the three SATISFIABLE caps, and
+-- carries hCex : IsGammaCounterexample α γ as an explicit
+-- hypothesis (see below).
 -- Lifts the cascade output to a concrete LayeredDecomposition on
--- X∖X^exc, with the ChainLift data structure that the perturbation
--- lift consumes.
+-- X∖X^exc, faithful to paper def:layered (step8.tex:1983-2007) and
+-- lem:layered-from-step7 conclusion items (i)/(ii)/(iii)
+-- (step8.tex:2054-2088). The bridge then feeds PIECE 6
+-- (lem_layered_balanced_full, §G), not the bounded base case.
 theorem lem_layered_from_step7
     (γ : ℚ) (hγ_pos : 0 < γ)
     (T : ℕ)
     (hP : HasWidthAtMost α 3)
     (hI : Indecomposable α)
+    (hCex : IsGammaCounterexample α γ)  -- ADDED mg-faf8 — pins the
+                                       -- bridge's domain to the
+                                       -- γ-counterexample regime
     (hCascade : Step5R α γ T ∨ Step5C α T)
     (ih : ∀ m, m < Fintype.card α →
            ∀ {β : Type u} [PartialOrder β] [Fintype β] [DecidableEq β],
@@ -436,13 +472,40 @@ theorem lem_layered_from_step7
              HasWidthAtMost β 3 → ¬ IsChainPoset β →
              HasBalancedPair β) :
     ∃ (Xexc : Finset α) (L : LayeredDecomposition {a : α // a ∉ Xexc}),
-      Xexc.card ≤ C_exc T ∧
-      Function.Injective L.band ∧                  -- cap 1
-      L.K ≤ 2 * L.w + 2 ∧                          -- cap 2
-      (Fintype.card α - Xexc.card) ≤ 6 * L.w + 6 ∧ -- cap 3
-      (∀ k, 1 ≤ k → k ≤ L.K →                      -- cap 4
+      Xexc.card ≤ C_exc T ∧                        -- bound on |X^exc| (item (i))
+      (∀ k, 1 ≤ k → k ≤ L.K →                      -- band-nonempty (compactified)
             (L.bandSet k).Nonempty) ∧
-      L.w ≤ 4                                      -- cap 5
+      L.w ≤ 4                                      -- interaction width (item (ii))
+      -- DROPPED mg-faf8 — the three unsatisfiable Case3Witness
+      -- API artefacts:
+      --   • Function.Injective L.band        (old cap 1)
+      --   • L.K ≤ 2 * L.w + 2                (old cap 2)
+      --   • (card α − Xexc.card) ≤ 6*L.w+6   (old cap 3)
+      -- Why dropped: caps 1+4 force singleton bands (L.K = card),
+      -- caps 2+5 then force L.K ≤ 10, jointly bounding
+      -- |α| ≤ 10 + C_exc T — FALSE for minimal γ-counterexamples
+      -- of unbounded size (the mg-0bd1 8th vacuity; §9). The
+      -- paper def:layered object instead has bands of size ≤ 3
+      -- (the LayeredDecomposition.band_size field; NOT singletons)
+      -- and depth L.K ≥ |X|/6 (step8.tex:2072) — unbounded — which
+      -- the three retained caps permit. Satisfiability of this
+      -- corrected conclusion is verified in §10.
+      --
+      -- ADDED HYPOTHESIS hCex (mg-faf8). The original §4.2 §E
+      -- omitted IsGammaCounterexample. Paper lem:layered-from-step7
+      -- only applies to α arising as a minimal γ-counterexample
+      -- in the (R)+(coherent) regime (mg-5fbd / §3 pitfall #5.3);
+      -- hCex pins the bridge's domain there explicitly. Without it,
+      -- the bridge as a standalone lemma is quantified over all
+      -- width-3 indecomposable α satisfying Step5R ∨ Step5C — and
+      -- whether non-γ-counterexamples (e.g. the 3-disjoint-chains
+      -- family) can satisfy that disjunct depends on the not-yet-
+      -- pinned exact definitions of Step5R/Step5C. hCex makes the
+      -- bridge a true proposition *standalone*, independent of
+      -- those definitions: a non-γ-counterexample fails hCex, so
+      -- the conditional is vacuously true on it (§10.4). hCex is
+      -- free at the call site — the §4.3 body has it in scope from
+      -- §3 (it is the same hCex stepsOneToSevenCascade §D consumes).
 
 -- §F. exc_perturb lift (UNCHANGED — Step8/ExcPerturb.lean:351).
 -- Existing signature `exc_perturb` lives at the probLT level; the
@@ -455,9 +518,41 @@ theorem excPerturbLift
     (hBP_sub : HasBalancedPair {a : α // a ∉ Xexc}) :
     HasBalancedPair α
 
--- §G. lem_layered_balanced (UNCHANGED — LayeredBalanced.lean:626).
--- Signature is post-mg-234e caller-L rewire; consumed on the subtype
--- {a // a ∉ Xexc} via the LayeredDecomposition produced by §E.
+-- §G. lem_layered_balanced_full (NEW — PIECE 6 deliverable).
+-- RE-PINNED mg-faf8: the §E bridge's downstream consumer is the
+-- FULL Step 8 G4, not the bounded-base lem_layered_balanced.
+-- Faithful Lean port of paper lem:layered-balanced
+-- (statement step8.tex:2453-2464; proof 3211-3266): strong
+-- induction on |β|, consuming ONLY L.w ≤ 4 (plus width-3,
+-- non-chain, 2 ≤ |β|). No band-injectivity, no L.K bound, no
+-- card bound — paper lem:layered-balanced has none.
+theorem lem_layered_balanced_full.{u}
+    {β : Type u} [PartialOrder β] [Fintype β] [DecidableEq β]
+    (L : LayeredDecomposition β)
+    (h2 : 2 ≤ Fintype.card β)
+    (hNotChain : ¬ IsChainPoset β)
+    (hW3 : HasWidthAtMost β 3)
+    (hLw : L.w ≤ 4) :          -- ONLY the interaction-width cap
+    HasBalancedPair β
+
+-- §G′. lem_layered_balanced (UNCHANGED in tree — LayeredBalanced.lean:626).
+-- NO LONGER on the §E→§G boundary. It moves INSIDE Piece 6: the
+-- in-tree lem_layered_balanced / Case3Witness_proof.{u} serve the
+-- BOUNDED BASE CASE of lem_layered_balanced_full's strong
+-- induction — paper Case C2 (step8.tex:3260-3263), the finite
+-- slice |β| ≤ 3(3w+1) ≤ 39 / depth K ≤ 3w+1 discharged by
+-- prop:in-situ-balanced. On that bounded slice |β| is finite, so
+-- caps 1/2/3 are NOT unsatisfiable there (the mg-0bd1 obstruction
+-- is a LARGE-α phenomenon only). NOTE — base-case coverage is a
+-- Piece 6 engineering sub-task, not a drop-in: the cap-1
+-- singleton-band Case3Witness_proof covers only the singleton-band
+-- sub-slice of |β| ≤ 39 (PROOF-STRUCTURE-ONBOARDING §3 pitfall #2.2:
+-- e.g. 3-antichain ⊕ 3-antichain has no singleton-band L), so
+-- Piece 6's bounded base must additionally cover non-singleton-band
+-- bounded posets — via the mg-be48 cap-light enumeration extension
+-- or a direct prop:in-situ-balanced port. See the Piece 6 scope
+-- (OneThird-Option-A-FULL-REFACTOR-scoping.md §2.6, sub-arc
+-- mg-G4-D + risk 1) and §10.6 below.
 theorem lem_layered_balanced.{u}
     {β : Type u} [PartialOrder β] [Fintype β] [DecidableEq β]
     (L : LayeredDecomposition β)
@@ -479,8 +574,7 @@ theorem lem_layered_balanced.{u}
 theorem width3_one_third_two_thirds_assembled.{u}
     {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
     (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
-    (hC3 : Step8.Case3Witness.{u})
-    (hArith : HypothesisArithmetic) :     -- NEW parameter
+    (hArith : HypothesisArithmetic) :     -- NEW parameter; hC3 DROPPED (mg-faf8)
     HasBalancedPair α := by
   -- §1. Strong induction on |α|; trivial cases first.
   induction hcard : Fintype.card α using Nat.strong_induction_on
@@ -509,22 +603,28 @@ theorem width3_one_third_two_thirds_assembled.{u}
     have hCascade :=
       stepsOneToSevenCascade γ hγ_pos hγ_third hP hI hCex h2 hArith hn0 hThmE
     -- §8. lem:layered-from-step7: LayeredDecomposition on X∖X^exc.
-    obtain ⟨Xexc, L, hXexc_small,
-            hInj, hKw, hCardw, hNonempty, hLw⟩ :=
-      lem_layered_from_step7 γ hγ_pos (hArith.T γ) hP hI hCascade
+    --   RE-PINNED mg-faf8: the bridge now emits only three caps
+    --   (Xexc bound, band-nonempty, L.w ≤ 4).
+    obtain ⟨Xexc, L, hXexc_small, hNonempty, hLw⟩ :=
+      lem_layered_from_step7 γ hγ_pos (hArith.T γ) hP hI hCex hCascade
         (ih_descent ih)
-    -- §9. lem_layered_balanced on the subposet {a // a ∉ Xexc}.
+    -- §9. lem_layered_balanced_full (PIECE 6) on {a // a ∉ Xexc}.
+    --   RE-PINNED mg-faf8: the consumer is the full Step 8 G4,
+    --   which needs only hLw : L.w ≤ 4 — no hInj/hKw/hCardw, and
+    --   no hC3 : Case3Witness (the witness is internal to Piece 6's
+    --   strong induction). hNonempty is emitted by the bridge and
+    --   carried for Piece 6's internal base-case use; it is not a
+    --   top-level argument of lem_layered_balanced_full.
     have hP_sub : HasWidthAtMost {a : α // a ∉ Xexc} 3 :=
       hP.subtype _
     have hNonChain_sub : ¬ IsChainPoset {a : α // a ∉ Xexc} :=
-      non_chain_subtype_of_C_exc_le hNonChain hCardw hXexc_small
+      non_chain_subtype_of_exc hNonChain hXexc_small hcard
     have h2_sub : 2 ≤ Fintype.card {a : α // a ∉ Xexc} := by
       have := hXexc_small
       have := hcard
       omega
     have hBP_sub : HasBalancedPair {a : α // a ∉ Xexc} :=
-      lem_layered_balanced L h2_sub hNonChain_sub hP_sub
-        hInj hKw hCardw hNonempty hLw hC3
+      lem_layered_balanced_full L h2_sub hNonChain_sub hP_sub hLw
     -- §10. exc_perturb lift: HasBalancedPair {a // a ∉ Xexc} → α.
     have hXexc_pert : 2 * (Xexc.card : ℚ) /
         (Fintype.card α - Xexc.card + 1 : ℚ) < γ / 2 :=
@@ -556,27 +656,56 @@ boundary):
   `2 ≤ |α|`, derive `n_zero γ T ≤ |α|`; if not, the small-`n` base
   case (`Step8/SmallN.lem_small_n`) discharges directly. Folded into
   mg-MA-Cascade.
-- `non_chain_subtype_of_C_exc_le` — under `|Xexc| ≤ C_exc(T)` and
-  `|α| ≥ 6 L.w + 6`, the subtype is also non-chain. Mechanical.
+- `non_chain_subtype_of_exc` — under `|Xexc| ≤ C_exc(T)` and `|α|`
+  large (`≥ n_zero γ T`, supplied by `hcard`/`hn0`), the subtype
+  `{a // a ∉ Xexc}` is also non-chain. **RE-PINNED mg-faf8:**
+  renamed from `non_chain_subtype_of_C_exc_le`; no longer consumes
+  the dropped cap 3 (`hCardw : |α| − |Xexc| ≤ 6 L.w + 6`).
+  Non-chain-ness of the subposet does not depend on cap 3 — a
+  width-3 non-chain `α` has `≥ |α| − 3` incomparable pairs, so
+  deleting `O_T(1)` exceptional elements leaves one. Mechanical.
 - `exc_perturb_bound_of_n_zero` — algebraic massage of the
   `eq:exc-perturb` bound at `n ≥ n_0(γ, T) = ⌈4 C_exc(T)/γ⌉ +
   C_exc(T) − 1`. Mechanical.
 
-### §4.4. Why this types cleanly (no 8th vacuity)
+### §4.4. Why this types cleanly **and is satisfiable** (RE-PINNED mg-faf8)
 
-Sanity check on each cross-piece boundary:
+**The original §4.4 checked only type-compatibility — that is the
+gap that produced the 8th vacuity (mg-0bd1; see §9).** A clean
+type-check is *necessary but not sufficient*: a signature can type
+cleanly and still pin an unsatisfiable proposition. This re-pinned
+§4.4 therefore runs **both** checks per `PROOF-STRUCTURE-ONBOARDING.md`
+§3 pitfall #2: (A) type compatibility, and (B) satisfiability
+under caps.
+
+**Check (A) — type compatibility on each cross-piece boundary:**
 
 | Boundary | Type-check verdict |
 |---|---|
 | `cexImpliesLowBKExpansion` → `stepsOneToSevenCascade` | hThmE matches the `hS` parameter signature byte-for-byte (both are `∃ S, vol ≥ γ·vol(univ) ∧ Phi ≤ 2/(γn)`) |
-| `stepsOneToSevenCascade` → `lem_layered_from_step7` | hCascade matches `hCascade` parameter; T threaded via `hArith.T γ` |
-| `lem_layered_from_step7` → `lem_layered_balanced` | output `LayeredDecomposition {a // a ∉ Xexc}` matches input `L : LayeredDecomposition β` (with `β := {a // a ∉ Xexc}`); 5 caps match |
-| `lem_layered_balanced` → `excPerturbLift` | `HasBalancedPair {a // a ∉ Xexc}` matches `hBP_sub` |
+| `stepsOneToSevenCascade` → `lem_layered_from_step7` | hCascade matches `hCascade` parameter; T threaded via `hArith.T γ`; `hCex : IsGammaCounterexample α γ` (added mg-faf8) is in scope from §4.3 body §3 and threaded directly |
+| `lem_layered_from_step7` → `lem_layered_balanced_full` (Piece 6) | output `LayeredDecomposition {a // a ∉ Xexc}` matches input `L : LayeredDecomposition β` (`β := {a // a ∉ Xexc}`); the bridge emits `Xexc.card ≤ C_exc T ∧ band-nonempty ∧ L.w ≤ 4`, and Piece 6 consumes exactly `hLw : L.w ≤ 4` — the `band-nonempty` conjunct is carried for Piece 6's internal base case, the `Xexc.card` conjunct is consumed by `excPerturbLift` |
+| `lem_layered_balanced_full` → `excPerturbLift` | `HasBalancedPair {a // a ∉ Xexc}` matches `hBP_sub` |
 | `excPerturbLift` → final contradiction | `HasBalancedPair α` contradicts `hNoBP` |
 | IH (Nat.strong_induction_on) → `decomp_reduction` + `lem_layered_from_step7` recursive descent | Both consume the IH on strict-cardinality-smaller posets; the IH supplies it directly |
 
 All boundaries match concretely. No "shape mismatch" / "missing
 hypothesis" / "wrong universe" surfaces under inspection.
+
+**Check (B) — satisfiability under caps.** The decisive check
+(skipped by the original §4.4). At the `lem_layered_from_step7 →
+lem_layered_balanced_full` boundary, is the emitted conclusion
+*satisfiable* for the headline's full `|α|` range under the
+hypotheses that actually reach the bridge? The original five-cap
+shape failed this — it forced `|α| ≤ 10 + C_exc T` (mg-0bd1 §2).
+The corrected three-cap shape **passes** it: the paper `def:layered`
+object has unbounded depth `L.K ≥ |X|/6`, bands of size `≤ 3`, and
+`L.w ≤ 4`, satisfying exactly `Xexc.card ≤ C_exc T`, band-nonempty,
+and `L.w ≤ 4`. The full verification — including instantiation
+against the mg-0bd1 counterexample class — is **§10** below.
+
+The other boundaries carry no `∃`-conclusion with caps, so type
+compatibility is also satisfiability for them.
 
 ---
 
@@ -584,7 +713,7 @@ hypothesis" / "wrong universe" surfaces under inspection.
 
 | Parent §2.4 risk | This session's finding | Budget delta |
 |---|---|---|
-| Risk #1: 8th vacuity-discovery on signature | Did not materialize. Signature types cleanly. | 0 |
+| Risk #1: 8th vacuity-discovery on signature | ~~Did not materialize. Signature types cleanly.~~ **CORRECTED (mg-0bd1/mg-faf8):** the risk DID materialize — the §4.2 §E five-cap bridge conclusion was unsatisfiable for large α. Surfaced by mg-0bd1, re-pinned by mg-faf8 (§4.2 §E/§G, §4.3, §4.4, §9, §10). The original "did not materialize" claim rested on a type-only audit. | re-scope: +Piece 6 (0.8M–1.6M; see scoping doc §2.6) |
 | Risk #2: Decomposability hypotheses non-trivial | Folded into mg-MA-MinCex via `decomp_reduction`; substantive but bounded by paper rem:decomp-reduction content. | within parent estimate |
 | Risk #3: Theorem E may be marker (30%, +500-800k) | **Theorem E is SUBSTANTIVE.** mg-MA-ThmE is wiring, not grounding. | **−250k to −500k** |
 | Risk #9: hyp:arith threading contentious | Decided: in-Lean predicate (default). Defer body content to piece 1 / out-of-scope. | within parent estimate |
@@ -602,7 +731,7 @@ This propagates to parent §3.2 cumulative budget: mid-estimate
 
 Per ticket constraint *"no premature execution commitment without
 Daniel sign-off"*, this session does **not** file the sub-tickets.
-Two updates to the parent dispatch sequence are recommended:
+Updates to the parent dispatch sequence:
 
 1. **mg-MA-ThmE downgrade.** Re-tag from "Theorem E grounding"
    (0.5-0.8M) to "Theorem E wiring" (0.2-0.3M). Body: extract
@@ -613,12 +742,26 @@ Two updates to the parent dispatch sequence are recommended:
    `Nat.strong_induction_on`. mg-MA-MinCex's content is just
    `decomp_reduction` (indecomposability descent) — still ~200k / 1
    session, but content-clear.
+3. **NEW (mg-faf8): Piece 6 sub-arc.** The re-pin (§9, §10) adds a
+   **sixth piece** to mg-d8c7 — `lem_layered_balanced_full` (the
+   full Step 8 G4 port, §4.2 §G). It is **not** part of piece 4;
+   it has **no upstream cascade dependency** (consumes only a
+   `LayeredDecomposition` with `L.w ≤ 4`; `lem_cut`,
+   `windowLocalization`, `lem_layered_reduction` are already in
+   tree) and can be dispatched in parallel with piece 1. Sub-arc
+   recommendation `mg-MA-G4-Full`: see
+   `docs/OneThird-Option-A-FULL-REFACTOR-scoping.md` §2.6 and §7.3a.
+   Budget ~0.8M-1.6M / 3-6 sessions.
 
 The other parent §7.4 sub-tickets (`mg-MA-Cascade`, `mg-MA-Body`)
-are unchanged in shape. Recommended Phase 4 dispatch:
+are unchanged in shape. `mg-MA-Body` now calls
+`lem_layered_balanced_full` (no `hC3`). Recommended Phase 4
+dispatch:
 
 ```
-[After pieces 1, 2, 3 land + checkpoint 4 audit]
+[Piece 6 — mg-MA-G4-Full — dispatched early, parallel with piece 1]
+
+[After pieces 1, 2, 3, 6 land + checkpoint 4 audit]
   mg-MA-MinCex ∥ mg-MA-ThmE                 (parallel, ~250k each)
   mg-MA-Cascade                              (sequential, ~250k-300k)
   mg-MA-Body                                 (sequential, ~250k-300k)
@@ -647,7 +790,17 @@ are unchanged in shape. Recommended Phase 4 dispatch:
 - `lean/OneThird/Step8/ExcPerturb.lean:351` — `exc_perturb`
   (SUBSTANTIVE; consumed by `excPerturbLift` thin combinator).
 - `lean/OneThird/Step8/LayeredBalanced.lean:626` — `lem_layered_balanced`
-  (post-mg-234e; unchanged; consumed on subtype `{a // a ∉ Xexc}`).
+  (post-mg-234e; in-tree signature unchanged; **RE-PINNED mg-faf8:**
+  no longer the §4.2 §E consumer — it becomes the bounded base case
+  *inside* Piece 6's `lem_layered_balanced_full`).
+- `lem_layered_balanced_full` — **Piece 6 deliverable, NEW; not yet
+  in tree.** Full Step 8 G4 (paper `lem:layered-balanced`,
+  `step8.tex:2453-2464` / proof `3211-3266`). Strong induction on
+  `|β|`; consumes only `L.w ≤ 4`. Target file
+  `lean/OneThird/Step8/LayeredBalancedFull.lean` (new). Consumes
+  the NC lemmas `lem_cut` / `windowLocalization` /
+  `lem_layered_reduction` (`LayeredReduction.lean` /
+  `LayeredBalanced.lean:103`).
 - `lean/OneThird/LinearExtension.lean:38,50,71` — `HasBalancedPair`,
   `IsGammaCounterexample`, `Phi` (definitions; unchanged).
 - `lean/OneThird/LinearExtension.lean:166` — `edgeBoundary_pairCut_sum_le`
@@ -669,10 +822,16 @@ are unchanged in shape. Recommended Phase 4 dispatch:
 
 ### §7.3. Predecessor docs
 
-- `docs/OneThird-Option-A-FULL-REFACTOR-scoping.md` (mg-d8c7).
-- `docs/PROOF-STRUCTURE-ONBOARDING.md` (mg-6f04) — §2 tag legend.
+- `docs/OneThird-Option-A-FULL-REFACTOR-scoping.md` (mg-d8c7) —
+  §2.6 records Piece 6 (added by mg-faf8).
+- `docs/PROOF-STRUCTURE-ONBOARDING.md` (mg-6f04) — §2 tag legend;
+  §3 pitfall #6 (the 8th vacuity).
 - `docs/OneThird-Steps-1-7-Lean-port-scoping.md` (mg-6ab8).
 - `docs/state-S7-F-bridge-Session1.md` (mg-5fbd) — RED 7th vacuity.
+- `docs/state-S7-F-bridge-Session2.md` (mg-0bd1) — RED 8th
+  vacuity discovery; the full proof that the original §4.2 §E
+  five-cap conclusion is unsatisfiable for large α. The source
+  of this session's re-pin.
 - `docs/coherence-collapse-case-extraction.md` (mg-ac13) —
   3-disjoint-chains counterexample (motivates the refactor).
 - `docs/layered-form-vs-coherence-architecture-audit.md` (mg-74d2)
@@ -680,36 +839,47 @@ are unchanged in shape. Recommended Phase 4 dispatch:
 
 ### §7.4. Predecessor work items
 
-- mg-d8c7 (Option A' FULL REFACTOR scoping; this session's parent),
+- mg-d8c7 (Option A' FULL REFACTOR scoping; mg-a22b's parent),
 - mg-6ab8 (Steps 1-7 scoping), mg-5fbd (S7-F bridge audit; RED),
 - mg-ac13 (coherence-collapse extraction),
 - mg-234e (lem_layered_balanced caller-L rewire),
 - mg-d5a0 (cap-5 sorry first surfaced; relocated by mg-234e),
-- **mg-a22b (this session)**.
+- mg-a22b (Phase 1 signature contract — the session this doc
+  was created in),
+- mg-0bd1 (S7-F bridge Session 2 — RED 8th vacuity discovery on
+  the §4.2 §E signature),
+- **mg-faf8 (this session — the MA-Sig re-pin correcting the
+  8th vacuity; §4.2 §E/§G, §4.3, §4.4, §9, §10)**.
 
 ---
 
 ## §8. Maintenance contract
 
 This file is the **signature contract for the Option A' FULL
-REFACTOR's piece 4**. Downstream sub-tickets (mg-MA-MinCex,
-mg-MA-ThmE, mg-MA-Cascade, mg-MA-Body, mg-Int-A, mg-Int-B) reference
-the §4.2-§4.3 signatures.
+REFACTOR's piece 4 and (post-mg-faf8) piece 6**. Downstream
+sub-tickets (mg-MA-G4-Full, mg-MA-MinCex, mg-MA-ThmE,
+mg-MA-Cascade, mg-MA-Body, mg-Int-A, mg-Int-B) reference the
+§4.2-§4.3 signatures.
 
 Update this file in the **same commit** as any of the following:
 
-- A Phase 4 sub-ticket lands and its actual signature drifts from
-  §4.2; reflect the drift here.
-- An 8th vacuity-discovery surfaces during Phase 4 execution; record
+- A Phase 2/4 sub-ticket lands and its actual signature drifts
+  from §4.2; reflect the drift here.
+- A further vacuity-discovery surfaces during execution; record
   here with re-scoped recommendation.
-- A piece 1/2/3 deliverable lands and its output shape differs from
-  what §4.2 assumes; update the consumer-side signature.
+- A piece 1/2/3/6 deliverable lands and its output shape differs
+  from what §4.2 assumes; update the consumer-side signature.
 
-Default-skeptical posture: per Daniel's "vacuity-discovery has hit 7
-times" pattern (mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970,
-mg-ac13, mg-5fbd), if Phase 2-4 surfaces a gap, **stop and re-scope**
-rather than pushing through. The signature in §4.2 is the contract;
-if it doesn't hold, the assumption fails, not the dispatch sequence.
+Default-skeptical posture: per Daniel's "vacuity-discovery has hit
+**8 times**" pattern (mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970,
+mg-ac13, mg-5fbd, **mg-0bd1**), if execution surfaces a gap,
+**stop and re-scope** rather than pushing through. The §4.2
+signature is the contract — and per the mg-0bd1 lesson, "the
+contract" means a **satisfiable** proposition, not merely a
+type-clean one. Every `∃`-with-caps conclusion pinned here must
+pass `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #2 check #1
+(satisfiability under caps) before it is accepted — see §4.4
+check (B) and §10.
 
 ---
 
@@ -747,9 +917,13 @@ Step 8 G4, not the full G4. The full Step 8 G4 (paper
 strong induction on `|β|`) is not in tree and is not one of
 mg-d8c7's 5 pieces.
 
-**Re-pin (supersedes §4.2 §E and §4.2 §G).**
+**Re-pin — APPLIED by mg-faf8 (supersedes the original §4.2 §E
+and §4.2 §G).** The three corrections below are now **landed** in
+this document; see §10 for the satisfiability verification that
+gates them.
 
-1. **Add piece 6 to mg-d8c7** — the full Step 8 G4 port:
+1. **Piece 6 added to mg-d8c7** — the full Step 8 G4 port,
+   `lem_layered_balanced_full` (signature pinned at §4.2 §G):
    ```lean
    theorem lem_layered_balanced_full
        {β : Type u} [PartialOrder β] [Fintype β] [DecidableEq β]
@@ -758,23 +932,306 @@ mg-d8c7's 5 pieces.
        (hLw : L.w ≤ 4) :          -- ONLY cap 5
        HasBalancedPair β
    ```
-   The existing `lem_layered_balanced` becomes its `|β| ≤ 10`
-   base case.
+   The existing `lem_layered_balanced` becomes its bounded base
+   case (paper Case C2, `|β| ≤ 3(3w+1) ≤ 39`). Recorded as the
+   sixth piece in `docs/OneThird-Option-A-FULL-REFACTOR-scoping.md`
+   §2.6.
 
-2. **Re-pin §4.2 §E** — the bridge emits only `L.w ≤ 4`
-   (+ `Xexc.card ≤ C_exc T`, + optionally cap 4 nonempty);
-   caps 1, 2, 3 are dropped (they are `Case3Witness` API
-   artefacts, false for `|X ∖ X^exc| > 10`).
+2. **§4.2 §E re-pinned** — the bridge emits only
+   `Xexc.card ≤ C_exc T`, the band-nonempty cap, and `L.w ≤ 4`;
+   caps 1, 2, 3 (band injectivity; `L.K ≤ 2 L.w + 2`; the
+   `card − Xexc` bound) are dropped as `Case3Witness` API
+   artefacts, false for `|X ∖ X^exc| > 10`. The bridge also
+   gains `hCex : IsGammaCounterexample α γ` (domain pin) — see
+   §10.4 (X-b) for why the satisfiability check requires it.
 
-3. **Re-pin §4.3 §9** — the headline body calls
-   `lem_layered_balanced_full` (piece 6), dropping the
-   `hInj`/`hKw`/`hCardw` arguments and the `hC3 : Case3Witness`
-   threading.
+3. **§4.3 re-pinned** — the headline body calls
+   `lem_layered_balanced_full` (Piece 6), dropping the
+   `hInj`/`hKw`/`hCardw` arguments, the `hC3 : Case3Witness`
+   threading, and the `hC3` parameter from
+   `width3_one_third_two_thirds[_assembled]`.
 
-**Recommendation.** Re-scope (1 session, ~250-400k) before
-dispatching P3/P4. Piece 6 has no upstream cascade dependency
-(it consumes only a `LayeredDecomposition` with `L.w ≤ 4`, and
-`lem_cut` / `windowLocalization` / `lem_layered_reduction` are
-already in tree) — it can be dispatched immediately, in parallel
-with piece 1. Full forward options: `state-S7-F-bridge-Session2.md`
-§7-§8.
+**Status.** The re-scope mg-0bd1 recommended (Option (R1), 1
+session) is **this session, mg-faf8**. Piece 6 has no upstream
+cascade dependency (it consumes only a `LayeredDecomposition`
+with `L.w ≤ 4`, and `lem_cut` / `windowLocalization` /
+`lem_layered_reduction` are already in tree) — it can be
+dispatched immediately, in parallel with piece 1 (mg-0bd1
+Option (R2) ordering). Full forward options:
+`state-S7-F-bridge-Session2.md` §7-§8.
+
+---
+
+## §10. Satisfiability verification of the corrected contract (mg-faf8)
+
+**This section is the acceptance-bar deliverable.** The 8th
+vacuity (mg-0bd1) was caused precisely by an audit (the original
+§4.4) that checked **type-compatibility only**. A re-pin that
+merely type-checks would repeat the error. So the corrected §4.2
+§E/§G contract is verified here for **satisfiability** — per
+`PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #2 check #1 — and the
+verification is instantiated explicitly against the mg-0bd1
+counterexample class (the 3-disjoint-chains family).
+
+### §10.1. The corrected bridge as a proposition
+
+Write the corrected §4.2 §E bridge as the conditional
+`∀ α, H(α) → C(α)`, where
+
+```
+H(α)  :=  HasWidthAtMost α 3
+        ∧ Indecomposable α
+        ∧ IsGammaCounterexample α γ              -- added mg-faf8 (§4.2 §E)
+        ∧ (Step5R α γ T ∨ Step5C α T)
+        ∧ ih                                    -- (the strong-induction IH)
+
+C(α)  :=  ∃ (Xexc : Finset α) (L : LayeredDecomposition {a // a ∉ Xexc}),
+              Xexc.card ≤ C_exc T
+            ∧ (∀ k, 1 ≤ k → k ≤ L.K → (L.bandSet k).Nonempty)
+            ∧ L.w ≤ 4
+```
+
+The `IsGammaCounterexample α γ` conjunct is the **load-bearing
+domain pin** added by the re-pin. The original §4.2 §E omitted
+it; the satisfiability check below (§10.4 (X-b)) shows why it is
+required — without it, the bridge's truth on non-γ-counterexample
+posets would hinge on the not-yet-pinned exact definitions of
+`Step5R`/`Step5C`. With it, the bridge is a true proposition
+*standalone*.
+
+The bridge is a **true** proposition iff `H(α) → C(α)` for every
+`α`. It is moreover **non-vacuously** true iff `H(α)` is itself
+satisfiable (otherwise the bridge is a harmless-but-empty shell).
+Both must be checked. We check three things:
+
+* **(V) Non-vacuity** — `H(α)` is satisfiable for `α` of
+  *unbounded* size (§10.2).
+* **(S) Satisfiable conclusion** — whenever `H(α)` holds, `C(α)`
+  holds, for every `α` regardless of `|α|` (§10.3).
+* **(X) Counterexample-class instantiation** — explicit check
+  against the mg-0bd1 / mg-5fbd 3-disjoint-chains family (§10.4).
+
+### §10.2. (V) — `H(α)` is satisfiable for unbounded `|α|`
+
+This is exactly the fact that made the *original* contract
+**false** rather than vacuous (mg-0bd1 §3). The re-pin touched
+the conclusion `C` and added the `IsGammaCounterexample` conjunct
+to `H` — neither change makes `H` unsatisfiable, because the
+witnesses are *minimal γ-counterexamples*, which satisfy the new
+conjunct trivially:
+
+* The 1/3–2/3 conjecture ranges over all finite posets. If it had
+  a width-3 non-chain counterexample, a **minimal** one `α`
+  exists; by `rem:decomp-reduction` it is `Indecomposable`, it is
+  width-3 non-chain by assumption, and it satisfies
+  `IsGammaCounterexample α γ` for the relevant `γ` **by
+  construction** (it is a counterexample).
+* For every minimal γ-counterexample `α` above the small-`n`
+  threshold `n_0(γ,T)`, paper `thm:step5` (`step5.tex`) makes the
+  Step 5 dichotomy `Step5R α γ T ∨ Step5C α T` **true**.
+* Minimal γ-counterexamples are of **unbounded** size: the small
+  ones are dispatched by `lem_small_n`; the cascade's domain is
+  exactly the large ones.
+
+Hence all four substantive conjuncts of `H(α)` (`HasWidthAtMost`,
+`Indecomposable`, `IsGammaCounterexample`, `Step5R ∨ Step5C`)
+hold simultaneously for `α` of every sufficiently large size —
+the bridge is **not** a vacuous shell. ∎(V)
+
+### §10.3. (S) — `C(α)` holds whenever `H(α)` holds
+
+Fix any `α` with `H(α)`. Then `Step5R α γ T ∨ Step5C α T` holds,
+which is exactly the two-branch input of paper
+`lem:layered-from-step7` (`step8.tex:2009-2089`):
+
+* `Step5C α T` ⟹ branch (a), the Step 5(C) collapse input
+  (`step8.tex:2016-2021`);
+* `Step5R α γ T` ⟹ branch (b) via the Step 7(ii) globalization it
+  feeds (`step8.tex:2022-2027`).
+
+The paper lemma's conclusion (`step8.tex:2054-2088`) then produces
+an exceptional set `X^exc` and an **exact** `def:layered`
+decomposition of `P|_{X∖X^exc}` (`step8.tex:1983-2007`) with:
+
+| Paper conclusion item | Value | Corrected Lean cap |
+|---|---|---|
+| (i) `\|X^exc\| ≤ C_exc(T) = 3 c_1(T) = O_T(1)` | bounded | `Xexc.card ≤ C_exc T` ✓ |
+| (ii) interaction width `w = K_bw + 2` (branch b) / `w_coll` (branch a), each `≤ 4` by `lem:bandwidth`/`rem:w0-constant` (`w_0(γ) ≤ 4`, `step8.tex:576`) | `≤ 4` | `L.w ≤ 4` ✓ |
+| ordered partition `X∖X^exc = L_1 ⊔ ⋯ ⊔ L_K` into `K` **nonempty** bands (`compactify` re-indexes to guarantee it) | all `[1,K]` hit | `∀ k ∈ [1,K], (bandSet k).Nonempty` ✓ |
+
+So `C(α)` holds. **The key point:** the paper object has bands of
+size `≤ 3` — *not* singletons — and depth
+`K ≥ (|X| − |X^exc|)/3 ≥ |X|/6` (`step8.tex:2072`), which is
+`Θ(|α|)` and **unbounded**. The corrected `C` permits this because
+it no longer carries:
+
+* old cap 1 (`Function.Injective L.band`) — would force singleton
+  bands, hence `L.K = |X∖X^exc|`;
+* old cap 2 (`L.K ≤ 2 L.w + 2`) — would then force
+  `L.K ≤ 2·4+2 = 10`;
+* old cap 3 (`|X∖X^exc| ≤ 6 L.w + 6`) — an independent `≤ 30`
+  bound.
+
+Caps 1+2 jointly forced `|α| ≤ 10 + C_exc T` — the mg-0bd1 defect.
+Dropping them lets `L.K` be `Θ(|α|)`, matching the paper object
+exactly. (`LayeredDecomposition.band_size`, an intrinsic structure
+field, already guarantees bands of size `≤ 3` — no cap needed for
+that.) Hence `H(α) → C(α)` for every `α`, **of every size**. ∎(S)
+
+Together (V)+(S): the corrected bridge is a **true, non-vacuous**
+proposition. This is the property the original five-cap signature
+provably lacked.
+
+### §10.4. (X) — instantiation against the mg-0bd1 counterexample class
+
+The mg-0bd1 / mg-5fbd counterexample class is the
+**3-disjoint-chains family** `Δ_ℓ` := three pairwise-disjoint
+chains each of length `ℓ` (so `|Δ_ℓ| = 3 ℓ`, width 3, non-chain).
+mg-5fbd §2.3 used `Δ_3` (`|Δ_3| = 9`); mg-0bd1 §2.3 generalised to
+all `ℓ`. The ticket requires confirming the **corrected** contract
+holds on this class. We take the two regimes separately.
+
+**(X-a) `Δ_3` — the named family member (`|Δ_3| = 9`).** Label the
+chains `a_1 <_P a_2 <_P a_3`, `b_1 < b_2 < b_3`, `c_1 < c_2 < c_3`.
+
+* *Under the original five-cap contract* mg-5fbd §2.3 showed **no**
+  `L` satisfies all five caps: cap 1 forces singleton bands, so
+  `L.K = 9`; cap 2 forces `9 ≤ 2 L.w + 2`, i.e. `L.w ≥ 4`; cap 5
+  forces `L.w = 4`; then (L2-forced) demands 10 ground-set pairs
+  at band-distance `> w` be `<_P`-comparable, but `Δ_3` has only 9
+  comparable pairs (all within-chain). Contradiction.
+* *Under the corrected three-cap contract* a satisfying witness
+  **exists**. Take `Xexc := ∅` (so `Xexc.card = 0 ≤ C_exc T`) and
+  the natural banding `L_k := {a_k, b_k, c_k}` for `k = 1,2,3`.
+  Then `L.K = 3`, every band is a 3-element antichain (the three
+  chains are mutually incomparable — `band_size = 3 ≤ 3` ✓,
+  `band_antichain` ✓), and all of `[1,3]` is hit (band-nonempty
+  cap ✓). Interaction width: the only cross-band incomparabilities
+  are cross-chain pairs (e.g. `a_1 ∥ b_3`), whose maximum
+  band-distance is `|1 − 3| = 2`; within-chain comparabilities
+  `a_i <_P a_j` (`i<j`) are band-upward, satisfying (L4). So
+  `L.w = 2 ≤ 4` (cap ✓), (L2-forced) is vacuous (no pair has
+  `band x + 2 < band y` since `K = 3`), (L3) holds. **All three
+  corrected caps are satisfied** — `C(Δ_3)` is true. The cap the
+  original contract failed, cap 1, is exactly the one dropped:
+  the natural bands are 3-element antichains, not singletons.
+
+So on `Δ_3` the corrected contract is fine *even at the level of
+the conclusion alone*. (And note: `Δ_3` is not a γ-counterexample
+— it has balanced pairs by symmetry, e.g. `(a_1,b_1)` with
+`Pr = 1/2` — so `H(Δ_3)` is false and the bridge is in any case
+vacuously true on it; see (X-c).)
+
+**(X-b) `Δ_ℓ`, `ℓ > 5` — the unbounded regime (`|Δ_ℓ| = 3ℓ`).**
+Here `C(Δ_ℓ)` is **false**: by `PROOF-STRUCTURE-ONBOARDING.md` §3
+pitfall #2.3, every layered decomposition of `Δ_ℓ` has interaction
+width `≥ ℓ − 1` (a length-`ℓ` chain occupies `ℓ` distinct band
+indices by (L1)+(L4), and a cross-chain pair `a_1 ∥ b_ℓ` then
+forces `w ≥ ℓ − 1` by (L3)); deleting `C_exc(T) = O_T(1)`
+exceptional elements still leaves width `≥ ℓ − O_T(1) > 4`. So no
+`L` with `L.w ≤ 4` exists — `C(Δ_ℓ)` fails.
+
+**This does not break the corrected contract**, because
+`H(Δ_ℓ)` is *also* false — and, with the `hCex` conjunct added
+by the re-pin, **provably and definition-independently** so:
+
+* **`Δ_ℓ` is not a γ-counterexample.** `(a_1, b_1)` are exchanged
+  by a poset-automorphism of `Δ_ℓ` (swap chains `A` and `B`
+  pointwise), so `Pr[a_1 <_L b_1] = 1/2 ∈ [1/3, 2/3]` — a
+  balanced pair. Hence `HasBalancedPair Δ_ℓ` holds and
+  `IsGammaCounterexample Δ_ℓ γ` is **false** for every `γ`. The
+  `H` conjunct `IsGammaCounterexample α γ` (added mg-faf8) is
+  therefore false on `Δ_ℓ`, so `H(Δ_ℓ)` is false **outright** —
+  no reasoning about `Step5R`/`Step5C` is needed. This is the
+  reason `hCex` was added to §4.2 §E: it makes the exclusion of
+  the 3-disjoint-chains family **airtight**, not contingent on
+  the (not-yet-pinned) exact definitions of `Step5R`/`Step5C`.
+* For completeness, the cascade conjunct is false too:
+  `Step5C Δ_ℓ T` literally asserts a bounded-width (`width ≤ w`,
+  `w = w_coll(T) = O_T(1)`) layered structure on `X∖X^exc` —
+  false for `ℓ` large by the pitfall #2.3 argument above. And
+  `Step5R Δ_ℓ γ T` is a richness conclusion the Step 5 dichotomy
+  (`thm:step5`) certifies only from Theorem E's low-conductance
+  input, which holds only for minimal γ-counterexamples — but
+  this third bullet is **not load-bearing**: the first bullet
+  already kills `H(Δ_ℓ)`.
+
+Hence `H(Δ_ℓ)` is false, and the corrected bridge is
+**vacuously true** on `Δ_ℓ`: `false → false`. This is a *correct*
+vacuity — a harmless conditional with an unsatisfiable
+hypothesis — **not** the *falsity* (`true → false`) that the
+original five-cap contract had on genuine large minimal
+γ-counterexamples.
+
+**(X-c) Why this is the decisive distinction.** The 3-disjoint-
+chains family is the standard witness that *"∀ width-3 non-chain
+`α`, ∃ `L` with `L.w ≤ 4`"* is **false** (pitfall #2.3). The
+corrected bridge does **not** make that false universal claim: it
+quantifies only over `α` satisfying `H`, i.e. over the
+cascade-hypothesis region — exactly the minimal γ-counterexamples.
+The `Δ_ℓ` family sits entirely **outside** that region. The
+re-pin's correctness rests on this: the bridge's domain is
+`{α : H(α)}`, and on that domain `C` is satisfiable (§10.3);
+`Δ_ℓ ∉ {α : H(α)}`, so it never constrains the bridge.
+
+### §10.5. Old vs corrected — the contrast in one table
+
+For a poset `α` in each row, the bridge `H(α) → C(α)`:
+
+| `α` | `H(α)` | old `C₅(α)` (5 caps) | corrected `C₃(α)` (3 caps) | old bridge | corrected bridge |
+|---|---|---|---|---|---|
+| genuine minimal γ-cex, `\|α\|` large | **true** (`thm:step5`) | **false** (forces `\|α\| ≤ 10 + C_exc T`) | **true** (paper `def:layered`, `K = Θ(\|α\|)`) | **`true→false` = FALSE** ✗ | `true→true` = true ✓ |
+| genuine minimal γ-cex, `\|α\|` small | true | possibly true | true | conditional ok | true ✓ |
+| `Δ_3` (3 chains of 3) | false (has balanced pair) | false (mg-5fbd §2.3) | true (X-a) | `false→…` = vacuous | `false→true` = true ✓ |
+| `Δ_ℓ`, `ℓ` large | false (has balanced pair) | false | false (pitfall #2.3) | `false→…` = vacuous | `false→false` = true ✓ |
+
+The original contract has a row — *genuine large minimal
+γ-counterexample* — where it is outright **false**. The corrected
+contract has **no false row**: wherever `H` is true, `C` is true;
+wherever `C` is false, `H` is false. That is the whole content of
+the re-pin.
+
+### §10.6. Satisfiability of the §4.2 §G consumer (Piece 6)
+
+The corrected consumer `lem_layered_balanced_full` (§4.2 §G) is a
+**faithful transcription of paper `lem:layered-balanced`**
+(`step8.tex:2453-2464`): "a width-3 poset `P` with `|X| ≥ 2`,
+not a chain, admitting a layered decomposition of interaction
+width `w` — has a balanced pair." The paper statement carries
+**no** injectivity / `K`-bound / `card`-bound hypothesis; the Lean
+`hLw : L.w ≤ 4` restricts `w` to the headline-relevant range and
+keeps the paper-proof's Case-C2 base case a *finite decidable*
+family. So §4.2 §G is satisfiable by construction — it is the
+paper lemma. The paper proof (`step8.tex:3211-3266`) is a strong
+induction on `|β|` (base `|β| = 2`; Case A `K=1`; Case B
+ordinal-reducible; Case C irreducible, sub-case C1 window `⊊ X`
+recurses, C2 `W = X` bounded `|β| ≤ 3(3w+1)`). **Caveat carried
+forward (not a vacuity, a Piece-6 scope item):** the C2 bounded
+base must cover *all* width-3 non-chain posets with `|β| ≤ 3(3w+1)`,
+whereas the in-tree `Case3Witness_proof` covers only the
+singleton-band (cap-1) sub-slice of that range. Piece 6's base
+case must therefore extend coverage to non-singleton-band bounded
+posets — via the mg-be48 cap-light enumeration or a direct
+`prop:in-situ-balanced` port. This is recorded as a Piece 6
+sub-task in the scoping doc §2.6, **not** papered over here.
+
+### §10.7. Acceptance-bar verdict
+
+| Acceptance bar (ticket mg-faf8) | Status |
+|---|---|
+| Re-pin §4.2 §E to emit only `Xexc.card ≤ C_exc T` + band-nonempty + `L.w ≤ 4` | **Done** — §4.2 §E |
+| Drop the three unsatisfiable caps (band injectivity; `L.K ≤ 2 L.w + 2`; `card − Xexc` bound) | **Done** — §4.2 §E |
+| (Surfaced during the satisfiability check) Pin the bridge domain via `hCex : IsGammaCounterexample α γ` | **Done** — §4.2 §E; rationale §10.1, §10.4 (X-b) |
+| Re-pin §4.2 §G consumer to Piece 6 (`lem_layered_balanced_full`, only `L.w ≤ 4`) | **Done** — §4.2 §G |
+| `Case3Witness_proof` becomes Piece 6's bounded base case | **Done** — §4.2 §G′, §10.6 |
+| Update §4.3 body + downstream consumer references | **Done** — §3.1, §4.3, §4.4 |
+| Record Piece 6 as the sixth piece of mg-d8c7 | **Done** — `OneThird-Option-A-FULL-REFACTOR-scoping.md` §2.6 |
+| **Satisfiability, not just types** — corrected conclusion satisfiable for minimal γ-counterexamples of unbounded size | **Verified** — §10.2 (V) + §10.3 (S) |
+| Instantiate against the mg-0bd1 counterexample class (3-disjoint-chains); confirm the corrected contract holds there | **Verified** — §10.4 (X-a/b/c), §10.5 |
+| A type-checks-clean verdict is NOT sufficient | Acknowledged — §4.4 now runs check (A) **and** check (B); §10 is check (B) in full |
+
+**Verdict: GREEN — corrected contract satisfiability-verified.**
+The corrected §4.2 §E/§G contract is a true, non-vacuous
+proposition; the 8th vacuity (caps 1+2 forcing `|α| ≤ 10 + C_exc T`)
+is eliminated, and the fix is confirmed against the exact
+counterexample class that exposed the defect.
