@@ -69,6 +69,7 @@ import OneThird.Step6.RichnessBound
 import OneThird.Step6.Incoherence
 import OneThird.Step6.OverlapCounting
 import OneThird.Step6.Assembly
+import OneThird.Step6.DichotomyGrounded
 import OneThird.Step7.SignedThreshold
 import OneThird.Step7.SignConsistency
 import OneThird.Step7.TripleVisibility
