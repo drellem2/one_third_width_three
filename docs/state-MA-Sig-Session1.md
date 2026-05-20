@@ -42,6 +42,15 @@ correspond to the same content. Citations below use the
 
 ---
 
+> **⚠ SUPERSEDED IN PART (mg-0bd1, 2026-05-20).** The §4.2 §E
+> bridge signature and §4.2 §G `lem_layered_balanced` pinning
+> below carry an **8th vacuity-discovery defect**: the five-cap
+> bridge conclusion is unsatisfiable for large α. The §0 verdict's
+> "no 8th vacuity-discovery" claim held only for *type-checking*
+> (§4.4), not *satisfiability*. See **§9** (added this session)
+> and `docs/state-S7-F-bridge-Session2.md` for the correction and
+> the re-pin recommendation. Read §9 before consuming §4.2.
+
 ## §0. Verdict — **GREEN-signature-types-cleanly + Theorem-E-substantive**
 
 The proof-by-contradiction refactor signature **types cleanly** with
@@ -701,3 +710,71 @@ times" pattern (mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970,
 mg-ac13, mg-5fbd), if Phase 2-4 surfaces a gap, **stop and re-scope**
 rather than pushing through. The signature in §4.2 is the contract;
 if it doesn't hold, the assumption fails, not the dispatch sequence.
+
+---
+
+## §9. 8th vacuity-discovery — the §4.2 §E bridge signature is unsatisfiable (mg-0bd1)
+
+**Recorded per §8 maintenance contract** (*"An 8th vacuity-discovery
+surfaces during Phase 2-4 execution; record here with re-scoped
+recommendation"*). Source: `docs/state-S7-F-bridge-Session2.md`
+(mg-0bd1, the piece-3 execution attempt).
+
+**Finding.** The §4.2 §E `lem_layered_from_step7` conclusion
+transcribes the five `Case3Witness` caps onto
+`L : LayeredDecomposition {a // a ∉ Xexc}`. caps 1 + 4 force
+singleton bands (`card {a // a ∉ Xexc} = L.K`); caps 2 + 5 force
+`L.K ≤ 10`. Hence the conclusion entails
+`Fintype.card α ≤ 10 + C_exc T`, a fixed finite bound. But the
+hypothesis `Step5R ∨ Step5C` (Step 5 dichotomy) holds for minimal
+γ-counterexamples of unbounded size. So the pinned bridge is
+**false**, not vacuous, for every large minimal γ-counterexample.
+This is `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #2.1 recurring
+inside this contract's pseudo-Lean.
+
+**Why §4.4 missed it.** §4.4's "no 8th vacuity" table checked, at
+the `lem_layered_from_step7 → lem_layered_balanced` boundary, only
+that *"5 caps match"* — producer/consumer **type compatibility**.
+It did not run pitfall #2's mandated **check #1 — satisfiability
+under caps**. The signature types cleanly *and* is unsatisfiable.
+
+**Root cause.** §4.2 §G pinned `lem_layered_balanced` "UNCHANGED"
+as the Step-8 endpoint. But `lem_layered_balanced` /
+`Case3Witness` is — per its own docstring (`LayeredBalanced.lean:
+447-450`) — the bounded `|β| ≤ 30`, `K ≤ 10` base sub-slice of
+Step 8 G4, not the full G4. The full Step 8 G4 (paper
+`lem:layered-balanced`, `step8.tex:3071-3124`: only `L.w ≤ 4`,
+strong induction on `|β|`) is not in tree and is not one of
+mg-d8c7's 5 pieces.
+
+**Re-pin (supersedes §4.2 §E and §4.2 §G).**
+
+1. **Add piece 6 to mg-d8c7** — the full Step 8 G4 port:
+   ```lean
+   theorem lem_layered_balanced_full
+       {β : Type u} [PartialOrder β] [Fintype β] [DecidableEq β]
+       (L : LayeredDecomposition β) (h2 : 2 ≤ Fintype.card β)
+       (hNotChain : ¬ IsChainPoset β) (hW3 : HasWidthAtMost β 3)
+       (hLw : L.w ≤ 4) :          -- ONLY cap 5
+       HasBalancedPair β
+   ```
+   The existing `lem_layered_balanced` becomes its `|β| ≤ 10`
+   base case.
+
+2. **Re-pin §4.2 §E** — the bridge emits only `L.w ≤ 4`
+   (+ `Xexc.card ≤ C_exc T`, + optionally cap 4 nonempty);
+   caps 1, 2, 3 are dropped (they are `Case3Witness` API
+   artefacts, false for `|X ∖ X^exc| > 10`).
+
+3. **Re-pin §4.3 §9** — the headline body calls
+   `lem_layered_balanced_full` (piece 6), dropping the
+   `hInj`/`hKw`/`hCardw` arguments and the `hC3 : Case3Witness`
+   threading.
+
+**Recommendation.** Re-scope (1 session, ~250-400k) before
+dispatching P3/P4. Piece 6 has no upstream cascade dependency
+(it consumes only a `LayeredDecomposition` with `L.w ≤ 4`, and
+`lem_cut` / `windowLocalization` / `lem_layered_reduction` are
+already in tree) — it can be dispatched immediately, in parallel
+with piece 1. Full forward options: `state-S7-F-bridge-Session2.md`
+§7-§8.

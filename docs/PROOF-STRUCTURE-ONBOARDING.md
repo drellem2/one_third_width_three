@@ -51,6 +51,14 @@ and this file is wrong — fix it.
   to proof-by-contradiction. Status-quo (retain the sorry with
   AXIOMS.md-analog disclosure) is the recommended forward
   action.
+* **mg-0bd1 S7-F bridge Session 2 (RED, 8th vacuity discovery)**:
+  the FULL REFACTOR's pinned bridge signature (`MA-Sig §4.2 §E`,
+  mg-a22b) is **structurally unsatisfiable for large α**. Its
+  five-cap conclusion (transcribed from `Case3Witness`) forces
+  `|α| ≤ 10 + C_exc T`. The 5-piece mg-d8c7 decomposition is
+  **missing a 6th piece** — the full Step 8 G4 port. See §3
+  pitfall #6 + `docs/state-S7-F-bridge-Session2.md`. Re-scope
+  required before any P3/P4 Lean work.
 
 ---
 
@@ -420,6 +428,64 @@ close via a new project axiom in `AXIOMS.md`, (A') full multi-
 month refactor + cascade port. Recommendation per Daniel
 mg-ac13 §5.3 stance: **(C') status-quo**.
 
+### Pitfall #6 — The FULL REFACTOR's pinned S7-F bridge signature is unsatisfiable for large α (mg-0bd1, 8th vacuity discovery)
+
+**Status post-mg-0bd1:** The Option A' FULL REFACTOR (mg-d8c7)
+pinned the S7-F bridge signature in `docs/state-MA-Sig-Session1.md`
+§4.2 §E (`lem_layered_from_step7`). That pinned signature's
+conclusion **cannot be satisfied** for large minimal
+γ-counterexamples, so piece 3 of the refactor **cannot be built
+honestly against it**. Do **not** dispatch P3 or P4 Lean work
+against the current `MA-Sig §4.2` contract.
+
+The defect (full proof in `docs/state-S7-F-bridge-Session2.md`
+§2):
+
+1. The pinned `lem_layered_from_step7` conclusion is
+   `∃ Xexc L, Xexc.card ≤ C_exc T ∧ [the five Case3Witness caps
+   on L : LayeredDecomposition {a // a ∉ Xexc}]`.
+2. cap 1 (`Function.Injective L.band`) + cap 4 (nonempty bands
+   on `[1,K]`) ⇒ singleton bands ⇒ `card {a // a ∉ Xexc} = L.K`.
+3. cap 2 (`L.K ≤ 2 L.w + 2`) + cap 5 (`L.w ≤ 4`) ⇒ `L.K ≤ 10`.
+4. Hence `Fintype.card α ≤ 10 + Xexc.card ≤ 10 + C_exc T` — a
+   fixed finite bound, since `C_exc T` is `O_T(1)`.
+5. But the bridge's hypothesis `Step5R ∨ Step5C` (Step 5
+   dichotomy) holds for minimal γ-counterexamples of **unbounded**
+   size. So the pinned bridge is a **false** proposition, not a
+   vacuous one, for every large minimal γ-counterexample.
+
+This is **the same error as pitfall #2.1** (stapling caps 1+4+2+5
+gives an unsatisfiable shape), recurring inside the MA-Sig
+**pinned pseudo-Lean signature**. `MA-Sig §4.4`'s "no 8th vacuity"
+audit checked only producer/consumer **type compatibility**
+("5 caps match"), not pitfall #2's mandated **check #1 —
+satisfiability under caps**.
+
+**Root cause.** `lem_layered_balanced` / `Case3Witness`
+(`LayeredBalanced.lean:461`) is — by its own docstring
+(`LayeredBalanced.lean:447-450`: *"`|β| ≤ 30`, `K ≤ 10`"*) — the
+**bounded `|β| ≤ 10` base sub-slice** of Step 8 G4, **not** the
+full Step 8. `MA-Sig §4.2 §G` pinned it "UNCHANGED" as the
+Step-8 endpoint and so had to pin its producer (the bridge) to
+emit the same bounded-only five caps. The **full** Step 8 G4
+(paper `lem:layered-balanced`, `step8.tex:3071-3124`: only
+`L.w ≤ 4`, strong induction on `|β|`, no caps 1/2/3 — see
+pitfall #2's "right framing") is **not in the tree** and is
+**not one of mg-d8c7's 5 pieces**.
+
+**Practical implication.** The FULL REFACTOR needs a **6th
+piece** — the full Step 8 G4 port (consuming `lem_cut`,
+`windowLocalization`, `lem_layered_reduction`, currently **NC**).
+The S7-F bridge must be re-pinned to emit only `L.w ≤ 4`
+(+ `Xexc.card ≤ C_exc T`), dropping caps 1/2/3, and to feed
+piece 6 rather than the bounded `lem_layered_balanced`. The
+paper `lem:layered-from-step7` itself is sound; only the MA-Sig
+signature shape is wrong. Re-scoping recommendation:
+`docs/state-S7-F-bridge-Session2.md` §7-§8.
+
+**This is the 8th vacuity discovery** (after mg-e2e9, mg-74d2,
+mg-5c32, mg-82fc, mg-2970, mg-ac13, mg-5fbd).
+
 ---
 
 ## §4. Cross-reference index (terse)
@@ -546,6 +612,14 @@ mg-ac13 §5.3 stance: **(C') status-quo**.
   `caseC_canonicalLayered` per §3 pitfall #5). Recommendation:
   Option (C') RED-STAY-PUT — retain the sorry with documented
   disclosure. No Lean changes in this session.
+* `docs/state-S7-F-bridge-Session2.md` (mg-0bd1) — FULL REFACTOR
+  piece 3 (S7-F bridge) execution attempt; **RED 8th vacuity
+  discovery**. The MA-Sig §4.2 §E pinned bridge signature's
+  five-cap conclusion is unsatisfiable for large α (§3
+  pitfall #6); the 5-piece mg-d8c7 decomposition is missing the
+  full Step 8 G4 port (a 6th piece). Recommendation: re-scope
+  (re-pin MA-Sig §4.2, add piece 6) before any P3/P4 Lean work.
+  No Lean changes in this session.
 * `docs/OneThird-Steps-1-7-Lean-port-scoping.md` (mg-6ab8) — Steps
   1-7 multi-month Lean-port scoping; Phase E option B selected.
 * `docs/why-hC3-is-structural.md` — F1/F2/F3 obstructions; option-(δ)

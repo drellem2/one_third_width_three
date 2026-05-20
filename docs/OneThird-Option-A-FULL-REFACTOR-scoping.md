@@ -61,6 +61,18 @@ source).**
 
 ## §0. Verdict (top-of-page) — **GREEN-scoping-delivered**
 
+> **⚠ AMENDED (mg-0bd1, 2026-05-20).** The piece-3 execution
+> attempt surfaced an **8th vacuity discovery**: the MA-Sig §4.2 §E
+> bridge signature is unsatisfiable for large α, and this 5-piece
+> decomposition is **missing a 6th piece** — the full Step 8 G4
+> port (`lem:layered-balanced`, `step8.tex:3071-3124`). §2.3
+> (piece 3) and §4.1's listing of `lem_layered_balanced` as
+> "already-in-tree, usable" are both affected: the in-tree
+> `lem_layered_balanced` is the bounded `|β| ≤ 30` base case, not
+> the Step-8 endpoint. Re-scope before executing P3/P4. See
+> `docs/state-S7-F-bridge-Session2.md` §5-§8 and
+> `docs/PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #6.
+
 Five pieces of the Option A' FULL REFACTOR scoped end-to-end. **No
 paper-side gap surfaced** under default-skeptical re-read (the
 cumulative 7-step vacuity-discovery pattern hits the *Lean call-site
