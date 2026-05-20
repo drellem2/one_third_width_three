@@ -90,6 +90,24 @@ and this file is wrong — fix it.
   on `Antichain3`: `interface_part_iv_faithfulness_defect`
   (`Interface.lean` §6). See §3 pitfall #8 +
   `docs/state-S1-E-Session1.md`.
+* **mg-e996 S6-QA Checkpoint 2 (AMBER, 2026-05-20)**: the
+  FULL REFACTOR Phase-2 hold-the-line gate after Step 6 (Piece 1),
+  gating Piece 2. Verdict **AMBER — do NOT dispatch Piece 2**. The
+  Step 6 grounded forms (`Step6/DichotomyGrounded.lean`,
+  `Step6/PointwiseGrounded.lean`) are sound, sorry-free,
+  axiom-free, but consumability is partial: the S4 per-pair bound
+  threads in genuinely, but **the S2 `ε₂` bookkeeping does not
+  wire into Step 6 at all** (`ε₂` in zero Step 6 files; the
+  grounded chain skips G6 `lem:most-good`; `badSet` is opaque),
+  and the cascade `cascade_steps_1_6_grounded` is parametric and
+  uncomposed with hand-built witness fibers and zero downstream
+  consumers. **S1-E (mg-c2d7) did NOT close the Checkpoint-1 gap**
+  — it was a RED block-and-report and no G2 re-port commit
+  followed; `goodFiberSet` is still empty in tree. "Piece 1
+  closes" (S6-B) is an over-claim. The G2 re-port is still
+  gating, and Piece 1's cascade-port completion (ground G6 + wire
+  `ε₂`; compose the cascade) is unfinished. See
+  `docs/state-S6-QA-Checkpoint2-Session1.md`.
 
 ---
 

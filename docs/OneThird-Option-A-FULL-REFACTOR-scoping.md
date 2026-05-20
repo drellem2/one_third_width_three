@@ -1143,6 +1143,36 @@ Checkpoint 6 added mg-faf8):
 - **Checkpoint 2 (after S6 lands, ~weeks 10-12).** mg-6ab8 §4.3
   Checkpoint 2: abstract S6 scaffold consumable by grounded
   inputs?
+  **OUTCOME (mg-e996 S6-QA, 2026-05-20): AMBER — gap surfaced; do
+  NOT dispatch Piece 2.** Two findings. **(Part 1)** The Step 6
+  grounded forms (`Step6/DichotomyGrounded.lean`,
+  `Step6/PointwiseGrounded.lean`) are sound, sorry-free,
+  axiom-free theorems on concrete BK-graph carrier objects, but
+  consumability is only partial: the S4 per-pair bound threads in
+  genuinely (`lem_sum_step4_grounded` → `hSum`, type-compatible,
+  trivially composable), one S5 wire is genuine
+  (`pair_overlap_sum_ge_vol`, G10), but **the S2 `ε₂` bookkeeping
+  does not wire into Step 6 at all** — `ε₂` appears in zero Step 6
+  files, no Step 6 file imports Step 2, the grounded chain skips
+  G6 (`lem:most-good`, still abstract) where `ε₂` enters, and
+  `badSet` is an opaque parameter. S2-B §2/§4 explicitly deferred
+  the `ε₂ ↔ C₂'` reconciliation to this checkpoint; S6-A/S6-B did
+  not perform it. The cascade `cascade_steps_1_6_grounded` takes
+  every upstream output as a free hypothesis with free constants,
+  is not composed end-to-end, uses hand-built singleton fibers in
+  its concrete witnesses, and has zero downstream consumers.
+  **(Part 2)** S1-E (mg-c2d7) was a RED block-and-report — it did
+  **not** close the Checkpoint-1 gap; no commit re-ported the
+  `IsGoodFiber` G2 clause. `goodFiberSet a0 a1 = ∅` is still
+  machine-checked in tree; `bounded_interaction` is still the
+  vacuous `|Int| ≤ |𝓛(P)|`. The cascade only appears consumable
+  because nothing downstream instantiates a fiber from S1's empty
+  `goodFiberSet` — pitfall #6 deferred, not removed. Required
+  before Piece 2: (1) re-port the S1-A `IsGoodFiber` G2 clause
+  (S1-E §5 forward action, needs paper access — still gating);
+  (2) ground G6 and wire `ε₂`; (3) compose the cascade end-to-end
+  with a genuine-object concrete witness. Full analysis:
+  `docs/state-S6-QA-Checkpoint2-Session1.md`.
 - **Checkpoint 3 (before piece 3-S7-F-A starts, ~weeks 13-15).**
   mg-6ab8 §4.3 Checkpoint 3 + mg-5fbd Phase D audit replay: does
   piece 2's `L_{S7E}` deliver the bridge's input hypotheses
