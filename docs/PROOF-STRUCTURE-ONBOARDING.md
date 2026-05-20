@@ -51,14 +51,20 @@ and this file is wrong — fix it.
   to proof-by-contradiction. Status-quo (retain the sorry with
   AXIOMS.md-analog disclosure) is the recommended forward
   action.
-* **mg-0bd1 S7-F bridge Session 2 (RED, 8th vacuity discovery)**:
-  the FULL REFACTOR's pinned bridge signature (`MA-Sig §4.2 §E`,
-  mg-a22b) is **structurally unsatisfiable for large α**. Its
-  five-cap conclusion (transcribed from `Case3Witness`) forces
-  `|α| ≤ 10 + C_exc T`. The 5-piece mg-d8c7 decomposition is
-  **missing a 6th piece** — the full Step 8 G4 port. See §3
-  pitfall #6 + `docs/state-S7-F-bridge-Session2.md`. Re-scope
-  required before any P3/P4 Lean work.
+* **mg-0bd1 S7-F bridge Session 2 (RED, 8th vacuity discovery)
+  → CORRECTED by mg-faf8**: mg-0bd1 found the FULL REFACTOR's
+  pinned bridge signature (`MA-Sig §4.2 §E`, mg-a22b)
+  **structurally unsatisfiable for large α** — its five-cap
+  conclusion (transcribed from `Case3Witness`) forced
+  `|α| ≤ 10 + C_exc T`. **mg-faf8 re-pinned the contract**: the
+  bridge `lem_layered_from_step7` now emits only three caps
+  (`Xexc.card ≤ C_exc T`, band-nonempty, `L.w ≤ 4`); the consumer
+  is the new **Piece 6** (`lem_layered_balanced_full`, the full
+  Step 8 G4), not the bounded `lem_layered_balanced`; and the
+  corrected contract is satisfiability-verified
+  (`docs/state-MA-Sig-Session1.md` §10, instantiated against the
+  3-disjoint-chains counterexample class). mg-d8c7 is now a
+  **6-piece** decomposition. See §3 pitfall #6.
 
 ---
 
@@ -430,16 +436,25 @@ mg-ac13 §5.3 stance: **(C') status-quo**.
 
 ### Pitfall #6 — The FULL REFACTOR's pinned S7-F bridge signature is unsatisfiable for large α (mg-0bd1, 8th vacuity discovery)
 
-**Status post-mg-0bd1:** The Option A' FULL REFACTOR (mg-d8c7)
-pinned the S7-F bridge signature in `docs/state-MA-Sig-Session1.md`
-§4.2 §E (`lem_layered_from_step7`). That pinned signature's
-conclusion **cannot be satisfied** for large minimal
-γ-counterexamples, so piece 3 of the refactor **cannot be built
-honestly against it**. Do **not** dispatch P3 or P4 Lean work
-against the current `MA-Sig §4.2` contract.
+**Status post-mg-faf8 — CORRECTED.** mg-faf8 re-pinned
+`MA-Sig §4.2 §E/§G` per the recommendation below; the corrected
+contract is satisfiability-verified in
+`docs/state-MA-Sig-Session1.md` §10. P3/P4 Lean work may now be
+dispatched against the corrected `MA-Sig §4.2`, and **Piece 6**
+(the full Step 8 G4) is recorded in
+`docs/OneThird-Option-A-FULL-REFACTOR-scoping.md` §2.6. The
+pitfall record below is **retained as an error pattern** — it is
+the canonical example of a type-clean-but-unsatisfiable pinned
+signature; future signature contracts must run the satisfiability
+check (see the closing).
 
-The defect (full proof in `docs/state-S7-F-bridge-Session2.md`
-§2):
+**The original defect (mg-0bd1).** The Option A' FULL REFACTOR
+(mg-d8c7) pinned the S7-F bridge signature in
+`docs/state-MA-Sig-Session1.md` §4.2 §E
+(`lem_layered_from_step7`). That *original* pinned signature's
+five-cap conclusion **could not be satisfied** for large minimal
+γ-counterexamples. Full proof in
+`docs/state-S7-F-bridge-Session2.md` §2:
 
 1. The pinned `lem_layered_from_step7` conclusion is
    `∃ Xexc L, Xexc.card ≤ C_exc T ∧ [the five Case3Witness caps
@@ -465,26 +480,38 @@ satisfiability under caps**.
 (`LayeredBalanced.lean:461`) is — by its own docstring
 (`LayeredBalanced.lean:447-450`: *"`|β| ≤ 30`, `K ≤ 10`"*) — the
 **bounded `|β| ≤ 10` base sub-slice** of Step 8 G4, **not** the
-full Step 8. `MA-Sig §4.2 §G` pinned it "UNCHANGED" as the
-Step-8 endpoint and so had to pin its producer (the bridge) to
-emit the same bounded-only five caps. The **full** Step 8 G4
-(paper `lem:layered-balanced`, `step8.tex:3071-3124`: only
-`L.w ≤ 4`, strong induction on `|β|`, no caps 1/2/3 — see
-pitfall #2's "right framing") is **not in the tree** and is
-**not one of mg-d8c7's 5 pieces**.
+full Step 8. The original `MA-Sig §4.2 §G` pinned it "UNCHANGED"
+as the Step-8 endpoint and so had to pin its producer (the
+bridge) to emit the same bounded-only five caps. The **full**
+Step 8 G4 (paper `lem:layered-balanced`, statement
+`step8.tex:2453-2464`, proof `3211-3266`: only `L.w ≤ 4`, strong
+induction on `|β|`, no caps 1/2/3 — see pitfall #2's "right
+framing") was **not in the tree** and **not one of mg-d8c7's
+original 5 pieces**.
 
-**Practical implication.** The FULL REFACTOR needs a **6th
-piece** — the full Step 8 G4 port (consuming `lem_cut`,
-`windowLocalization`, `lem_layered_reduction`, currently **NC**).
-The S7-F bridge must be re-pinned to emit only `L.w ≤ 4`
-(+ `Xexc.card ≤ C_exc T`), dropping caps 1/2/3, and to feed
-piece 6 rather than the bounded `lem_layered_balanced`. The
-paper `lem:layered-from-step7` itself is sound; only the MA-Sig
-signature shape is wrong. Re-scoping recommendation:
-`docs/state-S7-F-bridge-Session2.md` §7-§8.
+**The fix (mg-faf8).** The FULL REFACTOR gains a **6th piece** —
+`lem_layered_balanced_full`, the full Step 8 G4 port (consuming
+`lem_cut`, `windowLocalization`, `lem_layered_reduction`,
+currently **NC**), recorded in
+`docs/OneThird-Option-A-FULL-REFACTOR-scoping.md` §2.6. The S7-F
+bridge is re-pinned (`MA-Sig §4.2 §E`) to emit only the three
+satisfiable caps — `Xexc.card ≤ C_exc T`, band-nonempty,
+`L.w ≤ 4` — dropping caps 1/2/3, and to feed Piece 6 rather than
+the bounded `lem_layered_balanced`. The paper
+`lem:layered-from-step7` and `lem:layered-balanced` are both
+sound; only the original MA-Sig signature *shape* was wrong, and
+it is now fixed. `MA-Sig §4.4` is also re-pinned: it now runs a
+satisfiability check (check (B)), not type-compatibility alone.
 
-**This is the 8th vacuity discovery** (after mg-e2e9, mg-74d2,
-mg-5c32, mg-82fc, mg-2970, mg-ac13, mg-5fbd).
+**Standing lesson.** This was the **8th vacuity discovery**
+(after mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970, mg-ac13,
+mg-5fbd). It recurred because an audit checked types only. When
+pinning or consuming any `∃`-with-caps signature, run
+pitfall #2's **check #1 — satisfiability under caps** — a
+signature can type cleanly and still be a false proposition.
+See `docs/state-MA-Sig-Session1.md` §4.4 check (B) + §10 for the
+template (the corrected contract's satisfiability verification,
+instantiated against the 3-disjoint-chains counterexample class).
 
 ---
 
@@ -619,7 +646,15 @@ mg-5c32, mg-82fc, mg-2970, mg-ac13, mg-5fbd).
   pitfall #6); the 5-piece mg-d8c7 decomposition is missing the
   full Step 8 G4 port (a 6th piece). Recommendation: re-scope
   (re-pin MA-Sig §4.2, add piece 6) before any P3/P4 Lean work.
-  No Lean changes in this session.
+  No Lean changes in that session.
+* `docs/state-MA-Sig-Session1.md` (mg-a22b, re-pinned mg-faf8) —
+  the Option A' FULL REFACTOR signature contract. §4.2 §E/§G,
+  §4.3, §4.4 are the pinned cascade API; **§9** records the
+  mg-0bd1 8th-vacuity finding; **§10** is the mg-faf8 re-pin's
+  satisfiability verification (the corrected bridge is a true,
+  non-vacuous proposition, instantiated against the
+  3-disjoint-chains counterexample class). The re-pin mg-0bd1
+  recommended is **applied** by mg-faf8.
 * `docs/OneThird-Steps-1-7-Lean-port-scoping.md` (mg-6ab8) — Steps
   1-7 multi-month Lean-port scoping; Phase E option B selected.
 * `docs/why-hC3-is-structural.md` — F1/F2/F3 obstructions; option-(δ)
