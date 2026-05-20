@@ -474,3 +474,44 @@ supplied by S1-E" until S1-E lands.
   banner (the `|I(z)| ≤ 2` refutation).
 
 No Lean source changed — this is an audit.
+
+---
+
+## §11. S1-E follow-on outcome (mg-c2d7, 2026-05-20) — the gap is deeper than this audit found
+
+The S1-E follow-on this audit recommended (§8.1) was executed as
+**mg-c2d7**. Its verdict is **RED**: the Checkpoint-1 AMBER gap is a
+*definition-layer* bug, not the *assembly* gap this audit assumed.
+
+* **This audit's §8.1 premise was wrong on two counts.** (a) The
+  "strip count … in tree" claim does not survive a `grep` — only
+  `incompLocus_ordConvex`, `card_externalFinset`,
+  `collinear_fiber_card_le` are in tree; there is no strip
+  decomposition, bad-fiber count, or collinearity lemma. (b) More
+  fundamentally, the S1-A `IsGoodFiber` order-convexity clause (G2,
+  `LocalCoords.lean:209-214`) is **rectangle-convexity**, which is too
+  strong: a genuine constant-sign raw fiber's coordinate image is a
+  *triangle* (`signMarker = + ⇒ iCoord ≤ jCoord`), never a rectangle
+  for `t ≥ 1`. G2 therefore rejects every genuine two-dimensional
+  fiber and inverts the good/bad partition.
+* **What this audit missed.** Finding 3 here noted part (ii) is a
+  "tautological partition" but never *computed* `goodFiberSet` on a
+  concrete poset. mg-c2d7 did: it machine-checked
+  `goodFiberSet a0 a1 = ∅` and `badSet a0 a1 = 𝓛(P)` for `Antichain3`
+  (`interface_part_iv_faithfulness_defect`, `Interface.lean` §6). The
+  "degenerate witness" warning in §0 of this audit was correct in
+  spirit but understated: the good-fiber set is not merely
+  small/degenerate — it is **empty**, so `|Bad| ≪ |F|` is *false*
+  under the landed definition, not just undelivered. (The audit's §7
+  conclusion "the paper math is sound; the gap is delivery" still
+  holds for the *paper*; the gap is in the *Lean port of
+  `def:good-fiber`*.)
+* **Corrected forward action.** The Checkpoint-1 gap is closed by
+  **re-porting the `IsGoodFiber` G2 clause** (S1-A `LocalCoords.lean`,
+  a new S1-A-class ticket needing paper access), **then** re-scoping
+  the assembly. The Wave-4 Step 6 gate of §8.3 stands and tightens:
+  the gating prerequisite is the G2 re-port, not an assembly.
+
+Full analysis, the machine-checked refutation, and forward options:
+`docs/state-S1-E-Session1.md`; `PROOF-STRUCTURE-ONBOARDING.md` §3
+pitfall #8.

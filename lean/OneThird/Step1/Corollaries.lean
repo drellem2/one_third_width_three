@@ -78,6 +78,37 @@ set-theoretic density statements proved in this file (containments
 and trivial cardinality bounds) and the commuting-square/cube
 verifications of `Overlap.lean` are unconditional.
 
+### ⚠ AMENDED (S1-E, mg-c2d7) — the scaffold upgrade is BLOCKED
+
+The Checkpoint-1 audit (mg-8b95) scoped S1-E to *replace* the vacuous
+`bounded_interaction` (`|Int| ≤ |𝓛(P)|`) with the genuine
+`O((t_{xy}+t_{uv})^2)` bound and to deliver `cor:overlap` (b) /
+`cor:triple-overlap` (d).  Executing S1-E (work item mg-c2d7) found
+this is **not deliverable on the current definitions**, and the
+`bounded_interaction` / `regularOverlap_density` /
+`regularTripleOverlap_density` scaffolds below are **left as-is**:
+
+* The interaction locus `Int_{xy,uv}` lives inside the pairwise
+  overlap `Ω = goodFiberSet x y ∩ goodFiberSet u v`.  Step 1's
+  `IsGoodFiber` order-convexity clause (G2, `LocalCoords.lean`) is too
+  strong — it rejects every genuine two-dimensional raw fiber — so for
+  any rich pair with `t ≥ 1` the *good* fiber set is empty and `Ω` is
+  empty.  This is proved concretely in
+  `OneThird/Step1/Interface.lean` §6
+  (`interface_part_iv_faithfulness_defect`,
+  `goodFiberSet_a0_a1_eq_empty`).
+* A genuine `O((t_{xy}+t_{uv})^2)` bound on `|Int|` therefore cannot
+  be assembled until the `IsGoodFiber` G2 clause is re-ported to the
+  paper's genuine order-convexity notion — which is in S1-A
+  (`LocalCoords.lean`), **outside the S1-E file scope**.
+* Shipping a *conditional* `bounded_interaction` whose structural
+  hypothesis is unsatisfiable on the current definitions would be a
+  fresh content-free scaffold (`PROOF-STRUCTURE-ONBOARDING.md` §3
+  pitfall #6), so S1-E does **not** do that.
+
+S1-E is a block-and-report.  See `docs/state-S1-E-Session1.md` for the
+full analysis and forward options.
+
 The bridge from *regular-overlap membership* (`regularOverlap` /
 `regularTripleOverlap`, i.e. interaction-locus exclusion) to the
 *disjoint-support* hypothesis consumed by `cor_overlap_commuting_square`

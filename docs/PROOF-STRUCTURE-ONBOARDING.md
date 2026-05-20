@@ -79,6 +79,17 @@ and this file is wrong — fix it.
   takes `q := probLT x y`; the latter returns its own input
   field). This is the scoping doc §2.6 risk 1 / Checkpoint 6 gate
   firing. See §3 pitfall #7 + `docs/state-Piece6-FullStep8G4-Session1.md`.
+* **mg-c2d7 S1-E (RED, 10th vacuity discovery)**: the Checkpoint-1
+  AMBER gap (mg-8b95) is **not** an assembly gap. The S1-A
+  `IsGoodFiber` order-convexity clause (G2, `LocalCoords.lean`) is
+  rectangle-convexity, which is too strong — it rejects every
+  genuine two-dimensional raw fiber, so `goodFiberSet x y` is empty
+  for every rich pair (`t ≥ 1`) and `badSet x y = 𝓛(P)`. The
+  part-(iv) bad-set bound and the `Corollaries.lean` scaffold
+  upgrades cannot be assembled until G2 is re-ported. Machine-checked
+  on `Antichain3`: `interface_part_iv_faithfulness_defect`
+  (`Interface.lean` §6). See §3 pitfall #8 +
+  `docs/state-S1-E-Session1.md`.
 
 ---
 
@@ -591,6 +602,64 @@ named base case is a theorem about a strictly smaller class.
 proof body before scoping the wiring** — a lemma can be in tree,
 typed, and named after a paper result while carrying none of that
 result's content.
+
+### Pitfall #8 — The S1 `IsGoodFiber` G2 clause is rectangle-convexity, which inverts the good/bad partition (mg-c2d7, 10th vacuity discovery)
+
+**Status: RED — the Checkpoint-1 AMBER gap is a definition-layer
+bug, not an assembly gap.** The S1-E ticket (mg-c2d7) was scoped by
+the Checkpoint-1 audit (mg-8b95 §8.1) as an *assembly-only*
+follow-on: "the strip count and `collinear_fiber_card_le` are in
+tree — what is missing is the assembly". Executing it found:
+
+1. **The strip-count machinery is NOT in tree** — only
+   `incompLocus_ordConvex`, `card_externalFinset`,
+   `collinear_fiber_card_le` (pitfall #4 again).
+
+2. **The S1-A `IsGoodFiber` order-convexity clause (G2,
+   `LocalCoords.lean:209-214`) is too strong.** G2 demands the
+   coordinate image `π_{x,y}(F)` be **rectangle-convex** in `ℕ²`
+   (for `p ≤ q` in the image, the whole axis-aligned rectangle
+   `[p,q]` is in the image). But a genuine constant-sign raw fiber's
+   image is a **triangle**: `signMarker = true` forces
+   `iCoord ≤ jCoord` (the image sits in `{(i,j) : i ≤ j}`), and a
+   triangle is never a rectangle for `t ≥ 1`. So G2 **rejects every
+   genuine two-dimensional fiber** and accepts only the degenerate
+   collinear ones — it **inverts** the paper's good/bad partition
+   (the paper's *bad* fibers are the collinear ones).
+
+3. **Consequence.** For every rich pair with `t ≥ 1` the landed
+   `goodFiberSet x y` is **empty** and `badSet x y = 𝓛(P)`. The
+   operative part-(iv) content `|Bad| ≪ |F|` is not *undelivered* —
+   under the landed definition it is **false**. Machine-checked
+   concretely on `Antichain3`:
+   `interface_part_iv_faithfulness_defect` (`Interface.lean` §6,
+   `goodFiberSet a0 a1 = ∅`, `badSet a0 a1 = 𝓛(P)`, no `sorry`/`axiom`).
+
+**Practical implication.** The Checkpoint-1 gap is closed not by an
+assembly ticket but by **re-porting the `IsGoodFiber` G2 clause** in
+S1-A `LocalCoords.lean` to the paper's genuine `def:good-fiber`
+order-convexity (staircase / BK-move-graph convexity, **not**
+product-order rectangle-convexity) — a small but upstream, gating
+ticket, requiring paper access (`step1.tex` is not in the repo).
+Only then can the part-(iv) bad-set bound / `bounded_interaction`
+upgrade / density corollaries be assembled honestly. S1-E delivered
+the machine-checked refutation + the sound general lemmas
+(`rawFiber_eq_of_externalEquiv`, `mem_goodFiberSet`,
+`goodFiber_image_no_unit_square[']`, the sign↔coordinate lemmas) and
+**block-and-reported** the four quantitative items — shipping a
+conditional `bounded_interaction` whose hypothesis is unsatisfiable
+on the current definitions would be pitfall #6 recurring. Full
+analysis: `docs/state-S1-E-Session1.md`.
+
+**Standing lesson.** This is the **10th** gap discovery of the
+OneThird arc (after mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970,
+mg-ac13, mg-5fbd, mg-0bd1, mg-fdc2). The recurring meta-error:
+**an audit that scopes a follow-on as "just assembly" without
+computing the objects.** mg-8b95 noted part (ii) is "tautological"
+but never evaluated `goodFiberSet` on a concrete poset — had it
+done so it would have found it empty. **When a definition's whole
+point is "X is the bulk", instantiate it and check `X ≠ ∅` before
+building on it.**
 
 ---
 

@@ -1124,6 +1124,22 @@ Checkpoint 6 added mg-faf8):
   completed Step 4. Not RED: the interface theorem is sound and
   `|Bad| ≪ |F|` holds in the rich regime. Full analysis:
   `docs/state-S1234-QA-Checkpoint1-Session1.md`.
+  **UPDATE (mg-c2d7 S1-E, 2026-05-20): RED — the gap is deeper
+  than mg-8b95 found.** Executing S1-E showed the Checkpoint-1 gap
+  is a *definition-layer* bug, not an *assembly* gap. The S1-A
+  `IsGoodFiber` order-convexity clause (G2, `LocalCoords.lean`) is
+  rectangle-convexity, which is too strong — it rejects every
+  genuine two-dimensional raw fiber, so `goodFiberSet x y` is empty
+  for every `t ≥ 1` pair and `badSet x y = 𝓛(P)` (machine-checked
+  on `Antichain3`: `interface_part_iv_faithfulness_defect`,
+  `Interface.lean` §6). The part-(iv) bad-set bound and the
+  `Corollaries.lean` scaffold upgrades cannot be assembled until G2
+  is re-ported (a new S1-A-class ticket, paper access required;
+  outside the S1-E file scope). The Wave-4 Step 6 gate stands and
+  tightens: the prerequisite is the G2 re-port, not an assembly.
+  Full analysis: `docs/state-S1-E-Session1.md`;
+  `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #8 (10th vacuity
+  discovery).
 - **Checkpoint 2 (after S6 lands, ~weeks 10-12).** mg-6ab8 §4.3
   Checkpoint 2: abstract S6 scaffold consumable by grounded
   inputs?

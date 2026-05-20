@@ -69,6 +69,27 @@ in `cor:overlap` / `cor:triple-overlap` — survives with the weaker
 no `sorry` are introduced.  See `docs/state-S1-B-bkmoves-badset-Session1.md`
 and `docs/state-S1-D-Session1.md`.
 
+## §6 — S1-E: the part-(iv) bad-set bound is blocked by an `IsGoodFiber`
+## faithfulness defect (mg-c2d7)
+
+The follow-on S1-E (work item mg-c2d7) was scoped by the Checkpoint-1
+audit (mg-8b95) to *assemble* the part-(iv) bad-set cardinality bound
+`|Bad_{x,y}| = O(|Z| · t²)`.  Executing it surfaced that the
+assembly-only framing is unsound: the bound cannot be assembled on the
+landed definitions because the S1-A `IsGoodFiber` order-convexity
+clause (G2, `LocalCoords.lean`) is **too strong**.  G2 demands the
+coordinate image be *rectangle*-convex, but a genuine constant-sign
+raw fiber's image is a *triangle* (`signMarker = true` forces
+`iCoord ≤ jCoord`), never a rectangle for `t ≥ 1`.  Section §6 below
+proves, fully and concretely on `Antichain3`, that **every** raw fiber
+of the rich pair `(a0, a1)` is therefore rejected:
+`goodFiberSet a0 a1 = ∅` and `badSet a0 a1 = 𝓛(P)`
+(`interface_part_iv_faithfulness_defect`).  S1-E is a block-and-report:
+the Checkpoint-1 AMBER gap is a *definition-layer* bug, not an assembly
+gap, and closing it requires first re-porting the `IsGoodFiber` G2
+clause (outside the S1-E file scope).  See
+`docs/state-S1-E-Session1.md`.
+
 ## Cross-references
 
 * `step1.tex:144-195` — `thm:interface`, the four-part target.
@@ -429,5 +450,333 @@ theorem thm_interface_nonvacuous :
   · -- The assembled `thm_interface` fires at this concrete poset.
     exact thm_interface Antichain3.hasWidthAtMost 1
       Antichain3.a0 Antichain3.a1 Antichain3.isRich_a0_a1
+
+/-! ### §6 — Part-(iv) faithfulness probe: the `IsGoodFiber` G2 defect (S1-E)
+
+**Work item mg-c2d7 (OneThird-S1-E).**  The Checkpoint-1 audit
+(`docs/state-S1234-QA-Checkpoint1-Session1.md`, mg-8b95) flagged the
+part-(iv) **bad-set cardinality bound** `|Bad_{x,y}| = O(|Z|·t²)` as
+*undelivered* and scoped S1-E as an *assembly-only* follow-on
+(audit §8.1: "the strip count and `collinear_fiber_card_le` are in
+tree — what is missing is the assembly").
+
+Executing S1-E surfaced that the assembly-only framing rests on a false
+premise.  The strip-count machinery is **not** in tree, and — more
+fundamentally — the bad-set bound **cannot be assembled on top of the
+landed `IsGoodFiber` definition**, because its order-convexity clause
+(G2, `LocalCoords.lean:209-214`) is *too strong*:
+
+* G2 demands the coordinate image `π_{x,y}(F)` be **rectangle-convex**
+  in `ℕ²` (for `p ≤ q` in the image, the whole axis-aligned rectangle
+  `[p,q]` lies in the image).
+* But a genuine raw fiber has constant sign, and `signMarker = true`
+  forces `iCoord ≤ jCoord` (`iCoord_le_jCoord_of_sign_true` below):
+  the image lies in the **triangle** `{(i,j) : i ≤ j}`, never a
+  rectangle for `t ≥ 1`.  A sign-`+` good fiber therefore cannot
+  contain both `(0,0)` and `(1,1)` (`goodFiber_image_no_unit_square`).
+* The verdict is decisive on the concrete width-3 non-chain poset
+  `Antichain3` (the very non-vacuity witness of §5): **every** raw
+  fiber of the rich pair `(a0, a1)` is rejected, so
+  `goodFiberSet a0 a1 = ∅` and `badSet a0 a1 = 𝓛(P)`
+  (`interface_part_iv_faithfulness_defect`).  The operative part-(iv)
+  content `|Bad| ≪ |F|` is not merely undelivered — under the landed
+  definition it is **inverted**.
+
+These theorems are the machine-checked backing of the S1-E
+block-and-report (`docs/state-S1-E-Session1.md`).  Closing the
+Checkpoint-1 AMBER gap requires first re-porting the S1-A `IsGoodFiber`
+G2 clause (`LocalCoords.lean`, **out of the S1-E file scope**) to the
+paper's genuine order-convexity notion; only then is the
+`O(|Z|·t²)` assembly meaningful.  See the state document for the full
+analysis and forward options. -/
+
+/-- **Sign `+` ⇒ `iCoord ≤ jCoord`.**  If `x <_L y` then every common
+neighbour preceding `x` also precedes `y`, so the first coordinate never
+exceeds the second.  The image of a constant-sign-`+` fiber lies in the
+triangle `{(i,j) : i ≤ j}` — *not* a rectangle. -/
+theorem iCoord_le_jCoord_of_sign_true {x y : α} {L : LinearExt α}
+    (h : signMarker x y L = true) : iCoord x y L ≤ jCoord x y L := by
+  rw [signMarker_eq_true_iff] at h
+  unfold iCoord jCoord
+  exact Finset.card_le_card (fun z hz => by
+    rw [Finset.mem_filter] at hz ⊢; exact ⟨hz.1, lt_trans hz.2 h⟩)
+
+/-- **Sign `−` ⇒ `jCoord ≤ iCoord`.**  The mirror of
+`iCoord_le_jCoord_of_sign_true`: a constant-sign-`−` fiber's image lies
+in the triangle `{(i,j) : j ≤ i}`. -/
+theorem jCoord_le_iCoord_of_sign_false {x y : α} {L : LinearExt α}
+    (h : signMarker x y L = false) : jCoord x y L ≤ iCoord x y L := by
+  rw [signMarker_eq_false_iff] at h
+  have hle : L.pos y ≤ L.pos x := not_lt.mp h
+  unfold iCoord jCoord
+  exact Finset.card_le_card (fun z hz => by
+    rw [Finset.mem_filter] at hz ⊢
+    exact ⟨hz.1, lt_of_lt_of_le hz.2 hle⟩)
+
+/-- A raw fiber depends only on the external-equivalence class of its
+anchor: if `L` and `L₀` are externally equivalent then they anchor the
+same raw fiber (at any sign).  This is the genuine — non-tautological —
+content behind part (ii)'s "the raw fibers are equivalence classes". -/
+theorem rawFiber_eq_of_externalEquiv {x y : α} {L L₀ : LinearExt α}
+    (ε : Bool) (h : ExternalEquiv x y L L₀) :
+    rawFiber x y L₀ ε = rawFiber x y L ε := by
+  ext L'
+  simp only [mem_rawFiber]
+  exact ⟨fun ⟨he, hs⟩ => ⟨he.trans h.symm, hs⟩,
+         fun ⟨he, hs⟩ => ⟨he.trans h, hs⟩⟩
+
+/-- Membership characterisation of the good-fiber set: `L` is good iff
+its own raw fiber (at `L`'s sign) is good. -/
+theorem mem_goodFiberSet {x y : α} {L : LinearExt α} :
+    L ∈ goodFiberSet x y ↔
+      ∃ L₀, IsGoodFiber x y (rawFiber x y L₀ (signMarker x y L)) ∧
+            L ∈ rawFiber x y L₀ (signMarker x y L) := by
+  classical
+  unfold goodFiberSet
+  rw [Finset.mem_filter]
+  exact ⟨fun h => h.2, fun h => ⟨Finset.mem_univ _, h⟩⟩
+
+/-- **The `IsGoodFiber` G2 defect (sign `+`).**  A good fiber whose
+elements all carry sign `+` cannot have *both* `(0,0)` and `(1,1)` in
+its coordinate image: G2 would then force `(1,0)` into the image, but
+`(1,0)` violates `iCoord ≤ jCoord`.  So G2 rejects every genuine
+two-dimensional sign-`+` fiber. -/
+theorem goodFiber_image_no_unit_square {x y : α} {F : Finset (LinearExt α)}
+    (hF : IsGoodFiber x y F) (hsign : ∀ L ∈ F, signMarker x y L = true)
+    (h00 : ((0, 0) : ℕ × ℕ) ∈ F.image (localCoord x y))
+    (h11 : ((1, 1) : ℕ × ℕ) ∈ F.image (localCoord x y)) : False := by
+  have h10 : ((1, 0) : ℕ × ℕ) ∈ F.image (localCoord x y) :=
+    hF.2.1 (0, 0) h00 (1, 1) h11 (by norm_num) (by norm_num) (1, 0)
+      ⟨by norm_num, by norm_num⟩ ⟨by norm_num, by norm_num⟩
+  rw [Finset.mem_image] at h10
+  obtain ⟨L, hLF, hLc⟩ := h10
+  have hle := iCoord_le_jCoord_of_sign_true (hsign L hLF)
+  unfold localCoord at hLc; rw [Prod.mk.injEq] at hLc; omega
+
+/-- **The `IsGoodFiber` G2 defect (sign `−`).**  The mirror of
+`goodFiber_image_no_unit_square`: a good constant-sign-`−` fiber cannot
+contain both `(0,0)` and `(1,1)` — G2 would force `(0,1)`, which
+violates `jCoord ≤ iCoord`. -/
+theorem goodFiber_image_no_unit_square' {x y : α} {F : Finset (LinearExt α)}
+    (hF : IsGoodFiber x y F) (hsign : ∀ L ∈ F, signMarker x y L = false)
+    (h00 : ((0, 0) : ℕ × ℕ) ∈ F.image (localCoord x y))
+    (h11 : ((1, 1) : ℕ × ℕ) ∈ F.image (localCoord x y)) : False := by
+  have h01 : ((0, 1) : ℕ × ℕ) ∈ F.image (localCoord x y) :=
+    hF.2.1 (0, 0) h00 (1, 1) h11 (by norm_num) (by norm_num) (0, 1)
+      ⟨by norm_num, by norm_num⟩ ⟨by norm_num, by norm_num⟩
+  rw [Finset.mem_image] at h01
+  obtain ⟨L, hLF, hLc⟩ := h01
+  have hle := jCoord_le_iCoord_of_sign_false (hsign L hLF)
+  unfold localCoord at hLc; rw [Prod.mk.injEq] at hLc; omega
+
+namespace Antichain3
+
+/-! The four linear extensions of `Antichain3` exhibiting the two
+corner coordinates `(0,0)` and `(1,1)` in each sign class. -/
+
+/-- The 3-cycle `a0 ↦ 1, a1 ↦ 2, a2 ↦ 0` (the `a2`-first order). -/
+def permCyc : Fin 3 ≃ Fin 3 where
+  toFun := ![1, 2, 0]
+  invFun := ![2, 0, 1]
+  left_inv := by decide
+  right_inv := by decide
+
+/-- The transposition `a0 ↔ a1` (the `a1 < a0 < a2` order). -/
+def permSwap : Fin 3 ≃ Fin 3 where
+  toFun := ![1, 0, 2]
+  invFun := ![1, 0, 2]
+  left_inv := by decide
+  right_inv := by decide
+
+/-- The reversal `a0 ↔ a2` (the `a2 < a1 < a0` order). -/
+def permRev : Fin 3 ≃ Fin 3 where
+  toFun := ![2, 1, 0]
+  invFun := ![2, 1, 0]
+  left_inv := by decide
+  right_inv := by decide
+
+/-- Order `a0 < a1 < a2`: sign `+`, local coordinate `(0,0)`. -/
+noncomputable def extId : LinearExt Antichain3 :=
+  linExtOfEquiv (finCongr Antichain3.card_eq.symm)
+
+/-- Order `a2 < a0 < a1`: sign `+`, local coordinate `(1,1)`. -/
+noncomputable def extCyc : LinearExt Antichain3 :=
+  linExtOfEquiv (permCyc.trans (finCongr Antichain3.card_eq.symm))
+
+/-- Order `a1 < a0 < a2`: sign `−`, local coordinate `(0,0)`. -/
+noncomputable def extSwap : LinearExt Antichain3 :=
+  linExtOfEquiv (permSwap.trans (finCongr Antichain3.card_eq.symm))
+
+/-- Order `a2 < a1 < a0`: sign `−`, local coordinate `(1,1)`. -/
+noncomputable def extRev : LinearExt Antichain3 :=
+  linExtOfEquiv (permRev.trans (finCongr Antichain3.card_eq.symm))
+
+/-- On `Antichain3` there are no external elements, so the
+external-ordering equivalence relates *every* pair of linear
+extensions: there is a single external class, refined only by sign. -/
+lemma externalEquiv_total (L L' : LinearExt Antichain3) :
+    ExternalEquiv a0 a1 L L' := by
+  have hcover : insert a0 (insert a1 (commonNbhdFinset a0 a1))
+      = (Finset.univ : Finset Antichain3) := by
+    rw [commonNbhdFinset_a0_a1]; decide
+  exact ⟨fun a _ ha _ => absurd (hcover ▸ Finset.mem_univ a) ha,
+         fun a _ _ ha => absurd (hcover ▸ Finset.mem_univ a) ha⟩
+
+private lemma lt_of_pos {L : LinearExt Antichain3} {p q : Antichain3}
+    {m n : ℕ} (hp : (L.pos p).val = m) (hq : (L.pos q).val = n)
+    (h : m < n) : L.lt p q := by
+  change L.pos p < L.pos q; rw [Fin.lt_def, hp, hq]; exact h
+
+private lemma not_lt_of_pos {L : LinearExt Antichain3} {p q : Antichain3}
+    {m n : ℕ} (hp : (L.pos p).val = m) (hq : (L.pos q).val = n)
+    (h : n ≤ m) : ¬ L.lt p q := by
+  change ¬ L.pos p < L.pos q; rw [Fin.lt_def, hp, hq]; omega
+
+lemma sign_extId : signMarker a0 a1 extId = true := by
+  rw [signMarker_eq_true_iff]
+  exact lt_of_pos (by decide : (extId.pos a0).val = 0)
+    (by decide : (extId.pos a1).val = 1) (by norm_num)
+
+lemma sign_extCyc : signMarker a0 a1 extCyc = true := by
+  rw [signMarker_eq_true_iff]
+  exact lt_of_pos (by decide : (extCyc.pos a0).val = 1)
+    (by decide : (extCyc.pos a1).val = 2) (by norm_num)
+
+lemma sign_extSwap : signMarker a0 a1 extSwap = false := by
+  rw [signMarker_eq_false_iff]
+  exact not_lt_of_pos (by decide : (extSwap.pos a0).val = 1)
+    (by decide : (extSwap.pos a1).val = 0) (by norm_num)
+
+lemma sign_extRev : signMarker a0 a1 extRev = false := by
+  rw [signMarker_eq_false_iff]
+  exact not_lt_of_pos (by decide : (extRev.pos a0).val = 2)
+    (by decide : (extRev.pos a1).val = 1) (by norm_num)
+
+private lemma iCoord_eq {L : LinearExt Antichain3} {v : ℕ}
+    (h : (if L.lt a2 a0 then (1 : ℕ) else 0) = v) : iCoord a0 a1 L = v := by
+  unfold iCoord
+  rw [commonNbhdFinset_a0_a1, Finset.filter_singleton]
+  by_cases hc : L.lt a2 a0
+  · rw [if_pos hc] at h ⊢; rw [Finset.card_singleton]; omega
+  · rw [if_neg hc] at h ⊢; simp; omega
+
+private lemma jCoord_eq {L : LinearExt Antichain3} {v : ℕ}
+    (h : (if L.lt a2 a1 then (1 : ℕ) else 0) = v) : jCoord a0 a1 L = v := by
+  unfold jCoord
+  rw [commonNbhdFinset_a0_a1, Finset.filter_singleton]
+  by_cases hc : L.lt a2 a1
+  · rw [if_pos hc] at h ⊢; rw [Finset.card_singleton]; omega
+  · rw [if_neg hc] at h ⊢; simp; omega
+
+lemma localCoord_extId : localCoord a0 a1 extId = (0, 0) := by
+  unfold localCoord
+  rw [iCoord_eq (L := extId) (v := 0) (by
+        rw [if_neg (not_lt_of_pos (by decide : (extId.pos a2).val = 2)
+          (by decide : (extId.pos a0).val = 0) (by norm_num))]),
+      jCoord_eq (L := extId) (v := 0) (by
+        rw [if_neg (not_lt_of_pos (by decide : (extId.pos a2).val = 2)
+          (by decide : (extId.pos a1).val = 1) (by norm_num))])]
+
+lemma localCoord_extCyc : localCoord a0 a1 extCyc = (1, 1) := by
+  unfold localCoord
+  rw [iCoord_eq (L := extCyc) (v := 1) (by
+        rw [if_pos (lt_of_pos (by decide : (extCyc.pos a2).val = 0)
+          (by decide : (extCyc.pos a0).val = 1) (by norm_num))]),
+      jCoord_eq (L := extCyc) (v := 1) (by
+        rw [if_pos (lt_of_pos (by decide : (extCyc.pos a2).val = 0)
+          (by decide : (extCyc.pos a1).val = 2) (by norm_num))])]
+
+lemma localCoord_extSwap : localCoord a0 a1 extSwap = (0, 0) := by
+  unfold localCoord
+  rw [iCoord_eq (L := extSwap) (v := 0) (by
+        rw [if_neg (not_lt_of_pos (by decide : (extSwap.pos a2).val = 2)
+          (by decide : (extSwap.pos a0).val = 1) (by norm_num))]),
+      jCoord_eq (L := extSwap) (v := 0) (by
+        rw [if_neg (not_lt_of_pos (by decide : (extSwap.pos a2).val = 2)
+          (by decide : (extSwap.pos a1).val = 0) (by norm_num))])]
+
+lemma localCoord_extRev : localCoord a0 a1 extRev = (1, 1) := by
+  unfold localCoord
+  rw [iCoord_eq (L := extRev) (v := 1) (by
+        rw [if_pos (lt_of_pos (by decide : (extRev.pos a2).val = 0)
+          (by decide : (extRev.pos a0).val = 2) (by norm_num))]),
+      jCoord_eq (L := extRev) (v := 1) (by
+        rw [if_pos (lt_of_pos (by decide : (extRev.pos a2).val = 0)
+          (by decide : (extRev.pos a1).val = 1) (by norm_num))])]
+
+/-- **The sign-`+` raw fiber of `(a0, a1)` on `Antichain3` is bad.**
+It contains `extId` (coordinate `(0,0)`) and `extCyc` (coordinate
+`(1,1)`); by `goodFiber_image_no_unit_square` G2 fails. -/
+theorem not_isGoodFiber_plus :
+    ¬ IsGoodFiber a0 a1 (rawFiber a0 a1 extId true) := by
+  intro hF
+  have hmemId : extId ∈ rawFiber a0 a1 extId true := by
+    have := self_mem_rawFiber a0 a1 extId
+    rwa [sign_extId] at this
+  have hmemCyc : extCyc ∈ rawFiber a0 a1 extId true :=
+    mem_rawFiber.mpr ⟨externalEquiv_total extCyc extId, sign_extCyc⟩
+  refine goodFiber_image_no_unit_square hF
+    (fun L hL => signMarker_of_mem_rawFiber hL) ?_ ?_
+  · exact Finset.mem_image.mpr ⟨extId, hmemId, localCoord_extId⟩
+  · exact Finset.mem_image.mpr ⟨extCyc, hmemCyc, localCoord_extCyc⟩
+
+/-- **The sign-`−` raw fiber of `(a0, a1)` on `Antichain3` is bad.** -/
+theorem not_isGoodFiber_minus :
+    ¬ IsGoodFiber a0 a1 (rawFiber a0 a1 extId false) := by
+  intro hF
+  have hmemSwap : extSwap ∈ rawFiber a0 a1 extId false :=
+    mem_rawFiber.mpr ⟨externalEquiv_total extSwap extId, sign_extSwap⟩
+  have hmemRev : extRev ∈ rawFiber a0 a1 extId false :=
+    mem_rawFiber.mpr ⟨externalEquiv_total extRev extId, sign_extRev⟩
+  refine goodFiber_image_no_unit_square' hF
+    (fun L hL => signMarker_of_mem_rawFiber hL) ?_ ?_
+  · exact Finset.mem_image.mpr ⟨extSwap, hmemSwap, localCoord_extSwap⟩
+  · exact Finset.mem_image.mpr ⟨extRev, hmemRev, localCoord_extRev⟩
+
+/-- **The interface theorem's good-fiber set is EMPTY on `Antichain3`.**
+Every linear extension's raw fiber — sign `+` or sign `−` — is rejected
+by G2.  This refutes the implicit assumption of the part-(ii)
+decomposition that `goodFiberSet` is the bulk of `𝓛(P)`. -/
+theorem goodFiberSet_a0_a1_eq_empty :
+    goodFiberSet a0 a1 = (∅ : Finset (LinearExt Antichain3)) := by
+  rw [Finset.eq_empty_iff_forall_notMem]
+  intro L hL
+  obtain ⟨L₀, hgood, -⟩ := mem_goodFiberSet.mp hL
+  rw [rawFiber_eq_of_externalEquiv (signMarker a0 a1 L)
+        (externalEquiv_total extId L₀)] at hgood
+  cases hs : signMarker a0 a1 L with
+  | true => rw [hs] at hgood; exact not_isGoodFiber_plus hgood
+  | false => rw [hs] at hgood; exact not_isGoodFiber_minus hgood
+
+/-- **The interface theorem's bad set is ALL of `𝓛(P)` on `Antichain3`.**
+The operative part-(iv) negligibility `|Bad| ≪ |F|` is inverted. -/
+theorem badSet_a0_a1_eq_univ :
+    badSet a0 a1 = (Finset.univ : Finset (LinearExt Antichain3)) := by
+  unfold badSet
+  rw [goodFiberSet_a0_a1_eq_empty, Finset.sdiff_empty]
+
+/-- **Part-(iv) faithfulness defect (S1-E headline, mg-c2d7).**
+
+On the concrete width-3 non-chain poset `Antichain3` with the rich pair
+`(a0, a1)` (`t = 1`), the landed `IsGoodFiber` order-convexity clause
+(G2) rejects *both* sign classes' raw fibers, so the good-fiber set is
+empty and the bad set is all of `𝓛(P)`.
+
+This is the machine-checked witness that the Checkpoint-1 AMBER gap is
+**not** an assembly gap: the part-(iv) bad-set cardinality bound
+`|Bad| = O(|Z|·t²)` cannot be assembled on top of the current
+`IsGoodFiber` definition, because that definition classifies the
+genuine two-dimensional good fibers as bad.  Closing the gap requires
+re-porting the S1-A `IsGoodFiber` G2 clause first.  See
+`docs/state-S1-E-Session1.md`. -/
+theorem interface_part_iv_faithfulness_defect :
+    ¬ IsGoodFiber a0 a1 (rawFiber a0 a1 extId true) ∧
+    ¬ IsGoodFiber a0 a1 (rawFiber a0 a1 extId false) ∧
+    goodFiberSet a0 a1 = (∅ : Finset (LinearExt Antichain3)) ∧
+    badSet a0 a1 = (Finset.univ : Finset (LinearExt Antichain3)) :=
+  ⟨not_isGoodFiber_plus, not_isGoodFiber_minus,
+   goodFiberSet_a0_a1_eq_empty, badSet_a0_a1_eq_univ⟩
+
+end Antichain3
 
 end OneThird
