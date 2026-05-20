@@ -815,6 +815,18 @@ specific clause, read the paper clause.**
   not from `thm_step5_grounded`'s aggregate `Step5Richness`; the
   constants project cleanly into the parametric S7-E signature.
   See `docs/state-S7-Conc-B-Session1.md`.
+  `Step7/Step6Budget.lean` (full file, **piece 2 sub-arc C**:
+  `step6BudgetNum`, `step6BudgetDen`, `step6_budget_grounded`,
+  `varBudgetHyp_of_budget_bound`, `step6_varBudgetHyp_grounded`,
+  `step6_budget_constants_antichain3`, `antichain3_varBudgetHyp_genuine`)
+  (mg-5f3e) — extracts the Step 6 budget constants
+  `b_n = 2·t_d·δ_n`, `b_d = t_n·δ_d` from the landed Piece-1
+  Step 6 cascade `cascade_steps_1_6_grounded` (the `thm:step6` +
+  `cor:pointwise` grounded output) and shows they project cleanly
+  into the Step 7 `BandwidthData.VarBudgetHyp` signature; the
+  `lem:budget-var` index conversion + the `M₀` shared with the
+  Step 5 richness side are sub-arc `mg-S7-Conc-D`. See
+  `docs/state-S7-Conc-C-Session1.md`.
 
 **Paper.** `main.tex` §1.4 road map; `step7.tex:1175-1193`
 (`prop:72`); `step8.tex:2404-2418` (`lem:ordinal-factorisation`);

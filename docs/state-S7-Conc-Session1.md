@@ -225,8 +225,13 @@ The remaining piece-2 work — genuinely blocked on piece 1:
   (exhibited by `lem_bandwidth_le_four_bundled_of_step5_richness`).
   See `docs/state-S7-Conc-B-Session1.md`.
 * **mg-S7-Conc-C** — extract `b_n, b_d` from the Step 6
-  `thm:step6` + `cor:pointwise` grounded form. **Needs:** a Step 6
-  grounded form exporting concrete budget constants. Not in tree.
+  `thm:step6` + `cor:pointwise` grounded form. **LANDED** (mg-5f3e,
+  `lean/OneThird/Step7/Step6Budget.lean`): once Piece 1 completed
+  (mg-496b), the Step 6 cascade output `cascade_steps_1_6_grounded`
+  existed in tree, and `b_n = 2·t_d·δ_n`, `b_d = t_n·δ_d` were
+  extracted as genuine cascade-conclusion coefficients (GREEN — the
+  constants project cleanly into `BandwidthData.VarBudgetHyp`). See
+  `docs/state-S7-Conc-C-Session1.md`.
 * **mg-S7-Conc-D (discharge half)** — construct the concrete
   `hBud : VarBudgetHyp` and `hRich : RichnessHyp` witnesses from
   the -B / -C constants, and invoke
@@ -314,7 +319,11 @@ hypotheses until piece 1 discharges them.
 
 mg-d8c7 (Option A' scoping), mg-a22b (MA-Sig), mg-6ab8 (Steps 1-7
 scoping), mg-516f (S7-E), mg-d135/1069/9331/4584 (S7-A–D),
-mg-5fbd (S7-F bridge audit), **mg-4ce6 (this session)**.
+mg-5fbd (S7-F bridge audit), **mg-4ce6 (this session)**,
+mg-8f9c (S7-Conc-B follow-on — Step 5 richness constants;
+`docs/state-S7-Conc-B-Session1.md`),
+mg-5f3e (S7-Conc-C follow-on — Step 6 budget constants `b_n, b_d`;
+`docs/state-S7-Conc-C-Session1.md`).
 
 ---
 
