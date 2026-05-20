@@ -50,6 +50,7 @@ import OneThird.Step4.RectangleModel
 import OneThird.Step4.DensityRegularization
 import OneThird.Step4.Step4Theorem
 import OneThird.Step4.WitnessGrounded
+import OneThird.Step4.PerPairBound
 import OneThird.Step5.EndpointMono
 import OneThird.Step5.ConvexOverlap
 import OneThird.Step5.FiberMass
