@@ -55,6 +55,7 @@ import OneThird.Step5.Dichotomy
 import OneThird.Step5.G1G2Grounded
 import OneThird.Step5.GroundSet
 import OneThird.Step5.DichotomyGrounded
+import OneThird.Step5.G4G5Grounded
 import OneThird.Step6.ErrorControl
 import OneThird.Step6.CommutingSquare
 import OneThird.Step6.RichnessBound
