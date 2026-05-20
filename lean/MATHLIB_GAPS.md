@@ -28,6 +28,34 @@ The §5 "Minimal dependency chain" below therefore becomes the work-item
 partition for the formalization project itself: each numbered block in
 §5 corresponds to a cluster of mg items tagged `one-third, lean`.
 
+**SHIPPED-SINCE-AUDIT update (2026-05-20, mg-dc4c).** The mg-dc4c
+block-and-report audit verified the Lean tree against this 2026-04-19
+audit. The following items audited below as PARTIAL / NOT IN MATHLIB
+are now **SHIPPED** — in tree, complete, `0`-`sorry` (verified
+`lake build` green):
+
+| Item | Audit verdict (stale) | Shipped at |
+|---|---|---|
+| C3 edge boundary | PARTIAL | `OneThird/Mathlib/SimpleGraph/EdgeBoundary.lean` (`edgeBoundary`, `mk_mem_edgeBoundary_iff`, `edgeBoundary_subset_edgeFinset`) |
+| C4 BK graph on `L(P)` | NOT IN MATHLIB | `OneThird/Mathlib/BKGraph.lean` (`BKAdj`, `bkGraph`, `swapAdj`) |
+| C7 BK connectivity (Bubley–Karzanov) | NOT IN MATHLIB | `OneThird/Mathlib/BKGraph.lean` (`bkGraph_preconnected`, `bkGraph_connected`) |
+| D2 Dirichlet form | NOT IN MATHLIB | `OneThird/Mathlib/DirichletForm.lean` (`dirichletForm`, `dirichletForm_indicator`) |
+| D4 indicator conductance/Dirichlet inequality | NOT IN MATHLIB | `OneThird/Mathlib/DirichletForm.lean` (`cheeger_indicator`) — the "easy half" of Cheeger, no spectral machinery |
+| F2 order-convex `ℤ²` API | PARTIAL | `OneThird/Mathlib/Grid2D.lean` (`IsOrdConvex` + `.Icc`/`.inter`/`.icc_subset`/`.mem_of_between`) |
+| F4 monotone staircase region | PARTIAL | `OneThird/Mathlib/Grid2D.lean` (`ofYoungDiagram` + monotonicity API) |
+| F5 grid edge boundary `∂_D A` | NOT IN MATHLIB | `OneThird/Mathlib/Grid2D.lean` (`gridBdy` + membership API) |
+
+Still **NOT NEEDED** (audit verdicts §D3, §D5, §4, §6 confirmed
+correct, do not build): the **full Cheeger inequality** (`λ₂ ≤ 2Φ`,
+`Φ²/2 ≤ λ₂`) and the **spectral gap / Poincaré** machinery. The
+mg-893b Theorem-E resolution (2026-04-18) replaced the
+pair-Poincaré / spectral argument with elementary averaging.
+
+Still genuinely open in buckets C/D/F: **F6 quantitative weak-grid
+stability** — `OneThird/Step2/WeakGrid.lean` currently ships only the
+trivial `δ ≤ 1` placeholder; the quantitative `δ = O(ε)` form is the
+mg-dc4c re-scoped deliverable (mg-c7f5 content).
+
 Terminology convention below:
 
 - **IN MATHLIB** — usable as-is, with a cited file path.

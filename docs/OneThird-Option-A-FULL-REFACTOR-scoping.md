@@ -337,14 +337,29 @@ foundation.
 `Mathlib/Poset/Dilworth.lean` (partial — Frankl-mathlib-copy-and-tweak
 pattern may apply; see §4.2 below).
 
-**New mathlib infrastructure** (the same six rows from mg-6ab8 §5.2
-table; subtotal 3.4M-5.9M):
+**New mathlib infrastructure.**
+
+> **⚠ AMENDED (mg-dc4c, 2026-05-20).** The original table here
+> inherited six rows from mg-6ab8 §5.2 with a 3.4M-5.9M subtotal. The
+> mg-dc4c block-and-report audit verified the tree and found the
+> **"Cheeger inequality on `bkGraph α`" row (1.5M-2.5M) is RETIRED**:
+> the proof never consumes the full Cheeger inequality / spectral gap
+> (MATHLIB_GAPS.md §D3/§D5/§4/§6 — the mg-893b Theorem-E resolution
+> replaced the spectral argument with elementary averaging). The
+> conductance↔boundary translation the cascade *does* use is already
+> in tree, complete: `DirichletForm.lean` (`cheeger_indicator`),
+> `BKGraph.lean`, `SimpleGraph/EdgeBoundary.lean`. mg-6ab8 §5 line 749
+> itself phrased the requirement as "Cheeger/spectral-gap **or** the
+> equivalent conductance↔boundary on finite graphs" — that equivalent
+> is `cheeger_indicator`, done. The "Order-convex region API for `Z²`"
+> row is likewise **SHIPPED** (`Grid2D.lean` `IsOrdConvex`). The
+> revised subtotal is **0.9M-1.7M** (the remaining three rows).
 
 | Prerequisite | Used by | Effort | Upstreamable |
 |---|---|---|---|
-| Cheeger inequality on `bkGraph α` (weighted finite) | S2, S4, S6 | 1.5M-2.5M | Yes |
-| Weak grid isoperimetric stability (planar) | S2 | 0.4M-0.7M | Yes |
-| Order-convex region API for `Z²` | S1, S2 | 0.1M-0.2M | Yes (small utility) |
+| ~~Cheeger inequality on `bkGraph α` (weighted finite)~~ | ~~S2, S4, S6~~ | **RETIRED** — `cheeger_indicator` already in tree; full Cheeger/spectral-gap not needed (mg-dc4c) | — |
+| Weak grid isoperimetric stability (planar) — quantitative F6 | S2 | 0.4M-0.7M (mg-dc4c re-scoped deliverable) | Yes |
+| ~~Order-convex region API for `Z²`~~ | ~~S1, S2~~ | **SHIPPED** — `Grid2D.IsOrdConvex` (mg-dc4c) | — |
 | Chain-removal subtype lift (extend `OrdinalDecomp.hasBalancedPair_lift`) | piece 3 (not piece 1) | 0.5M-1.0M | No (internal) |
 | Discrete-Hodge cocycle integration | piece 2 (S7-C grounded form already lands this in S7-A-E pilot — already done) | (already paid) | Maybe |
 | Markov-style giant-component for weighted graphs | piece 2 (similarly) | (already paid) | Yes |
