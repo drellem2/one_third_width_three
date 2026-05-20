@@ -239,6 +239,17 @@ is exhaustive. **No vacuity-discovery surfaced** under skeptical
 re-read of the bad-set bound and overlap commutation arguments — the
 arguments rely on width-3 ⇒ common-neighbour-is-chain throughout.
 
+> **⚠ AMENDED (mg-8b95 Checkpoint-1 audit, 2026-05-20).** This
+> "no vacuity-discovery" claim is **refuted by the S1 port.** The
+> S1-B port (mg-2e24) found `step1.tex:308-311`'s `|I(z)| ≤ 2`
+> length claim **false** for width-3 posets (an external `z` can be
+> incomparable to the entire common chain — worked counterexample in
+> `docs/state-S1234-QA-Checkpoint1-Session1.md` §3). The combinatorial
+> bad-set bound below is therefore **`O(n·t²)`, not `O(n·t)`**, and
+> `O(n·t)` is **not** "always valid". The negligibility
+> `|Bad| ≪ |F_{x,y}|` is a *rich-regime conditional*, not an
+> unconditional fact. See Checkpoint-1 verdict AMBER.
+
 **Hidden constraints / sub-conditions surfaced.** Two:
 
 1. The bad-set bound has *two* statements: a combinatorial

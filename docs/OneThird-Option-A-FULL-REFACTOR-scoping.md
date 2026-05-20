@@ -1107,6 +1107,23 @@ Checkpoint 6 added mg-faf8):
   (probability ~15%), re-scope before piece 1 starts.
 - **Checkpoint 1 (after S1-S4 land, ~weeks 6-8).** mg-6ab8 §4.3
   Checkpoint 1: paper-side gap in S1 `thm:interface` port?
+  **OUTCOME (mg-8b95, 2026-05-20): AMBER — gap surfaced.** The S1
+  port surfaced a paper-side imprecision missed by the mg-6ab8 §2.1
+  pre-filing audit (`step1.tex:308-311`'s `|I(z)| ≤ 2` length claim
+  is false for width-3 posets — corrected combinatorial bad-set
+  bound is `O(n·t²)`, not `O(n·t)`), and — more consequentially —
+  the landed S1 port does **not** deliver the operative part-(iv)
+  bad-set bound `|Bad_{x,y}| ≪ |F_{x,y}|` or the `cor:overlap` (b) /
+  `cor:triple-overlap` (d) density bounds: they sit as vacuous
+  `≤ |𝓛(P)|` scaffolds (`Corollaries.lean` `bounded_interaction`).
+  Bounded re-scope: file an **S1-E** follow-on to assemble the
+  deferred part-(iv) quantitative content (corrected exponent) and
+  to thread the rich-regime richness hypothesis explicitly. **Wave-4
+  Step 6 must not enter cascade assembly until S1-E lands** —
+  S4-B/S4-C consume the part-(iv) bounds and Step 6 consumes a
+  completed Step 4. Not RED: the interface theorem is sound and
+  `|Bad| ≪ |F|` holds in the rich regime. Full analysis:
+  `docs/state-S1234-QA-Checkpoint1-Session1.md`.
 - **Checkpoint 2 (after S6 lands, ~weeks 10-12).** mg-6ab8 §4.3
   Checkpoint 2: abstract S6 scaffold consumable by grounded
   inputs?
