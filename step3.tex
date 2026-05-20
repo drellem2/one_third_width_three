@@ -26,7 +26,11 @@ weakening of these inputs must be propagated into the Step 3 lemmas below.
   where $\Dxy$ is order-convex, $\pi_{x,y}$ is a bijection onto its image, and
   BK edges inside $\Fxy$ correspond exactly to unit grid moves in $\Dxy$.
   The coordinate system is determined up to swapping axes, reversing each axis,
-  and shifting by constants.
+  and shifting by constants. Order-convexity of $\Dxy$ refers to the chart
+  delivered by Step~1; it is preserved under axis swaps and shifts, but axis
+  reversals preserve only the weaker HV-convexity (Step~2,
+  Lemma~\ref{lem:hv-reflection} and Remark~\ref{rem:ord-not-stable}). Every
+  argument below that applies an axis reversal is phrased accordingly.
   \item[\textsc{I2 (Step 2, fiber rigidity).}]
   Writing $A_{x,y}:=\pi_{x,y}(S\cap\Fxy)\subseteq\Dxy$, there is a
   \emph{staircase} $M_{x,y}\subseteq\Dxy$ and an error set
@@ -765,9 +769,15 @@ $|A\symdiff M|\le\varepsilon_2|\Fxy|$.
 
 \smallskip
 \emph{(5a) Connectedness of $M$ and $\Dxy\setminus M$.}
-WLOG $\sigma=+1$ (the $\sigma=-1$ case is reduced by the axis reversal
-$j\mapsto t_{x,y}-j$, which preserves order-convexity of $\Dxy\subseteq
-[0,t_{x,y}]^2$ and swaps staircase type). By Def.~\ref{def:staircase-type}
+WLOG $\sigma=+1$. The $\sigma=-1$ case is reduced by the axis reversal
+$j\mapsto t_{x,y}-j$, which swaps staircase type. This reversal does
+\emph{not} preserve order-convexity of $\Dxy$ (Step~2,
+Remark~\ref{rem:ord-not-stable}), but it does preserve HV-convexity (Step~2,
+Lemma~\ref{lem:hv-reflection}), and the only order-convexity consequence the
+argument below draws --- that adjacent non-empty column slices of $\Dxy$
+overlap --- is itself invariant under $j\mapsto t_{x,y}-j$, since the
+reversal acts within each slice and commutes with intersection. The reduction
+is therefore valid. By Def.~\ref{def:staircase-type}
 (equivalently Def.~\ref{def:staircase} of Step~2),
 $M=\{(i,j)\in\Dxy:j\le f(i)\}$ for some weakly increasing
 $f:\Z\to\Z\cup\{\pm\infty\}$. By \textsc{I1}, each column
@@ -776,12 +786,14 @@ $M\cap(\{i\}\times(\Dxy)_i)=[u_i,\min(f(i),v_i)]$ (bottom-anchored) and
 $(\Dxy\setminus M)\cap(\{i\}\times(\Dxy)_i)=[\max(f(i)+1,u_i),v_i]$
 (top-anchored) whenever non-empty, so each is columnwise connected.
 
-For adjacent non-empty columns $i,i+1$, \textsc{I1} (order-convexity)
-applied to the NE-ordered pair $(i,j_1),(i+1,j_2)$ (any $j_1\in(\Dxy)_i$,
-$j_2\in(\Dxy)_{i+1}$ with $j_1\le j_2$; existence of such a pair follows
-from $|\Dxy|\ge c_0 t_{x,y}^2$ ruling out the pathological
+For adjacent non-empty columns $i,i+1$, order-convexity of $\Dxy$ in the
+Step-1 chart (\textsc{I1}) applied to the NE-ordered pair $(i,j_1),(i+1,j_2)$
+(any $j_1\in(\Dxy)_i$, $j_2\in(\Dxy)_{i+1}$ with $j_1\le j_2$; existence of
+such a pair follows from $|\Dxy|\ge c_0 t_{x,y}^2$ ruling out the pathological
 disjoint-columns case) forces
-$(\Dxy)_i\cap(\Dxy)_{i+1}\supseteq[j_1,j_2]\ne\varnothing$.
+$(\Dxy)_i\cap(\Dxy)_{i+1}\supseteq[j_1,j_2]\ne\varnothing$; in the
+$\sigma=-1$ case this overlap is inherited from the un-reversed chart, as
+noted above.
 By monotonicity of $f$ ($f(i+1)\ge f(i)$), a common level
 $j^{\circ}:=\max(u_i,u_{i+1})\le\min(f(i),f(i+1),v_i,v_{i+1})$ lies in
 $M\cap(\Dxy)_i\cap M\cap(\Dxy)_{i+1}$ whenever both columns meet $M$, so the

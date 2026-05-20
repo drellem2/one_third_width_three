@@ -81,10 +81,91 @@ is what produces the constant $K$.
 This is the combinatorial core of Step~2. It is a purely planar statement about
 subsets of an order-convex region of $\mathbb{Z}^2$.
 
+\subsection{HV-convexity and reflection stability}
+\label{subsec:hv-convex}
+
+The proof of Lemma~\ref{lem:weak-grid} processes $D$ one row and one column at a
+time, and at a single point applies coordinate reflections to normalize the
+staircase orientation. Neither operation needs the full strength of
+order-convexity; the property that supports both --- and, crucially, that
+\emph{is} stable under the reflections --- is the following, strictly weaker
+notion.
+
+\begin{definition}[HV-convex region]\label{def:hv-convex}
+A set $D\subseteq\mathbb{Z}^2$ is \emph{HV-convex} if every row
+$D_i:=\{j:(i,j)\in D\}$ and every column $D^j:=\{i:(i,j)\in D\}$ is an interval
+of $\mathbb{Z}$ (a contiguous run of integers, possibly empty).
+\end{definition}
+
+\begin{lemma}[Order-convex $\Rightarrow$ HV-convex]\label{lem:ord-implies-hv}
+Every order-convex $D\subseteq\mathbb{Z}^2$ --- in particular every domain
+$D_{x,y}$ delivered by \textup{(S1.2)} of
+Definition~\textup{\ref{def:step1-data}} --- is HV-convex.
+\end{lemma}
+
+\begin{proof}
+Fix a row index $i$ and let $j\le j''\le j'$ with $(i,j),(i,j')\in D$. The
+pair $(i,j),(i,j')$ meets the order-convexity hypothesis with $i\le i$ and
+$j\le j'$, so every lattice point $(i'',j'')$ with $i\le i''\le i$ and
+$j\le j''\le j'$ lies in $D$; taking $i''=i$ gives $(i,j'')\in D$. Hence
+$D_i$ is an interval. The argument for columns is identical with the two
+coordinates exchanged.
+\end{proof}
+
+\begin{lemma}[Reflections preserve HV-convexity]\label{lem:hv-reflection}
+Let $D\subseteq[0,t]^2$ be HV-convex. Then the horizontal reflection
+$\rho_h\colon(i,j)\mapsto(t-i,j)$ and the vertical reflection
+$\rho_v\colon(i,j)\mapsto(i,t-j)$ each map $D$ to an HV-convex subset of
+$[0,t]^2$. Being $\ell^1$-isometries of the grid graph on $[0,t]^2$, both
+reflections also preserve the grid boundary $\bd_D(\cdot)$ of
+Definition~\textup{\ref{def:grid-bdy}}. \textup(The transpose
+$(i,j)\mapsto(j,i)$ likewise preserves HV-convexity --- indeed it preserves
+order-convexity as well, being an order-isomorphism of the product order.\textup)
+\end{lemma}
+
+\begin{proof}
+The map $i\mapsto t-i$ is an order-reversing bijection of $\{0,\dots,t\}$ and
+therefore sends intervals to intervals. Under $\rho_h$ the row at index $i$ is
+$(\rho_h D)_i=\{j:(t-i,j)\in D\}=D_{t-i}$, an interval; the column at index
+$j$ is $(\rho_h D)^j=\{t-i:(i,j)\in D\}$, the image of the interval $D^j$
+under $i\mapsto t-i$, again an interval. Hence $\rho_h D$ is HV-convex; the
+case $\rho_v$ is identical. Each reflection is a bijection of $[0,t]^2$
+carrying unit grid edges to unit grid edges, so it preserves $\bd_D(\cdot)$.
+\end{proof}
+
+\begin{remark}[Order-convexity is \emph{not} reflection-stable]\label{rem:ord-not-stable}
+The weaker hypothesis in Lemma~\ref{lem:hv-reflection} is unavoidable:
+order-convexity itself is genuinely \emph{not} preserved by the coordinate
+reflections, so the reflection step of Lemma~\ref{lem:weak-grid} \emph{must}
+be phrased through HV-convexity rather than order-convexity. For $t=1$, the
+region $D=\{(0,0),(1,0),(0,1)\}$ is order-convex --- its only
+product-comparable pairs are $(0,0)\le(1,0)$ and $(0,0)\le(0,1)$, and the
+lattice segment between the members of each pair lies in $D$ --- yet its
+horizontal reflection $\rho_h D=\{(0,0),(1,0),(1,1)\}$ is not: the comparable
+pair $(0,0)\le(1,1)$ has the intermediate lattice point $(0,1)\notin\rho_h D$.
+Both $D$ and $\rho_h D$ are HV-convex, consistently with
+Lemma~\ref{lem:hv-reflection}.
+\end{remark}
+
+\begin{remark}[The weak grid stability lemma uses only HV-convexity]\label{rem:wg-needs-hv}
+Although Lemma~\ref{lem:weak-grid} below is stated for the order-convex domain
+that \textup{(S1.2)} delivers, its proof invokes the hypothesis on $D$
+\emph{only} through the consequence that every row and every column of $D$ is
+an interval --- that is, only through HV-convexity
+(Lemma~\ref{lem:ord-implies-hv}). The same is true of Corollary~\ref{cor:sign}
+and of its Claim~\ref{cl:sep}. Consequently the orientation-normalizing
+reflections of Step~2 of the proof keep $D$ inside the class of regions to
+which Steps~1 and 3--6 apply, by Lemma~\ref{lem:hv-reflection}; this is what
+makes the WLOG reduction there legitimate.
+\end{remark}
+
 \subsection{Staircase regions}
 
 \begin{definition}[Monotone staircase]\label{def:staircase}
-Let $D \subseteq \mathbb{Z}^2$ be an order-convex region. A set $M \subseteq D$ is a
+Let $D \subseteq \mathbb{Z}^2$ be an HV-convex region
+(Definition~\ref{def:hv-convex}; this covers every order-convex $D$ by
+Lemma~\ref{lem:ord-implies-hv}, and is in addition stable under the
+coordinate reflections). A set $M \subseteq D$ is a
 \emph{staircase region of type} $\sigma\in\{+,-\}$ if there exists a monotone function
 $f_\sigma\colon \mathbb{Z}\to\mathbb{Z}\cup\{\pm\infty\}$ such that
 \[
@@ -145,7 +226,8 @@ Applying Corollary~\ref{cor:most-rows-intervals} in both directions, the sets
 \[
 I_b:=\{i:m(A_i)\ge 2\},\qquad J_b:=\{j:m(A^j)\ge 2\}
 \]
-satisfy $|I_b|\le B^h/2$ and $|J_b|\le B^v/2$. For $i\notin I_b$, order-convexity
+satisfy $|I_b|\le B^h/2$ and $|J_b|\le B^v/2$. For $i\notin I_b$, HV-convexity
+(Lemma~\ref{lem:ord-implies-hv}; see Remark~\ref{rem:wg-needs-hv})
 gives $D_i=[u_i,v_i]\cap\mathbb Z$, and when $A_i\ne\emptyset$ we have
 $A_i=[\ell_i,r_i]\cap\mathbb Z$ with $u_i\le\ell_i\le r_i\le v_i$. Columns
 satisfy the analogous structure $D^j=[p^j,q^j]\cap\mathbb Z$ and (for
@@ -171,11 +253,16 @@ By~\eqref{eq:wg-anchor-row}, $\min(|I_{ne}\setminus I_L|,|I_{ne}\setminus I_R|)\
 by~\eqref{eq:wg-anchor-col}, $\min(|J_{ne}\setminus J_B|,|J_{ne}\setminus J_T|)\le B^v/2$.
 Choose the row anchor (L or R) and column anchor (B or T) achieving these minima; this
 selects one of the four orientations. The reflections $i\mapsto t-i$ and $j\mapsto t-j$
-preserve order-convexity (mapping $D\subseteq[0,t]^2$ to another order-convex subset of
-$[0,t]^2$), preserve $\bd_D(\cdot)$, and permute $\mathrm{Stair}(D)$ in the
+preserve HV-convexity (Lemma~\ref{lem:hv-reflection}: each maps
+$D\subseteq[0,t]^2$ to another HV-convex subset of $[0,t]^2$), preserve
+$\bd_D(\cdot)$, and permute $\mathrm{Stair}(D)$ in the
 four-orientation reading of Remark~\ref{rem:four-orient}: $i\mapsto t-i$ swaps
 $J_B\leftrightarrow J_T$ (and exchanges types $\pm$), while $j\mapsto t-j$ swaps
 $I_L\leftrightarrow I_R$ (and exchanges type-$\pm$ staircases with their complements).
+HV-convexity --- not order-convexity, which these reflections do \emph{not}
+preserve (Remark~\ref{rem:ord-not-stable}) --- is the correct invariant here,
+and it is all the proof requires (Remark~\ref{rem:wg-needs-hv}): the reflected
+region still meets the hypotheses under which Steps~1 and 3--6 operate.
 Hence WLOG the favored orientation is $(L,T)$, which corresponds to type-$+$ staircases
 (the SE orientation: $M_i=[u_i,f(i)]$ is left-anchored in rows and $M^j=[i^\star(j),q^j]$
 is top-anchored in columns).
@@ -325,7 +412,9 @@ rely on the $\pm$ distinction there. Outside this degenerate regime---i.e., unde
 non-horizontal hypothesis in the corollary---the type is determined unambiguously.
 
 \medskip\noindent\emph{Proof of Claim~\ref{cl:sep}.}
-Let $N:=|D|$. By order-convexity, each row $D_i=[a_i,b_i]\cap\mathbb Z$ is an
+Let $N:=|D|$. By HV-convexity (Lemma~\ref{lem:ord-implies-hv}; the argument
+uses $D$ only through this property, Remark~\ref{rem:wg-needs-hv}), each row
+$D_i=[a_i,b_i]\cap\mathbb Z$ is an
 interval; let $I\subseteq\mathbb Z$ be the range of first coordinates, $|I|\le t+1$,
 $N_i:=|D_i|$, so $N=\sum_{i\in I}N_i\ge ct^2$. Analogously each column
 $D^j=[p^j,q^j]\cap\mathbb Z$ is an interval.
