@@ -51,10 +51,18 @@ correct, do not build): the **full Cheeger inequality** (`λ₂ ≤ 2Φ`,
 mg-893b Theorem-E resolution (2026-04-18) replaced the
 pair-Poincaré / spectral argument with elementary averaging.
 
-Still genuinely open in buckets C/D/F: **F6 quantitative weak-grid
-stability** — `OneThird/Step2/WeakGrid.lean` currently ships only the
-trivial `δ ≤ 1` placeholder; the quantitative `δ = O(ε)` form is the
-mg-dc4c re-scoped deliverable (mg-c7f5 content).
+**F6a SHIPPED-SINCE-AUDIT (2026-05-20, mg-28fe).** The **F6a
+single-orientation quantitative core** is now in tree:
+`OneThird/Step2/WeakGrid.lean` §2 ships `weak_grid_quantitative`, the
+genuine `δ = 4ε/c` form of `lem:weak-grid` (`step2.tex` proof
+Steps 1–6) for a single pre-chosen staircase orientation, `0`-`sorry`.
+The trivial `δ ≤ 1` placeholder `weak_grid_bound` is retained only for
+its current consumers and is superseded by `weak_grid_quantitative`.
+Still genuinely open in buckets C/D/F: **F6b** — the four-orientation
+reflection reduction that discharges F6a's `hrow` / `hcol`
+single-orientation cleanup hypotheses (paper Step 2's `min`
+argument), which is where the HV-convex / reflection-stability
+threading lives (see `docs/state-F6a-weak-grid-Session1.md` §3).
 
 Terminology convention below:
 

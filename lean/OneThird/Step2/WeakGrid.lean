@@ -8,6 +8,11 @@ import OneThird.Step2.RowDecomp
 import OneThird.Step2.FiberAvg
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
+import Mathlib.Data.Finset.Prod
+import Mathlib.Data.Int.Interval
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Positivity
 
 /-!
 # Step 2 — Weak grid stability (`lem:weak-grid`)
@@ -144,6 +149,343 @@ theorem badRows_le_half_gridBdy {D A : Finset (ℤ × ℤ)}
     (hD : IsOrdConvex (D : Set (ℤ × ℤ))) (hA : A ⊆ D) :
     2 * (RowDecomp.badRowsAt D A).card ≤ (gridBdy D A).card :=
   RowDecomp.twice_badRows_le_gridBdy_card hD hA
+
+/-! ## §2. Quantitative single-orientation core (`lem:weak-grid`, F6a)
+
+This section delivers the **genuine quantitative** weak grid stability
+bound for a single, pre-chosen staircase orientation: the
+`δ = 4ε/c` form of `lem:weak-grid` (`step2.tex`, proof Steps 1–6),
+superseding the trivial `δ ≤ 1` placeholder `weak_grid_bound` above.
+
+`weak_grid_quantitative` is the F6a deliverable. Given an order-convex
+`D ⊆ [0,t]²` with `|D| ≥ c·t²`, a subset `A ⊆ D` with grid boundary
+`∂_D A ≤ ε·t`, and the two **single-orientation cleanup hypotheses**
+(paper Steps 1–2 for the fixed `+`/`SE` orientation — the count of
+`A`-non-empty rows that are not left-anchored intervals, and of
+`A`-non-empty columns that are not bottom-anchored, are each
+`≤ ∂_D A`), it produces a genuine `+`-staircase `M`
+(`IsStaircasePlus`) with `|A △ M| ≤ (4ε/c)·|D|`.
+
+The four-orientation reduction (paper Step 2's reflection argument,
+which *discharges* the two cleanup hypotheses) is the separate F6b
+deliverable.
+
+**Design.** The proof carries the interval/anchoring structure of
+`A`'s rows and columns through the predicates encoded in `cornerSet`
+(left-anchored interval rows) and `exCols` (non-bottom-anchored
+columns). The staircase `M` is the set of `D`-cells weakly below
+some corner; this is a product-order lower set by construction, so
+`IsStaircasePlus` is immediate. Order-convexity of `D` is used in
+exactly one place — the "box" lemma `ordConvex_box`, which closes
+the column-side Step 5 bound. HV-convexity (every row and column an
+interval) is strictly weaker than order-convexity and does **not**
+imply the box property; the single-orientation core therefore
+threads the full `IsOrdConvex` hypothesis that Step 1 (`S1.2`)
+delivers. Reflection-stability of HV-convexity is an F6b concern,
+not an F6a one — F6a performs no reflection.
+-/
+
+/-- Column slice of a finset `D ⊆ ℤ²` at column `j`: the first
+coordinates `i` with `(i, j) ∈ D`. -/
+def colSlice (D : Finset (ℤ × ℤ)) (j : ℤ) : Finset ℤ :=
+  (D.filter (fun p => p.2 = j)).image Prod.fst
+
+lemma mem_colSlice {D : Finset (ℤ × ℤ)} {i j : ℤ} :
+    i ∈ colSlice D j ↔ (i, j) ∈ D := by
+  unfold colSlice
+  simp only [Finset.mem_image, Finset.mem_filter]
+  constructor
+  · rintro ⟨⟨i', j'⟩, ⟨hD, hj⟩, hi⟩
+    dsimp at hj hi
+    subst hj; subst hi; exact hD
+  · intro hij
+    exact ⟨(i, j), ⟨hij, rfl⟩, rfl⟩
+
+open Classical in
+/-- The set of **corners** of `A` inside `D`: an `A`-cell `q = (i, r)`
+is a corner when `r` is the maximum of `A` in row `i` *and* every
+`D`-cell of row `i` at height `≤ r` belongs to `A`. Equivalently,
+`A`'s row `i` is the left-anchored interval `[min (D-row i), r]`.
+The single-orientation `+`-staircase is the down-closure of the
+corner set. -/
+noncomputable def cornerSet (D A : Finset (ℤ × ℤ)) : Finset (ℤ × ℤ) :=
+  A.filter (fun q =>
+    (∀ j' ∈ RowDecomp.rowSlice A q.1, j' ≤ q.2) ∧
+    (∀ j ∈ RowDecomp.rowSlice D q.1, j ≤ q.2 → (q.1, j) ∈ A))
+
+lemma mem_cornerSet {D A : Finset (ℤ × ℤ)} {q : ℤ × ℤ} :
+    q ∈ cornerSet D A ↔
+      q ∈ A ∧
+      (∀ j' ∈ RowDecomp.rowSlice A q.1, j' ≤ q.2) ∧
+      (∀ j ∈ RowDecomp.rowSlice D q.1, j ≤ q.2 → (q.1, j) ∈ A) := by
+  unfold cornerSet
+  rw [Finset.mem_filter]
+
+open Classical in
+/-- The single-orientation `+`-staircase: the set of `D`-cells lying
+weakly below some corner of `A`. -/
+noncomputable def stairM (D A : Finset (ℤ × ℤ)) : Finset (ℤ × ℤ) :=
+  D.filter (fun p => ∃ q ∈ cornerSet D A, p ≤ q)
+
+lemma mem_stairM {D A : Finset (ℤ × ℤ)} {p : ℤ × ℤ} :
+    p ∈ stairM D A ↔ p ∈ D ∧ ∃ q ∈ cornerSet D A, p ≤ q := by
+  unfold stairM
+  rw [Finset.mem_filter]
+
+open Classical in
+/-- Row-side exceptional set: `A`-non-empty rows that carry no corner
+(i.e. are not left-anchored intervals). These are the rows that the
+`|A \ M|` bound charges to the boundary. -/
+noncomputable def exRows (D A : Finset (ℤ × ℤ)) : Finset ℤ :=
+  (D.image Prod.fst).filter (fun i =>
+    (RowDecomp.rowSlice A i).Nonempty ∧ ¬ ∃ q ∈ cornerSet D A, q.1 = i)
+
+lemma mem_exRows {D A : Finset (ℤ × ℤ)} {i : ℤ} :
+    i ∈ exRows D A ↔
+      i ∈ D.image Prod.fst ∧
+      (RowDecomp.rowSlice A i).Nonempty ∧ ¬ ∃ q ∈ cornerSet D A, q.1 = i := by
+  unfold exRows
+  rw [Finset.mem_filter]
+
+open Classical in
+/-- Column-side exceptional set: `A`-non-empty columns that are not
+bottom-anchored — some `D`-cell of the column sits weakly below an
+`A`-cell of the column yet is itself not in `A`. These are the
+columns that the `|M \ A|` bound charges to the boundary. -/
+noncomputable def exCols (D A : Finset (ℤ × ℤ)) : Finset ℤ :=
+  (D.image Prod.snd).filter (fun j =>
+    (colSlice A j).Nonempty ∧
+    ¬ (∀ i ∈ colSlice D j, ∀ i' ∈ colSlice A j, i ≤ i' → (i, j) ∈ A))
+
+lemma mem_exCols {D A : Finset (ℤ × ℤ)} {j : ℤ} :
+    j ∈ exCols D A ↔
+      j ∈ D.image Prod.snd ∧
+      (colSlice A j).Nonempty ∧
+      ¬ (∀ i ∈ colSlice D j, ∀ i' ∈ colSlice A j, i ≤ i' → (i, j) ∈ A) := by
+  unfold exCols
+  rw [Finset.mem_filter]
+
+/-- **Box lemma.** In an order-convex `D`, if `(i, j)` and `(i', j')`
+both lie in `D` with `i ≤ i'` and `j ≤ j'`, then the corner `(i', j)`
+also lies in `D`. This is the *only* place order-convexity of `D`
+enters the single-orientation core. -/
+theorem ordConvex_box {D : Finset (ℤ × ℤ)}
+    (hD : IsOrdConvex (D : Set (ℤ × ℤ)))
+    {i j i' j' : ℤ} (hij : ((i, j) : ℤ × ℤ) ∈ D)
+    (hij' : ((i', j') : ℤ × ℤ) ∈ D) (hi : i ≤ i') (hj : j ≤ j') :
+    ((i', j) : ℤ × ℤ) ∈ D := by
+  have h : ((i', j) : ℤ × ℤ) ∈ (D : Set (ℤ × ℤ)) :=
+    hD.mem_of_between (by exact_mod_cast hij) (by exact_mod_cast hij')
+      ⟨hi, le_refl j⟩ ⟨le_refl i', hj⟩
+  exact_mod_cast h
+
+/-- The staircase `stairM D A` is a genuine `+`-staircase region of
+`D` (a product-order lower set): immediate from being a down-closure
+of corners. This is `step2.tex` proof Step 3. -/
+theorem stairM_isStaircasePlus (D A : Finset (ℤ × ℤ)) :
+    IsStaircasePlus D (stairM D A) := by
+  constructor
+  · intro p hp
+    exact (mem_stairM.mp hp).1
+  · intro p hp q hqD hqp
+    rw [mem_stairM] at hp ⊢
+    obtain ⟨_, c, hc, hpc⟩ := hp
+    exact ⟨hqD, c, hc, le_trans hqp hpc⟩
+
+/-- **Step 4 (row side).** Every cell of `A \ M` lies in an
+exceptional row: a row that is `A`-non-empty but carries no corner. -/
+theorem fst_mem_exRows_of_mem_sdiff {D A : Finset (ℤ × ℤ)} (hAD : A ⊆ D)
+    {p : ℤ × ℤ} (hpA : p ∈ A) (hpM : p ∉ stairM D A) :
+    p.1 ∈ exRows D A := by
+  classical
+  have hpD : p ∈ D := hAD hpA
+  rw [mem_exRows]
+  refine ⟨Finset.mem_image.mpr ⟨p, hpD, rfl⟩, ⟨p.2, ?_⟩, ?_⟩
+  · rw [RowDecomp.mem_rowSlice]; exact hpA
+  · rintro ⟨q, hq, hq1⟩
+    refine hpM ?_
+    rw [mem_stairM]
+    refine ⟨hpD, q, hq, ?_⟩
+    rw [mem_cornerSet] at hq
+    obtain ⟨_, hqmax, _⟩ := hq
+    have hp2 : p.2 ≤ q.2 := by
+      refine hqmax p.2 ?_
+      rw [hq1, RowDecomp.mem_rowSlice]
+      exact hpA
+    exact ⟨le_of_eq hq1.symm, hp2⟩
+
+/-- **Step 5 (column side).** Every cell of `M \ A` lies in an
+exceptional column: a column that is `A`-non-empty but not
+bottom-anchored. Order-convexity of `D` enters here, via
+`ordConvex_box`. -/
+theorem snd_mem_exCols_of_mem_sdiff {D A : Finset (ℤ × ℤ)} (hAD : A ⊆ D)
+    (hD : IsOrdConvex (D : Set (ℤ × ℤ)))
+    {p : ℤ × ℤ} (hpM : p ∈ stairM D A) (hpA : p ∉ A) :
+    p.2 ∈ exCols D A := by
+  classical
+  rw [mem_stairM] at hpM
+  obtain ⟨hpD, q, hq, hpq⟩ := hpM
+  rw [mem_cornerSet] at hq
+  obtain ⟨hqA, _, hqdown⟩ := hq
+  have hqD : q ∈ D := hAD hqA
+  -- Box: the cell `(q.1, p.2)` lies in `D`.
+  have hbox : ((q.1, p.2) : ℤ × ℤ) ∈ D :=
+    ordConvex_box hD (i := p.1) (j := p.2) (i' := q.1) (j' := q.2)
+      hpD hqD hpq.1 hpq.2
+  -- Corner down-closure: `(q.1, p.2)` lies in `A`.
+  have hqp2A : ((q.1, p.2) : ℤ × ℤ) ∈ A := by
+    refine hqdown p.2 ?_ hpq.2
+    rw [RowDecomp.mem_rowSlice]; exact hbox
+  rw [mem_exCols]
+  refine ⟨Finset.mem_image.mpr ⟨p, hpD, rfl⟩, ⟨q.1, ?_⟩, ?_⟩
+  · rw [mem_colSlice]; exact hqp2A
+  · intro hgood
+    refine hpA ?_
+    have hp1col : p.1 ∈ colSlice D p.2 := by rw [mem_colSlice]; exact hpD
+    have hq1col : q.1 ∈ colSlice A p.2 := by rw [mem_colSlice]; exact hqp2A
+    exact hgood p.1 hp1col q.1 hq1col hpq.1
+
+/-- The integer interval `[0, t]` has exactly `t + 1` lattice points. -/
+lemma card_Icc_zero_t (t : ℕ) :
+    (Finset.Icc (0 : ℤ) (t : ℤ)).card = t + 1 := by
+  have h : (t : ℤ) + 1 - 0 = ((t + 1 : ℕ) : ℤ) := by push_cast; ring
+  rw [Int.card_Icc, h, Int.toNat_natCast]
+
+/-- The cells of `D` whose row index lies in `S` number at most
+`|S| · (t + 1)`, when `D ⊆ ℤ × [0, t]`. -/
+lemma card_filter_fst_le {D : Finset (ℤ × ℤ)} {t : ℕ}
+    (hbox : ∀ p ∈ D, 0 ≤ p.2 ∧ p.2 ≤ (t : ℤ)) (S : Finset ℤ) :
+    (D.filter (fun p => p.1 ∈ S)).card ≤ S.card * (t + 1) := by
+  have hsub : D.filter (fun p => p.1 ∈ S) ⊆ S ×ˢ Finset.Icc (0 : ℤ) (t : ℤ) := by
+    intro p hp
+    rw [Finset.mem_filter] at hp
+    obtain ⟨hpD, hpS⟩ := hp
+    rw [Finset.mem_product]
+    exact ⟨hpS, Finset.mem_Icc.mpr (hbox p hpD)⟩
+  calc (D.filter (fun p => p.1 ∈ S)).card
+      ≤ (S ×ˢ Finset.Icc (0 : ℤ) (t : ℤ)).card := Finset.card_le_card hsub
+    _ = S.card * (Finset.Icc (0 : ℤ) (t : ℤ)).card := Finset.card_product _ _
+    _ = S.card * (t + 1) := by rw [card_Icc_zero_t]
+
+/-- The cells of `D` whose column index lies in `S` number at most
+`|S| · (t + 1)`, when `D ⊆ [0, t] × ℤ`. -/
+lemma card_filter_snd_le {D : Finset (ℤ × ℤ)} {t : ℕ}
+    (hbox : ∀ p ∈ D, 0 ≤ p.1 ∧ p.1 ≤ (t : ℤ)) (S : Finset ℤ) :
+    (D.filter (fun p => p.2 ∈ S)).card ≤ S.card * (t + 1) := by
+  have hsub : D.filter (fun p => p.2 ∈ S) ⊆ Finset.Icc (0 : ℤ) (t : ℤ) ×ˢ S := by
+    intro p hp
+    rw [Finset.mem_filter] at hp
+    obtain ⟨hpD, hpS⟩ := hp
+    rw [Finset.mem_product]
+    exact ⟨Finset.mem_Icc.mpr (hbox p hpD), hpS⟩
+  calc (D.filter (fun p => p.2 ∈ S)).card
+      ≤ (Finset.Icc (0 : ℤ) (t : ℤ) ×ˢ S).card := Finset.card_le_card hsub
+    _ = (Finset.Icc (0 : ℤ) (t : ℤ)).card * S.card := Finset.card_product _ _
+    _ = (t + 1) * S.card := by rw [card_Icc_zero_t]
+    _ = S.card * (t + 1) := Nat.mul_comm _ _
+
+/-- **`lem:weak-grid`, single-orientation quantitative core (F6a).**
+
+For an order-convex `D ⊆ [0, t]²` with `|D| ≥ c · t²`, a subset
+`A ⊆ D` with grid boundary `∂_D A ≤ ε · t`, and the two
+single-orientation cleanup hypotheses `hrow` / `hcol` (paper
+Steps 1–2 for the fixed `+`/`SE` orientation), there is a genuine
+`+`-staircase `M` with the **quantitative** bound
+`|A △ M| ≤ (4ε/c) · |D|`.
+
+This is the genuine `δ = 4ε/c` form of `step2.tex`'s
+Lemma `lem:weak-grid`, proof Steps 1–6, and supersedes the trivial
+`δ ≤ 1` placeholder `weak_grid_bound`. The `δ(ε) → 0` qualitative
+conclusion is the visible content: as `ε → 0` the staircase
+approximation becomes exact. -/
+theorem weak_grid_quantitative
+    {D A : Finset (ℤ × ℤ)} {t : ℕ} {c ε : ℚ}
+    (hc : 0 < c)
+    (hD : IsOrdConvex (D : Set (ℤ × ℤ)))
+    (hbox : ∀ p ∈ D, 0 ≤ p.1 ∧ p.1 ≤ (t : ℤ) ∧ 0 ≤ p.2 ∧ p.2 ≤ (t : ℤ))
+    (ht : 1 ≤ t)
+    (hmass : c * (t : ℚ) ^ 2 ≤ (D.card : ℚ))
+    (hAD : A ⊆ D)
+    (hbdy : ((gridBdy D A).card : ℚ) ≤ ε * (t : ℚ))
+    (hrow : (exRows D A).card ≤ (gridBdy D A).card)
+    (hcol : (exCols D A).card ≤ (gridBdy D A).card) :
+    ∃ M : Finset (ℤ × ℤ), IsStaircasePlus D M ∧
+      ((symmDiff A M).card : ℚ) ≤ (4 * ε / c) * (D.card : ℚ) := by
+  classical
+  refine ⟨stairM D A, stairM_isStaircasePlus D A, ?_⟩
+  -- §2a. `symmDiff A M = (A \ M) ∪ (M \ A)`, a disjoint union.
+  have hdisj : Disjoint (A \ stairM D A) (stairM D A \ A) := by
+    rw [Finset.disjoint_left]
+    intro x hx hx'
+    exact (Finset.mem_sdiff.mp hx').2 (Finset.mem_sdiff.mp hx).1
+  have hsd : symmDiff A (stairM D A) = (A \ stairM D A) ∪ (stairM D A \ A) := by
+    rw [symmDiff_def, Finset.sup_eq_union]
+  have hcard_sd : (symmDiff A (stairM D A)).card
+      = (A \ stairM D A).card + (stairM D A \ A).card := by
+    rw [hsd, Finset.card_union_of_disjoint hdisj]
+  -- §2b. Steps 4 / 5: locate the two halves on exceptional rows / columns.
+  have hAM_sub : A \ stairM D A
+      ⊆ D.filter (fun p => p.1 ∈ exRows D A) := by
+    intro p hp
+    rw [Finset.mem_sdiff] at hp
+    obtain ⟨hpA, hpM⟩ := hp
+    rw [Finset.mem_filter]
+    exact ⟨hAD hpA, fst_mem_exRows_of_mem_sdiff hAD hpA hpM⟩
+  have hMA_sub : stairM D A \ A
+      ⊆ D.filter (fun p => p.2 ∈ exCols D A) := by
+    intro p hp
+    rw [Finset.mem_sdiff] at hp
+    obtain ⟨hpM, hpA⟩ := hp
+    rw [Finset.mem_filter]
+    exact ⟨(mem_stairM.mp hpM).1,
+      snd_mem_exCols_of_mem_sdiff hAD hD hpM hpA⟩
+  -- §2c. Cardinality bounds in ℕ.
+  have hbox1 : ∀ p ∈ D, 0 ≤ p.2 ∧ p.2 ≤ (t : ℤ) :=
+    fun p hp => ⟨(hbox p hp).2.2.1, (hbox p hp).2.2.2⟩
+  have hbox2 : ∀ p ∈ D, 0 ≤ p.1 ∧ p.1 ≤ (t : ℤ) :=
+    fun p hp => ⟨(hbox p hp).1, (hbox p hp).2.1⟩
+  have hAM_card : (A \ stairM D A).card ≤ (exRows D A).card * (t + 1) :=
+    le_trans (Finset.card_le_card hAM_sub) (card_filter_fst_le hbox1 _)
+  have hMA_card : (stairM D A \ A).card ≤ (exCols D A).card * (t + 1) :=
+    le_trans (Finset.card_le_card hMA_sub) (card_filter_snd_le hbox2 _)
+  -- §2d. Step 6: combine, bound each exceptional set by the boundary.
+  have hbnat : (symmDiff A (stairM D A)).card
+      ≤ 2 * (gridBdy D A).card * (t + 1) := by
+    have h1 : (exRows D A).card * (t + 1) ≤ (gridBdy D A).card * (t + 1) :=
+      Nat.mul_le_mul_right _ hrow
+    have h2 : (exCols D A).card * (t + 1) ≤ (gridBdy D A).card * (t + 1) :=
+      Nat.mul_le_mul_right _ hcol
+    calc (symmDiff A (stairM D A)).card
+        = (A \ stairM D A).card + (stairM D A \ A).card := hcard_sd
+      _ ≤ (exRows D A).card * (t + 1) + (exCols D A).card * (t + 1) :=
+          Nat.add_le_add hAM_card hMA_card
+      _ ≤ (gridBdy D A).card * (t + 1) + (gridBdy D A).card * (t + 1) :=
+          Nat.add_le_add h1 h2
+      _ = 2 * (gridBdy D A).card * (t + 1) := by ring
+  -- §2e. The arithmetic of Step 6, in ℚ.
+  have htq : (1 : ℚ) ≤ (t : ℚ) := by exact_mod_cast ht
+  have htpos : (0 : ℚ) < (t : ℚ) := lt_of_lt_of_le one_pos htq
+  have hbnonneg : (0 : ℚ) ≤ ((gridBdy D A).card : ℚ) := by positivity
+  have hεnonneg : (0 : ℚ) ≤ ε := by
+    have hmul : (0 : ℚ) ≤ ε * (t : ℚ) := le_trans hbnonneg hbdy
+    nlinarith [hmul, htpos]
+  have heq : ((2 * (gridBdy D A).card * (t + 1) : ℕ) : ℚ)
+      = 2 * ((gridBdy D A).card : ℚ) * ((t : ℚ) + 1) := by
+    push_cast; ring
+  have hSq : ((symmDiff A (stairM D A)).card : ℚ)
+      ≤ 2 * ((gridBdy D A).card : ℚ) * ((t : ℚ) + 1) := by
+    rw [← heq]; exact_mod_cast hbnat
+  have ht1 : (0 : ℚ) ≤ (t : ℚ) + 1 := by linarith
+  have step1 : 2 * ((gridBdy D A).card : ℚ) * ((t : ℚ) + 1)
+      ≤ 2 * (ε * (t : ℚ)) * ((t : ℚ) + 1) := by
+    nlinarith [mul_nonneg (sub_nonneg.mpr hbdy) ht1]
+  have step2 : 2 * (ε * (t : ℚ)) * ((t : ℚ) + 1) ≤ 4 * ε * (t : ℚ) ^ 2 := by
+    nlinarith [mul_nonneg (mul_nonneg hεnonneg (le_of_lt htpos))
+      (sub_nonneg.mpr htq)]
+  have step3 : 4 * ε * (t : ℚ) ^ 2 ≤ (4 * ε / c) * (D.card : ℚ) := by
+    rw [div_mul_eq_mul_div, le_div_iff₀ hc]
+    nlinarith [mul_nonneg hεnonneg (sub_nonneg.mpr hmass)]
+  linarith [hSq, step1, step2, step3]
 
 end WeakGrid
 end Step2
