@@ -147,6 +147,33 @@ and this file is wrong — fix it.
   `ε₂ = fiberStaircaseRate 1 1 1 1`). The cascade end-to-end
   recomposition (audit §6.1 item 3) remains the open Checkpoint-2
   follow-on item. See `docs/state-S6-G6-Ground-Session1.md`.
+* **mg-496b Cascade-Compose (GREEN, 2026-05-20)**: the Checkpoint-2
+  follow-on item 3 — this item **genuinely completes Piece 1**. The
+  Steps 1-6 grounded cascade `cascade_steps_1_6_grounded` is now
+  composed end-to-end on a **genuine S1 `thm_interface`-produced
+  fiber** in `lean/OneThird/Step6/CascadeComposed.lean` (NEW,
+  sorry-free, axiom-free). `cascade_steps_1_6_grounded_genuine`
+  re-does the concrete witness with the fiber family
+  `genFstar := fun _ : Bool => goodFiberSet a0 a1` — the Step 1
+  good-fiber set of `(a0, a1)` on `Antichain3`, the genuine output of
+  the mg-fc78 `def:good-fiber` re-port — **not** the hand-built
+  singleton `pwFstar := fun _ => {gridLinExt}` the Checkpoint-2 audit
+  rejected (§3.4/§5). It genuinely invokes `thm_interface`
+  (producing `InterfaceConclusion a0 a1`), genuinely consumes
+  `interface_part_iv_goodFiber_nonempty` (the mg-fc78 hard gate),
+  discharges the cascade's `hfirst` through a genuine
+  `Step5.Step5Richness` computed **from** the genuine fiber, and feeds
+  the fiber through `cascade_steps_1_6_grounded` (which internally
+  composes the S6 grounded producers
+  `thm_step6_rich_closure_grounded_of_firstMoment` + `cor_pointwise_grounded`)
+  to deliver Conclusion B. **Un-fakeable:** the witness asserts
+  strictly-positive values (`M = 24`, disagreement mass `12`,
+  `I²`-mass `24`) for sums over `goodFiberSet a0 a1`; were that fiber
+  empty (its provable pre-mg-fc78 state), every sum would be `0`, the
+  equalities false, and the file would not compile — the hard
+  satisfiability gate. Empty-bad-active-set scope boundary disclosed
+  (all disagreement mass routed through the non-active term, faithful
+  to `step6.tex:646-649`). See `docs/state-Cascade-Compose-Session1.md`.
 
 ---
 
