@@ -32,6 +32,7 @@ import OneThird.Step1.Corollaries
 import OneThird.Step1.GroundSet
 import OneThird.Step1.BKMoves
 import OneThird.Step1.BadSet
+import OneThird.Step1.Interface
 import OneThird.Step2.OneD
 import OneThird.Step2.RowDecomp
 import OneThird.Step2.FiberAvg
