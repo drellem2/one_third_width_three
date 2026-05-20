@@ -5,6 +5,7 @@ Released under the MIT License.
 import OneThird.Poset
 import OneThird.RichPair
 import OneThird.Step1.LocalCoords
+import OneThird.Step1.Overlap
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 
@@ -50,18 +51,39 @@ interface theorem (`thm:interface`, `step1.tex`):
   bounded by the sum of the three pairwise interaction loci (scaffold
   form of `cor:triple-overlap` part (d)).
 
+## Commuting-square and commuting-cube verifications
+
+The combinatorial heart of `cor:overlap` part (a) and
+`cor:triple-overlap` parts (b),(c) — that BK moves with disjoint
+support commute, generating an embedded `2×2` BK square (resp.
+`2×2×2` BK cube) — is verified in full in
+`OneThird/Step1/Overlap.lean` (`bkCommSquare_of_disjoint`,
+`bkCommCube_of_disjoint`), and re-exported here under the corollary
+names `cor_overlap_commuting_square` and
+`cor_triple_overlap_commuting_cube`. Those verifications are
+unconditional and non-vacuous (`bkCommCube_grid_example` instantiates
+them on the concrete width-3 non-chain poset `Fin 3 × Fin 3`).
+
 ## Scaffold vs. paper strength
 
-The paper's quantitative bounds
+The paper's *quantitative* bounds
 (`|Int_{xy,uv}| = O((t_{xy}+t_{uv})^2)`, the strip decomposition, and
-the local `ℤ²`/`ℤ³` cube structure on the regular overlaps) use parts
-(iii) (BK-move classification) and (iv) (bad-set strip decomposition)
-of `thm:interface`, which are stronger than the current
+the `O(t·√|Ω|)` triple-overlap bad mass) use parts (iii) (BK-move
+classification) and (iv) (bad-set strip decomposition) of
+`thm:interface`, which are stronger than the current
 `localInterfaceTheorem` scaffold (parts (i)+(ii) only). Accordingly
-the commuting-cube and the quantitative `O(t^2)`/`O(t·√|Ω|)` forms
-are deferred to follow-up items that will discharge the stronger
-`thm:interface`. The set-theoretic density statements proved in this
-file (containments and trivial cardinality bounds) are unconditional.
+the quantitative `O(t^2)`/`O(t·√|Ω|)` forms remain deferred to the
+follow-up items discharging `thm:interface` (iii)+(iv). The
+set-theoretic density statements proved in this file (containments
+and trivial cardinality bounds) and the commuting-square/cube
+verifications of `Overlap.lean` are unconditional.
+
+The bridge from *regular-overlap membership* (`regularOverlap` /
+`regularTripleOverlap`, i.e. interaction-locus exclusion) to the
+*disjoint-support* hypothesis consumed by `cor_overlap_commuting_square`
+/ `cor_triple_overlap_commuting_cube` is supplied by the BK-move
+classification (`thm:interface` part (iii)); it is wired in at Step 1
+assembly (S1-D).
 -/
 
 namespace OneThird
@@ -387,5 +409,49 @@ theorem regularTripleOverlap_density (x y z : α) :
             (interactionLocus x y x z).card) +
           (interactionLocus y z x z).card :=
           Nat.add_le_add_right (Finset.card_union_le _ _) _
+
+/-! ## Commuting square and cube (`cor:overlap` (a), `cor:triple-overlap` (b),(c)) -/
+
+/-- **`cor:overlap` part (a)** (`step1.tex:443`): on a regular overlap,
+two BK moves from the two rich interfaces — whose moved-element pairs
+have disjoint support — commute, generating an embedded `2×2` BK
+square (a piece of the local `ℤ²` grid). This is the corollary name
+for the verification `bkCommSquare_of_disjoint` of
+`OneThird/Step1/Overlap.lean`; the disjoint-support hypothesis is what
+`regularOverlap`-membership provides via the BK-move classification
+(`thm:interface` part (iii), wired at S1-D). -/
+theorem cor_overlap_commuting_square (L₀ : LinearExt α)
+    {k m : Fin (Fintype.card α)}
+    (hk : k.val + 1 < Fintype.card α) (hm : m.val + 1 < Fintype.card α)
+    (hkinc : L₀.toFun.symm k ∥ L₀.toFun.symm ⟨k.val + 1, hk⟩)
+    (hminc : L₀.toFun.symm m ∥ L₀.toFun.symm ⟨m.val + 1, hm⟩)
+    (hdisj : DisjointPos k m) :
+    BKCommSquare L₀ (L₀.swapAdj k hk hkinc) (L₀.swapAdj m hm hminc)
+      ((L₀.swapAdj k hk hkinc).swapAdj m hm
+        (swapAdj_incomp_of_disjoint L₀ hk hm hkinc hminc hdisj)) :=
+  bkCommSquare_of_disjoint L₀ hk hm hkinc hminc hdisj
+
+/-- **`cor:triple-overlap` parts (b),(c)** (`step1.tex:538`): on a
+regular triple overlap, three BK moves from the three rich interfaces
+— pairwise disjoint in support — pairwise commute, generating an
+embedded `2×2×2` BK cube (the local `ℤ³` cube model consumed by Step 7
+gap G4). This is the corollary name for the verification
+`bkCommCube_of_disjoint` of `OneThird/Step1/Overlap.lean`; the
+pairwise-disjoint-support hypotheses are what
+`regularTripleOverlap`-membership provides via the BK-move
+classification (`thm:interface` part (iii), wired at S1-D). -/
+theorem cor_triple_overlap_commuting_cube (L₀ : LinearExt α)
+    {p₁ p₂ p₃ : Fin (Fintype.card α)}
+    (hp₁ : p₁.val + 1 < Fintype.card α)
+    (hp₂ : p₂.val + 1 < Fintype.card α)
+    (hp₃ : p₃.val + 1 < Fintype.card α)
+    (hi₁ : L₀.toFun.symm p₁ ∥ L₀.toFun.symm ⟨p₁.val + 1, hp₁⟩)
+    (hi₂ : L₀.toFun.symm p₂ ∥ L₀.toFun.symm ⟨p₂.val + 1, hp₂⟩)
+    (hi₃ : L₀.toFun.symm p₃ ∥ L₀.toFun.symm ⟨p₃.val + 1, hp₃⟩)
+    (h₁₂ : DisjointPos p₁ p₂) (h₁₃ : DisjointPos p₁ p₃)
+    (h₂₃ : DisjointPos p₂ p₃) :
+    ∃ v₁ v₂ v₃ v₁₂ v₁₃ v₂₃ v₁₂₃ : LinearExt α,
+      BKCommCube L₀ v₁ v₂ v₃ v₁₂ v₁₃ v₂₃ v₁₂₃ :=
+  bkCommCube_of_disjoint L₀ hp₁ hp₂ hp₃ hi₁ hi₂ hi₃ h₁₂ h₁₃ h₂₃
 
 end OneThird

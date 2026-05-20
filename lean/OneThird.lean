@@ -27,6 +27,7 @@ import OneThird.Mathlib.Poset.Dilworth
 import OneThird.Mathlib.Grid2D
 import OneThird.Mathlib.DirichletForm
 import OneThird.Step1.CommonChain
+import OneThird.Step1.Overlap
 import OneThird.Step1.Corollaries
 import OneThird.Step2.OneD
 import OneThird.Step2.RowDecomp
