@@ -94,14 +94,18 @@ correspond to the same content. Citations below use the
 > * **§11 (added this session)** — records the reconciliation and
 >   re-runs the satisfiability check for the new input shape.
 >
-> **PROVISIONAL.** Whether a concrete, non-degenerate
-> `ChainLiftData α` is *constructible* for a minimal
-> γ-counterexample is the **open F7a question**. Part R1 (mg-974c)
-> settles it. This contract is **provisional until R1 confirms
-> F7a** — see §11.4. §9–§10 record the earlier mg-faf8 re-pin
-> against the *superseded* `Step5R ∨ Step5C` input shape; their
-> conclusion-side (3-cap) analysis is unchanged — only the *input*
-> is superseded by §11.
+> **F7a — SETTLED GREEN (R1, mg-974c, 2026-05-21).** A concrete,
+> non-degenerate `ChainLiftData α` IS constructible
+> (`lean/OneThird/Step8/ConcreteChainLiftData.lean`,
+> `gridChainLiftData` on the 3×3 grid). Per §11.4.1 this is **case
+> 1** — the witness matches the *bare* structure, so §4.2 §D′/§E
+> **stand as pinned**; the contract is no longer provisional on
+> constructibility. Remaining (a Piece-3 concern, *not* F7a): the
+> §11.3 soundness caveat — whether the bridge *body* needs a
+> strengthened structure (resolution (B)). §9–§10 record the
+> earlier mg-faf8 re-pin against the *superseded* `Step5R ∨ Step5C`
+> input shape; their conclusion-side (3-cap) analysis is unchanged
+> — only the *input* is superseded by §11.
 
 ## §0. Verdict — **GREEN-signature-types-cleanly + Theorem-E-substantive**
 
@@ -768,7 +772,7 @@ under caps.
 |---|---|
 | `cexImpliesLowBKExpansion` → `stepsOneToSevenCascade` | hThmE matches the `hS` parameter signature byte-for-byte (both are `∃ S, vol ≥ γ·vol(univ) ∧ Phi ≤ 2/(γn)`) |
 | `stepsOneToSevenCascade` → `chainLiftData_of_cascade` (RECONCILED mg-3119) | the cascade output `Step5R ∨ Step5C` matches the `hCascade` parameter of the §D′ constructor; `T` threaded via `hArith.T γ`; `hCex` in scope from §4.3 body §3 |
-| `chainLiftData_of_cascade` → `lem_layered_from_step7` (RECONCILED mg-3119) | the §D′ constructor emits `∃ cld : ChainLiftData α, cld.K_bw ≤ 2`; `obtain` destructures it to `cld` + `hKbw`, matching the bridge's `cld` / `hKbw` parameters; `hCex` / `hP` / `hI` / `T` threaded directly. **Provisional until R1 confirms F7a** — §11.4 |
+| `chainLiftData_of_cascade` → `lem_layered_from_step7` (RECONCILED mg-3119) | the §D′ constructor emits `∃ cld : ChainLiftData α, cld.K_bw ≤ 2`; `obtain` destructures it to `cld` + `hKbw`, matching the bridge's `cld` / `hKbw` parameters; `hCex` / `hP` / `hI` / `T` threaded directly. **F7a settled GREEN by R1 (mg-974c)** — §11.4.1; §4.2 §D′/§E stand |
 | `lem_layered_from_step7` → `lem_layered_balanced_full` (Piece 6) | output `LayeredDecomposition {a // a ∉ Xexc}` matches input `L : LayeredDecomposition β` (`β := {a // a ∉ Xexc}`); the bridge emits `Xexc.card ≤ C_exc T ∧ band-nonempty ∧ L.w ≤ 4`, and Piece 6 consumes exactly `hLw : L.w ≤ 4` — the `band-nonempty` conjunct is carried for Piece 6's internal base case, the `Xexc.card` conjunct is consumed by `excPerturbLift` |
 | `lem_layered_balanced_full` → `excPerturbLift` | `HasBalancedPair {a // a ∉ Xexc}` matches `hBP_sub` |
 | `excPerturbLift` → final contradiction | `HasBalancedPair α` contradicts `hNoBP` |
@@ -971,15 +975,16 @@ mg-MA-Cascade, mg-MA-Body, mg-Int-A, mg-Int-B) reference the
 > Piece 6 *execution plan* (mg-MA-G4-Full must be split per
 > §7 of the Piece 6 state doc).
 
-> **⚠ Bridge input reconciled (mg-3119 / S7F-R2, 2026-05-21).**
+> **⚠ Bridge input reconciled (mg-3119 / S7F-R2, 2026-05-21);
+> F7a settled GREEN (mg-974c / S7F-R1, 2026-05-21).**
 > The §4.2 §E bridge *input* is re-pinned: `lem_layered_from_step7`
 > consumes a `ChainLiftData α` (+ `hKbw`), not `Step5R ∨ Step5C`;
 > a §4.2 §D′ constructor `chainLiftData_of_cascade` is added. See
-> §11. **The contract is PROVISIONAL** — it is GREEN only once
-> part R1 (mg-974c) confirms F7a (a concrete non-degenerate
-> `ChainLiftData α` is constructible). If R1 strengthens the
-> `ChainLiftData` structure, §4.2 §D′/§E **must be re-pinned in
-> the same commit as R1's landing** (§11.4 case 2).
+> §11. **R1 settled F7a GREEN** — a concrete non-degenerate
+> `ChainLiftData α` is constructible (`gridChainLiftData`,
+> `Step8/ConcreteChainLiftData.lean`). Per §11.4.1 this is **case
+> 1**: the witness matches the *bare* structure, so §4.2 §D′/§E
+> **stand as pinned** — no re-pin needed.
 
 Update this file in the **same commit** as any of the following:
 
@@ -1584,6 +1589,45 @@ flagged for `L_S7E`).
 Until one of these resolves, Piece 3 (the S7-F bridge sub-arcs
 mg-S7-F-A … mg-S7-F-Z) stays **blocked** — Checkpoint 3 is not
 GREEN, it is GREEN-reconciled-PROVISIONAL.
+
+#### §11.4.1. R1 resolution — F7a SETTLED GREEN, case 1 (mg-974c, 2026-05-21)
+
+**R1 (mg-974c) has landed: F7a is settled GREEN — a concrete,
+non-degenerate `ChainLiftData α` IS constructible.** The deliverable
+is `lean/OneThird/Step8/ConcreteChainLiftData.lean` (NEW; sorry-free,
+axiom-free; imported into `OneThird.lean`):
+`GridChainLift.gridChainLiftData : ChainLiftData (Fin 3 × Fin 3)` on
+the 3×3 grid — a genuine width-3, non-chain, 9-element poset. It is
+non-degenerate on every axis Checkpoint 3 Finding D flagged: a
+non-constant `i+j` chain potential (5 distinct values); sync maps
+`f_AB`/`f_BC` total and non-constant, `f_AC` genuinely partial with a
+real `X^exc_sync` orphan; and `K_bw = 1` proven to be the *actual,
+tight* maximum potential gap over incomparable pairs — not an inert
+literal. `f7a_chainLiftData_constructible` packages it as the §4.2
+§D′ codomain `∃ cld : ChainLiftData α, cld.K_bw ≤ 2`.
+
+**This is §11.4 case 1.** The witness matches the **bare**
+`ChainLiftData` structure (`ChainPotentials.lean:328`) — no fields
+added, no structure change. **Therefore §4.2 §D′/§E stand as pinned;
+no re-pin is required.** The provisionality on *constructibility* is
+discharged.
+
+**The §11.3 caveat is NOT resolved by R1 — and was never F7a.** The
+bare structure still carries no soundness invariant: it is inhabited
+for `Δ_ℓ` (the witness's `pot`/sync-maps could be the cascade output
+or could be arbitrary). Whether the bridge *body* is provable from
+the bare structure (resolution (A), `hCex` domain pin) or needs a
+strengthened structure with soundness fields (resolution (B)) is a
+**Piece-3 / F7-bridge** decision — Piece 3 inherits it. R1
+demonstrates `gridChainLiftData` is the *genuine* (non-`Δ_ℓ`) kind
+via `gridChainLiftData_bandwidth_genuine` (the grid's potential
+confines every incomparable pair within `K_bw` — provably false for
+`Δ_ℓ`) and `gridLayered` (the grid admits a genuine
+`LayeredDecomposition` with `w = 1 ≤ 4`).
+
+**Checkpoint 3 is now GREEN-reconciled** (no longer PROVISIONAL on
+F7a). Piece 3 is unblocked on F7a. Full record:
+`docs/state-S7F-R1-Session1.md`.
 
 ### §11.5. Acceptance-bar verdict (ticket mg-3119)
 
