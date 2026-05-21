@@ -837,6 +837,19 @@ a genuine, non-sham conversion exists**. A shared name (`…Width3`,
 delivered the wrong object entirely; full analysis +
 re-scope action in `docs/state-S7F-Checkpoint3-Session1.md`.
 
+**Re-scope status (2026-05-21).** Checkpoint 3's two-part
+re-scope: **R2** (mg-3119) — *done* — reconciled the bridge
+contract; MA-Sig §4.2 §E and scoping §2.3 now consistently pin the
+S7-F bridge input as a **`ChainLiftData α`** (`ChainPotentials.lean:328`
+— Dilworth triple + chain potential + sync maps + `K_bw`), with a
+new §4.2 §D′ constructor `chainLiftData_of_cascade` taking
+`Step5R ∨ Step5C → ChainLiftData`; see `state-MA-Sig-Session1.md`
+§11. **R1** (mg-974c, depends on mg-3119) — *pending* — re-points
+Piece 2 to a concrete `ChainLiftData α` and settles the **open
+F7a constructibility question** (no concrete `ChainLiftData`
+instance exists in tree). The reconciled contract is **provisional
+until R1 confirms F7a**; Piece 3 stays blocked until then.
+
 ---
 
 ## §4. Cross-reference index (terse)

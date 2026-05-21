@@ -77,6 +77,23 @@ source).**
 > `docs/state-MA-Sig-Session1.md` §9-§10, and
 > `docs/PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #6.
 
+> **⚠ CHECKPOINT 3 → RECONCILED (mg-ca83 RED; mg-3119 / R2,
+> 2026-05-21).** Checkpoint 3 (§3.3) fired **RED**: Piece 2
+> delivered the wrong object (`L_{S7E}`, a `Step7.LayeredWidth3`
+> rich-pair packaging) and the bridge contract was pinned
+> **inconsistently** — MA-Sig §4.2 §E said the bridge consumes
+> `Step5R ∨ Step5C`, this doc's §2.3 said it consumes `L_{S7E}`.
+> The re-scope is two parts. **R2** (mg-3119) — *done* — reconciled
+> the contract: §2.3 and MA-Sig §4.2 §E now consistently state the
+> bridge input as a **`ChainLiftData α`** (Dilworth triple + chain
+> potential + sync maps + `K_bw`); §2.2/§2.3 carry ⚠ RECONCILED
+> banners, MA-Sig adds §4.2 §D′ + §11. **R1** (mg-974c, depends on
+> mg-3119) — *pending* — re-points Piece 2 to deliver a concrete
+> non-degenerate `ChainLiftData α` and settles the open **F7a**
+> constructibility question. Piece 3 stays blocked until R1 lands
+> GREEN. See `docs/state-S7F-Checkpoint3-Session1.md` and
+> `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #9.
+
 **Six pieces** of the Option A' FULL REFACTOR scoped end-to-end
 (originally five; **Piece 6 added by mg-faf8** per the mg-0bd1
 8th vacuity discovery — see the AMENDED→CORRECTED banner above
@@ -258,8 +275,8 @@ content of that mirroring.
 | Piece | Engineering content | Maps to paper step |
 |---|---|---|
 | 1 | Lean port of Steps 1-6 grounded forms | `step{1..6}.tex` proofs |
-| 2 | Concretise S7-A-E grounded forms on ground-set α | bridges paper Step 6 ↔ S7-A-E grounded form inputs |
-| 3 | S7-F bridge: `prop:72` output → `LayeredDecomposition α` on `X∖X^exc` (emits only `\|X^exc\| ≤ C_exc T`, band-nonempty, `L.w ≤ 4`) | `lem:layered-from-step7` (`step8.tex:2009-2089`) |
+| 2 | Concretise S7-A-E grounded forms on ground-set α → a concrete `ChainLiftData α` (re-pointed mg-ca83/R1; was `L_{S7E}`) | bridges paper Step 6 ↔ S7-A-E grounded form inputs |
+| 3 | S7-F bridge: consume `ChainLiftData α` → `LayeredDecomposition α` on `X∖X^exc` (emits only `\|X^exc\| ≤ C_exc T`, band-nonempty, `L.w ≤ 4`) | `lem:layered-from-step7` (`step8.tex:2009-2089`) |
 | 4 | `width3_one_third_two_thirds_assembled` proof-by-contradiction refactor | `thm:main-step8` proof setup |
 | 5 | Integration: close `MainAssembly.lean:265` sorry, retire `Step7.LayeredWidth3` paper-axiom | `thm:main-step8` final assembly |
 | 6 | Full Step 8 G4 port: `lem_layered_balanced_full` — strong induction on `\|β\|`, consumes only `L.w ≤ 4` | `lem:layered-balanced` (`step8.tex:2453-2464` / proof `3211-3266`) |
@@ -388,6 +405,21 @@ paper-side is unchanged from mg-6ab8 §2.
 
 ### §2.2. Piece 2 — S7-A-E scaffolding → ground-set α concretisation
 
+> **⚠ RE-POINTED (mg-ca83 Checkpoint 3 → R1 mg-974c, 2026-05-21).**
+> The §2.2 text below describes Piece 2 as producing
+> `L_{S7E} : Step7.LayeredWidth3`. **Checkpoint 3 (mg-ca83) found
+> that is the wrong object** — a `LayeredWidth3` rich-pair
+> packaging cannot be consumed by the S7-F bridge (mg-ca83 §3;
+> `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #9). Piece 2's
+> concretisation target is **re-pointed to a concrete
+> `ChainLiftData α`** (Dilworth triple + chain potential + sync
+> maps + `K_{bw}`) — the object the bridge §2.3 actually consumes,
+> reconciled by **R2** (mg-3119). The re-point itself — and the
+> open **F7a** question of whether such a concrete non-degenerate
+> `ChainLiftData α` is constructible — is **part R1** (mg-974c).
+> Read the `L_{S7E}` deliverable below as **superseded**; the
+> Conc-A BK-graph carrier types stay reusable.
+
 **Substantive content.** The S7-A-E pilot (mg-4584/9331/1069/d135/516f,
 landed) produces *grounded forms* on **parametric upstream hypotheses**
 (the abstract `Edge / Vertex / Pair / src / tgt / path /
@@ -445,8 +477,10 @@ grounded forms exist, only their α-side wiring is missing.
 S7-A-E grounded forms themselves are already landed and unchanged
 (mg-4584 et seq.).
 
-**Downstream consumers.** Piece 3 (S7-F bridge) consumes `L_{S7E}`
-as its input.
+**Downstream consumers.** Piece 3 (S7-F bridge) consumes the
+re-pointed Piece-2 deliverable — a concrete `ChainLiftData α`
+(per R1 mg-974c / R2 mg-3119), **not** `L_{S7E}`. See the
+⚠ RE-POINTED banner above and §2.3.
 
 **Hold-the-line risks.**
 
@@ -479,10 +513,31 @@ top of an already-grounded abstract scaffold.
 > any implication that the bridge transcribes `Case3Witness`'s
 > five caps.
 
+> **⚠ RECONCILED (mg-3119 / S7F-R2, 2026-05-21).** Per the
+> Checkpoint-3 audit (mg-ca83, `docs/state-S7F-Checkpoint3-Session1.md`),
+> the bridge contract was pinned **inconsistently**: MA-Sig §4.2
+> §E said the bridge consumes the abstract dichotomy
+> `Step5R ∨ Step5C`; this §2.3 said it consumes Piece 2's
+> `L_{S7E}` (a `Step7.LayeredWidth3` rich-pair packaging).
+> **Neither is the object the bridge body can consume.** The bridge
+> consumes a **`ChainLiftData α`** — the Dilworth triple `A/B/C` +
+> chain potential + sync maps `f_{AB}/f_{AC}/f_{BC}` + `K_{bw}`
+> bundle (`ChainPotentials.lean:328`). The §2.3 text below is
+> re-pinned to match: **everywhere it says "from piece 2's
+> `L_{S7E}`", the bridge input is a `ChainLiftData α`.** The
+> `L_{S7E}` wording is **dropped** — `LayeredWidth3` is sound
+> Step-7 *internal* scaffolding, not the bridge input (mg-ca83 §3,
+> `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #9). The matching
+> MA-Sig re-pin is `docs/state-MA-Sig-Session1.md` §4.2 §D′/§E +
+> §11. **PROVISIONAL:** whether a concrete non-degenerate
+> `ChainLiftData α` is constructible for a minimal counterexample
+> is the open **F7a** question — part **R1** (mg-974c) settles it;
+> Piece 3 stays blocked until R1 lands GREEN.
+
 **Substantive content.** Lean port of the paper's
 `lem:layered-from-step7` (`step8.tex:2009-2089`): the *structural
-ground-set lift* from "layered on the Pair space `(1-o(1))`-mass"
-(piece 2's `L_{S7E}`) to "exact `def:layered` on the ground set
+ground-set lift* from the concrete globalization data — a
+**`ChainLiftData α`** — to "exact `def:layered` on the ground set
 `X \setminus X^{exc}`" (the input shape Piece 6 — re-pinned
 mg-faf8, was `lem_layered_balanced` — consumes).
 
@@ -490,13 +545,18 @@ Concretely, given:
 
 - α a width-3 non-chain poset arising as a minimal γ-counterexample
   (the proof-by-contradiction state from piece 4),
-- **Dilworth decomposition** `X = A ⊔ B ⊔ C` (from `Mathlib/Poset/Dilworth.lean`),
-- **Either** Step 5(C) collapse data (`w_{coll}(T) = O_T(1)`) **or**
-  Step 7(ii) globalization data (potential `a : X → ℝ`, threshold
-  `c ∈ ℝ`, bandwidth `K_{bw} = K(T) ≤ 4`) — from piece 2's
-  `L_{S7E}` together with piece 1's S5(C)/S7(ii) cascade outputs,
-- `ChainLiftData α` (F7a, already in tree at
-  `ChainPotentials.lean:328`, mg-7b26),
+- a **`ChainLiftData α`** (`ChainPotentials.lean:328`, mg-7b26) —
+  the genuine bridge input, bundling the **Dilworth triple**
+  `X = A ⊔ B ⊔ C`, a **chain potential** (strictly monotone along
+  each chain), the **synchronization maps** `f_{AB}, f_{AC}, f_{BC}`,
+  and the **bandwidth constant** `K_{bw}` — produced by the
+  re-pointed Piece 2 (per **R1**, mg-974c; **F7a constructibility
+  open until R1 lands**) out of piece 1's S5(C)/S7(ii) cascade
+  outputs via the `chainLiftData_of_cascade` constructor (MA-Sig
+  §4.2 §D′), which dispatches both the Step 5(C) collapse branch
+  and the Step 7(ii) globalization branch into one `ChainLiftData`,
+- `K_{bw} ≤ 2` (from `lem:bandwidth`) so the resulting interaction
+  width is `L.w = K_{bw} + 2 ≤ 4`,
 - `exc_perturb` (F6b, already in tree at `ExcPerturb.lean:351`,
   mg-7496),
 
@@ -550,9 +610,13 @@ probability of 7th vacuity-discovery at bridge construction).
   produce `lem_layered_from_step7 : ∀ minimal-γ-cex α, ∃ L : LayeredDecomposition α-restricted-to-Xc, L.w ≤ 4 ∧ HasBalancedPair α-restricted → HasBalancedPair α`. ~1 session,
   200k-300k.
 
-**Upstream dependencies.** Pieces 1 (S5(C) and S7(ii) cascade
-outputs) + 2 (`L_{S7E}`). `ChainLiftData α` and `exc_perturb`
-already in tree.
+**Upstream dependencies.** Piece 1 (S5(C) and S7(ii) cascade
+outputs) + the **re-pointed Piece 2** — which, per **R1**
+(mg-974c, the Checkpoint-3 re-scope), delivers a concrete
+`ChainLiftData α` (NOT `L_{S7E}`; see the ⚠ RECONCILED banner
+above). The `ChainLiftData` structure type and `exc_perturb` are
+already in tree; a concrete non-degenerate **instance** is the
+open F7a question R1 settles.
 
 **Downstream consumers.** Piece 4 (refactor body) consumes the
 bridge to derive the contradiction's `HasBalancedPair α`.
@@ -560,10 +624,14 @@ bridge to derive the contradiction's `HasBalancedPair α`.
 **Hold-the-line risks.**
 
 1. **Mandatory hold-the-line audit** (mg-6ab8 §4.3 Checkpoint 3 +
-   mg-5fbd §1) **before mg-S7-F-A starts:** does piece 2's
-   `L_{S7E}` deliver the inputs the bridge actually consumes
-   (synchronization maps' definedness, `o(1)`-mass non-monotonic
-   set, etc.)? If not, surface and re-scope piece 2 before piece 3.
+   mg-5fbd §1) **before mg-S7-F-A starts:** does the re-pointed
+   Piece 2 deliver the `ChainLiftData α` the bridge actually
+   consumes (synchronization maps' definedness, `o(1)`-mass
+   non-monotonic set, etc.)? **OUTCOME (mg-ca83, 2026-05-21): RED**
+   — Checkpoint 3 fired and found Piece 2 delivered the wrong
+   object (`L_{S7E}`); the re-scope is parts **R1** (mg-974c,
+   re-point Piece 2 → `ChainLiftData`) + **R2** (mg-3119, this
+   reconciliation). Piece 3 stays blocked until R1 lands GREEN.
 2. **Chain-tail orphans in `X^{exc}_{sync}`.** The paper says
    `f_{AB}` may be undefined at chain tails (`step8.tex:2050-2055`)
    and absorbs these into `X^{exc}_{sync}`. The Lean port has to
@@ -692,10 +760,13 @@ genuine cascade-output bundles.
   200k-500k.
 - **mg-MA-Cascade (Steps 1-7 cascade wiring).** Build
   `stepsOneToSevenCascade : Step5R α ∨ Step5C α` consuming
-  `LowConductanceOn`. Calls into piece 1's outputs at S5 + S6 +
-  piece 2's `L_{S7E}`. ~1 session, 200k-300k. (This sub-arc is
-  "wiring" not "new mathematical content" — it pulls existing
-  cascade pieces together.)
+  `LowConductanceOn`. Calls into piece 1's outputs at S5 + S6. The
+  `Step5R ∨ Step5C` disjunction is then turned into the bridge's
+  `ChainLiftData α` input by the `chainLiftData_of_cascade`
+  constructor (MA-Sig §4.2 §D′; the R1 deliverable, mg-974c) —
+  RECONCILED mg-3119, was "piece 2's `L_{S7E}`". ~1 session,
+  200k-300k. (This sub-arc is "wiring" not "new mathematical
+  content" — it pulls existing cascade pieces together.)
 - **mg-MA-Body (the new `width3_one_third_two_thirds_assembled`).**
   Replace the existing body with the proof-by-contradiction shape;
   delete `mainAssembly`, `mainTheoremInputsOf`,
@@ -1026,7 +1097,8 @@ risk is the base-case coverage gap (risk 1).
 
 - piece 4-Sig → everything else (piece 4-Sig fixes downstream signatures).
 - piece 1 → piece 2 (S7-A-E concretisation needs Steps 5 + 6 grounded).
-- piece 2 → piece 3 (bridge needs `L_{S7E}` input).
+- piece 2 → piece 3 (bridge needs the re-pointed Piece-2
+  `ChainLiftData α` input — RECONCILED mg-3119; was `L_{S7E}`).
 - piece 3 → **piece 6** → piece 4-Body (the bridge's
   `LayeredDecomposition` output is consumed by piece 6's full
   Step 8 G4; piece 6's `HasBalancedPair` output is consumed by
@@ -1199,6 +1271,16 @@ Checkpoint 6 added mg-faf8):
   §2.3 "from piece 2's `L_{S7E}`" wording. Full analysis:
   `docs/state-S7F-Checkpoint3-Session1.md`;
   `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #9.
+  **RE-SCOPE (the two follow-on parts).** **R2** (mg-3119) —
+  *done* — reconciled the bridge contract: MA-Sig §4.2 §E and
+  §2.3 now consistently state the bridge input as a
+  `ChainLiftData α` (§D′ constructor added; `state-MA-Sig-Session1.md`
+  §11; the ⚠ RECONCILED banners in §2.2/§2.3). **R1** (mg-974c,
+  depends on mg-3119) — *pending* — re-points Piece 2 to deliver a
+  concrete non-degenerate `ChainLiftData α` and **settles the open
+  F7a constructibility question**. Checkpoint 3 is
+  **GREEN-reconciled-PROVISIONAL** after R2; it flips to GREEN
+  (Piece 3 unblocked) only when R1 lands GREEN.
 - **Checkpoint 4 (after piece 3 lands, before piece 4-Body
   starts, ~weeks 18-20).** Audit: does the bridge's output have
   the shape the refactor body consumes? Specifically, is

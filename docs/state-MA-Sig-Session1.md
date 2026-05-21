@@ -72,6 +72,37 @@ correspond to the same content. Citations below use the
 > alongside it; its "no 8th vacuity-discovery" claim held only for
 > *type-checking* (old §4.4), never *satisfiability*.
 
+> **⚠ RECONCILED (mg-3119 / S7F-R2, 2026-05-21).** The §4.2 §E
+> bridge *input shape* has been re-pinned. Checkpoint 3 (mg-ca83,
+> `docs/state-S7F-Checkpoint3-Session1.md`) found the bridge
+> contract pinned **inconsistently** across the two READ-FIRST
+> docs — §4.2 §E here said the bridge consumes
+> `Step5R ∨ Step5C`; the scoping doc §2.3 said it consumes
+> Piece 2's `L_S7E`. Neither names the object the bridge body can
+> actually consume to build a ground-set `LayeredDecomposition`.
+> As re-pinned (full analysis in §11):
+>
+> * **§4.2 §E** — `lem_layered_from_step7` now consumes a concrete
+>   **`ChainLiftData α`** (Dilworth triple + chain potential + sync
+>   maps `fAB/fAC/fBC` + `K_bw`; `ChainPotentials.lean:328`) plus
+>   `hKbw : cld.K_bw ≤ 2`, **replacing** the abstract
+>   `hCascade : Step5R ∨ Step5C` hypothesis.
+> * **§4.2 §D′ (NEW)** — `chainLiftData_of_cascade` converts the
+>   Step-5 dichotomy into the `ChainLiftData` bundle (dispatching
+>   both disjuncts). This is the **R1 deliverable** (mg-974c).
+> * **§4.3 / §4.4** — call-site + boundary table updated to match.
+> * **§11 (added this session)** — records the reconciliation and
+>   re-runs the satisfiability check for the new input shape.
+>
+> **PROVISIONAL.** Whether a concrete, non-degenerate
+> `ChainLiftData α` is *constructible* for a minimal
+> γ-counterexample is the **open F7a question**. Part R1 (mg-974c)
+> settles it. This contract is **provisional until R1 confirms
+> F7a** — see §11.4. §9–§10 record the earlier mg-faf8 re-pin
+> against the *superseded* `Step5R ∨ Step5C` input shape; their
+> conclusion-side (3-cap) analysis is unchanged — only the *input*
+> is superseded by §11.
+
 ## §0. Verdict — **GREEN-signature-types-cleanly + Theorem-E-substantive**
 
 The proof-by-contradiction refactor signature **types cleanly** with
@@ -448,11 +479,48 @@ theorem stepsOneToSevenCascade
             Phi S ≤ 2 / (γ * (Fintype.card α : ℚ))) :
     Step5R α γ (hArith.T γ) ∨ Step5C α (hArith.T γ)
 
+-- §D′. ChainLiftData constructor (NEW — RECONCILED mg-3119 / R2;
+-- this is the R1 deliverable, mg-974c).
+-- Converts the Step-5 dichotomy into the concrete globalization
+-- bundle the bridge consumes. Dispatches BOTH disjuncts to a
+-- single ChainLiftData shape:
+--   Step5C α T  → branch (a): the Step 5(C) collapse already gives
+--     a bounded-width layered structure; repackage as ChainLiftData
+--     with K_bw chosen so K_bw + 2 = w_coll(T) ≤ 4.
+--   Step5R α γ T → branch (b): the Step 7(ii) globalization yields
+--     the chain potential + sync maps + K_bw directly (K_bw ≤ 2 by
+--     lem:bandwidth).
+-- Unifying both branches into one ChainLiftData is what lets the
+-- bridge §E take a single input type (the paper lem:layered-from-
+-- step7 takes the disjunction; the Lean refactor pushes the case
+-- split UPSTREAM of the bridge, into this constructor).
+-- F7a IS OPEN. No concrete ChainLiftData instance exists in tree
+-- (Checkpoint 3, mg-ca83 §6 R1). Whether this constructor can be
+-- discharged genuinely — yielding a NON-DEGENERATE ChainLiftData,
+-- not the empty-sync-map / inert-K_bw degenerate inhabitant the
+-- bare structure admits — is the open F7a question. Part R1
+-- (mg-974c) settles it; the signature below is the R2-recommended
+-- target shape, provisional until R1 lands (§11.4). A
+-- RED-F7a-not-constructible verdict from R1 forces a further
+-- re-pin here.
+theorem chainLiftData_of_cascade
+    (γ : ℚ) (hγ_pos : 0 < γ)
+    (T : ℕ)
+    (hP : HasWidthAtMost α 3)
+    (hI : Indecomposable α)
+    (hCex : IsGammaCounterexample α γ)
+    (hCascade : Step5R α γ T ∨ Step5C α T) :
+    ∃ cld : ChainLiftData α, cld.K_bw ≤ 2
+
 -- §E. lem:layered-from-step7 (NEW — piece 3 deliverable).
+-- RECONCILED mg-3119 / R2: the bridge consumes a concrete
+-- ChainLiftData α (the genuine globalization bundle), NOT the
+-- abstract Step5R ∨ Step5C disjunction (which is now dispatched
+-- upstream by §D′). See the ⚠ RECONCILED banner above and §11.
 -- RE-PINNED mg-faf8: emits only the three SATISFIABLE caps, and
 -- carries hCex : IsGammaCounterexample α γ as an explicit
 -- hypothesis (see below).
--- Lifts the cascade output to a concrete LayeredDecomposition on
+-- Lifts the ChainLiftData to a concrete LayeredDecomposition on
 -- X∖X^exc, faithful to paper def:layered (step8.tex:1983-2007) and
 -- lem:layered-from-step7 conclusion items (i)/(ii)/(iii)
 -- (step8.tex:2054-2088). The bridge then feeds PIECE 6
@@ -462,10 +530,14 @@ theorem lem_layered_from_step7
     (T : ℕ)
     (hP : HasWidthAtMost α 3)
     (hI : Indecomposable α)
-    (hCex : IsGammaCounterexample α γ)  -- ADDED mg-faf8 — pins the
-                                       -- bridge's domain to the
-                                       -- γ-counterexample regime
-    (hCascade : Step5R α γ T ∨ Step5C α T)
+    (hCex : IsGammaCounterexample α γ)  -- domain pin (mg-faf8);
+                                       -- LOAD-BEARING under the R2
+                                       -- reconciliation — see §11.3
+    (cld : ChainLiftData α)            -- RECONCILED mg-3119 — the
+                                       -- genuine bridge input;
+                                       -- REPLACES hCascade
+    (hKbw : cld.K_bw ≤ 2)              -- lem:bandwidth bound ⇒
+                                       -- L.w = K_bw + 2 ≤ 4
     (ih : ∀ m, m < Fintype.card α →
            ∀ {β : Type u} [PartialOrder β] [Fintype β] [DecidableEq β],
              Fintype.card β = m →
@@ -489,23 +561,28 @@ theorem lem_layered_from_step7
       -- (the LayeredDecomposition.band_size field; NOT singletons)
       -- and depth L.K ≥ |X|/6 (step8.tex:2072) — unbounded — which
       -- the three retained caps permit. Satisfiability of this
-      -- corrected conclusion is verified in §10.
+      -- corrected conclusion is verified in §10 (against the
+      -- mg-faf8 input shape) and §11 (re-run for the R2 input).
       --
-      -- ADDED HYPOTHESIS hCex (mg-faf8). The original §4.2 §E
-      -- omitted IsGammaCounterexample. Paper lem:layered-from-step7
-      -- only applies to α arising as a minimal γ-counterexample
-      -- in the (R)+(coherent) regime (mg-5fbd / §3 pitfall #5.3);
-      -- hCex pins the bridge's domain there explicitly. Without it,
-      -- the bridge as a standalone lemma is quantified over all
-      -- width-3 indecomposable α satisfying Step5R ∨ Step5C — and
-      -- whether non-γ-counterexamples (e.g. the 3-disjoint-chains
-      -- family) can satisfy that disjunct depends on the not-yet-
-      -- pinned exact definitions of Step5R/Step5C. hCex makes the
-      -- bridge a true proposition *standalone*, independent of
-      -- those definitions: a non-γ-counterexample fails hCex, so
-      -- the conditional is vacuously true on it (§10.4). hCex is
-      -- free at the call site — the §4.3 body has it in scope from
-      -- §3 (it is the same hCex stepsOneToSevenCascade §D consumes).
+      -- ADDED HYPOTHESIS hCex (mg-faf8) — LOAD-BEARING under the
+      -- R2 reconciliation. Paper lem:layered-from-step7 only
+      -- applies to α arising as a minimal γ-counterexample in the
+      -- (R)+(coherent) regime (mg-5fbd / §3 pitfall #5.3); hCex
+      -- pins the bridge's domain there. It is MORE load-bearing now
+      -- that the input is a ChainLiftData (mg-3119): the bare
+      -- ChainLiftData structure is INHABITED for the
+      -- 3-disjoint-chains family Δ_ℓ (triple = the three chains,
+      -- any strictly-monotone potential, empty sync maps,
+      -- K_bw := 0 ≤ 2), yet C(Δ_ℓ) is FALSE for large ℓ (every
+      -- layered decomposition of Δ_ℓ has width ≥ ℓ−1; §3 pitfall
+      -- #2.3). So a bridge taking cld + hKbw WITHOUT hCex would be
+      -- false on Δ_ℓ — repeating the 8th-vacuity error. hCex
+      -- excludes Δ_ℓ airtight (Δ_ℓ has balanced pairs by symmetry
+      -- ⇒ ¬ IsGammaCounterexample), so the conditional is vacuously
+      -- true there (§11.3). hCex is free at the call site — the
+      -- §4.3 body has it in scope from §3 (the same hCex
+      -- stepsOneToSevenCascade §D and chainLiftData_of_cascade §D′
+      -- consume).
 
 -- §F. exc_perturb lift (UNCHANGED — Step8/ExcPerturb.lean:351).
 -- Existing signature `exc_perturb` lives at the probLT level; the
@@ -602,11 +679,18 @@ theorem width3_one_third_two_thirds_assembled.{u}
     -- §7. Steps 1-7 cascade: Step5R ∨ Step5C.
     have hCascade :=
       stepsOneToSevenCascade γ hγ_pos hγ_third hP hI hCex h2 hArith hn0 hThmE
+    -- §7′. ChainLiftData constructor (§D′; R1 — mg-974c): convert
+    --   the Step-5 dichotomy into the concrete globalization bundle
+    --   the bridge consumes. RECONCILED mg-3119 — see §4.2 §D′, §11.
+    obtain ⟨cld, hKbw⟩ :=
+      chainLiftData_of_cascade γ hγ_pos (hArith.T γ) hP hI hCex hCascade
     -- §8. lem:layered-from-step7: LayeredDecomposition on X∖X^exc.
-    --   RE-PINNED mg-faf8: the bridge now emits only three caps
+    --   RE-PINNED mg-faf8: the bridge emits only three caps
     --   (Xexc bound, band-nonempty, L.w ≤ 4).
+    --   RECONCILED mg-3119: the bridge consumes cld : ChainLiftData α
+    --   (+ hKbw : cld.K_bw ≤ 2), NOT hCascade — see §4.2 §E.
     obtain ⟨Xexc, L, hXexc_small, hNonempty, hLw⟩ :=
-      lem_layered_from_step7 γ hγ_pos (hArith.T γ) hP hI hCex hCascade
+      lem_layered_from_step7 γ hγ_pos (hArith.T γ) hP hI hCex cld hKbw
         (ih_descent ih)
     -- §9. lem_layered_balanced_full (PIECE 6) on {a // a ∉ Xexc}.
     --   RE-PINNED mg-faf8: the consumer is the full Step 8 G4,
@@ -683,7 +767,8 @@ under caps.
 | Boundary | Type-check verdict |
 |---|---|
 | `cexImpliesLowBKExpansion` → `stepsOneToSevenCascade` | hThmE matches the `hS` parameter signature byte-for-byte (both are `∃ S, vol ≥ γ·vol(univ) ∧ Phi ≤ 2/(γn)`) |
-| `stepsOneToSevenCascade` → `lem_layered_from_step7` | hCascade matches `hCascade` parameter; T threaded via `hArith.T γ`; `hCex : IsGammaCounterexample α γ` (added mg-faf8) is in scope from §4.3 body §3 and threaded directly |
+| `stepsOneToSevenCascade` → `chainLiftData_of_cascade` (RECONCILED mg-3119) | the cascade output `Step5R ∨ Step5C` matches the `hCascade` parameter of the §D′ constructor; `T` threaded via `hArith.T γ`; `hCex` in scope from §4.3 body §3 |
+| `chainLiftData_of_cascade` → `lem_layered_from_step7` (RECONCILED mg-3119) | the §D′ constructor emits `∃ cld : ChainLiftData α, cld.K_bw ≤ 2`; `obtain` destructures it to `cld` + `hKbw`, matching the bridge's `cld` / `hKbw` parameters; `hCex` / `hP` / `hI` / `T` threaded directly. **Provisional until R1 confirms F7a** — §11.4 |
 | `lem_layered_from_step7` → `lem_layered_balanced_full` (Piece 6) | output `LayeredDecomposition {a // a ∉ Xexc}` matches input `L : LayeredDecomposition β` (`β := {a // a ∉ Xexc}`); the bridge emits `Xexc.card ≤ C_exc T ∧ band-nonempty ∧ L.w ≤ 4`, and Piece 6 consumes exactly `hLw : L.w ≤ 4` — the `band-nonempty` conjunct is carried for Piece 6's internal base case, the `Xexc.card` conjunct is consumed by `excPerturbLift` |
 | `lem_layered_balanced_full` → `excPerturbLift` | `HasBalancedPair {a // a ∉ Xexc}` matches `hBP_sub` |
 | `excPerturbLift` → final contradiction | `HasBalancedPair α` contradicts `hNoBP` |
@@ -848,8 +933,15 @@ dispatch:
   was created in),
 - mg-0bd1 (S7-F bridge Session 2 — RED 8th vacuity discovery on
   the §4.2 §E signature),
-- **mg-faf8 (this session — the MA-Sig re-pin correcting the
-  8th vacuity; §4.2 §E/§G, §4.3, §4.4, §9, §10)**.
+- mg-faf8 (the MA-Sig re-pin correcting the 8th vacuity; §4.2
+  §E/§G, §4.3, §4.4, §9, §10),
+- mg-ca83 (S7-F Checkpoint 3 — RED; found the bridge contract
+  pinned inconsistently MA-Sig §4.2 §E vs scoping §2.3),
+- **mg-3119 (this session — S7F-R2; the bridge-input
+  reconciliation: §4.2 §E now consumes a `ChainLiftData`, §4.2
+  §D′ added, §4.3/§4.4 updated, §11 added)**,
+- mg-974c (S7F-R1 — the F7a `ChainLiftData` constructibility
+  ticket; depends on mg-3119).
 
 ---
 
@@ -879,6 +971,16 @@ mg-MA-Cascade, mg-MA-Body, mg-Int-A, mg-Int-B) reference the
 > Piece 6 *execution plan* (mg-MA-G4-Full must be split per
 > §7 of the Piece 6 state doc).
 
+> **⚠ Bridge input reconciled (mg-3119 / S7F-R2, 2026-05-21).**
+> The §4.2 §E bridge *input* is re-pinned: `lem_layered_from_step7`
+> consumes a `ChainLiftData α` (+ `hKbw`), not `Step5R ∨ Step5C`;
+> a §4.2 §D′ constructor `chainLiftData_of_cascade` is added. See
+> §11. **The contract is PROVISIONAL** — it is GREEN only once
+> part R1 (mg-974c) confirms F7a (a concrete non-degenerate
+> `ChainLiftData α` is constructible). If R1 strengthens the
+> `ChainLiftData` structure, §4.2 §D′/§E **must be re-pinned in
+> the same commit as R1's landing** (§11.4 case 2).
+
 Update this file in the **same commit** as any of the following:
 
 - A Phase 2/4 sub-ticket lands and its actual signature drifts
@@ -887,6 +989,9 @@ Update this file in the **same commit** as any of the following:
   here with re-scoped recommendation.
 - A piece 1/2/3/6 deliverable lands and its output shape differs
   from what §4.2 assumes; update the consumer-side signature.
+- **R1 (mg-974c) settles F7a** — land the resolution per §11.4
+  (case 1 stand / case 2 re-pin to a strengthened `ChainLiftData`
+  / case 3 reopen on RED-not-constructible).
 
 Default-skeptical posture: per Daniel's "vacuity-discovery has hit
 **8 times**" pattern (mg-e2e9, mg-74d2, mg-5c32, mg-82fc, mg-2970,
@@ -981,6 +1086,17 @@ Option (R2) ordering). Full forward options:
 ---
 
 ## §10. Satisfiability verification of the corrected contract (mg-faf8)
+
+> **⚠ INPUT SHAPE SUPERSEDED (mg-3119 / R2).** §10 verifies the
+> mg-faf8 contract whose bridge *input* was `Step5R ∨ Step5C`. The
+> R2 reconciliation (§11) re-pins that input to a `ChainLiftData α`.
+> §10's **conclusion-side** analysis — the 3-cap shape `C(α)`, and
+> the (V)/(S)/(X) checks on `Xexc.card ≤ C_exc T` ∧ band-nonempty
+> ∧ `L.w ≤ 4` — is **unchanged** and carries over verbatim. Only
+> the *hypothesis* `H(α)` changes: where §10 writes
+> "`Step5R α γ T ∨ Step5C α T`" the reconciled bridge reads
+> "`cld : ChainLiftData α` with `cld.K_bw ≤ 2`". §11 re-runs
+> (V)/(S)/(X) against that new input.
 
 **This section is the acceptance-bar deliverable.** The 8th
 vacuity (mg-0bd1) was caused precisely by an audit (the original
@@ -1253,3 +1369,254 @@ The corrected §4.2 §E/§G contract is a true, non-vacuous
 proposition; the 8th vacuity (caps 1+2 forcing `|α| ≤ 10 + C_exc T`)
 is eliminated, and the fix is confirmed against the exact
 counterexample class that exposed the defect.
+
+---
+
+## §11. R2 reconciliation — the bridge input is a `ChainLiftData`, not `Step5R ∨ Step5C` (mg-3119)
+
+**Recorded per §8 maintenance contract** (*"A piece 1/2/3/6
+deliverable lands and its output shape differs from what §4.2
+assumes; update the consumer-side signature"*). Source: the
+Checkpoint-3 audit `docs/state-S7F-Checkpoint3-Session1.md`
+(mg-ca83), §5 + §6 R2. This section is the mg-3119 (S7F-R2)
+deliverable. It re-pins the **input** of §4.2 §E; §9–§10 (the
+mg-faf8 conclusion-side re-pin) are unaffected.
+
+### §11.0. What R2 reconciles, and the verdict
+
+Checkpoint 3 (mg-ca83 §5) found the S7-F bridge contract pinned
+**inconsistently** across the two READ-FIRST documents:
+
+* **MA-Sig §4.2 §E** (this doc, pre-mg-3119) — the bridge
+  `lem_layered_from_step7` consumes the abstract Step-5 dichotomy
+  `hCascade : Step5R α γ T ∨ Step5C α T`.
+* **Scoping §2.3** (`OneThird-Option-A-FULL-REFACTOR-scoping.md`)
+  — the bridge *"consumes `L_{S7E}`"*, i.e. Piece 2's
+  `Step7.LayeredWidth3` packaging.
+
+These cannot both be the contract, and — decisively — **neither
+names the object the bridge *body* can consume to build a
+ground-set `LayeredDecomposition`** (mg-ca83 §2–§4, §3 pitfall #9).
+The audit established (§6 R1/R2) that the bridge must, to build a
+ground-set `LayeredDecomposition {a : α // a ∉ Xexc}`, consume a
+**`ChainLiftData α`**: the bundle of a Dilworth triple `A/B/C`, a
+chain potential, the sync maps `fAB/fAC/fBC`, and the bandwidth
+constant `K_bw` (`Step8/ChainPotentials.lean:328-340`).
+
+**R2 re-pins both documents to consistently state the bridge input
+as a `ChainLiftData α`.** MA-Sig §4.2 §E is re-pinned in place
+(§11.2 below); scoping §2.3 is re-pinned in the parallel mg-3119
+commit, dropping its "from piece 2's `L_S7E`" wording.
+
+**Verdict: GREEN-reconciled-PROVISIONAL.** The two documents now
+agree, and the named input (`ChainLiftData α`) is the object the
+bridge body genuinely consumes. The contract is **provisional
+until R1 (mg-974c) confirms F7a** — the open question of whether a
+concrete, non-degenerate `ChainLiftData α` is constructible for a
+minimal γ-counterexample (§11.4).
+
+### §11.1. Why `Step5R ∨ Step5C` and `L_S7E` both failed
+
+* **`L_S7E : Step7.LayeredWidth3`** is a rich-pair window-confinement
+  packaging on the pair space `α × α` — `bandwidth : ℕ` plus a
+  partition of `richPairs`. It carries **no** band map, **no**
+  potential, **no** sync maps, **no** Dilworth triple; its
+  `bandwidth ≤ 4` is the inert `4 ≤ 4` (mg-ca83 §3.1–§3.2,
+  §3 pitfall #9). The only in-tree `LayeredWidth3 →
+  LayeredDecomposition` conversion (`layeredFromBridges`) is a
+  documented sham. `L_S7E` is sound Step-7 *internal* scaffolding,
+  but it is the wrong object for the Piece-2/Piece-3 boundary.
+* **`Step5R ∨ Step5C`** is an abstract dichotomy *proposition*.
+  It is the right *upstream* object — it is what
+  `stepsOneToSevenCascade` (§4.2 §D) emits — but the bridge body
+  cannot build a band map directly from a `Prop`. The paper
+  `lem:layered-from-step7` (`step8.tex:2009-2089`) consumes the
+  *content behind* the disjunction: the potential `a`, the
+  threshold, the Dilworth chains, the sync maps, `K_bw`. That
+  content is exactly `ChainLiftData`.
+
+The reconciliation therefore **keeps the disjunction**, but moves
+it one step upstream — into the §D′ constructor
+`chainLiftData_of_cascade`, which turns `Step5R ∨ Step5C` into a
+`ChainLiftData α`. The bridge §E then consumes the `ChainLiftData`.
+
+### §11.2. The reconciled contract
+
+Two signature changes, both landed above:
+
+1. **§4.2 §D′ (NEW)** — `chainLiftData_of_cascade`:
+   ```
+   Step5R α γ T ∨ Step5C α T  →  ∃ cld : ChainLiftData α, cld.K_bw ≤ 2
+   ```
+   Dispatches both disjuncts to one `ChainLiftData` shape (branch
+   (a) collapse: `K_bw + 2 = w_coll ≤ 4`; branch (b) globalization:
+   `K_bw ≤ 2` by `lem:bandwidth`). This is the **R1 deliverable**
+   (mg-974c).
+2. **§4.2 §E re-pinned** — `lem_layered_from_step7` drops
+   `hCascade : Step5R α γ T ∨ Step5C α T` and gains
+   `(cld : ChainLiftData α)` + `(hKbw : cld.K_bw ≤ 2)`. The
+   conclusion `C(α)` (the three caps) is **unchanged** from the
+   mg-faf8 re-pin (§10).
+
+**Note on the `ChainLiftData` field set.** The in-tree structure
+(`ChainPotentials.lean:328-340`) has fields `triple`, `pot`,
+`K_bw`, `fAB`, `fAC`, `fBC` — Dilworth triple, chain potential,
+bandwidth constant, three sync maps. The paper's *threshold* `c`
+(`step8.tex:2022-2027`) is **not** a structure field; it is
+chosen inside the bridge body from the potential, or is implicit
+in the `K_bw` window. Whether the reconciled bridge needs an
+explicit threshold field added to `ChainLiftData` is an R1/F7a
+detail (§11.4); R2 pins the *named type*, R1 pins the *exact
+field set*.
+
+### §11.3. Satisfiability re-check for the `ChainLiftData` input
+
+The acceptance bar is *satisfiability, not just types* (the
+8th-vacuity lesson). §10 verified the mg-faf8 contract; here the
+three checks are re-run for the **new input shape**.
+
+**(V) Non-vacuity.** `H(α)` is now
+`HasWidthAtMost α 3 ∧ Indecomposable α ∧ IsGammaCounterexample α γ
+∧ (∃ cld : ChainLiftData α, cld.K_bw ≤ 2) ∧ ih`. Every conjunct is
+satisfiable for minimal γ-counterexamples of unbounded size: the
+first three exactly as §10.2; the new
+`∃ cld : ChainLiftData α, cld.K_bw ≤ 2` conjunct is satisfiable
+because a `ChainLiftData α` *exists* for every finite poset
+(Dilworth gives the triple, every chain admits a strictly-monotone
+potential, `K_bw` is a free `ℕ` — set it `≤ 2`). So `H(α)` is not
+a vacuous shell. ∎(V)
+
+**(S) Conclusion holds on the domain.** `C(α)` (the 3-cap
+conclusion) is **unchanged** from §10.3 — the paper `def:layered`
+object with bands of size `≤ 3`, depth `K = Θ(|α|)`, `L.w ≤ 4`
+satisfies it for every `α` regardless of `|α|`. §10.3's proof goes
+through verbatim once the `ChainLiftData` is the genuine cascade
+output (branch (a)/(b) → paper `lem:layered-from-step7`). ∎(S)
+
+**(X) The `hCex` domain pin is LOAD-BEARING — and more so now.**
+This is the critical re-check. Under the mg-faf8 input shape the
+3-disjoint-chains family `Δ_ℓ` was excluded because `Δ_ℓ` is not a
+γ-counterexample (§10.4 X-b). Under the `ChainLiftData` input that
+exclusion is **even more necessary**, because:
+
+> The **bare** `ChainLiftData α` structure is INHABITED for
+> `Δ_ℓ`. Take `triple` := the three length-`ℓ` chains, `pot` :=
+> any strictly-monotone potential along each chain, `K_bw := 0`,
+> and `fAB = fAC = fBC := SyncMap.empty` (`ChainPotentials.lean:238`).
+> All structure fields are satisfied; `K_bw = 0 ≤ 2`. So
+> `∃ cld : ChainLiftData Δ_ℓ, cld.K_bw ≤ 2` is **true**.
+
+Yet `C(Δ_ℓ)` is **false** for `ℓ > 5` (every layered decomposition
+of `Δ_ℓ` has interaction width `≥ ℓ − 1`; §3 pitfall #2.3,
+§10.4 X-b). So a reconciled bridge that took `cld` + `hKbw` but
+**dropped `hCex`** would be a `true → false` proposition on
+`Δ_ℓ` — re-introducing the 8th-vacuity error in a new form.
+
+The re-pin therefore **retains `hCex : IsGammaCounterexample α γ`**
+(mg-faf8) as the load-bearing domain pin. `Δ_ℓ` has balanced pairs
+by symmetry (`(a_1, b_1)` exchanged by the chain-swap automorphism,
+`Pr = 1/2`), so `IsGammaCounterexample Δ_ℓ γ` is false for every
+`γ`; `H(Δ_ℓ)` is false outright; the bridge is **vacuously true**
+(`false → false`) on `Δ_ℓ`. This is a correct vacuity, not a
+falsity. ∎(X)
+
+The contrast table of §10.5 still holds, with the middle column
+read as the `ChainLiftData` input: every row is `true → true` or
+`false → …` — **no false row**.
+
+**Caveat — the bare structure is necessary but not sufficient.**
+(V) shows a `ChainLiftData α` *exists* for every poset; (X) shows
+the bare structure does **not** by itself force `C(α)` (it is
+inhabited for `Δ_ℓ`, where `C` fails). What makes the bridge body
+go through is the `ChainLiftData` being the **genuine cascade
+output** — the potential being the BFS potential, the sync maps
+being the argmin-aligned maps of `step8.tex:2102-2105`, the band
+assembly `L_k := {a_k, b_{fAB(k)}, c_{fAC(k)}}` then having width
+`K_bw + 2 ≤ 4`. The bare `ChainLiftData` structure carries no
+field asserting that genuineness. Two honest resolutions, and R1
+picks:
+
+* **(A)** keep `hCex` as the domain pin (done) and rely on
+  `C(α)` being `α`-determined-true on `{α : H}` (§10.3 / §11.3-S);
+  `cld` is then the constructive vehicle for the bridge *proof*;
+* **(B)** strengthen the `ChainLiftData` structure with soundness
+  fields (potential/sync-map consistency, a bounded-width witness)
+  so that *every* inhabitant genuinely drives `C(α)`.
+
+R2 pins **(A)** as the contract shape (minimal, satisfiable as a
+proposition via `hCex`). Whether **(B)** is additionally needed —
+i.e. whether the bridge *body* is buildable from the bare
+structure — is part of F7a (§11.4).
+
+### §11.4. F7a provisionality — the contract is provisional until R1
+
+**F7a is the open question: is a concrete, non-degenerate
+`ChainLiftData α` constructible for `α` a minimal
+γ-counterexample?** No concrete `ChainLiftData` instance exists in
+tree (mg-ca83 §6 R1: the structure is referenced only in
+`LayeredBridges.lean` / `MainAssembly.lean` / its defining file,
+never instantiated). The reconciled contract **names an input the
+bridge can consume**, but whether that input is **constructible**
+is not settled here.
+
+**Part R1 (mg-974c) settles F7a.** R1 re-points Piece 2's
+concretisation to deliver a concrete `ChainLiftData α` — or, if it
+genuinely cannot be constructed for a minimal counterexample,
+returns a RED-F7a-not-constructible block-and-report (a valid and
+important outcome). R1's non-triviality bar forbids a degenerate
+witness (the bare structure admits `SyncMap.empty` sync maps and
+an inert `K_bw` — exactly the degeneracy Checkpoint 3 Finding D
+flagged for `L_S7E`).
+
+**This contract is PROVISIONAL until R1 confirms F7a.** Concretely:
+
+1. If R1 lands GREEN with a concrete non-degenerate
+   `ChainLiftData α` matching the bare structure, §4.2 §D′/§E
+   stand as pinned.
+2. If R1 finds the bare structure insufficient and **strengthens**
+   it (resolution (B), §11.3 — adds soundness/consistency fields),
+   §4.2 §D′ (the `∃ cld, …` shape) and §E (the `cld` parameter)
+   must be **re-pinned** to the strengthened type, in the same
+   commit as R1's landing, per the §8 maintenance contract.
+3. If R1 returns RED-F7a-not-constructible, the S7-F bridge
+   approach itself needs rethinking, and §4.2 §D′/§E are reopened.
+
+Until one of these resolves, Piece 3 (the S7-F bridge sub-arcs
+mg-S7-F-A … mg-S7-F-Z) stays **blocked** — Checkpoint 3 is not
+GREEN, it is GREEN-reconciled-PROVISIONAL.
+
+### §11.5. Acceptance-bar verdict (ticket mg-3119)
+
+| Acceptance bar (ticket mg-3119) | Status |
+|---|---|
+| Re-pin MA-Sig §4.2 §E so the bridge input is a `ChainLiftData` | **Done** — §4.2 §E (`cld` + `hKbw` replace `hCascade`); §D′ added |
+| Re-pin scoping §2.3 to consistently state the input as a `ChainLiftData` | **Done** — parallel mg-3119 commit on `OneThird-Option-A-FULL-REFACTOR-scoping.md` §2.3 |
+| Drop the scoping §2.3 "from piece 2's `L_S7E`" wording | **Done** — scoping §2.3 |
+| The two documents now state the contract consistently | **Done** — both name `ChainLiftData α` |
+| Satisfiability, not just types — the input is one the bridge can actually consume | **Verified** — §11.1–§11.3; the bridge body builds the band map from `ChainLiftData`, not from a `Prop` or a pair-finset |
+| The named input is constructible | **OPEN — F7a** — flagged §11.4; R1 (mg-974c) settles it |
+| Flag the contract as provisional until R1 confirms F7a | **Done** — §11.4; top banner; §4.2 §D′ comment |
+| `hCex` retained as the domain pin (no new false row) | **Verified** — §11.3 (X); the bare `ChainLiftData` is inhabited for `Δ_ℓ`, so `hCex` is load-bearing |
+
+**Verdict: GREEN-reconciled-PROVISIONAL.** The S7-F bridge
+contract is now pinned consistently across MA-Sig §4.2 §E and
+scoping §2.3 as consuming a `ChainLiftData α`. The contract names
+an input the bridge body can genuinely consume and is a
+satisfiable proposition (via the retained `hCex` pin). It is
+**provisional until R1 (mg-974c) confirms F7a** — the
+constructibility of a concrete non-degenerate `ChainLiftData α`.
+
+### §11.6. Cross-reference
+
+* `docs/state-S7F-Checkpoint3-Session1.md` (mg-ca83) — the
+  Checkpoint-3 audit; §5 the inconsistency, §6 R1/R2 the re-scope.
+* `docs/OneThird-Option-A-FULL-REFACTOR-scoping.md` §2.3 — the
+  scoping-side bridge contract, re-pinned by mg-3119 to match.
+* `lean/OneThird/Step8/ChainPotentials.lean:328-340` —
+  `ChainLiftData α` structure (`triple`/`pot`/`K_bw`/`fAB`/`fAC`/
+  `fBC`); `:211` `SyncMap`; `:238` `SyncMap.empty` (the degenerate
+  inhabitant R1 must avoid); `:267` `ChainPotential`.
+* `docs/PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #9 — the
+  `LayeredWidth3` ≠ `LayeredDecomposition` standing lesson.
+* mg-974c (S7F-R1) — the F7a constructibility ticket; depends on
+  this one (mg-3119).
