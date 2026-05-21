@@ -885,3 +885,134 @@ Lean-checked). Same category as
 `case3Witness_hasBalancedPair_outOfScope` and
 `lem_layered_balanced_irreducible_base` — a disclosed internal axiom
 with an honest replacement path, retained pending the Steps 1-7 port.
+
+## `OneThird.Step8.width3_smallN_hasBalancedPair`
+
+**File.** `lean/OneThird/Step8/MainAssembly.lean`
+
+**Paper statement.** `step8.tex` `lem:small-n` (`step8.tex:757-825`)
+together with `rem:small-n` (`step8.tex:827-874`): every finite
+width-≤ 3 non-chain poset on `n < n₀(γ, T)` elements — below the
+cascade-realisability threshold — has a balanced pair. The paper
+proves it by the two-regime base-case argument: the **large-`γ`
+regime** (`γ ≥ 1/3 − δ_KL`) by the unconditional Kahn–Linial bound
+`δ(P) ≥ δ_KL ≈ 0.276` [KahnLinial1991]; the **small-`γ` regime**
+(`γ < 1/3 − δ_KL ≈ 0.057`) by a finite exhaustive enumeration of
+width-3 posets on `≤ n₀` elements (`step8.tex:785-814`).
+
+**Introduced by.** `mg-9add` (OneThird-MA-Body, FULL REFACTOR Phase 2
+Piece-4 body — this entry; finding F-Body-1).
+
+**QA status.** The session state doc is
+`docs/state-MA-Body-Session1.md` (finding F-Body-1). The mg-92a8
+Piece-4 signature contract §4.8 pinned this leaf as a "mechanical"
+combinator `n_zero_le_of_cascade_realised : n_zero γ T ≤ |α|` — that
+pin is **ill-posed** (false for every minimal counterexample with
+`|α| < n_zero γ T`, a non-empty reachable regime since
+`n_zero ≥ C_exc T ≥ 6`). The honest body uses a `by_cases` dichotomy;
+this axiom is the small-`|β|` leaf.
+
+**Status.** **Disclosed project axiom — RETAINED.** The genuine
+mathematical content is two un-ported pieces: the Kahn–Linial bound
+is an external theorem not in mathlib; the finite enumeration is a
+mechanical computation not formalised. The in-tree `Step8.lem_small_n`
+(`SmallN.lean`) is **not** a discharge — it packages both regimes'
+outputs as the hypothesis `HasBalancedPair α ∨ HasBalancedPair α`, so
+it cannot close the proof-by-contradiction's small-`n` leaf. This
+axiom supplies the genuine output.
+
+### Non-vacuity
+
+Not a `true → false` pin. The hypotheses are satisfiable jointly —
+e.g. `Antichain3` (width-3, non-chain, `|·| = 3 < n_zero γ T` for any
+`γ ∈ (0, 1/3]`) — and the conclusion `HasBalancedPair Antichain3` is
+genuinely true (the antichain's elements are pairwise symmetric,
+`Pr = 1/2`). The statement is a special case of the 1/3–2/3
+conjecture itself, true with the same standing as
+`lem_layered_balanced_irreducible_base`.
+
+### Replacement path
+
+Two independent ports, both orthogonal to the Steps 1-7 cascade:
+formalise the Kahn–Linial bound `δ(P) ≥ (5−√5)/10` for finite
+non-chain posets (an external-result port), and formalise the
+width-3 finite-enumeration decision procedure of `step8.tex:785-814`
+(a `Decidable`-instance + `native_decide` engineering task, the
+same flavour as the in-tree `Case3Enum` machinery). Either regime
+ported standalone shrinks the axiom; both ported retire it.
+
+**Retained-axiom audit bar.** Meets `difficult` (✓ — two separate
+ports, one of an external theorem); meets `labeled` (✓ — pinned to
+`lem:small-n` / `rem:small-n`); meets `external` partially (◑ — the
+large-`γ` regime *is* an external citation [KahnLinial1991]; the
+small-`γ` enumeration is project-internal); meets `low-risk`
+partially (◑ — an open-conjecture instance, but the Kahn–Linial
+regime is proof-backed). Same category as
+`lem_layered_balanced_irreducible_base`.
+
+## `OneThird.Step8.nonChain_compl_of_no_balancedPair`
+
+**File.** `lean/OneThird/Step8/MainAssembly.lean`
+
+**Paper statement.** `step8.tex` `thm:main-step8` perturbation step
+(`step8.tex:106-260`): in the proof-by-contradiction, for a width-≤ 3
+non-chain **indecomposable** poset `β` with **no balanced pair**, the
+deletion of the bounded exceptional set `X^exc` (`|X^exc| ≤ C_exc T`,
+an `O_T(1)` bound) from a large `β` (`n₀(γ, T) ≤ |β|`) leaves a
+**non-chain** poset on the complement `P|_{X∖X^exc}` — so that the
+full Step 8 G4 (`lem_layered_balanced_full`) applies to it.
+
+**Introduced by.** `mg-9add` (OneThird-MA-Body, FULL REFACTOR Phase 2
+Piece-4 body — this entry; finding F-Body-2).
+
+**QA status.** The session state doc is
+`docs/state-MA-Body-Session1.md` (finding F-Body-2). The mg-92a8
+Piece-4 signature contract §4.8 pinned this as a "mechanical"
+combinator `non_chain_subtype_of_exc`, justified by "a width-3
+non-chain `α` has `≥ |α| − 3` incomparable pairs; deleting `O_T(1)`
+elements leaves one." That justification is **false**: a width-3
+non-chain poset can concentrate all its incomparability on an
+`O_T(1)` vertex cover (a long chain plus `O(1)` floaters has just
+those `O(1)` elements in every incomparable pair), so the counting
+fails. The fact is true only via `hNoBP`.
+
+**Status.** **Disclosed project axiom — RETAINED.** The genuine
+reason `↥(X^exc)ᶜ` is non-chain is `hNoBP`: were `↥(X^exc)ᶜ` a chain,
+every incomparable pair of `β` would touch `X^exc`; since `β` is
+indecomposable it has `≥ |β|` ordered incomparable pairs
+(`card_univ_le_ordIncompPairs_card`, in tree), so some
+`X^exc`-element is incomparable to a long *contiguous* sub-chain of
+`↥(X^exc)ᶜ` — and a floater incomparable to a long range of a chain
+forms a **balanced** pair with that range's middle (`Pr ≈ 1/2`),
+contradicting `hNoBP`. That is Step-8-level combinatorics not
+Lean-ported.
+
+### Non-vacuity
+
+Not a `true → false` pin. The hypotheses are jointly satisfiable in
+the non-degenerate direction: e.g. the 3×3 grid `gridChainLiftData`
+witness (`ConcreteChainLiftData.lean`) has `X^exc = {(0,0)}` and
+`↥(X^excᶜ)` the 8-element grid-minus-corner, which is genuinely
+non-chain — the conclusion holds there. The `hNoBP` hypothesis is
+load-bearing: dropping it makes the statement *false* (a long chain
+with one global floater `z` is width-2 non-chain indecomposable, yet
+`↥({z}ᶜ)` is a chain). So this is a genuine soundness filter, not a
+disguised `True`.
+
+### Replacement path
+
+Port the "floater incomparable to a long range ⇒ balanced pair"
+argument: a chain element range `[a, b]` all incomparable to a fixed
+`z`, with `b − a` large, has `probLT z c ≈ 1/2` for `c` mid-range
+(the in-tree `probLT` / `LinearExt` marginal machinery suffices for
+the quantitative step); combine with `card_univ_le_ordIncompPairs_card`
+to extract the long range from indecomposability. A self-contained
+Step-8 lemma, multi-hundred-line but not multi-month.
+
+**Retained-axiom audit bar.** Meets `difficult` (✓ — a substantial
+combinatorial argument); meets `labeled` (✓ — pinned to the
+`thm:main-step8` perturbation step); fails `external` (✗ —
+project-internal Step-8 combinatorics); meets `low-risk` partially
+(◑ — an instance of the conjecture's structure, with a concrete
+non-vacuity witness and a load-bearing soundness filter `hNoBP`).
+Same category as `case3Witness_hasBalancedPair_outOfScope`.

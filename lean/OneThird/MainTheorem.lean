@@ -15,13 +15,12 @@ This file states the main theorem of the paper and the headline
 Step 8 intermediate result `thm:cex-implies-low-expansion`.
 
 The headline theorem `width3_one_third_two_thirds` is discharged
-via the Step 8 assembly (`OneThird.Step8.MainAssembly`) with
-`Step8.Case3Witness` supplied internally by `Case3Witness_proof`
-(`OneThird.Step8.OptionC.Case3WitnessProof`, `mg-8c72`); the
-intermediate Theorem E is discharged here via the trivial
-`S = 𝓛(P)` cut, with the tighter frozen-pair averaging cut of
-the paper recorded in `OneThird.Step8.cexImpliesLowBKExpansion`
-(indecomposable form).
+via the Step 8 assembly (`OneThird.Step8.MainAssembly`), which since
+the FULL REFACTOR Phase-2 Piece-4 body (`mg-MA-Body`) is a **proof by
+contradiction** matching the paper `thm:main-step8`. The intermediate
+Theorem E is discharged here via the trivial `S = 𝓛(P)` cut, with the
+tighter frozen-pair averaging cut of the paper recorded in
+`OneThird.Step8.cexImpliesLowBKExpansion` (indecomposable form).
 -/
 
 namespace OneThird
@@ -34,31 +33,27 @@ variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
 Every finite width-≤ 3 poset that is not a chain admits a pair
 `(x, y)` of incomparable elements with
 `1/3 ≤ Pr[x <_L y] ≤ 2/3` under the uniform linear-extension
-measure.
+measure — under the paper's arithmetic-richness Hypothesis A
+(`hArith`, `step8.tex:9-23`).
 
 Discharged via the Step 8 assembly
-(`OneThird.Step8.width3_one_third_two_thirds_assembled`) with the
-`Step8.Case3Witness` hypothesis supplied internally by
-`Step8.OptionC.Case3Witness_proof` (Option-C Stage 2B, `mg-8c72`).
+(`OneThird.Step8.width3_one_third_two_thirds_assembled`), which since
+the FULL REFACTOR Phase-2 Piece-4 body (`mg-MA-Body`) is a **proof by
+contradiction**: a minimal `γ`-counterexample is fed through
+Theorem E, the Steps 1-7 cascade, the S7-F bridge (Piece 3), the full
+Step 8 G4 (Piece 6) and the `exc_perturb` lift (S7-F-D) to a
+contradiction. See `OneThird/Step8/MainAssembly.lean`.
 
-**Hypothesis-free as of `mg-8c72`.** The historical `hC3` parameter
-of `Case3Witness` was dropped after Option-C Stage 2A (`mg-2a56`,
-band-compactification) and Stage 2B (this work, Candidate A''
-tightening + `Case3Witness_proof`) closed Obstructions A and B of
-`docs/option-c-execution-arc/mg-979e-block-and-report.md`. The
-operational headline path supplies the Candidate A'' caps for
-`Step8.layeredFromBridges` trivially: band injective via the
-Szpilrajn extension; `K = |α|` and `w = |α| + 1` make `K ≤ 2w + 2`
-and `|α| ≤ 6w + 6` hold trivially; each band has exactly one
-element so `(bandSet k).Nonempty` for all `k ∈ [1, K]`. The
-internal `lem_layered_balanced` consumer applies `Case3Witness_proof`
-on its own canonical Szpilrajn-derived `canonicalLayered α`. -/
+**Signature change (`mg-MA-Body`).** The pre-refactor `hC3 :
+Case3Witness` parameter is dropped (Piece 6 discharges the witness
+internally); the `hArith : HypothesisArithmetic` parameter is added,
+faithful to `step8.tex` stating `thm:main-step8` under Hypothesis A. -/
 theorem width3_one_third_two_thirds.{u}
     {α : Type u} [PartialOrder α] [Fintype α] [DecidableEq α]
-    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α) :
+    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
+    (hArith : Step8.HypothesisArithmetic) :
     HasBalancedPair α :=
-  Step8.width3_one_third_two_thirds_assembled hP hNonChain
-    Step8.OptionC.Case3Witness_proof
+  Step8.width3_one_third_two_thirds_assembled hP hNonChain hArith
 
 /-- **Theorem E — Counterexample ⇒ low BK conductance**
 (`thm:cex-implies-low-expansion` in `step8.tex`).

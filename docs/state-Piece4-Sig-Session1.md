@@ -1060,3 +1060,52 @@ All four are predictable Phase-1/Phase-2 drift, not satisfiability
 defects: `chainLiftData_of_cascade`'s codomain is satisfiable against
 the landed bridge (`grid_Step5C_fires_bridge`), and `stepsOneToSeven
 Cascade`'s `Step5C` disjunct is the same non-vacuous codomain.
+
+### §10.3. `mg-MA-Body` — the proof-by-contradiction body (LANDED)
+
+`mg-9add` (OneThird-MA-Body) rewrote
+`lean/OneThird/Step8/MainAssembly.lean`:
+`width3_one_third_two_thirds_assembled` is now the §4.8
+proof-by-contradiction (sorry-free); `MainTheoremInputs`,
+`caseC_canonicalLayered`, `mainTheoremInputsOf`, `mainAssembly` are
+**deleted**; `MainTheorem.width3_one_third_two_thirds` gains `hArith`.
+The headline instantiates non-vacuously at `Antichain3`
+(`antichain3_width3_one_third_two_thirds_assembled`). `lake build
+OneThird` succeeds. **Piece 4 is complete.** State doc:
+`docs/state-MA-Body-Session1.md`. Findings F-Body-1, F-Body-2:
+
+**F-Body-1 — `n_zero_le_of_cascade_realised` is ill-posed.** §4.8
+pins `hn0 := n_zero_le_of_cascade_realised hArith hcard hγ_pos
+hγ_third : n_zero γ (hArith.T γ) ≤ |α|`. No such theorem exists — it
+is *false* for every minimal counterexample with `|α| < n_zero γ T`
+(a non-empty reachable regime: `n_zero ≥ C_exc T ≥ 6`). `mg-52e0`
+correctly did not land it. The honest body uses a `by_cases`
+dichotomy on `n_zero γ (hArith.T γ) ≤ |β|`; the small-`|β|` leaf is
+the paper `lem:small-n` base case. The in-tree `Step8.lem_small_n`
+(`SmallN.lean`) is **not** a discharge (it packages Kahn–Linial +
+enumeration as hypotheses). The honest discharge is the new disclosed
+project axiom `width3_smallN_hasBalancedPair` (Kahn–Linial is
+external; the enumeration is unformalised) — `AXIOMS.md`-certified.
+
+**F-Body-2 — `non_chain_subtype_of_exc` is not mechanical.** §4.8
+aux lists it as a "mechanical" combinator (`¬ IsChainPoset ↥(Xexcᶜ)`
+from `¬ IsChainPoset α` + size bounds), justified by "`≥ |α| − 3`
+incomparable pairs survive deletion." That justification is **false**
+(a width-3 non-chain poset can concentrate all incomparability on an
+`O_T(1)` vertex cover). The fact is true only via `hNoBP` (a floater
+incomparable to a long sub-chain forms a balanced pair) — Step-8
+combinatorics, not a combinator. It is the new disclosed project
+axiom `nonChain_compl_of_no_balancedPair` — `AXIOMS.md`-certified.
+
+**F-Body-3 — §6's axiom accounting is `+2`, not the projected wash.**
+§6 (corrected by F-Cascade-2 to `{brightwell_sharp_centred,
+lem_layered_balanced_irreducible_base, stepsOneToSevenCascade}`) omits
+the two base-case leaves the §4.8 body had assumed mechanical. The
+accurate post-refactor headline axiom set is that set **plus**
+`width3_smallN_hasBalancedPair` and `nonChain_compl_of_no_balancedPair`
+(both sorry-free, paper-faithful, `AXIOMS.md`-certified). The
+`case3Witness_hasBalancedPair_outOfScope` axiom and the
+`caseC_canonicalLayered` structured `sorry` both drop off the
+headline (the deleted `Case3Witness_proof` direct path).
+
+Findings F3/F4/F5/F7 and F-MinCex-1 were honoured exactly — no drift.

@@ -13,11 +13,20 @@ and this file is wrong — fix it.
 ## §0. Onboarding TL;DR (read even if you skim nothing else)
 
 * The headline theorem is `OneThird.width3_one_third_two_thirds`
-  (`lean/OneThird/MainTheorem.lean:56`). It is **AMBER**: one
-  structured `sorry` (relocated to `MainAssembly.lean` integration
-  point post-mg-234e) and one named project axiom (plus Brightwell
-  is gone from the headline deps as of mg-8c72's Case3Witness_proof
-  landing).
+  (`lean/OneThird/MainTheorem.lean:56`). As of **mg-9add** (the
+  Piece-4 proof-by-contradiction body) it is **sorry-free**: it now
+  takes `hArith : HypothesisArithmetic` (paper Hypothesis A) and
+  drops `hC3 : Case3Witness`. Its project axioms are
+  `{brightwell_sharp_centred, lem_layered_balanced_irreducible_base,
+  stepsOneToSevenCascade, width3_smallN_hasBalancedPair,
+  nonChain_compl_of_no_balancedPair}` (see `AXIOMS.md`). The
+  pre-mg-9add structured `sorry` at `caseC_canonicalLayered` and the
+  `case3Witness_hasBalancedPair_outOfScope` axiom are **gone** — the
+  old direct-construction path that reached them is deleted. **NB:
+  §1–§3 below predate mg-9add and describe the deleted
+  `lem_layered_balanced` / `Case3Witness_proof` headline path; the
+  live headline is the `MainAssembly.lean` proof-by-contradiction —
+  see the mg-9add bullet at the end of §0.**
 * The proof is **layered-decomposition based**, descending through
   `lem_layered_balanced` → (`Case3Witness_proof` ∘ `bounded_irreducible_balanced_hybrid`)
   with Bool-certificate leaves verified by `native_decide`.
@@ -363,6 +372,35 @@ and this file is wrong — fix it.
   A–D pipeline). `#print axioms lem_layered_from_step7`:
   `propext`/`Classical.choice`/`Quot.sound` only. **Piece 3 is
   complete.** See `docs/state-S7F-Z-Session1.md`.
+* **mg-9add MA-Body (GREEN, 2026-05-21) — Piece 4 COMPLETE**: FULL
+  REFACTOR Phase-2 Piece 4 body. `lean/OneThird/Step8/MainAssembly.lean`
+  is rewritten: `width3_one_third_two_thirds_assembled` is now the
+  **proof by contradiction** of the mg-92a8 contract §4.8 —
+  minimal-counterexample strong induction (`mg-7969`) → `by_contra`
+  → `gamma_counterexample_of_no_BP` → `decomp_reduction` → a
+  `by_cases` dichotomy on `n_zero γ T ≤ |β|`: the large-`|β|` leaf
+  runs Theorem E (`mg-3638`) → `stepsOneToSevenCascade` /
+  `chainLiftData_of_cascade` (`mg-52e0`) → `lem_layered_from_step7`
+  (Piece 3) → `lem_layered_balanced_full` (Piece 6) →
+  `not_isGammaCounterexample_of_exc_balanced_compl` (S7-F-D), then
+  contradicts `hCex` (finding F3); the small-`|β|` leaf is the
+  `lem:small-n` base case. The four direct-construction machinery
+  items (`mainAssembly`, `mainTheoremInputsOf`,
+  `caseC_canonicalLayered`, `MainTheoremInputs`) are **deleted**;
+  the `caseC_canonicalLayered` cap-5 `sorry` is excised. Two of the
+  contract §4.8 "mechanical" aux combinators were genuine un-ported
+  math, re-pinned as documented project axioms:
+  **`width3_smallN_hasBalancedPair`** (the `lem:small-n` base case —
+  the contract's `n_zero_le_of_cascade_realised` was ill-posed,
+  finding F-Body-1) and **`nonChain_compl_of_no_balancedPair`** (the
+  `↥(Xexcᶜ)`-non-chain fact — the contract's `non_chain_subtype_of_exc`
+  is not mechanical, finding F-Body-2). Both `AXIOMS.md`-certified,
+  parallel to `stepsOneToSevenCascade`. Headline non-vacuously
+  instantiated at `Antichain3`
+  (`antichain3_width3_one_third_two_thirds_assembled`). `lake build
+  OneThird` succeeds. **Piece 4 is complete; only Piece 5
+  (integration) remains.** See `docs/state-MA-Body-Session1.md` and
+  `docs/state-Piece4-Sig-Session1.md` §10.3.
 
 ---
 
