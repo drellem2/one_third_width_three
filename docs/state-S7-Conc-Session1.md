@@ -232,12 +232,28 @@ The remaining piece-2 work — genuinely blocked on piece 1:
   extracted as genuine cascade-conclusion coefficients (GREEN — the
   constants project cleanly into `BandwidthData.VarBudgetHyp`). See
   `docs/state-S7-Conc-C-Session1.md`.
-* **mg-S7-Conc-D (discharge half)** — construct the concrete
-  `hBud : VarBudgetHyp` and `hRich : RichnessHyp` witnesses from
-  the -B / -C constants, and invoke
-  `lem_bandwidth_le_four_bundled_groundSet` to produce an
-  *unconditional* `L_{S7E} : LayeredWidth3 (richPairs α)` with
-  `bandwidth ≤ 4` for `α` a minimal γ-counterexample.
+* **mg-S7-Conc-D (assembly)** — **DONE (mg-3f00, 2026-05-21).
+  Piece 2 is complete.** `lean/OneThird/Step7/S7EAssembly.lean`
+  (NEW) composes the mg-8f9c richness discharge
+  (`richnessHyp_groundSet_of_step5`, `c_n = 1, c_d = 2`) and the
+  mg-5f3e budget discharge (`varBudgetHyp_of_budget_bound`,
+  `b_n = step6BudgetNum t_d δ_n, b_d = step6BudgetDen t_n δ_d`) onto
+  a single common `BandwidthData` and a single common cleared
+  denominator `M₀ := LP.card` — the `M₀` reconciliation flagged by
+  `state-S7-Conc-C-Session1.md` §3 point 3, resolved by the
+  denominator-independence of `varBudgetHyp_of_budget_bound`.
+  `lemS7E_groundSet` discharges **both** `hBud` and `hRich` (neither
+  is a free hypothesis) and invokes
+  `lem_bandwidth_le_four_bundled_groundSet`, producing
+  `L_S7E : LayeredWidth3 (richPairs : Finset (α × α))` with
+  `bandwidth ≤ 4`. `lemS7E_antichain3` / `L_S7E_antichain3` is the
+  fully-closed, non-vacuous concrete instance on the genuine
+  width-3 non-chain poset `Antichain3` with the genuine extracted
+  constants (`M₀ = genLP.card = 6`). The `lem:budget-var` index
+  conversion (deriving the cleared `hBound` from the Step 6
+  cascade's `M`-denominated output) is threaded as a hypothesis and
+  deferred to Piece 3 — disclosed, not a gap. See
+  `docs/state-S7-Conc-D-Session1.md`.
 
 **Recommendation.** Dispatch mg-S7-Conc-B / -C / -D-discharge as a
 piece-2 follow-on **after piece 1 (Steps 1–6 cascade port) lands**,

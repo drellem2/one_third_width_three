@@ -870,6 +870,25 @@ specific clause, read the paper clause.**
   `lem:budget-var` index conversion + the `M₀` shared with the
   Step 5 richness side are sub-arc `mg-S7-Conc-D`. See
   `docs/state-S7-Conc-C-Session1.md`.
+  `Step7/S7EAssembly.lean` (full file, **piece 2 sub-arc D — the
+  assembly that COMPLETES Piece 2**: `lemS7E_groundSet`,
+  `lemS7E_antichain3`, `L_S7E_antichain3`, `L_S7E_antichain3_bandwidth`,
+  `lemS7E_antichain3_nonvacuous`) (mg-3f00) — composes the mg-8f9c
+  richness discharge and the mg-5f3e budget discharge onto a single
+  common `BandwidthData` and a single common cleared denominator
+  `M₀ := LP.card` (the `M₀` reconciliation: `varBudgetHyp_of_budget_bound`
+  is denominator-independent, so the budget side is taken at the
+  richness side's `|LE(P)|`), and invokes
+  `lem_bandwidth_le_four_bundled_groundSet` to produce `L_S7E :
+  LayeredWidth3 (richPairs : Finset (α × α))` with `bandwidth ≤ 4`.
+  `lemS7E_groundSet` discharges **both** `hBud` and `hRich` (neither
+  is a free hypothesis); `lemS7E_antichain3` is the fully-closed,
+  non-vacuous concrete instance on the genuine width-3 non-chain
+  poset `Antichain3` with the genuine extracted constants. The
+  `hModel`/`hBound` threaded as hypotheses are the cleared
+  `lem:budget-var` output; deriving them from the Step 6 cascade's
+  `M`-denominated form is the genuine `lem:budget-var` index
+  conversion, deferred to Piece 3. See `docs/state-S7-Conc-D-Session1.md`.
 
 **Paper.** `main.tex` §1.4 road map; `step7.tex:1175-1193`
 (`prop:72`); `step8.tex:2404-2418` (`lem:ordinal-factorisation`);
