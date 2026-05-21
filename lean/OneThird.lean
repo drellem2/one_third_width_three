@@ -143,6 +143,7 @@ import OneThird.Step7.RichnessConstants
 import OneThird.Step7.Step6Budget
 import OneThird.Step7.S7EAssembly
 import OneThird.Step8.MainAssembly
+import OneThird.Step8.MinCounterexample
 import OneThird.Bridge
 
 /-!

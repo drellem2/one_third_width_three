@@ -940,3 +940,54 @@ pseudo-Lean is **not** the contract for the §E/§F/§G rows — the
 landed code is, and §4 here re-pins to it. A Piece-4 body
 sub-ticket that finds §4 type-checks but is unsatisfiable should
 **stop and re-scope**, not push through.
+
+---
+
+## §10. Body sub-ticket landings
+
+Per §9, each Piece-4 body sub-ticket records its landing and any
+signature drift here.
+
+### §10.1. `mg-MA-MinCex` — minimal-counterexample machinery (LANDED)
+
+`mg-7969` (OneThird-MA-MinCex, re-scoped) landed
+`lean/OneThird/Step8/MinCounterexample.lean` —
+`chain_of_subsingleton`, `gamma_counterexample_of_no_BP`,
+`decomp_reduction`, `ih_descent`, and the packaged
+`Nat.strong_induction_on` minimal-counterexample induction
+`hasBalancedPair_of_strongInduction` (§4.3).  Sorry-free; axioms
+`[propext, Classical.choice, Quot.sound]` only.  State doc:
+`docs/state-MA-MinCex-Session1.md`.
+
+**`WithEdge` design resolution.** §4.8 aux `gamma_counterexample_of_no_BP`
+needs `probLT x y > 0` for incomparable pairs (else `γ > 0` is
+unprovable and the lemma is vacuous).  The first session ground in an
+edit-build-fail loop trying to give a new `WithEdge x y` type a
+`PartialOrder` instance.  The landed file uses the in-tree
+order-refinement pattern `OneThird.RelationPoset` + `addRel` instead —
+a data-level poset, no instance to synthesize.  No `WithEdge` type
+exists.
+
+**Drift from §4.4 — `decomp_reduction` hypothesis (finding F-MinCex-1).**
+§4.4 pins `decomp_reduction` with `hCex : IsGammaCounterexample α γ`.
+The landed signature instead takes `hNoBP : ¬ HasBalancedPair α`
+directly:
+
+```lean
+theorem decomp_reduction
+    (hP : HasWidthAtMost α 3) (hNonChain : ¬ IsChainPoset α)
+    (hNoBP : ¬ HasBalancedPair α)
+    (ih : ∀ m, m < Fintype.card α → ∀ {β : Type u} [PartialOrder β]
+            [Fintype β] [DecidableEq β], Fintype.card β = m →
+            HasWidthAtMost β 3 → ¬ IsChainPoset β → HasBalancedPair β) :
+    Indecomposable α
+```
+
+`decomp_reduction` uses only "α has no balanced pair"; deriving that
+from `IsGammaCounterexample α γ` additionally needs `0 ≤ γ` (an
+incomparable balanced pair has `min(probLT) ≥ 1/3`, contradicting
+`min < 1/3 − γ` only when `γ ≥ 0`).  **Call-site impact: none** — the
+§4.8 body opens with `by_contra hNoBP`, so `hNoBP` is in scope; §4.8
+line §4 becomes `decomp_reduction hP hNonChain hNoBP (ih_descent hcard ih)`.
+This is the predictable Phase-1/Phase-2 drift, not a satisfiability
+defect.
