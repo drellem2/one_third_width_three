@@ -2,6 +2,7 @@ import OneThird.MainTheorem
 import OneThird.Step8.MainAssembly
 import OneThird.Step8.TheoremE
 import OneThird.Step8.TheoremEWiring
+import OneThird.Step8.Cascade
 
 /-! Headline theorems — full audit (mg-49a4) -/
 
@@ -17,3 +18,11 @@ import OneThird.Step8.TheoremEWiring
 
 #print axioms OneThird.Step8.theoremE_lowConductanceWitness
 #print axioms OneThird.Step8.theoremE_lowConductanceWitness_nonempty
+
+/-! Piece 4 — Steps 1-7 cascade wiring (`mg-MA-Cascade`, mg-52e0).
+`chainLiftData_of_cascade` and the supporting lemmas are axiom-free;
+`stepsOneToSevenCascade` carries the one disclosed Steps-1-7 axiom. -/
+
+#print axioms OneThird.Step8.chainLiftData_of_cascade
+#print axioms OneThird.Step8.stepsOneToSevenCascade
+#print axioms OneThird.Step8.GridChainLift.grid_Step5C_fires_bridge

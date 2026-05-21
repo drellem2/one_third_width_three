@@ -991,3 +991,72 @@ incomparable balanced pair has `min(probLT) ≥ 1/3`, contradicting
 line §4 becomes `decomp_reduction hP hNonChain hNoBP (ih_descent hcard ih)`.
 This is the predictable Phase-1/Phase-2 drift, not a satisfiability
 defect.
+
+### §10.2. `mg-MA-Cascade` — the Steps 1-7 cascade wiring (LANDED)
+
+`mg-52e0` (OneThird-MA-Cascade) landed
+`lean/OneThird/Step8/Cascade.lean` — `HypothesisArithmetic`,
+`n_zero` (+ correctness lemma `n_zero_ceil_ge`), `Step5R` / `Step5C`,
+`not_hasBalancedPair_of_isGammaCounterexample`,
+`stepsOneToSevenCascade`, `chainLiftData_of_cascade`, and the
+non-vacuity certificates `GridChainLift.grid_Step5C` /
+`grid_Step5C_fires_bridge`.  `lake build OneThird` succeeds.
+`#print axioms`: `chainLiftData_of_cascade` and the four supporting
+lemmas are **axiom-free** (`propext` / `Classical.choice` /
+`Quot.sound` only); `stepsOneToSevenCascade` carries the one new
+project axiom (see F-Cascade-1).  State doc:
+`docs/state-MA-Cascade-Session1.md`.  Findings F-Cascade-1..4:
+
+**F-Cascade-1 — `stepsOneToSevenCascade` landed as a named project
+axiom, not a theorem.**  §4.5 wrote `theorem stepsOneToSevenCascade`.
+The genuine content — BK-expansion ⇒ Step-5 dichotomy ⇒ Steps 6-7
+chain-potential cascade — is a multi-month Lean port that is not in
+tree (Step 7 is the rich-pair packaging `Step7.LayeredWidth3`, which
+`mg-ca83` Checkpoint 3 found carries no poset-structural content;
+there is no consumable α-side `ChainLiftData`-valued cascade).  This
+is exactly the hold-the-line situation §7's Dependency note
+anticipates.  The honest representation is a named, paper-faithful,
+`AXIOMS.md`-certified project axiom (`step8.tex` thm:main-step8
+Steps 1-7 + `step7.tex:1173` `prop:72`).  Consistent with the
+sanctioned posture (mg-ac13 Option C, mg-6ab8; onboarding §1 step 1).
+
+**F-Cascade-2 — §6's axiom accounting was incomplete.**  §6 stated the
+post-refactor headline axiom set is a "net wash"
+(`brightwell_sharp_centred` + `lem_layered_balanced_irreducible_base`).
+It omitted the Steps-1-7 gap.  The accurate picture: the current
+`MainAssembly.lean` cap-5 **`sorry`** *is* the Steps-1-7 `w₀(γ) ≤ 4`
+delivery gap (onboarding §0, pitfall #3/#5).  Piece 4 converts that
+`sorry` into the named axiom `stepsOneToSevenCascade` — a
+`sorry → documented axiom` upgrade.  **Corrected §6:** post-refactor
+the headline is sorry-free with axioms
+`{brightwell_sharp_centred, lem_layered_balanced_irreducible_base,
+stepsOneToSevenCascade}` + Mathlib's.
+
+**F-Cascade-3 — `Step5R` / `Step5C` are not wrappers around the
+in-tree numeric predicates.**  §4.5 described them as wrappers around
+`Step5.Step5Richness` / `Step5.Step5Collapse`.  Those in-tree
+predicates are structurally weak — `Step5Collapse p q` is provably
+`True` (`fAC := 0, fBC := 0, K := 0`), `Step5Richness` likewise when
+the numerics are free — so a literal wrapper would be **vacuous**,
+violating the non-triviality bar.  The landed `Step5C` is the
+F2-widened bridge-ready `ChainLiftData` existence (Step-7 collapse
+output); `Step5R := HasBalancedPair α` (the richness route's net
+conclusion via Step 6 `cor:pointwise`).  The §4.5 signatures (name,
+`α`/`γ`/`T` arity, `: Prop`) are honoured; only the elided `…` bodies
+differ from the §4.5 prose description.
+
+**F-Cascade-4 — `chainLiftData_of_cascade`'s `hP`/`hI` are inert.**
+Given the F2-widened `Step5C` (which carries the full codomain),
+`chainLiftData_of_cascade` is a genuine but thin extraction:
+`hγ_pos`, `hCex`, `hCascade` are load-bearing (`hCex` *excludes the
+`Step5R` branch*, per §5.3); `hP`/`hI` are inert and kept only for
+§4.5 signature conformance.  Also: `Step5C` /
+`chainLiftData_of_cascade` / `stepsOneToSevenCascade` carry
+`[DecidableLE α]` (needed transitively by `ExcBudget`), which §4.5
+omitted — the same instance the F7 finding flags; the §4.8 headline
+body's opening `classical` supplies it, so no public-API change.
+
+All four are predictable Phase-1/Phase-2 drift, not satisfiability
+defects: `chainLiftData_of_cascade`'s codomain is satisfiable against
+the landed bridge (`grid_Step5C_fires_bridge`), and `stepsOneToSeven
+Cascade`'s `Step5C` disjunct is the same non-vacuous codomain.

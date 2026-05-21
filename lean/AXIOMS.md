@@ -757,3 +757,131 @@ the mg-65de findings; the errors are in the proof *method*, not the
 *target*). Its acceptability rests on the independent evidence above,
 not on the paper's authority. Full statement of residual risk:
 `docs/state-Piece6-Axiom-Verify-Session1.md` §6.
+
+---
+
+## `OneThird.Step8.stepsOneToSevenCascade`
+
+**File.** `lean/OneThird/Step8/Cascade.lean`
+
+**Paper statement.** `step8.tex` `thm:main-step8` (`step8.tex:106-260`),
+the **Steps 1-7 cascade** segment of the proof-by-contradiction: a
+minimal width-3 indecomposable `γ`-counterexample, once Theorem E
+(`cexImpliesLowBKExpansion`, landed sorry-free) supplies the
+low-conductance cut `S ⊆ 𝓛(P)`, is driven through Steps 1-7 of the
+paper — the BK-expansion bound, the per-fiber staircase (Steps 1-4),
+the Rich-or-Collapse dichotomy (Step 5, `step5.tex:77` `thm:step5`),
+the pointwise / most-good closures (Step 6), and the layered collapse
+(Step 7, `step7.tex:1173` `prop:72` + `prop:71` + `lem:bandwidth`).
+The output is the Step-5 dichotomy: either the richness route (which
+yields a balanced pair, contradicting the counterexample) or the
+collapse route delivering a bridge-ready `ChainLiftData` — a Dilworth
+chain triple with chain potential, sync maps, bandwidth `K_bw ≤ 2`,
+strict poset-monotone potential (`prop:71`), and `O_T(1)` exceptional
+budget (`lem:bandwidth`).
+
+**Introduced by.** `mg-52e0` (OneThird-MA-Cascade, FULL REFACTOR
+Phase 2 Piece-4 body — this entry).
+
+**QA status.** Pre-flight-pinned by `mg-92a8` (the Piece-4 signature
+contract `docs/state-Piece4-Sig-Session1.md`); the contract §5.3/§5.4
+satisfiability-verified the cascade codomain. The session state doc
+is `docs/state-MA-Cascade-Session1.md`.
+
+**Status.** **Disclosed project axiom — RETAINED.** This axiom is the
+honest representation of the un-ported Steps 1-7 paper cascade. It is
+**not new debt** — it is a `sorry → documented axiom` *upgrade*:
+
+* Before Piece 4, the Steps-1-7 `w₀(γ) ≤ 4` delivery gap lived as the
+  structured `sorry` at `MainAssembly.lean` (`caseC_canonicalLayered`,
+  `PROOF-STRUCTURE-ONBOARDING.md` §0 / pitfall #3 / #5). That `sorry`
+  is *exactly* this gap (mg-5fbd 7th-vacuity audit: architecturally
+  unclosable in-place; closing it honestly requires the multi-month
+  Steps 1-6 cascade port).
+* Piece 4 rewrites the headline to proof-by-contradiction and replaces
+  that `sorry` with this **named, paper-faithful, `AXIOMS.md`-certified
+  axiom** — strictly more auditable than an anonymous `sorry`.
+
+Axiomatising Steps 1-7 is the project's sanctioned posture: mg-ac13
+Option C and mg-6ab8 explicitly recommend it, and the onboarding §1
+step 1 records "Steps 1-7 are paper-axiomatised". The structural
+backbone of the headline is Step 8 (G4, `lem_layered_balanced_full`)
+plus the S7-F bridge — both genuinely in tree; Steps 1-7 is the
+upstream cascade whose full Lean port is multi-month / multi-MTok
+(mg-6ab8 Option A, 6-9M tokens).
+
+### Scope-match checklist
+
+| Paper | Axiom | Status |
+| --- | --- | --- |
+| `γ`-counterexample with `γ ∈ (0, 1/3]` | `γ : ℚ`, `hγ_pos : 0 < γ`, `hγ_third : γ ≤ 1/3` | ✅ |
+| Width-3 hypothesis | `hP : HasWidthAtMost α 3` | ✅ |
+| Minimal counterexample is indecomposable (`rem:decomp-reduction`) | `hI : Indecomposable α` | ✅ (supplied by `decomp_reduction`, mg-7969) |
+| `α` is a `γ`-counterexample | `hCex : IsGammaCounterexample α γ` | ✅ |
+| `|α| ≥ 2` | `h2 : 2 ≤ Fintype.card α` | ✅ |
+| Hypothesis A (`hyp:arith`, `step8.tex:9-23`) | `hArith : HypothesisArithmetic` | ✅ (in-Lean predicate, not an axiom) |
+| `α` large enough to realise the cascade (`n ≥ n₀`) | `hn0 : n_zero γ (hArith.T γ) ≤ Fintype.card α` | ✅ |
+| Theorem E low-conductance witness (`thm:cex-implies-low-expansion`) | `hS : ∃ S, γ·vol(univ) ≤ vol S ∧ Φ(S) ≤ 2/(γn)` | ✅ (produced by `theoremE_lowConductanceWitness`, mg-3638) |
+| Conclusion: Step-5 dichotomy (R) or (C) | `Step5R α γ (hArith.T γ) ∨ Step5C α (hArith.T γ)` | ✅ |
+
+Every hypothesis is load-bearing: the axiom is invokable only for a
+genuine minimal `γ`-counterexample realised above `n_zero` with the
+Theorem-E witness in hand.
+
+### Why an axiom and not a proof
+
+The genuine mathematical content — BK-expansion ⇒ Steps 1-4 staircase
+⇒ Step-5 Rich-or-Collapse ⇒ Step-6 closures ⇒ Step-7 layered collapse
+— is a multi-month Lean port. The current tree has:
+
+* the **abstract** Step-5 dichotomy `Step5.thm_step5`
+  (`Step5/Dichotomy.lean`) — a genuine `rcases` theorem, but it
+  consumes the per-triple structural inputs as hypotheses; deriving
+  those from the low-conductance witness is the Steps 1-4 cascade,
+  not in tree;
+* the Steps 1-6 grounded cascade `cascade_steps_1_6_grounded`
+  (mg-496b, parametric);
+* Step 7's `Step7.LayeredWidth3` — which `mg-ca83` Checkpoint 3 found
+  is a *rich-pair window packaging with no poset-structural content*;
+  there is **no consumable α-side `ChainLiftData`-valued cascade**.
+
+The Piece-4 signature contract `mg-92a8` §7 anticipates exactly this:
+*"If, at `mg-MA-Cascade` kickoff, the Piece-1/2 α-side concretisation
+is not consumable, that is a hold-the-line finding to surface — not a
+defect of this contract (the signatures are correct; the discharge is
+the cross-piece work)."* This axiom *is* that disclosed cross-piece
+discharge.
+
+### Non-vacuity
+
+The axiom is **not** a `true → false` pin. Its codomain disjunct
+`Step5C` (the F2-widened bridge-ready `ChainLiftData` existence) is
+satisfiability-verified against the landed S7-F bridge:
+`GridChainLift.grid_Step5C` inhabits `Step5C` on the genuine width-3
+non-chain 3×3 grid (`gridChainLiftData`), and
+`GridChainLift.grid_Step5C_fires_bridge` feeds that witness through
+`lem_layered_from_step7` to a genuine three-cap output. Both
+`PotPosetMono` and `ExcBudget` provably *fail* for the degenerate
+3-disjoint-chains family `Δ_ℓ` (Piece-4 contract §5.3), so the
+codomain is a genuine soundness filter.
+
+### Replacement path
+
+Port Steps 1-7 of the paper to Lean (mg-6ab8 Option A, the multi-month
+arc): wire the Steps 1-4 per-fiber staircase into the Step-5 abstract
+dichotomy `thm_step5`; ground Step 6; and replace `Step7.LayeredWidth3`
+with a genuine `ChainLiftData`-valued Step-7 collapse delivering
+`prop:72`'s `w₀(γ) ≤ 4`. The Piece-4 signature contract is fixed so
+that `mg-MA-Cascade` (this file) needs no downstream signature
+re-scope when that port lands — `stepsOneToSevenCascade` becomes a
+theorem with no change to its consumers.
+
+**Retained-axiom audit bar.** Meets `difficult` (✓ — a multi-month
+port) and `labeled` (✓ — pinned by mg-92a8 to a specific paper
+segment); fails `external` (✗ — the project's own Steps 1-7, not an
+external citation); meets `low-risk` partially (◑ — the paper's
+Steps 1-7 are a genuine published proof, but not yet independently
+Lean-checked). Same category as
+`case3Witness_hasBalancedPair_outOfScope` and
+`lem_layered_balanced_irreducible_base` — a disclosed internal axiom
+with an honest replacement path, retained pending the Steps 1-7 port.
