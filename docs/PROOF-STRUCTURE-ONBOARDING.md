@@ -237,8 +237,13 @@ and this file is wrong — fix it.
   (MA-Sig §4.2 §E consumes `Step5R ∨ Step5C`; scoping §2.3 says it
   consumes `L_S7E`). Required before Piece 3: re-point Piece 2 to
   deliver a concrete `ChainLiftData α` (the genuine bridge input)
-  and reconcile the contract. See §3 pitfall #9 +
-  `docs/state-S7F-Checkpoint3-Session1.md`.
+  and reconcile the contract. **Both done (2026-05-21):** R2
+  (mg-3119) reconciled the contract; **R1 (mg-974c) settled F7a
+  GREEN** — a concrete non-degenerate `ChainLiftData α` IS
+  constructible (`Step8/ConcreteChainLiftData.lean`). Piece 3 is
+  unblocked on F7a. See §3 pitfall #9 (Re-scope status) +
+  `docs/state-S7F-Checkpoint3-Session1.md` +
+  `docs/state-S7F-R1-Session1.md`.
 
 ---
 
@@ -855,18 +860,28 @@ a genuine, non-sham conversion exists**. A shared name (`…Width3`,
 delivered the wrong object entirely; full analysis +
 re-scope action in `docs/state-S7F-Checkpoint3-Session1.md`.
 
-**Re-scope status (2026-05-21).** Checkpoint 3's two-part
-re-scope: **R2** (mg-3119) — *done* — reconciled the bridge
+**Re-scope status (2026-05-21) — both halves DONE.** Checkpoint 3's
+two-part re-scope: **R2** (mg-3119) — *done* — reconciled the bridge
 contract; MA-Sig §4.2 §E and scoping §2.3 now consistently pin the
 S7-F bridge input as a **`ChainLiftData α`** (`ChainPotentials.lean:328`
 — Dilworth triple + chain potential + sync maps + `K_bw`), with a
 new §4.2 §D′ constructor `chainLiftData_of_cascade` taking
 `Step5R ∨ Step5C → ChainLiftData`; see `state-MA-Sig-Session1.md`
-§11. **R1** (mg-974c, depends on mg-3119) — *pending* — re-points
-Piece 2 to a concrete `ChainLiftData α` and settles the **open
-F7a constructibility question** (no concrete `ChainLiftData`
-instance exists in tree). The reconciled contract is **provisional
-until R1 confirms F7a**; Piece 3 stays blocked until then.
+§11. **R1** (mg-974c) — *done* — **F7a is settled GREEN: a concrete,
+non-degenerate `ChainLiftData α` IS constructible.** The deliverable
+is `lean/OneThird/Step8/ConcreteChainLiftData.lean`
+(`gridChainLiftData : ChainLiftData (Fin 3 × Fin 3)` on the 3×3
+grid — non-constant `i+j` potential, non-empty sync maps with a
+genuine `X^exc_sync` orphan, non-inert tight `K_bw = 1`; sorry-free,
+axiom-free). Per MA-Sig §11.4 this is **case 1** — the witness
+matches the *bare* structure, so §4.2 §D′/§E **stand as pinned**.
+**Caveat (MA-Sig §11.3, NOT F7a):** the bare `ChainLiftData`
+structure carries no soundness invariant — it is inhabited even for
+`Δ_ℓ` where the bridge conclusion fails — so structure
+constructibility ≠ bridge-body dischargeability; whether the bridge
+body needs a strengthened structure (resolution (B)) is a **Piece-3**
+concern. Piece 3 (S7-F bridge sub-arcs) is now **unblocked on F7a**.
+See `docs/state-S7F-R1-Session1.md`.
 
 ---
 

@@ -83,15 +83,20 @@ source).**
 > rich-pair packaging) and the bridge contract was pinned
 > **inconsistently** — MA-Sig §4.2 §E said the bridge consumes
 > `Step5R ∨ Step5C`, this doc's §2.3 said it consumes `L_{S7E}`.
-> The re-scope is two parts. **R2** (mg-3119) — *done* — reconciled
-> the contract: §2.3 and MA-Sig §4.2 §E now consistently state the
-> bridge input as a **`ChainLiftData α`** (Dilworth triple + chain
-> potential + sync maps + `K_bw`); §2.2/§2.3 carry ⚠ RECONCILED
-> banners, MA-Sig adds §4.2 §D′ + §11. **R1** (mg-974c, depends on
-> mg-3119) — *pending* — re-points Piece 2 to deliver a concrete
-> non-degenerate `ChainLiftData α` and settles the open **F7a**
-> constructibility question. Piece 3 stays blocked until R1 lands
-> GREEN. See `docs/state-S7F-Checkpoint3-Session1.md` and
+> The re-scope is two parts, **both now DONE**. **R2** (mg-3119) —
+> *done* — reconciled the contract: §2.3 and MA-Sig §4.2 §E now
+> consistently state the bridge input as a **`ChainLiftData α`**
+> (Dilworth triple + chain potential + sync maps + `K_bw`); §2.2/§2.3
+> carry ⚠ RECONCILED banners, MA-Sig adds §4.2 §D′ + §11. **R1**
+> (mg-974c) — *done* — **F7a is settled GREEN: a concrete
+> non-degenerate `ChainLiftData α` IS constructible**
+> (`lean/OneThird/Step8/ConcreteChainLiftData.lean`,
+> `gridChainLiftData` on the 3×3 grid; sorry-free, axiom-free).
+> Piece 3 is now **unblocked on F7a**. Caveat (MA-Sig §11.3): the
+> bare structure carries no soundness invariant — whether the bridge
+> *body* needs a strengthened structure is a Piece-3 concern, not
+> F7a. See `docs/state-S7F-R1-Session1.md`,
+> `docs/state-S7F-Checkpoint3-Session1.md` and
 > `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #9.
 
 **Six pieces** of the Option A' FULL REFACTOR scoped end-to-end
@@ -414,11 +419,15 @@ paper-side is unchanged from mg-6ab8 §2.
 > concretisation target is **re-pointed to a concrete
 > `ChainLiftData α`** (Dilworth triple + chain potential + sync
 > maps + `K_{bw}`) — the object the bridge §2.3 actually consumes,
-> reconciled by **R2** (mg-3119). The re-point itself — and the
-> open **F7a** question of whether such a concrete non-degenerate
-> `ChainLiftData α` is constructible — is **part R1** (mg-974c).
-> Read the `L_{S7E}` deliverable below as **superseded**; the
-> Conc-A BK-graph carrier types stay reusable.
+> reconciled by **R2** (mg-3119). **R1 (mg-974c) — DONE: F7a is
+> settled GREEN.** A concrete non-degenerate `ChainLiftData α` IS
+> constructible — `lean/OneThird/Step8/ConcreteChainLiftData.lean`
+> (`gridChainLiftData` on the 3×3 grid; non-constant potential,
+> sync maps with a genuine `X^exc_sync` orphan, non-inert tight
+> `K_bw = 1`; sorry-free, axiom-free). Read the `L_{S7E}`
+> deliverable below as **superseded** — the re-pointed Piece-2
+> deliverable is `gridChainLiftData`; the Conc-A BK-graph carrier
+> types stay reusable. See `docs/state-S7F-R1-Session1.md`.
 
 **Substantive content.** The S7-A-E pilot (mg-4584/9331/1069/d135/516f,
 landed) produces *grounded forms* on **parametric upstream hypotheses**
@@ -529,10 +538,17 @@ top of an already-grounded abstract scaffold.
 > Step-7 *internal* scaffolding, not the bridge input (mg-ca83 §3,
 > `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #9). The matching
 > MA-Sig re-pin is `docs/state-MA-Sig-Session1.md` §4.2 §D′/§E +
-> §11. **PROVISIONAL:** whether a concrete non-degenerate
-> `ChainLiftData α` is constructible for a minimal counterexample
-> is the open **F7a** question — part **R1** (mg-974c) settles it;
-> Piece 3 stays blocked until R1 lands GREEN.
+> §11. **F7a — SETTLED GREEN (R1, mg-974c).** A concrete
+> non-degenerate `ChainLiftData α` IS constructible —
+> `lean/OneThird/Step8/ConcreteChainLiftData.lean` (`gridChainLiftData`
+> on the 3×3 grid). Per MA-Sig §11.4 this is **case 1** (witness
+> matches the bare structure); §4.2 §D′/§E stand. Piece 3 is
+> **unblocked on F7a**. Remaining (a Piece-3 concern, *not* F7a):
+> MA-Sig §11.3 — the bare structure carries no soundness invariant,
+> so Piece 3 must decide whether the bridge body is provable from
+> the bare structure (resolution (A), `hCex` domain pin) or needs a
+> strengthened structure (resolution (B)). See
+> `docs/state-S7F-R1-Session1.md`.
 
 **Substantive content.** Lean port of the paper's
 `lem:layered-from-step7` (`step8.tex:2009-2089`): the *structural
