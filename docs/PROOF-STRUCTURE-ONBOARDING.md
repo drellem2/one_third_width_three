@@ -198,6 +198,29 @@ and this file is wrong — fix it.
   satisfiability gate. Empty-bad-active-set scope boundary disclosed
   (all disagreement mass routed through the non-active term, faithful
   to `step6.tex:646-649`). See `docs/state-Cascade-Compose-Session1.md`.
+* **mg-ca83 S7-F Checkpoint 3 (RED, 2026-05-21)**: the FULL REFACTOR
+  Phase-2 hold-the-line gate after Piece 2 (S7-A–E concretisation),
+  gating Piece 3 (the S7-F bridge). Verdict **RED — do NOT dispatch
+  Piece 3.** Piece 2's deliverable `L_S7E` is a
+  `Step7.LayeredWidth3 (richPairs : Finset (α × α))` — a rich-pair
+  window-confinement packaging (`bandwidth : ℕ` + a partition of
+  `richPairs`). The S7-F bridge `lem:layered-from-step7` must
+  **output** a ground-set `LayeredDecomposition {a // a ∉ Xexc}`
+  (band map + (L1)/(L2)/(L4) invariants) and to build it must
+  **consume** a potential `a : X → ℝ`, a threshold, a Dilworth
+  triple, and the synchronization maps `f_AB/f_AC/f_BC`. `L_S7E`
+  carries **none** of these; its one nominal contribution
+  `bandwidth ≤ 4` is inert (`prop_72` sets `bandwidth = c₀`, a free
+  threshold param fixed to the literal `4`; `bandwidth ≤ 4` reduces
+  to `4 ≤ 4`). The only in-tree `LayeredWidth3 → LayeredDecomposition`
+  conversion (`layeredFromBridges`, `LayeredBridges.lean:181`) is a
+  documented sham — it inflates `w` to `|α|+1` and makes (L2)
+  vacuous. The bridge contract is also pinned **inconsistently**
+  (MA-Sig §4.2 §E consumes `Step5R ∨ Step5C`; scoping §2.3 says it
+  consumes `L_S7E`). Required before Piece 3: re-point Piece 2 to
+  deliver a concrete `ChainLiftData α` (the genuine bridge input)
+  and reconcile the contract. See §3 pitfall #9 +
+  `docs/state-S7F-Checkpoint3-Session1.md`.
 
 ---
 
@@ -781,6 +804,39 @@ declared `step1.tex` "not in the repo" and guessed the fix; the paper
 bug in a different clause. **Before attributing a port bug to a
 specific clause, read the paper clause.**
 
+### Pitfall #9 — `LayeredWidth3` is not `LayeredDecomposition`: a Pair-space packaging with an inert `bandwidth` is not the S7-F bridge input (mg-ca83, Checkpoint 3)
+
+Two structures sit on opposite sides of the Piece-2/Piece-3 boundary
+and are easy to conflate by name:
+
+| Structure | File:Line | What it is |
+|---|---|---|
+| `Step7.LayeredWidth3 (richPairs : Finset Pair)` | `Step7/Assembly.lean:302` | Piece 2's `L_S7E`. A **rich-pair window-confinement packaging**: `bandwidth : ℕ` + a partition `richPairsIn ⊔ richPairsOut = richPairs`. **No band map, no poset invariant.** |
+| `Step8.LayeredDecomposition α` | `Step8/LayeredReduction.lean:113` | The S7-F bridge **output** / Piece 6 **input**. A genuine ground-set decomposition: `band : α → ℕ`, `band_size`/`band_antichain` (L1), `forced_lt` (L2), `cross_band_lt_upward` (L4). `w` is load-bearing (inside `forced_lt`). |
+
+**The trap.** `LayeredWidth3` is named to evoke "layered
+decomposition" and ships a field called `bandwidth`. Both are
+deceptive. `bandwidth` is a bare `ℕ` with **no invariant** tying it
+to any band map — `prop_72` (`Step7/Assembly.lean:329`) sets
+`L.bandwidth = c₀` for a *free* threshold parameter `c₀`, and
+`lem_bandwidth_le_four` fixes `c₀ := 4`, so `L_S7E.bandwidth ≤ 4`
+is the content-free `4 ≤ 4`. The genuine `LayeredDecomposition.w` is
+a structural quantity; `LayeredWidth3.bandwidth` is a chosen
+constant. The only in-tree conversion between the two,
+`layeredFromBridges` (`Step8/LayeredBridges.lean:181`), is a
+**documented sham**: to keep (L2) Lean-sound it inflates `w` to
+`|α|+1` and makes `forced_lt` vacuous — its docstring says a genuine
+conversion needs the chain-potential + sync-map alignment of
+`rem:layered-from-step7`.
+
+**Standing lesson** (a refinement of pitfall #7's). When a ticket
+says "Piece N produces the input Piece N+1 consumes", **read both
+structure definitions and confirm the types are the same — or that
+a genuine, non-sham conversion exists**. A shared name (`…Width3`,
+`bandwidth`, `…Layered…`) is not evidence. mg-ca83 found Piece 2
+delivered the wrong object entirely; full analysis +
+re-scope action in `docs/state-S7F-Checkpoint3-Session1.md`.
+
 ---
 
 ## §4. Cross-reference index (terse)
@@ -970,6 +1026,15 @@ specific clause, read the paper clause.**
   full Step 8 G4 port (a 6th piece). Recommendation: re-scope
   (re-pin MA-Sig §4.2, add piece 6) before any P3/P4 Lean work.
   No Lean changes in that session.
+* `docs/state-S7F-Checkpoint3-Session1.md` (mg-ca83) — FULL
+  REFACTOR Phase-2 Checkpoint 3 hold-the-line audit; **RED**. Piece
+  2's `L_S7E` (`Step7.LayeredWidth3`, a rich-pair window-confinement
+  packaging) does not match the S7-F bridge input: the bridge needs
+  a ground-set potential + threshold + Dilworth triple + sync maps
+  to build a `LayeredDecomposition`, none of which `L_S7E` carries;
+  `bandwidth ≤ 4` is inert. §3 pitfall #9. Recommendation: re-point
+  Piece 2 to deliver `ChainLiftData α` + reconcile the bridge
+  contract before Piece 3. No Lean changes.
 * `docs/state-Piece6-FullStep8G4-Session1.md` (mg-fdc2) — FULL
   REFACTOR Piece 6 (`lem_layered_balanced_full`, full Step 8 G4)
   first execution attempt; **RED — base-case coverage gap**. The

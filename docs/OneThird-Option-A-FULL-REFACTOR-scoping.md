@@ -1179,6 +1179,26 @@ Checkpoint 6 added mg-faf8):
   concretely? **This is the highest-risk checkpoint** — the prior
   failure of this audit at the call-site architecture is exactly
   what triggered mg-d8c7.
+  **OUTCOME (mg-ca83, 2026-05-21): RED — do NOT dispatch Piece 3.**
+  Piece 2's `L_{S7E}` is a `Step7.LayeredWidth3 (richPairs :
+  Finset (α × α))` — a rich-pair window-confinement packaging
+  (`bandwidth : ℕ` + a partition of `richPairs`). The S7-F bridge
+  must output a ground-set `LayeredDecomposition {a // a ∉ Xexc}`
+  and to build it must consume a potential `a : X → ℝ`, a threshold,
+  a Dilworth triple, and the synchronization maps `f_AB/f_AC/f_BC`
+  (paper `lem:layered-from-step7`, `step8.tex:2009-2089`). `L_{S7E}`
+  carries none of these; its `bandwidth ≤ 4` is inert (`prop_72`
+  sets `bandwidth = c₀`, a free threshold param fixed to `4`).
+  The only in-tree `LayeredWidth3 → LayeredDecomposition`
+  conversion (`layeredFromBridges`) is a documented sham. The
+  bridge contract is additionally pinned inconsistently (MA-Sig
+  §4.2 §E consumes `Step5R ∨ Step5C`; §2.3 below says it consumes
+  `L_{S7E}`). Required before Piece 3: re-point Piece 2 to deliver
+  a concrete `ChainLiftData α` (Dilworth triple + chain potential +
+  sync maps + `K_bw`), and reconcile the bridge contract — drop the
+  §2.3 "from piece 2's `L_{S7E}`" wording. Full analysis:
+  `docs/state-S7F-Checkpoint3-Session1.md`;
+  `PROOF-STRUCTURE-ONBOARDING.md` §3 pitfall #9.
 - **Checkpoint 4 (after piece 3 lands, before piece 4-Body
   starts, ~weeks 18-20).** Audit: does the bridge's output have
   the shape the refactor body consumes? Specifically, is
