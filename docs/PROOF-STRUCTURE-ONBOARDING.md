@@ -262,6 +262,26 @@ and this file is wrong — fix it.
   per the Piece-3 design note), not fabricated. The ground-set
   `X^exc_sync : Finset α` stays scoped to S7-F-A. Piece-3 sub-arcs
   A/C/Z remain. See `docs/state-S7F-B-Session1.md`.
+* **mg-08d7 S7-F-A (GREEN, 2026-05-21)**: FULL REFACTOR Phase-2
+  Piece 3 (the S7-F bridge), sub-arc `mg-S7-F-A` — paper item (i)
+  of `lem:layered-from-step7`. `lean/OneThird/Step8/ExceptionalSet.lean`
+  (NEW, sorry-free, no new axiom) constructs the exceptional set
+  `X^exc = X^exc_mono ∪ X^exc_band ∪ X^exc_sync`, each a `Finset α`
+  derived from the bare `ChainLiftData α` fields, and proves
+  `|X^exc| ≤ C_exc T` (an `O_T(1)` bound). `X^exc_mono` is *proved*
+  empty (earned from the `ChainPotential.strictMono` fields — the
+  Lean structure is the post-`prop:71` monotone potential). The
+  `O_T(1)` bound is **not** derivable from the *bare* structure
+  (false on `Δ_ℓ`, MA-Sig §11.3); the genuine cascade facts
+  (`lem:bandwidth` count + per-chain orphan bound) are pinned as the
+  `ExcBudget D T` interface — the precise obligation sub-arc
+  `mg-S7-F-Z` must discharge from `hCex` + the cascade (Resolution A
+  per the PIECE-3 DESIGN NOTE). The construction is discharged
+  unconditionally on the F7a grid witness (`X^exc = {(0,0)}`,
+  non-empty; bound closes hypothesis-free). The `opaque c₁` modelling
+  the Step-5 constant `c_1(T)` is an opaque def, **not** an axiom
+  (`AXIOMS.md` unchanged); the load-bearing `Xexc_card_le_of_budget`
+  does not reference it. See `docs/state-S7F-A-Session1.md`.
 
 ---
 

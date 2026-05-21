@@ -128,6 +128,7 @@ import OneThird.Step8.SmallN
 import OneThird.Step8.ChainPotentials
 import OneThird.Step8.ConcreteChainLiftData
 import OneThird.Step8.SyncMaps
+import OneThird.Step8.ExceptionalSet
 import OneThird.Step8.LayeredBalancedFull
 import OneThird.Step8.LayeredBalancedFullExample
 import OneThird.Step8.LayeredBridges
