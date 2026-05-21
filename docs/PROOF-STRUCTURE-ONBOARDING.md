@@ -282,6 +282,32 @@ and this file is wrong — fix it.
   the Step-5 constant `c_1(T)` is an opaque def, **not** an axiom
   (`AXIOMS.md` unchanged); the load-bearing `Xexc_card_le_of_budget`
   does not reference it. See `docs/state-S7F-A-Session1.md`.
+* **mg-bcc9 S7-F-C (GREEN, 2026-05-21)**: FULL REFACTOR Phase-2
+  Piece 3 (the S7-F bridge), sub-arc `mg-S7-F-C` — paper item (ii)
+  of `lem:layered-from-step7`. `lean/OneThird/Step8/BridgeLayered.lean`
+  (NEW, sorry-free, no new axiom) assembles
+  `bridgeLayered D hMono : LayeredDecomposition (↥((Xexc D)ᶜ))` — the
+  genuine ground-set `LayeredDecomposition` on `X ∖ X^exc` — and
+  verifies all four `def:layered` invariants `(L1)`–`(L4)`, with
+  interaction width `w := K_bw + 2` and the cap `w ≤ 4` from
+  `K_bw ≤ 2`. The band map is the **normalised chain potential**
+  (`bridgeBand z = (a z − potMin).toNat + 1`) — exactly the band map
+  of the in-tree witness `gridLayered` (`band = potFun + 1`), a
+  genuine non-inert band map, not a Checkpoint-3 Finding-D `4 ≤ 4`.
+  **The Resolution-A-vs-B decision point resolved to Resolution A:
+  `(L2)` (`forced_lt`) closes.** The comparability half is a
+  structural tautology of the complement — `X^exc_band` (sub-ticket A)
+  was *defined* as the bandwidth-excess locus, so on `X ∖ X^exc` every
+  incomparable pair is within `K_bw < w`; only the *direction* needs
+  the named obligation `ChainLiftData.PotPosetMono` (paper `prop:71`:
+  the potential is strictly poset-monotone, not merely chain-monotone)
+  — the S7-F-C analogue of `ExcBudget` (A) / `BoundedSyncOrphans` (B),
+  to be discharged from `hCex` + cascade by `mg-S7-F-Z`. No
+  Resolution-B escalation, no block-and-report. Discharged
+  unconditionally on the F7a grid witness (`gridBridgeLayered`:
+  `K = 5`, `w = 3`, non-constant band map). `#print axioms`: only
+  `propext`/`Classical.choice`/`Quot.sound`. See
+  `docs/state-S7F-C-Session1.md`.
 
 ---
 
