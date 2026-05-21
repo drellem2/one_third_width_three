@@ -562,25 +562,37 @@ content required.
 **File.** `lean/OneThird/Step8/LayeredBalancedFull.lean`
 
 **Paper statement.** `step8.tex` `prop:in-situ-balanced` Cases 2 + 3
-(`step8.tex:3096-3186`), the irreducible base case of
+(`step8.tex:3096-3210`), the irreducible base case of
 `lem:layered-balanced` (the full Step 8 G4). The proposition: a
 width-3 non-chain poset `β` admitting a layered decomposition `L` of
 interaction width `L.w ≤ 4` that is **layer-ordinal irreducible** and
 has **no profile collision** contains a balanced pair. The paper's
 argument for this regime is the Ahlswede–Daykin / FKG
-profile-ordering inequality for linear extensions (Case 2,
-`step8.tex:3120-3150`) together with the finite enumeration of
-width-3 profile antichains (Case 3, `step8.tex:3152-3186` /
+profile-ordering inequality for linear extensions (Case 2) together
+with the finite enumeration of width-3 profile antichains (Case 3 /
 `rem:enumeration`).
+
+**Precision (mg-44f1 audit).** The axiom is *not* a literal
+transcription of `prop:in-situ-balanced`: that proposition is stated
+**with** the size bound `|Q| ≤ 3(3w+1)`, whereas the Lean axiom
+**drops** it. The drop is correct and necessary — mg-65de §3 showed
+the irreducible residual is genuinely *unbounded* (`P_K = {1,…,K},
+i<j ⇔ j−i>2`). So the axiom is the **unbounded extension** of
+`prop:in-situ-balanced` Cases 2+3 / `lem:enum` (the size bound
+removed; the `rem:enumeration` "extended to … `2w` near-bands"
+parenthetical taken as the intended content), not the bounded
+proposition verbatim.
 
 **Introduced by.** `mg-65de` (OneThird-Piece6-Redo, this entry).
 
-**QA-audited by.** *pending* — filed for pm-onethird review per the
-mg-65de ticket directive ("Any axiom proposal comes back to
-pm-onethird for review before adoption"). See
-`docs/state-Piece6-Redo-Session1.md` for the full block-and-report.
+**QA-audited by.** `mg-44f1` (OneThird-Piece6-Axiom-Verify) — verdict
+**TRUE — strong evidence**; provisional accept recommended to become
+permanent. See "QA verdict (mg-44f1)" below and the full report
+`docs/state-Piece6-Axiom-Verify-Session1.md`. The mg-65de
+block-and-report is `docs/state-Piece6-Redo-Session1.md`.
 
-**Status.** **Disclosed project axiom — pm-onethird review pending.**
+**Status.** **Disclosed project axiom — RETAINED; mg-44f1 audit
+recommends permanent accept (pm-onethird to relay to Daniel).**
 This is the genuine, *minimal* residual of Piece 6 (the full Step 8
 G4 lemma `lem_layered_balanced_full`). It is a sub-lemma **strictly
 weaker** than the headline `lem_layered_balanced_full`: the two extra
@@ -657,14 +669,91 @@ minimal residual, filed for pm-onethird review.
 ### Replacement path
 
 1. Port the Ahlswede–Daykin / FKG inequality for linear extensions
-   (replacing the provably-false `Case2FKGSubClaim` with a correct
-   narrower FKG sub-claim) — `Mathlib/RelationPoset/FKG.lean §11`.
+   (replacing the provably-false `Case2FKGSubClaim` — whose `pair`
+   field is direction-flipped — with a correctly-directed FKG
+   sub-claim) — `Mathlib/RelationPoset/FKG.lean §11`. This part is a
+   *standard, true, externally-citable* correlation inequality.
 2. Formalise `prop:in-situ-balanced` Case 2 (FKG profile-ordering ⇒
    `Pr ≥ 1/2`, then balanced-or-rotation) for non-singleton bands.
 3. Formalise `prop:in-situ-balanced` Case 3 (the width-3 profile
-   antichain enumeration) for the *unbounded* irreducible regime —
-   this needs new math beyond the paper, since the paper's size
-   bound for the irreducible case is false (point 3 above).
+   antichain enumeration) for the *unbounded* irreducible regime.
+   **mg-44f1 sharpening: step 3 is genuinely new mathematics, not a
+   porting exercise** — the paper's bounded enumeration provably does
+   not cover the unbounded irreducible regime, and there is no
+   published width-3 1/3–2/3 theorem to cite. The most promising
+   route is the "near-twin" argument (`docs/state-Piece6-Axiom-Verify-
+   Session1.md` §2.3): under `hNoTwin` + bounded `w`, a most-similar
+   incomparable pair always exists and is always balanced — strongly
+   supported by the mg-44f1 search but not yet proven.
+
+**mg-44f1 recommended refinement (preferred form).** Split the axiom
+along the Case-2 / Case-3 boundary: once step 1 lands, the Case-2
+(FKG profile-ordering) content can become a *separate, external-
+citable* axiom (brightwell-class, audit-bar 4/4), leaving a strictly
+smaller internal axiom carrying only the genuinely-novel Case-3
+residual. This is the only refinement that *lowers* the trust surface
+rather than relocating it. See
+`docs/state-Piece6-Axiom-Verify-Session1.md` §4.
 
 Until then the axiom is retained, fully disclosed, and **strictly
 weaker** than the theorem it supports.
+
+### QA verdict (mg-44f1)
+
+**Verdict. TRUE — strong evidence.** The audit determined the
+*statement* is true (a full proof is out of scope — FKG-for-linear-
+extensions is not in tree). Basis:
+
+1. **It is a special case of the 1/3–2/3 conjecture** restricted to
+   the class {width-3, non-chain, `|β|≥2`, admits an irreducible
+   width-`≤4` layered decomposition, twin-free}. The conjecture is
+   open in general but is verified in the literature to `n = 11`, has
+   a proven lower bound `δ* ≥ 0.2764`, and is the very result this
+   paper establishes at width 3. The axiom's truth does not depend on
+   the paper's separate Hypothesis A (that concerns Steps 1–7).
+
+2. **Counterexample search — zero counterexamples.** An independent
+   exact-rational linear-extension verifier
+   (`scripts/onethird_mg44f1_axiom_probe.py`,
+   `..._deep.py`) checked **1 118 061 posets** exhaustively or via
+   structured family — including the canonical unbounded residual
+   family `P_K` to `K = 200`, every width-3 non-chain poset to
+   `n = 7`, and the singleton-band irreducible width-3 `w≤4` class
+   exhaustively to `K = 9` (1 070 326 posets — the mg-4d7b cap-1
+   regime run *unbounded*) — plus 2 847 random in-class posets. Zero
+   counterexamples. The safest balanced pair stays a strictly
+   positive margin inside `[1/3,2/3]` everywhere: minimum
+   `safety = 1/51 ≈ 0.0196` over the exhaustive class; `P_K`
+   converges to `≈ 0.087`. The margin does not decay with size.
+
+3. **Structural sanity.** twin-free + bounded interaction width
+   guarantees "near-twin" incomparable pairs (within-band profiles
+   differ only inside the bounded near-band window); the search
+   confirms such a pair is always the safest and always balanced.
+
+**Retained-axiom audit bar.** The axiom meets `difficult` (✓) and
+`labeled` (✓); fails `external` (✗ — it is the project's own
+proposition, not external literature, unlike
+`brightwell_sharp_centred`); and meets `low-risk` only partially (◑ —
+low risk of being *false*, but it is an instance of an *open*
+conjecture, not a proof-backed result). Score ≈ 2.5/4 — the same
+category as `case3Witness_hasBalancedPair_outOfScope`, a
+strictly-weaker justification than `brightwell_sharp_centred` (4/4).
+This supports *retaining* the disclosed axiom (the established bar for
+an internal residual with an honest replacement path) but **not**
+disclosing it as a brightwell-class external import.
+
+**Load-bearing precision.** As of this audit the axiom is **not** on
+the live `#print axioms width3_one_third_two_thirds` dependency
+(`lean/PRINT_AXIOMS_OUTPUT.txt`) — it is consumed only by
+`lem_layered_balanced_full` (Piece 6 of the FULL REFACTOR) and its
+example file. It *is* the intended G4 endpoint; when the Piece-6
+route is wired into the headline it should **replace**
+`case3Witness_hasBalancedPair_outOfScope`, not add to it.
+
+**Residual risk.** The axiom is an instance of an open conjecture
+backed by no proof (the paper's proof of this region is broken — see
+the mg-65de findings; the errors are in the proof *method*, not the
+*target*). Its acceptability rests on the independent evidence above,
+not on the paper's authority. Full statement of residual risk:
+`docs/state-Piece6-Axiom-Verify-Session1.md` §6.
