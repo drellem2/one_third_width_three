@@ -554,3 +554,117 @@ over the entire `¬ InCase3Scope` range, whatever the value of
 `InCase3Scope`. The mg-9a4a narrowing reduces the surface area that
 a future port has to cover, but does not change the substantive math
 content required.
+
+---
+
+## `OneThird.Step8.lem_layered_balanced_irreducible_base`
+
+**File.** `lean/OneThird/Step8/LayeredBalancedFull.lean`
+
+**Paper statement.** `step8.tex` `prop:in-situ-balanced` Cases 2 + 3
+(`step8.tex:3096-3186`), the irreducible base case of
+`lem:layered-balanced` (the full Step 8 G4). The proposition: a
+width-3 non-chain poset `β` admitting a layered decomposition `L` of
+interaction width `L.w ≤ 4` that is **layer-ordinal irreducible** and
+has **no profile collision** contains a balanced pair. The paper's
+argument for this regime is the Ahlswede–Daykin / FKG
+profile-ordering inequality for linear extensions (Case 2,
+`step8.tex:3120-3150`) together with the finite enumeration of
+width-3 profile antichains (Case 3, `step8.tex:3152-3186` /
+`rem:enumeration`).
+
+**Introduced by.** `mg-65de` (OneThird-Piece6-Redo, this entry).
+
+**QA-audited by.** *pending* — filed for pm-onethird review per the
+mg-65de ticket directive ("Any axiom proposal comes back to
+pm-onethird for review before adoption"). See
+`docs/state-Piece6-Redo-Session1.md` for the full block-and-report.
+
+**Status.** **Disclosed project axiom — pm-onethird review pending.**
+This is the genuine, *minimal* residual of Piece 6 (the full Step 8
+G4 lemma `lem_layered_balanced_full`). It is a sub-lemma **strictly
+weaker** than the headline `lem_layered_balanced_full`: the two extra
+hypotheses `hIrr` (irreducibility) and `hNoTwin` (no profile
+collision) carve out a proper sub-case, and the complementary cases
+are **genuinely proved**:
+
+* the **reducible** case (`¬hIrr`) — Case B of
+  `lem_layered_balanced_full`: the genuine ordinal-sum recursion plus
+  the de-vacuified `lem_layered_reduction` (`LayeredReduction.lean`);
+* the **profile-collision** case (`¬hNoTwin`) — Case C-twin:
+  `hasBalancedPair_of_ambient_profile_match` (`Case3Struct.lean`),
+  the transposition-automorphism argument giving `Pr = 1/2`.
+
+So `lem_layered_balanced_full` = (reducible: proved) ∨ (twin: proved)
+∨ (irreducible ∧ twin-free: this axiom). The axiom is **not** a
+headline-equivalent dodge.
+
+### Scope-match checklist
+
+| Paper | Axiom | Status |
+| --- | --- | --- |
+| Width-3 layered poset `β` with layered decomposition `L` | `β : Type u` with `[PartialOrder β] [Fintype β] [DecidableEq β]`; `L : LayeredDecomposition β` | ✅ |
+| `|β| ≥ 2` | `h2 : 2 ≤ Fintype.card β` | ✅ |
+| `β` is not a chain | `hNotChain : ¬ IsChainPoset β` | ✅ |
+| Width-3 hypothesis | `hW3 : HasWidthAtMost β 3` | ✅ |
+| Interaction width `w ≤ 4` (the headline cap, `step8.tex:576` `w₀(γ) ≤ 4`) | `hLw : L.w ≤ 4` | ✅ |
+| Layer-ordinal-sum irreducible (`prop:in-situ-balanced` treats the irreducible factor; reducible posets reduce by `cor:reducibility-transfer`) | `hIrr : ¬ ∃ k, 1 ≤ k ∧ k < L.K ∧ LayerOrdinalReducible L k ∧ both sides non-empty` | ✅ |
+| No symmetric within-band pair / profile collision (Case 1 of `prop:in-situ-balanced` excluded; Cases 2+3 are the residual) | `hNoTwin : ¬ ∃ a a', a ≠ a' ∧ (∀ z, a < z ↔ a' < z) ∧ (∀ z, z < a ↔ z < a')` | ✅ |
+| Conclusion: `β` admits a balanced pair | `HasBalancedPair β` | ✅ |
+
+### Why an axiom and not a proof (mg-65de genuine attempt)
+
+Ticket mg-65de instructed: *attempt genuine formalization; do NOT
+default to a new axiom; if a sub-piece truly cannot be formalized,
+block-and-report with a precise minimal axiom proposal.* The genuine
+attempt established:
+
+1. **`Case3Witness_proof` cannot serve as the base case.** It needs
+   `Function.Injective L.band` (singleton bands) load-bearing in
+   every branch; Piece 6's `L` is a `def:layered` decomposition with
+   bands of size `≤ 3` (mg-fdc2 §3.1-§3.2). Verified.
+
+2. **The paper's window-localization Case C1 is invalid for
+   irreducible posets.** An ordinal middle piece needs both boundary
+   cuts clean (no straddling incomparable pair); a layer-ordinal
+   *irreducible* poset has **no** clean cut, so the only window is
+   `W = X` itself. The paper's `W(i,j) = L_{min−w} ∪ ⋯ ∪ L_{max+w}`
+   is *not* in general an ordinal middle piece (boundary bands differ
+   by a single index, which (L2) does not bridge for `w ≥ 1`). This
+   is a genuine gap in the paper proof — see
+   `docs/state-Piece6-Redo-Session1.md` §3.
+
+3. **The residual is genuinely unbounded.** The paper's
+   `prop:in-situ-balanced` size bound `|Q| ≤ 3(3w+1)` does **not**
+   hold for irreducible posets: the poset `{1,…,K}` with
+   `i <_P j ⇔ j − i > 2` is layer-ordinal irreducible, width 3, of
+   interaction width `w = 2`, with `K` *unbounded*. So the existing
+   bounded enumeration certificates (`case3_certificate`, the mg-4d7b
+   Python enumeration) do **not** cover the residual.
+
+4. **The FKG inequality for linear extensions is not in the tree.**
+   The Ahlswede–Daykin / FKG profile-ordering inequality that paper
+   Case 2 invokes is listed as future work
+   (`Mathlib/RelationPoset/FKG.lean §11`); the in-tree
+   `Case2FKGSubClaim` is **provably false** (`OptionC/K2Closure.lean:21`).
+
+A faithful Lean proof therefore requires the FKG-for-linear-extensions
+infrastructure (estimated multi-polecat, `~2000`–`3500` LoC) plus a
+genuinely new argument for the unbounded irreducible regime — neither
+of which is within a single Piece-6 ticket. The axiom is the precise,
+minimal residual, filed for pm-onethird review.
+
+### Replacement path
+
+1. Port the Ahlswede–Daykin / FKG inequality for linear extensions
+   (replacing the provably-false `Case2FKGSubClaim` with a correct
+   narrower FKG sub-claim) — `Mathlib/RelationPoset/FKG.lean §11`.
+2. Formalise `prop:in-situ-balanced` Case 2 (FKG profile-ordering ⇒
+   `Pr ≥ 1/2`, then balanced-or-rotation) for non-singleton bands.
+3. Formalise `prop:in-situ-balanced` Case 3 (the width-3 profile
+   antichain enumeration) for the *unbounded* irreducible regime —
+   this needs new math beyond the paper, since the paper's size
+   bound for the irreducible case is false (point 3 above).
+
+Until then the axiom is retained, fully disclosed, and **strictly
+weaker** than the theorem it supports.
