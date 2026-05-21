@@ -308,6 +308,33 @@ and this file is wrong — fix it.
   `K = 5`, `w = 3`, non-constant band map). `#print axioms`: only
   `propext`/`Classical.choice`/`Quot.sound`. See
   `docs/state-S7F-C-Session1.md`.
+* **mg-876f S7-F-D (GREEN-with-a-block-report, 2026-05-21)**: FULL
+  REFACTOR Phase-2 Piece 3 (the S7-F bridge), sub-arc `mg-S7-F-D` —
+  paper item (iii) of `lem:layered-from-step7` (`step8.tex:2080-2089`),
+  the perturbation lift. `lean/OneThird/Step8/ExcBalancedLift.lean`
+  (NEW, sorry-free, **no new `axiom`**) extends
+  `OrdinalDecomp.hasBalancedPair_lift` (exact, ordinal-sum) to the
+  exceptional-set-deletion variant and wires `exc_perturb` (F6b).
+  `hasApproxBalancedPair_lift_exc` lifts a balanced pair on
+  `{a // a ∉ S}` to an **`ε`-approximately balanced** pair of `α`
+  (`ε = 2|S|/(|α|−|S|+1)`, the `exc_perturb` bound);
+  `hasApproxBalancedPair_zero_iff` shows `ε = 0` recovers exact
+  `HasBalancedPair`. **BLOCK-REPORT:** the pinned bridge contract
+  `MA-Sig §4.2 §F` `excPerturbLift : … → HasBalancedPair α` (exact
+  conclusion) is **ill-posed** — a *false* proposition for every
+  `|X^exc| ≥ 1`, since the perturbation widens the balance window by
+  `ε > 0` (same error class as pitfall #6). The honest, satisfiable
+  forms are delivered instead: `hasApproxBalancedPair_lift_exc` and
+  `not_isGammaCounterexample_of_exc_balanced` (alias `excPerturbLift`,
+  re-pinned to `¬ IsGammaCounterexample α γ`). The headline body
+  `MA-Sig §4.3 §10–§11` adapts trivially (contradict `hCex`, in scope,
+  not `hNoBP`); S7-F-Z must apply that one mechanical re-pin. Discharged
+  non-vacuously on the genuine bridge object — the 3×3 grid minus
+  `Xexc gridChainLiftData = {(0,0)}` →
+  `HasApproxBalancedPair (Fin 3 × Fin 3) (2/9)`, `ε = 2/9 < 1/3`.
+  `#print axioms`: `propext`/`Classical.choice`/`Quot.sound` **+**
+  `brightwell_sharp_centred` (inherited from `exc_perturb`/F6b, not
+  new). See `docs/state-S7F-D-Session1.md` + §3 pitfall #10.
 
 ---
 
@@ -947,6 +974,40 @@ body needs a strengthened structure (resolution (B)) is a **Piece-3**
 concern. Piece 3 (S7-F bridge sub-arcs) is now **unblocked on F7a**.
 See `docs/state-S7F-R1-Session1.md`.
 
+### Pitfall #10 — A perturbation lift cannot conclude exact `HasBalancedPair`: the pinned `excPerturbLift` is ill-posed (mg-876f, S7-F-D)
+
+`OrdinalDecomp.hasBalancedPair_lift` (`Subtype.lean:1152`) transfers
+`HasBalancedPair` from a sub-poset to the ambient poset **exactly** —
+the ordinal-sum marginal is invariant (`probLT_restrict_eq`). It is
+tempting to transcribe the *exceptional-set-deletion* analogue with the
+same conclusion shape. `MA-Sig §4.2 §F` did exactly that, pinning
+
+```
+  excPerturbLift : HasBalancedPair {a // a ∉ Xexc} → … → HasBalancedPair α.
+```
+
+**This is ill-posed — a false proposition for every `|Xexc| ≥ 1`.**
+Exceptional-set deletion is only an *approximate* coupling: `exc_perturb`
+(F6b) bounds `|probLT x.val y.val − probLT x y| ≤ ε` with
+`ε = 2k/(n−k+1) > 0`. A pair balanced on `{a // a ∉ Xexc}`
+(`probLT ∈ [1/3, 2/3]`) therefore lands only in the *widened* window
+`[1/3 − ε, 2/3 + ε]` on `α` — that is **not** `HasBalancedPair α`,
+which demands the exact `[1/3, 2/3]`. The honest conclusion is
+`HasApproxBalancedPair α ε` (the lift) or `¬ IsGammaCounterexample α γ`
+(the headline-ready corollary, sound once `ε ≤ γ`). mg-876f delivers
+both (`Step8/ExcBalancedLift.lean`) and block-reported §4.2 §F for
+re-pinning.
+
+**This is the same error class as pitfall #6** (a signature that
+type-checks but pins a false proposition) — and again it slipped
+because the satisfiability check `MA-Sig §4.4` check (B) was run for
+the *bridge* `lem_layered_from_step7` but **not** for the §F leaf
+(tagged "UNCHANGED", waved through). **Standing lesson:** when a lemma
+is an *approximate* analogue of an *exact* one, the conclusion shape
+must change too — an `o(1)`-error transfer cannot land in a
+zero-width target window. Run check (B) on **every** `∃`/implication
+leaf of a contract, including the ones marked "unchanged".
+
 ---
 
 ## §4. Cross-reference index (terse)
@@ -1154,6 +1215,24 @@ See `docs/state-S7F-R1-Session1.md`.
   `|X^exc_sync| ≤ K_bw` bound is block-and-reported as ill-posed
   against the bare structure and made explicit as the hypothesis
   `BoundedSyncOrphans` (Resolution A).
+* `docs/state-S7F-C-Session1.md` (mg-bcc9) — FULL REFACTOR Phase-2
+  Piece-3 sub-arc C; **GREEN**. `Step8/BridgeLayered.lean` assembles
+  `bridgeLayered D hMono : LayeredDecomposition (↥((Xexc D)ᶜ))` — the
+  ground-set `LayeredDecomposition` on `X ∖ X^exc`, band map the
+  normalised chain potential, `w = K_bw + 2 ≤ 4`; verifies
+  `(L1)`–`(L4)`. `(L2)` closes under Resolution A; the direction
+  obligation is the named `PotPosetMono` (paper `prop:71`).
+* `docs/state-S7F-D-Session1.md` (mg-876f) — FULL REFACTOR Phase-2
+  Piece-3 sub-arc D; **GREEN-with-a-block-report**.
+  `Step8/ExcBalancedLift.lean` extends
+  `OrdinalDecomp.hasBalancedPair_lift` to the exceptional-set-deletion
+  variant and wires `exc_perturb` (F6b): `hasApproxBalancedPair_lift_exc`
+  (balanced pair on `{a // a ∉ S}` → `ε`-approximately balanced pair of
+  `α`) + `not_isGammaCounterexample_of_exc_balanced`/`excPerturbLift`.
+  Block-reports that `MA-Sig §4.2 §F` `excPerturbLift : … →
+  HasBalancedPair α` is ill-posed (perturbation widens the balance
+  window; §3 pitfall #10) and delivers the honest re-pin. Non-vacuous
+  on the grid: `HasApproxBalancedPair (Fin 3 × Fin 3) (2/9)`.
 * `docs/state-Piece6-FullStep8G4-Session1.md` (mg-fdc2) — FULL
   REFACTOR Piece 6 (`lem_layered_balanced_full`, full Step 8 G4)
   first execution attempt; **RED — base-case coverage gap**. The
