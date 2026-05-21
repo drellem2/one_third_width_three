@@ -392,6 +392,26 @@ grounding. The Piece-4 `mg-MA-ThmE` sub-arc is **wiring only**:
 `cexImpliesLowBKExpansion` is then called directly with
 `(γ, hγ_pos, hγ_third, hP, hI, hCex, h2)` — the §2.4 signature.
 
+**LANDED (mg-3638, `mg-MA-ThmE`).** The wiring is in tree:
+`lean/OneThird/Step8/TheoremEWiring.lean` (NEW, sorry-free,
+axiom-free — only `propext`/`Classical.choice`/`Quot.sound`).
+`theoremE_lowConductanceWitness` is the wired call of
+`cexImpliesLowBKExpansion` with the §2.4 tuple, its conclusion
+written out as the **exact** cascade-`hS` shape (§4.5) so the
+Theorem-E → cascade boundary is fixed at one named point. The
+`mg-MA-Body` body step §6 may call either
+`theoremE_lowConductanceWitness` or `cexImpliesLowBKExpansion`
+directly — they are signature-identical. The output type-checks
+against the §4.5 cascade `hS` pin verbatim — **no ill-posed
+obligation, no block-report.** The companion
+`theoremE_lowConductanceWitness_nonempty` is a genuineness
+certificate: the wired witness's cut `S` is provably non-empty
+(forced by the bulk-volume bound), so the wiring is not vacuous
+routing. The supporting `volume_univ_pos` records
+`0 < vol(𝓛(P))` for `|α| ≥ 2`. The four Theorem-E-wiring sub-arc
+items in §4.4 list 1–2 (`decomp_reduction`, `ih_descent`) remain
+`mg-MA-MinCex`; `mg-MA-ThmE` is complete.
+
 **F6 note (axioms).** Theorem E itself is axiom-free. The headline's
 post-refactor `#print axioms` is addressed in §6.
 
@@ -810,7 +830,7 @@ merge"*), the recommended sub-arc shapes (no `mg new` called here):
 | Sub-ticket | Content | Pin reference | Budget |
 |---|---|---|---|
 | `mg-MA-MinCex` | `decomp_reduction` + `ih_descent` + `gamma_counterexample_of_no_BP` + `chain_of_subsingleton` | §4.3, §4.4, §4.8 aux | ~1 session, 200k |
-| `mg-MA-ThmE` | wire `cexImpliesLowBKExpansion` (LANDED) — extract `Indecomposable`, repack output | §4.4 | ~1 session, 200k-250k |
+| `mg-MA-ThmE` | **LANDED (mg-3638)** — `theoremE_lowConductanceWitness` wires `cexImpliesLowBKExpansion` with the §2.4 tuple; conclusion pinned to the §4.5 cascade-`hS` shape; `theoremE_lowConductanceWitness_nonempty` genuineness certificate; `Step8/TheoremEWiring.lean` (NEW) | §4.4 | ~1 session, 200k-250k |
 | `mg-MA-Cascade` | `Step5R`/`Step5C` α-wrappers, `stepsOneToSevenCascade`, **F2-widened** `chainLiftData_of_cascade`, `n_zero`, `n_zero_le_of_cascade_realised` | §4.5 | ~1-2 sessions, 250k-450k |
 | `mg-MA-Body` | the §4.8 body; delete `mainAssembly`/`mainTheoremInputsOf`/`caseC_canonicalLayered`/`MainTheoremInputs`; aux combinators `non_chain_subtype_of_exc`, `card_compl_ge_two`, `exc_perturb_bound_of_n_zero` | §4.1, §4.6, §4.7, §4.8 | ~1 session, 250k-300k |
 
@@ -846,6 +866,9 @@ are correct; the discharge is the cross-piece work).
   `excPerturbLift` (S7-F-D, LANDED; §2.3).
 - `lean/OneThird/Step8/TheoremE.lean:171` —
   `cexImpliesLowBKExpansion` (LANDED; §2.4).
+- `lean/OneThird/Step8/TheoremEWiring.lean` —
+  `theoremE_lowConductanceWitness` + `_nonempty` + `volume_univ_pos`
+  (the `mg-MA-ThmE` deliverable, mg-3638; §4.4).
 - `lean/OneThird/Step8/ChainPotentials.lean:328` — `ChainLiftData α`.
 - `lean/OneThird/Step8/BridgeLayered.lean:162` —
   `ChainLiftData.PotPosetMono`; `:510` `grid_PotPosetMono`.
