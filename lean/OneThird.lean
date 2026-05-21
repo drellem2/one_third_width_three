@@ -131,6 +131,7 @@ import OneThird.Step8.SyncMaps
 import OneThird.Step8.ExceptionalSet
 import OneThird.Step8.BridgeLayered
 import OneThird.Step8.ExcBalancedLift
+import OneThird.Step8.LayeredFromStep7
 import OneThird.Step8.LayeredBalancedFull
 import OneThird.Step8.LayeredBalancedFullExample
 import OneThird.Step8.LayeredBridges

@@ -335,6 +335,34 @@ and this file is wrong — fix it.
   `#print axioms`: `propext`/`Classical.choice`/`Quot.sound` **+**
   `brightwell_sharp_centred` (inherited from `exc_perturb`/F6b, not
   new). See `docs/state-S7F-D-Session1.md` + §3 pitfall #10.
+* **mg-02cd S7-F-Z (GREEN, 2026-05-21) — Piece 3 COMPLETE**: FULL
+  REFACTOR Phase-2 Piece 3 (the S7-F bridge), sub-arc `mg-S7-F-Z` —
+  the **integration**. `lean/OneThird/Step8/LayeredFromStep7.lean`
+  (NEW, sorry-free, **no new `axiom`**) wires A–D into the finalised
+  bridge **`lem_layered_from_step7`**: consumes a `ChainLiftData α`
+  (`cld`, `K_bw ≤ 2`) + the two Resolution-A obligations
+  (`hMono : cld.PotPosetMono` from C, `hBudget : ExcBudget cld T`
+  from A), emits the re-pinned **three-cap** output —
+  `Xexc.card ≤ C_exc T`, band-nonempty on `[1, L.K]`, `L.w ≤ 4` — on
+  the carrier `↥(Xexcᶜ)`. The band-nonempty cap needs the new
+  **`compactifySelf`** (`Compactify.lean` §6, the same-type empty-band
+  compactification — `compactify` specialised to `S := univ`, kept on
+  the carrier; `bridgeLayered`'s potential-level-set bands can skip
+  values). `excPerturbLift_of_bridge_output` records the A–D output
+  boundary: the bridge carrier `↥(Xexcᶜ)` is exactly what S7-F-D's
+  `not_isGammaCounterexample_of_exc_balanced_compl` consumes.
+  **QA finding** — the `MA-Sig §4.2 §E` `hCex` domain pin is **not** a
+  bridge-body input: under Resolution A the `Δ_ℓ`-exclusion role is
+  carried by `hMono`/`hBudget` (both provably fail on `Δ_ℓ`), so
+  `hCex` is redundant in the body — carrying it unused would be an
+  inert hypothesis. `hCex` stays the §D′/§4.3 call-site pin from which
+  a future Piece-1 `chainLiftData_of_cascade` derives `cld` + `hMono`
+  + `hBudget`. Non-vacuous on the R1 witness `gridChainLiftData`
+  (`grid_lem_layered_from_step7`; output `w = 3`, depth `K ≥ 2`,
+  non-constant band; `grid_excPerturbLift_of_bridge` runs the full
+  A–D pipeline). `#print axioms lem_layered_from_step7`:
+  `propext`/`Classical.choice`/`Quot.sound` only. **Piece 3 is
+  complete.** See `docs/state-S7F-Z-Session1.md`.
 
 ---
 

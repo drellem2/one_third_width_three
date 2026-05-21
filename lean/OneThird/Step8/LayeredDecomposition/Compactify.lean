@@ -532,6 +532,156 @@ lemma compactify_bandSet_nonempty (L : LayeredDecomposition α) (S : Finset α)
   rw [hba]
   exact hcompactBand_eq
 
+/-! ### §6 — `compactifySelf`: in-place empty-band compactification
+
+`compactify` changes the carrier type (`α ↦ ↥S`) and is the right
+tool for sub-poset descent. The **S7-F bridge** (`mg-02cd`,
+sub-arc Z) needs a different shape: its `LayeredDecomposition` is
+already on the fixed carrier `↥((Xexc D)ᶜ)`, but the re-pinned
+3-cap output of `lem_layered_from_step7` (`MA-Sig §4.2 §E`) demands
+the *band-nonempty* conjunct `∀ k ∈ [1, K], (bandSet k).Nonempty`,
+which the bare bridge band map (a chain-potential level set that may
+skip values) does **not** satisfy. `compactifySelf` is the
+**same-type** empty-band compactification: `compactify` specialised
+to `S := Finset.univ`, kept on the carrier `α`. It reuses the
+`compactBand` machinery verbatim (with `S := Finset.univ`), so its
+structural correctness rests on exactly the lemmas proved above. -/
+
+/-- **In-place empty-band compactification** of a layered
+decomposition. Renumbers band indices densely so that every band
+index in `[1, K']` is non-empty (`compactifySelf_bandSet_nonempty`),
+keeping the carrier type `α` and the interaction width `w` unchanged
+(`compactifySelf_w`). The depth contracts (`compactifySelf_K`). -/
+def compactifySelf (L : LayeredDecomposition α) : LayeredDecomposition α where
+  K := compactBand L Finset.univ L.K
+  w := L.w
+  band x := compactBand L Finset.univ (L.band x)
+  band_pos x :=
+    one_le_compactBand_of_nonEmpty L Finset.univ (L.band_pos x)
+      ⟨x, Finset.mem_univ x, rfl⟩
+  band_le x := compactBand_mono L Finset.univ (L.band_le x)
+  band_size k := by
+    classical
+    by_cases hexists :
+        ∃ x : α, compactBand L Finset.univ (L.band x) = k
+    · obtain ⟨x₀, hx₀⟩ := hexists
+      have h_subset :
+          (Finset.univ.filter
+              (fun x : α => compactBand L Finset.univ (L.band x) = k)) ⊆
+            (Finset.univ.filter (fun x : α => L.band x = L.band x₀)) := by
+        intro x hx
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hx ⊢
+        have h_eq : compactBand L Finset.univ (L.band x) =
+            compactBand L Finset.univ (L.band x₀) := by rw [hx, hx₀]
+        exact compactBand_inj_on_S L Finset.univ
+          (z := ⟨x, Finset.mem_univ x⟩) (w := ⟨x₀, Finset.mem_univ x₀⟩) h_eq
+      exact (Finset.card_le_card h_subset).trans (L.band_size (L.band x₀))
+    · push_neg at hexists
+      have h_empty :
+          (Finset.univ.filter
+              (fun x : α => compactBand L Finset.univ (L.band x) = k)) = ∅ := by
+        rw [Finset.filter_eq_empty_iff]
+        intro x _
+        exact hexists x
+      rw [h_empty]; simp
+  band_antichain k := by
+    classical
+    intro a ha b hb hne hle
+    simp only [Finset.coe_filter, Finset.mem_univ, true_and,
+      Set.mem_setOf_eq] at ha hb
+    have h_eq : compactBand L Finset.univ (L.band a) =
+        compactBand L Finset.univ (L.band b) := by rw [ha, hb]
+    have h_band_eq : L.band a = L.band b :=
+      compactBand_inj_on_S L Finset.univ
+        (z := ⟨a, Finset.mem_univ a⟩) (w := ⟨b, Finset.mem_univ b⟩) h_eq
+    apply L.band_antichain (L.band a)
+      (show a ∈ ((((Finset.univ : Finset α).filter
+          (fun x => L.band x = L.band a))) : Set α) by
+        simp only [Finset.coe_filter, Finset.mem_univ, true_and,
+          Set.mem_setOf_eq])
+      (show b ∈ ((((Finset.univ : Finset α).filter
+          (fun x => L.band x = L.band a))) : Set α) by
+        simp only [Finset.coe_filter, Finset.mem_univ, true_and,
+          Set.mem_setOf_eq]
+        exact h_band_eq.symm)
+      hne hle
+  forced_lt x y h := by
+    have h_lt : L.band x < L.band y := by
+      by_contra h_ge
+      push_neg at h_ge
+      have := compactBand_mono L Finset.univ h_ge
+      omega
+    have h_diff : L.band x + L.w < L.band y := by
+      have h_bd := compactBand_diff_le L Finset.univ h_lt.le
+      omega
+    exact L.forced_lt x y h_diff
+  cross_band_lt_upward x y h :=
+    compactBand_mono L Finset.univ (L.cross_band_lt_upward x y h)
+
+@[simp] lemma compactifySelf_K (L : LayeredDecomposition α) :
+    (compactifySelf L).K = compactBand L Finset.univ L.K := rfl
+
+@[simp] lemma compactifySelf_w (L : LayeredDecomposition α) :
+    (compactifySelf L).w = L.w := rfl
+
+@[simp] lemma compactifySelf_band (L : LayeredDecomposition α) (x : α) :
+    (compactifySelf L).band x = compactBand L Finset.univ (L.band x) := rfl
+
+/-- **Depth contracts under self-compactification**: `K' ≤ K`. -/
+lemma compactifySelf_K_le (L : LayeredDecomposition α) :
+    (compactifySelf L).K ≤ L.K := by
+  change compactBand L Finset.univ L.K ≤ L.K
+  unfold compactBand
+  calc ((Finset.Icc 1 L.K).filter (fun i => NonEmptyOnS L Finset.univ i)).card
+      ≤ (Finset.Icc 1 L.K).card := Finset.card_filter_le _ _
+    _ = L.K + 1 - 1 := Nat.card_Icc _ _
+    _ = L.K := by omega
+
+/-- **Every band of the self-compactification is non-empty.** The
+re-pinned 3-cap conjunct of `lem_layered_from_step7` (`MA-Sig §4.2
+§E`): each band index `k ∈ [1, (compactifySelf L).K]` contains an
+element. By construction `K' = compactBand L univ L.K` counts the
+non-empty original bands, so the renumbering leaves no gaps. -/
+lemma compactifySelf_bandSet_nonempty (L : LayeredDecomposition α)
+    {k : ℕ} (hk1 : 1 ≤ k) (hk : k ≤ (compactifySelf L).K) :
+    ((compactifySelf L).bandSet k).Nonempty := by
+  classical
+  have hK_eq : (compactifySelf L).K = compactBand L Finset.univ L.K := rfl
+  rw [hK_eq] at hk
+  have h_exists : ∃ j : ℕ, j ≤ L.K ∧ k ≤ compactBand L Finset.univ j :=
+    ⟨L.K, le_refl _, hk⟩
+  let j₀ := Nat.find h_exists
+  have hj₀_spec : j₀ ≤ L.K ∧ k ≤ compactBand L Finset.univ j₀ :=
+    Nat.find_spec h_exists
+  have hj₀_min : ∀ m < j₀, ¬ (m ≤ L.K ∧ k ≤ compactBand L Finset.univ m) :=
+    fun m hm => Nat.find_min h_exists hm
+  obtain ⟨hj₀_le, hj₀_ge⟩ := hj₀_spec
+  have hj₀_pos : 1 ≤ j₀ := by
+    rcases Nat.eq_zero_or_pos j₀ with hj0 | hjpos
+    · exfalso
+      rw [hj0, compactBand_zero] at hj₀_ge
+      omega
+    · exact hjpos
+  have hpred_lt : compactBand L Finset.univ (j₀ - 1) < k := by
+    by_contra h
+    push_neg at h
+    exact hj₀_min (j₀ - 1) (by omega) ⟨by omega, h⟩
+  have h_diff_le :
+      compactBand L Finset.univ j₀ ≤ compactBand L Finset.univ (j₀ - 1) + 1 := by
+    have := compactBand_diff_le L Finset.univ (Nat.sub_le j₀ 1)
+    omega
+  have hcompactBand_eq : compactBand L Finset.univ j₀ = k := by omega
+  have hj₀_ne : NonEmptyOnS L Finset.univ j₀ := by
+    by_contra hje
+    have h_eq := compactBand_succ_of_empty L Finset.univ hj₀_pos hje
+    omega
+  obtain ⟨a, _, hba⟩ := hj₀_ne
+  refine ⟨a, ?_⟩
+  rw [LayeredDecomposition.mem_bandSet]
+  show compactBand L Finset.univ (L.band a) = k
+  rw [hba]
+  exact hcompactBand_eq
+
 end LayeredDecomposition
 
 end Step8
