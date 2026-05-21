@@ -103,6 +103,24 @@ and this file is wrong — fix it.
   width 3, `w=2`, `K` unbounded — refuting the paper's
   `|X| ≤ 3(3w+1)` Case-C2 bound). See §3 pitfall #7 +
   `docs/state-Piece6-Redo-Session1.md` + `AXIOMS.md`.
+* **mg-44f1 Piece-6 axiom verification (audit, verdict TRUE —
+  strong evidence)**: the pm-onethird review of the mg-65de axiom
+  `lem_layered_balanced_irreducible_base`. The axiom's *statement* is
+  true with strong evidence — it is a special case of the 1/3–2/3
+  conjecture, and an independent exact-rational counterexample search
+  over **1 118 061 posets** (the canonical unbounded residual `P_K`
+  to `K=200`; every width-3 non-chain poset to `n=7`; the
+  singleton-band irreducible width-3 `w≤4` class exhaustive to `K=9`,
+  i.e. mg-4d7b's cap-1 regime run *unbounded*) found **zero
+  counterexamples** and a strictly positive safety margin
+  (`≥ 1/51`). Retained-axiom bar: `difficult`+`labeled` met,
+  `external` failed (project-own, not literature), `low-risk` partial
+  (open-conjecture instance, not proof-backed) — ≈2.5/4, same class
+  as `case3Witness_hasBalancedPair_outOfScope`. Note: the axiom is
+  **not** on the live `#print axioms` headline — it is consumed only
+  by `lem_layered_balanced_full` (Piece 6); when Piece 6 is
+  headline-wired it should *replace* `case3Witness_hasBalancedPair_
+  outOfScope`. Full report: `docs/state-Piece6-Axiom-Verify-Session1.md`.
 * **mg-c2d7 S1-E (RED, 10th vacuity discovery)**: the Checkpoint-1
   AMBER gap (mg-8b95) is **not** an assembly gap. The S1-A
   `IsGoodFiber` order-convexity clause (G2, `LocalCoords.lean`) is
@@ -341,7 +359,7 @@ inputs or hypothesis is structurally unreachable). **T** = TODO-sorry.
 | `Step8.windowLocalization` | `LayeredBalanced.lean:103` | **S** (de-vacuified mg-65de: genuine `OrdinalDecomp` + marginal invariance + lift; clean-cut form) |
 | `Step8.lem_layered_reduction` | `LayeredReduction.lean` | **S** (de-vacuified mg-65de: conclusion derived via `hasBalancedPair_lift_*`; wired into `lem_layered_balanced_full` Case B) |
 | `Step8.lem_layered_balanced_full` (Piece 6) | `LayeredBalancedFull.lean` | **S** (full Step 8 G4; strong induction on `\|β\|`; Cases B + C-twin genuine) |
-| `Step8.lem_layered_balanced_irreducible_base` | `LayeredBalancedFull.lean` | **SP** (disclosed axiom mg-65de: `prop:in-situ-balanced` Cases 2+3, the irreducible twin-free residual; pm-onethird review pending) |
+| `Step8.lem_layered_balanced_irreducible_base` | `LayeredBalancedFull.lean` | **SP** (disclosed axiom mg-65de: unbounded extension of `prop:in-situ-balanced` Cases 2+3, the irreducible twin-free residual; **mg-44f1 audit verdict TRUE-strong-evidence**, recommends permanent accept; NOT on live `#print axioms` headline — consumed by `lem_layered_balanced_full` Piece 6 only) |
 | `Cap5Singletons.case3_balanced_singletons_K{2,4..8}_*` | `Case3Enum/Cap5Singletons.lean:101+` | SC + **NC** (mg-4d7b ports; not wired into headline) |
 | `Cap5SingletonsK9` | `Cap5SingletonsK9.lean` | SC + **NC** (not imported into `OneThird.lean`) |
 | K=10 w=4 cap-5 cell | `lean/scripts/enum_cap5_K10_certificate.json` | external evidence (no Lean axiom) |
