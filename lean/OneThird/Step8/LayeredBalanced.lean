@@ -43,7 +43,10 @@ not a chain contains a balanced pair (`lem:layered-balanced`,
 
 ## Main results
 
-* `windowLocalization` — `lem:window-localization`, abstract form.
+* `windowLocalization` — `lem:window-localization`, genuine
+  marginal-invariance form (de-vacuified mg-65de: constructs a real
+  `OrdinalDecomp` and delivers `probLT` invariance + balanced-pair
+  lift, given clean band-cuts).
 * `bipartiteBalanced` — `prop:bipartite-balanced`, packaged
   statement.
 * `lem_layered_balanced` — **`lem:layered-balanced`** (G4
@@ -71,105 +74,125 @@ variable {α : Type*} [PartialOrder α] [Fintype α] [DecidableEq α]
 
 /-! ### §1 — Window localization (`lem:window-localization`) -/
 
-/-- **`lem:window-localization`** (`step8.tex:2524-2569`).
+/-- **`lem:window-localization`** (`step8.tex:2524-2569`), genuine
+marginal-invariance form.
 
-For an incomparable pair `(x, y)` with `x ∈ L_i, y ∈ L_j` and the
-band-distance bound `|i − j| ≤ w` (the only case allowed by
-`(L2)`), the `Pr[x <_L y]` marginal in `L(P)` agrees with the
-marginal in `L(P|_W)` for the window
-`W = L_{max(1, min(i,j) − w)} ∪ ⋯ ∪ L_{min(K, max(i,j) + w)}`.
+Given a layered decomposition `L` and two band boundaries
+`cutLo ≤ cutHi` at which `L` is layer-ordinal reducible (so the cuts
+`cutLo ∣ cutLo+1` and `cutHi ∣ cutHi+1` are both *clean* — no
+incomparable pair straddles either), the band-window
 
-The proof (`step8.tex:2541-2569`):
-1. by `(L2)`, every `z ∈ X ∖ W` lies in a band more than `w` away
-   from both `i` and `j`, so is comparable in `P` to every element
-   of `W`, with the direction given by whether the band is below
-   or above;
-2. `X` thus decomposes ordinally as `X = X^− ⊔ W ⊔ X^+`, and
-   every linear extension of `P` factors uniquely as a
-   concatenation `L^− · L_W · L^+` of independent extensions of
-   the three pieces;
-3. the marginal distribution of `(x, y)`-order is therefore a
-   marginal of `L_W` alone, equal to the marginal in `L(P|_W)`.
+  `W := {z : cutLo < band z ≤ cutHi}`
 
-This file states the cleared-denominator probability identity in
-the abstract form `probLT_eq_window`. The full proof requires the
-ordinal-sum factorisation lemma for the linear-extension count,
-which is the F4 foundation item; the probability invariance is
-reflected here trivially (by taking `q := probLT x y`).
+is the **middle piece of a genuine ordinal-sum decomposition**
+`X = X⁻ ⊔ W ⊔ X⁺` of `P`.  Consequently:
 
-The size bound `|W| ≤ 3(3w + 1)` is proven from `(L1)` (each band
-size `≤ 3`) and the band-distance bound `|i − j| ≤ w` derived from
-`hxy : x ∥ y` via (L2), via `Window.card_le`. -/
+* the window has at most `3 (cutHi − cutLo)` elements (each of the
+  `cutHi − cutLo` bands has size `≤ 3` by axiom (L1));
+* the marginal `Pr[x <_L y]` of any pair inside `W` is **invariant**:
+  it equals the marginal computed in `P|_W` (paper
+  `cor:ordinal-marginal`, `OrdinalDecomp.probLT_restrict_eq`);
+* therefore a balanced pair inside the window **lifts** to a
+  balanced pair of the ambient poset
+  (`OrdinalDecomp.hasBalancedPair_lift`).
+
+**What changed (mg-65de — de-vacuification).** The earlier
+`windowLocalization` proved `∃ q, probLT x y = q ∧ |W| ≤ 3(3w+1)`
+by taking `q := probLT x y`, so the conjunct `probLT x y = q` was
+`rfl` and carried *no marginal-invariance content whatsoever* — only
+the window-size bound.  The form below instead exhibits a real
+`OrdinalDecomp α` and the genuine marginal-invariance identity
+`probLT x y = probLT_{P|_W} x y`, plus the balanced-pair lift.
+
+**Why the cleanness hypotheses are needed.** The paper's
+`W(i,j) = L_{min−w} ∪ ⋯ ∪ L_{max+w}` is *not* in general an ordinal
+middle piece: an element `z` at band `min−w−1` and a window element
+`ω` at band `min−w` differ by a single band, so (L2) does not force
+`z <_P ω` once `w ≥ 1`.  An ordinal middle piece needs its two
+boundary cuts to be genuinely clean — exactly
+`LayerOrdinalReducible L cutLo` and `LayerOrdinalReducible L cutHi`.
+For the *reducible* dispatch of `lem_layered_balanced_full` these
+hold by construction (one boundary is the reducibility index, the
+other is a trivial `0`/`K` boundary). -/
 theorem windowLocalization (L : LayeredDecomposition α)
-    (x y : α) (hxy : x ∥ y)
-    (W : Finset α)
-    (_hW_x : x ∈ W) (_hW_y : y ∈ W)
-    (_hW_def : ∀ z, z ∈ W ↔
-      (min (L.band x) (L.band y)) ≤ L.band z + L.w ∧
-        L.band z ≤ (max (L.band x) (L.band y)) + L.w) :
-    -- Probability identity, abstract form: there is some
-    -- restricted poset `P_W` whose `probLT` agrees with `P`'s.
-    -- Stated as a witness existence, which downstream gluing
-    -- (window-localized restriction) supplies.
-    ∃ q : ℚ,
-      probLT x y = q ∧
-      -- The window has size `≤ 3 · (3w + 1)` — the
-      -- structural size bound (`step8.tex:2537-2538`).
-      W.card ≤ 3 * (3 * L.w + 1) := by
+    (cutLo cutHi : ℕ) (hcut : cutLo ≤ cutHi)
+    (hLo : LayerOrdinalReducible L cutLo)
+    (hHi : LayerOrdinalReducible L cutHi) :
+    ∃ D : OneThird.OrdinalDecomp α,
+      D.Mid = (Finset.univ : Finset α).filter
+        (fun z => cutLo < L.band z ∧ L.band z ≤ cutHi) ∧
+      D.Mid.card ≤ 3 * (cutHi - cutLo) ∧
+      (∀ (x y : α) (hx : x ∈ D.Mid) (hy : y ∈ D.Mid),
+        probLT x y = probLT (⟨x, hx⟩ : ↥D.Mid) ⟨y, hy⟩) ∧
+      (OneThird.HasBalancedPair ↥D.Mid → OneThird.HasBalancedPair α) := by
   classical
-  refine ⟨probLT x y, rfl, ?_⟩
-  -- From `x ∥ y` and (L2), derive the band-distance bound
-  -- `|band x − band y| ≤ w` (otherwise (L2) forces comparability).
-  have h_by_bx : L.band y ≤ L.band x + L.w := by
-    by_contra h
-    exact hxy.1 (L.forced_lt x y (Nat.lt_of_not_le h)).le
-  have h_bx_by : L.band x ≤ L.band y + L.w := by
-    by_contra h
-    exact hxy.2 (L.forced_lt y x (Nat.lt_of_not_le h)).le
-  have h_max_min :
-      max (L.band x) (L.band y) ≤ min (L.band x) (L.band y) + L.w := by
-    rcases le_total (L.band x) (L.band y) with h | h
-    · rw [max_eq_right h, min_eq_left h]; exact h_by_bx
-    · rw [max_eq_left h, min_eq_right h]; exact h_bx_by
-  -- Build the window data at the band pair `(band x, band y)` and show
-  -- `W ⊆ W'.slice`; then `Window.card_le` gives the bound.
-  set minB : ℕ := min (L.band x) (L.band y) with hminB
-  set maxB : ℕ := max (L.band x) (L.band y) with hmaxB
-  set loBand : ℕ := if minB ≤ L.w then 1 else minB - L.w with hloBand
-  set hiBand : ℕ := maxB + L.w with hhiBand
-  have hspan : hiBand + 1 ≤ loBand + (3 * L.w + 1) := by
-    by_cases hw : minB ≤ L.w
-    · simp only [hloBand, hhiBand, if_pos hw]
-      have hmax_le : maxB ≤ L.w + L.w := le_trans h_max_min (by omega)
-      omega
-    · have hw' : L.w < minB := Nat.lt_of_not_le hw
-      simp only [hloBand, hhiBand, if_neg hw]
-      omega
-  let W' : Window L :=
-    { loBand := loBand
-      hiBand := hiBand
-      slice := (Finset.univ : Finset α).filter
-        (fun z => loBand ≤ L.band z ∧ L.band z ≤ hiBand)
-      slice_eq := rfl
-      span_le := hspan }
-  have hsub : W ⊆ W'.slice := by
-    intro z hz
-    have hz' := (_hW_def z).1 hz
-    simp only [Window.mem_iff]
-    refine ⟨?_, hz'.2⟩
-    -- `loBand ≤ L.band z`: in the `minB ≤ L.w` branch, use `band_pos`;
-    -- in the `minB > L.w` branch, rearrange `minB ≤ L.band z + L.w`.
-    change loBand ≤ L.band z
-    by_cases hw : minB ≤ L.w
-    · simp only [hloBand, if_pos hw]
-      exact L.band_pos z
-    · have hw' : L.w < minB := Nat.lt_of_not_le hw
-      simp only [hloBand, if_neg hw]
-      have := hz'.1
-      omega
-  calc W.card
-      ≤ W'.slice.card := Finset.card_le_card hsub
-    _ ≤ 3 * (3 * L.w + 1) := Window.card_le L W'
+  refine ⟨{
+      Lower := (Finset.univ : Finset α).filter (fun z => L.band z ≤ cutLo)
+      Mid := (Finset.univ : Finset α).filter
+        (fun z => cutLo < L.band z ∧ L.band z ≤ cutHi)
+      Upper := (Finset.univ : Finset α).filter (fun z => cutHi < L.band z)
+      hCover := by
+        ext z
+        simp only [Finset.mem_union, Finset.mem_filter, Finset.mem_univ,
+          true_and, iff_true]
+        omega
+      hDisjLM := by
+        rw [Finset.disjoint_left]
+        intro z hz1 hz2
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz1 hz2
+        omega
+      hDisjLU := by
+        rw [Finset.disjoint_left]
+        intro z hz1 hz2
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz1 hz2
+        omega
+      hDisjMU := by
+        rw [Finset.disjoint_left]
+        intro z hz1 hz2
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz1 hz2
+        omega
+      hLM_lt := by
+        intro u hu v hv
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hu hv
+        exact hLo u v hu hv.1
+      hLU_lt := by
+        intro u hu v hv
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hu hv
+        exact hHi u v (le_trans hu hcut) hv
+      hMU_lt := by
+        intro u hu v hv
+        simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hu hv
+        exact hHi u v hu.2 hv }, rfl, ?_, ?_, ?_⟩
+  · -- Size bound: the window is a union of `cutHi − cutLo` bands of
+    -- size `≤ 3` each (axiom (L1)).
+    have hsub :
+        ((Finset.univ : Finset α).filter
+          (fun z => cutLo < L.band z ∧ L.band z ≤ cutHi)) ⊆
+        (Finset.Ioc cutLo cutHi).biUnion
+          (fun k => (Finset.univ : Finset α).filter (fun z => L.band z = k)) := by
+      intro z hz
+      simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hz
+      simp only [Finset.mem_biUnion, Finset.mem_Ioc, Finset.mem_filter,
+        Finset.mem_univ, true_and]
+      exact ⟨L.band z, ⟨hz.1, hz.2⟩, rfl⟩
+    calc ((Finset.univ : Finset α).filter
+            (fun z => cutLo < L.band z ∧ L.band z ≤ cutHi)).card
+        ≤ ((Finset.Ioc cutLo cutHi).biUnion
+            (fun k => (Finset.univ : Finset α).filter
+              (fun z => L.band z = k))).card := Finset.card_le_card hsub
+      _ ≤ ∑ k ∈ Finset.Ioc cutLo cutHi,
+            ((Finset.univ : Finset α).filter (fun z => L.band z = k)).card :=
+          Finset.card_biUnion_le
+      _ ≤ ∑ _k ∈ Finset.Ioc cutLo cutHi, 3 :=
+          Finset.sum_le_sum (fun k _ => L.band_size k)
+      _ = 3 * (cutHi - cutLo) := by
+          rw [Finset.sum_const, Nat.card_Ioc, smul_eq_mul, Nat.mul_comm]
+  · -- Marginal invariance: paper `cor:ordinal-marginal`.
+    intro x y hx hy
+    exact OneThird.OrdinalDecomp.probLT_restrict_eq _ hx hy
+  · -- Balanced-pair lift: paper `cor:ordinal-marginal` ⇒ a balanced
+    -- pair inside the window is balanced in the ambient poset.
+    exact OneThird.OrdinalDecomp.hasBalancedPair_lift _
 
 /-! ### §2 — Rotation lemma (`step8.tex:2900-2914`) -/
 

@@ -79,6 +79,30 @@ and this file is wrong — fix it.
   takes `q := probLT x y`; the latter returns its own input
   field). This is the scoping doc §2.6 risk 1 / Checkpoint 6 gate
   firing. See §3 pitfall #7 + `docs/state-Piece6-FullStep8G4-Session1.md`.
+* **mg-65de Piece 6 RE-DO (GREEN-built + one disclosed axiom)**:
+  Piece 6 is now **genuinely built**. `lem_layered_balanced_full`
+  (`Step8/LayeredBalancedFull.lean`, NEW) is the full Step 8 G4 —
+  strong induction on `|β|`, hypothesis only `L.w ≤ 4`, no band
+  injectivity. The two vacuous "wiring" lemmas are **de-vacuified**:
+  `windowLocalization` (`LayeredBalanced.lean`) now constructs a
+  genuine `OrdinalDecomp` from clean band-cuts and delivers the
+  marginal-invariance identity + balanced-pair lift;
+  `lem_layered_reduction` (`LayeredReduction.lean`) now **derives**
+  its conclusion via `OrdinalDecomp.hasBalancedPair_lift_*` instead
+  of carrying it as an input field. The strong induction does NOT
+  route through `Case3Witness_proof` (so band injectivity is never
+  needed): **Case B** (reducible) recurses via `lem_layered_reduction`;
+  **Case C-twin** (profile collision) closes via
+  `hasBalancedPair_of_ambient_profile_match`; the **irreducible
+  twin-free residual** is the new disclosed axiom
+  `lem_layered_balanced_irreducible_base` (= `prop:in-situ-balanced`
+  Cases 2 + 3, the FKG + enumeration residual). mg-65de also found
+  a **genuine gap in the paper proof**: window-localization Case C1
+  is invalid for irreducible posets, and the irreducible residual is
+  genuinely *unbounded* (`{1,…,K}`, `i<j ⇔ j−i>2`, irreducible,
+  width 3, `w=2`, `K` unbounded — refuting the paper's
+  `|X| ≤ 3(3w+1)` Case-C2 bound). See §3 pitfall #7 +
+  `docs/state-Piece6-Redo-Session1.md` + `AXIOMS.md`.
 * **mg-c2d7 S1-E (RED, 10th vacuity discovery)**: the Checkpoint-1
   AMBER gap (mg-8b95) is **not** an assembly gap. The S1-A
   `IsGoodFiber` order-convexity clause (G2, `LocalCoords.lean`) is
@@ -290,7 +314,11 @@ inputs or hypothesis is structurally unreachable). **T** = TODO-sorry.
 | `LinearExt.brightwell_sharp_centred` | `Mathlib/LinearExtension/BrightwellAxiom.lean` | **SE** (Brightwell–Tetali) |
 | `Step8.bounded_irreducible_balanced` (no `_inScope`) | `BIB.lean:1626` | M (pure identity; all `_h*` underscored) |
 | `Step8.hasBalancedPair_of_layered_strongInduction[_width3]` | `LayerOrdinal.lean:370/472` | M (bare F3 framework; L unused; recursion on `Fintype.card α` only) — **NC** (not invoked on headline) |
-| `Step8.lem_cut`, `Step8.windowLocalization`, `Step8.lem_layered_reduction` | `LayeredReduction.lean:373/491` + `LayeredBalanced.lean:103` | S + **NC** (paper's G3 cut-and-window infrastructure, not on Lean headline path) |
+| `Step8.lem_cut` | `LayeredReduction.lean:373` | S + **NC** (paper's G3 cut data, not on Lean headline path) |
+| `Step8.windowLocalization` | `LayeredBalanced.lean:103` | **S** (de-vacuified mg-65de: genuine `OrdinalDecomp` + marginal invariance + lift; clean-cut form) |
+| `Step8.lem_layered_reduction` | `LayeredReduction.lean` | **S** (de-vacuified mg-65de: conclusion derived via `hasBalancedPair_lift_*`; wired into `lem_layered_balanced_full` Case B) |
+| `Step8.lem_layered_balanced_full` (Piece 6) | `LayeredBalancedFull.lean` | **S** (full Step 8 G4; strong induction on `\|β\|`; Cases B + C-twin genuine) |
+| `Step8.lem_layered_balanced_irreducible_base` | `LayeredBalancedFull.lean` | **SP** (disclosed axiom mg-65de: `prop:in-situ-balanced` Cases 2+3, the irreducible twin-free residual; pm-onethird review pending) |
 | `Cap5Singletons.case3_balanced_singletons_K{2,4..8}_*` | `Case3Enum/Cap5Singletons.lean:101+` | SC + **NC** (mg-4d7b ports; not wired into headline) |
 | `Cap5SingletonsK9` | `Cap5SingletonsK9.lean` | SC + **NC** (not imported into `OneThird.lean`) |
 | K=10 w=4 cap-5 cell | `lean/scripts/enum_cap5_K10_certificate.json` | external evidence (no Lean axiom) |
@@ -624,8 +652,23 @@ instantiated against the 3-disjoint-chains counterexample class).
 
 ### Pitfall #7 — Piece 6's base case is not `Case3Witness_proof`, and two of its "wiring" lemmas are vacuous (mg-fdc2, Checkpoint-6 gate)
 
-**Status: RED — Piece 6 (`lem_layered_balanced_full`) not buildable
-as scoped.** The mg-fdc2 ticket scoped Piece 6 as "`Case3Witness_proof`
+**Status update (mg-65de): Piece 6 is now BUILT.** The mg-fdc2 RED
+finding below is correct *about the scoped routing*, and mg-65de did
+not use that routing — it de-vacuified the placeholder lemmas first
+and built `lem_layered_balanced_full` directly (strong induction on
+`|β|`, **not** through `Case3Witness_proof`, so band injectivity is
+never needed). `windowLocalization` and `lem_layered_reduction` now
+carry genuine ordinal-sum content. The genuine irreducible residual
+(`prop:in-situ-balanced` Cases 2 + 3) is the disclosed axiom
+`lem_layered_balanced_irreducible_base`. **The lesson below still
+stands**: a lemma named after a paper result can carry none of that
+result's content — and mg-65de additionally found the paper's
+window-localization is itself flawed for irreducible posets (see
+`docs/state-Piece6-Redo-Session1.md` §3). The original mg-fdc2
+analysis follows.
+
+**Original mg-fdc2 finding — RED for the scoped routing.** The
+mg-fdc2 ticket scoped Piece 6 as "`Case3Witness_proof`
 becomes the base case; the inductive step wires `lem_cut`,
 `windowLocalization`, `lem_layered_reduction`". Both halves fail:
 
@@ -918,6 +961,15 @@ specific clause, read the paper clause.**
   scoping doc §2.6 risk 1 / Checkpoint 6 gate firing. §3
   pitfall #7. Forward options G1 (formalise honestly) / G2
   (disclosed base-case axiom) / G3 (status-quo). No Lean changes.
+* `docs/state-Piece6-Redo-Session1.md` (mg-65de) — FULL REFACTOR
+  Piece 6 RE-DO; **GREEN — genuinely built**. `lem_layered_balanced_full`
+  built (`Step8/LayeredBalancedFull.lean`); `windowLocalization` and
+  `lem_layered_reduction` de-vacuified; one disclosed minimal axiom
+  `lem_layered_balanced_irreducible_base` for the irreducible
+  twin-free residual (`prop:in-situ-balanced` Cases 2+3). Records
+  the genuine paper-gap finding (window-localization invalid for
+  irreducible posets; irreducible residual genuinely unbounded). The
+  effective execution of option G2 of mg-fdc2 §7.
 * `docs/state-MA-Sig-Session1.md` (mg-a22b, re-pinned mg-faf8) —
   the Option A' FULL REFACTOR signature contract. §4.2 §E/§G,
   §4.3, §4.4 are the pinned cascade API; **§9** records the

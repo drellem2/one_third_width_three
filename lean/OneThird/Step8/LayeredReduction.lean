@@ -3,6 +3,7 @@ Copyright (c) 2026 The OneThird Authors. All rights reserved.
 Released under the MIT License.
 -/
 import OneThird.Poset
+import OneThird.Mathlib.LinearExtension.Subtype
 import Mathlib.Data.Fintype.Card
 import Mathlib.Tactic.Linarith
 
@@ -61,20 +62,17 @@ compounding through iterated halving.
   `K ≥ 2w + 2`, every index `k ∈ (w, K − w)` produces an ordinal
   cut whose only cross-comparability obstructions live inside the
   interaction window of size `≤ 6w`.
-* `LayeredReductionConclusion` — the conclusion of
-  `lem:layered-reduction` in size-minimal form: `P` has a balanced
-  pair, contradicting that `P` is a γ-counterexample. (Single
-  `Prop`, no disjunction — the prior `(γ/2)`-counterexample
-  alternative branch is gone.)
+* `ReductionWitness` — the genuine (de-vacuified, mg-65de) witness
+  for `lem:layered-reduction`: a clean two-part ordinal cut
+  (`OrdinalDecomp` with empty middle, both sides non-empty) plus a
+  balanced pair on one of the two strictly smaller sides.
 * `lem_layered_reduction` — **`lem:layered-reduction`**
-  (`step8.tex:2193`, GAP G3 discharged, size-minimal form).
-  Cleared-denominator abstract form: from a layered decomposition
-  of depth `K ≥ K₀(γ, w)` and the witness map packaged in
-  `ReductionWitness`-style (which carries the size-minimality
-  discharge as a `Prop` hypothesis), the conclusion `balanced`
-  holds. The combinatorial cut + bulk/window lift argument is left
-  to the downstream window-localization gluing in
-  `LayeredBalanced.lean`; this file packages the conclusion.
+  (`step8.tex:2193`, GAP G3 discharged, size-minimal form,
+  de-vacuified mg-65de). From a `ReductionWitness`, `P` has a
+  balanced pair. The conclusion is **derived** by the ordinal-sum
+  marginal-invariance lift (`OrdinalDecomp.hasBalancedPair_lift_*`),
+  not assumed: the earlier placeholder carried the conclusion itself
+  as an input field (`fun W => W.conclusion`).
 
 ## References
 
@@ -414,85 +412,72 @@ theorem lem_cut (L : LayeredDecomposition α)
 
 /-! ### §3 — `lem:layered-reduction`: GAP G3 (size-minimal form, `mg-805c`) -/
 
-/-- **Layered-reduction conclusion** (`step8.tex:2199-2201`,
-size-minimal form).
+/-- **Reduction witness for `lem:layered-reduction`** (de-vacuified,
+mg-65de).
 
-In the size-minimal framing of `lem:layered-reduction`, the
-conclusion is a single `Prop` — `balanced` — asserting that `P` has
-a balanced pair (contradicting the γ-counterexample hypothesis on
-`P`).
+This packages the genuine contractual content of the paper's
+size-minimal reduction argument (`step8.tex:2218-2317`): a *clean
+two-part ordinal cut* of `P` — an `OrdinalDecomp α` with **empty
+middle piece** and **both outer pieces non-empty** — together with a
+balanced pair located on **one of the two (strictly smaller)
+sides**.
 
-The earlier formulation of this lemma was a disjunction
-`balanced ∨ strictSubCex` packaging an alternative
-`(γ/2)`-counterexample on a strict induced subposet. That branch
-is gone in the size-minimal framing: by size-minimality of `P` at
-γ, any strict induced subposet `A ⊊ P` is not a γ-counterexample,
-so the alternative collapses to "`A` has a balanced pair", which
-lifts to `P` by the bulk identity / window perturbation.
+**What changed (mg-65de — de-vacuification).** The earlier
+`ReductionWitness` carried a field `conclusion : balanced` — the
+ambient balanced-pair conclusion *itself* — as an *input*, so
+`lem_layered_reduction` was literally `fun W => W.conclusion`: it
+assumed its own conclusion.  This version carries only data about
+the **two strictly-smaller sub-posets** `↥D.Lower`, `↥D.Upper`; the
+ambient conclusion `HasBalancedPair α` is genuinely **derived** (via
+the ordinal-sum marginal-invariance lifts
+`OrdinalDecomp.hasBalancedPair_lift_lower / _upper`), not assumed.
 
-In abstract form, `balanced` is passed as a `Prop` — the caller
-(Step 7 assembly) supplies the concrete witness. -/
-def LayeredReductionConclusion (balanced : Prop) : Prop :=
-  balanced
-
-/-- **Reduction-witness map** (`step8.tex:2218-2317`, paper proof,
-size-minimal form).
-
-The contractual content of the size-minimal paper proof of
-`lem:layered-reduction`: given the cut data of `lem:cut` and the
-hypothesis that `P` is size-minimal among γ-counterexamples, the
-case analysis in `step8.tex:2222-2317` (Steps 1–5 of the proof)
-produces a balanced pair in `P` directly. The size-minimality
-hypothesis is what discharges Step 4 (`A` is not a γ-counterexample
-because `|A| < |X|`).
-
-This is a `Prop`-level packaging: the input is an existence witness
-for the cut + a discharge of the size-minimality + bulk/window lift
-argument; the output is the conclusion `balanced`. The single-shot
-size-minimality contradiction replaces the prior
-`(γ/2)`-counterexample alternative, removing recursive halving from
-`K₀`. -/
-structure ReductionWitness (L : LayeredDecomposition α)
-    (balanced : Prop) where
-  /-- Cut data from `lem:cut`. -/
-  cut : LayeredCut L
-  /-- Cross-cut window-comparability conclusion. -/
-  ordinal : ∀ a ∈ cut.A, ∀ b ∈ cut.B,
-    a < b ∨ (a ∈ cut.W ∧ b ∈ cut.W)
-  /-- Discharge: caller supplies the balanced-pair conclusion via
-  the size-minimality argument applied to the cut piece `A`, lifted
-  by Step 3 (bulk identity) or Step 5 (window perturbation). -/
-  conclusion : balanced
+The `hMidEmpty` / `hLowerNE` / `hUpperNE` fields pin the cut to be a
+genuine *reduction*: a two-part split into two **strictly smaller**
+sub-posets, faithful to the paper's `A ⊊ X`, `B ⊊ X` cut. -/
+structure ReductionWitness (α : Type*) [PartialOrder α] [Fintype α]
+    [DecidableEq α] where
+  /-- The clean ordinal cut produced by the reduction. -/
+  D : OrdinalDecomp α
+  /-- The cut is genuinely two-part: the middle piece is empty. -/
+  hMidEmpty : D.Mid = ∅
+  /-- The lower side is non-empty (a genuine *reduction* — `A ⊊ X`). -/
+  hLowerNE : D.Lower.Nonempty
+  /-- The upper side is non-empty (a genuine *reduction* — `B ⊊ X`). -/
+  hUpperNE : D.Upper.Nonempty
+  /-- A balanced pair on one of the two strictly-smaller sides.  This
+  is the genuinely-weaker input: it is a statement about a sub-poset,
+  not about `α`. -/
+  hSide : HasBalancedPair ↥D.Lower ∨ HasBalancedPair ↥D.Upper
 
 /-- **`lem:layered-reduction` — GAP G3** (`step8.tex:2193`,
-size-minimal one-shot form, `mg-805c`).
+size-minimal one-shot form, de-vacuified mg-65de).
 
-For a layered decomposition of depth `K ≥ K₀(γ, w)` of a
-*size-minimal* width-3 γ-counterexample, `P` has a balanced pair,
-contradicting the γ-counterexample hypothesis.
+From a `ReductionWitness` — a clean two-part ordinal cut of `P` plus
+a balanced pair on one of the two strictly smaller sides — `P`
+itself has a balanced pair.
 
-The integer threshold is `K₀(γ, w) := max(2w + 2, ⌈2/γ⌉ + 6w + 4)`
-(`step8.tex:2222`, size-minimal form); the cleared-denominator depth
-condition is `K ≥ max(2w + 2, ⌈2/γ⌉ + 6w + 4)`. The dependence on γ
-is one-sided — driven by the window-perturbation bound alone, with
-no recursive halving.
+**Genuine proof.** Case-split on which side carries the balanced
+pair and apply the ordinal-sum marginal-invariance lift
+(`OrdinalDecomp.hasBalancedPair_lift_lower` / `_upper`, paper
+`cor:ordinal-marginal`, `step8.tex:2500-2519`): a balanced pair in
+either ordinal-sum factor is balanced in the whole poset because the
+`(x, y)`-marginal of a pair inside one factor is invariant under the
+ordinal-sum factorisation `L(P) ≃ L(P_lower) × L(P_upper)`.
 
-The proof reduces to:
-* invoking `lem_cut` for the existence of the cut data;
-* applying size-minimality of `P`: the heavy side `A ⊊ X` has
-  `|A| < |X|`, so `A` is not a γ-counterexample, so `A` has a
-  balanced pair `(x, y)`;
-* lifting via Step 3 (bulk: `p_xy(P) = p_xy(A)` exactly when
-  `(x, y) ⊆ A ∖ W`) or Step 5 (window: perturbation bounded by
-  `o_K(1) ≤ 1/3 - γ/2` for `K ≥ K₀`).
-
-The size-minimality discharge and the lift are packaged in the
-`conclusion` field of `ReductionWitness`. -/
-theorem lem_layered_reduction (L : LayeredDecomposition α)
-    (balanced : Prop)
-    (W : ReductionWitness L balanced) :
-    LayeredReductionConclusion balanced :=
-  W.conclusion
+This is the size-minimal reduction (`mg-805c`): a deep layering
+admits a clean cut; size-minimality (or, in the
+`lem_layered_balanced_full` strong induction, the induction
+hypothesis) supplies a balanced pair on the strictly smaller
+non-chain side; the lift transports it back to `P`.  Unlike the
+earlier placeholder, the conclusion `HasBalancedPair α` is **not**
+an input field — it is computed. -/
+theorem lem_layered_reduction {α : Type*} [PartialOrder α] [Fintype α]
+    [DecidableEq α] (W : ReductionWitness α) :
+    HasBalancedPair α := by
+  rcases W.hSide with h | h
+  · exact W.D.hasBalancedPair_lift_lower h
+  · exact W.D.hasBalancedPair_lift_upper h
 
 /-- **Threshold `K₀(γ, w)`** (`step8.tex:2222`, size-minimal form,
 `max(2w + 2, ⌈2/γ⌉ + 6w + 4)`).
