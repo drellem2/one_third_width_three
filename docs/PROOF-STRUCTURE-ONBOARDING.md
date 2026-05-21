@@ -244,6 +244,24 @@ and this file is wrong — fix it.
   unblocked on F7a. See §3 pitfall #9 (Re-scope status) +
   `docs/state-S7F-Checkpoint3-Session1.md` +
   `docs/state-S7F-R1-Session1.md`.
+* **mg-120d S7-F-B sync-map wiring (GREEN, 2026-05-21)**: FULL
+  REFACTOR Phase-2 Piece-3 sub-arc B. `lean/OneThird/Step8/SyncMaps.lean`
+  (NEW, sorry-free, no new axioms) **wires** the synchronization
+  maps `f_AB/f_AC/f_BC` carried by a `ChainLiftData α` into the
+  band-assembly-ready form: `SyncMap.IsOrphan` (decidable chain-tail
+  orphan predicate) + `SyncMap.orphans` / `ChainLiftData.refOrphans`
+  (orphan index sets) make orphan inclusion **decidable**;
+  `SyncMap.onDomain` / `extend` / `ChainLiftData.fABwired`/`fACwired`
+  extend the partial maps to total maps on `X ∖ X^exc_sync`;
+  `SyncMap.onDomain_monotone` + `ChainLiftData.fABwired_monotone`/
+  `fACwired_monotone` deliver the (L4) monotonicity. The paper's
+  per-chain bound `|X^exc_sync| ≤ K_bw` is **ill-posed against the
+  bare `ChainLiftData`** (no field ties orphan count to `K_bw`) —
+  block-and-reported and **made explicit** as the decidable
+  hypothesis `ChainLiftData.BoundedSyncOrphans` (Resolution A,
+  per the Piece-3 design note), not fabricated. The ground-set
+  `X^exc_sync : Finset α` stays scoped to S7-F-A. Piece-3 sub-arcs
+  A/C/Z remain. See `docs/state-S7F-B-Session1.md`.
 
 ---
 
@@ -1081,6 +1099,15 @@ See `docs/state-S7F-R1-Session1.md`.
   `bandwidth ≤ 4` is inert. §3 pitfall #9. Recommendation: re-point
   Piece 2 to deliver `ChainLiftData α` + reconcile the bridge
   contract before Piece 3. No Lean changes.
+* `docs/state-S7F-B-Session1.md` (mg-120d) — FULL REFACTOR Phase-2
+  Piece-3 sub-arc B; **GREEN**. `Step8/SyncMaps.lean` wires the
+  `ChainLiftData`'s sync maps `f_AB/f_AC/f_BC`: decidable orphan
+  inclusion (`SyncMap.IsOrphan`/`orphans`/`ChainLiftData.refOrphans`),
+  domain extension (`onDomain`/`extend`/`fABwired`/`fACwired`),
+  monotonicity (`onDomain_monotone`/`fABwired_monotone`). The
+  `|X^exc_sync| ≤ K_bw` bound is block-and-reported as ill-posed
+  against the bare structure and made explicit as the hypothesis
+  `BoundedSyncOrphans` (Resolution A).
 * `docs/state-Piece6-FullStep8G4-Session1.md` (mg-fdc2) — FULL
   REFACTOR Piece 6 (`lem_layered_balanced_full`, full Step 8 G4)
   first execution attempt; **RED — base-case coverage gap**. The

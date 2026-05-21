@@ -615,7 +615,19 @@ probability of 7th vacuity-discovery at bridge construction).
   250k-400k.
 - **mg-S7-F-B (synchronization maps):** define `f_{AB}, f_{AC},
   f_{BC}` on `X \setminus X^{exc}` with monotonicity. ~1 session,
-  250k.
+  250k. **OUTCOME (mg-120d, 2026-05-21): GREEN — done.** Re-scoped
+  per Checkpoint 3: the maps are **input** carried by the
+  `ChainLiftData` (not constructed), so this became a *wiring*
+  task. `lean/OneThird/Step8/SyncMaps.lean` (NEW, sorry-free, no new
+  axioms): decidable orphan inclusion (`SyncMap.IsOrphan`/`orphans`,
+  `ChainLiftData.refOrphans`), domain extension
+  (`onDomain`/`extend`/`fABwired`/`fACwired`), monotonicity
+  (`onDomain_monotone`/`fABwired_monotone`/`fACwired_monotone`). The
+  per-chain bound `|X^exc_sync| ≤ K_bw` is ill-posed against the
+  bare `ChainLiftData` — made explicit as the hypothesis
+  `BoundedSyncOrphans` (Resolution A). The ground-set
+  `X^exc_sync : Finset α` stays in mg-S7-F-A's scope. See
+  `docs/state-S7F-B-Session1.md`.
 - **mg-S7-F-C (band assembly):** construct
   `LayeredDecomposition (X \setminus X^{exc})` with `L.w ≤ 4`.
   ~1-2 sessions, 250k-400k. (The (L1)-(L4) verifications go here.)
