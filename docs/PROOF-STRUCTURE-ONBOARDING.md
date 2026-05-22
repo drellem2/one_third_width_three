@@ -12,6 +12,30 @@ and this file is wrong — fix it.
 
 ## §0. Onboarding TL;DR (read even if you skim nothing else)
 
+* **mg-5fdd MATH-FINISHED AUDIT (RED — the math is NOT finished;
+  read `docs/onethird-math-finished-audit.md` first).** A genuine
+  paper-side math audit (not a Lean-port scoping) found the width-3
+  1/3–2/3 proof has genuine, in-places-fatal mathematical gaps — not
+  pure formalization gaps. Verified directly: (1) Step 2
+  `prop:per-fiber` feeds an *area*-scaled per-fiber boundary into the
+  *perimeter*-scaled `lem:weak-grid` stability lemma — the exported
+  `o(1)` staircase error does not exist (FATAL); (2) Step 4
+  `lem:rect-stable-area` is self-admittedly vacuous (`rem:G3-vacuity`)
+  and the route-around is `min(m,n)`-scale, a factor `t` short of the
+  `|R|`-scale `thm:step4` needs (FATAL); (3) Step 8 G4
+  `lem:window-localization` is false for `w ≥ 1`, and G3
+  `lem:layered-reduction`'s `eq:window-pert` claims `o_K(1)` where the
+  truth is `Θ(1)` — so the **deep-irreducible** layered width-3 case
+  (= axiom `lem_layered_balanced_irreducible_base`) is unproven by
+  either route (genuine open math). Probe finding: Steps 1↔5 have a
+  circular density dependency. Of the 5 disclosed axioms, only
+  `brightwell_sharp_centred` is a pure formalization gap; the other
+  four shadow genuine math gaps. The OneThird LaTeX (`main.tex`,
+  `step{2,4,5,8}.tex`, `summary.tex`) has been brought to an honest
+  state on `main`: every gap marked inline with the `\GAP{}` macro,
+  abstract / `thm:main` / gaps-section / stale-Lean-remarks corrected.
+  **The recurring error is area-vs-perimeter / total-vs-local
+  conflation — the same pattern three times.**
 * The headline theorem is `OneThird.width3_one_third_two_thirds`
   (`lean/OneThird/MainTheorem.lean:56`). As of **mg-9add** (the
   Piece-4 proof-by-contradiction body) it is **sorry-free**: it now

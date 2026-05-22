@@ -1093,6 +1093,32 @@ $\fib_{x,y}\to D_{x,y}$ and hence preserves cardinality exactly. The final
 clause follows by plugging $|S|\le\alpha\eta W/(K\kappa)$ into (i).
 \end{proof}
 
+\GAP{Part~(ii) of Proposition~\ref{prop:per-fiber} does \emph{not}
+deliver a non-trivial staircase approximation, because it feeds an
+\emph{area}-scaled boundary bound into a \emph{perimeter}-scaled
+stability lemma. A ``good'' fiber is defined by the area-scaled bound
+$|\bd_{\mathrm{BK}}(S\cap\fib_{x,y})|\le\eta\,|\fib_{x,y}|$ with
+$\eta\in(0,1)$ a \emph{fixed} threshold (independent of $n$, and
+distinct from the conductance $\kappa$). Lemma~\ref{lem:weak-grid}
+requires the \emph{perimeter}-scaled hypothesis $\bd_D A\le\varepsilon\,t$
+with $\varepsilon$ small, and its rate satisfies
+$\delta(\varepsilon)\to0$ only as $\varepsilon\to0$. The proof writes
+$\bd_D A\le\eta\,t^2=(\eta\,t)\cdot t$ and sets
+$\varepsilon_{x,y}:=\eta\,t_{x,y}$. Since $\eta$ is a fixed constant
+and rich fibers have side length $t_{x,y}$ as large as $\Theta(n)$,
+the quantity $\varepsilon_{x,y}=\eta\,t_{x,y}$ \emph{diverges}, so
+$\delta(\varepsilon_{x,y})$ does not tend to $0$ and the conclusion
+$|E_{x,y}|\le\delta(\eta\,t_{x,y})\,|\fib_{x,y}|$ degenerates to the
+trivial bound $|E_{x,y}|\le|\fib_{x,y}|$. There is a genuine parameter
+squeeze with no solution: keeping the bad-fiber mass~(i) small
+($\propto K\kappa/\eta$) forces $\eta$ large, while keeping the
+good-fiber error~(ii) small forces $\eta\,t$ small; with
+$t=\Theta(n)$ in the rich regime the two demands are incompatible.
+Consequently the ``$o(|\fib_{x,y}|)$-close to a staircase''
+conclusion of Theorem~\ref{thm:step2}, on which Steps~3, 4, 6 and~7
+all depend, is \emph{not established}. This is an open gap; see
+\texttt{docs/onethird-math-finished-audit.md} (mg-5fdd).}
+
 The exact inequality Step~2 exports, with no coupling assumed, is
 \[
 \sum_{(x,y)\in\mathcal{R}\setminus\mathcal{G}}|\fib_{x,y}|

@@ -40,11 +40,23 @@ for width-2 posets (Linial 1984), $2$-dimensional posets (Kahn--Saks
 1984), semiorders (Brightwell), and symmetric posets, but
 \emph{not} previously known at width~$3$.
 
-\begin{theorem}[Main result]
+\begin{theorem}[Target result --- see status note]
 Let $P$ be a finite poset of width at most~$3$ that is not a chain.
 Then $P$ admits a pair $(x,y)$ of incomparable elements with
 $1/3\le\Pp[x<_L y]\le 2/3$.
 \end{theorem}
+
+\noindent\textbf{Status.} This is the result the paper aims at, and
+the full argument for it is given in \texttt{main.tex}. It is
+\emph{not} at present a complete proof: it is conditional on an
+arithmetic-richness hypothesis (Hypothesis~A of Step~8), and an
+internal audit (\texttt{docs/onethird-math-finished-audit.md}) has
+identified several load-bearing steps whose proofs are currently
+incomplete --- in Step~2 (per-fiber stability), Step~4
+(two-interface incompatibility), and the deep irreducible case of the
+Step~8 layered balanced-pair lemma. The summary below describes the
+intended strategy; the gaps are marked \textbf{[GAP:]} in the main
+text.
 
 \section*{The two ideas}
 

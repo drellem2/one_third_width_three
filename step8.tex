@@ -543,50 +543,35 @@ Section~\ref{sec:layered-reduction} for G3, and
 Section~\ref{sec:g4-balanced-pair} for G4. G5 is the present proof
 itself.)
 
-\begin{remark}[In-tree headline restatement; Lean
-formalisation status]\label{rem:headline-lean-restatement}
+\begin{remark}[Companion Lean formalisation: status]\label{rem:headline-lean-restatement}
 The companion Lean formalisation
 (\texttt{lean/OneThird/MainTheorem.lean}, \texttt{width3\_one\_third\_two\_thirds})
-exposes Theorem~\ref{thm:main-step8} as a disjoint union of two
-slices that the paper's single conditional statement bundles:
-\begin{enumerate}[nosep, label=(\roman*)]
-  \item \emph{Small-$n$ unconditional slice $(|P| \le 10)$.} For
-  every width-$3$ finite poset on at most $10$ elements that is not
-  a chain, $P$ has a balanced pair. \emph{Paper-level:}
-  unconditional via the strong induction in
-  Lemma~\ref{lem:layered-balanced} below
-  (Section~\ref{sec:g4-balanced-pair}); does not depend on
-  Steps~1--7 or on Hypothesis~\ref{hyp:arith}. \emph{In-tree Lean
-  dispatch:} verifies the singleton-band cap-$w \le 4$ sub-slice
-  ($P$ admitting a width-$\le 4$ singleton-band layered
-  decomposition) by exhaustive Python enumeration
-  (\texttt{lean/scripts/enum\_cap5.py}; certificate
-  \texttt{enum\_cap5\_certificate.json}; see
-  Remark~\ref{rem:residual-base}). Coverage of the remaining
-  configurations (e.g.\ reducible $|P| = 6$ posets like $A \oplus B$
-  with $A,B$ width-$3$ antichains, whose minimum singleton-band
-  bandwidth equals $5$) requires either an extended enumeration or
-  a Lean port of Lemma~\ref{lem:layered-balanced} that drops the
-  singleton-band restriction (companion work item
-  \texttt{mg-2970}).
-  \item \emph{Large-$n$ Steps-1--7-conditional slice $(|P| \ge 11)$.}
-  For every width-$3$ non-chain finite poset on at least $11$
-  elements, $P$ has a balanced pair, conditional on
-  Prop.~\ref{prop:72} of \texttt{step7.tex} delivering a layered
-  width-3 decomposition of bandwidth $w_0(\gamma) \le 4$ (see
-  Remark~\ref{rem:w0-constant} of \texttt{step7.tex}).
-\end{enumerate}
-The Lean dispatch shape uses Lemma~\ref{lem:layered-balanced} (G4)
-uniformly at every depth $K \ge 1$ via an F3 strong induction inside
-\texttt{Case3WitnessProof.lean}; the depth-dichotomy of
-Section~\ref{sec:layered-reduction} (G3 for $K \ge K_0$, G4 for
-$K < K_0$) is a paper-side organisation that the in-tree dispatch
-does not consume on the headline path. The G3 lemma
-(Lemma~\ref{lem:layered-reduction}) is nonetheless formalised
-end-to-end in Lean (\texttt{Step8/LayeredReduction.lean},
-\texttt{lem\_cut}, \texttt{lem\_layered\_reduction}) and is
-preserved as documentation of the paper's intended mechanism; see
-the disclaimer at the head of Section~\ref{sec:layered-reduction}.
+exposes Theorem~\ref{thm:main-step8} as a \texttt{sorry}-free
+development resting on \emph{five disclosed project axioms}
+(\texttt{lean/AXIOMS.md}). The headline Lean theorem is a proof by
+contradiction --- a minimal $\gamma$-counter\-example is fed through
+Theorem~E, the Steps~1--7 cascade, the Step~7--8 bridge, the Step~8
+G4 lemma and the exceptional-set perturbation lift --- and it takes
+Hypothesis~A (\texttt{HypothesisArithmetic}) as an explicit
+hypothesis. The five axioms are: \texttt{brightwell\_sharp\_centred}
+(the external Brightwell/Kahn--Saks bound \eqref{eq:sharp-centred});
+\texttt{stepsOneToSevenCascade} (all of Steps~1--7);
+\texttt{lem\_layered\_balanced\_irreducible\_base} (the Step~8 G4
+deep irreducible residual --- the open gap discussed after the proof
+of Lemma~\ref{lem:layered-balanced});
+\texttt{width3\_smallN\_hasBalancedPair} (the base case
+Lemma~\ref{lem:small-n}); and
+\texttt{nonChain\_compl\_of\_no\_balancedPair} (the perturbation-step
+non-chain fact). An internal audit (work item \texttt{mg-5fdd},
+\texttt{docs/onethird-math-finished-audit.md}) found that, of these,
+only \texttt{brightwell\_sharp\_centred} is a pure formalisation gap
+(a complete external result not yet ported); the remaining four
+shadow the genuine, in-places-open mathematical gaps marked
+\textbf{[GAP:]} in this paper (see
+Section~\ref{sec:roadmap-residual}). The G3 reduction lemma
+(Lemma~\ref{lem:layered-reduction}) is also formalised in Lean
+(\texttt{Step8/LayeredReduction.lean}); it inherits the gap recorded
+in the \textbf{[GAP:]} note after its proof.
 \end{remark}
 
 \medskip\noindent\emph{Scope note.} Without
@@ -765,13 +750,41 @@ at any fixed $\gamma \in (0, 2/9]$.
  recursive descent on $\gamma$: the lemma's $K_0$ depends one-sidedly
  on $\gamma$ via the window-perturbation bound alone.)
  \item If $K < K_0$, apply Lemma~\ref{lem:layered-balanced} (G4)
- directly: $P|_{X \setminus X^{\mathrm{exc}}}$ is not a chain (else
- $P$ were, contradicting width~$3$ with a counter\-example), so it
- has a balanced pair $(x,y)$; the same perturbation
- bound~\eqref{eq:exc-perturb} transfers this to $P$ via
- $p_{xy}(P) \in [1/3 - \gamma/2, 2/3 + \gamma/2]$, contradicting
- that $P$ is a $\gamma$-counter\-example.
+ directly. First, $P|_{X \setminus X^{\mathrm{exc}}}$ is not a chain:
+ if it were, then $P$ would consist of a chain on
+ $n - |X^{\mathrm{exc}}|$ elements together with the
+ $|X^{\mathrm{exc}}| \le C_{\mathrm{exc}}(T) = O_T(1)$ exceptional
+ elements; by Lemma~\ref{lem:indec-incompairs} the indecomposable
+ poset $P$ has $\ge n/2$ incomparable pairs, each of which (since the
+ complement is a chain) involves an exceptional element, so by
+ pigeonhole some exceptional $z$ is incomparable to at least
+ $n / (2\,C_{\mathrm{exc}}(T))$ chain elements; these form a
+ contiguous range $[c_a, c_b]$ of the chain (the chain elements
+ comparable to $z$ split into an up-set and a down-set), and a floater
+ incomparable to a contiguous chain-range of length $\ell$ has
+ $\Pr[z <_L c_j] \in [1/3, 2/3]$ for some mid-range $c_j$ once
+ $\ell \ge 2$ (the floater is inserted into one of $\ell + 1$ gaps
+ with monotone, $1/(\ell+1)$-spaced cumulative probabilities), giving
+ a balanced pair of $P$ directly --- already a contradiction. So
+ $P|_{X \setminus X^{\mathrm{exc}}}$ is not a chain, and
+ Lemma~\ref{lem:layered-balanced} produces a balanced pair $(x,y)$;
+ the same perturbation bound~\eqref{eq:exc-perturb} transfers this to
+ $P$ via $p_{xy}(P) \in [1/3 - \gamma/2, 2/3 + \gamma/2]$,
+ contradicting that $P$ is a $\gamma$-counter\-example.
 \end{itemize}
+\GAP{The non-chain argument for $P|_{X \setminus X^{\mathrm{exc}}}$
+just given is correct in outline but is a \emph{sketch}: the
+``floater incomparable to a long contiguous chain-range yields a
+balanced pair'' step uses, for the marginal $\Pr_P[z <_L c_j]$ over
+the \emph{full} poset $P$, that the cumulative probabilities along the
+range are monotone with bounded ($O(1/\ell)$) increments. The earlier
+draft justified ``$P|_{X \setminus X^{\mathrm{exc}}}$ is not a chain''
+by the false one-liner ``else $P$ were a chain'' (deleting $O_T(1)$
+elements from a non-chain can yield a chain). A fully rigorous
+self-contained lemma for the floater step --- the Lean axiom
+\texttt{nonChain\_compl\_of\_no\_balancedPair} --- remains to be
+written; the mathematics is standard. See
+\texttt{docs/onethird-math-finished-audit.md} (mg-5fdd).}
 The condition $n \ge n_0(\gamma, T)$ is automatic for the cascade:
 if $n < n_0(\gamma, T) = O(C_{\mathrm{exc}}(T)/\gamma)$, the
 finite-enumeration base case (Remark~\ref{rem:small-n}) rules out
@@ -1482,18 +1495,26 @@ separate work item.
  rescaling'') derives the $C_4/c_4$ rescaling explicitly.
 
  \item[\textbf{G3}] \emph{Minimality invariance / reduction lemma.}
- \textbf{Discharged}: see
- Section~\ref{sec:layered-reduction} and
- Lemma~\ref{lem:layered-reduction} below.
+ \textbf{Open (gap).} See Section~\ref{sec:layered-reduction} and
+ Lemma~\ref{lem:layered-reduction} below. The reduction is correct on
+ the bulk (Case~(a)) but its window-perturbation estimate
+ \eqref{eq:window-pert} (Case~(b)) is wrong --- it claims $o_K(1)$
+ where the truth is $\Theta(1)$. See the \textbf{[GAP:]} note
+ following the proof of Lemma~\ref{lem:layered-reduction}.
 
  \item[\textbf{G4}] \emph{Layered-width-3 balanced-pair lemma.}
- \textbf{Discharged}: see Section~\ref{sec:g4-balanced-pair} and
- Lemma~\ref{lem:layered-balanced} below. A layered width-$3$ poset
- that is not a chain always contains a balanced pair, via ordinal-sum
- isolation to a bounded bipartite window plus a direct FKG/averaging
- argument (Prop.~\ref{prop:bipartite-balanced}). Together with G3
- (Lemma~\ref{lem:layered-reduction}) this exhausts
- Proposition~\ref{prop:step7}(iii) with no depth gap.
+ \textbf{Partially discharged; open for the deep irreducible case.}
+ See Section~\ref{sec:g4-balanced-pair} and
+ Lemma~\ref{lem:layered-balanced} below.
+ Lemma~\ref{lem:layered-balanced} is established for depth $K = 1$,
+ for layer-ordinal-reducible posets, and for irreducible posets of
+ bounded size $|X| \le 3(3w+1)$. The \emph{deep irreducible} case is
+ not covered: its proof (Case~C1) relies on
+ Lemma~\ref{lem:window-localization}, which is invalid for $w \ge 1$.
+ See the \textbf{[GAP:]} notes after
+ Lemma~\ref{lem:window-localization} and after the proof of
+ Lemma~\ref{lem:layered-balanced}. Together with the G3 gap, the deep
+ irreducible regime of Proposition~\ref{prop:step7}(iii) is open.
 
  \item[\textbf{G5}] \emph{Main-theorem write-up.} \textbf{Discharged}:
  the proof of Theorem~\ref{thm:main} in Section~\ref{sec:main-thm}
@@ -1524,20 +1545,20 @@ The constants below ($c_5(T), c_6, K(T), \delta_0(\gamma),
 inequality~\eqref{eq:G2} of Proposition~\ref{prop:G2}; for the
 inequality to hold at large $n$, the arithmetic-richness
 Hypothesis~\ref{hyp:arith} of Section~\ref{sec:main-thm} must be in
-force. The companion Lean formalisation does \emph{not} consume
-Hypothesis~\ref{hyp:arith}: the in-tree headline
-\texttt{width3\_one\_third\_two\_thirds} is stated against the
-Steps~1--7 interface (paper-axiomatised at
-\texttt{lean/OneThird/Step7/Assembly.lean}, \texttt{LayeredWidth3})
-and dispatches via the bandwidth field directly; the cascade
-closure inequality~\eqref{eq:G2} appears in the paper only, at the
-Steps~1--7 assembly level, and is not re-derived in Lean. The
-constants of this section are therefore paper-side bookkeeping for
-the Steps~1--7 assembly; the in-tree formalisation's surface area
-of conditionality is limited to the
-\hyperref[rem:headline-lean-restatement]{large-$n$
-Steps-1--7-conditional slice} of
-Remark~\ref{rem:headline-lean-restatement}.
+force. The companion Lean formalisation takes Hypothesis~A as an
+explicit hypothesis (\texttt{HypothesisArithmetic}) of the in-tree
+headline \texttt{width3\_one\_third\_two\_thirds}, and carries all of
+Steps~1--7 --- including the cascade closure inequality~\eqref{eq:G2}
+--- as the disclosed axiom \texttt{stepsOneToSevenCascade}. The
+constants of this section are paper-side bookkeeping for the
+Steps~1--7 assembly. Note that the audit
+\texttt{docs/onethird-math-finished-audit.md} (mg-5fdd) found a
+load-bearing flaw \emph{upstream} of these constants --- the Step~2
+per-fiber staircase error $\varepsilon$ is not actually delivered as
+an $o(1)$ quantity (see the \textbf{[GAP:]} note after
+Proposition~\ref{prop:per-fiber} in \texttt{step2.tex}) --- so the
+constant $\varepsilon$ used below, and hence the inequality
+\eqref{eq:G2}, currently rest on an open gap.
 \end{remark}
 
 \paragraph{Named constants.}
@@ -1947,11 +1968,14 @@ condition precludes an impossible large-$n$ limit.
 \section{G3: Layered-decomposition reduction via size-minimality}
 \label{sec:layered-reduction}
 
-This section discharges GAP\,G3: we prove the ``reduction'' branch of
+This section addresses GAP\,G3: the ``reduction'' branch of
 Proposition~\ref{prop:step7}(iii). The near-ordinal-sum and
 near-disjoint-union templates of the width-3 literature are adapted
 here from exact ordinal decompositions to Step~7's \emph{layered}
-decompositions.
+decompositions. As recorded in the \textbf{[GAP:]} note after the
+proof of Lemma~\ref{lem:layered-reduction}, this section's reduction
+is incomplete: its window-perturbation estimate is incorrect, leaving
+the deep regime open.
 
 \begin{remark}[Paper-only: G3 is not on the in-tree Lean headline
 path]\label{rem:g3-paper-only}
@@ -2290,7 +2314,7 @@ therefore $k - w < i \le k$ and $k < j \le k + w$.
 
 \subsection{The reduction lemma}
 
-\begin{lemma}[Layered reduction; GAP\,G3 discharged]\label{lem:layered-reduction}
+\begin{lemma}[Layered reduction; GAP\,G3 --- incomplete, see gap note]\label{lem:layered-reduction}
 Fix $\gamma > 0$. There is an integer $K_0 = K_0(\gamma, w)$ such
 that the following holds. Let $P$ be a \emph{size-minimal} width-$3$
 $\gamma$-counterexample on ground set $X$ admitting a layered
@@ -2413,6 +2437,30 @@ balanced pair, contradicting the assumption that $P$ is a
 $\gamma$-counterexample.
 \end{proof}
 
+\GAP{The estimate \eqref{eq:window-pert} in Case~(b) is \emph{wrong}.
+The inequality
+$|p_{xy}(P) - p_{xy}(A)| \le |\mathcal L(P) \triangle \mathcal
+L(P^\sharp)| / |\mathcal L(P)|$ is valid, but its right-hand side is
+\emph{not} $o_K(1)$: it is $\Theta(1)$, bounded away from $0$
+uniformly in $K$. The extensions in
+$\mathcal L(P) \setminus \mathcal L(P^\sharp)$ are exactly those that
+reverse some incomparable cross-pair inside the bounded window $W$;
+the ratio $|\mathcal L(P^\sharp)| / |\mathcal L(P)|$ is the
+probability that a uniform random extension respects the ordinal
+order on $W$, a constant in $\big(0, 1\big)$ depending only on the
+bounded window (it lies in $[1/(6w)!,\,1)$) and \emph{not} decaying
+with $K$. The reasoning ``$W$ has bounded size while
+$|\mathcal L(P)|$ grows'' conflates the bounded \emph{window} with a
+bounded \emph{count}: the number of full extensions reversing a window
+pair grows in proportion to $|\mathcal L(P)| \sim 2^K$, not with
+$|W|$. Hence Case~(b) --- the case where every balanced pair of $A$
+touches the cut window --- is not closed, and
+Lemma~\ref{lem:layered-reduction} is an open gap for the deep regime.
+Together with the gap in Case~C of Lemma~\ref{lem:layered-balanced},
+this leaves the deep \emph{irreducible} layered width-$3$ case
+unproven by either route. See
+\texttt{docs/onethird-math-finished-audit.md} (mg-5fdd).}
+
 \begin{remark}\label{rem:shallow-layering}
 Lemma~\ref{lem:layered-reduction} requires $K \ge K_0(\gamma, w)$.
 The case $K < K_0$ --- a \emph{shallow} layering of bounded depth ---
@@ -2442,13 +2490,15 @@ therefore unnecessary here.
 \section{G4: Layered width-3 balanced-pair lemma}
 \label{sec:g4-balanced-pair}
 
-This section discharges GAP\,G4 as a standalone lemma: every layered
-width-$3$ poset that is not a chain has a balanced pair, produced by
-a direct averaging argument on a bounded interaction window. Combined
-with Lemma~\ref{lem:layered-reduction} (G3), this covers the
-direct-balanced-pair branch of Proposition~\ref{prop:step7}(iii) with
-no depth gap: shallow layerings ($K < K_0$) are handled here, deep
-layerings ($K \ge K_0$) by G3.
+This section addresses GAP\,G4: every layered width-$3$ poset that is
+not a chain has a balanced pair, via ordinal-sum factorisation and a
+direct averaging argument on a bounded interaction window. The
+intended design pairs this with Lemma~\ref{lem:layered-reduction} (G3)
+along a depth dichotomy --- shallow layerings ($K < K_0$) handled
+here, deep layerings ($K \ge K_0$) by G3. As recorded in the
+\textbf{[GAP:]} notes below (and in Section~\ref{sec:roadmap-residual}),
+this section is \emph{not} complete: the deep \emph{irreducible} case
+is established by neither route, and remains an open gap.
 
 \begin{lemma}[Layered width-$3$ balanced pair; GAP\,G4]
 \label{lem:layered-balanced}
@@ -2482,9 +2532,14 @@ by the enumeration certificate of Remark~\ref{rem:residual-base}
 below (\texttt{mg-4d7b}); the $K \ge 3$ irreducible leaves are
 discharged by the F5a Bool certificate
 (\texttt{BoundedIrreducibleBalancedInScope.lean},
-\texttt{case3\_certificate}). The two proofs prove the same theorem
-under the same hypothesis; the in-tree formalisation differs only in
-dispatch shape.
+\texttt{case3\_certificate}). Both routes share the same gap: the deep
+irreducible case (see the \textbf{[GAP:]} note after the proof of
+Lemma~\ref{lem:layered-balanced}). In the companion Lean development
+this case is carried by the disclosed axiom
+\texttt{lem\_layered\_balanced\_irreducible\_base}; in the paper it is
+the open residual described there. The two routes therefore prove the
+same theorem under the same hypotheses \emph{and with the same open
+gap}; they differ only in dispatch shape.
 \end{remark}
 
 The proof proceeds through three ingredients. First, a general
@@ -2697,6 +2752,28 @@ The size bound follows from $|W(i,j)| \le 3(3w+1)$ using $|i-j| \le w$
 and $|L_k| \le 3$, and $P|_{W(i,j)}$ inherits the layered structure
 of~$P$ with the same interaction width~$w$.
 \end{proof}
+
+\GAP{The probability identity in Lemma~\ref{lem:window-localization}
+is \emph{not valid as stated} for interaction width $w \ge 1$. The
+proof claims $(X_-, X_0, X_+)$ with $X_0 = W(i,j)$ is an ordinal-sum
+decomposition witness, i.e.\ that every $z \notin W(i,j)$ is comparable
+in $P$ to \emph{every} element of $W(i,j)$. By~(L2), an element $z$ in
+band $L_k$ is forced below an element of band $L_\ell$ only when
+$k + w < \ell$. An element $z$ in a band $L_k$ with
+$\min(i,j) - 2w \le k < \min(i,j) - w$ lies outside $W(i,j)$, yet is
+\emph{not} (L2)-forced below the bottom boundary band
+$L_{\min(i,j)-w}$ of $W(i,j)$: the cut below $W(i,j)$ is not clean. No
+fixed padding repairs this --- a layer-ordinal-irreducible poset
+(Definition~\ref{def:layer-reducible}) has \emph{no} clean cut
+anywhere, so its only ordinal middle pieces are $\varnothing$ and $X$
+itself. The lemma is correct only when the two window boundaries
+$\min(i,j)-w$ and $\max(i,j)+w$ are themselves indices of
+layer-ordinal reducibility (Definition~\ref{def:layer-reducible}); in
+that restricted form it is subsumed by
+Corollary~\ref{cor:reducibility-transfer}. The unrestricted statement
+above, and the Case~C1 step of Lemma~\ref{lem:layered-balanced} that
+consumes it, are an open gap; see the audit
+\texttt{docs/onethird-math-finished-audit.md} (mg-5fdd).}
 
 \subsection{Layer-ordinal reducibility}
 \label{subsec:layer-reducible}
@@ -3265,8 +3342,32 @@ balanced pair in $P$ directly.
 In every case the lemma holds, completing the induction.
 \end{proof}
 
-\begin{remark}[Where the old argument broke, and how the induction
-fixes it]\label{rem:old-vs-new}
+\GAP{Case~C of the proof above is an open gap. It relies on
+Lemma~\ref{lem:window-localization}, whose pair-identity is invalid for
+$w \ge 1$ (see the \textbf{[GAP:]} note following that lemma). With the
+corrected window localization, a proper clean window $W \subsetneq X$
+exists only when $P$ is layer-ordinal reducible --- a case already
+handled by Case~B --- so for a genuinely \emph{irreducible} $P$ the
+only sub-case is C2, $W = X$, which requires $|X| \le 3(3w+1)$. That
+size bound \emph{fails} for the irreducible layered width-$3$ posets
+that genuinely exist: e.g.\ $\beta = \{1,\dots,K\}$ with
+$i <_P j \Leftrightarrow j - i > 2$ is width-$3$, non-chain, layered
+with $\mathrm{band} = \mathrm{id}$ and $w = 2$, layer-ordinal
+\emph{irreducible} (every cut $k\mid k+1$ is straddled by the
+incomparable pair $(k,k+1)$), and has $K$ \emph{unbounded}. So
+Lemma~\ref{lem:layered-balanced} is established only for $K = 1$, for
+layer-ordinal-reducible $P$ (Case~B), and for irreducible $P$ with
+$|X| \le 3(3w+1)$ (Case~C2). The \emph{deep irreducible} case ---
+which is exactly the case a minimal counterexample falls into, since a
+minimal counterexample is indecomposable and large --- is not covered.
+This is the genuine residual recorded as the Lean axiom
+\texttt{lem\_layered\_balanced\_irreducible\_base}; the statement is
+strongly supported numerically (mg-44f1: an exact-rational search over
+$1\,118\,061$ posets found no counterexample) but is \emph{unproven}.
+See \texttt{docs/onethird-math-finished-audit.md} (mg-5fdd).}
+
+\begin{remark}[Where the old argument broke, and what the induction
+does and does not fix]\label{rem:old-vs-new}
 The published-draft proof of Lemma~\ref{lem:layered-balanced} replaced
 the strong induction above by a single-shot pipeline
 ``window-localise $\to$ ordinal-reduce to $Q^\star$ $\to$
@@ -3288,12 +3389,25 @@ well-founded recursion on $|X|$. Each call either strictly decreases
 $|X|$ (via ordinal-sum reduction, Case~B; or via a properly contained
 window, Case~C1) or terminates at a bounded-size irreducible instance
 (Case~C2) handled by Proposition~\ref{prop:in-situ-balanced} without
-any further windowing. This matches the Lean formalisation scheme of
-\S\ref{sec:g4-balanced-pair}: the ``well-founded recursion framework
-for iterated reduction'' (work item F3) and the ``chained
-\texttt{hasBalancedPair\_lift} over an \texttt{OrdinalDecomp} chain''
-(work item F4) are the Lean images of, respectively, the outer
-induction on $|X|$ and the Case~B ordinal-sum transfer step.
+any further windowing.
+
+\emph{This remark over-claimed in earlier drafts and is corrected
+here.} The strong induction fixes the \emph{structure} of the argument
+(no $\gamma$-recursion, an honest well-founded descent) but it does
+\emph{not} close the mathematical gap: Case~C1 still relies on
+Lemma~\ref{lem:window-localization}, whose ordinal-decomposition claim
+is invalid for $w \ge 1$. With the corrected window localization, a
+proper clean window exists only in the reducible case (subsumed by
+Case~B), and the irreducible Case~C2 is bounded-size only, leaving the
+deep irreducible regime open --- see the \textbf{[GAP:]} notes after
+Lemma~\ref{lem:window-localization} and after the proof of
+Lemma~\ref{lem:layered-balanced}. The Lean formalisation scheme of
+\S\ref{sec:g4-balanced-pair} (the ``well-founded recursion framework'',
+work item F3, and the ``chained \texttt{hasBalancedPair\_lift} over an
+\texttt{OrdinalDecomp} chain'', work item F4) faithfully formalises the
+\emph{reducible} descent; the deep irreducible base case is carried in
+Lean as the disclosed axiom
+\texttt{lem\_layered\_balanced\_irreducible\_base}.
 \end{remark}
 
 \begin{remark}[Enumeration of configurations; mg-4d7b
@@ -3344,31 +3458,29 @@ exhausts the bounded-depth case as long as $w_0(\gamma) \le 4$
 (Remark~\ref{rem:w0-constant} of \texttt{step7.tex}).
 \end{remark}
 
-\begin{remark}[Interface with G3]\label{rem:g3-g4-interface}
-Lemma~\ref{lem:layered-balanced} has no depth hypothesis: it holds for
-every layered width-$3$ poset that is not a chain, shallow or deep,
-\emph{conditional} on the residual base-case enumeration
-(Lemma~\ref{lem:enum}), which is needed only when the interaction
-width satisfies $w \ge 1$ and the irreducible sub-poset reached by
-the strong induction has depth $\ge 3$. In the deep regime
-($K \ge K_0(\gamma, w)$), Lemma~\ref{lem:layered-reduction}
-(in its size-minimal one-shot form) directly produces a balanced
-pair in $P$ — using the cut + bulk/window lift internally and
-contradicting that $P$ is a $\gamma$-counter\-example, without
-recursing on $\gamma$ or descending to a smaller counterexample at
-the outer assembly level. For $K < K_0$, Lemma~\ref{lem:layered-balanced}
-directly exhibits a balanced pair (modulo the residual enumeration),
-contradicting the counterexample hypothesis on $P$. Together,
-Lemma~\ref{lem:layered-reduction} (G3) and
-Lemma~\ref{lem:layered-balanced} (G4) exhaust
-Proposition~\ref{prop:step7}(iii) without any depth-gap and without
-any compounding $\gamma$-decay; the residual enumeration is the
-sole remaining mathematical obligation above the $w = 0$ floor. The
-G3/G4 dichotomy of the paper is a logical organisation; the
-companion Lean formalisation absorbs both regimes into G4 via the F3
-strong induction of \texttt{Case3WitnessProof.lean}
-(Remarks~\ref{rem:layered-balanced-lean} and
-\ref{rem:g3-paper-only}).
+\begin{remark}[Interface with G3, and the open depth-gap]\label{rem:g3-g4-interface}
+The intended design is a depth dichotomy: shallow layerings
+($K < K_0(\gamma,w)$) handled by G4
+(Lemma~\ref{lem:layered-balanced}), deep layerings
+($K \ge K_0$) by G3 (Lemma~\ref{lem:layered-reduction}). As the
+\textbf{[GAP:]} notes attached to those two lemmas record, neither
+route is complete for a \emph{deep irreducible} layered width-$3$
+poset: G4's Case~C1 relies on the invalid
+Lemma~\ref{lem:window-localization}, and G3's Case~(b) relies on the
+incorrect estimate \eqref{eq:window-pert}. A minimal
+$\gamma$-counter\-example, being indecomposable
+(Remark~\ref{rem:decomp-reduction}) and large, has precisely a deep
+irreducible layering, so this is not a vacuous regime. The
+established content is: G4 covers $K = 1$, layer-ordinal-reducible
+posets, and irreducible posets of bounded size $|X| \le 3(3w+1)$; G3
+covers deep posets whenever a heavy cut side carries a
+\emph{bulk} balanced pair (Case~(a)). The remaining obligation --- the
+deep irreducible case, equivalently the unbounded extension of
+Proposition~\ref{prop:in-situ-balanced} Cases~2--3 --- is an open
+mathematical gap, not a finite enumeration. The companion Lean
+formalisation carries it as the disclosed axiom
+\texttt{lem\_layered\_balanced\_irreducible\_base}; see
+\texttt{docs/onethird-math-finished-audit.md} (mg-5fdd).
 \end{remark}
 
 \begin{remark}[Residual Case-3 enumeration; mg-4d7b certificate]
@@ -3390,30 +3502,43 @@ a direction-variable way, so the marginal distribution on a
 within-layer pair $(x,y) \subseteq M_i$ in $Q^\star$ can differ from
 its marginal in $Q^\star|_{M_i \cup M_{i+1}}$.
 
-For this residual regime we appeal to a bounded finite enumeration:
-window localization (Lemma~\ref{lem:window-localization}) caps the
-size of $Q^\star$ at $|Q^\star| \le 3(3w+1)$ and the depth at
-$K^\star \le 2w+2$. With $w \in \{1,2,3,4\}$ from the bandwidth
-constant $w_0(\gamma)$ of Remark~\ref{rem:w0-constant} of
-\texttt{step7.tex}, the residual parameter range is finite and has
-been \emph{exhaustively verified} by the enumeration described in
-Remark~\ref{rem:enumeration} above: under the cap-$1$ singleton-band
-profile + cap-$5$ bandwidth bound $w \le 4$, the effective
-parameter domain is $|Q| = K \le 2w + 2 \le 10$, yielding $15$
-$(K, w)$ tuples covering roughly $1.72\times 10^6$ configurations
-across $K \in \{2, \ldots, 10\}$ and $w \in \{0, \ldots, 4\}$
-subject to $K \le 2w + 2$. The verification proceeds in two layers:
-the parameter cells $(K, w) \in \{(3,1), (3,2), (3,3), (3,4),
-(4,1)\}$ are closed in tree by the F5a Bool certificate
-(Lean: \texttt{lean/OneThird/Step8/Case3Enum/},
-\texttt{case3\_certificate}, via \texttt{native\_decide}); the
-residual $15$ cells with $K \in \{4, \ldots, 10\}$ and $w \in
-\{2, 3, 4\}$ are verified by Python enumeration
-(\texttt{lean/scripts/enum\_cap5.py} for $K \le 9$;
-\texttt{enum\_cap5\_K10.py} for $K = 10$, $w = 4$; companion work
-item \texttt{mg-4d7b}). The accompanying certificate
+For this residual regime the paper appealed to a bounded finite
+enumeration, on the ground that window localization
+(Lemma~\ref{lem:window-localization}) caps the size of $Q^\star$ at
+$|Q^\star| \le 3(3w+1)$ and the depth at $K^\star \le 2w+2$.
+
+\GAP{This boundedness claim is \emph{false}. Window localization is
+invalid for $w \ge 1$ (see the \textbf{[GAP:]} note after
+Lemma~\ref{lem:window-localization}), so it does not bound
+$|Q^\star|$, and the irreducible residual is genuinely
+\emph{unbounded}: the poset $\{1,\dots,K\}$ with
+$i <_P j \Leftrightarrow j - i > 2$ is irreducible, width-$3$,
+$w = 2$, with $K$ arbitrary. The finite enumeration described below
+therefore covers only the \emph{bounded} cells $|Q| \le 3(3w+1)$
+(in the cap-$1$ singleton-band sub-slice, $|Q| = K \le 2w+2 \le 10$);
+it does \emph{not} discharge the unbounded irreducible regime. That
+regime is the genuine open residual (Lean axiom
+\texttt{lem\_layered\_balanced\_irreducible\_base}); see
+\texttt{docs/onethird-math-finished-audit.md} (mg-5fdd).}
+
+The enumeration carried out --- complete for the bounded cells only
+--- is as follows. With $w \in \{1,2,3,4\}$, under the cap-$1$
+singleton-band profile + cap-$5$ bandwidth bound $w \le 4$, the
+bounded parameter domain is $|Q| = K \le 2w + 2 \le 10$, yielding
+$15$ $(K, w)$ tuples covering roughly $1.72\times 10^6$
+configurations across $K \in \{2, \ldots, 10\}$ and
+$w \in \{0, \ldots, 4\}$ subject to $K \le 2w + 2$. The verification
+proceeds in two layers: the parameter cells
+$(K, w) \in \{(3,1), (3,2), (3,3), (3,4), (4,1)\}$ are closed in tree
+by the F5a Bool certificate (Lean:
+\texttt{lean/OneThird/Step8/Case3Enum/}, \texttt{case3\_certificate},
+via \texttt{native\_decide}); the residual $15$ cells with
+$K \in \{4, \ldots, 10\}$ and $w \in \{2, 3, 4\}$ are verified by
+Python enumeration (\texttt{lean/scripts/enum\_cap5.py} for
+$K \le 9$; \texttt{enum\_cap5\_K10.py} for $K = 10$, $w = 4$;
+companion work item \texttt{mg-4d7b}). The accompanying certificate
 \texttt{enum\_cap5\_certificate.json} records the per-cell
-configuration count and reports no counterexample; a counterexample
-would halt the enumeration and be flagged.
+configuration count and reports no counterexample. This is strong
+evidence for, but not a proof of, the unbounded residual.
 \end{remark}
 

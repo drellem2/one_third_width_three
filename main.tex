@@ -98,13 +98,14 @@ uniformly random linear extension.  The conjecture is open in
 general; the current unconditional record is $\delta^*\ge
 0.2764\ldots$ (Kahn--Linial, building on Brightwell), and the $1/3$
 bound is known for width-$2$ posets, semiorders, and $2$-dimensional
-posets.  We prove the conjecture for posets of width~$3$.
+posets.  This paper develops a programme toward the conjecture for
+posets of width~$3$.
 
 Our argument departs from the correlation-inequality tradition: we
 operate on the Bubley--Karzanov (BK) graph of linear extensions and
 show, via a Cheeger-type dichotomy, that a width-$3$ counterexample
 would force a low-conductance cut that is structurally impossible.
-The proof proceeds in eight steps: (1)~a local interface/grid
+The argument proceeds in eight steps: (1)~a local interface/grid
 coordinate system for rich incomparable pairs, (2)~weak edge-isoperimetric
 stability on grid regions, (3--4)~coherence of interfaces and a
 two-interface incompatibility lemma that drives the expansion bound,
@@ -116,6 +117,19 @@ bound for counterexamples.  The width-$3$ hypothesis enters through
 a $2$-dimensional fiber geometry and a three-chain Dilworth
 dichotomy; extending beyond width~$3$ requires genuinely new
 ingredients.
+
+\medskip\noindent\textbf{Status of the argument.} The argument is
+presented here in full, but it is \emph{not} at present a complete
+proof. An internal audit (companion file
+\texttt{docs/onethird-math-finished-audit.md}) has identified several
+load-bearing steps whose proofs are currently incomplete --- notably
+the area-vs.-perimeter scaling in the Step~2 per-fiber stability
+estimate, the two-interface incompatibility bound of Step~4, and the
+deep irreducible case of the Step~8 layered balanced-pair lemma. These
+are marked in the text with \textbf{[GAP:]} annotations. The main
+theorem below should accordingly be read as conditional on those gaps
+being closed, in addition to the arithmetic-richness
+Hypothesis~\ref{hyp:arith} stated in Step~8.
 \end{abstract}
 
 \begin{center}
@@ -221,23 +235,30 @@ without additional structural hypotheses.
 
 \subsection{Main result}
 
-This paper establishes the $1/3$--$2/3$ conjecture at width~$3$,
-conditional on an arithmetic richness hypothesis (Hypothesis~A
-below; see Hypothesis~\ref{hyp:arith} in Step~8 for the precise
-form) that pins the intermediate regime $\gamma < 1/3 -
-\delta_{\mathrm{KL}} \approx 0.057$, $n > n_0(\gamma, T)$.
+This paper develops an argument toward the $1/3$--$2/3$ conjecture at
+width~$3$. The argument is conditional on an arithmetic richness
+hypothesis (Hypothesis~A below; see Hypothesis~\ref{hyp:arith} in
+Step~8 for the precise form) that pins the intermediate regime
+$\gamma < 1/3 - \delta_{\mathrm{KL}} \approx 0.057$,
+$n > n_0(\gamma, T)$; and, as an internal audit has found (see the
+\emph{Status of the argument} note in the abstract and
+Section~\ref{sec:roadmap-residual}), it is at present also conditional
+on several load-bearing steps whose proofs are incomplete.
 
-\begin{theorem}[Main theorem, conditional on Hypothesis~A]
+\begin{theorem}[Main theorem, conditional on Hypothesis~A and on the
+audit-identified gaps]
 \label{thm:main}
 Assume the arithmetic richness Hypothesis~A of Step~8
-(Hypothesis~\ref{hyp:arith}). Let $P$ be a finite poset of width at
-most~$3$ that is not a chain. Then $P$ admits a pair $(x,y)$ of
-incomparable elements with
+(Hypothesis~\ref{hyp:arith}), and assume the load-bearing steps marked
+\textbf{[GAP:]} in the text (catalogued in
+Section~\ref{sec:roadmap-residual}) admit valid proofs. Let $P$ be a
+finite poset of width at most~$3$ that is not a chain. Then $P$ admits
+a pair $(x,y)$ of incomparable elements with
 \[
   \tfrac{1}{3} \;\le\; \Pr[x<y] \;\le\; \tfrac{2}{3}.
 \]
 Equivalently, $\delta(P)\ge 1/3$ for every non-chain poset $P$ of
-width~$\le 3$, under Hypothesis~A.
+width~$\le 3$, under these hypotheses.
 \end{theorem}
 
 Theorem~\ref{thm:main} is established in Step~8 (Part~III below) as
@@ -249,7 +270,10 @@ bound~\cite{KahnLinial1991}) and on $n \le n_0(\gamma, T)$ in the
 small-$\gamma$ residual regime (by the finite-enumeration base
 case, Remark~\ref{rem:small-n}); Hypothesis~A is the additional
 input needed to close the large-$n$ tail of the small-$\gamma$
-regime via the BK-expansion cascade.
+regime via the BK-expansion cascade. The audit-identified gaps lie
+within Steps~2, 4 and~8 and within the Step~1/Step~5 richness
+interface; they are catalogued, with the corresponding
+\textbf{[GAP:]} annotations, in Section~\ref{sec:roadmap-residual}.
 
 \subsection{Approach: Cheeger-type expansion on the BK graph}
 
@@ -377,46 +401,63 @@ threshold defining ``rich'' are treated crudely; we do not attempt to
 optimize them, and no quantitative improvement over the
 $0.276\ldots$ record is claimed beyond the width-$3$ restriction.
 
-\paragraph{The in-tree residual obligations.}\label{sec:roadmap-residual}
+\paragraph{Audit status: the load-bearing gaps.}\label{sec:roadmap-residual}
+An internal audit of this paper (work item \texttt{mg-5fdd};
+companion file \texttt{docs/onethird-math-finished-audit.md})
+identified several load-bearing steps whose proofs, as written, are
+incomplete. Each is marked at its place in the text with a
+\textbf{[GAP:]} annotation. They are, in logical order:
+\begin{enumerate}\setlength{\itemsep}{2pt}
+  \item \emph{Step~2 --- per-fiber staircase stability
+  (Proposition~\ref{prop:per-fiber}).} The proof feeds an
+  \emph{area}-scaled per-fiber boundary bound ($\le\eta|\fiber{x,y}|$,
+  $\eta$ a fixed threshold) into the \emph{perimeter}-scaled stability
+  Lemma~\ref{lem:weak-grid} (which needs $\bd_D A\le\varepsilon t$
+  with $\varepsilon$ small), via $\varepsilon:=\eta\,t$. For rich
+  fibers with side length $t=\Theta(n)$ this makes $\varepsilon$
+  diverge, so the exported ``$o(1)$-close to a staircase'' conclusion
+  is not established. This propagates into Steps~3, 4, 6 and~7.
+  \item \emph{Step~4 --- two-interface incompatibility at $|R|$-scale.}
+  Lemma~\ref{lem:rect-stable-area} is vacuous (its own
+  Remark~\ref{rem:G3-vacuity} concedes this); the re-routing through a
+  $\min(m,n)$-scale lemma falls a factor $t$ short of the $|R|$-scale
+  expansion bound that Theorem~\ref{thm:step4} claims.
+  \item \emph{Step~1 / Step~5 --- richness interface.} The bad-set
+  bound of Theorem~\ref{thm:interface}~(iv) and the fiber-mass lower
+  bound of Lemma~\ref{lem:fiber-mass} appear to depend circularly on
+  one another for the positive-$|\mathcal L(P)|$-fraction fact;
+  flagged pending verification.
+  \item \emph{Step~8 G4 --- deep irreducible layered balanced pair.}
+  Lemma~\ref{lem:window-localization} is invalid for interaction
+  width $w\ge1$, so Case~C1 of Lemma~\ref{lem:layered-balanced} is
+  unsound; the alternative deep-case route
+  Lemma~\ref{lem:layered-reduction} has a wrong window-perturbation
+  estimate \eqref{eq:window-pert}. The deep \emph{irreducible} layered
+  width-$3$ case --- the case into which a minimal counterexample
+  falls --- is therefore unproven by either route. The statement is
+  strongly supported by exhaustive computation (over $10^6$ posets, no
+  counterexample) but is not proved.
+\end{enumerate}
+In addition, the headline is conditional on Hypothesis~A
+(Hypothesis~\ref{hyp:arith}), and the small-$n$ base case
+(Lemma~\ref{lem:small-n}, Remark~\ref{rem:small-n}) relies for the
+small-$\gamma$ regime on a finite enumeration that is effective in
+principle but has been carried out only for $n$ up to roughly $11$.
+
 A companion Lean formalisation (directory \texttt{lean/OneThird/};
 see \texttt{lean/README.md} and \texttt{lean/AXIOMS.md}) tracks the
-in-tree status of every load-bearing result of this paper. At
-present, that formalisation reduces the headline 1/3--2/3 theorem to
-two precisely-typed residual obligations, one of which is closed by
-external enumeration and one of which remains conditional on
-Steps~1--7:
-\begin{enumerate}\setlength{\itemsep}{2pt}
-  \item \emph{Small-$n$ slice ($|P| \le 10$):} the paper-level proof
-  is unconditional via the strong induction in
-  Lemma~\ref{lem:layered-balanced} (Section~\ref{sec:g4-balanced-pair}).
-  The in-tree Lean dispatch verifies the singleton-band sub-slice
-  ($P$ admitting a width-$\le 4$ singleton-band layered
-  decomposition) by exhaustive Python enumeration
-  (\texttt{lean/scripts/enum\_cap5.py}; certificate
-  \texttt{enum\_cap5\_certificate.json}). Coverage of the remaining
-  width-$3$ non-chain $|P| \le 10$ configurations (e.g.\ reducible
-  posets like $A \oplus B$ with $A,B$ width-$3$ antichains, whose
-  minimum singleton-band bandwidth exceeds $4$) requires either an
-  extended enumeration or a Lean port of
-  Lemma~\ref{lem:layered-balanced} that drops the singleton-band
-  restriction (companion work item \texttt{mg-2970}).
-  \item \emph{Large-$n$ slice ($|P| \ge 11$):} the in-tree discharge
-  is conditional on a faithful Lean delivery of the Step~7
-  bandwidth bound --- Proposition~\ref{prop:72} of
-  \texttt{step7.tex}, pinned to interaction width $w = w_0(\gamma)
-  \le 4$ (the constant aligned with the Lean certificate
-  \texttt{InCase3Scope.w\_mem}). The
-  paper-level proof of Prop.~\ref{prop:72} (existence of a layered
-  decomposition of width $w = O_T(1)$) is complete; only the
-  faithful Lean re-derivation of the constant $w_0(\gamma) \le 4$
-  remains open in tree.
-\end{enumerate}
-Read as a paper-level statement, the headline is unconditional
-(modulo the arithmetic-richness hypothesis stated in Step~8). Read
-as an in-tree Lean claim, the small-$n$ slice is unconditional and
-the large-$n$ slice is conditional on Steps~1--7 of the present
-paper. The faithful in-tree delivery of those steps is the present
-formalisation's principal remaining work.
+in-tree status of the load-bearing results. It is sorry-free but
+rests on five disclosed project axioms --- \texttt{brightwell\_sharp\_centred}
+(the external Brightwell/Kahn--Saks bound),
+\texttt{lem\_layered\_balanced\_irreducible\_base} (the Step~8 G4 deep
+irreducible residual of item~4 above), \texttt{stepsOneToSevenCascade}
+(all of Steps~1--7, items~1--3 above), \texttt{width3\_smallN\_hasBalancedPair}
+(the base case), and \texttt{nonChain\_compl\_of\_no\_balancedPair}
+(the perturbation-step non-chain fact). Of these, only the first is a
+pure formalisation gap (an un-ported but complete external result);
+the others shadow the genuine mathematical gaps catalogued above. See
+\texttt{docs/onethird-math-finished-audit.md} for the per-axiom
+analysis.
 
 \part{Local interface theory}
 
