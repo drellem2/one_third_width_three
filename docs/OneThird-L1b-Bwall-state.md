@@ -175,3 +175,113 @@ proof.
 3. **If the residual resists both**, this is the clean pivot hinge to
    `project_onethird_algebraic_program_vision`: the certificate route reduces L1b to exactly one
    realizability question, and its intractability is the documented go/no-go for the pivot.
+
+---
+
+# SESSION 2 (mg-9de3) — dual attack on the block-cross residual
+
+**Work item:** mg-9de3 (high). Prove `Σ_x m_x² = O(Σ_x m_x)` for frozen (δ<1/3) width-3
+(⇔ per-chain `E[S_C²]=O(E|S_C|)` ⇔ block-cross non-realizable ⇔ (B) closes), **or** construct a
+large-`n` frozen width-3 block-cross (pivot hinge).
+
+**Vision check (anti-drift), run first.** Stayed exactly on the (B)/block-cross residual named by
+§4 above; no drift, no vision amendment needed. The dual attack is precisely the pre-committed
+go/no-go probe for `project_onethird_algebraic_program_vision`.
+
+## VERDICT: AMBER — DUAL-RESIST → **RED-PIVOT** (pre-committed PM strategic call).
+
+Neither PROVEN nor REFUTED; **both** the counting-bound proof and the large-`n` falsification
+resist, and the session delivers **qualitative** structural change (not mere quantitative
+narrowing), so it clears the stop-loss "asymptotic-AMBER" trap and then **stops** per the
+pre-committed hinge. Weight of evidence **leans toward (B) TRUE** (barrier real, approached from
+above, never crossed), but it is unprovable-in-reach and the globally-frozen regime is doubly out
+of empirical reach. This is exactly the documented fork: **certificate route vs the algebraic-program
+vision** — escalated to Daniel (mailed `human`).
+
+## S2.1 The decisive numerics (fast `O(2^n)` LE-count DP breaks the `n≤9` ceiling)
+
+The mgb0a6 engine's ideal-DP (`linext_count`, `before_prob_dp`) computes exact slot
+distributions `a_m = e(P_m)/e(P)` and pairwise biases in `O(2^n)`, not `O(n!)` — so `n` reaches
+~13 by random search and ~18 by directed gadget. Three findings **correct and sharpen** mg-2acf's
+"max ratio ≡ 2.0" (an `n≤8` artifact):
+
+1. **The per-chain ratio is NOT bounded by 2 — it climbs.** Growth curve, max **chain-frozen**
+   `E[S²]/E|S|` by `n` (`scripts/onethird_mg9de3_growth_probe.py`):
+   ```
+   n:      6    7    8    9    10   11    12    13
+   ratio:  1.5  2.0  2.0  2.5  2.6  2.90  3.00  3.15   (p capped at 5; chain-δ ~0.28–0.32)
+   ```
+   The climb tracks the achievable chain length `p` (random search caps `p≤5` at reachable `n`);
+   the top shape is a spike-plus-tail `a≈[.023,.045,.068,.068,.081,.715]` (a partial block-cross)
+   whose tail is nearly **flat** near the spike (`.081,.068,.068` — ratios ~0.84,1.0) before
+   decaying. Whether the flat region **extends with `p`** (ratio→∞) or stays bounded is the pin.
+
+2. **CHAIN-frozen ≫ WHOLE-POSET frozen — and the block-cross needs the latter.** Requiring the
+   *whole poset* δ<1/3 (the actual hypothesis H), **no** block-cross appears. Directed
+   constructions (mine `scripts/onethird_mg9de3_pscale.py`, plus the hunt-series) push the ratio
+   linearly in `p` (flat slot ⇒ `ratio≈p/2`: p=4→12 gives ratio 1.67→**4.43**), but **whole-poset
+   δ stays pinned at 0.44–0.49 the entire way, never below 1/3.** The ratio-3.15 growth-curve
+   configs are only *chain*-frozen; those posets are **not** whole-poset frozen. Best whole-poset
+   δ ever seen for a block-cross is mg-dbd1's **0.357** — thin above 1/3 but never crossed. The
+   min-δ-vs-`p` floor sits at **0.44–0.49** and approaches 1/3 **from above**, no dip below.
+
+3. **The robust tension, quantified.** block-cross ⇔ flat/spread slot distribution ⇔ some pair
+   straddles Pr≈1/2 ⇔ δ→1/2. Freezing forces a *peaked* slot ⇔ ratio capped. The two requirements
+   pull apart at every `p`; nothing achieves frozen **and** diverging-ratio, but nothing proves
+   they are strictly incompatible.
+
+## S2.2 New structural results (the qualitative advance)
+
+- **`a_m = e(P_m) > 0` for every gap `m`.** Since `x` is incomparable to every chain element,
+  inserting `x` into any gap is order-consistent, so the slot count is strictly positive
+  everywhere. Hence the **exact** block-cross (zero interior mass) is *never* realizable; only an
+  *approximate* (exponentially-thin-interior) one could give ratio `ω(1)`.
+
+- **Frozen ⟹ a dominant-mode atom `a_j > 1/3`.** Every pair being frozen means every tail
+  probability `t_k = Pr[slot≥k] ∉ [1/3, 2/3]`; `t_k` is decreasing, so it jumps from `>2/3` to
+  `<1/3` in a single step at `k*=j`, giving `a_j = t_j − t_{j+1} > 1/3`. So a frozen slot
+  distribution has one atom carrying `>1/3` of the mass at the correct position `j`. **This does
+  NOT close (B):** the block-cross `a=[1−c,0,…,0,c]` has atom `a_0>2/3` yet ratio `p`. The residual
+  is whether the remaining `<1/3` tail mass can be pushed to the **far** end (`slot=p`, block) or
+  must stay geometric near the mode.
+
+- **The obstruction is a *realizability* constraint on `e(P_m)`, strictly weaker than
+  log-concavity (which is refuted).** Purely as probability vectors, frozen U-shaped / block
+  distributions exist (e.g. `a=(0.7,0.1,0.2)` is a frozen U-shape on the simplex); what forbids
+  them is `a=e(P_m)` for an actual width-3 poset. Neither the frozen constraints nor the simplex
+  exclude the block-cross — only realizability does, and it is *not* captured by log-concavity
+  (Neggers–Stanley non-real-rootedness, §4). This is the precise, still-open crux.
+
+## S2.3 Why both directions resist (name the dual block, per stop-loss)
+
+- **Proof blocked:** the only clean closing tool (slot log-concavity, §3) is false; the residual is
+  a realizability property of `e(P_m)` sequences under width 3 with no known handle short of a new
+  poset-LE-counting theorem. `Σ_x m_x²=O(Σ_x m_x)` cannot be forced by the frozen straddle alone
+  (the block-cross satisfies every per-pair frozen constraint).
+- **Refutation blocked:** every directed block-cross construction is pinned at whole-poset δ ≥
+  0.357 (mg-dbd1) / 0.44–0.49 (this session), approaching 1/3 from above but never crossing;
+  and the regime that could break it (`p=Θ(n)`, globally-frozen width-3) is doubly out of reach —
+  such posets are vanishingly rare (0 in 20 000 random dense trials, mg-dbd1) and a block-cross
+  needs `p=Θ(n)`.
+
+## S2.4 Status table (session 2)
+
+| item | statement | status |
+|---|---|---|
+| per-chain ratio bounded by 2 | mg-2acf impression | **CORRECTED** — climbs to 3.15 (chain-frozen, n=13) / 4.43 (directed, δ≈0.49) |
+| `a_m=e(P_m)>0` ∀m | exact block-cross impossible | **PROVEN** (incomparability ⇒ every gap consistent) |
+| frozen ⟹ `a_j>1/3` | dominant-mode atom | **PROVEN** (frozen ⇒ `t_k∉[1/3,2/3]` + monotone ⇒ single step) |
+| whole-poset-frozen block-cross | δ<1/3 width-3, ratio→∞ | **NOT FOUND** — min δ floor 0.44–0.49, mg-dbd1 0.357, never <1/3 |
+| **residual** | approx block-cross non-realizable ⇔ `e(P_m)` far-tail forbidden under width-3 | **OPEN — DUAL-RESIST** (realizability, strictly weaker than refuted log-concavity) |
+
+## S2.5 Recommendation (pre-committed pivot; no tickets filed)
+
+Per the mg-9de3 stop-loss: **declare RED-PIVOT and stop for a PM strategic call.** The certificate
+route has reduced L1b (B) to exactly one realizability question whose proof needs a new
+poset-LE-counting theorem (log-concavity dead) and whose refutation is blocked by a robust
+δ≥0.357-from-above barrier and the doubly-out-of-reach globally-frozen regime. The evidence leans
+(B)-TRUE but neither direction is closeable in-reach. This is the documented go/no-go fork:
+**continue the certificate route (invest in the realizability theorem) vs pivot to
+`project_onethird_algebraic_program_vision`.** Escalated to Daniel. New scripts:
+`onethird_mg9de3_{gadget_probe,ushape_probe,ushape_chainfrozen,growth_probe,pscale}.py` and the
+`blockcross_hunt*` series.
