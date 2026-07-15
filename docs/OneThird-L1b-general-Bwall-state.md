@@ -4,6 +4,16 @@
 Spectral / near-ordinal-sum program (`spectral_near_ordinal_sum_program.tex`), the **any-width**
 baseline. LaTeX-first, prove-or-wall, block-and-report.
 
+> **⚠ mg-0508 UPDATE (successor to mg-a7c5; see §8).** Attacked the single named residual — the
+> width-free geometric far-tail decay `E[M_{k,l}] ≤ Cρ^{l−k}E[K_k]` — via a **global/joint**
+> argument. Outcome: the residual is **crystallized** to its sharpest form (a *conditional
+> threshold-contraction* `ρ_i ≤ ρ<1` for a single element vs an incomparable chain, via chain-nesting)
+> and the "pinned above 1/3" evidence is **reproduced and extended to width > 3** with a new
+> **freezing-frontier** experiment. **Verdict: AMBER, same family (tail-decay / realizability) as
+> a7c5 — this is the SECOND consecutive AMBER in that family, so the mg-0508 trip-wire is FIRED:
+> surfaced to PM before any third iteration. NOT PROVEN, NOT RED.** The joint tools (Shepp XYZ, FKG)
+> push the *wrong* way and the natural closing tool (slot-law log-concavity) is dead (mg-2acf).
+
 **READ-FIRST predecessors:**
 - `spectral_near_ordinal_sum_program.tex` — the any-width baseline (no width bound anywhere;
   `grep -i width` = 0 hits over 603 lines; every L-lemma stated for a general finite minimal
@@ -303,3 +313,136 @@ Per the mg-a7c5 stop-loss (asymptotic-AMBER = stop and surface) and pre-committe
 theorem the width-3 arc also reduced to. The re-scope removed the drift (the width-3 crutch is gone;
 the reduction is an exact iff at any width), but did not, and per §2 cannot by elementary means,
 close the residual. AMBER, with the residual pinned width-free and the strategic call surfaced.*
+
+---
+
+# 8. mg-0508 — attacking the single residual via a GLOBAL argument (successor to mg-a7c5)
+
+**Work item:** mg-0508 (successor to mg-a7c5). Target: prove the width-free geometric far-tail
+decay `E[M_{k,l}] ≤ Cρ^{l−k}E[K_k]` (`C, ρ` width-free, `0<ρ<1`) via a **global / joint** argument,
+or refute it with an any-width counterexample. FORBID (honored): no per-pair freezing as the
+decay mechanism (refuted, §2.3), no width bound load-bearing (sanity-checked at width > 3 below),
+no `≤2`-chain Cauchy–Schwarz, no monotonicity (mg-b0a6).
+
+## 8.0 Verdict: **AMBER — same family (tail-decay / realizability) as a7c5 ⟹ TRIP-WIRE FIRED.**
+
+The residual is **crystallized** to its sharpest analytic form and the "pinned above `1/3`" evidence
+is **reproduced and extended to width > 3** with a new global experiment — but no global/joint tool
+delivers the decay, and no any-width counterexample is realizable. Because a7c5 was AMBER with a
+residual in the **same family** (tail-decay / realizability), this is the **second consecutive**
+such AMBER, so per the mg-0508 pre-committed trip-wire it is **surfaced to PM before any third
+iteration** rather than iterated silently. **NOT PROVEN. NOT RED.**
+
+## 8.1 The sharpest equivalent of (B) (even cleaner than (★global))
+
+`disp_σ(x) = pos_σ(x) − x` **exactly** (labels by `e`). Since `Σ_x E|disp_x| = 2E[Σ_m K_m] ≍ E[inv]`,
+
+> **(B)  ⟺  `Σ_x E[disp_x²] = O( Σ_x E|disp_x| )`**   — *"no heavy displacement tail."*
+
+Diagonal identity: writing `disp_x = Σ_{b>_e x} J_{xb} − Σ_{a<_e x} J_{ax}` with the inversion
+indicator `J_{ab}=1[b before a]` (`E[J_{ab}]=p_{ab}<1/3`),
+```
+Σ_x disp_x²  =  2·inv_e  +  2 Σ_{cherries P,Q sharing a vertex x} ε_P ε_Q J_P J_Q,
+```
+so the **diagonal is `2·inv` unconditionally** and **(B) ⟺ the total *signed cherry-correlation*
+`= O(E[inv])`**. The dangerous terms are the **same-side cherries** (`b,b' >_e x`), which
+**Shepp's XYZ inequality forces to be *positively* correlated** — i.e. the one available joint tool
+pushes in the **wrong direction** for an upper bound. (FKG / Ahlswede–Daykin likewise only give the
+`≥` direction here.)
+
+## 8.2 The chain-nesting crystallization (the new content)
+
+Take `x` incomparable to a chain `C: c_1 <_P ⋯ <_P c_p` (all `c_i` incomparable to `x`). Because
+`c_i <_P c_{i+1}` forces `c_i` before `c_{i+1}` in **every** LE, the events `A_i := {c_i before x}`
+are **nested**:
+```
+A_1 ⊇ A_2 ⊇ ⋯ ⊇ A_p ,     q_i := Pr[A_i] = Pr[c_i before x]  is DECREASING,  q_i < 1/3  (freezing).
+```
+Let `g = #{c_i before x} = max{i : A_i}` (by nesting). Then `Pr[g≥i]=q_i`, `E[g]=Σ q_i`,
+`E[g²]=Σ(2i−1)q_i`, and:
+
+- **`Pr[x AFTER the whole chain] = q_p = Pr[c_p before x]` — literally ONE frozen pair** (so `<1/3`,
+  bounded, but **not** decaying in `p`); `Pr[x BEFORE the whole chain] = 1 − q_1 > 2/3`.
+- **Single-element (B)-badness ratio** `= E[g²]/E[g] = Σ(2i−1)q_i / Σ q_i`.
+
+> **The wall, crystallized.** `(decay)` for this element `⟺` `q_i` decays **geometrically**
+> `⟺` the **conditional threshold-contraction** `ρ_i := Pr[c_{i+1} bef x | c_i bef x] = q_{i+1}/q_i`
+> is `≤ ρ < 1` uniformly.
+>
+> - The **flat law** `q_i ≡ q < 1/3` (i.e. `ρ_i = 1`) satisfies **every** frozen pairwise marginal
+>   yet gives `E[g²]/E[g] = Θ(p)`; with `p = Θ(n)` this is `R := E[Σdisp²]/E[inv] = Θ(n)` — **(B)
+>   FALSE**. So **marginal freezing is provably insufficient**; decay must come from the **joint**
+>   poset-LE structure.
+> - `q_p < 1/3` does **not** save it: the threat is `p²·q_p` (deep), not `q_p`.
+> - The natural closing tool — slot-law **log-concavity / real-rootedness** (Neggers–Stanley) — is
+>   **false** (mg-2acf: 7 537 violations). No elementary joint tool forces `ρ_i ≤ ρ<1`.
+
+This is the a7c5 residual reduced to its irreducible core: **"do the conditional deep-crossing
+probabilities of an element over an incomparable chain contract geometrically in a frozen poset?"**
+It confirms a7c5 §2.4 exactly — a **single** flat-long element is fatal (no global cancellation
+survives it), so `(★global)` fails **iff** such an element is realizable.
+
+## 8.3 New evidence — the FREEZING FRONTIER at width > 3 (`scripts/onethird_mg0508_freezing_frontier_probe.py`)
+
+For a poset let `Bworst = max over incomparable pairs of balance` (the **least-frozen** pair; (H)
+`⟺ Bworst < 1/3`) and `R = E[Σdisp²]/E[inv]`. The realizability question is whether a **deep tail**
+(large `R`, or `Pr[x after an incomparable chain]` deep) can coexist with `Bworst < 1/3`.
+
+- **[1] Global random search, width ≥ 4** (5 579 exact-LE ensembles, `n ≤ 8`): `min Bworst = 0.4010`
+  — **no** sampled width-≥4 poset even reaches `Bworst < 0.40`. The `(Bworst, R)` **Pareto frontier
+  is monotone**: `R≥4 ⟹ Bworst≥0.401`, `R≥5 ⟹ Bworst≥0.427`, `R≥6 ⟹ Bworst≥0.500`. **Pushing the
+  (B) ratio up *forces* un-freezing.**
+- **[2] Structured block-cross family** (element `x` incomparable to a length-`p` chain, ballast
+  hill-climbed to bias `x` early while sustaining `Pr[x after chain] ≥ 0.10`): the **minimum
+  achievable `Bworst` is pinned at `1/3` and GROWS with block length** —
+  `p=2: 0.3333`, `p=3: 0.4000`, `p=4: 0.4000` — **never frozen** (`Bworst < 1/3` never achieved),
+  and the pin moves **away** from `1/3` as the tail deepens. This reproduces the a7c5 / mg-9de3
+  "pinned at ≥ 0.357" finding, now **at width > 3, under a global search, and monotone in `p`** —
+  precisely the opposite of what a RED refutation would need.
+
+Width guard satisfied: every observable is width-agnostic; the search is at width ≥ 4; nothing caps
+the width. Reproduce: `python3.11 scripts/onethird_mg0508_freezing_frontier_probe.py`.
+
+## 8.4 Why not PROVEN, why not RED
+
+- **Not PROVEN.** Closing `(decay)` requires forcing `ρ_i ≤ ρ<1` (§8.2). The only joint tools
+  (Shepp XYZ, FKG) give the **wrong-signed** inequality; slot-law log-concavity is **dead**; and no
+  global cancellation can rescue a single realized flat-long element. A proof needs a genuinely new
+  **poset-linear-extension anti-concentration theorem** — not an elementary global argument.
+- **Not RED.** Refutation needs a **realized** frozen poset (`Bworst < 1/3`) carrying a flat-long
+  element; every construction (directed and now global-search, width > 3) is **pinned strictly above
+  `1/3`**, with the pin **growing** as the tail deepens. Evidence **leans (B)-TRUE**; a counterexample
+  is out of empirical reach (and would itself be a `1/3`–`2/3` counterexample).
+
+## 8.5 Recommendation — trip-wire fired (surface, do not iterate a third time)
+
+Per the mg-0508 pre-committed trip-wire ("if this is the SECOND consecutive AMBER whose residual is
+in the same family (tail-decay / realizability), surface to PM BEFORE any third iteration —
+asymptotic-AMBER often precedes a PROVEN structural RED and should not be iterated silently"):
+
+1. **This is that second consecutive same-family AMBER.** a7c5 named the residual (block-cross
+   realizability); mg-0508 crystallized it to conditional threshold-contraction `ρ_i ≤ ρ<1` and
+   added width->3 global evidence — **same family, no qualitative shape change** (asymptotic-AMBER).
+   Per the stop-loss this is **STOP-and-surface**, not a third tightening pass.
+2. **The strategic go/no-go is unchanged from a7c5 §7 and now sharper.** The certificate route for
+   L1b at **any width** hinges **entirely** on one poset-LE anti-concentration theorem: *no frozen
+   (`δ<1/3`) poset has an element whose conditional deep-crossing probabilities over an incomparable
+   chain fail to contract geometrically* (equivalently, no realizable flat-long block-cross). This
+   is a **Daniel/PM-level** call:
+   - **(a)** Invest in that anti-concentration theorem directly (new tool required; log-concavity is
+     dead). It would close (B) at **all widths** simultaneously.
+   - **(b)** Pivot to `project_onethird_algebraic_program_vision` (note: width-3 per drift audit Q5;
+     does not address the any-width concern).
+   - **(c)** A different L1 attack — the `.tex` BK-transport porting Problem (§11), independent of the
+     block-cross tail.
+3. **The asymptotic-AMBER warning is live:** two same-family AMBERs with a dead natural tool and a
+   wrong-signed joint tool is the classic precursor to a **structural RED** on the *route* (the
+   certificate cannot be closed by elementary means) even though the *statement* (B) leans TRUE.
+   The decision on whether the anti-concentration theorem is worth a dedicated arc should be made
+   **before** any third pass on the same object.
+
+**Bottom line (mg-0508).** *The residual is now irreducibly sharp — a single conditional-contraction
+`ρ_i ≤ ρ<1`, provably beyond marginal freezing, with the natural tool dead and the joint tools
+wrong-signed — and it is pinned above `1/3` under a global, width->3 search that only tightens with
+depth. Second consecutive tail-decay/realizability AMBER: trip-wire fired, surfaced to PM. Neither an
+elementary global proof nor an any-width counterexample exists in reach.*
