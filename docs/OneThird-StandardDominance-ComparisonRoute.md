@@ -9,151 +9,157 @@ on `L(P)`; identify the best intermediate target and attempt it.
 
 ## §0 Executive verdict
 
-**The ticket's target statement is false, and I can prove it.** The route was
-scoped as "lift Aldous dominance to get `λ₂^BK = λ_std`". That conclusion fails
-on **0 / 195** posets at `n=4` and **0 / 4111** at `n=5` — it holds nowhere — and
-it fails structurally, not marginally, on the class the programme treats as
-extremal (ordinal sums). This is not a near-miss to be repaired by a better
-comparison argument.
+Three findings, in decreasing order of consequence.
 
-**The reason is a category mismatch, and it is more fundamental than the octopus
-obstruction the ticket anticipated.** The ticket's framing ("the octopus's
-rerouting passes through non-extensions, so the operator inequality does not
-restrict") is a correct statement about the octopus, but it is not the binding
-constraint. The binding constraint is:
+**1. The ticket's target statement is false, and I can prove it.** The route was
+scoped as "lift Aldous dominance to get `λ₂^BK = λ_std`". That conclusion holds on
+**0 / 195** posets at `n=4` and **0 / 4111** at `n=5` — nowhere — and fails
+structurally on the class the programme treats as extremal (ordinal sums). It is
+not a near-miss awaiting a better comparison argument, and it is not a
+normalization slip (§2.5).
+
+**2. The lift the ticket asks for already exists in the literature — and it does
+not give dominance.** **Wilson (2004)**, generalizing Bubley–Dyer, proves that for
+**every** `n`-element poset,
+
+  `gap_BK(P) ≥ (1 − cos(π/n))/(n−1) = Θ(n^{-3})`,
+
+which is *exactly* the free/antichain value — the unconstrained chain is the
+**minimizer**, and adding poset relations never hurts the gap. I verified this on
+all **4306** posets at `n ≤ 5`: **zero violations, bound attained exactly** (§4).
+
+So the transfer "ambient single-particle bound ⟹ constrained chain" is a *solved
+problem*, solved sharply, by direct path coupling rather than by comparison. And
+having it changes nothing about standard dominance. This is the cleanest possible
+demonstration of finding 3.
+
+**3. The obstruction is a category mismatch, and it is upstream of the octopus.**
 
 > `λ₂^BK` is a **dynamical** functional (the gap of a generator). `λ_std` is a
-> **static** functional of the stationary measure alone (the top eigenvalue of
-> the symmetrized element-position marginal matrix). `λ_std` is not the spectral
-> gap of any chain in the comparison family. Every technique in the toolkit —
-> decomposition, tempering, Diaconis–Saloff-Coste, censoring — produces
-> inequalities between *Dirichlet forms*. None of them can have `λ_std` as an
-> endpoint, because `λ_std` is not one.
+> **static** functional of the stationary measure alone. Every technique in the
+> toolkit — decomposition, tempering, Diaconis–Saloff-Coste, censoring — produces
+> inequalities between *Dirichlet forms*. None can have `λ_std` as an endpoint,
+> because `λ_std` is not the gap of any chain in the family.
 
-The sharpest evidence is the **antichain**, and it points the opposite way from
-the ticket's intuition. On the antichain the constraint is empty, `L(P) = S_n`,
-the BK chain *is* the interchange process on the path, and the Aldous/CLR lift is
-**exact** (verified to `5e-15`). That is precisely where `λ_std`-dominance fails
-**maximally**: `λ_std = 0` while `λ₂^BK = 1 − (1−cos(π/n))/(n−1) → 1`. The lift
-working perfectly and dominance failing completely are the *same* case.
+The ticket's anticipated crux — "the octopus's rerouting passes through
+non-extensions, so the operator inequality does not restrict" — is a correct
+statement about the octopus (§5.0), but it is **not the binding constraint**. A
+programme organized around defeating it would be solving the wrong problem.
 
-**What is salvageable.** The tempering/deformation route — the one the ticket
-prioritized — does yield a real, correctly-directed result, just not dominance:
+The sharpest evidence inverts the ticket's intuition: on the **antichain** the
+constraint is empty, `L(P) = S_n`, the BK chain *is* the interchange process on
+the path, and the Aldous/CLR lift is **exact** (verified to `5e-15`). That is
+precisely where `λ_std`-dominance fails **maximally** (`λ_std = 0`,
+`λ₂^BK → 1`). The lift working perfectly and dominance failing completely are the
+*same case*.
 
-> **`gap_BK(P) ≥ gap_temper(β=∞) = min( gap_BK , gap_collar )`**, with the
-> constraint-boundary term identified exactly as `ρ(T)`, the spectral radius of
-> the substochastic **collar block** (the violating configurations). This is
-> classification **(b)**: strictly weaker than dominance, and *checkable*.
+**What survives.** The well-posed version of what the programme needs is not
+SD-BK but the **overlap** form `SD-quant(c)` (§3.2). I measured its constant for
+the first time: `c ≥ 0.979` across every poset tested at `n ≤ 6`, and `c ≈ 1` in
+the informative stratum (§7). That is a genuine positive signal — with an
+explicit, honest caveat about exactly where it is predicted to break (§7.3).
 
-**Honest bottom line.** No route yields standard dominance, and the reduction is
-not "boundary term ⟹ full dominance" (the ticket's anticipated dead-end) — it is
-worse and cleaner than that: dominance is **not in the image** of any comparison
-method. Per the ticket's own success criterion ("a clean, rigorous 'here is the
-reduction and here is exactly why it is not weaker' is a fully successful
-outcome"), that is the deliverable. Two genuine positive theorems fall out along
-the way (§2.3, §5.3).
+**Bottom line against the ticket's own success criterion** ("a clean, rigorous
+'here is the reduction and here is exactly why it is not weaker' is a fully
+successful outcome"): the boundary terms do **not** collapse to full standard
+dominance — in the tempering case the term is identified exactly as `ρ(T)` (§6).
+But no route yields a partial result *about dominance*, because dominance as
+stated is false and is not in the image of any comparison method.
 
 ### Claim ledger
 
 | # | Claim | Tag |
 |---|---|---|
 | C1 | `λ_std(antichain_n) = 0` while `λ₂^BK → 1`; dominance excess → 1 | **[proven]** (hand proof §2.1 + exact numerics) |
-| C2 | `λ₂^BK = λ_std` holds for 0/195 (`n=4`) and 0/4111 (`n=5`) posets | **[proven]** (exhaustive) |
-| C3 | The repo's asserted inequality `λ_std ≤ λ₂^BK` fails **exactly on the ordinal sums**, and holds elsewhere | **[proven]** (exact set equality at `n=4,5`; §2.4) |
+| C2 | `λ₂^BK = λ_std` holds for 0/195 (`n=4`) and 0/4111 (`n=5`) | **[proven]** (exhaustive) |
+| C3 | `λ_std ≤ λ₂^BK` fails **exactly on the ordinal sums**, holds elsewhere | **[proven]** at `n=4,5` (exact set equality); `⟸` proven ∀`n` (§2.4) |
 | C4 | Ordinal sums: exact BK product formula; `λ_std = 1`; dominance fails on the whole class | **[proven]** (hand proof §2.3 + 9/9 numeric) |
-| C5 | The one-particle sector `U` is invariant on ambient `S_n` but **not** on `L(P)`; leakage measured | **[proven]** (§3.2) |
-| C6 | `lim_{β→∞} λ₂(β) = max(λ₂^BK, ρ(T))` (block-triangularity) | **[proven]** (§5.2) |
-| C7 | The collar term dominates in 3/4 constrained test cases, so the tempering limit ≠ BK | **[proven]** (numerics §5.2) |
-| C8 | No comparison technique can prove dominance (category mismatch) | **[heuristic]** — rigorous for each of the 4 techniques individually (§4), but "every conceivable comparison method" is not a formal quantifier |
-| C9 | Tempering yields `gap_BK ≥ gap_temper(∞)`, a usable gap lower bound | **[proven]** (§5.3) |
+| C5 | SD-BK is not a normalization slip (ratio spread 9.3×/18.8×, growing in `n`) | **[proven]** (§2.5) |
+| C6 | One-particle sector `U` invariant on ambient `S_n`, **not** on `L(P)`; leakage `Θ(0.1)` | **[proven]** (§3.2) |
+| C7 | Wilson's universal bound `gap_BK ≥ (1−cos(π/n))/(n−1)`, attained by the antichain | **[proven in the literature]** (Wilson 2004); **independently verified 0/4306 violations** (§4) |
+| C8 | `lim_{β→∞} λ₂(β) = max(λ₂^BK, ρ(T))` (block-triangularity) | **[proven]** (§6.2) |
+| C9 | Collar term dominates in 3/4 constrained cases ⇒ tempering limit ≠ BK | **[proven]** (numerics §6.2) |
+| C10 | `SD-quant` constant `c ≥ 0.979` on all posets tested at `n ≤ 6` | **[proven for `n≤6`]**; [heuristic] beyond, and §7.3 flags where it should fail |
+| C11 | No comparison technique can prove dominance (category mismatch) | **[heuristic]** — rigorous per-technique (§5), but not a formal quantifier over all methods |
 
 ---
 
 ## §1 Three inequivalent statements called "standard dominance"
 
 The repo and the ticket use one name for three different things. Disentangling
-them is most of the work; once separated, the verdicts are immediate.
+them is most of the work; once separated the verdicts are immediate.
 
-Fix a finite poset `P` on `[n]`, `L(P)` its linear extensions.
-
-- **Transport / standard block** (repo convention, `onethird_mgb0a6_spectral_killshot_probe.py:263-296`):
+- **Transport / standard block** (`onethird_mgb0a6_spectral_killshot_probe.py:263-296`):
   `(T_P)_{x,a} = Pr_{σ~Unif L(P)}[σ(a) = x]`, `S_P = (T_P + T_Pᵀ)/2`,
   `λ_std(P) =` top eigenvalue of `S_P` on `H = 𝟙^⊥`.
-  **This depends only on the measure `Unif L(P)`, not on any dynamics.**
+  **Depends only on the measure `Unif L(P)`, not on any dynamics.**
 - **BK chain** (`step1.tex:20-26`, `step8.tex:21-25`): lazy walk on `L(P)`, step
-  `1/(2(n−1))` per adjacent incomparable position. `λ₂^BK` its second eigenvalue.
+  `1/(2(n−1))` per adjacent incomparable position; `λ₂^BK` its second eigenvalue.
 - **Cayley walk** (`onethird_mgb0a6_spectral_killshot_probe.py:459-475`): walk on
   **all of `S_n`** with generating measure `η_P = (μ_P + μ_P^∨)/2`, `μ_P` uniform
-  on `L(P)` *viewed as a set of permutations*.
-
-The three statements:
+  on `L(P)` viewed as a set of permutations.
 
 | Name | Statement | Status |
 |---|---|---|
 | **SD-Cayley** | `λ₂(Cayley walk) = λ_std` | Empirically supported, **0/132** (`mgb0a6`). Coherent and nontrivial. |
-| **SD-BK** | `λ₂^BK = λ_std` | **FALSE** — 0/4306 (§2). This is the ticket's target. |
-| **SD-quant** | the slowest BK mode has an `Ω(1)` component in the standard sector | Coherent, conditional, open. The programme's actual need (`OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:269-270`). |
+| **SD-BK** | `λ₂^BK = λ_std` | **FALSE** — 0/4306 (§2). *This is the ticket's target.* |
+| **SD-quant** | the slowest BK mode has an `Ω(1)` component in the standard sector | Coherent; the programme's actual need. Measured here for the first time (§7). |
 
 ### 1.1 The "0/132" evidence does not support the ticket's target
 
 The ticket asserts SD-BK is "empirically airtight (0/132 counterexamples)". **The
-0/132 figure is SD-Cayley evidence, and does not transfer.** The Cayley walk lives
+0/132 figure is SD-Cayley evidence and does not transfer.** The Cayley walk lives
 on `S_n` with generating set `L(P)`; the BK chain lives on `L(P)` with
 adjacent-transposition generators. Different state space, different generators.
 
 SD-Cayley is also *near-automatic* in a way SD-BK is not: by Schur's lemma
-`ρ_std(η_P) = S_P` exactly, so `λ_std` is *guaranteed* to sit in the Cayley
-spectrum, and SD-Cayley only asserts that no other irrep out-eigenvalues it. On
-`L(P)` there is **no group action at all**, so no irrep decomposition, so no
-sector in which `λ_std` is guaranteed to appear (§3.2). The repo already records
-this at `mgb0a6`'s own scope correction
-(`OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:290`: "**Standard dominance is not
-universal**").
+`ρ_std(η_P) = S_P` exactly, so `λ_std` is **guaranteed** to sit in the Cayley
+spectrum, and SD-Cayley only asserts no other irrep out-eigenvalues it. On `L(P)`
+there is **no group action at all**, hence no irrep decomposition and no sector in
+which `λ_std` is guaranteed to appear (§3.2). The repo already records a scope
+correction (`OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:290`: "**Standard
+dominance is not universal**").
 
-### 1.2 A second citation error, inherited
+### 1.2 A second inherited error
 
 `OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:273-275` asserts
 
 > "But `λ_std ≤ λ₂^{BK}` (the standard sector is a subspace)"
 
-**This is false as stated, but in a precisely characterizable way** (C3, §2.4):
-it holds on every poset that is *not* an ordinal sum, and fails on *every* ordinal
-sum. The stated justification is nonetheless invalid — it presupposes that the
-standard sector embeds in `L²(L(P))` as an invariant subspace so that `λ_std` is a
-Rayleigh restriction, which it does not (§3.2). So the inequality is *true off the
-ordinal sums for some other reason*, not for the reason given.
+**False as stated, but precisely characterizable** (§2.4): it holds on every poset
+that is *not* an ordinal sum, and fails on *every* ordinal sum. The stated
+justification is invalid regardless — it presupposes the standard sector embeds in
+`L²(L(P))` as an invariant subspace making `λ_std` a Rayleigh restriction, which
+it does not (§3.2). So the inequality is *true off the ordinal sums for a
+different reason than the one given*.
 
-This matters for the programme in a specific way: the inequality is used to argue
-that Theorem E "bounds the gap in the wrong direction". That argument survives on
-non-ordinal-sums — but the near-ordinal-sum regime is exactly where the programme
-operates, and that is exactly where the inequality reverses.
+This matters concretely: the inequality is used to argue Theorem E "bounds the gap
+in the wrong direction". That argument survives on generic posets — but the
+near-ordinal-sum regime is exactly where the programme operates, and exactly where
+the inequality reverses.
 
 ---
 
 ## §2 SD-BK is false
 
-Reproduce: `python3.11 scripts/onethird_mg4a86_standard_dominance_target_audit.py`
-(certificate: `data/onethird-mg4a86-standard-dominance-target-audit.json`).
+Reproduce: `python3.11 scripts/onethird_mg4a86_standard_dominance_target_audit.py`.
 
 ### 2.1 The antichain [proven]
 
-Let `P = A_n`, the `n`-element antichain, so `L(P) = S_n`.
+Let `P = A_n`, so `L(P) = S_n`.
 
-**`λ_std(A_n) = 0`.** By symmetry `Pr[σ(a) = x] = 1/n` for every `x,a`, so
-`T_P = J/n`, hence `S_P = J/n`. On `H = 𝟙^⊥`, `J` acts as `0`. ∎
+**`λ_std(A_n) = 0`.** By symmetry `Pr[σ(a)=x] = 1/n` for all `x,a`, so `T_P = J/n`
+and `S_P = J/n`. On `H = 𝟙^⊥`, `J` acts as `0`. ∎
 
 **`λ₂^BK(A_n) = 1 − (1−cos(π/n))/(n−1)`.** The BK chain on `L(A_n) = S_n` is
-exactly the interchange process on the path `P_n` with rate `1/(2(n−1))` per edge.
-By Aldous / Caputo–Liggett–Richthammer its gap equals the single-particle gap.
-*(The disproof does not actually need CLR: the `≥` direction is elementary. Take
-`f(σ) = g(σ^{-1}(x₀))` for a fixed element `x₀` and `g` the path's Fiedler
-vector; `f` is a one-particle observable whose BK Dirichlet form is exactly the
-single-particle one, so `λ₂^BK ≥ 1 − (1−cos(π/n))/(n−1)` by Rayleigh. That alone
-contradicts `λ₂^BK = λ_std = 0` for `n ≥ 3`.)*
+exactly the interchange process on the path `P_n` at rate `1/(2(n−1))` per edge;
+by CLR its gap equals the single-particle gap. *(The disproof does not need CLR:
+the `≥` direction is elementary. Take `f(σ) = g(σ^{-1}(x₀))` for fixed `x₀` and
+`g` the path's Fiedler vector — a one-particle observable whose BK Dirichlet form
+is exactly the single-particle one, so `λ₂^BK ≥ 1 − (1−cos(π/n))/(n−1)` by
+Rayleigh, contradicting `λ₂^BK = λ_std = 0` for `n ≥ 3`.)*
 
-**Verified** (residual vs. the closed form `≤ 5.2e-15`):
-
-| `n` | `λ₂^BK` | single-particle | residual | `λ_std` | excess `λ₂^BK − λ_std` |
+| `n` | `λ₂^BK` | single-particle | residual | `λ_std` | excess |
 |---|---|---|---|---|---|
 | 3 | 0.750000000 | 0.750000000 | 0.0 | 0 | **0.750** |
 | 4 | 0.902368927 | 0.902368927 | 5.6e-16 | 0 | **0.902** |
@@ -161,54 +167,44 @@ contradicts `λ₂^BK = λ_std = 0` for `n ≥ 3`.)*
 | 6 | 0.973205081 | 0.973205081 | 2.1e-15 | 0 | **0.973** |
 | 7 | 0.983494811 | 0.983494811 | 5.2e-15 | 0 | **0.983** |
 
-**Read this carefully — it inverts the ticket's premise.** The antichain is the
-case where the constraint is *empty* and the Aldous lift is *exact*. The ticket
-expected the obstruction to live where the constraint bites. It does not: the
-obstruction is maximal where the constraint vanishes. So the obstruction is not
-about the constraint at all.
+**This inverts the ticket's premise.** The antichain is where the constraint is
+*empty* and the Aldous lift is *exact*. The ticket expected the obstruction to
+live where the constraint bites; instead the obstruction is maximal where the
+constraint vanishes. So the obstruction is not about the constraint at all.
 
 ### 2.2 Exhaustive: dominance holds nowhere [proven]
 
-All labeled posets on `[n]` with `|L(P)| ≥ 2`:
-
-| `n` | tested | `λ₂^BK = λ_std` holds | fails | `λ_std > λ₂^BK` (refutes the §1.2 inequality) | worst excess |
+| `n` | tested | `λ₂^BK = λ_std` | fails | `λ_std > λ₂^BK` | worst excess |
 |---|---|---|---|---|---|
 | 4 | 195 | **0** | 195 | 33 | 0.902368927 |
 | 5 | 4111 | **0** | 4111 | 550 | 0.952254249 |
 
-Not one instance in 4306. And the failure is two-sided: 583 posets violate even
-the weak inequality — characterized exactly in §2.4.
+Not one instance in 4306; the failure is two-sided.
 
-### 2.3 Ordinal sums: an exact theorem, and an infinite counterexample family [proven]
+### 2.3 Ordinal sums: an exact theorem [proven]
 
-This is the structurally important case: the programme's own characterization is
-`λ_std = 1` **iff** `P` is an ordinal sum
+The programme's characterization is `λ_std = 1` **iff** `P` is an ordinal sum
 (`OneThird-L1b-ExpectedRank-Certificate.md:53-56`), so ordinal sums are the
-extremal class the whole near-ordinal-sum programme is organized around.
+extremal class the near-ordinal-sum programme is organized around.
 
-> **Theorem (ordinal-sum product formula).** Let `P = P₁ ⊕ ⋯ ⊕ P_k` be an ordinal
-> sum, `|P_i| = n_i`, `n = Σ n_i`. Then
->
+> **Theorem (ordinal-sum product formula).** Let `P = P₁ ⊕ ⋯ ⊕ P_k`, `|P_i| = n_i`,
+> `n = Σ n_i`. Then
 > 1. `L(P) = L(P₁) × ⋯ × L(P_k)` by concatenation, and the BK graph on `L(P)` is
->    the **Cartesian product** of the BK graphs on the `L(P_i)`.
-> 2. In the repo normalization,
->    `gap_BK(P) = min_i gap_BK(P_i) · (n_i − 1)/(n − 1)`.
-> 3. `λ_std(P) = 1`, i.e. the transport gap is `0`.
+>    the **Cartesian product** of the BK graphs on the `L(P_i)`;
+> 2. `gap_BK(P) = min_i gap_BK(P_i) · (n_i − 1)/(n − 1)`;
+> 3. `λ_std(P) = 1`.
 >
-> **Corollary.** For every ordinal sum with at least one block that is neither a
-> singleton nor a chain, `gap_BK(P) > 0 = 1 − λ_std(P)`. **SD-BK fails on the
-> entire class of nontrivial ordinal sums**, and `λ_std > λ₂^BK` there, refuting
-> §1.2's inequality on an infinite family.
+> **Corollary.** For every ordinal sum with a block that is neither a singleton
+> nor a chain, `gap_BK(P) > 0 = 1 − λ_std(P)`. **SD-BK fails on the entire class
+> of nontrivial ordinal sums**, with `λ_std > λ₂^BK` there.
 
-*Proof of (1).* In an ordinal sum, two elements are incomparable only if they lie
-in the same block. An adjacent pair of a linear extension is therefore swappable
-only if both members are in one block, so every BK move is internal to a block
-and blocks never interleave. ∎ *(2) follows since the generator is then a direct
-sum, and a chain's gap is linear in its step rate. (3) is the cited
-characterization, independently reconfirmed numerically below.*
+*Proof of (1).* In an ordinal sum two elements are incomparable only if in the
+same block, so an adjacent pair of a linear extension is swappable only if both
+members lie in one block: every BK move is internal to a block and blocks never
+interleave. ∎ *(2) follows since the generator is then a direct sum and a chain's
+gap is linear in its step rate.*
 
-**Verified**, 9/9 families, gap formula exact to `1e-9`
-(`scripts/onethird_mg4a86_ordinal_sum_theorem_check.py`):
+**Verified**, 9/9 families, formula exact to `1e-9`:
 
 | ordinal sum | `\|L(P)\|` | gap actual | gap predicted | `λ_std` | SD-BK? |
 |---|---|---|---|---|---|
@@ -217,73 +213,71 @@ characterization, independently reconfirmed numerically below.*
 | `A₂ ⊕ A₃` | 12 | 0.125000000 | 0.125000000 | 1.000000 | NO |
 | `A₂ ⊕ A₂ ⊕ A₂` | 8 | 0.200000000 | 0.200000000 | 1.000000 | NO |
 | `A₄ ⊕ C₁` | 24 | 0.073223305 | 0.073223305 | 1.000000 | NO |
-| `A₂ ⊕ C₂ ⊕ A₂` | 4 | 0.200000000 | 0.200000000 | 1.000000 | NO |
 | `V₃ ⊕ A₂` | 4 | 0.250000000 | 0.250000000 | 1.000000 | NO |
 
-(`|L(P)| = Π|L(P_i)|` confirmed on all; full table in the JSON certificate.)
+*(6 of the 9 families shown; `|L(P)| = Π|L(P_i)|` confirmed on all. Full table in
+the JSON certificate.)*
 
-Note the direction: on ordinal sums `λ_std = 1 > λ₂^BK`, whereas on antichains
-`λ_std = 0 < λ₂^BK`. The two extremal classes of the programme straddle the
-claimed equality from opposite sides. Any putative proof of SD-BK would have to
-be false at both ends.
+On ordinal sums `λ_std = 1 > λ₂^BK`; on antichains `λ_std = 0 < λ₂^BK`. The two
+extremal classes straddle the claimed equality from opposite sides — any putative
+proof of SD-BK would have to be false at both ends.
 
 ### 2.4 Exactly where the weak inequality fails [proven]
 
-The 583 violations of §2.2 are not scattered. Comparing the violation set
-`{P : λ_std > λ₂^BK}` against the set `{P : λ_std = 1}` (= the ordinal sums, by
-the programme's own characterization):
-
-| `n` | posets | `λ_std > λ₂^BK` | `λ_std = 1` | **sets equal?** | symmetric difference |
+| `n` | posets | `λ_std > λ₂^BK` | `λ_std = 1` | **sets equal?** | sym. difference |
 |---|---|---|---|---|---|
 | 4 | 195 | 33 | 33 | **YES** | 0 |
 | 5 | 4111 | 550 | 550 | **YES** | 0 |
 
-> **Proposition (exact characterization).** For every labeled poset on `n ≤ 5`
-> with `|L(P)| ≥ 2`:
-> `λ_std(P) > λ₂^BK(P)` **⟺** `λ_std(P) = 1` **⟺** `P` is an ordinal sum.
-> Equivalently: **`λ_std ≤ λ₂^BK` holds precisely off the ordinal sums.**
+> **Proposition.** For every labeled poset on `n ≤ 5` with `|L(P)| ≥ 2`:
+> `λ_std > λ₂^BK` ⟺ `λ_std = 1` ⟺ `P` is an ordinal sum. Equivalently,
+> **`λ_std ≤ λ₂^BK` holds precisely off the ordinal sums.**
 
-The `⟸` direction is the §2.3 Corollary and is **proven for all `n`** (ordinal sums
-have `λ_std = 1` and `λ₂^BK < 1` whenever `|L(P)| ≥ 2`). The `⟹` direction is
-**verified exhaustively at `n = 4,5`** and is [heuristic] beyond that.
+`⟸` is the §2.3 Corollary, **proven for all `n`**. `⟹` is **verified exhaustively
+at `n = 4,5`**, [heuristic] beyond. This is fairer to the repo than "the
+inequality is false": it is true generically and fails on a thin,
+exactly-identified set — which happens to be the set the programme is built around.
 
-This is a sharper and fairer correction than "the inequality is false": it is true
-on the generic poset and fails on a thin, exactly-identified set — which happens
-to be the set the near-ordinal-sum programme is built around.
+### 2.5 SD-BK is not a normalization slip [proven]
+
+The obvious objection is that SD-BK is really an equality up to a constant. It is
+not: `gap_BK / (1 − λ_std)` over posets with `λ_std < 1` has
+
+| `n` | min | max | spread |
+|---|---|---|---|
+| 4 | 0.097631 | 0.905309 | **9.3×** |
+| 5 | 0.047746 | 0.898890 | **18.8×** |
+
+A single constant would give spread `1.0`. The spread **grows with `n`**,
+consistent with §3.1's scaling mismatch.
 
 ---
 
-## §3 Why: the mismatch is static-vs-dynamic, not constrained-vs-ambient
+## §3 Why: static-vs-dynamic, not constrained-vs-ambient
 
 ### 3.1 Different objects, different scaling [proven]
 
-Aldous/CLR controls the **single-particle random walk on the graph** — a
-functional of the *generator*. `λ_std` is the top eigenvalue of the symmetrized
-*stationary marginal* matrix — a functional of the *measure*. Nothing forces them
-to agree, and on the antichain they do not even scale alike in `n`:
+Aldous/CLR controls the single-particle walk **on the graph** — a functional of
+the *generator*. `λ_std` is the top eigenvalue of the symmetrized *stationary
+marginal* matrix — a functional of the *measure*. On the antichain they do not
+even scale alike:
 
 - transport gap `1 − λ_std(A_n) = 1` — **`Θ(1)`**;
 - BK gap `1 − λ₂^BK(A_n) = (1−cos(π/n))/(n−1) ≍ π²/(2n³)` — **`Θ(n^{-3})`**.
 
-No constant rescaling reconciles a `Θ(1)` quantity with a `Θ(n^{-3})` one. The
-two "one-particle" objects are genuinely different, and the ticket's phrase
-"one-particle / standard-representation object" silently identifies them.
+No constant reconciles `Θ(1)` with `Θ(n^{-3})`. The ticket's phrase "one-particle
+/ standard-representation object" silently identifies two different things.
 
 ### 3.2 There is no standard sector on `L(P)` [proven]
 
-On `S_n`, the span `U = span{ σ ↦ 𝟙[σ(a)=x] }` of one-particle observables is
-**invariant** under the interchange process: a move permutes the position index
-`a`, mapping `U` into `U`. That invariance is exactly what makes "the gap lives in
-the standard sector" well-posed, and it is what Schur/CLR exploit.
+On `S_n` the span `U = span{ σ ↦ 𝟙[σ(a)=x] }` is **invariant** under the
+interchange process (a move permutes the position index `a`). That invariance is
+what makes "the gap lives in the standard sector" well-posed and is what Schur/CLR
+exploit. On `L(P)` the move at position `i` fires only when `σ(i), σ(i+1)` are
+incomparable — the action on the position index is **`σ`-dependent** — so `U` need
+not be invariant. Measure
 
-On `L(P)` the move at position `i` fires only when `σ(i), σ(i+1)` are
-incomparable — the action on the position index is **`σ`-dependent** — so `U`
-need not be invariant. Measure the leakage
-
-  `leak(P) := ‖ (I − P_U) W P_U ‖_op`,
-
-which is `0` iff `U` is BK-invariant. This is the constraint-boundary term of
-*any* sector-based argument, made concrete:
+  `leak(P) := ‖ (I − P_U) W P_U ‖_op`,   zero iff `U` is BK-invariant:
 
 | poset | `\|L(P)\|` | `dim U` | leakage |
 |---|---|---|---|
@@ -292,143 +286,203 @@ which is `0` iff `U` is BK-invariant. This is the constraint-boundary term of
 | N-poset (2+2) | 6 | 5 | **1.44e-01** |
 | chain2+anti2 | 12 | 8 | **1.44e-01** |
 | V + isolated | 8 | 6 | **1.00e-01** |
-| `A₂ ⊕ A₂` | 4 | 3 | 2.5e-16 *(degenerate: `dim U = 3`, `\|L(P)\| = 4`)* |
 
-The controls confirm the implementation: on the antichain, leakage is machine-zero
-and `dim U = (n−1)²+1` exactly (10 at `n=4`, 17 at `n=5`, 5 at `n=3`), matching
-the ambient theory. On genuinely constrained posets the leakage is **`Θ(0.1)`**,
-not small.
+Controls confirm the implementation: on the antichain leakage is machine-zero and
+`dim U = (n−1)²+1` exactly (10, 17, 5 at `n=4,5,3`). On constrained posets leakage
+is **`Θ(0.1)`**.
 
-**Consequence.** On `L(P)` there is no invariant standard sector, hence no
-guarantee that `λ_std` appears in the BK spectrum *at all* — which is why SD-BK
-can (and does) fail in both directions. The correct formulation of the
-programme's need is therefore an **overlap** statement (SD-quant), not a
-sector-decomposition statement:
+**Consequence.** There is no invariant standard sector on `L(P)`, hence no
+guarantee `λ_std` appears in the BK spectrum at all — which is why SD-BK fails in
+*both* directions. The correct formulation of the programme's need is an
+**overlap** statement, well-posed without invariance:
 
-  `SD-quant(c)`: the top nontrivial BK eigenfunction `f` satisfies `‖P_U f‖² ≥ c‖f‖²`.
+  **`SD-quant(c)`**: the top nontrivial BK eigenfunction `f` satisfies
+  `‖P_U f‖² ≥ c‖f‖²`.
 
-This is well-posed without invariance, and it is what a transfer to the transport
-quotient actually requires.
+Measured in §7.
 
 ---
 
-## §4 The four techniques: boundary terms and classification
+## §4 The lift already exists — Wilson (2004) — and it does not help
+
+This is the decisive literature finding, and it was not anticipated by the ticket.
+
+> **Theorem (Karzanov–Khachiyan chain; Wilson 2004, Table 1 + Prop. 3, building on
+> Bubley–Dyer 1999).** For **every** `n`-element poset `P`, the
+> adjacent-transposition chain on `L(P)` satisfies
+> `gap_BK(P) ≥ (1 − cos(π/n))/(n−1) = Θ(n^{-3})`,
+> the free/antichain value. The unconstrained chain is the **minimizer**: adding
+> poset relations never decreases the gap. Sometimes tight.
+
+Wilson obtains this by direct path coupling with **sinusoidal** weights
+`w(i) = cos(β(i/n − 1/2))`, treating blocked swaps as no-ops — *not* by comparison
+with the free chain. That is stronger than a comparison argument would be, since
+it is sharp.
+
+**Independently verified here**, exhaustively:
+
+| `n` | bound `(1−cos(π/n))/(n−1)` | min `gap_BK` over all posets | violations | attained exactly? |
+|---|---|---|---|---|
+| 4 | 0.097631073 | 0.097631073 | **0 / 195** | **yes** |
+| 5 | 0.047745751 | 0.047745751 | **0 / 4111** | **yes** |
+
+**Why this matters more than any of the four techniques.** The ticket's programme
+was: transport an ambient single-particle bound to the constrained chain. **That
+is done, sharply, and has been since 2004.** And it yields nothing about standard
+dominance — because `λ_std` never appears in it. If a *sharp, universal,
+already-proven* lift of exactly the anticipated form does not produce dominance,
+no lossy comparison version will either.
+
+*Citation caveat, honoring the source check:* Wilson states this in **Table 1**
+(row "Linear extensions of partially ordered set, Karzanov–Khachiyan chain",
+spectral-gap column), following from the §6 contraction at `β = π` via his
+Proposition 3 (Wasserstein contraction ⇒ gap, after Chen 1998). It is **not a
+numbered theorem** in the paper. Cite Table 1 + Prop. 3, or reprove the one-line
+step. The `Ω(n^{-3})` *order* predates Wilson (Bubley–Dyer §4); Wilson supplies
+the sharp constant. A matching *upper* bound is **not** universal — constrained
+posets can have far larger gaps, as §2 confirms.
+
+---
+
+## §5 The four techniques: boundary terms and classification
 
 Classification per the ticket: **(a)** still full standard dominance;
 **(b)** strictly weaker / checkable; **(c)** tractable on a sub-class.
 
-### 4.1 State-space decomposition (Madras–Randall 2002; Jerrum–Son–Tetali–Vigoda 2004) — **[blocked]**
+### 5.0 The octopus, stated precisely, and why it does not restrict
 
-Slice `S_n` by violation count: `Ω_k = {σ : V(σ) = k}`, `Ω_0 = L(P)`. The
-restriction of the ambient chain to `Ω_0` is exactly BK.
+For completeness, since the ticket centers on it. In `ℝ[S_n]`, with head vertex
+`n`, weights `w_{in} ≥ 0`, `S = Σ_k w_{kn}` (Cesi 2016, Thm 4.2, equivalent to
+CLR Thm 2.3):
 
-**The inequality points the wrong way.** Madras–Randall lower-bounds the gap of
-the **full** chain by (restriction gaps) × (projection gap):
+  `Σ_{i<n} w_{in}(Id − (i n)) ⪰ (1/S) Σ_{i<k<n} w_{in}w_{kn}(Id − (i k))`
 
-  `gap(full) ≳ min_k gap(restriction_k) · gap(projection)`.
+as self-adjoint operators in the regular representation. The LHS is the star at
+the head; the RHS its star–mesh transform.
 
-Here the *hard* chain is the restriction (BK) and the *easy* chain is the full one
-(ambient, where Aldous applies). Decomposition is designed to bound a hard chain
-by easy pieces; we need the exact converse — bound a hard **piece** by the easy
-**whole** — which decomposition does not provide. Knowing `gap(full)` places no
-lower bound on any `gap(restriction_k)`; a single slice can be arbitrarily slow
+**Why it does not restrict to `L(P)`.** The inequality is an operator relation in
+`ℝ[S_n]`, valid in *every* representation — but its meaning requires the `S_n`
+action. Confinement to `L(P)` is the projection `Π` onto `span{δ_σ : σ ∈ L(P)}`,
+and `Π` does **not commute** with the `τ_{ij}`: `τ_{ij}` maps a linear extension
+to a non-extension whenever `i,j` are comparable. So `Π A Π ⪰ Π B Π` does not
+follow from `A ⪰ B`. **This is correct and I found no way around it** — but §4
+shows it is not the binding obstruction, since the conclusion the octopus would
+buy is already available by other means.
+
+### 5.1 State-space decomposition (Madras–Randall 2002; JSTV 2004) — **[blocked]**
+
+Slice `S_n` by violation count: `Ω_k = {σ : V(σ) = k}`, `Ω_0 = L(P)`, the
+restriction to which is exactly BK.
+
+**Two independent failures.**
+
+*(i) The inequality points the wrong way.* Madras–Randall Thm 1.1 gives
+`Gap(full) ≥ Θ^{-2} · Gap(projection) · min_i Gap(restriction_i)` — it
+**lower-bounds the full chain** by its pieces. Here the *hard* chain is the
+restriction (BK) and the *easy* one is the full chain (Aldous). Decomposition
+bounds a hard chain by easy pieces; we need the converse. Knowing `Gap(full)`
+places no lower bound on any restriction — a single slice can be arbitrarily slow
 while the whole mixes fine.
 
-**Boundary term:** the projection chain on violation-levels `{0,1,…,K}`.
-**Classification: blocked** — not (a), (b) or (c); the technique is structurally
-inapplicable in this direction. *(This is a cleaner "no" than the ticket
-anticipated: the term does not collapse to dominance, the method simply does not
-point this way.)*
+*(ii) Madras–Randall is literally vacuous for this slicing.* MR Thm 1.1 is an
+**overlapping-cover** theorem: on a disjoint partition `π[A_i ∩ A_j] = 0`, so
+`P_H = Id` and `Gap(P_H) = 0`. Slicing by violation count **is** a disjoint
+partition, so the bound reads `Gap ≥ 0`. For disjoint partitions one needs
+**Martin–Randall** or **JSTV**, whose escape parameter
+`γ = max_i max_{x∈Ω_i} Σ_{y∉Ω_i} P(x,y)` gives
+`λ ≥ min{λ̄/3, λ̄λ_min/(3γ + λ̄)}` — still direction *(i)*.
 
-### 4.2 Simulated tempering / soft-constraint homotopy — **(b), and the one live route.** See §5.
+**Boundary term:** the projection chain on violation levels.
+**Classification: blocked** — structurally inapplicable in this direction.
+*(A cleaner "no" than anticipated: the term does not collapse to dominance; the
+method does not point this way.)*
 
-### 4.3 Diaconis–Saloff-Coste comparison (1993) — **(b), but structurally incapable of dominance**
+*Attribution note:* MR Thm 1.1 is proved via **Caracciolo–Pelissetto–Sokal**
+(1992, unpublished, reproduced in MR Appendix A); "Madras–Randall" is a
+first-*publication* attribution.
 
-DSC compares two chains via canonical paths, with congestion constant `A`, giving
-`gap₁ ≥ gap₂ / A`. Two obstructions here:
+### 5.2 Simulated tempering / soft-constraint homotopy — **(b)**, the one live route. See §6.
 
-1. **State spaces differ.** BK lives on `L(P)`, the interchange process on `S_n`.
-   DSC in its basic form requires a common state space; the extension needs a map
-   `S_n → L(P)` (e.g. "sort into an extension") and the congestion picks up the
-   fiber sizes.
-2. **Detour cost.** Ambient paths between two linear extensions may leave `L(P)`;
-   they must be rerouted inside `L(P)`. The boundary term is the **detour
-   congestion** — the ratio of BK-graph distance to Cayley distance on `L(P)`.
+### 5.3 Diaconis–Saloff-Coste comparison (1993) — **(b)**, and structurally incapable of dominance
 
-**Boundary term:** fiber/detour congestion `A`.
-**Classification: (b)** — a bounded detour yields `gap_BK ≥ gap_ambient / poly(n)`,
-a genuine and weaker conclusion.
+DSC (AAP 1993, Thm 2.1) gives `Ẽ ≤ A·E` with congestion
+`A = max_{(z,w)} (1/(π(z)P(z,w))) Σ_{Ẽ(z,w)} |γ_{xy}| π̃(x)P̃(x,y)`, hence
+`γ̃ ≤ A·(max_x π(x)/π̃(x))·γ`.
 
-**But note the structural point, which applies to this technique and 4.4 alike:**
-comparison methods are **lossy by construction** (`A > 1` always, except for
-identical chains), whereas SD-BK is a *sharp equality*. **No comparison argument
-can ever certify a constant of exactly 1.** Even if every congestion estimate were
-optimal, the output is an inequality with a loss, not dominance. Combined with §2
-(the equality is false anyway), this route cannot reach the stated target — though
-its `(b)` output is worth having on its own terms.
+**It requires the same state space.** Verified in the source: DSC AAP §1 — "by
+comparison with a second reversible chain **on the same state space**"; the
+Dirichlet forms must be quadratic forms on the same `ℝ^X`. BK lives on `L(P)`, the
+interchange process on `S_n`.
 
-### 4.4 Censoring / monotone coupling (Peres–Winkler) — **[blocked]**
+*Correcting a common belief:* Dyer–Goldberg–Jerrum–Martin (2006) do **not** supply
+a different-state-space theorem — they explicitly disclaim it ("Not much is known
+about comparison of two chains with very different state spaces"). The general
+result is **Aaron Smith, arXiv:1301.7357**, via a one-to-many extension
+`f̂(x) = Σ_y P_x[y] f(y)`, giving
+`1 − β_i(Q) ≥ (1/(C₁C₃))(1 − β_i(K))` where `C₃` is the DSC congestion **plus**
+correction terms for removed states.
 
-Censoring requires a **monotone** chain with respect to a partial order on the
-state space, together with a monotone (e.g. FKG / positively associated) measure;
-the conclusion is that censoring updates cannot speed up convergence.
+**Boundary term:** the extension/detour congestion `C₃`.
+**Classification: (b)** — a bounded detour yields `gap_BK ≥ gap_ambient / poly(n)`.
 
-`L(P)` does carry natural order structure (the ticket's framing via maximal flags
-of the distributive lattice `J(P)`; `L(P)` under inversion-containment). However
-the BK move is an **adjacent transposition, not a monotone single-site update** —
-it is not a monotone spin-system update in the sense the censoring inequality
-requires. I could not establish the monotonicity hypothesis for the BK chain, and
-I am **not** asserting it fails.
+**But note the structural point, applying here and to 5.4 alike:** comparison
+methods are **lossy by construction** (`A > 1` except for identical chains),
+whereas SD-BK is a **sharp equality**. No comparison argument can certify a
+constant of exactly 1. And per §4, the `(b)`-grade conclusion this route would buy
+is already available *sharply* from Wilson — so this route is dominated even at
+its own target.
 
-**Boundary term:** the monotonicity hypothesis itself.
-**Classification: blocked pending verification** — plausibly **(c)** on a subclass
-where `L(P)` with weak order is a distributive lattice and the down-up walk
-formulation makes the updates genuinely monotone. Flagged as **not attempted in
-depth**; this is the least-explored of the four and the honest place to say so.
+### 5.4 Censoring / monotone coupling (Peres–Winkler) — **[blocked, definitively]**
+
+I initially classified this "blocked pending verification". The source check
+settles it more sharply:
+
+**Peres–Winkler ("Can Extra Updates Delay Mixing?", *Comm. Math. Phys.* **323**
+(2013), 1007–1016) proves no spectral-gap statement at all.** Theorem 1.1
+concludes `μ ⪯ ν` and `‖μ−π‖ ≤ ‖ν−π‖` — stochastic domination and **total
+variation** for the law at a *fixed time* after a prescribed update sequence. It
+is a distance/mixing-time tool. The paper's only gap mentions describe the
+conventional method it *replaces*.
+
+Additionally the **monotone-system hypothesis is not removable** (PW: "Other
+assumptions, in particular monotonicity of the system, cannot be dispensed with";
+Holroyd gives an explicit counterexample without it), and the BK move is an
+adjacent transposition, not a monotone single-site update.
+
+**Boundary term:** n/a — wrong output type.
+**Classification: blocked** — cannot produce a gap statement even in principle.
+*(Correcting the ticket's framing: censoring is not a spectral-gap technique.)*
 
 ---
 
-## §5 The tempering / deformation route (geometric lens)
+## §6 The tempering / deformation route (geometric lens)
 
-The route the ticket prioritized, and the only one that produces a
-correctly-directed result. Reproduce:
+The route the ticket prioritized. Reproduce:
 `python3.11 scripts/onethird_mg4a86_sector_leakage_and_tempering.py`.
 
-### 5.1 Setup
+### 6.1 Setup
 
-Gibbs measure on **all** of `S_n`:
-  `π_β(σ) ∝ exp(−β·V(σ))`, `V(σ) = #{(x,y) : x <_P y but σ places y before x}`.
+`π_β(σ) ∝ exp(−β·V(σ))` on **all** of `S_n`, `V(σ) = #{(x,y) : x <_P y but σ places
+y before x}`. Metropolis: pick position `i` uniformly, propose the adjacent swap,
+accept w.p. `min(1, e^{−βΔV})`; `ΔV ∈ {−1,0,+1}`.
 
-Metropolis: pick a position `i ∈ {1,…,n−1}` uniformly, propose the adjacent swap,
-accept w.p. `min(1, e^{−β ΔV})`. Note `ΔV ∈ {−1,0,+1}` for an adjacent swap (only
-the swapped pair's relation changes), so the deformation is clean.
-
-- `β = 0`: uniform on `S_n`, the interchange process on the path — **Aldous/CLR
-  applies exactly**.
-- `β = ∞` restricted to `{V = 0}`: **exactly the BK chain**.
+- `β = 0`: uniform `S_n`, interchange on the path — **Aldous/CLR exact**.
+- `β = ∞` restricted to `{V=0}`: **exactly the BK chain**.
 
 *(Normalization caveat, load-bearing: the tempered chain uses step `1/(n−1)`,
-**twice** the repo's `bk_walk_matrix` rate `1/(2(n−1))`. All comparisons below
-read the BK block directly off `W_∞` so both are on the same clock. An earlier
-pass of this analysis mismatched the clocks and produced a spurious
-"discontinuity"; it is corrected here. Eigenvalues are taken raw — the
+**twice** `bk_walk_matrix`'s `1/(2(n−1))`. All comparisons read the BK block
+directly off `W_∞` so both are on the same clock. An earlier pass mismatched the
+clocks and produced a spurious "discontinuity". Eigenvalues are taken raw — the
 `D^{1/2}WD^{-1/2}` symmetrization is numerically destroyed for `β ≳ 40`.)*
 
-### 5.2 The geometry: where the deformation degenerates [proven]
+### 6.2 Where the deformation degenerates [proven]
 
-> **Proposition.** At `β = ∞`, `L(P)` is **closed** (from a linear extension, any
-> swap of an adjacent comparable pair has `ΔV = +1` and is rejected; a swap of an
-> incomparable pair has `ΔV = 0` and is accepted). Hence `W_∞` is block
-> triangular,
-> `W_∞ = [[B, 0], [C, T]]`, with `B` the BK block on `L(P)` and `T` the
-> substochastic **collar block** on the violating configurations. Therefore
-> `spec(W_∞) = spec(B) ∪ spec(T)` and, since `W_β` is a polynomial in `x = e^{−β}`
-> (so eigenvalues are continuous in `x` at `x=0`),
->
->   **`lim_{β→∞} λ₂(β) = max( λ₂^BK , ρ(T) )`.** ∎
-
-**Verified**, with clean convergence (no discontinuity — the earlier report of one
-was the clock mismatch):
+> **Proposition.** At `β = ∞`, `L(P)` is **closed** (from an extension, swapping an
+> adjacent comparable pair has `ΔV = +1`, rejected; an incomparable pair `ΔV = 0`,
+> accepted). So `W_∞ = [[B, 0],[C, T]]` with `B` the BK block and `T` the
+> substochastic **collar block** on violating configurations. Hence
+> `spec(W_∞) = spec(B) ∪ spec(T)`, and since `W_β` is a polynomial in `x = e^{−β}`,
+> **`lim_{β→∞} λ₂(β) = max(λ₂^BK, ρ(T))`.** ∎
 
 | poset | `λ₂(β=20)` | `λ₂(β=80)` | `λ₂^BK` (matched clock) | `ρ(T)` collar | limit governed by |
 |---|---|---|---|---|---|
@@ -438,46 +492,52 @@ was the clock mismatch):
 | `A₂ ⊕ A₂` | 0.666688041 | 0.666667989 | 0.333333333 | **0.666666678** | **collar** |
 
 **The geometric reading the ticket asked for.** The deformation is *continuous* in
-`β` — the measure `π_β` concentrates smoothly onto `L(P)`, and `λ₂(β)` converges.
-What fails is that **the limit is the wrong object in 3 of 4 constrained cases**:
-the rate-limiting mode of the tempered chain at large `β` lives in the **collar**
-of near-feasible configurations, not in `L(P)`. The collar's `π_β`-mass vanishes
-like `e^{−β}`, but its **drainage time stays `Θ(1)`**. Mass → 0 does not imply
-timescale → 0.
+`β`: `π_β` concentrates smoothly onto `L(P)` and `λ₂(β)` converges. What fails is
+that **the limit is the wrong object in 3 of 4 constrained cases** — the
+rate-limiting mode at large `β` lives in the **collar** of near-feasible
+configurations, not in `L(P)`. The collar's mass vanishes like `e^{−β}` but its
+**drainage time stays `Θ(1)`**: mass → 0 does not imply timescale → 0.
 
-So: *"where does the deformation's geometry degenerate?"* — **not** at the
-constraint boundary in the algebraic sense the ticket anticipated (the octopus's
-non-restriction), but in the **collar**, and the degeneration is a
-mass-vs-timescale decoupling. The `A₂ ⊕ A₂` case is the sharpest: the tempering
-limit `0.6667` versus the BK value `0.3333` is a **factor-2 loss in `λ`**, on an
-ordinal sum — exactly the class the programme cares about.
+So *"where does the deformation's geometry degenerate?"* — **not** at the
+constraint boundary in the algebraic sense the ticket anticipated, but in the
+**collar**, and the degeneration is a **mass-vs-timescale decoupling**. This is
+also why a curvature / Bakry–Émery or localization reading describes the
+obstruction rather than removing it: the degeneration is precisely a loss of
+curvature control in the collar. `A₂ ⊕ A₂` is sharpest — limit `0.6667` vs BK
+`0.3333`, a **factor-2 loss in `λ`**, on an ordinal sum.
 
-### 5.3 What tempering *does* give [proven]
+### 6.3 What tempering gives, and why it is superseded [proven]
 
-The Proposition has a useful corollary, in the **right** direction:
+  `gap_temper(∞) = min( gap_BK , 1 − ρ(T) ) ≤ gap_BK`.
 
-  `gap_temper(∞) = 1 − max(λ₂^BK, ρ(T)) = min( gap_BK , 1 − ρ(T) ) ≤ gap_BK`.
+> **Corollary.** `gap_BK(P) ≥ gap_temper(β=∞)`. Any lower bound on the tempered
+> chain's gap lower-bounds the BK gap — and the tempered chain is what a
+> Woodard–Schmidler `β`-ladder attacks, starting from `β=0` where CLR is exact.
 
-> **Corollary (C9).** `gap_BK(P) ≥ gap_temper(β=∞)`. Hence **any lower bound on
-> the tempered chain's gap is a lower bound on the BK gap** — and the tempered
-> chain is precisely the object a Woodard–Schmidler `β`-ladder decomposition can
-> attack, starting from `β = 0` where Aldous/CLR gives the answer exactly.
+**Boundary term, named exactly:** `ρ(T)`, the collar spectral radius. The ladder is
+lossless **iff `ρ(T) ≤ λ₂^BK`** ("the collar drains faster than BK mixes") — a
+**checkable condition strictly weaker than dominance**: classification **(b)**. It
+involves only gaps; no `λ_std` anywhere.
 
-**Boundary term, named exactly:** `ρ(T)`, the collar spectral radius. The ladder
-recovers the BK gap **iff `ρ(T) ≤ λ₂^BK`** — "the collar drains faster than BK
-mixes". That is a **checkable condition strictly weaker than dominance**:
-classification **(b)**, as promised in §4.2. It is a statement purely about
-`gap`s — no `λ_std` anywhere.
+*The relevant machinery, stated correctly:* Woodard–Schmidler–Huber (*AAP* **19**
+(2009) 617–640) Cor. 3.1 gives, for simulated tempering,
+`Gap(P_st) ≥ [γ(A)^{J+3} δ(A)³ / (2^{14}(N+1)^5 J³)] · Gap(T̄₀) · min_{k,j} Gap(T_k|_{A_j})`,
+where the overlap is the **normalized ratio**
+`δ(A) = min_{|k−l|=1, j} ∫_{A_j} min{π_k,π_l} dλ / π_k[A_j]`
+and a second quantity `γ(A) = min_j Π_k min{1, π_{k−1}[A_j]/π_k[A_j]}` appears
+alongside it. The constants are severe.
 
-**And that last observation is the whole verdict.** The tempering route is a live
-route to **BK gap lower bounds**. It is *not* a route to standard dominance,
-because `λ_std` never enters the argument at any step — there is nowhere for it to
-appear. Which brings us to §6.
+**Why this is superseded.** Wilson (§4) already gives
+`gap_BK ≥ (1−cos(π/n))/(n−1)`, **sharply and universally**. The tempering ladder
+would at best reproduce that, lossily, through `δ(A)³` and `γ(A)^{J+3}`. So
+tempering is a *coherent* route to BK gap lower bounds and a **superseded** one.
 
-### 5.4 Dominance is not preserved along the homotopy [proven]
+And it is not a route to standard dominance at all: `λ_std` never enters the
+argument at any step.
 
-Independent of the endpoint analysis: the excess `λ₂(β) − λ_std(β)` **changes
-sign** along the deformation path (`A₂ ⊕ A₂`):
+### 6.4 Dominance is not preserved along the homotopy [proven]
+
+The excess `λ₂(β) − λ_std(β)` **changes sign** along the path (`A₂ ⊕ A₂`):
 
 | `β` | 0 | 0.5 | 1.0 | 1.5 | **2.0** | 3.0 | 5.0 | ∞ |
 |---|---|---|---|---|---|---|---|---|
@@ -485,162 +545,219 @@ sign** along the deformation path (`A₂ ⊕ A₂`):
 | `λ_std(β)` | 0.0000 | 0.3352 | 0.5899 | 0.7548 | 0.8547 | 0.9486 | 0.9932 | 1.0000 |
 | **excess** | **+0.805** | +0.496 | +0.240 | +0.060 | **−0.060** | −0.193 | −0.290 | **−0.667** |
 
-The excess starts at `+0.805`, crosses zero near `β ≈ 1.7`, and ends at `−0.667`.
-Also note `λ₂(β)` is **non-monotone** in `β` (it rises then falls). Two
-consequences:
+`λ₂(β)` is also **non-monotone** in `β`. Two consequences:
 
-- **No monotone-in-`β` comparison can hold** — the quantity dominance asserts to
-  be zero is positive at one end and negative at the other.
-- Dominance is **not a homotopy invariant** of this deformation. Any argument of
-  the form "it holds at `β=0`, transport it to `β=∞`" is refuted: at `β=0` the
-  excess is `+0.805`, i.e. dominance *fails at the starting point too*.
+- **No monotone-in-`β` comparison can hold** — the quantity dominance asserts to be
+  zero is positive at one end and negative at the other.
+- Dominance is **not a homotopy invariant**. Any "it holds at `β=0`, transport it
+  to `β=∞`" argument is refuted: at `β=0` the excess is `+0.805`, i.e. dominance
+  **fails at the starting point too**.
 
-The zero crossing at `β ≈ 1.7` is not a structure to exploit; it is the accidental
-intersection of two unrelated curves.
+The zero crossing near `β ≈ 1.7` is the accidental intersection of two unrelated
+curves, not a structure to exploit.
 
 ---
 
-## §6 Most promising intermediate target, and the attempt
+## §7 The live target: SD-quant, measured
 
-The ticket asked for the single most promising intermediate target, weighted
-toward tempering, with a genuine attempt. Given §2, the honest answer must first
-retarget: **`λ_std`-dominance is not available at any strength**, so an
-intermediate target aimed at it is aimed at a false statement.
-
-### 6.1 Targets considered and why they were rejected
+Given §2, an intermediate target aimed at `λ_std`-dominance is aimed at a false
+statement. The ticket's candidate list is therefore retargeted:
 
 | Candidate (ticket's list) | Verdict |
 |---|---|
-| Finite-`β` soft-constraint version of SD-BK | **Rejected** — §5.4: the excess is `+0.805` at `β=0` and changes sign; there is no `β` at which a soft SD-BK holds robustly. |
-| Geometric/curvature behavior of the gap along the path | **Partially delivered** (§5.2) — but Bakry–Émery/localization needs a log-concave or curvature-bounded structure; the collar decoupling (mass→0, timescale `Θ(1)`) is exactly a curvature *degeneration*, so a curvature reading describes the obstruction rather than removing it. |
-| Bounded Hamming distance from an ordinal sum | **Rejected as stated** — §2.3 shows dominance fails *at* ordinal sums (`λ_std=1 > λ₂^BK`), so the base case of any perturbation argument is already false. |
-| Bounded-width / series-parallel posets | Not attempted; no reason to expect the static/dynamic mismatch to respect width. |
+| Finite-`β` soft-constraint SD-BK | **Rejected** — §6.4: excess is `+0.805` at `β=0` and changes sign; no `β` where it holds. |
+| Curvature/geometry of the gap along the path | **Delivered as an obstruction** (§6.2), not a tool: the collar decoupling *is* a curvature degeneration. |
+| Bounded Hamming distance from an ordinal sum | **Rejected as stated** — §2.3: dominance fails *at* ordinal sums, so the base case of any perturbation argument is already false. |
+| Bounded-width / series-parallel | Not attempted; no reason the static/dynamic mismatch respects width. |
+| Tempering → BK gap lower bound (my §6.3 `T★`) | **Coherent but superseded** by Wilson (§4), sharply. |
 
-### 6.2 The target I selected and attempted: the collar criterion
+**What is left, and it is the right target:** `SD-quant(c)` (§3.2) — well-posed
+without sector invariance, untouched by anything above, and the actual content of
+the programme's need. It had never been measured.
 
-> **T★.** `gap_BK(P) ≥ gap_temper(∞) = min(gap_BK, 1 − ρ(T))`, with the transfer
-> from `β=0` (Aldous, exact) to `β=∞` losing exactly the collar term `ρ(T)`.
+### 7.1 Measurement
 
-**Attempt outcome: the reduction is proven (§5.2–5.3, C6/C9), the collar bound is
-not.** What I have:
+`c(P) := max over the BK λ₂-eigenspace of ‖P_U f‖²/‖f‖²` (max over the eigenspace
+is the most favorable reading, and matters because `λ₂` is frequently degenerate).
+Reproduce: `python3.11 scripts/onethird_mg4a86_sdquant_overlap.py`.
 
-- the identity `lim_{β→∞} λ₂(β) = max(λ₂^BK, ρ(T))` — **proven** by
-  block-triangularity;
-- the correct direction `gap_BK ≥ gap_temper(∞)` — **proven**;
-- the criterion "`ρ(T) ≤ λ₂^BK` ⟺ the ladder is lossless" — **proven**, and
-  strictly weaker than dominance;
-- **numerically, `ρ(T) > λ₂^BK` in 3 of 4 constrained cases** — so the criterion
-  *fails* on the tested posets, and the ladder is lossy exactly there.
+| poset | `\|L(P)\|` | `dim U` | ratio | `c(P)` |
+|---|---|---|---|---|
+| antichain-4 *(control: `c` must be 1)* | 24 | 10 | 0.417 | **1.000000** |
+| antichain-5 *(control)* | 120 | 17 | 0.142 | **1.000000** |
+| antichain-6 *(control)* | 720 | 26 | 0.036 | **1.000000** |
+| 3 chains of 2 (`n=6`) | 90 | 20 | 0.222 | 1.000000 |
+| N-poset + 2 isolated (`n=6`) | 180 | 22 | 0.122 | 1.000000 |
+| chain3 + antichain3 (`n=6`) | 120 | 20 | 0.167 | 1.000000 |
+| `A₃ ⊕ A₃` | 36 | — | — | 1.000000 |
 
-What is **missing** and is the honest blocker: a bound on `ρ(T)` in terms of `P`.
-The collar block is substochastic with a `σ`-dependent structure; I have no
-handle on its spectral radius beyond computing it. Bounding `ρ(T)` for a family
-of posets is the concrete next question, and it is a self-contained one — it
-involves no `λ_std`, no representation theory, and no octopus.
+Exhaustive plus an `n=6` random sample:
 
-**Calibration.** T★ is a real reduction with a real gap in it. It is **not** a
-proof of anything about standard dominance, and I am not claiming it is a
-partial proof of dominance — §6.3 explains why no such thing exists.
+| set | posets | min `c` | median `c` |
+|---|---|---|---|
+| `n=4` all | 195 | 0.988718 | 1.000000 |
+| `n=5` all | 4111 | 0.988718 | 1.000000 |
+| `n=5` informative stratum (`dim U ≤ |L(P)|/2`) | 841 | 0.990257 | 1.000000 |
+| `n=6` random sample, informative stratum | 2043 | **0.978898** | 1.000000 |
 
-### 6.3 Why no intermediate target reaches dominance [heuristic, but rigorous per-technique]
+### 7.2 Calibration — this is essential and I nearly reported it wrong
 
-Collecting §4 and §5:
+`c ≈ 1` is **vacuous** when `dim U ≈ |L(P)|`, since then `P_U ≈ I`. At `n=4` the
+median ratio `dim U / |L(P)|` is **1.0** — `U` fills the whole space — so the
+`n=4` row carries **no information**. Only the stratified rows do. At `n=5` the
+median ratio is 0.70 with 841 posets at `≤ 0.5`; the `n=6` sample and the antichain
+controls (ratios down to **0.036**) are the genuinely informative measurements,
+and there `c` is still `≥ 0.979`.
 
-> Every technique in the comparison-lift toolkit produces inequalities between
-> **Dirichlet forms / spectral gaps of Markov chains**. Standard dominance
-> equates a dynamical quantity (`λ₂^BK`) to a **static functional of the measure**
-> (`λ_std`), which is not the gap of any chain in the family. There is no step in
-> any of these arguments at which `λ_std` can enter.
+### 7.3 Honest reading, and where this is predicted to break
 
-Per-technique this is rigorous (§4.1 wrong direction; §4.3 lossy-by-construction
-and different state spaces; §4.4 hypothesis unverified; §5 no `λ_std` term
-anywhere). As a claim about *every conceivable* comparison method it is a
-**[heuristic]** generalization, not a theorem — I flag it as such rather than
-dress it up.
+**Supported at `n ≤ 6`:** the slowest BK mode has essentially full overlap with the
+one-particle span, even when that span is 3.6% of the space.
 
-The one place `λ_std` legitimately appears in a spectral identity is
-`ρ_std(η_P) = S_P` for the **Cayley** walk (§1.1) — which requires the `S_n`
-action, i.e. requires *not* being constrained to `L(P)`. That is the real content
-of the obstruction, and it is upstream of the octopus.
+**But this is weak evidence for the programme, for a specific reason.** The repo's
+own analysis (`OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:282-290`) reports
+`n=7` **off-regime refuters** (`enum-n7-#600`, `#3`, `#20`) whose slow mode is
+explicitly **degree-2** — a lone frozen pair — with `λ₂^BK ≈ 0.98` against
+`λ_std ≈ 0.77`. A genuinely degree-2 slow mode has **small** overlap with `U`, i.e.
+`c ≈ 0` there. **My sweep does not reach those posets**, so §7.1 does *not*
+contradict them, and it must not be read as evidence that SD-quant is universal.
+
+**The decisive next experiment**, cheap and well-specified: compute `c(P)` on
+`enum-n7-#600/#3/#20` from the `mg-8b64` data. Predicted outcome `c ≈ 0`, which
+would show SD-quant is *conditional* on the all-pairs-frozen regime — matching the
+repo's `L1b ⟺ "all-pairs-frozen ⇒ standard dominance"`. I did not run it: it needs
+the specific `n=7` posets from that dataset, `|L(P)|` up to 5040, and the ticket
+bars large enumerations. **Flagged as the single highest-value follow-on.**
 
 ---
 
-## §7 Honest verdict
+## §8 Honest verdict
 
 **On the ticket's question** ("does any route yield a real partial result, or does
 the boundary term reduce to full standard dominance in every case?"): **neither.**
-The boundary terms do *not* reduce to full standard dominance — they are genuinely
-weaker and, in the tempering case, exactly identifiable (`ρ(T)`). But no route
-yields a partial result *about dominance*, because dominance as stated (SD-BK) is
-**false**, and no comparison method has `λ_std` in its range.
+The boundary terms do *not* reduce to full standard dominance — in the tempering
+case the term is exactly `ρ(T)`, strictly weaker and checkable. But no route
+yields a partial result *about dominance*, because SD-BK is **false** and `λ_std`
+is not in the range of any comparison method.
 
-**On the octopus framing.** The ticket's stated crux — "the octopus's rerouting
-passes through non-extensions, so the operator inequality does not restrict" — is
-correct as far as it goes, and I did not find a way around it. But it is **not the
-binding obstruction**, and a programme organized around defeating it would be
-solving the wrong problem. The binding obstruction is visible before any octopus:
-`L(P)` carries no `S_n` action, hence no invariant standard sector (§3.2), hence
-no reason for `λ_std` to be in the BK spectrum — confirmed by its absence in
+**On the octopus framing.** The ticket's stated crux is correct as a statement
+about the octopus (§5.0), and I found no way around it. But it is **not the
+binding obstruction**. Two independent reasons: (i) the conclusion the octopus
+would buy is already available, sharply, from Wilson 2004 (§4) — and it does not
+give dominance; (ii) the failure is visible before any octopus, since `L(P)`
+carries no `S_n` action, hence no invariant standard sector (§3.2), hence no
+reason for `λ_std` to be in the BK spectrum — confirmed by its absence in
 4306/4306 cases.
 
 **Corrections owed to the repo** (both load-bearing elsewhere):
 1. `OneThird-Spectral-NearOrdinalSum-KillShot-Probe.md` — the "0/132" GREEN is
-   **SD-Cayley** evidence; it should not be read as support for any BK-chain
-   statement. (`OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:311-315` already
-   corrects the scope; this doc explains *why* the two are inequivalent.)
+   **SD-Cayley** evidence and should not be read as support for any BK-chain
+   statement (§1.1).
 2. `OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:273-275` — "`λ_std ≤ λ₂^BK` (the
-   standard sector is a subspace)" is **false**; 583 counterexamples at `n≤5` plus
-   the infinite ordinal-sum family (§2.3). The premise (an invariant standard
-   sector in `L²(L(P))`) does not hold.
+   standard sector is a subspace)" — the justification is invalid, and the
+   inequality itself fails **exactly on the ordinal sums** (§2.4), i.e. exactly in
+   the programme's regime of interest.
 
-**What survives and is worth pursuing:**
-- **SD-quant** (§3.2) — the overlap formulation `‖P_U f‖² ≥ c‖f‖²` — is the
-  well-posed version of what the programme needs, and is untouched by anything
-  here. It is *not* implied by, and does not imply, SD-BK.
-- **T★ / the collar criterion** (§6.2) — a live, self-contained question about
-  `ρ(T)` with a proven reduction attached, yielding BK gap lower bounds.
+**Also worth recording:** the programme should know that
+`gap_BK ≥ (1−cos(π/n))/(n−1)` universally (Wilson 2004, §4). It is sharp, free,
+and I did not find it cited anywhere in the repo.
+
+**What to pursue:**
+- **SD-quant** (§7) — the well-posed version of the need, `c ≥ 0.979` at `n ≤ 6`,
+  with a specified decisive test at `n=7` (§7.3).
 - **The ordinal-sum product formula** (§2.3) — an exact, reusable theorem.
 
-**What should not be pursued:** lifting the octopus/CLR to `L(P)` *for the purpose
-of standard dominance*. The lift is exact on the antichain and dominance fails
-there hardest; the two are unrelated.
+**What not to pursue:** lifting the octopus/CLR to `L(P)` *for the purpose of
+standard dominance*. The lift is exact on the antichain and dominance fails there
+hardest; a sharp universal lift already exists and gives nothing. The two are
+unrelated.
 
 ---
 
-## §8 Reproduction and cross-references
+## §9 Literature, verified
+
+Statements below were checked against primary sources rather than paraphrased.
+
+- **Aldous's conjecture / CLR.** P. Caputo, T. M. Liggett, T. Richthammer, "Proof
+  of Aldous' spectral gap conjecture", *J. Amer. Math. Soc.* **23** (2010),
+  831–851, [doi:10.1090/S0894-0347-10-00659-4](https://doi.org/10.1090/S0894-0347-10-00659-4),
+  arXiv:0906.1238. Thm 1.2: for all weighted graphs with connected skeleton,
+  `λ₁^IP(G) = λ₁^RW(G)`. *(The arXiv title says "A recursive proof…"; cite the JAMS
+  form.)* Companion: A. B. Dieker, *SIAM J. Discrete Math.* **24** (2010), 191–206.
+- **Octopus inequality.** CLR Thm 2.3 (probabilistic form); equivalent group-algebra
+  form in F. Cesi, *Comm. Algebra* **44** (2016), 279–302, Thm 4.2
+  (arXiv:1310.6156). Hypotheses: `c_{xy} ≥ 0` only. Quoted in §5.0.
+- **Madras–Randall.** *Ann. Appl. Probab.* **12** (2002), 581–606, Thm 1.1:
+  `Gap(P) ≥ Θ^{-2} Gap(P_H) min_i Gap(P_{[A_i]})`. **Overlapping-cover theorem;
+  vacuous on a disjoint partition.** Proved via Caracciolo–Pelissetto–Sokal (1992,
+  unpublished, MR Appendix A). For disjoint partitions: **Martin–Randall**
+  (*CPC* **15** (2006), 411–448) or **JSTV**.
+- **JSTV.** Jerrum, Son, Tetali, Vigoda, *Ann. Appl. Probab.* **14** (2004),
+  1741–1765, Thm 1: `λ ≥ min{λ̄/3, λ̄λ_min/(3γ+λ̄)}` with escape parameter `γ`;
+  adds a log-Sobolev version and inductive-decomposition bounds.
+- **Diaconis–Saloff-Coste.** *Ann. Appl. Probab.* **3** (1993), 696–730, Thm 2.1
+  (congestion `A`, eq. 2.4) — **same state space required**. The groups paper is
+  *Ann. Probab.* **21** (1993), 2131–2156. Different state spaces: **A. Smith,
+  arXiv:1301.7357**; Dyer–Goldberg–Jerrum–Martin (*Probab. Surveys* **3** (2006),
+  89–111) explicitly *disclaim* such a theorem.
+- **Peres–Winkler censoring.** "Can Extra Updates Delay Mixing?", *Comm. Math.
+  Phys.* **323** (2013), no. 3, **1007–1016**, arXiv:1112.0603. Thm 1.1 —
+  stochastic domination + total variation, **monotone systems only**, and **no
+  spectral-gap conclusion**. *(A citation of "325, 907–917" is in circulation and
+  is wrong.)* Counterexample without monotonicity: Holroyd, arXiv:1101.4690.
+- **Tempering.** Woodard–Schmidler–Huber, *Ann. Appl. Probab.* **19** (2009),
+  617–640, Thm 3.1 / Cor. 3.1, with `δ(A)` a **normalized ratio** and a second
+  quantity `γ(A)`; torpid-mixing companion *EJP* **14** (2009), 780–804.
+  Madras–Zheng, *Random Structures Algorithms* **22** (2003), 66–97.
+- **The linear-extension chain.** Karzanov–Khachiyan, *Order* **8** (1991), 7–15
+  (`O(n^6 log n)`); Bubley–Dyer, *Discrete Math.* **201** (1999), 81–88
+  (`O(n³ log n)` — **for the parabolic chain `M_F`, not the uniform KK chain**);
+  **Wilson**, *Ann. Appl. Probab.* **14** (2004), 274–325, §6 + Table 1 + Prop. 3
+  (arXiv:math/0102193) — `Θ(n³ log n)` mixing for KK on general posets, and the
+  **universal gap bound of §4**. Survey: Chan–Pak, arXiv:2311.02743, §12.2.
+  *Different* chains do better (Ayyer–Schilling–Thiéry random-to-random,
+  arXiv:1412.7488) but are not adjacent-transposition chains.
+
+---
+
+## §10 Reproduction
 
 | Script | Produces | Certificate |
 |---|---|---|
-| `scripts/onethird_mg4a86_standard_dominance_target_audit.py` | §2.1 antichain table, §2.2 exhaustive `n=4,5` | `data/onethird-mg4a86-standard-dominance-target-audit.json` |
-| `scripts/onethird_mg4a86_sector_leakage_and_tempering.py` | §3.2 leakage, §5.2 endpoint, §5.4 sign change | `data/onethird-mg4a86-sector-leakage-tempering.json` |
-| `scripts/onethird_mg4a86_ordinal_sum_theorem_check.py` | §2.3 ordinal-sum theorem check | `data/onethird-mg4a86-ordinal-sum-check.json` |
+| `onethird_mg4a86_standard_dominance_target_audit.py` | §2.1, §2.2, §2.4, §2.5 | `data/onethird-mg4a86-standard-dominance-target-audit.json` |
+| `onethird_mg4a86_sector_leakage_and_tempering.py` | §3.2, §6.2, §6.4 | `data/onethird-mg4a86-sector-leakage-tempering.json` |
+| `onethird_mg4a86_ordinal_sum_theorem_check.py` | §2.3 | `data/onethird-mg4a86-ordinal-sum-check.json` |
+| `onethird_mg4a86_sdquant_overlap.py` | §7 | `data/onethird-mg4a86-sdquant-overlap.json` |
 
 All run under `python3.11` (the repo's numpy environment). No large enumerations:
-the largest sweep is 4111 labeled posets at `n=5`; state spaces are capped at
-`n ≤ 5` for the `n!`-sized tempered chains.
+largest sweep is 4111 labeled posets at `n=5`; `n!`-sized tempered chains capped at
+`n ≤ 5`; the `n=6` work is a capped random sample plus named structured cases.
 
 **Built-in controls** (each catches a specific failure mode):
 - antichain `λ₂^BK` vs. the closed-form single-particle value — validates the BK
-  matrix construction against CLR (residual `≤ 5.2e-15`);
-- antichain leakage ≈ 0 and `dim U = (n−1)²+1` — validates the sector projector
-  *(this control caught a real bug: an initial QR-based rank filter reported
-  `dim U = 11` and leakage `0.218` on antichain-4, where both must be `10` and
-  `0`; fixed with an SVD rank test)*;
-- **enumeration completeness**: the sweep finds `195` posets at `n=4` and `4111`
-  at `n=5`. Labeled partial orders number `219` and `4231` (OEIS A001035), and
-  the excluded `|L(P)|<2` cases are exactly the total orders (`4! = 24`,
-  `5! = 120`): `219−24 = 195` ✓, `4231−120 = 4111` ✓. The enumeration is
-  provably exhaustive, not a sample;
-- ordinal sums: `|L(P)| = Π|L(P_i)|` and the predicted gap formula — validates
-  §2.3;
-- tempered chain at `β=0` reproduces the uniform-`S_n` interchange gap, and
-  antichain rows are `β`-independent (`V ≡ 0`).
+  matrix against CLR (residual `≤ 5.2e-15`);
+- antichain leakage ≈ 0 and `dim U = (n−1)²+1` — validates the sector projector.
+  **This control caught a real bug:** an initial QR-based rank filter reported
+  `dim U = 11` and leakage `0.218` on antichain-4, where both must be `10` and `0`;
+  fixed with an SVD rank test;
+- **enumeration completeness**: the sweep finds `195` (`n=4`) and `4111` (`n=5`)
+  posets. Labeled partial orders number `219` and `4231` (OEIS A001035), and the
+  excluded `|L(P)|<2` cases are exactly the total orders (`24`, `120`):
+  `219−24 = 195` ✓, `4231−120 = 4111` ✓ — provably exhaustive, not a sample;
+- ordinal sums: `|L(P)| = Π|L(P_i)|` and the predicted gap formula (§2.3);
+- Wilson's universal bound reproduced exactly, 0/4306 violations (§4) — an
+  independent check of both the BK construction and the literature statement;
+- SD-quant control: `c = 1` on antichains, where the slowest mode provably *is* the
+  single-particle mode;
+- tempered chain at `β=0` reproduces the uniform-`S_n` interchange gap; antichain
+  rows are `β`-independent (`V ≡ 0`).
 
-**Repo cross-references:**
-`step1.tex:20-26`, `step8.tex:21-25,85-112` (BK definitions);
-`scripts/onethird_mgb0a6_spectral_killshot_probe.py:19-25,263-296,459-475`
-(`λ_std`, Cayley walk);
-`docs/OneThird-Spectral-NearOrdinalSum-KillShot-Probe.md:20,103-119,286` (SD-Cayley, 0/132);
-`docs/OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:269-315` (SD-quant, the false
-inequality, the scope correction);
-`docs/OneThird-L1b-ExpectedRank-Certificate.md:53-56` (`λ_std = 1` ⟺ ordinal sum).
+**Known numerical limits.** The `D^{1/2}WD^{-1/2}` symmetrization of the tempered
+chain is unusable for `β ≳ 40` (conditioning `~e^{βΔV}`); §6 uses raw eigenvalues.
+`n=6` results are a capped sample, not exhaustive. Nothing here reaches `n=7`.
+
+**Repo cross-references:** `step1.tex:20-26`, `step8.tex:21-25,85-112`;
+`scripts/onethird_mgb0a6_spectral_killshot_probe.py:19-25,263-296,459-475`;
+`docs/OneThird-Spectral-NearOrdinalSum-KillShot-Probe.md:20,103-119,286`;
+`docs/OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:269-315`;
+`docs/OneThird-L1b-ExpectedRank-Certificate.md:53-56`.
