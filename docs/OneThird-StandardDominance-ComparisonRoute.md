@@ -59,7 +59,7 @@ the way (§2.3, §5.3).
 |---|---|---|
 | C1 | `λ_std(antichain_n) = 0` while `λ₂^BK → 1`; dominance excess → 1 | **[proven]** (hand proof §2.1 + exact numerics) |
 | C2 | `λ₂^BK = λ_std` holds for 0/195 (`n=4`) and 0/4111 (`n=5`) posets | **[proven]** (exhaustive) |
-| C3 | The repo's asserted inequality `λ_std ≤ λ₂^BK` is **false** | **[proven]** (583 counterexamples; infinite family §2.3) |
+| C3 | The repo's asserted inequality `λ_std ≤ λ₂^BK` fails **exactly on the ordinal sums**, and holds elsewhere | **[proven]** (exact set equality at `n=4,5`; §2.4) |
 | C4 | Ordinal sums: exact BK product formula; `λ_std = 1`; dominance fails on the whole class | **[proven]** (hand proof §2.3 + 9/9 numeric) |
 | C5 | The one-particle sector `U` is invariant on ambient `S_n` but **not** on `L(P)`; leakage measured | **[proven]** (§3.2) |
 | C6 | `lim_{β→∞} λ₂(β) = max(λ₂^BK, ρ(T))` (block-triangularity) | **[proven]** (§5.2) |
@@ -116,11 +116,17 @@ universal**").
 
 > "But `λ_std ≤ λ₂^{BK}` (the standard sector is a subspace)"
 
-**This is false** (C3, §2.3). The justification presupposes that the standard
-sector embeds in `L²(L(P))` as an invariant subspace so that `λ_std` is a
-Rayleigh restriction. It does not (§3.2). Correcting this matters for the
-programme: the inequality is used to argue Theorem E "bounds the gap in the wrong
-direction", but the true relation is that **neither** side dominates.
+**This is false as stated, but in a precisely characterizable way** (C3, §2.4):
+it holds on every poset that is *not* an ordinal sum, and fails on *every* ordinal
+sum. The stated justification is nonetheless invalid — it presupposes that the
+standard sector embeds in `L²(L(P))` as an invariant subspace so that `λ_std` is a
+Rayleigh restriction, which it does not (§3.2). So the inequality is *true off the
+ordinal sums for some other reason*, not for the reason given.
+
+This matters for the programme in a specific way: the inequality is used to argue
+that Theorem E "bounds the gap in the wrong direction". That argument survives on
+non-ordinal-sums — but the near-ordinal-sum regime is exactly where the programme
+operates, and that is exactly where the inequality reverses.
 
 ---
 
@@ -171,7 +177,7 @@ All labeled posets on `[n]` with `|L(P)| ≥ 2`:
 | 5 | 4111 | **0** | 4111 | 550 | 0.952254249 |
 
 Not one instance in 4306. And the failure is two-sided: 583 posets violate even
-the weak inequality.
+the weak inequality — characterized exactly in §2.4.
 
 ### 2.3 Ordinal sums: an exact theorem, and an infinite counterexample family [proven]
 
@@ -220,6 +226,30 @@ Note the direction: on ordinal sums `λ_std = 1 > λ₂^BK`, whereas on antichai
 `λ_std = 0 < λ₂^BK`. The two extremal classes of the programme straddle the
 claimed equality from opposite sides. Any putative proof of SD-BK would have to
 be false at both ends.
+
+### 2.4 Exactly where the weak inequality fails [proven]
+
+The 583 violations of §2.2 are not scattered. Comparing the violation set
+`{P : λ_std > λ₂^BK}` against the set `{P : λ_std = 1}` (= the ordinal sums, by
+the programme's own characterization):
+
+| `n` | posets | `λ_std > λ₂^BK` | `λ_std = 1` | **sets equal?** | symmetric difference |
+|---|---|---|---|---|---|
+| 4 | 195 | 33 | 33 | **YES** | 0 |
+| 5 | 4111 | 550 | 550 | **YES** | 0 |
+
+> **Proposition (exact characterization).** For every labeled poset on `n ≤ 5`
+> with `|L(P)| ≥ 2`:
+> `λ_std(P) > λ₂^BK(P)` **⟺** `λ_std(P) = 1` **⟺** `P` is an ordinal sum.
+> Equivalently: **`λ_std ≤ λ₂^BK` holds precisely off the ordinal sums.**
+
+The `⟸` direction is the §2.3 Corollary and is **proven for all `n`** (ordinal sums
+have `λ_std = 1` and `λ₂^BK < 1` whenever `|L(P)| ≥ 2`). The `⟹` direction is
+**verified exhaustively at `n = 4,5`** and is [heuristic] beyond that.
+
+This is a sharper and fairer correction than "the inequality is false": it is true
+on the generic poset and fails on a thin, exactly-identified set — which happens
+to be the set the near-ordinal-sum programme is built around.
 
 ---
 

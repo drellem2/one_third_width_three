@@ -258,6 +258,47 @@ def main():
         print(f"      lambda_std > lambda_2^BK        : {len(ineq_violations)}")
         print(f"      worst excess (lam2-lam_std)     : {worst['excess']:.9f}")
 
+    # --- Test 2b. Adversarial checks on the refutation. --------------------
+    # (i) Could SD-BK be a mere NORMALIZATION slip, i.e. gap_BK = c * transport
+    #     gap for one universal constant c?  If so, max/min of the ratio = 1.
+    # (ii) Is the violation set {lambda_std > lambda_2^BK} EXACTLY the set
+    #     {lambda_std = 1} (= the ordinal sums)?
+    print()
+    print("=" * 74)
+    print("TEST 2b -- ADVERSARIAL: is SD-BK just a rescaling? is the violation")
+    print("           set exactly {lambda_std = 1}?")
+    print("=" * 74)
+    report["adversarial"] = {}
+    for n in (4, 5):
+        ratios, viol, lam1 = [], set(), set()
+        for i, P in enumerate(all_labeled_posets(n)):
+            les = P.linear_extensions()
+            if len(les) < 2:
+                continue
+            l2 = bk_lambda2(P)
+            ls = lambda_std(P)
+            g, tg = 1.0 - l2, 1.0 - ls
+            if tg > 1e-9:
+                ratios.append(g / tg)
+            if ls > l2 + 1e-9:
+                viol.add(i)
+            if abs(ls - 1.0) < 1e-9:
+                lam1.add(i)
+        ratios = np.array(ratios)
+        spread = float(ratios.max() / ratios.min())
+        report["adversarial"][f"n={n}"] = {
+            "ratio_min": float(ratios.min()), "ratio_max": float(ratios.max()),
+            "ratio_spread": spread, "uniform_constant_possible": spread < 1.0 + 1e-6,
+            "n_violations": len(viol), "n_lambda_std_eq_1": len(lam1),
+            "violation_set_equals_lambda1_set": viol == lam1,
+        }
+        print(f"  n={n}:")
+        print(f"    gap_BK / transport_gap : min={ratios.min():.6f} "
+              f"max={ratios.max():.6f} spread={spread:.1f}x "
+              f"-> uniform constant? {'YES' if spread < 1+1e-6 else 'NO'}")
+        print(f"    |{{lam_std > lam2}}|={len(viol)}  |{{lam_std=1}}|={len(lam1)}  "
+              f"sets equal? {viol == lam1}")
+
     # --- Test 3. Named posets. --------------------------------------------
     print()
     print("=" * 74)
@@ -285,7 +326,8 @@ def main():
                                 "excess": l2 - ls})
         print(f"{name:>36} {len(les):>7} {l2:>11.7f} {ls:>11.7f} {l2-ls:>11.7f}")
 
-    with open("data/onethird-mg4a86-standard-dominance-target-audit.json", "w") as f:
+    import os as _os; _repo = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    with open(_os.path.join(_repo, "data", "onethird-mg4a86-standard-dominance-target-audit.json"), "w") as f:
         json.dump(report, f, indent=2)
     print()
     print("wrote data/onethird-mg4a86-standard-dominance-target-audit.json")

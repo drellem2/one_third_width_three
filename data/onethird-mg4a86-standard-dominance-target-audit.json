@@ -195,5 +195,25 @@
       "lambda_std": 0.9999999999999998,
       "excess": -0.0999999999999992
     }
-  ]
+  ],
+  "adversarial": {
+    "n=4": {
+      "ratio_min": 0.09763107293781692,
+      "ratio_max": 0.9053090773899486,
+      "ratio_spread": 9.272755590492764,
+      "uniform_constant_possible": false,
+      "n_violations": 33,
+      "n_lambda_std_eq_1": 33,
+      "violation_set_equals_lambda1_set": true
+    },
+    "n=5": {
+      "ratio_min": 0.04774575140626203,
+      "ratio_max": 0.8988901936575873,
+      "ratio_spread": 18.82660063319675,
+      "uniform_constant_possible": false,
+      "n_violations": 550,
+      "n_lambda_std_eq_1": 550,
+      "violation_set_equals_lambda1_set": true
+    }
+  }
 }
