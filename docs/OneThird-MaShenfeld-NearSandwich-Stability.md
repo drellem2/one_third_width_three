@@ -584,6 +584,8 @@ available.
 > mechanism for the Kahn–Saks architecture. **Two routes designed from opposite ends converge on one
 > elementary, Stanley-free, AF-free statement.** That is the forward recommendation.*
 
+> **[REFUTED by mg-8f56 — see STATE.md]** This Φ→Var reduction is invalid: it caps a lower bound on Var and infers an upper bound (inequality-direction error). By the law of total variance, `Var(pos_σ x)` splits into a within-window term (which `Φ` bounds) plus a between-window term (which it does not — e.g. parallel p-chains: window `O(1)` but `Var = Θ(n)`). The canonical record is in STATE.md.
+
 **Honest caveat on the reduction.** (LOC) as stated quantifies over the threshold pair `(y^-, y^+)`,
 which depends on `x`; mg-dcae's version quantifies over inversions against `e`. The two are the same
 shape and I believe they are equivalent under (H) up to constants, but **I did not prove the
