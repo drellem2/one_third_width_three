@@ -1,0 +1,199 @@
+{
+  "antichain_family": [
+    {
+      "n": 2,
+      "lambda2_BK": 0.0,
+      "lambda_one_particle": 1.1102230246251565e-16,
+      "lambda_std": 0.0,
+      "aldous_residual": 1.1102230246251565e-16,
+      "dominance_excess": 0.0
+    },
+    {
+      "n": 3,
+      "lambda2_BK": 0.75,
+      "lambda_one_particle": 0.75,
+      "lambda_std": 8.412855744616967e-34,
+      "aldous_residual": 0.0,
+      "dominance_excess": 0.75
+    },
+    {
+      "n": 4,
+      "lambda2_BK": 0.9023689270621831,
+      "lambda_one_particle": 0.9023689270621825,
+      "lambda_std": 3.0814879110195774e-33,
+      "aldous_residual": 5.551115123125783e-16,
+      "dominance_excess": 0.9023689270621831
+    },
+    {
+      "n": 5,
+      "lambda2_BK": 0.952254248593738,
+      "lambda_one_particle": 0.9522542485937369,
+      "lambda_std": 7.247935643848064e-34,
+      "aldous_residual": 1.1102230246251565e-15,
+      "dominance_excess": 0.952254248593738
+    },
+    {
+      "n": 6,
+      "lambda2_BK": 0.9732050807568898,
+      "lambda_one_particle": 0.9732050807568877,
+      "lambda_std": 3.1587782340604515e-33,
+      "aldous_residual": 2.1094237467877974e-15,
+      "dominance_excess": 0.9732050807568898
+    },
+    {
+      "n": 7,
+      "lambda2_BK": 0.9834948113170751,
+      "lambda_one_particle": 0.9834948113170698,
+      "lambda_std": 2.9181079424226116e-33,
+      "aldous_residual": 5.218048215738236e-15,
+      "dominance_excess": 0.9834948113170751
+    }
+  ],
+  "exhaustive": {
+    "n=4": {
+      "tested": 195,
+      "dominance_holds": 0,
+      "dominance_fails": 195,
+      "lambda_std_gt_lambda2_violations": 33,
+      "worst_excess": {
+        "excess": 0.9023689270621831,
+        "lambda2_BK": 0.9023689270621831,
+        "lambda_std": 3.0814879110195774e-33,
+        "relation": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "n_le": 24
+      }
+    },
+    "n=5": {
+      "tested": 4111,
+      "dominance_holds": 0,
+      "dominance_fails": 4111,
+      "lambda_std_gt_lambda2_violations": 550,
+      "worst_excess": {
+        "excess": 0.952254248593738,
+        "lambda2_BK": 0.952254248593738,
+        "lambda_std": 7.247935643848064e-34,
+        "relation": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "n_le": 120
+      }
+    }
+  },
+  "named": [
+    {
+      "name": "antichain-4",
+      "n": 4,
+      "n_le": 24,
+      "lambda2_BK": 0.9023689270621831,
+      "lambda_std": 3.0814879110195774e-33,
+      "excess": 0.9023689270621831
+    },
+    {
+      "name": "N-poset (2+2): 0<2, 1<3",
+      "n": 4,
+      "n_le": 6,
+      "lambda2_BK": 0.9023689270621826,
+      "lambda_std": 0.7060113295832986,
+      "excess": 0.19635759747888404
+    },
+    {
+      "name": "chain-2 + antichain-2 (0<1, 2||3)",
+      "n": 4,
+      "n_le": 12,
+      "lambda2_BK": 0.902368927062183,
+      "lambda_std": 0.3468564716806982,
+      "excess": 0.5555124553814847
+    },
+    {
+      "name": "V (0<1, 0<2)",
+      "n": 3,
+      "n_le": 2,
+      "lambda2_BK": 0.5,
+      "lambda_std": 1.0,
+      "excess": -0.5
+    },
+    {
+      "name": "Lambda (0<2, 1<2)",
+      "n": 3,
+      "n_le": 2,
+      "lambda2_BK": 0.5,
+      "lambda_std": 1.0000000000000002,
+      "excess": -0.5000000000000002
+    },
+    {
+      "name": "antichain-3",
+      "n": 3,
+      "n_le": 6,
+      "lambda2_BK": 0.75,
+      "lambda_std": 8.412855744616967e-34,
+      "excess": 0.75
+    },
+    {
+      "name": "3+3 ordinal sum of antichains",
+      "n": 6,
+      "n_le": 36,
+      "lambda2_BK": 0.9000000000000006,
+      "lambda_std": 0.9999999999999998,
+      "excess": -0.0999999999999992
+    }
+  ]
+}

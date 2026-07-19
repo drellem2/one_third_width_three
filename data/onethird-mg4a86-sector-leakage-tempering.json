@@ -1,0 +1,698 @@
+{
+  "leakage": [
+    {
+      "name": "antichain-4",
+      "n": 4,
+      "n_le": 24,
+      "dim_U": 10,
+      "leakage": 9.475951084891268e-16
+    },
+    {
+      "name": "antichain-5",
+      "n": 5,
+      "n_le": 120,
+      "dim_U": 17,
+      "leakage": 1.472453097676533e-15
+    },
+    {
+      "name": "N-poset (2+2)",
+      "n": 4,
+      "n_le": 6,
+      "dim_U": 5,
+      "leakage": 0.14433756729740646
+    },
+    {
+      "name": "chain2+anti2 (0<1, 2||3)",
+      "n": 4,
+      "n_le": 12,
+      "dim_U": 8,
+      "leakage": 0.14433756729740643
+    },
+    {
+      "name": "V (0<1,0<2)+isolated 3",
+      "n": 4,
+      "n_le": 8,
+      "dim_U": 6,
+      "leakage": 0.09999999999999998
+    },
+    {
+      "name": "2+2 ordinal sum (anti2 -> anti2)",
+      "n": 4,
+      "n_le": 4,
+      "dim_U": 3,
+      "leakage": 2.466482008810487e-16
+    },
+    {
+      "name": "antichain-3",
+      "n": 3,
+      "n_le": 6,
+      "dim_U": 5,
+      "leakage": 3.8307554847397537e-16
+    }
+  ],
+  "tempering": {
+    "antichain-4": [
+      {
+        "beta": 0.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 0.25,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 0.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 1.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 1.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 2.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 3.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 5.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 8.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 12.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": null,
+        "beta_is_inf": true,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      }
+    ],
+    "antichain-5": [
+      {
+        "beta": 0.0,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": 0.25,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": 0.5,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": 1.0,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": 1.5,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": 2.0,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": 3.0,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": 5.0,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": 8.0,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": 12.0,
+        "beta_is_inf": false,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      },
+      {
+        "beta": null,
+        "beta_is_inf": true,
+        "lambda2": 0.9045084971874746,
+        "lambda_std": 1.1167586818774581e-33,
+        "excess": 0.9045084971874746
+      }
+    ],
+    "N-poset (2+2)": [
+      {
+        "beta": 0.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 0.25,
+        "beta_is_inf": false,
+        "lambda2": 0.8162981467100907,
+        "lambda_std": 0.08779462811843886,
+        "excess": 0.7285035185916519
+      },
+      {
+        "beta": 0.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8264672957902693,
+        "lambda_std": 0.17291535048340573,
+        "excess": 0.6535519453068637
+      },
+      {
+        "beta": 1.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8425257735761819,
+        "lambda_std": 0.326259948620394,
+        "excess": 0.5162658249557879
+      },
+      {
+        "beta": 1.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8535391447896334,
+        "lambda_std": 0.4484223563583879,
+        "excess": 0.40511678843124554
+      },
+      {
+        "beta": 2.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8607407193440975,
+        "lambda_std": 0.5376941026491995,
+        "excess": 0.323046616694898
+      },
+      {
+        "beta": 3.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8681642268790817,
+        "lambda_std": 0.6390449220258132,
+        "excess": 0.22911930485326848
+      },
+      {
+        "beta": 5.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8720585737410887,
+        "lambda_std": 0.6965608724237838,
+        "excess": 0.1754977013173049
+      },
+      {
+        "beta": 8.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8726470930749044,
+        "lambda_std": 0.7055378076003258,
+        "excess": 0.1671092854745786
+      },
+      {
+        "beta": 12.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8726774301782488,
+        "lambda_std": 0.7060026538695383,
+        "excess": 0.16667477630871053
+      },
+      {
+        "beta": null,
+        "beta_is_inf": true,
+        "lambda2": 0.8047378541243653,
+        "lambda_std": 0.7060113295832986,
+        "excess": 0.09872652454106667
+      }
+    ],
+    "chain2+anti2 (0<1, 2||3)": [
+      {
+        "beta": 0.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 0.25,
+        "beta_is_inf": false,
+        "lambda2": 0.8162981467100912,
+        "lambda_std": 0.04313264343739946,
+        "excess": 0.7731655032726917
+      },
+      {
+        "beta": 0.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8264672957902691,
+        "lambda_std": 0.08495162309010662,
+        "excess": 0.7415156727001625
+      },
+      {
+        "beta": 1.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8425257735761816,
+        "lambda_std": 0.16028832667032133,
+        "excess": 0.6822374469058603
+      },
+      {
+        "beta": 1.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8535391447896333,
+        "lambda_std": 0.22030552461674638,
+        "excess": 0.633233620172887
+      },
+      {
+        "beta": 2.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8607407193440975,
+        "lambda_std": 0.26416386178745616,
+        "excess": 0.5965768575566412
+      },
+      {
+        "beta": 3.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8681642268790811,
+        "lambda_std": 0.31395652960720416,
+        "excess": 0.554207697271877
+      },
+      {
+        "beta": 5.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8720585737410879,
+        "lambda_std": 0.3422135543665336,
+        "excess": 0.5298450193745543
+      },
+      {
+        "beta": 8.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8726470930749038,
+        "lambda_std": 0.3466238349546357,
+        "excess": 0.5260232581202682
+      },
+      {
+        "beta": 12.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8726774301782481,
+        "lambda_std": 0.3468522093872506,
+        "excess": 0.5258252207909975
+      },
+      {
+        "beta": null,
+        "beta_is_inf": true,
+        "lambda2": 0.8047378541243653,
+        "lambda_std": 0.3468564716806981,
+        "excess": 0.45788138244366716
+      }
+    ],
+    "V (0<1,0<2)+isolated 3": [
+      {
+        "beta": 0.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 0.25,
+        "beta_is_inf": false,
+        "lambda2": 0.8202057788890974,
+        "lambda_std": 0.0900481929366553,
+        "excess": 0.7301575859524421
+      },
+      {
+        "beta": 0.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8306212088786105,
+        "lambda_std": 0.1800845272077951,
+        "excess": 0.6505366816708154
+      },
+      {
+        "beta": 1.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8401479267672283,
+        "lambda_std": 0.34214967152517817,
+        "excess": 0.4979982552420501
+      },
+      {
+        "beta": 1.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8401330951685376,
+        "lambda_std": 0.4648823821806142,
+        "excess": 0.37525071298792345
+      },
+      {
+        "beta": 2.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8353409413407435,
+        "lambda_std": 0.5482902570059949,
+        "excess": 0.2870506843347487
+      },
+      {
+        "beta": 3.0,
+        "beta_is_inf": false,
+        "lambda2": 0.821669099600294,
+        "lambda_std": 0.6350986756889435,
+        "excess": 0.18657042391135048
+      },
+      {
+        "beta": 5.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 0.6803487172749973,
+        "excess": 0.12438913684936781
+      },
+      {
+        "beta": 8.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243653,
+        "lambda_std": 0.6871435897409708,
+        "excess": 0.11759426438339449
+      },
+      {
+        "beta": 12.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243653,
+        "lambda_std": 0.6874934717806667,
+        "excess": 0.1172443823436986
+      },
+      {
+        "beta": null,
+        "beta_is_inf": true,
+        "lambda2": 0.804737854124365,
+        "lambda_std": 0.6875,
+        "excess": 0.11723785412436505
+      }
+    ],
+    "2+2 ordinal sum (anti2 -> anti2)": [
+      {
+        "beta": 0.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8047378541243652,
+        "lambda_std": 2.777630231632401e-34,
+        "excess": 0.8047378541243652
+      },
+      {
+        "beta": 0.25,
+        "beta_is_inf": false,
+        "lambda2": 0.8230794351053258,
+        "lambda_std": 0.174134009150113,
+        "excess": 0.6489454259552128
+      },
+      {
+        "beta": 0.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8316199900312446,
+        "lambda_std": 0.3351876372907859,
+        "excess": 0.49643235274045877
+      },
+      {
+        "beta": 1.0,
+        "beta_is_inf": false,
+        "lambda2": 0.8299614812630881,
+        "lambda_std": 0.5899319579077535,
+        "excess": 0.24002952335533456
+      },
+      {
+        "beta": 1.5,
+        "beta_is_inf": false,
+        "lambda2": 0.8149656750497797,
+        "lambda_std": 0.754822251751024,
+        "excess": 0.06014342329875566
+      },
+      {
+        "beta": 2.0,
+        "beta_is_inf": false,
+        "lambda2": 0.7949749372620922,
+        "lambda_std": 0.8546781083759366,
+        "excess": -0.05970317111384438
+      },
+      {
+        "beta": 3.0,
+        "beta_is_inf": false,
+        "lambda2": 0.755255543429509,
+        "lambda_std": 0.9485587656392872,
+        "excess": -0.19330322220977825
+      },
+      {
+        "beta": 5.0,
+        "beta_is_inf": false,
+        "lambda2": 0.7031159237740696,
+        "lambda_std": 0.9932285346479913,
+        "excess": -0.2901126108739217
+      },
+      {
+        "beta": 8.0,
+        "beta_is_inf": false,
+        "lambda2": 0.6751874729112969,
+        "lambda_std": 0.9996644530367584,
+        "excess": -0.32447698012546156
+      },
+      {
+        "beta": 12.0,
+        "beta_is_inf": false,
+        "lambda2": 0.6678310637122493,
+        "lambda_std": 0.9999938557593334,
+        "excess": -0.3321627920470841
+      },
+      {
+        "beta": null,
+        "beta_is_inf": true,
+        "lambda2": 0.3333333333333335,
+        "lambda_std": 1.0000000000000002,
+        "excess": -0.6666666666666667
+      }
+    ],
+    "antichain-3": [
+      {
+        "beta": 0.0,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": 0.25,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": 0.5,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": 1.0,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": 1.5,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": 2.0,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": 3.0,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": 5.0,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": 8.0,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": 12.0,
+        "beta_is_inf": false,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      },
+      {
+        "beta": null,
+        "beta_is_inf": true,
+        "lambda2": 0.5,
+        "lambda_std": 8.412855744616967e-34,
+        "excess": 0.5
+      }
+    ]
+  },
+  "endpoint": [
+    {
+      "name": "N-poset (2+2)",
+      "betas": [
+        5.0,
+        10.0,
+        20.0,
+        40.0,
+        80.0
+      ],
+      "lambda2_at_betas": [
+        0.8720585737410892,
+        0.8726738135674295,
+        0.8726779960600685,
+        0.8726779962499654,
+        0.8726779962499647
+      ],
+      "lambda2_BK_block_matched_clock": 0.8047378541243654,
+      "transient_block_spectral_radius": 0.8726779962499657,
+      "limit": 0.8726779962499647,
+      "limit_governed_by": "transient",
+      "limit_equals_BK": false
+    },
+    {
+      "name": "chain2+anti2 (0<1, 2||3)",
+      "betas": [
+        5.0,
+        10.0,
+        20.0,
+        40.0,
+        80.0
+      ],
+      "lambda2_at_betas": [
+        0.872058573741089,
+        0.8726738135674281,
+        0.8726779960600706,
+        0.8726779962499652,
+        0.8726779962499652
+      ],
+      "lambda2_BK_block_matched_clock": 0.8047378541243647,
+      "transient_block_spectral_radius": 0.8726779962499648,
+      "limit": 0.8726779962499652,
+      "limit_governed_by": "transient",
+      "limit_equals_BK": false
+    },
+    {
+      "name": "V (0<1,0<2)+isolated 3",
+      "betas": [
+        5.0,
+        10.0,
+        20.0,
+        40.0,
+        80.0
+      ],
+      "lambda2_at_betas": [
+        0.804737854124365,
+        0.8047378541243656,
+        0.804737854124366,
+        0.804737854124365,
+        0.804737854124366
+      ],
+      "lambda2_BK_block_matched_clock": 0.8047378541243647,
+      "transient_block_spectral_radius": 0.7852247705293813,
+      "limit": 0.804737854124366,
+      "limit_governed_by": "BK",
+      "limit_equals_BK": true
+    },
+    {
+      "name": "2+2 ordinal sum (anti2 -> anti2)",
+      "betas": [
+        5.0,
+        10.0,
+        20.0,
+        40.0,
+        80.0
+      ],
+      "lambda2_at_betas": [
+        0.7031159237740549,
+        0.6698278320319138,
+        0.6666880412547926,
+        0.666668421674681,
+        0.6666679893067966
+      ],
+      "lambda2_BK_block_matched_clock": 0.3333333333333335,
+      "transient_block_spectral_radius": 0.6666666776540592,
+      "limit": 0.6666679893067966,
+      "limit_governed_by": "transient",
+      "limit_equals_BK": false
+    }
+  ]
+}
