@@ -1,0 +1,265 @@
+{
+ "beta_sah": {
+  "decimal": "0.34884346742240945893",
+  "min_poly": "33625952 x^2 - 23459572 x + 4091717",
+  "radical": "(5864893 + 27*sqrt(57))/16812976"
+ },
+ "description": "Peczarski ladder-with-broken-rungs family L_{n;S}: min delta per size. n<=19 exhaustive over all 2^(n-3) broken-rung subsets; n>=20 1-/2-flip local search (upper bound only).",
+ "kappa_chen": {
+  "decimal": "0.34889999217940447361",
+  "min_poly": "32 x^2 - 186 x + 61",
+  "radical": "(93 - sqrt(6697))/32"
+ },
+ "profile": {
+  "10": {
+   "broken_rungs": [
+    1,
+    5
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "37/106",
+   "delta_float": 0.3490566037735849
+  },
+  "11": {
+   "broken_rungs": [
+    1,
+    6
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "20/57",
+   "delta_float": 0.3508771929824561
+  },
+  "12": {
+   "broken_rungs": [
+    1,
+    7
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "97/277",
+   "delta_float": 0.35018050541516244
+  },
+  "13": {
+   "broken_rungs": [
+    1,
+    8
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "157/448",
+   "delta_float": 0.35044642857142855
+  },
+  "14": {
+   "broken_rungs": [
+    1,
+    9
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "254/725",
+   "delta_float": 0.3503448275862069
+  },
+  "15": {
+   "broken_rungs": [
+    1,
+    5,
+    6,
+    10
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "166/475",
+   "delta_float": 0.3494736842105263
+  },
+  "16": {
+   "broken_rungs": [
+    1,
+    11
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "665/1898",
+   "delta_float": 0.35036880927291886
+  },
+  "17": {
+   "broken_rungs": [
+    1,
+    5,
+    8,
+    12
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "1304/3737",
+   "delta_float": 0.34894300240834897
+  },
+  "18": {
+   "broken_rungs": [
+    1,
+    5,
+    6,
+    9,
+    13
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "387/1108",
+   "delta_float": 0.3492779783393502
+  },
+  "19": {
+   "broken_rungs": [
+    1,
+    5,
+    6,
+    9,
+    10,
+    14
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "458/1311",
+   "delta_float": 0.3493516399694889
+  },
+  "20": {
+   "broken_rungs": [
+    1,
+    5,
+    8,
+    11,
+    15
+   ],
+   "coverage": "local-search-ladder",
+   "delta": "6059/17366",
+   "delta_float": 0.34890014971783945
+  },
+  "21": {
+   "broken_rungs": [
+    1,
+    5,
+    8,
+    9,
+    12,
+    16
+   ],
+   "coverage": "local-search-ladder",
+   "delta": "5402/15485",
+   "delta_float": 0.3488537294155635
+  },
+  "22": {
+   "broken_rungs": [
+    1,
+    5,
+    6,
+    9,
+    12,
+    13,
+    17
+   ],
+   "coverage": "local-search-ladder",
+   "delta": "1065/3049",
+   "delta_float": 0.3492948507707445
+  },
+  "23": {
+   "broken_rungs": [
+    1,
+    5,
+    8,
+    11,
+    14,
+    18
+   ],
+   "coverage": "local-search-ladder",
+   "delta": "28148/80675",
+   "delta_float": 0.3489061047412457
+  },
+  "24": {
+   "broken_rungs": [
+    1,
+    5,
+    8,
+    9,
+    12,
+    15,
+    19
+   ],
+   "coverage": "local-search-ladder",
+   "delta": "25091/71912",
+   "delta_float": 0.3489125597953054
+  },
+  "25": {
+   "broken_rungs": [
+    1,
+    5,
+    8,
+    9,
+    12,
+    13,
+    16,
+    20
+   ],
+   "coverage": "local-search-ladder",
+   "delta": "7451/21359",
+   "delta_float": 0.34884591975279744
+  },
+  "26": {
+   "broken_rungs": [
+    1,
+    5,
+    8,
+    11,
+    14,
+    17,
+    21
+   ],
+   "coverage": "local-search-ladder",
+   "delta": "130769/374798",
+   "delta_float": 0.3489052769758643
+  },
+  "27": {
+   "broken_rungs": [
+    1,
+    5,
+    8,
+    11,
+    14,
+    15,
+    18,
+    22
+   ],
+   "coverage": "local-search-ladder",
+   "delta": "116570/334103",
+   "delta_float": 0.3489043797870717
+  },
+  "6": {
+   "broken_rungs": [
+    1
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "5/14",
+   "delta_float": 0.35714285714285715
+  },
+  "7": {
+   "broken_rungs": [
+    1,
+    2
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "9/25",
+   "delta_float": 0.36
+  },
+  "8": {
+   "broken_rungs": [
+    1,
+    2,
+    3
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "17/46",
+   "delta_float": 0.3695652173913043
+  },
+  "9": {
+   "broken_rungs": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "coverage": "exhaustive-ladder",
+   "delta": "6/17",
+   "delta_float": 0.35294117647058826
+  }
+ },
+ "work_item": "mg-0eac"
+}

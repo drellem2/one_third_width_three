@@ -1,0 +1,482 @@
+{
+ "beam_ladder": {
+  "14": {
+   "argmin_below": [
+    64,
+    65,
+    8387,
+    8647,
+    9167,
+    9183,
+    0,
+    8256,
+    8385,
+    8643,
+    9159,
+    10191,
+    12255,
+    0
+   ],
+   "min_delta": "254/725",
+   "min_delta_float": 0.3503448275862069,
+   "stats": {
+    "beam": 400,
+    "depths": 12,
+    "evaluated": 14957,
+    "seconds": 9.9,
+    "seeds": 262
+   }
+  },
+  "15": {
+   "argmin_below": [
+    16448,
+    24641,
+    24771,
+    25031,
+    25551,
+    25567,
+    0,
+    8256,
+    24769,
+    25027,
+    25543,
+    26575,
+    28639,
+    64,
+    0
+   ],
+   "min_delta": "137/391",
+   "min_delta_float": 0.35038363171355497,
+   "stats": {
+    "beam": 400,
+    "depths": 13,
+    "evaluated": 17162,
+    "seconds": 12.5,
+    "seeds": 282
+   }
+  },
+  "16": {
+   "argmin_below": [
+    16448,
+    24641,
+    24771,
+    25031,
+    25551,
+    26591,
+    0,
+    8256,
+    24769,
+    25027,
+    25543,
+    26575,
+    28671,
+    64,
+    0,
+    28623
+   ],
+   "min_delta": "665/1898",
+   "min_delta_float": 0.35036880927291886,
+   "stats": {
+    "beam": 400,
+    "depths": 13,
+    "evaluated": 18315,
+    "seconds": 14.5,
+    "seeds": 302
+   }
+  },
+  "17": {
+   "argmin_below": [
+    16448,
+    24641,
+    24771,
+    90567,
+    91087,
+    92127,
+    0,
+    8256,
+    24769,
+    25031,
+    25543,
+    92111,
+    94207,
+    64,
+    0,
+    94159,
+    25025
+   ],
+   "min_delta": "1304/3737",
+   "min_delta_float": 0.34894300240834897,
+   "stats": {
+    "beam": 400,
+    "depths": 13,
+    "evaluated": 19523,
+    "seconds": 16.9,
+    "seeds": 322
+   }
+  },
+  "18": {
+   "argmin_below": [
+    16448,
+    24641,
+    24771,
+    90567,
+    92111,
+    223199,
+    0,
+    8256,
+    24769,
+    25031,
+    25543,
+    223183,
+    225279,
+    64,
+    0,
+    225231,
+    25025,
+    90575
+   ],
+   "min_delta": "387/1108",
+   "min_delta_float": 0.3492779783393502,
+   "stats": {
+    "beam": 400,
+    "depths": 12,
+    "evaluated": 24680,
+    "seconds": 22.8,
+    "seeds": 650
+   }
+  }
+ },
+ "beta_chen": 0.34889999217940426,
+ "beta_peczarski_sah": 0.3488433993,
+ "beta_threshold": 0.3488433993,
+ "controls": [
+  [
+   "T",
+   3,
+   "1/3",
+   "M1=M2=M3=M4=MC",
+   true
+  ],
+  [
+   "A3",
+   3,
+   "1/2",
+   "M1=M2=M3=M4=MC",
+   true
+  ],
+  [
+   "A4",
+   4,
+   "1/2",
+   "M1=M2=M3=M4=MC",
+   true
+  ],
+  [
+   "A5",
+   5,
+   "1/2",
+   "M1=M2=M3=M4=MC",
+   true
+  ],
+  [
+   "T(+)T",
+   6,
+   "1/3",
+   "M1=M2=M3=M4=MC",
+   true
+  ],
+  [
+   "w2-n10-argmin",
+   10,
+   "37/106",
+   "M1=M2=M3=M4=MC",
+   true
+  ]
+ ],
+ "exhaustive_allwidth": {
+  "2": {
+   "argmin_below": [
+    0,
+    0
+   ],
+   "classes": 2,
+   "min_delta": "1/2",
+   "min_delta_float": 0.5,
+   "primitive": 1
+  },
+  "3": {
+   "argmin_below": [
+    0,
+    0,
+    1
+   ],
+   "classes": 5,
+   "min_delta": "1/3",
+   "min_delta_float": 0.3333333333333333,
+   "primitive": 2
+  },
+  "4": {
+   "argmin_below": [
+    0,
+    0,
+    1,
+    3
+   ],
+   "classes": 16,
+   "min_delta": "2/5",
+   "min_delta_float": 0.4,
+   "primitive": 7
+  },
+  "5": {
+   "argmin_below": [
+    0,
+    0,
+    1,
+    1,
+    7
+   ],
+   "classes": 63,
+   "min_delta": "4/11",
+   "min_delta_float": 0.36363636363636365,
+   "primitive": 31
+  },
+  "6": {
+   "argmin_below": [
+    0,
+    0,
+    1,
+    3,
+    15,
+    5
+   ],
+   "classes": 318,
+   "min_delta": "5/14",
+   "min_delta_float": 0.35714285714285715,
+   "primitive": 184
+  },
+  "7": {
+   "argmin_below": [
+    0,
+    0,
+    1,
+    1,
+    7,
+    7,
+    31
+   ],
+   "classes": 2045,
+   "min_delta": "14/39",
+   "min_delta_float": 0.358974358974359,
+   "primitive": 1351
+  },
+  "8": {
+   "argmin_below": [
+    0,
+    0,
+    1,
+    3,
+    11,
+    5,
+    63,
+    39
+   ],
+   "classes": 16999,
+   "min_delta": "16/45",
+   "min_delta_float": 0.35555555555555557,
+   "primitive": 12524
+  },
+  "9": {
+   "argmin_below": [
+    0,
+    0,
+    1,
+    3,
+    11,
+    27,
+    5,
+    69,
+    223
+   ],
+   "classes": 183231,
+   "min_delta": "6/17",
+   "min_delta_float": 0.35294117647058826,
+   "primitive": 146468
+  }
+ },
+ "exhaustive_allwidth_covered_nmax": 9,
+ "exhaustive_width2": {
+  "10": {
+   "argmin_below": [
+    0,
+    1,
+    3,
+    103,
+    111,
+    0,
+    33,
+    99,
+    231,
+    495
+   ],
+   "generated": 58784,
+   "min_delta": "37/106",
+   "min_delta_float": 0.3490566037735849
+  },
+  "11": {
+   "argmin_below": [
+    0,
+    33,
+    99,
+    231,
+    239,
+    0,
+    32,
+    96,
+    227,
+    487,
+    1007
+   ],
+   "generated": 208010,
+   "min_delta": "20/57",
+   "min_delta_float": 0.3508771929824561
+  },
+  "12": {
+   "argmin_below": [
+    0,
+    1,
+    3,
+    199,
+    463,
+    479,
+    0,
+    65,
+    195,
+    455,
+    975,
+    2015
+   ],
+   "generated": 742898,
+   "min_delta": "97/277",
+   "min_delta_float": 0.35018050541516244
+  },
+  "13": {
+   "argmin_below": [
+    0,
+    65,
+    195,
+    455,
+    975,
+    991,
+    0,
+    64,
+    192,
+    451,
+    967,
+    1999,
+    4063
+   ],
+   "generated": 2674438,
+   "min_delta": "157/448",
+   "min_delta_float": 0.35044642857142855
+  },
+  "4": {
+   "argmin_below": [
+    0,
+    1,
+    0,
+    5
+   ],
+   "generated": 40,
+   "min_delta": "2/5",
+   "min_delta_float": 0.4
+  },
+  "5": {
+   "argmin_below": [
+    0,
+    5,
+    0,
+    4,
+    13
+   ],
+   "generated": 130,
+   "min_delta": "3/8",
+   "min_delta_float": 0.375
+  },
+  "6": {
+   "argmin_below": [
+    0,
+    1,
+    3,
+    0,
+    9,
+    27
+   ],
+   "generated": 427,
+   "min_delta": "5/14",
+   "min_delta_float": 0.35714285714285715
+  },
+  "7": {
+   "argmin_below": [
+    0,
+    9,
+    11,
+    0,
+    8,
+    24,
+    59
+   ],
+   "generated": 1428,
+   "min_delta": "9/25",
+   "min_delta_float": 0.36
+  },
+  "8": {
+   "argmin_below": [
+    0,
+    1,
+    3,
+    23,
+    0,
+    17,
+    49,
+    119
+   ],
+   "generated": 4860,
+   "min_delta": "16/45",
+   "min_delta_float": 0.35555555555555557
+  },
+  "9": {
+   "argmin_below": [
+    0,
+    17,
+    19,
+    23,
+    0,
+    16,
+    48,
+    112,
+    247
+   ],
+   "generated": 16794,
+   "min_delta": "6/17",
+   "min_delta_float": 0.35294117647058826
+  }
+ },
+ "params": {
+  "beam": 400,
+  "exhaustive_nmax": 9,
+  "json": "data/onethird-mg0eac-primitive-delta-search.json",
+  "keep": 30,
+  "ladder_nmax": 18,
+  "quick": false,
+  "width2_nmax": 13
+ },
+ "seconds": 455.3,
+ "sub_beta_hits": [],
+ "verdict_best": {
+  "delta": "1304/3737",
+  "delta_float": 0.34894300240834897,
+  "n": 17,
+  "source": "beam"
+ },
+ "work_item": "mg-0eac"
+}
