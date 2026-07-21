@@ -660,7 +660,14 @@ def beam_search_at_n(n, seeds, beam=200, max_depth=None, verbose=True,
                 scored.append((d, k, nb))
                 if best is None or d < best:
                     best, best_b = d, list(nb)
-                    if record is not None and float(d) < BETA_THRESHOLD:
+                    # EXACT, not float (mg-8489, audit finding F4): BETA_THRESHOLD
+                    # is a float and `d` a Fraction, so `float(d) < BETA_THRESHOLD`
+                    # was the one beta comparison in this file that did not honour
+                    # sec.0's blanket "exact, not floating point" claim.  No verdict
+                    # ever depended on it -- the tightest margin in play is 2.45e-6
+                    # against double precision ~1e-16 -- but the flag now matches
+                    # the claim.  `lt_beta_sah` is the same predicate sec.10 uses.
+                    if record is not None and lt_beta_sah(d):
                         record.append(("SUB-BETA", n, d, list(nb)))
         if not scored:
             break
@@ -827,7 +834,9 @@ def main():
         t = time.time()
         d, b, cnt = exhaustive_width2_min_delta(n)
         w2[n] = (d, b, cnt)
-        flag = " <-- SUB-BETA" if d is not None and float(d) < BETA_THRESHOLD else ""
+        # EXACT (mg-8489, audit finding F4) -- see the note at the beam's
+        # sub_beta_records flag; same repair, same reason.
+        flag = " <-- SUB-BETA" if d is not None and lt_beta_sah(d) else ""
         print(f"  n={n:2d}  generated={cnt:>10,}  min delta = {d} ~ "
               f"{float(d):.9f}{flag}  ({time.time()-t:.1f}s)", flush=True)
         if d is not None and d <= THIRD:

@@ -27,9 +27,11 @@ The lowest `δ` found over **primitive** posets with `n ≥ 4`, anywhere in this
 
 The margin above `β` is `7451/21359 − β ≈ 2.45·10⁻⁶` — the search gets within about two parts per million of the conjectured boundary **and does not cross it**.
 
-**No poset with `δ < 1/3` was found. No poset with `δ ∈ (1/3, β)` was found.** Every comparison against `β` in this document is **exact rational-vs-algebraic arithmetic**, not floating point (§1.2) — necessary, because the search operates within `~10⁻⁶` of `β`.
+**No poset with `δ < 1/3` was found. No poset with `δ ∈ (1/3, β)` was found.** Every reported comparison against `β` in this document is **exact rational-vs-algebraic arithmetic**, not floating point (§1.2) — necessary, because the search operates within `~10⁻⁶` of `β`.
 
-> **§9 (added by the resume session) extends this to the width ≥ 3 arena**, which §§0–8 left as their one uncovered region: exhaustive at width **exactly 3** for `n ≤ 11` (min `6/17` at `n = 10`, a proven minimum) and a bounded width-≥3 beam for `12 ≤ n ≤ 16`. **Nothing below `β` there either**, and nothing close — the width-3 best sits `4.1·10⁻³` above `β` versus the ladder record's `2.45·10⁻⁶`. The headline above is unchanged.
+> *Scoped by independent audit (§9.8, finding F4).* The blanket form of that sentence was marginally stronger than the code: two **display flags** in the §§0–8 script (`sub_beta_records`, and the width-2 `<-- SUB-BETA` marker) used `float(d) < BETA_THRESHOLD` rather than the exact predicate. Neither ever gated a reported verdict, and the tightest margin in play (`2.45·10⁻⁶`) sits ten orders of magnitude clear of double precision, so nothing could have flipped. **mg-8489 made both flags exact** (`lt_beta_sah`), and verified that the exact and float predicates agree on all 60 rationals appearing in the committed certificates — **0 disagreements**, so no recorded output changes. The sentence above is now true of the code as well as of the results.
+
+> **§9 (added by the resume session) extends this to width EXACTLY 3, and only up to `n = 11` for anything proven.** §§0–8 left width ≥ 3 as their one uncovered region; §9 covers **part** of it: **exhaustive at width exactly 3 for `n ≤ 11`** (min `6/17` at `n = 10`, a proven minimum) plus a **bounded, demonstrably incomplete** width-≥3 beam for `12 ≤ n ≤ 16`. **Nothing below `β` there either**, and nothing close — the width-3 best sits `4.1·10⁻³` above `β` versus the ladder record's `2.45·10⁻⁶`. **Width ≥ 4 received no coverage at any `n ≥ 10`.** The headline above is unchanged. See §9.0 for the claimed/not-claimed table and §9.7 for the audited statement of scope, §9.8 for the audit itself.
 
 ### The correction
 
@@ -333,7 +335,7 @@ Stated explicitly so "nothing below `β`" is not read as more than it is. **No s
 | width **exactly 3** | `n ≤ 11` | **exhaustive** (prune-certified, §9.2) — min `6/17` at `n = 10` | proven minimum over width 3 |
 | width ≥ 3, constrained beam | `12 ≤ n ≤ 16` | **bounded beam** (misses at `n = 10`, §9.3c) | upper bound only |
 | **widths ≥ 3, `n ≥ 17`** | — | **NOT COVERED** | **residual gap** |
-| **widths ≥ 4, `n ≥ 12`** | — | **NOT COVERED** except incidentally by the beam | **residual gap** |
+| **widths ≥ 4, `n ≥ 10`** | — | **NOT COVERED** — the all-width exhaustive sweep stops at `n ≤ 9`, §9 is width **exactly** 3, and every §9.3b beam argmin at `n = 12…16` has width exactly 3, so the beam did not incidentally cover it either (audit F5, §9.8) | **residual gap — the widest one** |
 
 **The honest gap.** *(Partly closed by §9 — this paragraph is the original assessment; read it with §9.5.)* The `§§0–8` search does not speak to **width ≥ 3 at `n ≥ 12`** at all. Two reasons not to weight it heavily, both **heuristics, not arguments**: (a) every known `β`-extremal family — Peczarski's ladders, Chen's `P(5k,5k)`, Sah's `Tₙ` — is **width 2**; (b) `δ` trends upward with width (the antichain, maximally wide, has the largest possible `δ = 1/2`), and Olson–Sagan report the smallest known `δ` at width `> 2` is `14/39 ≈ 0.3590`, far above `β`, with computer search to 9 elements finding nothing smaller. But a genuine low-`δ` wide poset at `n ≥ 12` would be missed here.
 
@@ -379,13 +381,20 @@ python3 scripts/onethird_mg0eac_width3_gap_search.py \
 
 # fast self-test for the gap pass (~1 minute)
 python3 scripts/onethird_mg0eac_width3_gap_search.py --quick
+
+# CAN THE GATE FAIL?  negative control on the fast_Q gate extension (~1 second)
+python3 scripts/onethird_mg8489_fastq_gate_control.py
+# ... plus the 9 398-poset cross-check through the shipped gate (~60 seconds)
+python3 scripts/onethird_mg8489_fastq_gate_control.py --sweep
 ```
 
 Pure standard library. Both scripts **assert** every positive control (internal and the external Peczarski table) and **raise** `SubBetaHalt` on any `δ ≤ 1/3` candidate (scoped to `n ≥ 4`, per the `T` exception of §0), so neither a silent engine regression nor an unreviewed counterexample claim can pass through. The §9 script additionally **asserts** its width-prune certification (§9.2) and imports the `δ` engine from the §§0–8 script verbatim — nothing is re-implemented.
 
+**The controls are proven able to fail.** A positive control that cannot be made to fail on deliberately broken input is not a control. The independent audit corrupted each engine and confirmed the gate catches it, and forced a sub-`1/3` `δ` inside the sweep and confirmed `SubBetaHalt` fires rather than passing the candidate through silently (`scripts/audit_mg0eac_negative_controls.py`). The one engine the gate did **not** cover — `fast_Q`, the engine every sweep actually runs — is covered as of mg-8489, with its own can-it-fail control above (§9.2 Gate 1, §9.8 F2).
+
 ---
 
-## 9. Closing pass on the one named gap — width ≥ 3 at `n ≥ 12`
+## 9. Narrowing pass on the one named gap — width ≥ 3 at `n ≥ 12`
 
 *Added by the mg-0eac **resume session**, 2026-07-21 (the original session's process was lost in a fleet restart; its work was recovered from disk before this section was begun — see §9.6). Script: [`scripts/onethird_mg0eac_width3_gap_search.py`](../scripts/onethird_mg0eac_width3_gap_search.py). Certificate: [`data/onethird-mg0eac-width3-gap.json`](../data/onethird-mg0eac-width3-gap.json).*
 
@@ -395,12 +404,14 @@ Pure standard library. Both scripts **assert** every positive control (internal 
 
 This section attacks that region. **It narrows the gap; it does not close it.**
 
+> **The commit subject of `a90f0f7` — "close out the width>=3, n>=12 gap" — overstates this section, and this sentence is the correct record.** Independent audit finding F1 (§9.8). Any ledger, roadmap or release note derived from that subject must say **narrows**, not closes: at `n ≥ 12` the only coverage is a bounded beam which, by its own validation (§9.3c), misses the true optimum at 1 of the 3 sizes where the truth is known. Commit history cannot be rewritten; this note is the in-repo correction.
+
 ### 9.0 What is and is not claimed
 
 | | |
 |:--|:--|
 | **Claimed** | an **exhaustive** min-`δ` profile over primitive posets of width **exactly 3** for `n ≤ 11`; a **bounded** width-≥3-constrained coherence beam for `12 ≤ n ≤ 16`; **nothing below `β` in either** |
-| **NOT claimed** | any exhaustive statement at width ≥ 3 for `n ≥ 12`; any statement at width ≥ 4 for `n ≥ 12` beyond what the beam happened to visit |
+| **NOT claimed** | any exhaustive statement at width ≥ 3 for `n ≥ 12`; any statement at width ≥ 4 for **`n ≥ 10`** beyond what the beam happened to visit — and every beam argmin at `n = 12…16` has width exactly 3, so in practice **width ≥ 4 got no coverage at any `n ≥ 10`** |
 
 The gap moves from "width ≥ 3, `n ≥ 12`, **nothing at all**" to "width ≥ 3, `n ≥ 12`, covered by a **stated bounded search**". A width-≥3 *exhaustive* sweep at `n ≥ 12` remains out of reach — §9.4.
 
@@ -418,7 +429,14 @@ The gap moves from "width ≥ 3, `n ≥ 12`, **nothing at all**" to "width ≥ 3
 
 **Gate 1 — the engine.** The five-engine controls are re-run **inside this module**, so it never trusts a `δ` it did not itself verify: `T → 1/3`, `A₃, A₄ → 1/2`, `L₉;₁,₂,₃,₄ → 6/17`, `L₁₀;₁,₅ → 37/106`, all `M1=M2=M3=M4=MC`. **PASS.**
 
-**Gate 2 — the width prune.** A prune that silently dropped posets would convert the whole sweep into false negatives, so it is certified rather than assumed. At `W = 2` the pruned canonical augmentation must reproduce `width2_families` — the **independent** Dilworth-2-chain-lacing enumerator that §3.4c already certified iso-class-by-iso-class against the unrestricted enumeration. Two independent routes, same set:
+> **Gate 1 extended — `fast_Q` is now inside the gate (audit finding F2, §9.8).** As audited at `a90f0f7`, `five_engine_check` called `Q_primary`, `ap0_Q_via_dp`, `IndPoset`, `ehrhart_Q` and `Q_brute` — but **not** `fast_Q`, while `delta_of`, which computes `δ` for *every poset in every sweep*, calls exactly `fast_Q`. Corrupting `Q_primary` or `Q_brute` was caught; **corrupting `fast_Q` passed the gate untouched.** The risk is asymmetric and that is why it mattered: only the *argmin* is re-verified through the gate, so a `fast_Q` fault that *understates* `δ` produces a bogus argmin the gate would catch, but one that *overstates* `δ` **on the true minimiser** hides that poset as a **silent false negative** — the search would simply not report the thing it was built to find. **There was no actual bug** (the audit cross-checked `fast_Q` against `Q_primary` over all 9 397 width-≤3 posets to `n = 8` and against a from-scratch engine to `n = 7`: **0 disagreements**); the defect was that the *stated* control did not cover the load-bearing path.
+>
+> **mg-8489 added `fast_Q` to `five_engine_check` as engine `M0`**, asserted on `e` and on `δ` before the other engines run. Two things to be precise about:
+>
+> 1. **`M0` is not an independent sixth route.** `fast_Q` is an all-pairs-in-one-pass reimplementation of `M1`'s placed-set DP. Adding it closes a **code-path coverage** gap, not an algorithmic-independence gap — independence still comes from `M2`/`M3`/`M4`/`MC`. The `engines_used` label is deliberately left naming the independent routes, and every committed certificate and table below still carries the label of the run that produced it.
+> 2. **The extended gate is proven able to fail on the new engine.** A control extended to an engine and only ever seen green there has not been tested on it. [`scripts/onethird_mg8489_fastq_gate_control.py`](../scripts/onethird_mg8489_fastq_gate_control.py) corrupts `fast_Q` three ways — `δ + 10⁻⁶` (the audit's own probe), `δ` **overstated** ×1.001 (the asymmetric silent-false-negative direction), and `e(P) + 1` — and confirms the gate now **raises** on each; it also re-confirms a corrupted `Q_primary` is still caught, i.e. that `M0` did not shadow the pre-existing coverage. **6/6 rows as required.** Its `--sweep` mode re-establishes the audit's empirical closure *through the shipped gate*, driving all **9 398** width-≤3 iso-classes to `n = 8` (class counts `15, 55, 245, 1285, 7790`) through the extended check: **0 disagreements.**
+
+**Gate 2 — the width prune.** A prune that silently dropped posets would convert the whole sweep into false negatives, so it is certified rather than assumed. At `W = 2` the pruned canonical augmentation must reproduce `width2_families` — the **independent** Dilworth-2-chain-lacing enumerator that §3.4c already certified iso-class-by-iso-class against the unrestricted enumeration. Two independent *enumerators*, same set (but see the scope note below the table — they share the width oracle):
 
 | `n` | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
 |:--|--:|--:|--:|--:|--:|--:|--:|
@@ -426,7 +444,11 @@ The gap moves from "width ≥ 3, `n ≥ 12`, **nothing at all**" to "width ≥ 3
 | independent `width2_families` | 2 | 4 | 10 | 26 | 75 | 225 | 711 |
 | **mismatch** | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
-**Prune CERTIFIED.** The sweep also inherits the STRICT `δ ≤ 1/3` guard, **scoped to `n ≥ 4`**: `T` at `n = 3` is the known primitive `1/3`-attainer of §0 and is an *expected* hit, not a counterexample event. **The guard never fired at `n ≥ 4`** anywhere in this section — across 3 195 182 iso-classes at `n = 11` alone.
+**Prune CERTIFIED — conditional on the width oracle (audit finding F3, §9.8).** The two routes above are independent *enumerators*, but they are **not** independent of `width_value_bitmask`: `certify_width_prune` filters `width2_families` through the **same** width oracle it uses for the prune. The audit demonstrated the consequence directly — corrupting the oracle collapses both sides to 1 class at every `n ≥ 5` and the certification still prints `MATCH` / `CERTIFIED`. **So this gate certifies the *prune logic*, and cannot detect a width-oracle bug.**
+
+That residual is closed **empirically, not structurally**: the audit validated `width_value_bitmask` against a brute-force largest-antichain computation over all **19 448** posets to `n = 8` (**0 disagreements**), and independently reproduced the width-≤3 counts (`7790` at `n = 8`) from an unpruned enumeration using its own width function. **No actual bug.** Read the table above as *"the prune drops nothing, given a correct width oracle — and the oracle is independently validated to `n = 8`."*
+
+The sweep also inherits the STRICT `δ ≤ 1/3` guard, **scoped to `n ≥ 4`**: `T` at `n = 3` is the known primitive `1/3`-attainer of §0 and is an *expected* hit, not a counterexample event. **The guard never fired at `n ≥ 4`** anywhere in this section — across 3 195 182 iso-classes at `n = 11` alone.
 
 ### 9.3 Results
 
@@ -496,7 +518,7 @@ Growth is ≈ **7.5× per level**, so `n = 12` is ≈ 2.4·10⁷ classes, each n
 
 ### 9.5 Net effect on the headline
 
-**None — the §0 headline is unchanged.** The lowest `δ` anywhere in this document remains `7451/21359` at `n = 25` (§0), from the width-2 ladder family. The width-≥3 arena's best is `6/17 ≈ 0.35294`, which is **`1.8·10⁻²` above the ladder record and `4.1·10⁻³` above `β`** — not competitive. Outcome **(iii)** stands, now on a materially larger arena.
+**None — the §0 headline is unchanged.** The lowest `δ` anywhere in this document remains `7451/21359` at `n = 25` (§0), from the width-2 ladder family. The best found at width exactly 3 is `6/17 ≈ 0.35294`, which is **`1.8·10⁻²` above the ladder record and `4.1·10⁻³` above `β`** — not competitive. Outcome **(iii)** stands, now on a materially larger arena: **exhaustively larger at width exactly 3 for `n ≤ 11`, and by a bounded search at `12 ≤ n ≤ 16`.**
 
 §6's heuristic for not weighting the width-≥3 gap heavily — that `δ` trends upward with width — is **partly corroborated and partly qualified** by §9.3a. Comparing the width-exactly-3 minimum against the all-width minimum of §5.1:
 
@@ -513,6 +535,38 @@ Growth is ≈ **7.5× per level**, so `n = 12` is ≈ 2.4·10⁷ classes, each n
 The original mg-0eac session was lost mid-flight in a fleet restart. Its committed work (`c583212`) and its *uncommitted* newer worktree state were recovered from disk and re-committed before any new work began. **The recovered δ engine was not taken on trust**: the full positive-control gate was re-run in the resume session, including the external Peczarski table — all seven published `(δ, e)` pairs reproduced exactly, up to `L₂₅;₁,₅,₈,₉,₁₂,₁₃,₁₆,₂₀` with `e = 256 308`. §§0–8 are the recovered original; §9 is new.
 
 ---
+
+### 9.7 The proven statement, in the words the audit settled on
+
+Downstream summaries — ledgers, roadmaps, release notes — should carry **this** wording, not the commit subject's. Three qualifiers are load-bearing and all three are absent from `a90f0f7`'s subject line: **width exactly 3**, **`n ≤ 11` for anything proven**, and **still above `β`**.
+
+> Over primitive posets of **width exactly 3** with **`n ≤ 11`**, the minimum `δ` is **`6/17 ≈ 0.352941`**, attained at `n = 10`. This is a **proven minimum** — exhaustive enumeration, prune independently re-certified. It lies **below** Olson–Sagan's `14/39 ≈ 0.358974`, which they established only for `n ≤ 9`, so this **extends** their datum rather than contradicting it — and it remains **`4.10·10⁻³` ABOVE `β`**.
+>
+> For **`12 ≤ n ≤ 16`** at width ≥ 3, nothing below `β` was found by a **bounded beam that is demonstrably incomplete** — it misses the true optimum at `n = 10` in its own validation (§9.3c). **Width ≥ 4 received no coverage at any `n ≥ 10`.** Nothing below `1/3` was found anywhere.
+>
+> So **"nothing below `β`" is PROVEN only at width exactly 3 for `n ≤ 11`**, and is a **bounded-search observation** at `12 ≤ n ≤ 16`.
+
+**Width ≥ 4 is the honest boundary of the residual gap** — it is where a wide low-`δ` poset would have to hide, and it is essentially untouched at `n ≥ 10`.
+
+### 9.8 Independent audit of this section
+
+§9 (merged at `a90f0f7`) was independently audited by polecat `aud0eac` on 2026-07-21 — fresh context, not the author — with verdict **PASS-WITH-FINDINGS**. Report and reproduction scripts: [`OneThird-CounterexampleSearch-C-IndependentAudit.md`](OneThird-CounterexampleSearch-C-IndependentAudit.md), `scripts/audit_mg0eac_{independent_delta,negative_controls,completeness}.py`.
+
+**Every headline quantitative claim reproduced exactly**, most of them on a from-scratch `δ` engine sharing no code with this work: all five mandated controls, **all seven** of Peczarski's published `(δ, e)` pairs rebuilt from this document's *prose* ladder spec, every §9.3a row through `n = 10` regenerated from scratch (including the 397 222-class `n = 10` level), both record witnesses, the `n = 10` beam miss, all five beam witnesses, and both `β`/`κ` minimal polynomials re-derived. Completeness was re-certified against **OEIS A000112**, and the width oracle, width prune and primitivity filter each against brute force. **No false-negative channel was found; no finding changes a number.**
+
+The five findings and their disposition under **mg-8489** (this pass — hardening only, no number touched):
+
+| # | severity | finding | disposition |
+|:--|:--|:--|:--|
+| **F1** | MEDIUM | commit `a90f0f7`'s subject says "close out" the gap; this document says *"it narrows the gap; it does not close it"* — **the document is right** | **FIXED in-repo.** §9's heading is now "Narrowing pass"; the §9 preamble records the overstatement explicitly; §9.6a gives the wording downstream summaries must carry. History cannot be rewritten, so the doc is the correction. |
+| **F2** | MEDIUM | `five_engine_check` never called `fast_Q` — the engine every sweep actually runs — so the stated control did not cover the load-bearing path. Corrupting `fast_Q` passed the gate untouched. **No actual bug** (0 disagreements over 9 397 posets) | **FIXED in code.** `fast_Q` added to the gate as engine `M0`, plus a control proven able to fail on it. §9.2 Gate 1, and `scripts/onethird_mg8489_fastq_gate_control.py`. |
+| **F3** | LOW | the width-prune certification filters both "independent routes" through the **same** width oracle, so it cannot detect a width-oracle bug. **No actual bug** (oracle validated to `n = 8`) | **ANNOTATED.** §9.2 Gate 2 now states the certification as conditional on the width oracle, and records the oracle's independent validation. Structurally still self-referential. |
+| **F4** | LOW | §0's blanket "every `β` comparison is exact" was marginally stronger than the code: two display flags used `float(d) < BETA_THRESHOLD` | **FIXED in code.** Both flags now use the exact `lt_beta_sah`; exact and float predicates verified to agree on all 60 rationals in the committed certificates, so no recorded output changes. Noted at §0. |
+| **F5** | LOW | §0's one-line §9 summary said "width ≥ 3 arena" when §9.3a is width **exactly** 3 and width ≥ 4 got no coverage at `n ≥ 10` | **FIXED.** §0's summary and §9.0's not-claimed row now carry the exact-3 scope and the width-≥4 boundary. |
+
+**Nothing here blocks anything, and the mathematics and search results stand exactly as reported.** This pass adds **no new mathematical claim** — it tightens scope wording and closes one control-coverage gap.
+
+*A note the audit made and this section endorses (F6, INFO): the genuinely-new-territory contribution at `n ≥ 12` is the bounded beam alone. §9.3a's `n ≤ 11` sits inside Peczarski's GPC-verified range — but Peczarski verifies the Gold Partition Conjecture there, not a width-stratified min-`δ` profile, and Olson–Sagan covered only `n ≤ 9` at width > 2, so `n = 10, 11` is new relative to them. The boundary set by the originating ticket was respected.*
 
 ## 10. References
 

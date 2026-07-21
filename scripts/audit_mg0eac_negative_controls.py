@@ -10,13 +10,20 @@ Findings recorded in docs/OneThird-CounterexampleSearch-C-IndependentAudit.md:
   * corrupting Q_primary (M1 as the CONTROLS call it) -> CAUGHT
   * corrupting Q_brute   (M4)                          -> CAUGHT
   * forcing delta = 1/4 inside the sweep                -> CAUGHT (SubBetaHalt)
-  * corrupting fast_Q (the engine the SWEEP runs)       -> *** NOT CAUGHT ***  (Finding F2)
+  * corrupting fast_Q (the engine the SWEEP runs)       -> NOT CAUGHT at audit
+                                                           time (Finding F2);
+                                                           CAUGHT since mg-8489
   * corrupting width_value_bitmask                      -> *** NOT CAUGHT ***  (Finding F3)
 
-The last two are the audit's structural findings: the control gate does not
+The last two were the audit's structural findings: the control gate did not
 cover `fast_Q`, and the width-prune certification shares its width oracle with
 the prune it certifies.  Both were closed EMPIRICALLY by
 `audit_mg0eac_completeness.py` (0 disagreements) -- neither is an actual bug.
+
+F2 has since been closed STRUCTURALLY too: mg-8489 added `fast_Q` to
+`five_engine_check` as engine M0, so the fast_Q row below now expects CAUGHT.
+See `scripts/onethird_mg8489_fastq_gate_control.py` for the dedicated
+can-it-fail control on the extended gate.  F3 remains open as a structural gap.
 
 Usage:  python3 scripts/audit_mg0eac_negative_controls.py
 """
@@ -84,8 +91,14 @@ def main():
     F.Q_brute = orig4
 
     # --- 3. corrupt fast_Q: the engine EVERY SWEEP actually runs ------------ #
-    # FINDING F2: five_engine_check never calls fast_Q, so the gate is blind
-    # to a fault in the exact code path that produces every swept delta.
+    # FINDING F2 (as audited at a90f0f7): five_engine_check never called fast_Q,
+    # so the gate was blind to a fault in the exact code path that produces
+    # every swept delta -- this row recorded *** NOT CAUGHT ***.
+    #
+    # CLOSED by mg-8489, which added fast_Q to the gate as engine M0.  The row
+    # now expects CAUGHT, so this script keeps working as a live control
+    # instead of asserting a gap that no longer exists.  The finding itself
+    # stands as audited; only its remediation state has changed.
     origf = F.fast_Q
     def broken_fast(n, below):
         e, d, arg = origf(n, below)
@@ -93,7 +106,7 @@ def main():
     F.fast_Q = broken_fast
     caught, detail = try_controls()
     record("corrupt fast_Q (SWEEP path) +1e-6", caught, detail,
-           expected_caught=False, finding="F2")
+           expected_caught=True)
     F.fast_Q = origf
 
     import inspect
@@ -145,11 +158,14 @@ def main():
     unexpected = [r for r in RESULTS if "UNEXPECTED" in r[2]]
     print(f"\n  Controls that behave correctly:     "
           f"{len(RESULTS) - len(findings) - len(unexpected)}/{len(RESULTS)}")
-    print(f"  Structural audit findings (F2, F3): {len(findings)}")
+    print(f"  Structural audit findings still open (F3): {len(findings)}")
     print(f"  Unexpected results (would invalidate this audit): {len(unexpected)}")
-    print("  => The control gate IS a real control (it fails on broken input),")
-    print("     but does NOT cover fast_Q (F2) or the width oracle (F3).")
-    print("     Both closed empirically by audit_mg0eac_completeness.py.")
+    print("  => The control gate IS a real control (it fails on broken input).")
+    print("     F2 (gate did not cover fast_Q) is CLOSED by mg-8489: fast_Q is")
+    print("     now engine M0 in five_engine_check and corrupting it is caught.")
+    print("     F3 (width-prune certification shares its width oracle) remains")
+    print("     open as a structural gap; closed empirically, and the doc's")
+    print("     sec.9.2 now states the certification as oracle-conditional.")
 
 
 if __name__ == "__main__":

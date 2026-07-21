@@ -472,14 +472,39 @@ def fast_Q(n, below):
 
 
 def five_engine_check(name, n, below, brute_cap=200000):
-    """Run M1+M2+M3+MC always; M4 brute when e<=cap.  Assert exact agreement.
-    Returns (e, Q, engines_used)."""
+    """Run M0+M1+M2+M3+MC always; M4 brute when e<=cap.  Assert exact
+    agreement.  Returns (e, Q, engines_used).
+
+    Name kept for API stability across the four call sites; the gate now
+    validates SIX engines.  M0 == `fast_Q`, added mg-8489 per independent-audit
+    finding F2 (docs/OneThird-CounterexampleSearch-C-IndependentAudit.md sec.4):
+    `fast_Q` is the engine every SWEEP actually runs (via `delta_of`), yet it
+    was not among the engines this gate called, so corrupting it passed the
+    gate untouched.  The audit closed that empirically (fast_Q vs Q_primary
+    over all 9 397 width-<=3 posets to n=8: 0 disagreements -- no actual bug),
+    but the stated control did not cover the load-bearing path.  It does now.
+
+    M0 is NOT an algorithmically independent sixth route: `fast_Q` is an
+    all-pairs-in-one-pass reimplementation of M1's placed-set DP.  Including it
+    closes a CODE-PATH coverage gap, not an algorithmic-independence gap --
+    the independence still comes from M2/M3/M4/MC.  Proven able to fail:
+    scripts/onethird_mg8489_fastq_gate_control.py.
+
+    The returned `engines_used` label is deliberately UNCHANGED ("M1=M2=M3=MC"
+    / "M1=M2=M3=M4=MC"): it names the independent cross-check routes, and every
+    committed certificate and doc table carries it as a record of an earlier
+    run.  M0 is an always-on gate assertion on top of those, not a sixth
+    independent route, so relabelling would misdescribe both."""
     elems = list(range(n))
     bd = to_belowdict(n, below)
     incomp = incomparable_pairs(elems, bd)
     pairs = to_pairs(n, below)
     # M1 primary
     e1, Q1, _ = Q_primary(elems, bd)
+    # M0 fast_Q -- the all-pairs sweep engine; the path `delta_of` runs
+    e0, Q0, _ = fast_Q(n, below)
+    assert e0 == e1, f"{name}: e M1={e1} M0(fast_Q)={e0}"
+    assert Q0 == Q1, f"{name}: Q M1={Q1} M0(fast_Q)={Q0}"
     # M2 AP-0 subset DP
     e2, Q2 = ap0_Q_via_dp(elems, bd, incomp)
     assert e2 == e1, f"{name}: e M1={e1} M2={e2}"
