@@ -26,7 +26,16 @@ the calibration.
 
 Usage
 -----
-    python3 scripts/onethird_mgc47a_width4_arena_count.py --nmax 11 --budget 600
+    python3 scripts/onethird_mgc47a_width4_arena_count.py --nmax 9 --budget 600
+
+`--budget` is a wall-clock budget PER WIDTH, enforced inside a level (see
+`count_width_le`).  Until mg-8ff1 it was tested only after a level completed,
+which bounded nothing: levels grow ~10x, so the reading `--nmax 11
+--budget 600` did not stop at 600s, it ran for about an hour and then reported
+that the budget had been exceeded.  Measured on this machine at W = 4: n = 8
+completes ~3s cumulative, n = 9 ~34s, n = 10 ~5min, n = 11 ~50min.  So a full
+`--nmax 11` run over widths 2,3,4 is roughly an hour, NOT the "~10 min" once
+claimed; budget accordingly, or cap `--nmax` at 9 for a fast calibration.
 """
 
 import argparse
@@ -54,6 +63,13 @@ KNOWN = {
         10: 397222},
 }
 
+# How often to consult the wall clock inside a level, in parents processed.
+# Overshoot past --budget is bounded by the time to process this many parents;
+# at the level sizes this probe reaches that is well under a second, and the
+# `--budget` control in the doc measures it.  Large enough that time.time()
+# is not itself a cost.
+_BUDGET_CHECK_EVERY = 512
+
 
 def count_width_le(W, nmax, time_budget=None, verbose=True):
     """Count order-iso classes of posets of width <= W, level by level.
@@ -61,35 +77,72 @@ def count_width_le(W, nmax, time_budget=None, verbose=True):
     Same width-pruned canonical augmentation as the certified sweep; the delta
     evaluation, the primitivity filter and the sub-beta guard are all absent
     because nothing here looks at balance.
+
+    `time_budget` is enforced *inside* a level, not only at level boundaries.
+    That distinction is the whole point: levels grow ~10x here, so by n = 11 a
+    single level runs for tens of minutes, and a budget consulted only between
+    levels bounds nothing (it was checked only between levels until mg-8ff1,
+    which is why `--nmax 11 --budget 600` ran for about an hour).
+
+    A level aborted mid-way is NOT reported.  Every returned per-level dict
+    covers exactly the levels that ran to completion, so a partial level can
+    never be misread as a complete count; `covered` is the last complete level
+    and `aborted_at` names the level that was abandoned, if any.
     """
     t0 = time.time()
+    deadline = None if time_budget is None else t0 + time_budget
+
+    def expired():
+        return deadline is not None and time.time() > deadline
+
     level = {order_canon(1, [0]): [0]}
     counts = {1: 1}
     exact_counts, prim_counts, prim_exact_counts = {}, {}, {}
     times = {}
     covered = 1
+    aborted_at = None
+    budget_hit = False
     for n in range(2, nmax + 1):
         nxt = {}
-        for below in level.values():
+        aborted = False
+        for i, below in enumerate(level.values()):
+            if i % _BUDGET_CHECK_EVERY == 0 and expired():
+                aborted = True
+                break
             for nb in children_max(n - 1, below):
                 if width_value_bitmask(n, nb) > W:
                     continue
                 k = order_canon(n, nb)
                 if k not in nxt:
                     nxt[k] = nb
+        if aborted:
+            aborted_at = n
+            break
         level = nxt
-        counts[n] = len(level)
+        n_classes = len(level)
         # The ticket asks for width-EXACTLY-W and PRIMITIVE counts, so split
         # the level.  Still no delta: `is_primitive` is connectivity of the
         # incomparability graph, and `width_value_bitmask` is the certified
         # oracle -- neither looks at linear extensions.
         nexact = nprim = nprim_exact = 0
-        for below in level.values():
+        for i, below in enumerate(level.values()):
+            if i % _BUDGET_CHECK_EVERY == 0 and expired():
+                aborted = True
+                break
             w_exact = (width_value_bitmask(n, below) == W)
             prim = is_primitive(n, below)
             nexact += w_exact
             nprim += prim
             nprim_exact += (w_exact and prim)
+        if aborted:
+            # The augmentation for level n finished, so `n_classes` is sound --
+            # but the split is not.  Drop the whole level rather than report a
+            # complete count beside partial ones: every dict below then covers
+            # the same set of levels, which is the property that makes a
+            # truncated run safe to read.
+            aborted_at = n
+            break
+        counts[n] = n_classes
         exact_counts[n] = nexact
         prim_counts[n] = nprim
         prim_exact_counts[n] = nprim_exact
@@ -105,17 +158,28 @@ def count_width_le(W, nmax, time_budget=None, verbose=True):
                   f"ratio={ratio:6.3f}  |  width=={W}: {nexact:>12,}  "
                   f"primitive: {nprim:>12,}  primitive&width=={W}: "
                   f"{nprim_exact:>12,}  ({times[n]:8.1f}s){flag}", flush=True)
-        if time_budget is not None and time.time() - t0 > time_budget:
+        if expired():
+            # Clean stop: level n completed, level n+1 never begun.
+            budget_hit = True
             if verbose:
                 print(f"  [width<={W}] TIME BUDGET hit after n={n}; "
                       f"levels beyond n={n} NOT counted.", flush=True)
             break
+    if aborted_at is not None:
+        budget_hit = True
+        if verbose:
+            print(f"  [width<={W}] TIME BUDGET hit DURING n={aborted_at} "
+                  f"after {time.time()-t0:.1f}s; n={aborted_at} abandoned and "
+                  f"NOT counted (last complete level: n={covered}).",
+                  flush=True)
     return {"counts": counts, "width_exactly_W": exact_counts,
             "primitive": prim_counts, "primitive_width_exactly_W":
-            prim_exact_counts, "seconds": times, "covered": covered}
+            prim_exact_counts, "seconds": times, "covered": covered,
+            "aborted_at": aborted_at, "budget_exhausted": budget_hit,
+            "wall_seconds": time.time() - t0}
 
 
-def certify_prune_unpruned(W, nmax=8, verbose=True):
+def certify_prune_unpruned(W, nmax=8, time_budget=None, verbose=True):
     """Certify the width-`W` prune against an UNPRUNED enumeration.
 
     mg-0eac's `certify_width_prune` checks the prune at W = 2 only, against
@@ -127,17 +191,38 @@ def certify_prune_unpruned(W, nmax=8, verbose=True):
 
     A pruned enumerator that silently dropped a width-<=W poset would show up
     here as a shortfall.  Cheap: 19,448 classes at n = 8.
+
+    Cheap at the default n = 8, but this enumeration has NO width prune, so it
+    grows faster than the pruned one and is the more dangerous of the two to
+    leave unbounded.  It honours `time_budget` on the same terms as
+    `count_width_le`: checked inside a level, and an abandoned level is
+    dropped rather than reported short.
     """
     t0 = time.time()
+    deadline = None if time_budget is None else t0 + time_budget
+
+    def expired():
+        return deadline is not None and time.time() > deadline
+
     level = {order_canon(1, [0]): [0]}
     unpruned = {1: 1}
     for n in range(2, nmax + 1):
         nxt = {}
-        for below in level.values():
+        aborted = False
+        for i, below in enumerate(level.values()):
+            if i % _BUDGET_CHECK_EVERY == 0 and expired():
+                aborted = True
+                break
             for nb in children_max(n - 1, below):
                 k = order_canon(n, nb)
                 if k not in nxt:
                     nxt[k] = nb
+        if aborted:
+            if verbose:
+                print(f"  [unpruned] TIME BUDGET hit DURING n={n} after "
+                      f"{time.time()-t0:.1f}s; n={n} abandoned and NOT "
+                      f"certified.", flush=True)
+            break
         level = nxt
         unpruned[n] = sum(1 for b in level.values()
                           if width_value_bitmask(n, b) <= W)
@@ -145,6 +230,11 @@ def certify_prune_unpruned(W, nmax=8, verbose=True):
             print(f"  [unpruned] n={n:2d}  all classes={len(level):>8,}  "
                   f"of which width<={W}: {unpruned[n]:>8,}  "
                   f"({time.time()-t0:6.1f}s)", flush=True)
+        if expired():
+            if verbose:
+                print(f"  [unpruned] TIME BUDGET hit after n={n}; levels "
+                      f"beyond n={n} NOT certified.", flush=True)
+            break
     return unpruned
 
 
@@ -152,7 +242,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--nmax", type=int, default=11)
     ap.add_argument("--budget", type=float, default=600.0,
-                    help="hard wall-clock budget per width, seconds")
+                    help="wall-clock budget per width, seconds; enforced "
+                         "DURING a level, not only between levels. A level "
+                         "abandoned mid-way is dropped, not reported short.")
     ap.add_argument("--widths", type=int, nargs="+", default=[2, 3, 4])
     ap.add_argument("--json", default=None)
     ap.add_argument("--certify-nmax", type=int, default=0,
@@ -167,7 +259,8 @@ def main():
             print(f"\n=== certifying the width-<={W} prune against an "
                   f"UNPRUNED enumeration, n <= {args.certify_nmax} ===",
                   flush=True)
-            certs[W] = certify_prune_unpruned(W, args.certify_nmax)
+            certs[W] = certify_prune_unpruned(W, args.certify_nmax,
+                                              time_budget=args.budget)
     for W in args.widths:
         print(f"\n=== counting width <= {W} (no delta computed) ===",
               flush=True)
@@ -188,6 +281,13 @@ def main():
         out[W] = res
         print(f"  self-check mismatches vs repo reference: {mismatches or 0}",
               flush=True)
+        if res["budget_exhausted"]:
+            print(f"  BUDGET EXHAUSTED after {res['wall_seconds']:.1f}s "
+                  f"(--budget {args.budget:g}s): complete levels n <= "
+                  f"{res['covered']}"
+                  + (f"; n = {res['aborted_at']} abandoned mid-level"
+                     if res["aborted_at"] else "")
+                  + ". Counts above are NOT the full arena.", flush=True)
 
     print("\n=== summary: width-<=W iso-class counts ===")
     ns = sorted({n for W in out for n in out[W]["counts"]})

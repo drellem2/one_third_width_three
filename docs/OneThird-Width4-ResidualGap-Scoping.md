@@ -8,11 +8,13 @@
 
 ## 0. Headline
 
-> **Q1 — is there a structural reason low `δ` forces small width? Answer: the question, in the form that would dissolve the residual gap, is LOGICALLY EQUIVALENT TO THE 1/3–2/3 CONJECTURE ITSELF.** It is therefore not a cheaper route to closing the gap; it is the same problem repartitioned. No mechanism was found, and §3.3–§3.6 give four independent reasons why the natural family of mechanisms cannot produce one.
+> **Q1 — is there a structural reason low `δ` forces small width? Answer: its strongest form, `(2)` = "low `δ` forces width ≤ 2", is LOGICALLY EQUIVALENT TO THE 1/3–2/3 CONJECTURE ITSELF** (Obs. 3.1(a), modulo Sah). It is therefore not a cheaper route to the conjecture; it is the same problem repartitioned. No mechanism was found, and §3.3–§3.6 give four independent reasons why the natural family of mechanisms cannot produce one.
+>
+> **Precision, corrected in mg-8ff1 (audit mg-7d24).** An earlier wording of this line called `(2)` "the form that would dissolve the residual gap". That is wrong in both directions. The residual gap is **width ≥ 4**, so the form that would dissolve *it* is `(3)` — "low `δ` forces width ≤ 3" — which by Obs. 3.1(b) is equivalent to the conjecture **restricted to widths > 3**, not to the full conjecture. `(2)` proves the whole conjecture, which is **strictly more** than dissolving the gap. The equivalence result stands exactly as proven in §3.1; only this summary's identification of *which* statement dissolves *which* target was inaccurate.
 >
 > **Q2 — is a width-4 search tractable? Answer: at `n = 10` yes (≈14 min; the arena is 1 124 519 primitive width-exactly-4 classes, 4.06× the width-3 arena at the same `n`), at `n = 11` probably but memory-bound and unmeasured (≈2.4·10⁷ classes), at `n ≥ 12` no (≈3.8·10⁸). The certified prune extends to width 4 with zero code change, and this assessment supplies the width-4 prune certification that did not exist (`n ≤ 8`, 0 disagreements).** But tractability is the wrong question, because no width-bounded search can ever close the gap: the residual is a two-parameter region (`width ≥ 4` × `n ≥ 10`); every enumeration buys a bounded box in it, and the complement stays infinite in both parameters.
 >
-> **Recommendation: DROP the residual gap as a closure target. Do not run a general width-4 sweep.** If any empirical work is wanted, the single defensible item is a narrowly-scoped **width-exactly-4 exhaustive at `n = 10` only** — not to close anything, but because the literature contains **no width-4 `δ` datum at any `n`**, and one number would test the only width-related trend we have (§3.6). Costed in §6. Any recommendation to search *beyond* that is not supportable by anything in this assessment.
+> **Recommendation: DROP the residual gap as a closure target. Do not run a general width-4 sweep.** If any empirical work is wanted, the single defensible item is a narrowly-scoped **width-exactly-4 exhaustive at `n = 10` only** — not to close anything, but because the literature contains **no width-4 `δ` datum at any `n`**, and one number would **complete the all-width minimum at `n = 10`**, which §3.6 shows is currently unknown. Costed in §6. Any recommendation to search *beyond* that is not supportable by anything in this assessment.
 
 **⚠️ THIS DOCUMENT CONTAINS NEW `[PROVEN]`-CLASS CLAIMS** — Observation 3.1 (the equivalence), Lemmas 3.2a/3.2b, and Proposition 3.3. Per the standing rule (Appendix A of `/Users/daniel/research/onethird_program/STATE.md`) this triggers an **independent audit** before pm-onethird's review. All four are short and elementary; none is deep. The audit-relevant one is **Observation 3.1**, because it is the claim that changes what the program should do next.
 
@@ -74,7 +76,9 @@ The residual is the whole bottom-right block. Note its shape: it is **unbounded 
 
 **Three consequences, and they are the point of this section.**
 
-1. **Q1's strongest form is not a shortcut.** Proving `(2)` is *exactly as hard* as the conjecture — not "related to", not "at least as hard as": equivalent, modulo Sah's already-proven theorem. A programme that sets out to prove "low `δ` ⟹ narrow" as a lemma *en route* to the conjecture is going in a circle.
+1. **Q1's strongest form is not a shortcut.** Proving `(2)` is *exactly as hard* as the conjecture — not "related to", not "at least as hard as": equivalent, modulo Sah's already-proven theorem. So `(2)` cannot be used as a *cheaper* target than the conjecture: anything strong enough to prove it already proves the conjecture.
+
+   > **⚠ Inference REJECTED (pm-onethird ruling, mg-8ff1).** An earlier version of this point continued: "*a programme that sets out to prove 'low `δ` ⟹ narrow' as a lemma en route to the conjecture is going in a circle.*" **That does not follow and has been struck.** Logical equivalence of two *statements* says nothing about the difficulty, structure, or viability of *proofs* of them — mathematics routinely proves a theorem by way of an equivalent reformulation that is easier to attack. Equivalence licenses only the narrow claim above (no free lunch: `(2)` is not a weaker target), not any verdict on a programme that pursues it. **Do not reintroduce this inference.** The equivalence itself (Obs. 3.1(a)/(b)) is unaffected and remains `[PROVEN]` — it was independently CONFIRMED by audit mg-7d24.
 2. **Any weaker `(W₀)` is a genuine reduction, but only of the wide half.** `(W₀)` reduces the conjecture to widths `3 … W₀`. That is real value — but each of those widths is itself open (Peczarski proves the Gold Partition Conjecture for **width two** and for **semiorders**, and *verifies* it by computer for `n ≤ 11`; width 3 in general is open). So `(W₀)` trades one open problem for `W₀ − 2` open problems, and is worth pursuing only if the wide case is genuinely easier than the narrow case. §3.3–§3.5 argue it is not; §3.6 gives the only data bearing on it.
 3. **Vacuity is a live trap.** Because `(W₀)` is vacuously true under the conjecture, "is `(W₀)` true?" cannot be settled by finding it plausible — a proof must be non-vacuous, i.e. must not route through the conjecture. Every candidate mechanism below has to be checked against this, and it is why §3.3's ceiling result matters: it shows what a *non-vacuous* argument of this family can actually reach.
 
@@ -88,11 +92,19 @@ These are the only width-relevant lower-bound mechanisms for `δ` I could establ
 >
 > *Proof.* Map each linear extension `σ` with `y` before `x` to `σ'` obtained by exchanging the positions of `x` and `y`. `σ'` is a linear extension: for `z` strictly between them, `z ∈ D(x) ⊆ D(y)` would force `z` before `y`, contradiction; and `z ∈ U(y) ⊆ U(x)` would force `z` after `x`, contradiction; so `z` is incomparable to both and nothing is violated. Elements outside the interval keep their relative order with both. The map is injective (it is an involution), so `#{y<x} ≤ #{x<y}`. ∎
 
-> **Lemma 3.2b (symmetry) `[PROVEN — trivial]`.** If some automorphism of `P` maps `x` to `y` for an incomparable pair `x ∥ y`, then `Pr[x <_σ y] = 1/2` and hence `δ(P) ≥ 1/2`.
+> **Lemma 3.2b (symmetry) `[PROVEN — trivial]`.** If some automorphism of `P` **swaps** `x` and `y` (i.e. `φ(x) = y` **and** `φ(y) = x`, equivalently some automorphism exchanging them — necessarily an involution on `{x, y}`) for an incomparable pair `x ∥ y`, then `Pr[x <_σ y] = 1/2` and hence `δ(P) ≥ 1/2`.
 >
-> *Proof.* The automorphism induces a bijection of `L(P)` carrying `{x<y}` onto `{y<x}`. ∎
+> *Proof.* Such a `φ` induces a bijection of `L(P)` carrying `{x<y}` onto `{y<x}`: `σ ↦ σ∘φ⁻¹` sends an extension putting `x` first to one putting `φ(x) = y` first, and `φ(y) = x` second. Both directions need `φ` to exchange the two elements, not merely to move `x` to `y`. ∎
 >
-> **Corollary (twins).** If `x ∥ y` with `D(x) = D(y)` and `U(x) = U(y)`, the transposition of `x, y` is an automorphism, so `δ(P) ≥ 1/2`. Hence **every poset with `δ < 1/2` is twin-free.**
+> **⚠ The hypothesis must be "swaps", not "maps" — a worked non-example.** An automorphism can carry `x` to `y` while *no* automorphism exchanges them, and then **both** conclusions fail. Take `n = 9`, `below = (256, 64, 128, 322, 196, 385, 0, 0, 0)`:
+>
+> `Aut(P) = ⟨φ⟩ ≅ Z/3` **exactly**, with `φ = (1,2,0,4,5,3,7,8,6)` — three orbits `{0,1,2}`, `{3,4,5}`, `{6,7,8}`, each of length 3. Then `0 ∥ 1` and `φ(0) = 1`, so the *"maps"* hypothesis holds; but no power of a 3-cycle transposes two of its elements, so **no automorphism swaps `0` and `1`**. And indeed
+>
+> `e(P) = 1431`,  `Pr[0 <_σ 1] = 79/159 ≠ 1/2`,  `δ(P) = 79/159 ≈ 0.4969 < 1/2`.
+>
+> Both clauses of the conclusion are false. Generally: whenever `x, y` are adjacent in an automorphism orbit of length `k ≥ 3`, "maps" is strictly weaker than what the proof uses. `n = 9` is **minimal** — there are no chiral instances at `n ≤ 8`. Verified by brute force over all `9!` permutations; reproduce with `scripts/onethird_mg8ff1_lemma32b_counterexample.py`. *(Repair of audit finding F1 `[BROKEN]`, mg-7d24 → mg-8ff1.)*
+>
+> **Corollary (twins).** If `x ∥ y` with `D(x) = D(y)` and `U(x) = U(y)`, the transposition of `x, y` is an automorphism — a genuine swap, so the lemma applies as stated — and `δ(P) ≥ 1/2`. Hence **every poset with `δ < 1/2` is twin-free.**
 
 **This is the mechanism that has actually been doing the work all along.** Every wide poset one naturally writes down is *symmetric* in exactly the way Lemma 3.2b forbids — layered posets (= ordinal sums of antichains: two elements of a layer are twins), the standard example `S_w` (`a_i < b_j ⟺ i ≠ j`: transposing indices `i, j` is an automorphism), products, and semiorders with a wide indifference window (whose adjacent elements are near-twins). All have `δ = 1/2` or close to it. **So the folk observation "every known near-extremal family is narrow" is better explained as "every known near-extremal family is *rigid*"** — narrow interleaved constructions such as Peczarski's broken-rung ladders are simply the easiest way to build a rigid poset in which every incomparable pair is strongly decided.
 
@@ -134,21 +146,24 @@ So the resource is real but every tool in the corpus that touches it is **anti-m
 
 ### 3.6 What the data says — and it points the other way
 
-The only quantitative evidence on the width/`δ` relationship is mg-0eac §9.5's comparison of the width-exactly-3 minimum against the all-width minimum:
+The only quantitative evidence on the width/`δ` relationship is mg-0eac §9.5's comparison of the width-exactly-3 minimum against the best exhaustively-established minimum:
 
 | `n` | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
 |:--|:--|:--|:--|:--|:--|:--|:--|
-| all-width min `δ` | `4/11` | `5/14` | `14/39` | `16/45` | `6/17` | `37/106` | `20/57` |
+| **arena actually covered** | all widths | all widths | all widths | all widths | all widths | **width ≤ 3** | **width ≤ 3** |
+| min `δ` over that arena | `4/11` | `5/14` | `14/39` | `16/45` | `6/17` | `37/106` † | `20/57` † |
 | width-exactly-3 min `δ` | `4/11` | `15/37` | `14/39` | `19/50` | `50/139` | `6/17` | `134/375` |
-| **width-3 penalty** | **0** | `+0.0483` | **0** | `+0.0244` | `+0.0068` | `+0.0039` | `+0.0065` |
+| **width-3 penalty** | **0** | `+0.0483` | **0** | `+0.0244` | `+0.0068` | (`+0.0039`) † | (`+0.0065`) † |
+
+**⚠ `n = 10, 11` are not all-width.** mg-0eac §5.1's coverage column reads `exhaustive-width2` at `n = 10, 11`, and its §6 scope table states that all widths at `n = 10, 11` are **"not covered here"**. Those two cells are **width ≤ 3** minima; the true all-width value there is **unknown**. This corrects a mislabel that originated in mg-0eac §9.5 and was propagated into this document — see audit mg-7d24 finding F3, repaired at the source in mg-8ff1. The uncorrected form also contradicted this document's own §1.1.
 
 Three honest readings:
 
 1. **The penalty is zero twice** (`n = 5, 7`): at those sizes the all-width optimum *is* a width-3 poset (`n = 7` is Saks' `M₇`). So "wider ⟹ worse balance" is **already false as a rule** at width 3. Any conjectured mechanism must survive this, and the naive one does not.
-2. **The penalty is small and, over `n = 8 → 10`, shrinking** (`0.0244 → 0.0068 → 0.0039`), then rises at `n = 11`. **Non-monotone; no extrapolation is licensed** — that is mg-0eac's own caveat and it is correct. But the direction of the only visible trend is *against* a width-forcing mechanism.
-3. **The penalty is nonetheless enormous next to what matters.** `6/17` sits `4.10·10⁻³` above `β`, while the width-2 broken-rung ladders reach `2.45·10⁻⁶` above `β` — a factor of **≈1 700**. Whatever the trend, at `n ≤ 11` the low-`δ` action is decisively at width 2.
+2. **The apparent "shrinking penalty" over `n = 8 → 10` is withdrawn.** It read `0.0244 → 0.0068 → 0.0039` only because the `n = 10` cell was labelled all-width when it is width ≤ 3. An all-width minimum can only be **≤** a width-≤3 minimum, so the unknown true value at `n = 10` can only *widen* that penalty — the mislabel biased the sequence in precisely the direction that manufactured a downward trend. **This is circular as support for §5's recommendation:** pinning down the `n = 10` all-width cell requires exactly the width-≥4 search that §5 recommends dropping, so the trend cannot be cited as evidence for dropping it. No extrapolation was licensed before and none is now; the difference is that the trend is no longer evidence *at all*, in either direction.
+3. **The penalty is nonetheless enormous next to what matters.** `6/17` sits `4.10·10⁻³` above `β`, while the width-2 broken-rung ladders reach `2.45·10⁻⁶` above `β` — a factor of **≈1 700**. This comparison is **unaffected by the relabel**: it contrasts a width-3 value against a width-2 value, both exhaustively established, and cites no all-width cell. At `n ≤ 11` the low-`δ` action is decisively at width 2.
 
-Point 3 is the practical one and it is what §5's recommendation rests on: **the residual gap is where we have the least coverage, but it is also where the observed `δ` values are furthest from `β`.**
+Point 3 is the practical one, and after the F3 correction it is the **only** one of the three that supports §5's recommendation: **the residual gap is where we have the least coverage, but it is also where the observed `δ` values are furthest from `β`.** Point 2 is withdrawn as evidence.
 
 ### 3.7 What the width-3 minimiser actually looks like
 
@@ -164,11 +179,11 @@ That last point is a direct **refutation of the quantitative near-twin heuristic
 
 > **NO MECHANISM FOUND, and the search for one is mispriced.** Specifically:
 >
-> - `[PROVEN]` The form of Q1 that would dissolve the residual gap (`δ < 1/3 ⟹ width ≤ 2`) is **equivalent to the 1/3–2/3 conjecture**; weaker forms are equivalent to the conjecture restricted to wide posets (Obs. 3.1). Q1 is a repartition of the problem, not a shortcut around it.
+> - `[PROVEN]` Q1's strongest form (`δ < 1/3 ⟹ width ≤ 2`) is **equivalent to the 1/3–2/3 conjecture**; each weaker form `(W₀)` is equivalent to the conjecture restricted to posets of width `> W₀` (Obs. 3.1). Q1 is a repartition of the problem, not a shortcut around it. *(The form that would dissolve the **residual gap** specifically is `(3)`, not `(2)` — `(2)` proves the whole conjecture, strictly more; corrected mg-8ff1, see §0.)*
 > - `[PROVEN]` The only mechanisms that do force *some* width bound are symmetry/duplication arguments (Lemmas 3.2a/b), and they provably ceiling out at `width ≤ n − log₃ width` (Prop. 3.3) — useless for a constant bound.
 > - `[PROVEN — already merged]` Coherence contributes **zero** (§3.4, probe A).
 > - `[MEASURED — three merged probes]` Width enters every existing lower-bound tool **anti-monotonically**; the pair-abundance resource is the Kahn–Saks resource, capped at `0.2764 < 1/3` (§3.5).
-> - `[EMPIRICAL, non-monotone]` The width-3 penalty at `n ≤ 11` is small (`≤ 0.024`, and `0.0039` at `n = 10`) and its only visible trend is *shrinking* — evidence against, not for, a width-forcing mechanism (§3.6).
+> - `[EMPIRICAL]` The width-3 penalty is **zero at `n = 5, 7`** and small (`≤ 0.024`) at `n ≤ 9`, where the comparison is genuinely all-width-vs-width-3 — so "wider ⟹ worse balance" is already false as a rule (§3.6). **The former claim that the penalty is "shrinking" over `n = 8 → 10` is WITHDRAWN** (mg-8ff1, audit F3): the `n = 10, 11` cells are width-≤3 minima, not all-width, so those comparisons are not like-for-like and the trend was an artefact of the mislabel. No width-related trend is claimed in either direction.
 >
 > **What low `δ` does demonstrably force is RIGIDITY (trivial automorphism group, twin-freeness), not narrowness** — and rigidity is available at every width. This is offered as the corrected explanation of why the known near-extremal families are all narrow: it is a property of how those families were *constructed*, not a property `δ` imposes.
 
@@ -207,6 +222,8 @@ Two residual caveats:
 ### 4.2 Arena size — measured
 
 Class counts of width-`≤W` order-iso classes, measured on this machine under a declared wall-clock budget (`scripts/onethird_mgc47a_width4_arena_count.py`; no `δ` computed). `W = 2` and `W = 3` rows reproduce values already in the repo and are the self-check.
+
+> **`--budget` repaired in mg-8ff1 (audit item 7).** As originally written the flag was documented as a "hard wall-clock budget" but was tested **only after a level completed**, so it could not bound a level — and a level is the only thing worth bounding here, since levels grow ≈10× and dominate the run. The advertised invocation `--nmax 11 --budget 600` therefore ran for **≈1 h**, not 600 s. It is now checked **inside** a level (every 512 parents), and a level abandoned mid-way is **dropped rather than reported short**, so a truncated run can never be misread as a complete count. Controlled in both directions: with `--budget 4` a run that previously took **34 s** now halts mid-level at **4.5 s**, and across budgets `{1,2,5,10,20}` s on `--nmax 11` (otherwise ≈1 h) every run stopped within **≤ 1.0 s** of its budget; with the budget slack, every count below is reproduced unchanged and all self-checks pass. **No number in this table changed.**
 
 | `n` | width ≤ 2 | width ≤ 3 | **width ≤ 4** | width **exactly** 4 | **primitive, width exactly 4** | level ratio (w≤4) |
 |--:|--:|--:|--:|--:|--:|--:|
@@ -283,10 +300,18 @@ Stated plainly, as the ticket asks. The width-3 beam was validated blind at thre
 
 > **DROP the residual gap as a closure target. Do not authorise a general width-≥4 search.**
 
+> **Standing of this recommendation after audit mg-7d24 / pm-onethird ruling (mg-8ff1).** The recommendation **stands**, but on a **narrower base than this document originally claimed**, and two of its original supports are withdrawn:
+>
+> - **WITHDRAWN — the "circular programme" argument.** Struck as invalid; see the boxed ruling at §3.1. Equivalence of statements does not imply anything about difficulty of proofs. DROP does **not** rest on it.
+> - **WITHDRAWN — the "shrinking width-3 penalty" trend** (old §3.6 reading 2). Circular: the `n = 10` cell that produced the trend is a width-≤3 minimum mislabelled all-width, and fixing it needs precisely the width-≥4 search being recommended against (§3.6, audit F3).
+> - **RETAINED** — points 1–4 below, which are **tractability and evidence-weight** grounds.
+>
+> **DROP therefore rests on tractability grounds alone.** That is a thinner basis than the document originally presented, and it should be stated that way downstream — but it remains sufficient for the operational call, because point 1 is an in-principle obstruction that no budget defeats. **Do not let either withdrawn argument survive as the remembered reason.**
+
 The reasoning, in order of weight:
 
 1. **It is not closable by search, in principle** (§4.5). The residual is unbounded in two parameters; enumeration buys bounded boxes. This is not a compute-budget observation — no budget changes it.
-2. **It is not closable by the structural route either, cheaply** (§3.1): that route is the conjecture.
+2. **It is not closable by the structural route either, cheaply** (§3.1): proving `(3)` is equivalent to the conjecture restricted to widths `> 3`, and proving `(2)` is the whole conjecture. Neither is a cheap detour. *(This is a statement about targets, not a verdict on any programme — see the §3.1 ruling box.)*
 3. **It is the region where the evidence for a counterexample is weakest.** Width 3 exhaustive to `n = 11` produced a best `δ` that is ≈1 700× further from `β` than the width-2 ladders' best. If a sub-`β` poset exists, everything measured says it is narrow.
 4. **The programme already has the right tool for a width-uniform statement, and it is not a search.** STATE.md's skeleton is **any-width by construction** ("Width-3 baggage to keep out: … The skeleton above has zero width dependence"), and the current edge — `(B-cov)` / the window-location term `T2` / Residual `(R)` — is width-free. A width-4 enumeration would not feed it. **The honest closure of the width ≥ 4 residual is L1b, not a bigger sweep.**
 
@@ -300,8 +325,8 @@ Offered because the ticket asks for a costed proposal rather than a refusal, **n
 
 **Proposal: width-exactly-4 exhaustive at `n = 10` only.**
 
-- **Why this and nothing more.** The literature contains **no width-4 `δ` datum at any `n`** (Olson–Sagan covered width > 2 only to `n ≤ 9` and report `14/39` without a width stratification; Peczarski verifies the GPC to `n = 11` but that is `δ ≥ 1/3`, not a width-stratified min-`δ` profile). One exhaustive width-4 number at `n = 10` would be genuinely new, and it is the **only** measurement that tests the §3.6 trend — does the width penalty keep shrinking (`+0.0244 → +0.0068 → +0.0039` at widths-3 `n = 8,9,10`) or does it turn around at width 4?
-- **What it would and would not settle.** It would give one data point on the width/`δ` trend and one exhaustive minimum. It would **not** close, narrow, or bound the residual gap, and any write-up must say so in the headline — this is exactly the F1/F5 failure mode the audit caught last time.
+- **Why this and nothing more.** The literature contains **no width-4 `δ` datum at any `n`** (Olson–Sagan covered width > 2 only to `n ≤ 9` and report `14/39` without a width stratification; Peczarski verifies the GPC to `n = 11` but that is `δ ≥ 1/3`, not a width-stratified min-`δ` profile). One exhaustive width-4 number at `n = 10` would be genuinely new. **Its value is now sharper than when this section was written** (mg-8ff1): §3.6's `n = 10` cell is a width-≤3 minimum and the true **all-width** minimum at `n = 10` is *unknown*. A width-exactly-4 exhaustive at `n = 10` is exactly the missing ingredient — combined with the existing width-≤3 result it would **complete the all-width minimum at `n = 10`** and turn a mislabelled cell into a real one. *(Note the honest shape of this: that same dependency is why the withdrawn "shrinking trend" could not be used to support DROP — the datum needed to validate the trend is the width-≥4 search the trend was invoked to argue against.)*
+- **What it would and would not settle.** It would supply one exhaustive minimum and complete the all-width `n = 10` cell. It would **not** close, narrow, or bound the residual gap — one value of `n` says nothing about a residual unbounded in both `n` and width — and any write-up must say so in the headline. It must **not** be presented as reviving a width/`δ` trend: a single point does not make one. This is exactly the F1/F5 failure mode the audit caught last time.
 - **Cost.** **≈14 minutes of single-threaded Python** (§4.3), over 1 124 519 primitive width-exactly-4 classes. `n = 10` only. This is small enough that the argument against it is *not* cost — it is that it closes nothing, and that a cheap-and-inconclusive result is exactly the kind that gets over-read downstream (audit findings F1/F5).
 - **Preconditions.** (i) an explicit "COMPUTATION IS AUTHORIZED" line in the ticket, which this ticket deliberately does not carry; (ii) the width-4 prune certification of §4.1 is already in place to `n = 8` and should be **extended to `n = 9`** (unpruned enumeration at `n = 9` is 183 231 classes — minutes) so that certification and sweep are not separated by two whole levels; (iii) the STRICT `δ ≤ 1/3` halt guard carried over unchanged; (iv) the write-up must state in its *headline* that it closes nothing — this is precisely the F1/F5 scope-drift the last audit caught.
 - **Explicitly NOT proposed:** width-4 at `n ≥ 11`; any width-≥5 work; any width-4 beam at any `n` (§4.4).

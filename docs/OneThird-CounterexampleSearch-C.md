@@ -520,15 +520,18 @@ Growth is ≈ **7.5× per level**, so `n = 12` is ≈ 2.4·10⁷ classes, each n
 
 **None — the §0 headline is unchanged.** The lowest `δ` anywhere in this document remains `7451/21359` at `n = 25` (§0), from the width-2 ladder family. The best found at width exactly 3 is `6/17 ≈ 0.35294`, which is **`1.8·10⁻²` above the ladder record and `4.1·10⁻³` above `β`** — not competitive. Outcome **(iii)** stands, now on a materially larger arena: **exhaustively larger at width exactly 3 for `n ≤ 11`, and by a bounded search at `12 ≤ n ≤ 16`.**
 
-§6's heuristic for not weighting the width-≥3 gap heavily — that `δ` trends upward with width — is **partly corroborated and partly qualified** by §9.3a. Comparing the width-exactly-3 minimum against the all-width minimum of §5.1:
+§6's heuristic for not weighting the width-≥3 gap heavily — that `δ` trends upward with width — is **partly corroborated and partly qualified** by §9.3a. Comparing the width-exactly-3 minimum against the best exhaustively-established minimum of §5.1:
 
 | `n` | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
 |:--|:--|:--|:--|:--|:--|:--|:--|
-| all-width min `δ` | `4/11` | `5/14` | `14/39` | `16/45` | `6/17` | `37/106` | `20/57` |
+| **arena actually covered** | all widths | all widths | all widths | all widths | all widths | **width ≤ 3** | **width ≤ 3** |
+| min `δ` over that arena | `4/11` | `5/14` | `14/39` | `16/45` | `6/17` | `37/106` † | `20/57` † |
 | width-exactly-3 min `δ` | `4/11` | `15/37` | `14/39` | `19/50` | `50/139` | `6/17` | `134/375` |
-| gap | **0** | `+0.0483` | **0** | `+0.0244` | `+0.0068` | `+0.0039` | `+0.0065` |
+| gap | **0** | `+0.0483` | **0** | `+0.0244` | `+0.0068` | (`+0.0039`) † | (`+0.0065`) † |
 
-**Two honest qualifications.** (a) At `n = 5` and `n = 7` the gap is **zero** — the all-width optimum *is* a width-3 poset (§5.1 already flags both: `n = 5` "width 3, not width 2", and `n = 7` is Saks' `M₇`). So "wider ⟹ worse balance" is **not** a strict rule. (b) The gap **shrinks** from `n = 8` to `n = 10` (`0.0244 → 0.0039`) before widening again at `n = 11`; it is not monotone, and we cannot extrapolate it to `n ≥ 12`. What the data *does* support is the weaker and sufficient claim that **no width-3 poset at `n ≤ 11` comes near `β`** — the closest is `6/17`, still `4.1·10⁻³` away, three orders of magnitude worse than the ladder family's `2.45·10⁻⁶`.
+**⚠ The first two columns of that row are not the same quantity.** At `n ≤ 9` the all-width sweep is exhaustive (§5.1, coverage `exhaustive-allwidth`), so the row *is* the all-width minimum. At `n = 10, 11` it is **not**: §5.1's own coverage column reads `exhaustive-width2` there, and §6's scope table says in terms that all widths at `n = 10, 11` are **"not covered here"**. What the `n = 10, 11` cells report is the minimum over **width ≤ 3** — the width-≤2 exhaustive sweep combined with §9.2's width-exactly-3 exhaustive sweep. The true **all-width** minimum at `n = 10, 11` is **not known to this document**. Cells marked † are therefore *not* all-width comparisons, and the gap values in parentheses compare width-≤3 against width-exactly-3, not width-≥4 against anything. *(Corrected in mg-8ff1 after audit mg-7d24 found this row mislabelled "all-width min `δ`" and the mislabel propagated downstream; the row was wrong here, at the source.)*
+
+**Two honest qualifications.** (a) At `n = 5` and `n = 7` the gap is **zero** — the all-width optimum *is* a width-3 poset (§5.1 already flags both: `n = 5` "width 3, not width 2", and `n = 7` is Saks' `M₇`). So "wider ⟹ worse balance" is **not** a strict rule. (b) The apparent **shrinking** of the gap from `n = 8` to `n = 10` (`0.0244 → 0.0039`) **is an artefact of the mislabel and must not be read as a trend.** The `n = 8` entry is an all-width minimum; the `n = 10` entry is a width-≤3 minimum. Since an all-width minimum can only be ≤ a width-≤3 one, the unknown true all-width value at `n = 10` can only make that gap *larger* than `0.0039` — so the sequence `0.0244 → 0.0039` is comparing incomparable quantities in the direction that manufactures a downward trend. **Establishing the real `n = 10` value would require exactly the width-≥4 search this document does not perform**, which is why the trend cannot be repaired from data already in hand. It is not monotone, it is not like-for-like, and it must not be extrapolated to `n ≥ 12`. What the data *does* support is the weaker and sufficient claim that **no width-3 poset at `n ≤ 11` comes near `β`** — the closest is `6/17`, still `4.1·10⁻³` away, three orders of magnitude worse than the ladder family's `2.45·10⁻⁶`. That claim stands on its own and needs no trend.
 
 ### 9.6 Provenance of this section
 
@@ -566,7 +569,18 @@ The five findings and their disposition under **mg-8489** (this pass — hardeni
 
 **Nothing here blocks anything, and the mathematics and search results stand exactly as reported.** This pass adds **no new mathematical claim** — it tightens scope wording and closes one control-coverage gap.
 
-*A note the audit made and this section endorses (F6, INFO): the genuinely-new-territory contribution at `n ≥ 12` is the bounded beam alone. §9.3a's `n ≤ 11` sits inside Peczarski's GPC-verified range — but Peczarski verifies the Gold Partition Conjecture there, not a width-stratified min-`δ` profile, and Olson–Sagan covered only `n ≤ 9` at width > 2, so `n = 10, 11` is new relative to them. The boundary set by the originating ticket was respected.*
+### 9.9 A later audit found a defect this one missed (added mg-8ff1)
+
+`aud0eac`'s PASS-WITH-FINDINGS above did **not** examine §9.5's comparison row. A subsequent independent audit — **mg-7d24**, auditing the downstream mg-c47a width-4 scoping document — found that §9.5 labelled its comparison row **"all-width min `δ`"** when the `n = 10, 11` cells are **width ≤ 3**, contradicting this document's own §5.1 coverage column and §6 scope table. The mislabel had already **propagated** into mg-c47a §3.6, where it supplied a spurious "shrinking penalty" trend.
+
+It is corrected **at the source, here** (§9.5), and in the downstream copy, under **mg-8ff1**. Two things worth recording rather than quietly fixing:
+
+- **A previously audited section can still be wrong.** This is exactly the case Appendix A of `onethird_program/STATE.md` anticipates. A PASS verdict bounds what an audit *checked*, not what is *true*; `aud0eac` re-derived every number and found none wrong, and the defect was a **label on a correct number** — a class of error that number-checking is structurally blind to.
+- **Fixing only the downstream copy would have left the defect live** to be propagated again by the next reader of §9.5. Repairing propagated defects at their origin is the rule, not a courtesy.
+
+No number in §9.5 changed; the `δ` values in the row were and remain correct. What changed is what they are labelled as, and the withdrawal of the trend read off them.
+
+*A note the earlier audit made and this section endorses (F6, INFO): the genuinely-new-territory contribution at `n ≥ 12` is the bounded beam alone. §9.3a's `n ≤ 11` sits inside Peczarski's GPC-verified range — but Peczarski verifies the Gold Partition Conjecture there, not a width-stratified min-`δ` profile, and Olson–Sagan covered only `n ≤ 9` at width > 2, so `n = 10, 11` is new relative to them. The boundary set by the originating ticket was respected.*
 
 ## 10. References
 
