@@ -552,6 +552,14 @@ quoted here only as an order of magnitude in a remark that carries no load — t
 sufficient point already follows from `m_{a_i} = E|K_i − (i−1)| > 0` being unbounded, which the
 identity `m_{a_i} = E|K_i − (i−1)|` makes evident. Labelled **[HEURISTIC]** as to the exact rate.)*
 
+> **⚠️ ANNOTATION (2026-07-29, mg-1fdb) — the parenthetical above overstates.** `m_{a_i} > 0` gives
+> **positivity, not unboundedness**, and the insufficiency claim needs unboundedness. The only ground
+> for unboundedness on offer is the `Θ(√m)` rate, which is labelled **[HEURISTIC]** — so contrary to
+> the parenthetical, the rate *does* carry load here. The §10 ledger row for §7.3 is downgraded from
+> **PROVEN** to **PLAUSIBLE** on the insufficiency claim accordingly (mg-d112 audit §3.1).
+> **Consequence: nil.** §7.3 is a structural remark in a section flagged "recorded as structure, not
+> as progress"; nothing in §0, §3, §5 or §6 depends on it. Done for the ledger's accuracy.
+
 ---
 
 ## 8. Obstructions — why the elementary marginal tools are inert on this target
@@ -733,7 +741,7 @@ Per the ticket: every claim asserted anywhere in this document, including reduct
 | 7.1 | Lemma 7.1 holds with **equality** on `W_m` at `x = z` | **PROVEN** (both sides equal `Σ_i min(i,m+1−i)/(m+1)`) |
 | 7.2 | **Lemma 7.2** — `N_x ≤ (W_x−1) + N_{z⁻} + N_{z⁺}` pointwise | **PROVEN**, new, elementary |
 | 7.2 | Lemma 7.2 does **not** close anything (the max-form recursion is vacuous) | **PROVEN**, stated as a limitation |
-| 7.3 | bounded expected windows is necessary but **not** sufficient; `C_m ⊔ C_m` witnesses this via `m_{a_i} = E\|K_i − (i−1)\|` | **PROVEN** for the identity and the insufficiency; the rate `Θ(√m)` is **HEURISTIC** and carries no load |
+| 7.3 | bounded expected windows is necessary but **not** sufficient; `C_m ⊔ C_m` witnesses this via `m_{a_i} = E\|K_i − (i−1)\|` | **PROVEN** for the identity; **PLAUSIBLE** for the insufficiency — *downgraded 2026-07-29 (mg-1fdb) per the mg-d112 audit §3.1*: insufficiency needs `m_{a_i}` **unbounded**, and the stated non-heuristic ground (`m_{a_i} > 0`) gives positivity, not unboundedness; the unboundedness comes only from the `Θ(√m)` rate, which is **HEURISTIC**. So the rate *does* carry load here. Consequence: **nil** — §7.3 is explicitly "recorded as structure, not as progress", and nothing in §0, §3, §5 or §6 depends on it |
 | 8.1 | two-atom law ⟹ the lemma is false for abstract frozen laws | **PROVEN**; **re-derivation**, credited to STATE.md obstruction 4 / mg-7ae7 |
 | 8.2 | **Observation 8.1** — the 3-element system reduces on `e`-ordered triples to `m_{xz} ≤ m_{xy} + m_{yz}`, the reverse instance vacuous | **PROVEN**, elementary; the subadditivity itself is probe A's (mg-61bb) |
 | 8.2 | **Corollary 8.2** — pairwise marginals + 3-element inequalities cannot prove the lemma; subadditivity is wrong-signed for decay | **PROVEN** (constant assignment `m ≡ ε` satisfies the system and is realized by §8.1's law) |
@@ -744,7 +752,9 @@ Per the ticket: every claim asserted anywhere in this document, including reduct
 
 **Nothing in this document is tagged CONDITIONAL except Observation 1.1** (conditional on the
 1/3–2/3 conjecture, and stated as such), **and the two [HEURISTIC] items are §7.3's rate and §9's
-"not known to imply LIB" absence.** Everything else is PROVEN, elementary, and self-contained.
+"not known to imply LIB" absence.** Everything else is PROVEN, elementary, and self-contained —
+*with one correction (2026-07-29, mg-1fdb): §7.3's **insufficiency** claim is **PLAUSIBLE**, not
+PROVEN, because it rests on that HEURISTIC rate (mg-d112 audit §3.1). Nil consequence downstream.*
 
 ---
 

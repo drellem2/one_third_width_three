@@ -184,6 +184,39 @@ So **`max_x m_x = O(1)` ⟹ the deterministic part of (B) holds**; and by Jensen
 whether the frozen structure caps the per-element inversion degree `m_x` (and the analogous
 variance tails).
 
+> ### ⚠️ ANNOTATION (2026-07-29, mg-1fdb): the sentence beginning *"and by Jensen"* above is **WRONG — an inequality-direction error.**
+>
+> **What is wrong.** The display `Σ_x E[disp(x)]² ≤ Σ_x m_x²` at line 179 is **correct** — it is an
+> **upper** bound, and it uses `|E[disp(x)]| ≤ m_x` in the direction the triangle inequality supplies.
+> The very next sentence reverses it: to conclude `E[Σ disp²] ≥ m_x² = Θ(n²)` from a single
+> `m_x = Θ(n)` you need `|E[disp(x)]| ≥ m_x`, i.e. `b_x ≥ m_x`, where
+> `b_x := |E[pos_σ(x)] − rank_e(x)| = |E[A_x] − E[B_x]|`. **The only available relation is
+> `b_x ≤ m_x`** (Identity 4.1 of `OneThird-Bbias-Locality-Lemma.md`, mg-a58f: `b_x` is the *difference*
+> of the `e`-above and `e`-below inversion masses, `m_x` their *sum*; equality holds iff the mass is
+> one-sided). This is the same `b`-versus-`m` conflation mg-a58f diagnoses as "the lossy step" —
+> **used here in the opposite direction, where it is not lossy but invalid.**
+>
+> **Refuted by an explicit witness.** On `W_m = C_m ⊔ C_1` (mg-a58f §6.1, all values hand-computed and
+> independently recomputed by the mg-d112 audit §2.3): `m_z = Θ(n)` and `E[inv_e] = Θ(n)` — exactly the
+> hypothesis of the quoted sentence — yet `Σ_x E[disp_σ(x)]² = Σ_x b_x² ≤ n = Θ(n)`, **not** `Θ(n²)`.
+> The inference fails on the very configuration it describes. *(Lemma (B) does fail on `W_m` — but
+> through the **variance** term, which is not what the quoted argument claims. `W_m` also has
+> `δ = 1/2`, so it is a separation of **quantities**, not of frozen-conditional statements.)*
+>
+> **Consequence for this document.** §2.3's *upper*-bound half stands unchanged, and with it the
+> sufficiency direction "`max_x m_x = O(1)` ⟹ the deterministic part of (B)". What does **not** stand
+> is the converse reading: **`max_x m_x = Θ(n)` does not falsify (B)**, so §2.3 does not establish that
+> lemma (B) "hinges on" capping `max_x m_x`. See the further annotation at §3.2.
+>
+> **Provenance, and why the record is worth keeping.** Caught by the independent audit mg-d112 (§6.2)
+> of the mg-a58f deliverable. mg-a58f itself **read this passage, quoted the display immediately above
+> the error (line 179), and concluded "Both are correct"** — true of what it quoted, and one line short
+> of the error. It had every tool needed to catch it (Identity 4.1, Observation 5.2, and `W_m` itself).
+> Recorded plainly because *how the miss happened* is the durable value here: this is the second
+> instance of the same defect family — an unflagged inequality-direction error in merged work, the
+> first being mg-0ed7 §7.5, caught by mg-8f56. Both survived a prior review. The corresponding process
+> repair is `STATE.md` Appendix A step **4b** (strength check + falsifier-quantifier check).
+
 ---
 
 ## 3. Lemma (B) — the wall, named
@@ -211,6 +244,25 @@ could cross a whole frozen chain and contribute `Θ(n)` to a displacement").
 
 > **Is a bimodal chain-cross realizable under a single frozen `e` in width 3?**
 > Equivalently: can `max_x m_x = ω(1)` (indeed `Θ(n)`) with `E[inv_e] = O(n)`, δ < 1/3, width 3?
+
+> ### ⚠️ ANNOTATION (2026-07-29, mg-1fdb): **"Equivalently" is not an equivalence** — same `b`-vs-`m` conflation as §2.3.
+>
+> The falsifier of §3.1 is derived **only at the `e`-minimal element**, where `B_x = 0`, so
+> `disp_σ(x) = A_x`, `b_x = m_x`, and `E[A_x²] ≥ d_1²` genuinely does bound the (B) sum from below.
+> That derivation is sound *at that element*. **Generalising it from the `e`-min to `max_x` is the
+> invalid step**: away from the `e`-min the two masses cancel, and the only available relation is
+> `b_x ≤ m_x` (Identity 4.1, mg-a58f), which points the wrong way. `W_m = C_m ⊔ C_1` realises
+> `max_x m_x = Θ(n)` with `E[inv_e] = Θ(n)` and `max_x b_x ≤ 1` — the second display's hypothesis
+> holds and (B)'s deterministic part does not fail.
+>
+> **So `max_x m_x = Θ(n)` with `E[inv_e] = O(n)` does *not* falsify (B-bias)**, and the second
+> display is a *strictly stronger* question than the first, not an equivalent one. Since this section
+> is this document's *"single pin"* and the origin of §5's recommendation 1, the effect on the record
+> is sharper than bookkeeping: **the recommended target was not merely mis-priced (too strong — see
+> mg-a58f Thm 3.2, `Σ_x m_x = 2E[inv_e]`, so a uniform `max_x m_x ≤ C` bound simply *is* LIB); it was
+> also mis-derived as a falsifier.** The negation of §3.1's falsifier *at every element* is mg-a58f's
+> (EQ), `max_x |E[pos_σ x] − rank_e x| = O(1)`, which is the object that actually does this section's
+> job. Caught by the independent audit mg-d112 §6.2; not caught by mg-a58f. See §2.3's annotation.
 
 Two opposing pressures make this genuinely undecided by elementary means:
 - **Against.** Freezing `x` *before* a long incomparable chain requires `x` to be *pinned early*
