@@ -3,6 +3,15 @@
 **Status: RED for the prediction under test. The corpus predicted `c ≈ 0` at the three named
 n=7 off-regime posets; the measured value is `c ≈ 0.9966`.**
 
+> **AUDITED (mg-09ea, verdict OVERSTATED) — consequences landed in place 2026-07-29 by mg-60d3.**
+> The arithmetic is **CONFIRMED exhaustively**: every measured figure was reproduced from
+> definitions by a disjoint route, and the population claim confirmed twice — once with **no
+> enumeration at all**. **Not one number is wrong.** What was struck is one inference (§6(a)'s
+> *"no explanatory power"*, refuted by this document's own dataset) and two instrument gaps that
+> let mutations pass CI. **§14 is the ledger of what changed and what did not** — read it before
+> quoting any summary line from this file. Where this document and the audit disagree, **the audit
+> wins**; audit: `docs/OneThird-mg2c34-n7-Overlap-Test-IndependentAudit.md`.
+
 Ticket: mg-2c34, repo `one_third_width_three`. Computation permitted (Daniel, 2026-07-29: the
 no-computation directive *"was a specific directive for the time when I said it, it's not a blanket
 prohibition"*). First ticket filed under that clarification.
@@ -14,10 +23,13 @@ Artifacts, all committed:
 | the instrument + all controls + the sweep | `scripts/onethird_mg2c34_n7_overlap_test.py` |
 | every number below | `data/onethird-mg2c34-n7-overlap.json` |
 | prior data re-verified, not re-derived | `data/onethird-mg8b64-L1b-bk-transport-transfer.json` |
+| the independent audit's own sweep (§6, §6.1 project from it) | `data/onethird-mg09ea-independent-audit.json` |
+| the repaired gate's mutation demonstration (§2.6.1) | `scripts/onethird_mg60d3_gate_mutation_demo.py`, `data/onethird-mg60d3-gate-mutation-demo.json` |
 
-Reproduce in full with `python3 scripts/onethird_mg2c34_n7_overlap_test.py` (numpy; ~4 min). The
-script exits non-zero if any control fails, and runs in CI in its fast mode (§2.6). Nothing in this
-document is asserted from a number that is not in the committed JSON.
+Reproduce in full with `/usr/bin/python3 scripts/onethird_mg2c34_n7_overlap_test.py` (numpy; the
+interpreter matters — see §12). The script exits non-zero if any control fails, and runs in CI in
+its fast mode (§2.6). Nothing in this document is asserted from a number that is not in a committed
+JSON.
 
 ---
 
@@ -30,7 +42,8 @@ document is asserted from a number that is not in the committed JSON.
    6.6–15× the null: not a dimension artifact.
 
 2. **It is not three posets — it is every n=7 both-connected poset there is.** Measured on all
-   **956** isomorphism classes (mg-8b64's dedup had dropped 10; §5.1 finds and measures them):
+   **956** `n = 7` **both-connected** isomorphism classes (mg-8b64's dedup had dropped 10; §5.1
+   finds and measures them):
    `c ∈ [0.978492, 0.998529]`, median `0.994751`. Not one poset has small overlap.
    `corr(c, δ) = 0.055` — `c` is essentially **independent of `δ`**, i.e. of the frozen-regime
    coordinate the "conditional" picture is stated in.
@@ -46,17 +59,34 @@ document is asserted from a number that is not in the committed JSON.
 
 4. **The consequential finding is not the refutation — it is what replaces it.** `c` is pinned
    inside a 2%-wide band across the entire population, while the modulus the L1b transfer would
-   actually need, `R = (1−λ_std)/(1−λ₂^BK)`, ranges over `[0.99, 19.93]`. So **`c` has no
-   explanatory power for the transfer at n=7**: knowing `c` across its whole observed range
-   constrains `R` to its whole observed range. Worse for the programme, `corr(c, R) = +0.50` — the
-   **wrong sign** for a control inequality "high overlap ⟹ small required modulus".
+   actually need, `R = (1−λ_std)/(1−λ₂^BK)`, ranges over `[0.99, 19.93]`. And
+   **`corr(c, R) = +0.50` — the wrong sign** for a control inequality *"high overlap ⟹ small
+   required modulus"*. The sign result is monotone across the whole population, not an outlier
+   artifact: median `R` climbs from `2.90` in the bottom `c`-decile to `7.99` in the top, and
+   `R > 15` **forces** `c ≥ 0.994228` (§6, decile table). So `c` is **not a valid control
+   parameter** — which is a different and weaker statement than "`c` says nothing about `R`", and
+   only the first is true.
+
+   > **[CLAUSE STRUCK 2026-07-29 by mg-60d3, on mg-09ea §4.1 (F1).]** This point previously read
+   > *"So **`c` has no explanatory power for the transfer at n=7**: knowing `c` across its whole
+   > observed range constrains `R` to its whole observed range."* That clause is **BROKEN, and
+   > refuted by this document's own dataset.** Its derivation read *`c` spans 2%, `R` spans 20×* as
+   > *`c` cannot explain `R`*; **range width is not explanatory power** (a variable confined to a
+   > narrow range can determine a wide-range one exactly — `R = 924(c − 0.9785) + 0.99` has
+   > correlation `1`). Measured: `c` accounts for **25% of `R`'s variance**, and conditioning on the
+   > bottom `c`-decile confines `R` to `[1.07, 5.77]` — a quarter of the span. The replacement above
+   > is §6(b), and §6(b) is **stronger** than what was struck. **Ledger claim 12 is unchanged and
+   > survives as worded** (§11); what failed is its stated derivation and this prose.
 
 5. **What was never checkable at all.** The conditioning hypothesis of the "conditional
    standard-dominance" picture — *all-pairs-frozen*, i.e. `δ(P) < 1/3` — is **satisfied by no
    poset anywhere in the mg-8b64 ensemble** (1091 rows; `min δ = 1/3` exactly, `0` rows below).
-   `δ(P) < 1/3` says *every* incomparable pair is unbalanced — which **is** what it means for `P` to
-   be a counterexample to the 1/3–2/3 conjecture, the statement this programme exists to prove in
-   the width-3 case. So the regime is empty at every `n` unless that conjecture is false. **Both**
+   For any poset **with at least one incomparable pair**, `δ(P) < 1/3` says *every* incomparable
+   pair is unbalanced — which **is** what it means for `P` to be a counterexample to the 1/3–2/3
+   conjecture. So the regime contains **no non-chain poset** at any `n` unless the **general**
+   conjecture is false; a width-3 witness would additionally refute the width-3 case, which is the
+   statement this programme exists to prove, but a width-≥4 witness would not. *(Both qualifiers
+   restored here 2026-07-29 — mg-60d3, on mg-09ea F6; §7 has the full statement.)* **Both**
    the corpus's "off-regime" rows
    (`δ = 0.500`) and its "in-regime" rows (`δ = 0.381`, `0.360`) sit outside the conditioning
    hypothesis. The picture was inferred entirely from a `δ = 0.5` vs `δ ≈ 0.37` contrast and then
@@ -189,22 +219,87 @@ that could differ from it.
 
 A control nobody can fail is indistinguishable from no control at all — the mg-4ad1 lesson, applied
 to this file. The script **exits non-zero** if CONTROL A, B or C fails, if CHECK-0 disagrees by more
-than `1e-12`, if any of the three posets stops matching its committed mg-8b64 row, or if a
-degenerate `λ₂` ever makes the reported `c` reading-dependent. It is wired into
-`.github/workflows/script-controls.yml` in `--no-sweep` mode (~40 s), alongside the existing mg-8489
-and mg-8ff1 controls.
+than `1e-12`, if any of the three posets stops matching its committed mg-8b64 row **on any of
+`|L|`, `λ_std`, `δ` or `λ₂^BK`**, or if a degenerate `λ₂` ever makes the reported `c`
+reading-dependent. It is wired into `.github/workflows/script-controls.yml` in `--no-sweep` mode,
+alongside the existing mg-8489 and mg-8ff1 controls.
 
 **Mutation-tested, because "exits non-zero on failure" is itself a claim:**
 
 | mutation | caught by | exit |
 |---|---|---|
 | `projector_U` → a random subspace of the same dimension | CHECK-0 (`9.06e-01` disagreement) | **1** |
-| `U` genuinely shrunk (even positions only) — invisible to CHECK-0, since both instruments then share the wrong `U` | CONTROL B (`c = 0.573 / 0.724 / 0.530` on the antichains) | **1** |
+| `U` genuinely shrunk (even **positions** only) — invisible to CHECK-0, since both instruments then share the wrong `U` | CONTROL B (`c = 0.573 / 0.724 / 0.530` on the antichains) | **1** |
 | drop element `0`'s position observables from `U` | *nothing — and correctly so* | 0 |
+| **M1** — BK step `1/(n−1)` instead of `1/(2(n−1))` | ~~nothing~~ → **the identity check's `match_bk_lambda2`** *(repaired)* | **1** |
+| **M2** — `U` shrunk by **element** block (elements `0` **and** `1` dropped) | ~~nothing~~ → **CONTROL B's `c_min`** *(repaired)* | **1** |
 
 The third row is not a gap. Dropping any single element's block is a **no-op on `U`**: since
 `Σ_x 1[σ(a)=x] ≡ 1`, that block already lies in the span of the others together with the constant,
-and `dim U` is unchanged (`10 / 17 / 26` before and after). The gate is right not to fire.
+and `dim U` is unchanged (`10 / 17 / 26` before and after). The gate is right not to fire. **But the
+general claim that row implies — that CONTROL B covers `U` shrinks — is false**, and M2 is the
+witness: CONTROL B caught the *position*-block shrink and did not catch the *element*-block one.
+
+#### 2.6.1 The two repairs, and the demonstration that they fire (mg-60d3, on mg-09ea F3/F4)
+
+> **[Landed 2026-07-29.]** mg-09ea ran its own mutations against the shared dependency modules — so
+> that *both* this measurement and mg-4a86's reference instrument see the bug, which is the
+> realistic case for a coding error — and found **two that passed this gate**. mg-2c34 had wired
+> `script-controls.yml` to run these controls, so a gate that could not fail was **load-bearing in
+> CI**. Both repairs use values the script **already computed and threw away**; one line each.
+
+**F3 — `λ₂^BK` had no control that could fail, and the check that would cover it was *fetched and
+discarded*.** Under M1 the three headline `λ₂^BK` values become `0.961846 / 0.962405 / 0.959841`
+instead of `0.980923 / 0.981202 / 0.979921`, every `R` in §6 roughly halves, §4's column is wrong
+and §9's *"the `λ₂^BK` and `λ_std` columns reproduce the corpus's numbers exactly"* is falsified.
+Nothing caught it, and each miss had a reason: **CONTROL A never calls `bk_walk_matrix`** (it
+synthesises its own `W` from a chosen spectrum); **CONTROL B/C are eigenvector-only**, and a global
+rate rescaling fixes every eigenvector — the demonstration confirms this exactly, `c` under M1 is
+**bit-identical** at all five posets (`0.995552 / 0.996857 / 0.996549 / 0.987947 / 0.995256`) while
+every `λ₂^BK` moves; **CHECK-0 shares the code** (§11.1); and the identity check
+set `rec["ref_bk_lambda2"]` and then built only `match_num_LE`, `match_lambda_std`, `match_delta`.
+The one committed reference value for the only genuinely **dynamical** quantity in the document —
+the denominator of `R`, which is the whole substance of §6 — was loaded into the report and never
+compared. **Repair:** `λ₂^BK` is now recomputed in the identity block and `match_bk_lambda2` is in
+the gate's conjunction (`_identity_row_ok`). *The number was never wrong* — mg-09ea's independent
+Laplacian route agrees with the committed reference to `≤ 2.5e-15` — so this was **missing control,
+not wrong result**. But under Appendix A's own standard, a passing result whose check could not fail
+is unsupported.
+
+**F4 — CONTROL B gated on `c_max` only, and computed `c_min` without asserting it.** Under M2 the
+headline values move to `0.986571 / 0.988475 / 0.995959` (`#3 / #20 / #600`; `dim U` drops
+`10/17/26 → 7/13/21` on the antichains, so `U` is genuinely smaller) and the gate exited 0: on the
+antichain the
+shrunk `U` still meets the `λ₂` eigenspace, and `c_max` is a **maximum over that eigenspace**, so
+the favourable reading survives a shrink the adversarial reading does not. **This is the same
+one-sidedness §2.7 identifies as the reason to report `c_min` at all** — it was added to the
+measurement and not to the control. The already-computed value separates the cases perfectly:
+
+| antichain | true `U`: `c_max` / `c_min` | shrunk `U`: `c_max` / `c_min` |
+|---|---|---|
+| `A₄` | 1.000000000 / **1.000000** | 1.000000000 / **0.000000** |
+| `A₅` | 1.000000000 / **1.000000** | 1.000000000 / **0.000000** |
+| `A₆` | 1.000000000 / **1.000000** | 1.000000000 / **0.000000** |
+
+**Repair:** `B_PASS_c_is_1` now requires `|c_min − 1| < 1e-8` as well as `|c_max − 1| < 1e-8`
+(`_antichain_row_ok`).
+
+**Both repairs are demonstrated to FIRE**, because a control asserted and not shown to fire is the
+exact defect this arc keeps producing. `scripts/onethird_mg60d3_gate_mutation_demo.py` runs the
+full CI gate six times and asserts the whole exit-code matrix
+(`data/onethird-mg60d3-gate-mutation-demo.json`):
+
+| | pre-repair gate | repaired gate |
+|---|---|---|
+| unmutated instrument | exit **0** | exit **0** — neither repair fires on a healthy instrument |
+| **M1** (BK step) | exit **0** ← the defect | exit **1** — `enum-n7-#3/#20/#600/#809/#945` all fail `match_bk_lambda2` |
+| **M2** (`U` shrunk) | exit **0** ← the defect | exit **1** — CONTROL B fails on `A₄`, `A₅`, `A₆` |
+
+The pre-repair gate is reconstructed **inside the demo**, by substituting the two predicates' old
+bodies; the deliverable's gate has no switch that weakens it and must not acquire one. The demo is
+**itself a control** — it exits non-zero if that matrix is not observed exactly. It is **not** in CI:
+six full gate runs is ~12 min, far outside the order-seconds rule `script-controls.yml` states at the
+top. Run it on demand when the gate changes.
 
 ### 2.7 What this instrument adds over mg-4a86's
 
@@ -402,23 +497,94 @@ Over the 946-poset population:
 | `c` | 0.978492 | 0.994751 | 0.998529 |
 | `R` | 0.9923 | 5.9703 | **19.9303** (at `enum-n7-#94`, `c = 0.998001`) |
 
-`c` is confined to a band **2% wide**; `R` spans a factor of **20**. Two consequences, both tightly
-scoped to `n = 7`:
+`c` is confined to a band **2% wide**; `R` spans a factor of **20**. Two consequences were drawn
+from that, both tightly scoped to `n = 7`. **The first does not follow and is struck; the second is
+the finding, and it is stronger than it was stated.**
 
-**(a) `c` cannot explain `R`.** Conditioning on `c` anywhere in its observed range leaves `R` in
-essentially its whole observed range. Whatever distinguishes `R ≈ 1` posets from `R ≈ 20` posets, it
-is not the overlap.
+**(a) — STRUCK.**
 
-**(b) The correlation has the wrong sign.** `corr(c, R) = +0.50` (`corr(c, log R) = +0.53`). A
-control inequality of the shape *"higher standard-sector overlap ⟹ smaller required modulus"* would
-need this negative. At `n = 7` the poset with the **largest** required modulus has
-`c = 0.998001` — near the top of the `c` range.
+> **[STRUCK 2026-07-29 by mg-60d3, on mg-09ea §4.1 (F1).]** §6(a) previously read: *"**`c` cannot
+> explain `R`.** Conditioning on `c` anywhere in its observed range leaves `R` in essentially its
+> whole observed range. Whatever distinguishes `R ≈ 1` posets from `R ≈ 20` posets, it is not the
+> overlap."* It is **BROKEN, and refuted by the dataset this very section is computed from.** The
+> inference was *`c` spans 2%, `R` spans 20× ⟹ `c` cannot explain `R`*, and **range width is not
+> explanatory power**: the affine map `R = 924(c − 0.9785) + 0.99` takes `c`'s observed band onto
+> `[0.99, 19.47]` with correlation `1`. No conditional-range table was ever computed, here or in the
+> JSON. It is computed below, and it says the opposite. **What replaces §6(a) is the table, and the
+> table is (b) restated more strongly.**
+
+**(a′) `c` carries real information about `R` — and it is exactly the wrong information.**
+Conditioning on `c` by decile, over all 956 classes (mg-09ea's independent sweep, §4.1 of the audit;
+`data/onethird-mg09ea-independent-audit.json`):
+
+| `c` decile | n | `c` range | `R` min | `R` max | `R` median | share of full `R` span |
+|---|---|---|---|---|---|---|
+| 1 (lowest `c`) | 96 | 0.978492 – 0.987176 | 1.073 | **5.770** | 2.896 | **0.248** |
+| 2 | 95 | 0.987176 – 0.991508 | 0.992 | 8.704 | 3.810 | 0.407 |
+| 3 | 96 | 0.991508 – 0.992428 | 1.361 | 9.006 | 4.154 | 0.404 |
+| 4 | 95 | 0.992428 – 0.993597 | 3.945 | 12.079 | 6.960 | 0.430 |
+| 5 | 96 | 0.993597 – 0.994767 | 2.017 | 15.463 | 7.405 | 0.710 |
+| 6 | 95 | 0.994767 – 0.995528 | 1.738 | 16.805 | 6.396 | 0.796 |
+| 7 | 96 | 0.995528 – 0.996466 | 2.205 | 18.273 | 9.526 | 0.848 |
+| 8 | 95 | 0.996466 – 0.997245 | 2.835 | 16.582 | 9.132 | 0.726 |
+| 9 | 95 | 0.997245 – 0.997866 | 4.094 | 13.731 | 7.054 | 0.509 |
+| 10 (highest `c`) | 97 | 0.997866 – 0.998529 | 2.245 | **19.930** | 7.986 | 0.934 |
+
+- The bottom decile leaves `R` in **24.8%** of its span — not "essentially its whole range" — and
+  caps `R` at `5.77`, under a third of the population maximum. The bottom **three** deciles all cap
+  `R` below `9.01`.
+- Median `R` rises from **2.90** to **7.99**, a factor of `2.8`, essentially monotonically.
+- `corr(c, R) = +0.4991` ⟹ **`c` accounts for 25% of `R`'s variance**; mean within-decile variance
+  is `7.99` against a total of `11.89`.
+- Read the other way: `R > 15` (14 posets) **forces** `c ≥ 0.994228`.
+
+*(Provenance: **the table is the auditor's and is landed verbatim** — where this document and the
+audit disagree the audit wins. It was independently re-derived here from the committed
+`data/onethird-mg09ea-independent-audit.json`, and **every load-bearing figure reproduces exactly**:
+`corr(c,R) = 0.499101`, `corr(c,log R) = 0.536193`, bottom-decile `R ∈ [1.073, 5.770]` with span
+share `0.248`, `R > 15` ⟹ `c ≥ 0.9942276` on 14 posets, and mean-within-decile / total variance
+`7.994 / 11.892`. The re-derivation differs only in how the 956 classes are cut into deciles — a
+`95/96/…` split against the audit's `96/95/…`, one rank either way at each boundary — which moves the
+medians of deciles 2, 4, 9 and 10 by at most `0.08` and changes nothing else.)*
+
+**(b) The correlation has the wrong sign — this is the finding.** `corr(c, R) = +0.50`
+(`corr(c, log R) = +0.53`). A control inequality of the shape *"higher standard-sector overlap ⟹
+smaller required modulus"* would need this negative. At `n = 7` the poset with the **largest**
+required modulus has `c = 0.998001` — near the top of the `c` range. The decile table above is a
+**strictly stronger** statement of (b) than the correlation coefficient alone, because it shows the
+relation is monotone and not the work of a few outliers.
 
 The programme's honest BK-side statement, which mg-4a86's audit correctly identified as *"the slowest
 BK mode has `Ω(1)` standard-sector component"*, is therefore **already true and already
 insufficient**: it holds with `c ≥ 0.978` unconditionally across the measured population, and the
 transfer still needs a modulus of `20` there. The missing ingredient in L1b is not standard
 dominance in the overlap sense.
+
+### 6.1 This conclusion is drawn entirely OFF the class L1b quantifies over
+
+> **[Flagged 2026-07-29 by mg-60d3, on mg-09ea §4.2 (F2). The deliverable did not state this and
+> should have.]**
+
+L1b as the corpus states it is the **conditional** *all-pairs-frozen ⇒ standard dominance*, and §7
+establishes that **no poset in the ensemble satisfies `δ < 1/3`** — every one of the 956 classes
+measured here has `δ ∈ [0.359, 0.5]`. So §6 refutes the **unconditional** implication
+*high `c` ⟹ small `R`*, which L1b does not assert. **That is the same category error §7 diagnoses in
+the corpus, and it applies to this section.**
+
+The document is not uniformly guilty of it: §7 handles the `c` claim correctly (*"the conclusion
+`c ≈ 1` already holds without the hypothesis"* is a valid a-fortiori). The gap is specific to the
+`R` claim, where **no a-fortiori is available** — `R` being large off-regime says nothing about `R`
+in-regime. Ledger claim 20 already carries the honest, `CONDITIONAL` form; §6's prose did not, and
+now does.
+
+**What closes the objection, in this document's favour.** The obvious escape — *"but the conditional
+picture is fine in-regime"* — is itself measurable in the direction `δ` can be pushed, and mg-09ea
+measured it: **`corr(δ, R) = +0.096`** (`corr(δ, log R) = +0.076`), and the eight lowest-`δ` posets
+(`δ ≤ 0.3929`) still span `R ∈ [0.99, 6.96]` with median `3.73`, against `5.88` in the `δ = 0.5`
+block. So at `n = 7`, **`δ` does not control `R` either** — approaching the regime boundary buys
+nothing measurable. This does **not** reach `δ < 1/3`, which by §7's own argument is unreachable at
+every `n`; it removes the escape without pretending to test the hypothesis. *(Both figures re-derived
+here from the committed audit JSON: `+0.09554 / +0.07576`.)*
 
 ---
 
@@ -431,13 +597,25 @@ all-pairs-frozen means `δ(P) = max_{x∥y} min(p_xy, 1−p_xy) < 1/3`.
 `min δ = 1/3` **exactly** — attained, not undercut — and `0` rows have `δ < 1/3`. Restricted to the
 `n = 7` enumeration, `min δ = 0.358974`.
 
-This is not a sampling accident. For any poset with at least one incomparable pair, `δ(P) < 1/3`
+This is not a sampling accident. For any poset **with at least one incomparable pair**, `δ(P) < 1/3`
 says every incomparable pair has `p_xy ∉ [1/3, 2/3]` — which **is** what it means for `P` to be a
-counterexample to the 1/3–2/3 conjecture. Exhibiting one would refute the conjecture this programme
-exists to prove (in the width-3 case). So:
+counterexample to the 1/3–2/3 conjecture. The hypothesis is load-bearing and is **not** decoration:
+a chain has no incomparable pairs, so `δ = max ∅`, and under any convention making that `< 1/3` a
+chain satisfies the regime without being a counterexample (the conjecture is stated for posets that
+are not total orders). Chains have `|L(P)| = 1`, no BK dynamics and no content, so this is a vacuity
+hole and not a wrong conclusion — but the qualifier belongs in every statement of the reduction,
+including the ledger row. **Which conjecture** a witness would refute also needs splitting, and the
+two answers are different:
 
-- The regime is empty at every `n` **unless the conjecture is false**. (`PROVEN` as a reduction —
-  it is definitional.)
+- A `δ < 1/3` witness of **width 3** refutes the width-3 case — the statement this programme exists
+  to prove.
+- A `δ < 1/3` witness of **width ≥ 4** refutes the **general** 1/3–2/3 conjecture and leaves the
+  width-3 case untouched.
+
+So:
+
+- The regime contains **no non-chain poset** at any `n` **unless the general conjecture is false**.
+  (`PROVEN` as a reduction — it is definitional.)
 - The corpus's *"off-regime"* rows (`δ = 0.500`) and its *"in-regime"* rows (`δ = 0.381`, `0.360`)
   are **both** outside the conditioning hypothesis. The `1/3` boundary separates neither.
 - Therefore the "conditional" qualifier was inferred from a `δ = 0.5` vs `δ ≈ 0.37` contrast in
@@ -452,6 +630,17 @@ without the hypothesis.
 ---
 
 ## §8 — Generalisation audit of this document (Appendix A step 4d, run on myself)
+
+> **[This self-audit was run, was genuinely careful, and still missed the defect. Annotated
+> 2026-07-29 by mg-60d3, on mg-09ea §4.1/§4.2.]** It correctly identified §5's population claim and
+> §6's control-parameter claim as the most general statements here, and it audited both **for scope
+> in `n`** — and got both right. It did **not** audit §6(a)'s *inference* (struck; see §0.4 and §6),
+> and it did **not** audit §6 for **scope in regime** (§6.1). **Scope has more than one axis, and a
+> deliverable's own 4d pass is not sufficient** — the derivation is right, so re-reading the
+> derivation cannot find the defect. This is the fifth consecutive deliverable in the arc with sound
+> arithmetic and one over-wide generalisation at a new location, and the **first** where the
+> document ran 4d on itself; that it still missed is the finding, not the miss. Recorded in
+> `STATE.md` Appendix A.
 
 Appendix A records that this arc is four-for-four on sound arithmetic with an over-wide
 generalisation, at a **new location each time**, and directs that the most general statement a
@@ -510,8 +699,8 @@ its label there.
 | `STATE.md` mg-4a86 row | *"standard dominance appears to hold only in the all-pairs-frozen regime — already indicated by L1b's off-regime n=7 refuters"* | **The stated indication does not hold.** Those refuters have `c ≈ 0.9966`. Also: the regime named is empty in the ensemble (§7). |
 | `STATE.md` mg-4a86 row | *"The one uncomputed decisive check (overlap `c` at the 3 known n=7 off-regime posets) is blocked"* | **Discharged.** Computed; result is above. |
 | `union_closed/docs/roadmap.md:12` | *"Standard dominance is CONDITIONAL on all-pairs-frozen"* | **Not supported by the overlap form.** Needs re-wording to name which form is conditional. |
-| `STATE.md` mg-4a86 row | *"SD-quant overlap `c ≥ 0.979`, n ≤ 6"* | **CONFIRMED and extended** to `c ≥ 0.978492` at `n = 7` across all 956 isomorphism classes. |
-| mg-8b64 (`onethird_mgb0a6_..._probe.py:enumerate_both_connected`) | its `n=7` both-connected list, 946 posets, used as the enumeration everywhere downstream | **Undercounts by 10** — there are 956 isomorphism classes; `iso_signature` is not a canonical form and collapses 10 of them. No mg-8b64 conclusion turns on the 10 (§5.1), but the count is wrong wherever quoted. |
+| `STATE.md` mg-4a86 row | *"SD-quant overlap `c ≥ 0.979`, n ≤ 6"* | **CONFIRMED and extended** to `c ≥ 0.978492` at `n = 7` across all 956 `n = 7` **both-connected** isomorphism classes. *(The qualifier was added 2026-07-29 — mg-60d3, on mg-09ea §6. §8 is explicit that the sweep covers both-connected posets only; this row, the artifact that outlives the document, had dropped it. It is not optional: every `n = 7` poset failing either connectivity condition is unmeasured.)* |
+| mg-8b64 (`onethird_mgb0a6_..._probe.py:enumerate_both_connected`) | its `n=7` both-connected list, 946 posets, used as the enumeration everywhere downstream | **Undercounts by 10** — there are 956 `n = 7` **both-connected** isomorphism classes; `iso_signature` is not a canonical form and collapses 10 of them. No mg-8b64 conclusion turns on the 10 (§5.1). **The site is `docs/OneThird-L1b-BK-Transport-Transfer-Probe.md:86`** — *"Exhaustive both-connected posets **n = 3..7** (3, 9, 12, 104, 946 posets)"* — located by mg-09ea §6 and named here 2026-07-29 (mg-60d3), because *"wrong wherever it is quoted"* is not actionable. **`n ≤ 6` is unaffected:** mg-09ea's generating-function count (`1, 12, 104` at `n = 4, 5, 6`) matches `enumerate_both_connected` exactly, so `iso_signature` is exact below `n = 7` and first collides at `n = 7`. |
 
 **What is NOT changed.** Steps 1–8 of the paper; the `λ₂^BK ≠ λ_std` refutation (C1 antichain, C4
 ordinal sums — those are hand proofs and stand); the tempering/deformation route being dead
@@ -555,7 +744,7 @@ Every claim, including reductions asserted in prose. `PROVEN[c]` = proven by com
 | 2 | `λ₂^BK` is **simple** at all three, so `c_min = c_max` | **PROVEN[c]** | at tolerances `1e-9` and `1e-6` |
 | 3 | Those values exceed the random-subspace null (`0.067/0.111/0.152`) by 6.6–15× | **PROVEN[c]** | null = `dim U/\|L\|`, corroborated by 20 seeded draws (CONTROL D) |
 | 4 | The corpus's predicted `c ≈ 0` at these three posets is **refuted** | **PROVEN[c]** | given 1–3; prediction quoted verbatim in §1.2 |
-| 5 | The three posets are the ones the corpus names (`\|L\|`, `λ_std`, `δ` match the committed mg-8b64 rows) | **PROVEN[c]** | `\|L\|` exact; `λ_std`, `δ` to `< 1e-9` |
+| 5 | The three posets are the ones the corpus names (`\|L\|`, `λ_std`, `δ` **and `λ₂^BK`** match the committed mg-8b64 rows) | **PROVEN[c]** | `\|L\|` exact; `λ_std`, `δ`, `λ₂^BK` to `< 1e-9`. **`λ₂^BK` was fetched but never compared until 2026-07-29 (mg-60d3, on mg-09ea F3); it is now in the gate. The value was always right** — mg-09ea's independent Laplacian route agrees to `≤ 2.5e-15` |
 | 6 | **Lemma 3.1**: if `x <_σ y ⟺ pos_σ(x) ≤ k` on all of `L(P)`, then `1[x<_σ y] ∈ U` exactly | **PROVEN** | elementary, no computation; witness family `1 ‖ chain_m` |
 | 7 | Hence *"a degree-2 slow mode has small overlap with `U`"* is an **invalid inference** | **PROVEN** | from 6; a single witness suffices to break an inference |
 | 8 | The frozen-pair indicator's own overlap with `U` is `≥ 0.779` over the population and **exactly `1` in 137/946** posets | **PROVEN[c]** | mg-8b64's own Theorem-E frozen pair (argmin ratio), not the max-bias pair |
@@ -564,9 +753,9 @@ Every claim, including reductions asserted in prose. `PROVEN[c]` = proven by com
 | 9 | Over **all 956** `n=7` both-connected isomorphism classes, `c ∈ [0.978492, 0.998529]`, median `0.994751` | **PROVEN[c]** | exhaustive over that class (claim 16); says nothing about non-both-connected posets |
 | 10 | `corr(c, δ) = 0.055` — `c` is essentially independent of `δ` | **PROVEN[c]** | computed on the 946-poset sweep block |
 | 11 | `R = (1−λ_std)/(1−λ₂^BK)` spans `[0.9923, 19.9303]` while `c` spans a 2%-wide band | **PROVEN[c]** | same scope |
-| 12 | Hence `c` does **not** control the L1b transfer at `n = 7`, and `corr(c,R) = +0.50` has the wrong sign for a control inequality | **PROVEN[c]** | reduction from 9+11; scope is `n = 7`, this population — **not** a claim about all `n` |
+| 12 | Hence `c` does **not** control the L1b transfer at `n = 7`, and `corr(c,R) = +0.50` has the wrong sign for a control inequality | **PROVEN[c]** | **The claim is unchanged and stands as worded** (mg-09ea: CONFIRMED, and strengthened by the decile table). **Its derivation was replaced 2026-07-29 (mg-60d3, on mg-09ea F1): it read "reduction from 9+11", which is INVALID** — claims 9 and 11 are the two range facts and range width is not explanatory power. **It rests on the sign result and the monotone decile table of §6(a′)/(b), not on the widths.** Scope is `n = 7`, this population — **not** a claim about all `n`, and (§6.1) **entirely off L1b's `δ < 1/3` hypothesis class** |
 | 13 | No poset in the mg-8b64 ensemble (1091 rows) has `δ < 1/3`; `min δ = 1/3` exactly | **PROVEN[c]** | read from the committed dataset |
-| 14 | `δ(P) < 1/3` ⟺ `P` is a counterexample to the 1/3–2/3 conjecture; hence the all-pairs-frozen regime is empty at every `n` unless the conjecture is false | **PROVEN** | definitional reduction; stated as a reduction, not as evidence |
+| 14 | **For any poset with at least one incomparable pair**, `δ(P) < 1/3` ⟺ `P` is a counterexample to the 1/3–2/3 conjecture; hence the all-pairs-frozen regime contains **no non-chain poset** at any `n` unless the **general** conjecture is false | **PROVEN** | definitional reduction; stated as a reduction, not as evidence. **The hypothesis clause and the width split were restored 2026-07-29 (mg-60d3, on mg-09ea F6): §7's body always had the first, this row had dropped it; `⟹` fails for chains (`δ = max ∅`), a vacuity hole with no effect on the conclusion. A `δ<1/3` witness of width ≥ 4 refutes the general conjecture only** |
 | 15 | Therefore the corpus's "off-regime" **and** "in-regime" rows both lie outside the conditioning hypothesis | **PROVEN[c]** | from 13+14 and the quoted `δ` values (0.500 / 0.381 / 0.360) |
 | 16 | There are exactly **956** `n=7` both-connected isomorphism classes; mg-8b64's dedup keeps 946 and drops 10 | **PROVEN[c]** | two independent canonicalisations (profile-pruned and brute over all `7!`) agree |
 | 16b | The 10 dropped classes give `c ∈ [0.992696, 0.998412]`, so claim 9 is exhaustive | **PROVEN[c]** | — |
@@ -578,6 +767,10 @@ Every claim, including reductions asserted in prose. `PROVEN[c]` = proven by com
 | 21 | mg-4a86's `c ≥ 0.979` at `n ≤ 6` extends to `c ≥ 0.978492` at `n = 7` | **PROVEN[c]** | two adjacent `n`; a pattern, **not** a law (§8) |
 | 22 | `c ≥ 0.9789` persists on the corpus's family/named stress posets up to `n = 10`, including `fence8` (null `0.026`) and the `n=10` LEM witness (null `0.035`) | **HEURISTIC** | a **locked family**, chosen by the corpus for other reasons; can falsify the pattern, cannot establish it. 10 of the 29 rows are **vacuous** (`dim U = \|L\|`) and are excluded |
 | 23 | Recommendation: do not revert the mg-4a86 dataset; keep the epistemic downgrade | **not a claim** | a recommendation; the decision is pm-onethird's |
+| 24 | **`c` is substantially informative about `R`** — `corr(c,R) = +0.4991` ⟹ `c` accounts for **25%** of `R`'s variance; the bottom `c`-decile confines `R` to `[1.073, 5.770]` (24.8% of the span) and median `R` rises monotonically `2.90 → 7.99` across deciles; `R > 15` forces `c ≥ 0.994228` | **PROVEN[c]** | **added 2026-07-29 (mg-60d3), landing mg-09ea §4.1. This is what REPLACES the struck §6(a).** Computed on mg-09ea's independent 956-class sweep; re-derived here from `data/onethird-mg09ea-independent-audit.json`. **It strengthens claim 12, it does not weaken it** — the information runs the wrong way for a control inequality. Scope `n = 7`, both-connected |
+| 25 | **`δ` does not control `R` either at `n = 7`**: `corr(δ, R) = +0.096` (`corr(δ, log R) = +0.076`); the eight lowest-`δ` classes (`δ ≤ 0.3929`) span `R ∈ [0.99, 6.96]`, median `3.73`, against `5.88` in the `δ = 0.5` block | **PROVEN[c]** | added 2026-07-29 (mg-60d3), landing mg-09ea §4.2. Closes the *"but the conditional picture is fine in-regime"* escape **in this document's favour**. Scope `n = 7`, both-connected; **it does not and cannot reach `δ < 1/3`** (claim 14) |
+| 26 | **§6's conclusion is drawn entirely off L1b's hypothesis class** — L1b is the *conditional* all-pairs-frozen ⇒ standard dominance, and every one of the 956 classes measured has `δ ∈ [0.359, 0.5]` | **PROVEN** | added 2026-07-29 (mg-60d3), landing mg-09ea F2. §6 refutes the *unconditional* implication, which L1b does not assert. §7's `c` claim is a valid a-fortiori; **no a-fortiori is available for `R`**. Claim 20 already carried the honest form; §6's prose did not |
+| 27 | The CI gate **fires** on both mutations that previously passed it: M1 (BK step rescaled) via `match_bk_lambda2`, M2 (`U` shrunk by element block) via CONTROL B's `c_min`; and neither repair fires on the unmutated instrument | **PROVEN[c]** | added 2026-07-29 (mg-60d3), landing mg-09ea F3/F4. Full 2×3 exit-code matrix in §2.6.1 and `data/onethird-mg60d3-gate-mutation-demo.json`; the demo asserts the matrix and exits non-zero otherwise |
 
 ### 11.1 The one caveat on every `PROVEN[c]` label
 
@@ -585,7 +778,18 @@ These are double-precision `numpy.linalg.eigh` computations, not exact arithmeti
 bound the risk, and none of them eliminates it:
 
 - CONTROL A returns closed-form-known answers to `≤ 3.3e-16`.
-- CHECK-0 agrees with an independently-written instrument to `0.0e+00`.
+- ~~CHECK-0 agrees with an independently-written instrument to `0.0e+00`.~~ **RESTATED
+  2026-07-29 (mg-60d3, on mg-09ea F5): CHECK-0 verifies the wrapper, not the instrument, and bounds
+  no numerical risk.** `measure()` and `sd_quant_constant()` call the **same** `bk_walk_matrix` and
+  the **same** `projector_U` on the same inputs, and `slow_eigenspace` duplicates the four
+  eigenspace-selection lines inside `sd_quant_constant`; identical floating-point operations on
+  identical inputs give `0.0e+00` **by construction**. It is invisible to any error in the shared
+  code — which is exactly the class of error the two mutations in §2.6 represent. The bullet as
+  written contradicted §2.5's own *"not a re-implementation that could differ from it"*. **The
+  external agreement that does carry weight is mg-09ea's**, which rebuilt every figure from
+  definitions by a disjoint route (own linear-extension enumeration, graph-Laplacian BK operator,
+  inverse iteration instead of `eigh`, least-squares `P_U`, exact-`Fraction` `p_xy`) and agrees to
+  `≤ 1e-8`, typically `1e-13`.
 - Every margin claimed is enormous relative to any plausible numerical error: the smallest is
   `c = 0.9785` against a null of `0.20`, a margin of `0.78` against errors at `1e-15`.
 
@@ -597,9 +801,15 @@ of magnitude to floating-point error", not "certified by exact arithmetic".
 ## §12 — Reproduction
 
 ```
-python3 scripts/onethird_mg2c34_n7_overlap_test.py            # everything (~4 min); writes the JSON
-python3 scripts/onethird_mg2c34_n7_overlap_test.py --no-sweep # CI control mode (~40 s); writes nothing
+/usr/bin/python3 scripts/onethird_mg2c34_n7_overlap_test.py            # everything; writes the JSON
+/usr/bin/python3 scripts/onethird_mg2c34_n7_overlap_test.py --no-sweep # CI control mode; writes nothing
+/usr/bin/python3 scripts/onethird_mg60d3_gate_mutation_demo.py         # the gate's own mutation demo (§2.6)
 ```
+
+**Name the interpreter — `python3` is the wrong one on this host** (mg-09ea F7, landed 2026-07-29
+by mg-60d3). The default `python3` here is homebrew 3.14.6 with **no numpy**; only `/usr/bin/python3`
+(3.9.6, numpy 1.25.2) runs any of this. CI installs numpy, so the gate is unaffected — but §12 is
+the *reproduction* instruction and it did not run as written on the host the work was done on.
 
 Requires `numpy`. Deterministic except CONTROL A/D, which are seeded
 (`numpy.random.default_rng(20260729)`). The full mode writes
@@ -608,8 +818,8 @@ Requires `numpy`. Deterministic except CONTROL A/D, which are seeded
 with a sweep-less copy. Both modes exit non-zero if any control fails (§2.6).
 
 The three posets are recovered by index from `enumerate_both_connected(7)` and their identity
-re-verified against the committed mg-8b64 dataset (`|L|`, `λ_std`, `δ`) **before** anything is
-measured on them; a mismatch is a hard failure, not a warning.
+re-verified against the committed mg-8b64 dataset (`|L|`, `λ_std`, `δ`, **`λ₂^BK`**) **before**
+anything is measured on them; a mismatch is a hard failure, not a warning.
 
 ---
 
@@ -623,3 +833,72 @@ At `n = 7` it is bounded by `19.93`, and the poset attaining that has `c = 0.998
 next probe is to characterise `argmax R` structurally and see whether that family's `R` grows with
 `n` — a question this document deliberately does not answer, because answering it from a family
 chosen at `n = 7` is exactly the locked-parameter error Appendix A step 4d exists to catch.
+
+---
+
+## §14 — The mg-09ea audit, landed (mg-60d3, 2026-07-29)
+
+`docs/OneThird-mg2c34-n7-Overlap-Test-IndependentAudit.md` audited this document independently: it
+imported nothing from the corpus and rebuilt every figure from definitions by a disjoint route
+(own linear-extension enumeration in a different index order, graph-Laplacian BK operator, shifted
+inverse iteration instead of `eigh`, least-squares `P_U` with the transposed column layout, exact
+`Fraction` counting for `p_xy`, its own canonical form). **Verdict: OVERSTATED — and the arithmetic
+CONFIRMED exhaustively. Not one number in this document is wrong.**
+
+**Where this document and the audit disagree, the audit wins.** This section is the ledger of what
+that cost.
+
+### 14.1 What was struck or repaired — five items
+
+| # | site | what changed |
+|---|---|---|
+| 1 | **§0 point 4 and §6(a)** | The *"no explanatory power"* clause **STRUCK at both sites** — BROKEN, and refuted by this document's own dataset. Replaced by the audit's decile table (§6(a′)). **Ledger claim 12 is KEPT as worded**; only its derivation and this prose failed. |
+| 2 | **§9, the 956 row** | *"both-connected"* added — the qualifier §8 insists on and the proposed `STATE.md` row had dropped. |
+| 3 | **§7 body + ledger row 14** | The *"at least one incomparable pair"* hypothesis restored to the row (§7's body always had it; `⟹` fails for chains), and the **width-3 / general** conjecture split in the same paragraph. |
+| 4 | **§6.1 (new)** | §6's conclusion **flagged as off-class** — no measured poset satisfies L1b's `δ < 1/3` hypothesis — with `corr(δ, R) = +0.096` folded in, which closes the objection **in this document's favour**. |
+| 5 | **§9, the undercount row** | `docs/OneThird-L1b-BK-Transport-Transfer-Probe.md:86` **named** as the site of the 946 count, and annotated there. *"Wrong wherever it is quoted"* is not actionable. |
+
+Plus the instrument: **§2.6.1** (the two repaired controls and the demonstration that they fire),
+**§11.1** (the *"independently-written instrument"* bullet restated — CHECK-0 verifies the wrapper),
+and **§12** (the interpreter named: `/usr/bin/python3`, not `python3`).
+
+### 14.2 What lands UNCHANGED — this is the substance, and most of the document
+
+- **The RED.** `c = 0.995552 / 0.996857 / 0.996549` against a corpus prediction of `c ≈ 0` and a
+  random-subspace null of `0.067–0.152`. The prediction the corpus called *"the single
+  highest-value follow-on"* is refuted **at the opposite end of the range**. `λ₂` is simple at all
+  three, so there is no favourable-reading loophole.
+- **The mechanism refutation** — Lemma 3.1, three elementary lines, with its **non-vacuous** witness
+  (`enum-n7-#86`, `dim U/|L| = 0.156`) and `137 / 137`. The vacuity of the `1‖chain_m` illustration
+  was flagged by this document before anyone else could; the audit calls that discipline exemplary.
+- **The population sweep** — all **956** `n = 7` both-connected isomorphism classes — **and the
+  completeness correction** that produced it. The audit confirmed 956 **three** times: this
+  document's canonicalisation, its own finer one, and a generating-function argument touching no
+  poset at all. That third route also localises the defect: `iso_signature` is **exact below
+  `n = 7`** and first collides at `n = 7`.
+- **The most durable item, and it is a reduction rather than a measurement: the conditioning
+  hypothesis of the whole conditional picture is EMPTY BY DEFINITION** (§7). `δ(P) < 1/3` on a
+  poset with an incomparable pair *is* what it means to be a counterexample to the 1/3–2/3
+  conjecture. **This retires an entire class of future experiments** — the necessity half of the
+  conditional picture cannot be tested by enumeration at any `n`, and no computation will change
+  that. Record it as a reduction, not as evidence.
+- **The load-bearing conclusion, unaffected by anything the audit found:** *the overlap form of
+  standard dominance is already true and already insufficient.* It rests on the **coexistence** of
+  `c ≥ 0.978` across all 956 classes with a transfer that still needs a modulus of `19.93` — not on
+  the struck §6(a).
+- **The honest framing of §6, which this document already gave itself and which stands:**
+  **relocation, not progress.** §6 replaces *"overlap is the control parameter"* with *"we do not
+  know what the control parameter is"*, and the `R` question it displaces onto is **L1b's transfer
+  restated — so the crux has not moved.** §13 says exactly this, and the audit's §5 confirms it is
+  the right call: §13 names the crux rather than pricing a cheap step below it, and it declines to
+  answer it from an `n = 7`-chosen family.
+
+### 14.3 What the audit did *not* find
+
+No merged claim is refuted without being named, labelled and located; every quotation in §1, §3 and
+§9 is verbatim and in context; the object/coordinate discipline of §1.3–§1.4 is *"one of the
+deliverable's real strengths"*; no claim measured is vacuous, and the one vacuous illustration is
+flagged by its author. One footnote in this document's **favour**: §2.4's null `dim U/|L|` is the
+right null for CONTROL D's construction but slightly conservative for `U` itself (which contains the
+constant, so the honest null is `(dim U − 1)/(|L| − 1) = 0.145` at `#600`, not `0.152`) — the error
+**understates** the measured margin.

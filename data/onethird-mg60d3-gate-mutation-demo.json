@@ -1,0 +1,187 @@
+{
+  "what": "mg-60d3 mutation demonstration for the mg-09ea F3/F4 repairs to scripts/onethird_mg2c34_n7_overlap_test.py",
+  "gate_command": "python3 scripts/onethird_mg2c34_n7_overlap_test.py --no-sweep",
+  "repairs": {
+    "F3": "_identity_row_ok now requires match_bk_lambda2 -- the committed mg-8b64 bk_lambda2 was fetched and discarded",
+    "F4": "_antichain_row_ok now requires c_min = 1 as well as c_max = 1 -- CONTROL B gated on the favourable reading only"
+  },
+  "cases": [
+    {
+      "mutation": "none",
+      "mutation_desc": "unmutated instrument",
+      "gate": "pre-repair",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "PASS": true,
+      "lambda2_BK": {
+        "enum-n7-#3": 0.980923095,
+        "enum-n7-#20": 0.981202326,
+        "enum-n7-#600": 0.979920569,
+        "enum-n7-#945": 0.943488102,
+        "enum-n7-#809": 0.96949454
+      },
+      "c_max": {
+        "enum-n7-#3": 0.995552,
+        "enum-n7-#20": 0.996857,
+        "enum-n7-#600": 0.996549,
+        "enum-n7-#945": 0.987947,
+        "enum-n7-#809": 0.995256
+      },
+      "control_B_rows": [
+        "antichain-4  |L|=   24  dimU= 10  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.554580 (PASS)",
+        "antichain-5  |L|=  120  dimU= 17  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.290546 (PASS)",
+        "antichain-6  |L|=  720  dimU= 26  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.124694 (PASS)"
+      ],
+      "gate_failures": []
+    },
+    {
+      "mutation": "none",
+      "mutation_desc": "unmutated instrument",
+      "gate": "repaired",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "PASS": true,
+      "lambda2_BK": {
+        "enum-n7-#3": 0.980923095,
+        "enum-n7-#20": 0.981202326,
+        "enum-n7-#600": 0.979920569,
+        "enum-n7-#945": 0.943488102,
+        "enum-n7-#809": 0.96949454
+      },
+      "c_max": {
+        "enum-n7-#3": 0.995552,
+        "enum-n7-#20": 0.996857,
+        "enum-n7-#600": 0.996549,
+        "enum-n7-#945": 0.987947,
+        "enum-n7-#809": 0.995256
+      },
+      "control_B_rows": [
+        "antichain-4  |L|=   24  dimU= 10  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.554580 (PASS)",
+        "antichain-5  |L|=  120  dimU= 17  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.290546 (PASS)",
+        "antichain-6  |L|=  720  dimU= 26  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.124694 (PASS)"
+      ],
+      "gate_failures": []
+    },
+    {
+      "mutation": "M1",
+      "mutation_desc": "BK step 1/(n-1) instead of 1/(2(n-1)) -- global rate rescaling",
+      "gate": "pre-repair",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "PASS": true,
+      "lambda2_BK": {
+        "enum-n7-#3": 0.96184619,
+        "enum-n7-#20": 0.962404652,
+        "enum-n7-#600": 0.959841138,
+        "enum-n7-#945": 0.886976203,
+        "enum-n7-#809": 0.938989081
+      },
+      "c_max": {
+        "enum-n7-#3": 0.995552,
+        "enum-n7-#20": 0.996857,
+        "enum-n7-#600": 0.996549,
+        "enum-n7-#945": 0.987947,
+        "enum-n7-#809": 0.995256
+      },
+      "control_B_rows": [
+        "antichain-4  |L|=   24  dimU= 10  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.554580 (PASS)",
+        "antichain-5  |L|=  120  dimU= 17  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.290546 (PASS)",
+        "antichain-6  |L|=  720  dimU= 26  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.124694 (PASS)"
+      ],
+      "gate_failures": []
+    },
+    {
+      "mutation": "M1",
+      "mutation_desc": "BK step 1/(n-1) instead of 1/(2(n-1)) -- global rate rescaling",
+      "gate": "repaired",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "PASS": true,
+      "lambda2_BK": {
+        "enum-n7-#3": 0.96184619,
+        "enum-n7-#20": 0.962404652,
+        "enum-n7-#600": 0.959841138,
+        "enum-n7-#945": 0.886976203,
+        "enum-n7-#809": 0.938989081
+      },
+      "c_max": {
+        "enum-n7-#3": 0.995552,
+        "enum-n7-#20": 0.996857,
+        "enum-n7-#600": 0.996549,
+        "enum-n7-#945": 0.987947,
+        "enum-n7-#809": 0.995256
+      },
+      "control_B_rows": [
+        "antichain-4  |L|=   24  dimU= 10  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.554580 (PASS)",
+        "antichain-5  |L|=  120  dimU= 17  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.290546 (PASS)",
+        "antichain-6  |L|=  720  dimU= 26  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.124694 (PASS)"
+      ],
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)"
+      ]
+    },
+    {
+      "mutation": "M2",
+      "mutation_desc": "U shrunk: element-0 and element-1 position blocks dropped",
+      "gate": "pre-repair",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "PASS": true,
+      "lambda2_BK": {
+        "enum-n7-#3": 0.980923095,
+        "enum-n7-#20": 0.981202326,
+        "enum-n7-#600": 0.979920569,
+        "enum-n7-#945": 0.943488102,
+        "enum-n7-#809": 0.96949454
+      },
+      "c_max": {
+        "enum-n7-#3": 0.986571,
+        "enum-n7-#20": 0.988475,
+        "enum-n7-#600": 0.995959,
+        "enum-n7-#945": 0.966288,
+        "enum-n7-#809": 0.988713
+      },
+      "control_B_rows": [
+        "antichain-4  |L|=   24  dimU=  7  c_max=1.000000000 c_min=-0.000000000 (PASS)  broken c=0.446958 (PASS)",
+        "antichain-5  |L|=  120  dimU= 13  c_max=1.000000000 c_min=-0.000000000 (PASS)  broken c=0.246286 (PASS)",
+        "antichain-6  |L|=  720  dimU= 21  c_max=1.000000000 c_min=-0.000000000 (PASS)  broken c=0.104472 (PASS)"
+      ],
+      "gate_failures": []
+    },
+    {
+      "mutation": "M2",
+      "mutation_desc": "U shrunk: element-0 and element-1 position blocks dropped",
+      "gate": "repaired",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "PASS": true,
+      "lambda2_BK": {
+        "enum-n7-#3": 0.980923095,
+        "enum-n7-#20": 0.981202326,
+        "enum-n7-#600": 0.979920569,
+        "enum-n7-#945": 0.943488102,
+        "enum-n7-#809": 0.96949454
+      },
+      "c_max": {
+        "enum-n7-#3": 0.986571,
+        "enum-n7-#20": 0.988475,
+        "enum-n7-#600": 0.995959,
+        "enum-n7-#945": 0.966288,
+        "enum-n7-#809": 0.988713
+      },
+      "control_B_rows": [
+        "antichain-4  |L|=   24  dimU=  7  c_max=1.000000000 c_min=-0.000000000 (FAIL)  broken c=0.446958 (PASS)",
+        "antichain-5  |L|=  120  dimU= 13  c_max=1.000000000 c_min=-0.000000000 (FAIL)  broken c=0.246286 (PASS)",
+        "antichain-6  |L|=  720  dimU= 21  c_max=1.000000000 c_min=-0.000000000 (FAIL)  broken c=0.104472 (PASS)"
+      ],
+      "gate_failures": [
+        "CONTROL B: antichain c != 1 (Aldous/CLR)"
+      ]
+    }
+  ],
+  "ALL_PASS": true
+}

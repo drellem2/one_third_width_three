@@ -68,9 +68,10 @@
           "lambda2_BK": 0.9023689270621833,
           "c_max": 1.0000000000000009,
           "c_min": 0.9999999999999991,
-          "B_PASS_c_is_1": true,
           "broken_c_max": 0.5545804564781105,
-          "C_PASS_broken_is_not_1": true
+          "broken_c_min": 0.21372536969773154,
+          "C_PASS_broken_is_not_1": true,
+          "B_PASS_c_is_1": true
         },
         {
           "poset": "antichain-5",
@@ -79,9 +80,10 @@
           "lambda2_BK": 0.952254248593738,
           "c_max": 1.0000000000000013,
           "c_min": 1.0000000000000007,
-          "B_PASS_c_is_1": true,
           "broken_c_max": 0.29054610078734044,
-          "C_PASS_broken_is_not_1": true
+          "broken_c_min": 0.037785135010074744,
+          "C_PASS_broken_is_not_1": true,
+          "B_PASS_c_is_1": true
         },
         {
           "poset": "antichain-6",
@@ -90,9 +92,10 @@
           "lambda2_BK": 0.9732050807568882,
           "c_max": 1.000000000000001,
           "c_min": 0.9999999999999973,
-          "B_PASS_c_is_1": true,
           "broken_c_max": 0.12469392207480454,
-          "C_PASS_broken_is_not_1": true
+          "broken_c_min": 0.00040183690214514215,
+          "C_PASS_broken_is_not_1": true,
+          "B_PASS_c_is_1": true
         }
       ],
       "B_ALL_PASS": true,
@@ -148,65 +151,75 @@
       "num_LE": 360,
       "lambda_std": 0.7850482917286927,
       "delta": 0.5,
+      "lambda2_BK": 0.9809230949067392,
       "ref_num_LE": 360,
       "ref_lambda_std": 0.7850482917286934,
       "ref_delta": 0.5,
       "ref_bk_lambda2": 0.9809230949067392,
       "match_num_LE": true,
       "match_lambda_std": true,
-      "match_delta": true
+      "match_delta": true,
+      "match_bk_lambda2": true
     },
     {
       "name": "enum-n7-#20",
       "num_LE": 198,
       "lambda_std": 0.7675286877178846,
       "delta": 0.5,
+      "lambda2_BK": 0.9812023259642362,
       "ref_num_LE": 198,
       "ref_lambda_std": 0.767528687717884,
       "ref_delta": 0.5,
       "ref_bk_lambda2": 0.981202325964234,
       "match_num_LE": true,
       "match_lambda_std": true,
-      "match_delta": true
+      "match_delta": true,
+      "match_bk_lambda2": true
     },
     {
       "name": "enum-n7-#600",
       "num_LE": 132,
       "lambda_std": 0.7739109127920596,
       "delta": 0.5,
+      "lambda2_BK": 0.9799205687656997,
       "ref_num_LE": 132,
       "ref_lambda_std": 0.7739109127920598,
       "ref_delta": 0.5,
       "ref_bk_lambda2": 0.979920568765699,
       "match_num_LE": true,
       "match_lambda_std": true,
-      "match_delta": true
+      "match_delta": true,
+      "match_bk_lambda2": true
     },
     {
       "name": "enum-n7-#945",
       "num_LE": 21,
       "lambda_std": 0.943925792152297,
       "delta": 0.38095238095238093,
+      "lambda2_BK": 0.9434881015120076,
       "ref_num_LE": 21,
       "ref_lambda_std": 0.9439257921522968,
       "ref_delta": 0.38095238095238093,
       "ref_bk_lambda2": 0.9434881015120073,
       "match_num_LE": true,
       "match_lambda_std": true,
-      "match_delta": true
+      "match_delta": true,
+      "match_bk_lambda2": true
     },
     {
       "name": "enum-n7-#809",
       "num_LE": 25,
       "lambda_std": 0.9020148833073527,
       "delta": 0.36,
+      "lambda2_BK": 0.9694945404615063,
       "ref_num_LE": 25,
       "ref_lambda_std": 0.9020148833073525,
       "ref_delta": 0.36,
       "ref_bk_lambda2": 0.9694945404615061,
       "match_num_LE": true,
       "match_lambda_std": true,
-      "match_delta": true
+      "match_delta": true,
+      "match_bk_lambda2": true
     }
   ],
   "measured": [

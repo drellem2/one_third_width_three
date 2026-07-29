@@ -78,7 +78,16 @@ CONTROLS (the ticket's requirement: show the instrument CAN return the wrong
 answer on a case where the answer is known, before trusting it)
 =============================================================================
 CHECK-0  instrument equivalence: this file's c_max must equal mg-4a86's
-         `sd_quant_constant` to 1e-12 on every poset measured.
+         `sd_quant_constant` to 1e-12 on every poset measured.  NOTE, per
+         mg-09ea F5: this verifies the WRAPPER, not the instrument -- the two
+         call the same `bk_walk_matrix` and the same `projector_U`, so the
+         agreement is by construction and bounds no numerical risk.
+
+IDENTITY  |L(P)|, lambda_std, delta AND lambda_2^BK are recomputed and compared
+         against the committed mg-8b64 rows.  The lambda_2^BK comparison is the
+         mg-09ea F3 repair: the reference value was previously fetched into the
+         report and never compared, leaving the only dynamical quantity in the
+         document with no control that could fail.  See `_identity_row_ok`.
 
 CONTROL A (graded, analytic, CAN FAIL AT EVERY POINT).  On a real L(P), build a
          synthetic symmetric walk whose lambda_2 eigenvector is
@@ -93,7 +102,9 @@ CONTROL A (graded, analytic, CAN FAIL AT EVERY POINT).  On a real L(P), build a
 CONTROL B (known-answer poset).  Antichain A_n, n = 4,5,6: L(P) = S_n, the BK
          chain is the interchange process on the path, and by Aldous/CLR the
          slowest mode IS the single-particle mode, which lies in U.  Required:
-         c = 1.
+         c_max = 1 AND c_min = 1.  Both readings, per mg-09ea F4: c_max is a
+         maximum over the lambda_2 eigenspace, so it survives a shrink of U
+         that the adversarial reading does not.  See `_antichain_row_ok`.
 
 CONTROL C (deliberately BROKEN instrument, must fail control B).  Replace U by
          a fixed coordinate subspace of the SAME dimension.  On the antichain
@@ -167,6 +178,36 @@ def slow_eigenspace(W, tol=EIG_TOL):
     lam2 = ev[1]
     idx = [j for j in range(1, len(ev)) if abs(ev[j] - lam2) < tol]
     return float(lam2), V[:, idx], ev
+
+
+# --------------------------------------------------------- gate predicates --
+# The two predicates repaired after the mg-09ea independent audit (F3, F4).
+# They live at module level, separately named, for two reasons: the gate's
+# conjunction is then readable in one place, and the mutation demonstration
+# (`scripts/onethird_mg60d3_gate_mutation_demo.py`) can substitute the
+# PRE-REPAIR forms to show that the two mutations M1/M2 used to pass and now
+# do not.  Neither predicate has a switch to weaken it at run time.
+
+def _identity_row_ok(rec):
+    """Every committed mg-8b64 reference value fetched must also be COMPARED.
+
+    mg-09ea F3: `ref_bk_lambda2` was loaded into the report and never used, so
+    lambda_2^BK -- the denominator of R, and the only genuinely DYNAMICAL
+    quantity in the document -- had no control that could fail.  A global
+    rescaling of the BK step is invisible to CONTROL A (which synthesises its
+    own W), to CONTROL B/C (eigenvector-only), and to CHECK-0 (shared code)."""
+    return (rec["match_num_LE"] and rec["match_lambda_std"]
+            and rec["match_delta"] and rec["match_bk_lambda2"])
+
+
+def _antichain_row_ok(row):
+    """CONTROL B must gate on BOTH readings, not only the favourable one.
+
+    mg-09ea F4: c_max is a MAXIMUM over the lambda_2 eigenspace, so a shrunk U
+    that still meets that eigenspace leaves c_max = 1 while c_min collapses to
+    0.  This is the one-sidedness sec 2.7 identifies as the reason to report
+    c_min at all; it was added to the measurement and not to the control."""
+    return abs(row["c_max"] - 1.0) < 1e-8 and abs(row["c_min"] - 1.0) < 1e-8
 
 
 def overlap_stats(Vs, PU):
@@ -349,13 +390,16 @@ def control_B_and_C(ns=(4, 5, 6)):
             Qb[j, j] = 1.0
         PUb = Qb @ Qb.T
         cb_max, cb_min = overlap_stats(Vs, PUb)
-        rows.append({
+        row = {
             "poset": f"antichain-{n}", "num_LE": m, "dim_U": int(dimU),
             "lambda2_BK": lam2, "c_max": c_max, "c_min": c_min,
-            "B_PASS_c_is_1": abs(c_max - 1.0) < 1e-8,
-            "broken_c_max": cb_max,
+            "broken_c_max": cb_max, "broken_c_min": cb_min,
             "C_PASS_broken_is_not_1": abs(cb_max - 1.0) > 1e-3,
-        })
+        }
+        # mg-09ea F4 repair: BOTH readings, not just c_max (see
+        # _antichain_row_ok).  c_min was already computed and never asserted.
+        row["B_PASS_c_is_1"] = _antichain_row_ok(row)
+        rows.append(row)
     return {"rows": rows,
             "B_ALL_PASS": all(r["B_PASS_c_is_1"] for r in rows),
             "C_ALL_PASS": all(r["C_PASS_broken_is_not_1"] for r in rows)}
@@ -492,7 +536,8 @@ def main():
     report["controls"]["B_antichain_C_broken"] = BC
     for r in BC["rows"]:
         print(f"  {r['poset']:>12}  |L|={r['num_LE']:>5}  dimU={r['dim_U']:>3}  "
-              f"c={r['c_max']:.9f} ({'PASS' if r['B_PASS_c_is_1'] else 'FAIL'})  "
+              f"c_max={r['c_max']:.9f} c_min={r['c_min']:.9f} "
+              f"({'PASS' if r['B_PASS_c_is_1'] else 'FAIL'})  "
               f"broken c={r['broken_c_max']:.6f} "
               f"({'PASS' if r['C_PASS_broken_is_not_1'] else 'FAIL'})")
     print(f"  B_ALL_PASS = {BC['B_ALL_PASS']}   C_ALL_PASS = {BC['C_ALL_PASS']}")
@@ -511,6 +556,9 @@ def main():
                "lambda_std": float(lambda_std(P))}
         d, _ = delta_and_frozen_pair(P)
         rec["delta"] = d
+        # mg-09ea F3 repair: recompute lambda_2^BK here so the committed
+        # reference value has something to be compared AGAINST.
+        rec["lambda2_BK"] = slow_eigenspace(bk_walk_matrix(P))[0]
         if ref:
             rec["ref_num_LE"] = ref["num_LE"]
             rec["ref_lambda_std"] = ref["lambda_std"]
@@ -519,12 +567,15 @@ def main():
             rec["match_num_LE"] = rec["num_LE"] == ref["num_LE"]
             rec["match_lambda_std"] = abs(rec["lambda_std"] - ref["lambda_std"]) < 1e-9
             rec["match_delta"] = abs(rec["delta"] - ref["delta"]) < 1e-9
+            rec["match_bk_lambda2"] = abs(rec["lambda2_BK"]
+                                          - ref["bk_lambda2"]) < 1e-9
         report["identity_check"].append(rec)
         print(f"  {name:>14}  |L|={rec['num_LE']:>4} (ref {rec.get('ref_num_LE')})  "
               f"lam_std={rec['lambda_std']:.9f} (ref {rec.get('ref_lambda_std')})  "
               f"delta={rec['delta']:.6f}  "
+              f"lam2_BK={rec['lambda2_BK']:.9f} (ref {rec.get('ref_bk_lambda2')})  "
               f"match={rec.get('match_num_LE')}/{rec.get('match_lambda_std')}/"
-              f"{rec.get('match_delta')}")
+              f"{rec.get('match_delta')}/{rec.get('match_bk_lambda2')}")
 
     # -------- THE MEASUREMENT ----------------------------------------------
     print()
@@ -698,10 +749,13 @@ def main():
     for rec in report["identity_check"]:
         if "ref_num_LE" not in rec:
             failures.append(f"{rec['name']}: no mg-8b64 reference row found")
-        elif not (rec["match_num_LE"] and rec["match_lambda_std"]
-                  and rec["match_delta"]):
+        elif not _identity_row_ok(rec):
             failures.append(f"{rec['name']}: does not match its committed "
-                            f"mg-8b64 row -- poset identity is WRONG")
+                            f"mg-8b64 row -- poset identity is WRONG "
+                            f"(num_LE={rec['match_num_LE']} "
+                            f"lambda_std={rec['match_lambda_std']} "
+                            f"delta={rec['match_delta']} "
+                            f"lambda2_BK={rec['match_bk_lambda2']})")
     for r in report["measured"]:
         if r["dim_eigenspace"] > 1 and abs(r["c_max"] - r["c_min"]) > 1e-9:
             failures.append(f"{r['name']}: lambda_2 degenerate with c_max != "

@@ -83,6 +83,15 @@ New BK machinery (all exact-rational where the quantity is exact):
   separates `x` from `y`) and evaluates its transport conductance `Φ_T`.
 
 **Ensemble / n! wall (LOGGED, as the ticket requires).**
+
+> **[CORRECTED — the `n = 7` count is wrong. mg-2c34 §5.1, located by mg-09ea §6, landed by
+> mg-60d3 2026-07-29.]** There are **956** both-connected `n = 7` isomorphism classes, not 946:
+> `enumerate_both_connected` dedups by `iso_signature`, which its own docstring says is *"not a
+> perfect canonical form"*, and it collapses 10 classes at `n = 7`. `n = 3..6` are **unaffected**
+> (`iso_signature` is exact below `n = 7` and first collides there). **No conclusion in this
+> document turns on the 10** — they are ordinary posets with `δ ∈ [0.45, 0.50]` and
+> `c ∈ [0.992696, 0.998412]`, all since measured. Only the count is wrong.
+
 Exhaustive both-connected posets **n = 3..7** (3, 9, 12, 104, 946 posets), plus a
 mandated stress-family set (N-poset / 2+2, stacked & width-3 double-N, crown `S₃⁰`,
 zigzag fences to n=8, width-3 SP/ordinal-sum controls, tight `δ→1/3` chains

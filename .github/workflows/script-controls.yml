@@ -63,10 +63,21 @@ jobs:
       # `--no-sweep` mode skips the 946-poset population sweep and runs only
       # the parts that can fail: CONTROL A (the instrument must reproduce a
       # known c = cos^2(theta), INCLUDING c = 0 -- an instrument that cannot
-      # output 0 cannot refute SD-quant), CONTROL B/C (antichain c = 1, and a
-      # deliberately broken projector must NOT return 1), CHECK-0 (agreement
-      # with mg-4a86's own instrument), and the identity check that the three
-      # named posets still match their committed mg-8b64 rows.  ~40 s.
+      # output 0 cannot refute SD-quant), CONTROL B/C (antichain c_max = c_min
+      # = 1, and a deliberately broken projector must NOT return 1), CHECK-0
+      # (agreement with mg-4a86's own instrument), and the identity check that
+      # the three named posets still match their committed mg-8b64 rows.
+      #
+      # REPAIRED after the mg-09ea audit (mg-60d3): two mutations used to pass
+      # this step.  CONTROL B now asserts c_min as well as c_max (a shrunk U
+      # leaves the favourable reading at 1), and the identity check now
+      # compares lambda_2^BK against its committed reference instead of
+      # fetching it and discarding it (a rescaled BK step was invisible to
+      # every other control).  Both repairs are demonstrated to FIRE by
+      # scripts/onethird_mg60d3_gate_mutation_demo.py, which is NOT run here:
+      # it is six full runs of this step (~12 min), far outside the
+      # order-seconds rule at the top of this file.  Run it on demand when the
+      # gate changes.
       - name: 'mg-2c34 SD-quant overlap controls (can the instrument fail?)'
         run: |
           pip install --quiet numpy
