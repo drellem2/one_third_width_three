@@ -1,0 +1,60 @@
+name: Script controls
+
+# Runs the fast, self-contained controls that guard the delta engine.
+#
+# WHY THE PATH FILTER IS WIDE (mg-4ad1): the only workflow in this repo used to
+# be lean.yml, which filters on `lean/**`.  The last commit touching `lean/` was
+# 2026-05-21, so from that date every commit -- all of them under `docs/`,
+# `data/` and `scripts/` -- shipped with no automated coverage of any kind.  The
+# mg-8489 gate control was in that window: present, correct, and never invoked.
+# A control nothing runs is indistinguishable from a control that does not
+# exist, so the filter here names the directories this repo actually commits to.
+#
+# WHAT MAY GO IN HERE: fast (order-seconds), self-contained, self-verifying
+# scripts that already exit non-zero on failure.  The searches and the width-4
+# arena counter must NOT be added -- the arena count alone is ~430 s at n = 10
+# and the sweeps are far longer.  If a script has no fast self-check mode, leave
+# it out rather than inventing one.
+
+on:
+  push:
+    paths:
+      - 'scripts/**'
+      - 'data/**'
+      - 'docs/**'
+      - '.github/workflows/script-controls.yml'
+  pull_request:
+    paths:
+      - 'scripts/**'
+      - 'data/**'
+      - 'docs/**'
+      - '.github/workflows/script-controls.yml'
+  workflow_dispatch:
+
+jobs:
+  controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Python version
+        run: python3 --version
+
+      # mg-8489: negative control for the fast_Q engine gate.  Corrupts fast_Q
+      # three ways and Q_primary once, and requires five_engine_check to RAISE
+      # on each; also requires it to stay green before and after patching.
+      # ~1 s.  Exits non-zero if any of the 6 rows behaves wrongly.
+      - name: 'mg-8489 fast_Q gate control (can the engine gate fail?)'
+        run: python3 scripts/onethird_mg8489_fastq_gate_control.py
+
+      # mg-8ff1: the n=9 witness that Lemma 3.2b's boxed "maps" hypothesis is
+      # strictly weaker than the "swaps" its proof needs.  Re-derives |Aut(P)|,
+      # e(P) and delta(P) rather than asserting them, so it also exercises
+      # delta_of from the primitive delta search.  ~1 s.
+      - name: 'mg-8ff1 Lemma 3.2b counterexample (n=9 witness)'
+        run: python3 scripts/onethird_mg8ff1_lemma32b_counterexample.py

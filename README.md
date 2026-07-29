@@ -26,6 +26,7 @@ for the side-by-side reading and the build-and-verify instructions.
 **Contact:** [d.miller@hey.com](mailto:d.miller@hey.com)
 
 [![Lean build](https://github.com/drellem2/one_third_width_three/actions/workflows/lean.yml/badge.svg)](https://github.com/drellem2/one_third_width_three/actions/workflows/lean.yml)
+[![Script controls](https://github.com/drellem2/one_third_width_three/actions/workflows/script-controls.yml/badge.svg)](https://github.com/drellem2/one_third_width_three/actions/workflows/script-controls.yml)
 ![Release](https://img.shields.io/badge/release-v0.1--candidate-yellow)
 ![License](https://img.shields.io/badge/paper-CC%20BY%204.0-blue)
 ![License](https://img.shields.io/badge/code-MIT-blue)
@@ -309,7 +310,10 @@ summary.tex              2-page intuitive summary (source)
 summary.pdf              2-page intuitive summary (pre-built PDF)
 generalization.md        where width-3 is essential, and what generalizes
 lean/                    Lean 4 / mathlib formalization
-.github/workflows/       CI (Lean build)
+scripts/                 Python search / verification / control scripts
+.github/workflows/       CI — lean.yml (Lean build, on lean/**)
+                            script-controls.yml (fast controls, on
+                            scripts/**, data/**, docs/**)
 LICENSE                  dual license: CC BY 4.0 (writing) + MIT (code)
 ```
 
