@@ -1,0 +1,750 @@
+{
+ "audits": "mg-4f9b",
+ "dataset": "onethird-mg8b64-L1b-bk-transport-transfer.json",
+ "gate": "scripts/onethird_mg2c34_n7_overlap_test.py",
+ "part1_provenance": {
+  "floats_perturbed": 16398,
+  "gate_exit_on_perturbed_store": 1,
+  "ledger": [
+   {
+    "control": "CONTROL A  graded analytic, c = cos^2(theta)",
+    "reference_declared": "THEOREM",
+    "reference_measured": "THEOREM",
+    "verdict_moved_when_store_moved": false
+   },
+   {
+    "control": "CONTROL B  antichain c = 1, dim U = (n-1)^2+1",
+    "reference_declared": "THEOREM",
+    "reference_measured": "THEOREM",
+    "verdict_moved_when_store_moved": false
+   },
+   {
+    "control": "CONTROL C  broken projector must NOT return 1",
+    "reference_declared": "THEOREM",
+    "reference_measured": "THEOREM",
+    "verdict_moved_when_store_moved": false
+   },
+   {
+    "control": "CONTROL E  dim U <= (n-1)^2+1 and dim U < |L|",
+    "reference_declared": "THEOREM",
+    "reference_measured": "THEOREM",
+    "verdict_moved_when_store_moved": false
+   },
+   {
+    "control": "CONTROL F  two-sided reading-dependence on real data",
+    "reference_declared": "THEOREM",
+    "reference_measured": "THEOREM",
+    "verdict_moved_when_store_moved": false
+   },
+   {
+    "control": "IDENTITY   recomputed row vs the committed row",
+    "reference_declared": "STORED",
+    "reference_measured": "STORED",
+    "verdict_moved_when_store_moved": true
+   }
+  ],
+  "stored_reference_controls": [
+   "IDENTITY   recomputed row vs the committed row"
+  ],
+  "theorem_reference_controls": [
+   "CONTROL A  graded analytic, c = cos^2(theta)",
+   "CONTROL B  antichain c = 1, dim U = (n-1)^2+1",
+   "CONTROL C  broken projector must NOT return 1",
+   "CONTROL E  dim U <= (n-1)^2+1 and dim U < |L|",
+   "CONTROL F  two-sided reading-dependence on real data"
+  ]
+ },
+ "part2_matrix": [
+  {
+   "applied": [],
+   "case": "none",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "unmutated instrument",
+   "exit": 0,
+   "expected_exit": 0,
+   "gate_failures": [],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 8.88e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 9.99e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": null,
+   "regenerate": false,
+   "regenerated": null,
+   "stderr_tail": "",
+   "stdout_sha256": "c6675f4f484172b58c51d8ec4b78f49aa1addc0ed1f2584fee334c95620ddd61"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg2c34_n7_overlap_test.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "C2",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "the gate's own frozen_pair_indicator loses its centring (mg-bd53 C2).  Moves frozen_pair_overlap_with_U -- the quantity ledger claim 8 rests on -- 0.807 -> 0.904, and three sibling quantities with it",
+   "exit": 0,
+   "expected_exit": 0,
+   "gate_failures": [],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 8.88e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 9.99e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": "C2",
+   "regenerate": false,
+   "regenerated": null,
+   "stderr_tail": "",
+   "stdout_sha256": "c8b3acbad192a721ca6311adf42c3742a76ec00557a06cd88b78f15a9f661bf6"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg2c34_n7_overlap_test.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "C2+regen",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "the gate's own frozen_pair_indicator loses its centring (mg-bd53 C2).  Moves frozen_pair_overlap_with_U -- the quantity ledger claim 8 rests on -- 0.807 -> 0.904, and three sibling quantities with it",
+   "exit": 0,
+   "expected_exit": 0,
+   "gate_failures": [],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": "C2",
+   "regenerate": true,
+   "regenerated": {
+    "ok": true,
+    "rows": [
+     "enum-n7-#20",
+     "enum-n7-#3",
+     "enum-n7-#52",
+     "enum-n7-#600",
+     "enum-n7-#809",
+     "enum-n7-#88",
+     "enum-n7-#945",
+     "fam:N (2+2)"
+    ]
+   },
+   "stderr_tail": "",
+   "stdout_sha256": "4e21cbb25b8e5ea737288b700c089c90807cdb11ccd9a948d369c13eb81efbb6"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "M3",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "mg-8b64's Theorem-E frozen-pair selector min -> max (mg-5ad1 M3).  The one-character flip the whole lineage is about",
+   "exit": 1,
+   "expected_exit": 1,
+   "gate_failures": [
+    "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+    "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+    "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+    "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+    "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+    "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+    "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+    "fam:N (2+2): does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 24 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k"
+   ],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.22e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.35e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.65e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.62e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.20e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 4.69e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 4.83e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 3.33e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']"
+   ],
+   "mutation": "M3",
+   "regenerate": false,
+   "regenerated": null,
+   "stderr_tail": "",
+   "stdout_sha256": "ea4304f3714cafa6b9efbe393dc1aea16100b0e5d6656584027c11941e50c6db"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "M3+regen",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "mg-8b64's Theorem-E frozen-pair selector min -> max (mg-5ad1 M3).  The one-character flip the whole lineage is about",
+   "exit": 0,
+   "expected_exit": 0,
+   "gate_failures": [],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": "M3",
+   "regenerate": true,
+   "regenerated": {
+    "ok": true,
+    "rows": [
+     "enum-n7-#20",
+     "enum-n7-#3",
+     "enum-n7-#52",
+     "enum-n7-#600",
+     "enum-n7-#809",
+     "enum-n7-#88",
+     "enum-n7-#945",
+     "fam:N (2+2)"
+    ]
+   },
+   "stderr_tail": "",
+   "stdout_sha256": "a60e97fac6909ca14a7234de2fe8313ac1097dfc670ad9d4368ed7f0a6c77bcc"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg4a86_sdquant_overlap.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "M4",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "projector_U's rank filter s > max(tol,1e-10) -> s > 0.0 (mg-5ad1 M4).  CONTROL E's case: a theorem reference, so regeneration must NOT save it",
+   "exit": 1,
+   "expected_exit": 1,
+   "gate_failures": [
+    "CONTROL B: the antichain known-answer check failed.  Required: c_max = c_min = 1 (the whole gap EIGENSPACE inside U -- see _antichain_row_ok for what licenses that, which is NOT Aldous/CLR) AND dim U = (n-1)^2+1 (the known rank of the one-particle span on S_n).  antichain-4: c_max=1.000000000 c_min=1.000000000 dim_U=16 (known 10); antichain-5: c_max=1.000000000 c_min=1.000000000 dim_U=25 (known 17); antichain-6: c_max=1.000000000 c_min=1.000000000 dim_U=36 (known 26)",
+    "CONTROL F: two-sided reading-dependence on a real poset with degenerate lambda_2 -- either c_max != c_min, or the degeneracy that gives this control its coverage has gone (see _two_sided_row_ok)",
+    "enum-n7-#3: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 360 (null = 0.1361); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+    "enum-n7-#20: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 198 (null = 0.2475); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+    "enum-n7-#600: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 132 (null = 0.3712); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+    "enum-n7-#945: CONTROL E -- dim U = 21 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 21 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+    "enum-n7-#809: CONTROL E -- dim U = 25 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 25 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion"
+   ],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 8.88e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 9.99e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": "M4",
+   "regenerate": false,
+   "regenerated": null,
+   "stderr_tail": "",
+   "stdout_sha256": "b93366a419d039086442880c7e98b8b1837a93305c9da592057c2a17717b58b9"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg4a86_sdquant_overlap.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "M4+regen",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "projector_U's rank filter s > max(tol,1e-10) -> s > 0.0 (mg-5ad1 M4).  CONTROL E's case: a theorem reference, so regeneration must NOT save it",
+   "exit": 1,
+   "expected_exit": 1,
+   "gate_failures": [
+    "CONTROL B: the antichain known-answer check failed.  Required: c_max = c_min = 1 (the whole gap EIGENSPACE inside U -- see _antichain_row_ok for what licenses that, which is NOT Aldous/CLR) AND dim U = (n-1)^2+1 (the known rank of the one-particle span on S_n).  antichain-4: c_max=1.000000000 c_min=1.000000000 dim_U=16 (known 10); antichain-5: c_max=1.000000000 c_min=1.000000000 dim_U=25 (known 17); antichain-6: c_max=1.000000000 c_min=1.000000000 dim_U=36 (known 26)",
+    "CONTROL F: two-sided reading-dependence on a real poset with degenerate lambda_2 -- either c_max != c_min, or the degeneracy that gives this control its coverage has gone (see _two_sided_row_ok)",
+    "enum-n7-#3: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 360 (null = 0.1361); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+    "enum-n7-#20: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 198 (null = 0.2475); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+    "enum-n7-#600: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 132 (null = 0.3712); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+    "enum-n7-#945: CONTROL E -- dim U = 21 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 21 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+    "enum-n7-#809: CONTROL E -- dim U = 25 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 25 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion"
+   ],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": "M4",
+   "regenerate": true,
+   "regenerated": {
+    "ok": true,
+    "rows": [
+     "enum-n7-#20",
+     "enum-n7-#3",
+     "enum-n7-#52",
+     "enum-n7-#600",
+     "enum-n7-#809",
+     "enum-n7-#88",
+     "enum-n7-#945",
+     "fam:N (2+2)"
+    ]
+   },
+   "stderr_tail": "",
+   "stdout_sha256": "0608cd0318c3a1884d00785d7aa8f575e063780cd56d79f1ad17d7fb56f75a3a"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "mg56be-A",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "MINE.  BK_CHEEGER_CAP 15 -> 6 in mg-8b64.  h_bk_exhaustive and h_bk_argmin_is_pair_cut stop existing on 36 of the 47 reconstructible rows that carry them -- and NOT on the ONE poset the gate compares them at, because that poset has |L| = 6.  Aimed squarely at the per-dataset census mg-4f9b added: the census is a FIELD-NAME statement being read as a coverage statement",
+   "exit": 0,
+   "expected_exit": null,
+   "gate_failures": [],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 8.88e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 9.99e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": "mg56be-A",
+   "regenerate": false,
+   "regenerated": null,
+   "stderr_tail": "",
+   "stdout_sha256": "c6675f4f484172b58c51d8ec4b78f49aa1addc0ed1f2584fee334c95620ddd61"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "mg56be-A+regen",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "MINE.  BK_CHEEGER_CAP 15 -> 6 in mg-8b64.  h_bk_exhaustive and h_bk_argmin_is_pair_cut stop existing on 36 of the 47 reconstructible rows that carry them -- and NOT on the ONE poset the gate compares them at, because that poset has |L| = 6.  Aimed squarely at the per-dataset census mg-4f9b added: the census is a FIELD-NAME statement being read as a coverage statement",
+   "exit": 0,
+   "expected_exit": null,
+   "gate_failures": [],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": "mg56be-A",
+   "regenerate": true,
+   "regenerated": {
+    "ok": true,
+    "rows": [
+     "enum-n7-#20",
+     "enum-n7-#3",
+     "enum-n7-#52",
+     "enum-n7-#600",
+     "enum-n7-#809",
+     "enum-n7-#88",
+     "enum-n7-#945",
+     "fam:N (2+2)"
+    ]
+   },
+   "stderr_tail": "",
+   "stdout_sha256": "6c3dbe4ea6e7a3a6d542f1e482e761f19b4f00e5e6a7c59541f505923ee378cf"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg2c34_n7_overlap_test.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "mg56be-B",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "MINE, ROUTE AXIS.  Unwire lambda_std's restored second route in the gate and leave IDENTITY_SECOND_ROUTES declaring TWO ROUTES.  This is mg-75f0's regression re-committed one level up: the declaration is a gate condition, the WIRING is not",
+   "exit": 0,
+   "expected_exit": null,
+   "gate_failures": [],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 8.88e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 9.99e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": "mg56be-B",
+   "regenerate": false,
+   "regenerated": null,
+   "stderr_tail": "",
+   "stdout_sha256": "c6675f4f484172b58c51d8ec4b78f49aa1addc0ed1f2584fee334c95620ddd61"
+  },
+  {
+   "applied": [
+    {
+     "file": "scripts/onethird_mg2c34_n7_overlap_test.py",
+     "occurrences": 1
+    },
+    {
+     "file": "scripts/onethird_mg4a86_standard_dominance_target_audit.py",
+     "occurrences": 1
+    }
+   ],
+   "case": "mg56be-B+B1",
+   "census_lines": [
+    "CENSUS OVER THE DATASET (not the row): 1091 committed rows, 25 distinct field names, 24 compared at >=1 of the 8 identity posets, 1 excluded with a reason, compared NOWHERE: none"
+   ],
+   "desc": "MINE.  mg56be-B together with mg-bd53's B1 (mg-4a86's own lambda_std, np.max -> np.min).  The decisive one: if this exits 0 then the REGRESSION mg-4f9b was created to repair is reinstated by a two-line edit that every gate condition in the file passes, IDENTITY_SECOND_ROUTES still says TWO ROUTES, and _identity_routes_declared() still returns clean",
+   "exit": 0,
+   "expected_exit": null,
+   "gate_failures": [],
+   "identity_lines": [
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 8.88e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 9.99e-16  mismatched: none",
+    "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+    "fields compared 24/25 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+   ],
+   "mutation": "mg56be-B+B1",
+   "regenerate": false,
+   "regenerated": null,
+   "stderr_tail": "",
+   "stdout_sha256": "65b911befe86bb537342fe8d07d3655833167e63a9224071bbb8ade96492f3b7"
+  }
+ ],
+ "part3_invariants": {
+  "posets": [
+   {
+    "C2_uncentred": {
+     "I1_abs_sum_f": 13.416407864998739,
+     "I2_norm_defect": 7.771561172376096e-16,
+     "I3_in_range": true,
+     "I4_bessel_lower_bound": 0.394042838018742,
+     "I4_bound_holds": true,
+     "I4_tightness": 0.4360887537863837,
+     "I4_witness_in_U_defect": 5.080630444185508e-15,
+     "I5_lstsq_overlap": 0.9035840401694061,
+     "I5_route_defect": 1.1102230246251565e-16,
+     "I6_vacuity_margin": 0.09641595983059381,
+     "dim_U": 24,
+     "num_LE": 360,
+     "overlap": 0.9035840401694062
+    },
+    "C2_verdicts": {
+     "I1_centring": false,
+     "I2_normalised": true,
+     "I3_in_range": true,
+     "I4_bessel": true,
+     "I5_second_route": true,
+     "I6_not_vacuous": true
+    },
+    "M3_maxratio_pair": {
+     "I1_abs_sum_f": 0.0,
+     "I2_norm_defect": 1.3322676295501878e-15,
+     "I3_in_range": true,
+     "I4_bessel_lower_bound": 0.8399999999999961,
+     "I4_bound_holds": true,
+     "I4_tightness": 0.8399999999999979,
+     "I4_witness_in_U_defect": 4.894567092499464e-15,
+     "I5_lstsq_overlap": 0.9999999999999982,
+     "I5_route_defect": 3.3306690738754696e-16,
+     "I6_vacuity_margin": 2.1094237467877974e-15,
+     "dim_U": 24,
+     "num_LE": 360,
+     "overlap": 0.9999999999999979
+    },
+    "M3_verdicts": {
+     "I1_centring": true,
+     "I2_normalised": true,
+     "I3_in_range": true,
+     "I4_bessel": true,
+     "I5_second_route": true,
+     "I6_not_vacuous": false
+    },
+    "baseline": {
+     "I1_abs_sum_f": 2.220446049250313e-16,
+     "I2_norm_defect": 1.3322676295501878e-15,
+     "I3_in_range": true,
+     "I4_bessel_lower_bound": 0.788085676037485,
+     "I4_bound_holds": true,
+     "I4_tightness": 0.9763588219527755,
+     "I4_witness_in_U_defect": 5.080630444185508e-15,
+     "I5_lstsq_overlap": 0.8071680803388122,
+     "I5_route_defect": 8.881784197001252e-16,
+     "I6_vacuity_margin": 0.19283191966118873,
+     "dim_U": 24,
+     "num_LE": 360,
+     "overlap": 0.8071680803388113
+    },
+    "baseline_verdicts": {
+     "I1_centring": true,
+     "I2_normalised": true,
+     "I3_in_range": true,
+     "I4_bessel": true,
+     "I5_second_route": true,
+     "I6_not_vacuous": true
+    },
+    "frozen_pair_max_ratio": [
+     0,
+     1
+    ],
+    "frozen_pair_min_ratio": [
+     3,
+     5
+    ],
+    "name": "enum-n7-#3"
+   },
+   {
+    "C2_uncentred": {
+     "I1_abs_sum_f": 10.09950493836208,
+     "I2_norm_defect": 2.220446049250313e-16,
+     "I3_in_range": true,
+     "I4_bessel_lower_bound": 0.38187751293147776,
+     "I4_bound_holds": true,
+     "I4_tightness": 0.42075612441177196,
+     "I4_witness_in_U_defect": 2.9912287148340502e-15,
+     "I5_lstsq_overlap": 0.9075982279886085,
+     "I5_route_defect": 2.220446049250313e-15,
+     "I6_vacuity_margin": 0.09240177201139377,
+     "dim_U": 22,
+     "num_LE": 198,
+     "overlap": 0.9075982279886062
+    },
+    "C2_verdicts": {
+     "I1_centring": false,
+     "I2_normalised": true,
+     "I3_in_range": true,
+     "I4_bessel": true,
+     "I5_second_route": true,
+     "I6_not_vacuous": true
+    },
+    "M3_maxratio_pair": {
+     "I1_abs_sum_f": 8.881784197001252e-16,
+     "I2_norm_defect": 6.661338147750939e-16,
+     "I3_in_range": true,
+     "I4_bessel_lower_bound": 0.8357665957949426,
+     "I4_bound_holds": true,
+     "I4_tightness": 0.8357665957949402,
+     "I4_witness_in_U_defect": 2.673122758061351e-15,
+     "I5_lstsq_overlap": 1.0000000000000009,
+     "I5_route_defect": 1.9984014443252818e-15,
+     "I6_vacuity_margin": -2.886579864025407e-15,
+     "dim_U": 22,
+     "num_LE": 198,
+     "overlap": 1.0000000000000029
+    },
+    "M3_verdicts": {
+     "I1_centring": true,
+     "I2_normalised": true,
+     "I3_in_range": true,
+     "I4_bessel": true,
+     "I5_second_route": true,
+     "I6_not_vacuous": false
+    },
+    "baseline": {
+     "I1_abs_sum_f": 0.0,
+     "I2_norm_defect": 8.881784197001252e-16,
+     "I3_in_range": true,
+     "I4_bessel_lower_bound": 0.7876223704211723,
+     "I4_bound_holds": true,
+     "I4_tightness": 0.9730684458299937,
+     "I4_witness_in_U_defect": 2.9912287148340502e-15,
+     "I5_lstsq_overlap": 0.8094213452264996,
+     "I5_route_defect": 4.440892098500626e-16,
+     "I6_vacuity_margin": 0.1905786547735009,
+     "dim_U": 22,
+     "num_LE": 198,
+     "overlap": 0.8094213452264991
+    },
+    "baseline_verdicts": {
+     "I1_centring": true,
+     "I2_normalised": true,
+     "I3_in_range": true,
+     "I4_bessel": true,
+     "I5_second_route": true,
+     "I6_not_vacuous": true
+    },
+    "frozen_pair_max_ratio": [
+     0,
+     1
+    ],
+    "frozen_pair_min_ratio": [
+     4,
+     5
+    ],
+    "name": "enum-n7-#20"
+   },
+   {
+    "C2_uncentred": {
+     "I1_abs_sum_f": 8.12403840463596,
+     "I2_norm_defect": 3.3306690738754696e-16,
+     "I3_in_range": true,
+     "I4_bessel_lower_bound": 0.3938861684763322,
+     "I4_bound_holds": true,
+     "I4_tightness": 0.4353175665275483,
+     "I4_witness_in_U_defect": 1.6699252267618147e-15,
+     "I5_lstsq_overlap": 0.9048248882265284,
+     "I5_route_defect": 2.4424906541753444e-15,
+     "I6_vacuity_margin": 0.09517511177347404,
+     "dim_U": 20,
+     "num_LE": 132,
+     "overlap": 0.904824888226526
+    },
+    "C2_verdicts": {
+     "I1_centring": false,
+     "I2_normalised": true,
+     "I3_in_range": true,
+     "I4_bessel": true,
+     "I5_second_route": true,
+     "I6_not_vacuous": true
+    },
+    "M3_maxratio_pair": {
+     "I1_abs_sum_f": 0.0,
+     "I2_norm_defect": 3.3306690738754696e-16,
+     "I3_in_range": true,
+     "I4_bessel_lower_bound": 0.836293974225007,
+     "I4_bound_holds": true,
+     "I4_tightness": 0.836293974225007,
+     "I4_witness_in_U_defect": 1.2412864712701893e-15,
+     "I5_lstsq_overlap": 1.0000000000000009,
+     "I5_route_defect": 8.881784197001252e-16,
+     "I6_vacuity_margin": 0.0,
+     "dim_U": 20,
+     "num_LE": 132,
+     "overlap": 1.0
+    },
+    "M3_verdicts": {
+     "I1_centring": true,
+     "I2_normalised": true,
+     "I3_in_range": true,
+     "I4_bessel": true,
+     "I5_second_route": true,
+     "I6_not_vacuous": false
+    },
+    "baseline": {
+     "I1_abs_sum_f": 2.220446049250313e-16,
+     "I2_norm_defect": 3.3306690738754696e-16,
+     "I3_in_range": true,
+     "I4_bessel_lower_bound": 0.7877723369526658,
+     "I4_bound_holds": true,
+     "I4_tightness": 0.9729791322907175,
+     "I4_witness_in_U_defect": 1.6699252267618147e-15,
+     "I5_lstsq_overlap": 0.809649776453055,
+     "I5_route_defect": 1.1102230246251565e-15,
+     "I6_vacuity_margin": 0.19035022354694608,
+     "dim_U": 20,
+     "num_LE": 132,
+     "overlap": 0.8096497764530539
+    },
+    "baseline_verdicts": {
+     "I1_centring": true,
+     "I2_normalised": true,
+     "I3_in_range": true,
+     "I4_bessel": true,
+     "I5_second_route": true,
+     "I6_not_vacuous": true
+    },
+    "frozen_pair_max_ratio": [
+     5,
+     6
+    ],
+    "frozen_pair_min_ratio": [
+     2,
+     4
+    ],
+    "name": "enum-n7-#600"
+   }
+  ],
+  "refutation": {
+   "C2_closed_by_I1": true,
+   "M3_closed_by_I6": true
+  },
+  "tolerances": {
+   "I1": 1e-09,
+   "I2": 1e-09,
+   "I4_in_U": 1e-09,
+   "I5": 1e-06,
+   "I6_floor": 1e-06
+  }
+ },
+ "part4_route_declaration_vs_wiring": {
+  "ands_into_matches": {
+   "bk_lambda2": true,
+   "delta": true,
+   "lambda_std": true,
+   "num_LE": false
+  },
+  "computes": {
+   "bk_lambda2": true,
+   "delta": true,
+   "lambda_std": true,
+   "num_LE": false
+  },
+  "declaration_is_a_gate_condition": true,
+  "declared": {
+   "bk_lambda2": true,
+   "delta": true,
+   "lambda_std": true,
+   "num_LE": false
+  },
+  "wiring_is_a_gate_condition": false
+ },
+ "work_item": "mg-56be"
+}
