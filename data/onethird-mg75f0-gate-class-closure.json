@@ -1,0 +1,1389 @@
+{
+  "what": "mg-75f0 source-level mutation demonstration: is mg-5ad1's class -- a quantity the document asserts, computed by code the CI gate exercises, with no control that can fail -- closed?",
+  "gate_command": "python3 scripts/onethird_mg2c34_n7_overlap_test.py --no-sweep",
+  "pre_widening_gate_revision": "af7fc2df",
+  "gate_sources_differ": true,
+  "route": "isolated tree per case (copy of scripts/ + the mg-8b64 reference dataset), ONE source-level edit with an anchor-count assertion, gate run there; the pre-widening gate is the real source at a PINNED revision, not a reconstruction",
+  "how_the_pre_widening_gate_missed_them": {
+    "method": "sha256 of the pre-widening gate's entire stdout, compared against the unmutated pre-widening run",
+    "exercised_and_absorbed": [
+      "M3",
+      "M4",
+      "M8"
+    ],
+    "never_exercised": [
+      "M5",
+      "M6",
+      "M7",
+      "M9"
+    ]
+  },
+  "mutations": {
+    "M3": {
+      "desc": "Theorem-E frozen-pair selector min -> max (mg-5ad1 M3): moves frozen_pair at 5/5 posets and frozen_pair_overlap_with_U to exactly 1.0000, the quantity ledger claim 8 rests on",
+      "seen_by": "mg-5ad1 (audit finding 1, primary witness)",
+      "fields": [
+        "frozen_pair",
+        "frozen_ratio",
+        "frozen_phi_bk",
+        "frozen_p",
+        "frozen_phi_t_image",
+        "frozen_sep_k"
+      ],
+      "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py"
+    },
+    "M4": {
+      "desc": "projector_U's rank filter s > max(tol,1e-10) -> s > 0.0 (mg-5ad1 M4): numerically-null singular directions enter U, dim U inflates 24/22/20/7/9 -> 49/49/49/21/25, and at #945 and #809 U becomes the WHOLE space so c = null = 1.0000",
+      "seen_by": "mg-5ad1 (audit finding 1, corroborating witness)",
+      "fields": [
+        "-- none: no mg-8b64 field moves; this is CONTROL E's case"
+      ],
+      "file": "scripts/onethird_mg4a86_sdquant_overlap.py"
+    },
+    "M5": {
+      "desc": "bk_frozen_pair's MIN-PHI selector min -> max: the literally lowest BK pair-cut conductance becomes the highest.  M3's structural twin, one line down, in a field uncompared until mg-75f0",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1",
+      "fields": [
+        "min_phi_bk",
+        "min_phi_bk_pair",
+        "minphi_phi_t_image"
+      ],
+      "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py"
+    },
+    "M6": {
+      "desc": "transport_summary's expected-rank PREFIX selector min -> max: phi_t_min_prefix reports the WORST transport prefix cut instead of the best, i.e. the transport Cheeger surrogate the programme's Cheeger step feeds on",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1",
+      "fields": [
+        "phi_t_min_prefix"
+      ],
+      "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py"
+    },
+    "M7": {
+      "desc": "_transport_label_cheeger's volume normalisation min(r, n-r) -> max(r, n-r): the transport Cheeger constant is divided by the WRONG volume.  A normalisation, not a selector, so it is not the same shape as M3/M5/M6",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1",
+      "fields": [
+        "phi_t_cheeger"
+      ],
+      "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py"
+    },
+    "M8": {
+      "desc": "Bernoulli variance p(1-p) -> p in bk_pair_cut, so Theorem E's ratio E(f_xy)/Var(f_xy) is divided by the wrong variance.  AUTHORED BY mg-7db4 as its battery's row N1, independently of this widening and of the author of it",
+      "seen_by": "UNSEEN by mg-60d3/mg-5ad1; and NOT CHOSEN BY THIS AUTHOR -- mg-7db4's row N1",
+      "fields": [
+        "frozen_ratio",
+        "ratio_of_sums",
+        "and whatever else the non-uniform argmin shift moves"
+      ],
+      "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py"
+    },
+    "M9": {
+      "desc": "_width's antichain search direction range(n,0,-1) -> range(1,n+1): the max-antichain scan returns the FIRST r that admits an antichain instead of the LAST, so width collapses to 1 on every poset.  Not a selector and not a normalisation -- a search direction, in a purely combinatorial field",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1",
+      "fields": [
+        "width"
+      ],
+      "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py"
+    }
+  },
+  "cases": [
+    {
+      "mutation": "none",
+      "gate": "pre-widening",
+      "applied": null,
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [],
+      "stdout_sha256": "ede66e5d18cf05186845b0712ab84d796f7be8a9c3bee9c7c29a1bf8e3a3779a",
+      "stdout_bytes": 7975,
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "moves_reference_fields": [],
+      "desc": "unmutated instrument",
+      "seen_by": "-"
+    },
+    {
+      "mutation": "none",
+      "gate": "widened",
+      "applied": null,
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+      ],
+      "stdout_sha256": "6e6ee84c4f9fd4f9ed6d623bea100821a6be44d4d310d025e0839d8ad3f610e2",
+      "stdout_bytes": 9612,
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "moves_reference_fields": [],
+      "desc": "unmutated instrument",
+      "seen_by": "-"
+    },
+    {
+      "mutation": "M3",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.2325",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.2727",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.2647",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.1522",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.1526",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [],
+      "stdout_sha256": "2bece9edd41beee017db42c0608c4a826ee6245818857f5a593e076094ca0794",
+      "stdout_bytes": 7975,
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "moves_reference_fields": [
+        "frozen_pair",
+        "frozen_ratio",
+        "frozen_phi_bk",
+        "frozen_p",
+        "frozen_phi_t_image",
+        "frozen_sep_k"
+      ],
+      "desc": "Theorem-E frozen-pair selector min -> max (mg-5ad1 M3): moves frozen_pair at 5/5 posets and frozen_pair_overlap_with_U to exactly 1.0000, the quantity ledger claim 8 rests on",
+      "seen_by": "mg-5ad1 (audit finding 1, primary witness)",
+      "pre_widening_stdout_differs": true,
+      "pre_widening_verdict": "EXERCISED AND ABSORBED -- the pre-widening gate computed a moved quantity, printed it, and exited 0"
+    },
+    {
+      "mutation": "M3",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.2325",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.2727",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.2647",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.1522",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.1526",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.22e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.35e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.65e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.62e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.20e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 4.69e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 4.83e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']"
+      ],
+      "stdout_sha256": "9920411dd24e701d5bfd8d3e24da56f9f5f1612cb45745f290b7859c5687b30d",
+      "stdout_bytes": 11989,
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "moves_reference_fields": [
+        "frozen_pair",
+        "frozen_ratio",
+        "frozen_phi_bk",
+        "frozen_p",
+        "frozen_phi_t_image",
+        "frozen_sep_k"
+      ],
+      "desc": "Theorem-E frozen-pair selector min -> max (mg-5ad1 M3): moves frozen_pair at 5/5 posets and frozen_pair_overlap_with_U to exactly 1.0000, the quantity ledger claim 8 rests on",
+      "seen_by": "mg-5ad1 (audit finding 1, primary witness)"
+    },
+    {
+      "mutation": "M4",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg4a86_sdquant_overlap.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "49",
+          "c_max": "0.995805",
+          "c_min": "0.995805",
+          "null": "0.1361",
+          "frozcap": "0.3920",
+          "froz_U": "0.8221"
+        },
+        "enum-n7-#20": {
+          "dim_U": "49",
+          "c_max": "0.997237",
+          "c_min": "0.997237",
+          "null": "0.2475",
+          "frozcap": "0.4303",
+          "froz_U": "0.8451"
+        },
+        "enum-n7-#600": {
+          "dim_U": "49",
+          "c_max": "0.997853",
+          "c_min": "0.997853",
+          "null": "0.3712",
+          "frozcap": "0.6114",
+          "froz_U": "0.8732"
+        },
+        "enum-n7-#945": {
+          "dim_U": "21",
+          "c_max": "1.000000",
+          "c_min": "1.000000",
+          "null": "1.0000",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "25",
+          "c_max": "1.000000",
+          "c_min": "1.000000",
+          "null": "1.0000",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [],
+      "stdout_sha256": "d34f8aa376e694ca4fd93d02705621506ce6ea0fa01e8894d4945d366c2bf1b7",
+      "stdout_bytes": 7975,
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "moves_reference_fields": [
+        "-- none: no mg-8b64 field moves; this is CONTROL E's case"
+      ],
+      "desc": "projector_U's rank filter s > max(tol,1e-10) -> s > 0.0 (mg-5ad1 M4): numerically-null singular directions enter U, dim U inflates 24/22/20/7/9 -> 49/49/49/21/25, and at #945 and #809 U becomes the WHOLE space so c = null = 1.0000",
+      "seen_by": "mg-5ad1 (audit finding 1, corroborating witness)",
+      "pre_widening_stdout_differs": true,
+      "pre_widening_verdict": "EXERCISED AND ABSORBED -- the pre-widening gate computed a moved quantity, printed it, and exited 0"
+    },
+    {
+      "mutation": "M4",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg4a86_sdquant_overlap.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "CONTROL B: the antichain known-answer check failed.  Required: c_max = c_min = 1 (the whole gap EIGENSPACE inside U -- see _antichain_row_ok for what licenses that, which is NOT Aldous/CLR) AND dim U = (n-1)^2+1 (the known rank of the one-particle span on S_n).  antichain-4: c_max=1.000000000 c_min=1.000000000 dim_U=16 (known 10); antichain-5: c_max=1.000000000 c_min=1.000000000 dim_U=25 (known 17); antichain-6: c_max=1.000000000 c_min=1.000000000 dim_U=36 (known 26)",
+        "CONTROL F: two-sided reading-dependence on a real poset with degenerate lambda_2 -- either c_max != c_min, or the degeneracy that gives this control its coverage has gone (see _two_sided_row_ok)",
+        "enum-n7-#3: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 360 (null = 0.1361); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#20: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 198 (null = 0.2475); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#600: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 132 (null = 0.3712); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#945: CONTROL E -- dim U = 21 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 21 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#809: CONTROL E -- dim U = 25 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 25 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "49",
+          "c_max": "0.995805",
+          "c_min": "0.995805",
+          "null": "0.1361",
+          "frozcap": "0.3920",
+          "froz_U": "0.8221"
+        },
+        "enum-n7-#20": {
+          "dim_U": "49",
+          "c_max": "0.997237",
+          "c_min": "0.997237",
+          "null": "0.2475",
+          "frozcap": "0.4303",
+          "froz_U": "0.8451"
+        },
+        "enum-n7-#600": {
+          "dim_U": "49",
+          "c_max": "0.997853",
+          "c_min": "0.997853",
+          "null": "0.3712",
+          "frozcap": "0.6114",
+          "froz_U": "0.8732"
+        },
+        "enum-n7-#945": {
+          "dim_U": "21",
+          "c_max": "1.000000",
+          "c_min": "1.000000",
+          "null": "1.0000",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "25",
+          "c_max": "1.000000",
+          "c_min": "1.000000",
+          "null": "1.0000",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+      ],
+      "stdout_sha256": "615c22b56f2fd558bb6a82a19bbbbe03e9d2a9c3d137133b620308dc1e5890f6",
+      "stdout_bytes": 11691,
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "moves_reference_fields": [
+        "-- none: no mg-8b64 field moves; this is CONTROL E's case"
+      ],
+      "desc": "projector_U's rank filter s > max(tol,1e-10) -> s > 0.0 (mg-5ad1 M4): numerically-null singular directions enter U, dim U inflates 24/22/20/7/9 -> 49/49/49/21/25, and at #945 and #809 U becomes the WHOLE space so c = null = 1.0000",
+      "seen_by": "mg-5ad1 (audit finding 1, corroborating witness)"
+    },
+    {
+      "mutation": "M5",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [],
+      "stdout_sha256": "ede66e5d18cf05186845b0712ab84d796f7be8a9c3bee9c7c29a1bf8e3a3779a",
+      "stdout_bytes": 7975,
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "moves_reference_fields": [
+        "min_phi_bk",
+        "min_phi_bk_pair",
+        "minphi_phi_t_image"
+      ],
+      "desc": "bk_frozen_pair's MIN-PHI selector min -> max: the literally lowest BK pair-cut conductance becomes the highest.  M3's structural twin, one line down, in a field uncompared until mg-75f0",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1",
+      "pre_widening_stdout_differs": false,
+      "pre_widening_verdict": "NEVER EXERCISED -- the pre-widening gate did not reach the mutated code, so not one printed byte moved"
+    },
+    {
+      "mutation": "M5",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: min_phi_bk,min_phi_bk_pair,minphi_phi_t_image",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: min_phi_bk,min_phi_bk_pair,minphi_phi_t_image",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: min_phi_bk,min_phi_bk_pair,minphi_phi_t_image",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: min_phi_bk,min_phi_bk_pair,minphi_phi_t_image",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: min_phi_bk,min_phi_bk_pair,minphi_phi_t_image",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: min_phi_bk,min_phi_bk_pair,minphi_phi_t_image"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.11e-01  mismatched: ['min_phi_bk', 'min_phi_bk_pair', 'minphi_phi_t_image']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 8.16e-02  mismatched: ['min_phi_bk', 'min_phi_bk_pair', 'minphi_phi_t_image']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.70e-01  mismatched: ['min_phi_bk', 'min_phi_bk_pair', 'minphi_phi_t_image']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.20e-01  mismatched: ['min_phi_bk', 'min_phi_bk_pair', 'minphi_phi_t_image']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 5.38e-02  mismatched: ['min_phi_bk', 'min_phi_bk_pair', 'minphi_phi_t_image']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.17e-01  mismatched: ['min_phi_bk', 'min_phi_bk_pair', 'minphi_phi_t_image']"
+      ],
+      "stdout_sha256": "d084c615ee627313ef1a50e65ae60d860d5a136ff4b653c4283f39b637ad0794",
+      "stdout_bytes": 11282,
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "moves_reference_fields": [
+        "min_phi_bk",
+        "min_phi_bk_pair",
+        "minphi_phi_t_image"
+      ],
+      "desc": "bk_frozen_pair's MIN-PHI selector min -> max: the literally lowest BK pair-cut conductance becomes the highest.  M3's structural twin, one line down, in a field uncompared until mg-75f0",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1"
+    },
+    {
+      "mutation": "M6",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [],
+      "stdout_sha256": "ede66e5d18cf05186845b0712ab84d796f7be8a9c3bee9c7c29a1bf8e3a3779a",
+      "stdout_bytes": 7975,
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "moves_reference_fields": [
+        "phi_t_min_prefix"
+      ],
+      "desc": "transport_summary's expected-rank PREFIX selector min -> max: phi_t_min_prefix reports the WORST transport prefix cut instead of the best, i.e. the transport Cheeger surrogate the programme's Cheeger step feeds on",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1",
+      "pre_widening_stdout_differs": false,
+      "pre_widening_verdict": "NEVER EXERCISED -- the pre-widening gate did not reach the mutated code, so not one printed byte moved"
+    },
+    {
+      "mutation": "M6",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_min_prefix",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_min_prefix",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_min_prefix",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_min_prefix",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_min_prefix",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_min_prefix",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_min_prefix"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.70e-01  mismatched: ['phi_t_min_prefix']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.55e-01  mismatched: ['phi_t_min_prefix']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.15e-01  mismatched: ['phi_t_min_prefix']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.33e-01  mismatched: ['phi_t_min_prefix']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.04e-01  mismatched: ['phi_t_min_prefix']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 5.52e-01  mismatched: ['phi_t_min_prefix']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.00e-01  mismatched: ['phi_t_min_prefix']"
+      ],
+      "stdout_sha256": "e54a04b575de82eb16a63547cc55a0a731c50ca3b5183878e942fb0506c7cfaa",
+      "stdout_bytes": 11117,
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "moves_reference_fields": [
+        "phi_t_min_prefix"
+      ],
+      "desc": "transport_summary's expected-rank PREFIX selector min -> max: phi_t_min_prefix reports the WORST transport prefix cut instead of the best, i.e. the transport Cheeger surrogate the programme's Cheeger step feeds on",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1"
+    },
+    {
+      "mutation": "M7",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [],
+      "stdout_sha256": "ede66e5d18cf05186845b0712ab84d796f7be8a9c3bee9c7c29a1bf8e3a3779a",
+      "stdout_bytes": 7975,
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "moves_reference_fields": [
+        "phi_t_cheeger"
+      ],
+      "desc": "_transport_label_cheeger's volume normalisation min(r, n-r) -> max(r, n-r): the transport Cheeger constant is divided by the WRONG volume.  A normalisation, not a selector, so it is not the same shape as M3/M5/M6",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1",
+      "pre_widening_stdout_differs": false,
+      "pre_widening_verdict": "NEVER EXERCISED -- the pre-widening gate did not reach the mutated code, so not one printed byte moved"
+    },
+    {
+      "mutation": "M7",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_cheeger",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_cheeger",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_cheeger",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_cheeger",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_cheeger",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_cheeger",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: phi_t_cheeger"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.00e-01  mismatched: ['phi_t_cheeger']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.21e-01  mismatched: ['phi_t_cheeger']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.31e-01  mismatched: ['phi_t_cheeger']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 4.76e-02  mismatched: ['phi_t_cheeger']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 7.73e-02  mismatched: ['phi_t_cheeger']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 5.56e-02  mismatched: ['phi_t_cheeger']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.67e-02  mismatched: ['phi_t_cheeger']"
+      ],
+      "stdout_sha256": "ce42322f90c1eeb4eb27eb3691ff77f3c6a724b0714ec54b25fbcbd66ec29474",
+      "stdout_bytes": 11075,
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "moves_reference_fields": [
+        "phi_t_cheeger"
+      ],
+      "desc": "_transport_label_cheeger's volume normalisation min(r, n-r) -> max(r, n-r): the transport Cheeger constant is divided by the WRONG volume.  A normalisation, not a selector, so it is not the same shape as M3/M5/M6",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1"
+    },
+    {
+      "mutation": "M8",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.2274",
+          "froz_U": "0.9327"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.2583",
+          "froz_U": "0.9333"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.3164",
+          "froz_U": "0.9184"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.3262",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [],
+      "stdout_sha256": "889d9cfa45ad7f4ec7b2076b6cf23d6c01b3026b9482d2d2f4338e93e5c34959",
+      "stdout_bytes": 7975,
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "moves_reference_fields": [
+        "frozen_ratio",
+        "ratio_of_sums",
+        "and whatever else the non-uniform argmin shift moves"
+      ],
+      "desc": "Bernoulli variance p(1-p) -> p in bk_pair_cut, so Theorem E's ratio E(f_xy)/Var(f_xy) is divided by the wrong variance.  AUTHORED BY mg-7db4 as its battery's row N1, independently of this widening and of the author of it",
+      "seen_by": "UNSEEN by mg-60d3/mg-5ad1; and NOT CHOSEN BY THIS AUTHOR -- mg-7db4's row N1",
+      "pre_widening_stdout_differs": true,
+      "pre_widening_verdict": "EXERCISED AND ABSORBED -- the pre-widening gate computed a moved quantity, printed it, and exited 0"
+    },
+    {
+      "mutation": "M8",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k,ratio_of_sums",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k,ratio_of_sums",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k,ratio_of_sums",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_ratio,ratio_of_sums",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k,ratio_of_sums",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k,ratio_of_sums",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k,ratio_of_sums"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.2274",
+          "froz_U": "0.9327"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.2583",
+          "froz_U": "0.9333"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.3164",
+          "froz_U": "0.9184"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.3262",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 4.00e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k', 'ratio_of_sums']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.94e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k', 'ratio_of_sums']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.94e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k', 'ratio_of_sums']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.67e-01  mismatched: ['frozen_ratio', 'ratio_of_sums']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.00e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k', 'ratio_of_sums']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.68e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k', 'ratio_of_sums']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 4.33e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k', 'ratio_of_sums']"
+      ],
+      "stdout_sha256": "2ba8a53279aa42206b0a804a26d59ce445ec8529aae81d32fdfc0fa3a643ccab",
+      "stdout_bytes": 12172,
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "moves_reference_fields": [
+        "frozen_ratio",
+        "ratio_of_sums",
+        "and whatever else the non-uniform argmin shift moves"
+      ],
+      "desc": "Bernoulli variance p(1-p) -> p in bk_pair_cut, so Theorem E's ratio E(f_xy)/Var(f_xy) is divided by the wrong variance.  AUTHORED BY mg-7db4 as its battery's row N1, independently of this widening and of the author of it",
+      "seen_by": "UNSEEN by mg-60d3/mg-5ad1; and NOT CHOSEN BY THIS AUTHOR -- mg-7db4's row N1"
+    },
+    {
+      "mutation": "M9",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [],
+      "stdout_sha256": "ede66e5d18cf05186845b0712ab84d796f7be8a9c3bee9c7c29a1bf8e3a3779a",
+      "stdout_bytes": 7975,
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "moves_reference_fields": [
+        "width"
+      ],
+      "desc": "_width's antichain search direction range(n,0,-1) -> range(1,n+1): the max-antichain scan returns the FIRST r that admits an antichain instead of the LAST, so width collapses to 1 on every poset.  Not a selector and not a normalisation -- a search direction, in a purely combinatorial field",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1",
+      "pre_widening_stdout_differs": false,
+      "pre_widening_verdict": "NEVER EXERCISED -- the pre-widening gate did not reach the mutated code, so not one printed byte moved"
+    },
+    {
+      "mutation": "M9",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "c_max": "0.995552",
+          "c_min": "0.995552",
+          "null": "0.0667",
+          "frozcap": "0.3920",
+          "froz_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "c_max": "0.996857",
+          "c_min": "0.996857",
+          "null": "0.1111",
+          "frozcap": "0.4303",
+          "froz_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "c_max": "0.996549",
+          "c_min": "0.996549",
+          "null": "0.1515",
+          "frozcap": "0.6114",
+          "froz_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "c_max": "0.987947",
+          "c_min": "0.987947",
+          "null": "0.3333",
+          "frozcap": "0.3456",
+          "froz_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "c_max": "0.995256",
+          "c_min": "0.995256",
+          "null": "0.3600",
+          "frozcap": "0.4656",
+          "froz_U": "1.0000"
+        }
+      },
+      "field_census_lines": [
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']",
+        "fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']"
+      ],
+      "stdout_sha256": "1170aec2aafb04e233325a9d4d330092da14e0990579cd4819241fa0bac099a1",
+      "stdout_bytes": 10963,
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "moves_reference_fields": [
+        "width"
+      ],
+      "desc": "_width's antichain search direction range(n,0,-1) -> range(1,n+1): the max-antichain scan returns the FIRST r that admits an antichain instead of the LAST, so width collapses to 1 on every poset.  Not a selector and not a normalisation -- a search direction, in a purely combinatorial field",
+      "seen_by": "UNSEEN -- used by neither mg-60d3 nor mg-5ad1"
+    }
+  ],
+  "unseen_mutations": [
+    "M5",
+    "M6",
+    "M7",
+    "M8",
+    "M9"
+  ],
+  "unseen_invisible_to_the_pre_widening_gate": [
+    "M5",
+    "M6",
+    "M7",
+    "M8",
+    "M9"
+  ],
+  "unseen_caught_by_the_widened_gate": [
+    "M5",
+    "M6",
+    "M7",
+    "M8",
+    "M9"
+  ],
+  "ALL_PASS": true
+}

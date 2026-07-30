@@ -177,7 +177,8 @@ ROWS = [
     ("M4", "scripts/onethird_mg4a86_sdquant_overlap.py",
      "    Q = Uu[:, s > max(tol, 1e-10)]\n",
      "    Q = Uu[:, s > 0.0]\n",
-     0, "projector_U rank filter dropped -- UNCOVERED (mg-5ad1 M4)"),
+     0, "projector_U rank filter dropped -- UNCOVERED BY THIS PROBE (mg-5ad1 "
+        "M4); the GATE catches it on CONTROL E, see the docstring"),
 
     # RE-POINTED AND RE-EXPECTED BY mg-75f0.  The anchor moved because
     # `_antichain_row_ok` gained the dim-U conjunct, and the EXPECTATION moved
@@ -350,8 +351,11 @@ def main():
         "probe_command": "python3 " + PROBE,
         "reading": {
             "expected_exit_1": "the scheduled check catches this mutation",
-            "expected_exit_0": "NOTHING in the fast gate catches it; recorded "
-                               "as a blind spot rather than left implicit",
+            "expected_exit_0": "THIS PROBE does not catch it; recorded as a "
+                               "blind spot rather than left implicit.  Read the "
+                               "scope exactly: it means the probe is blind, NOT "
+                               "that the repo is.  M4 is caught by the gate's "
+                               "CONTROL E in the same workflow (mg-75f0)",
         },
         "rows": results,
         "ALL_PASS": ok,
@@ -380,7 +384,9 @@ def main():
               "scheduled check actually does.")
         return 1
     print("\nThe scheduled blindness check fires on %d mutations and is blind "
-          "to %d, exactly as recorded."
+          "to %d, exactly as recorded.\n(Blind means THIS PROBE is blind.  M4 is "
+          "caught by the gate's CONTROL E in the\nsame workflow; N5 is caught by "
+          "the mg-60d3 demonstration.  See the docstring.)"
           % (sum(1 for r in ROWS if r[4] == 1), sum(1 for r in ROWS if r[4] == 0)))
     return 0
 
