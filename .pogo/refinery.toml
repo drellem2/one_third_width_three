@@ -14,7 +14,11 @@
 [gates]
 commands = ["./scripts/refinery_gate.sh"]
 
-# Six full runs of the control gate is the slow path.  ~11 min observed on the
-# fleet host; the bound is loose enough that an ordinary slowdown does not read
-# as a gate failure, tight enough that a wedged run is still killed.
-timeout = "45m"
+# Six full runs of the control gate is the slow path.  ~11 min observed on an
+# idle fleet host -- but measured at roughly ten times that per case with one
+# other long numpy demonstration running concurrently, which is a normal state
+# for this host and not an anomaly.  45m was not enough headroom for that and
+# would have turned contention into a spurious gate failure, which is the worst
+# kind: it teaches authors that the gate is noise.  90m is loose enough to
+# survive a busy host and still kills a genuinely wedged run.
+timeout = "90m"

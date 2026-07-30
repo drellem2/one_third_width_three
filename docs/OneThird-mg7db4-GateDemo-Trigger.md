@@ -35,6 +35,7 @@ file, plus a third check whose only job is to stop those two copies from driftin
 |---|---|---|---|
 | **Trigger, visible** | `.github/workflows/gate-mutation-demo.yml` | push/PR touching a watched path | ~17 min, only then |
 | **Trigger, blocking** | `scripts/refinery_gate.sh` + `.pogo/refinery.toml` | every refinery merge; heavy path only on a watched path | milliseconds otherwise |
+| *(see §1.4 for what the blocking layer deliberately does **not** run)* | | | |
 | **Anti-drift** | `scripts/onethird_mg7db4_watchlist_consistency.py` | every commit (fast gate) + every merge | milliseconds |
 | **Standing blindness check** | `scripts/onethird_mg5ad1_gate_blindspot_probe.py` | every commit (fast gate) | ~40 s |
 | **Proof the standing check can fail** | `scripts/onethird_mg7db4_probe_mutation_battery.py` | watched paths only | ~6 min |
@@ -79,6 +80,26 @@ not match, and the refinery gate is a `git diff` and a `grep`. Only commits that
 demonstrations pay for them. What the fast gate did gain is the blindness probe (~40 s) and the
 consistency check (milliseconds), which is what pm-onethird's scope change asked for and is within
 the rule.
+
+### 1.4 What the blocking layer does not run, and why — measured, not preferred
+
+The first version of `refinery_gate.sh` ran the battery in the blocking gate too. Its own MR then sat
+in the refinery **22 minutes** and held the queue for every other author on the fleet, while a
+concurrent 25-minute demonstration (mg-75f0's) on the same host stretched each gate run to roughly
+ten times its uncontended cost. The mayor asked whether that was expected. It was not, and the right
+response was not a bigger timeout on its own.
+
+A blocking gate long enough that people want it bypassed has a shorter life expectancy than the
+defect it guards — which is this ticket's own failure mode, arriving one layer further out. So:
+
+| layer | runs | rationale |
+|---|---|---|
+| **blocking** (refinery) | watchlist consistency; mg-5ad1 probe; **mg-60d3 demo** | the ticket's named property is that a gate change cannot *merge* without the demo having run |
+| **informational** (Actions) | + mg-7db4 battery; + mg-75f0 closure demo | these are proofs *about* the checks, not checks on the change |
+
+Agreed with mg-75f0 and applied to my instrument as well as theirs. The gate timeout is `90m`, not
+`45m`: on a busy host, contention alone would have produced a spurious failure, and a gate that fails
+for reasons unrelated to the change teaches authors that the gate is noise.
 
 ---
 

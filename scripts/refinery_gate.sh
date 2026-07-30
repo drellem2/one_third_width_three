@@ -133,16 +133,37 @@ fi
 echo "=== watched paths changed:"
 for h in $HITS; do echo "    $h"; done
 
-# Cheapest first, so a broken gate reports in two minutes rather than fifteen.
+# WHAT RUNS HERE AND WHAT DOES NOT, decided by measurement rather than taste.
+#
+# The first version of this file also ran the mg-7db4 battery here.  Its own MR
+# then sat in the refinery for 22 minutes and held the queue for every other
+# author on the fleet, while a concurrent 25-minute demonstration on the same
+# host stretched each gate run to roughly ten times its uncontended cost.  A
+# blocking gate long enough that people want it bypassed has a shorter life
+# expectancy than the defect it guards, which is the failure this whole ticket
+# chain is about, arriving one layer further out.
+#
+# So the split, agreed with mg-75f0 and applied to my own instrument as well as
+# theirs: THE BLOCKING LAYER GETS THE CHEAP TOTAL CHECK, THE INFORMATIONAL LAYER
+# GETS THE EXPENSIVE COMPLETE ONE.
+#
+#   here (blocking)   watchlist consistency        ms, every merge
+#                     mg-5ad1 blindness probe      ~30 s on CI, ~2.5 min loaded
+#                     mg-60d3 mutation demo        ~11 min -- the ticket's named
+#                                                  property is that a gate change
+#                                                  cannot MERGE without it
+#   Actions only      mg-7db4 mutation battery     the proof the probe can fire.
+#                     mg-75f0 closure demo         Both are proofs ABOUT the
+#                                                  checks, not checks on the
+#                                                  change, and a proof that ran
+#                                                  ten minutes ago on the same
+#                                                  tree is not worth ten minutes
+#                                                  of everyone else's queue.
 echo
 echo "=== mg-5ad1 gate blindspot probe (is the gate blind anywhere?)"
 "$PY" scripts/onethird_mg5ad1_gate_blindspot_probe.py
 
 echo
-echo "=== mg-7db4 probe mutation battery (can that check actually fail?)"
-"$PY" scripts/onethird_mg7db4_probe_mutation_battery.py
-
-echo
 echo "=== mg-60d3 gate mutation demo (do the F3/F4 repairs still fire?)"
-echo "    six full runs of the control gate; ~11 min"
+echo "    six full runs of the control gate; ~11 min idle, more under load"
 exec "$PY" scripts/onethird_mg60d3_gate_mutation_demo.py
