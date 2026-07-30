@@ -37,8 +37,8 @@ corrected in the other's artifacts.
 | **Does it fire on mutations neither mg-60d3 nor mg-5ad1 used?** | **YES — 5 of 5** (M5, M6, M7, M8, M9), each fatal to nothing before the widening. **This is the finding.** One of the five, M8, was authored by mg-7db4 rather than by the author of the widening. §4.2, §4.3 |
 | **False positives** | **None.** Unmutated: exit 0, and every compared float field reproduces to `0.00e+00` against a `1e-9` tolerance, at all 7 posets. |
 | **Is the proof-of-firing run by anything?** | **Yes, at three tiers, all mg-7db4's mechanism.** The ~27 s probe on every commit; the ~11 min mg-60d3 demo blocking at the refinery; this ticket's ~13 min closure demo in the paths-filtered Actions job. §6 |
-| **The AMBER (audit finding 3)** | **FIXED, docstring only, no behaviour change.** §5 |
-| **Overall** | **The class is closed for the mg-8b64 identity surface and for `projector_U`'s rank, demonstrated against five unseen mutations. §7 states precisely what is still not covered, including a distinction §4.2 measures rather than assumes.** |
+| **The AMBER (audit finding 3)** | **FIXED.** ~~docstring only, no behaviour change~~ — **CORRECTED by mg-4f9b** (mg-bd53 finding 6): the justification is docstring-only, but the same commit added a third conjunct (`dim_U == dim_U_known`) to `_antichain_row_ok`. A strengthening, documented in §3.1 and in the predicate itself; the phrase belongs to the *justification*, not to the commit. §5 |
+| **Overall** | ~~The class is closed for the mg-8b64 identity surface~~ — **FALSE AS WORDED; corrected by mg-bd53 and mg-4f9b.** `lambda_std` is on that surface and this ticket *removed* its comparison (mg-bd53 finding 1, restored at mg-4f9b). What this ticket established is that the **field axis** was widened from four fields to the whole row, and that the widening generalises to mutations nobody built it from. What it did not establish, and what mg-4f9b measured, is that no widening of any axis can close the class: the reference is a frozen snapshot of the same code path, so a mutation committed together with a regenerated dataset moves both sides at once. See `WHAT THIS GATE CANNOT SEE` in the gate's own header and §3 of `docs/OneThird-mg4f9b-RouteAxis.md`. |
 
 ---
 
@@ -407,7 +407,16 @@ words, rather than being papered over.
 
 ---
 
-## §5 — The AMBER: CONTROL B's justification (audit finding 3), docstring only
+## §5 — The AMBER: CONTROL B's justification (audit finding 3)
+
+> **CORRECTION (mg-4f9b, landing mg-bd53 finding 6).** This section and ledger row 7 were headed *"docstring
+> only, no behaviour change"*. The **justification** is docstring-only and everything below about it stands —
+> mg-bd53 confirmed it independently, including that `dim U = 1 + (n−1)² = (n−1)²+1` is *exact* on `S_n`
+> because `C^n = trivial ⊕ standard`, which is the same fact CONTROL E asserts as a bound. But the **commit**
+> did change behaviour: it added a third conjunct, `row["dim_U"] == row["dim_U_known"]`, to
+> `_antichain_row_ok`. That strengthening is documented in §3.1, in the predicate's docstring and in the new
+> `dim_U_known` key, so nothing was ever at risk — but a ledger row is what a later reader consults to decide
+> whether a predicate changed, and this one said it had not.
 
 The docstring said:
 
@@ -622,7 +631,7 @@ host has no numpy.
 | **4** | **CONTROL E**: `dim U ≤ (n−1)²+1` and `dim U < \|L\|`. Analytic, the corpus's own stated rank, 0 violations in 985 committed rows. Catches M4 at 5/5 measured posets, which the identity widening does **not** | **new control** | §3.1 |
 | **5** | **CONTROL F**: the two-sided check now has real-data coverage (`#52`, `#88`, `dim_E = 2`), with non-vacuity asserted. It splits under M2 by `7.58e-02`/`4.30e-02` and under M4 by `5.54e-04`/`1.37e-03`, so the coverage is real and not decorative | **CLOSED** (audit finding 4, as a coverage gap) | §3.3 |
 | **6** | **The probe's census comes from the gate's own comparison function, not from its source** — 22/22 fields fire when perturbed, an unseen field is picked up and fails, and part D proves every gate predicate can reject. The parsing route it replaces had a *measured* defect (mg-7db4's N2) | **strengthened** (audit finding 2's cheap half, wired by mg-7db4) | §3.2 |
-| **7** | **CONTROL B's Aldous/CLR justification corrected**, docstring only, no behaviour change: CLR gives the gap eigenvalue; eigenspace containment is a verified property of these matrices, so a future failure narrows the *population* rather than loosening the *assertion* | **CLOSED** (audit finding 3, AMBER) | §5 |
+| **7** | **CONTROL B's Aldous/CLR justification corrected**, ~~docstring only, no behaviour change~~ **— the JUSTIFICATION is docstring-only; the COMMIT added a third conjunct (`dim_U == dim_U_known`) to `_antichain_row_ok`** (corrected by mg-4f9b, mg-bd53 finding 6). CLR gives the gap eigenvalue; eigenspace containment is a verified property of these matrices, so a future failure narrows the *population* rather than loosening the *assertion* | **CLOSED** (audit finding 3, AMBER); wording corrected mg-4f9b | §5 |
 | **8** | Every compared float field reproduces to `0.00e+00` at 7/7 posets against a `1e-9` tolerance — the widening introduces no tolerance risk. And non-float fields are compared exactly, which is what catches M9, whose float distance is `0.00e+00` | **note** | §2, §4.2 |
 | **9** | **CONTROL B's failure message misattributed its own cause**, found by running M4 against the widened gate: it read *"antichain c != 1 (Aldous/CLR)"* while `c` was exactly 1 and `dim U` was what had failed. It now prints all three conjuncts per failing row | **fixed, found in flight** | §5 |
 | **10** | mg-5ad1 finding 2 was **closed by mg-7db4**, not by this ticket. mg-7db4 owns the trigger, mg-75f0 owns what is triggered; the closure demo sits in the informational tier by mg-7db4's own cost split, and the fast gate's `timeout-minutes` is back to 10 on a corrected measurement | **ownership, stated** | §6 |

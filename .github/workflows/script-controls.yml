@@ -142,11 +142,19 @@ jobs:
       # (M1, M2).  It answers "do the two repairs still fire?", not "is the
       # gate blind anywhere?", so scheduling it would have closed the
       # ownership gap and left the coverage gap open -- mg-5ad1 sec 4.  This
-      # probe is the coverage half.  Part B parses the gate's identity
-      # conjunction OUT OF THE GATE SOURCE, so the census cannot drift away
-      # from the thing it censuses; Part C compares the corpus's Theorem-E
-      # frozen-pair selector against the committed reference, which is the
-      # quantity ledger claim 8 rests on and which the gate does not compare.
+      # probe is the coverage half.  Part B IMPORTS THE GATE AND CALLS its own
+      # `identity_field_comparisons` / `_identity_row_ok`, so there is no second
+      # representation of the census left to drift from the first; Part C
+      # compares the corpus's Theorem-E frozen-pair selector against the
+      # committed reference, which is the quantity ledger claim 8 rests on.
+      #
+      # This comment said "Part B PARSES the gate's identity conjunction OUT OF
+      # THE GATE SOURCE" and "...which the gate DOES NOT COMPARE" until mg-4f9b.
+      # Both clauses were made false by mg-75f0, deliberately and as its own
+      # headline -- and mg-75f0 edited this file without correcting the sentence
+      # directly above the step it describes (mg-bd53 finding 5).  That is this
+      # arc's named pattern one turn later: the over-wide statement lands in a
+      # file's own description of its coverage, where nobody is watching.
       #
       # It is order-seconds -- the runtime objection that excluded the demo
       # does not apply -- so it runs on every commit, not only on gate edits.
