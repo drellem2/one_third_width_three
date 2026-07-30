@@ -206,7 +206,10 @@ and there is **no identity failure beside them** — the store agrees with the m
 ```
 
 Output: `data/onethird-mg48dd-corpus-independent.json`. Interpreter matters — bare `python3` on this host has
-no numpy. BLAS pinned to one thread, for the reason mg-bd53's probe pins it.
+no numpy. BLAS pinned to one thread, for the reason mg-bd53's probe pins it. `--part-a` deliberately does
+**not** write the record, so an invariants-only run cannot overwrite the §4.1 table's source with a
+part-B-less copy — the same rule the gate applies to its own `--no-sweep` control mode. (See §7 on why the
+records the *wired* gate writes must be regenerated **un**pinned instead.)
 
 ---
 
@@ -346,11 +349,36 @@ so unlike this ticket's own probe these two controls now have a firing check tha
 docstring now also says the list is explicit and that a predicate added to the gate and not added there is a
 hole the file cannot report.
 
-`data/onethird-mg60d3-gate-mutation-demo.json` was **reverted rather than committed** after that run: its only
-diff was last-digit float noise (`c_min = -0.000000000` → `0.000000000`) from the threading regime, not an
-effect of this change, and committing it would put unrelated churn in a commit whose whole subject is what did
-and did not move. `data/onethird-mg5ad1-gate-blindspot-probe.json` **is** committed, because its part-D block
-genuinely changed (10 rows → 14).
+**A record the wired gate WRITES must be committed in the state the GATE'S OWN ENVIRONMENT produces it — and
+getting that wrong cost a merge, so it is recorded rather than quietly fixed.** `mg-5ad1`'s probe and
+`mg-60d3`'s demo each rewrite a committed JSON on every run, and `scripts/refinery_gate.sh` runs both on any
+commit touching the gate. The first submission of this branch **passed the gate (7m47s) and then failed the
+rebase**:
+
+```
+rebase onto main: error: cannot rebase: You have unstaged changes.
+```
+
+**The cause was the threading regime, not the code.** Every acceptance run in this document pins BLAS to one
+thread, for the reason `mg-bd53`'s probe pins it. `scripts/refinery_gate.sh` pins nothing, and neither does
+the probe or the demo. `data/onethird-mg5ad1-gate-blindspot-probe.json` was committed from a **pinned** run;
+the refinery re-ran the probe **unpinned**, the last digits moved, the tree was dirty, and the rebase died
+after a green gate. Regenerated unpinned, it reproduces the pre-change committed record's `part_A` block
+**exactly** — which is what identifies pinning, rather than anything in this change, as the whole of the
+difference.
+
+**And the diagnosis that first suggested itself was wrong, which is worth the sentence.** The obvious suspect
+was `data/onethird-mg60d3-gate-mutation-demo.json`, reverted earlier in this branch as "unrelated float
+noise". Re-run unpinned, the demo reproduces its committed record **byte-for-byte** — `git status` shows
+nothing — so that revert was correct and was never the cause. Naming the file that *looked* responsible would
+have been a repair aimed at the wrong object, in the ticket whose subject is references pointed at the wrong
+thing.
+
+**This is a standing fragility, not a fact about this ticket, and it is named because the next author will hit
+it.** Any MR touching the gate pays ~12 minutes to discover it, *after* a green gate, with an error message
+that names neither the file nor the cause. The obvious repairs — have `refinery_gate.sh` pin BLAS the way the
+audit probes already do, or have it run the record-writing instruments against a scratch output path — are
+both small, and neither is in this ticket's scope.
 
 **One note on the ticket text.** It asked for the recorded position to be changed in `docs/roadmap.md` and
 `STATE.md`. Neither file exists in this repository. The recorded position lives in the gate's own header —
