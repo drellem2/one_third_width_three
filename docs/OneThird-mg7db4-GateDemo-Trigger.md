@@ -193,6 +193,41 @@ The fast CI gate itself (`onethird_mg2c34_n7_overlap_test.py --no-sweep`) is **b
 compares `num_LE`, `lambda_std`, `delta` and `bk_lambda2`, none of which move. So the demonstration
 branch is a case where the gate prints PASSED and the new standing check prints FAILED.
 
+### 2.5 The demonstration, on GitHub, on a pushed branch
+
+Branch `polecat-7db4-mutation-probe` = this MR + N1 and nothing else. Both new mechanisms fired and
+failed; the pre-existing gate did not notice.
+
+**Run 30513056335, `Script controls`, conclusion `failure`:**
+
+```
+success  mg-8489 fast_Q gate control (can the engine gate fail?)
+success  mg-8ff1 Lemma 3.2b counterexample (n=9 witness)
+success  mg-2c34 SD-quant overlap controls (can the instrument fail?)   <- BLIND to N1
+success  mg-7db4 watchlist consistency (is the trigger still complete?)
+failure  mg-5ad1 gate blindspot probe (is the gate blind anywhere?)     <- CAUGHT
+```
+
+**Run 30513056294, `Gate mutation demo`, conclusion `failure` after 49 s** — the paths filter fired
+on a commit touching only `scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py`, and the
+battery refused to proceed:
+
+```
+- enum-n7-#3: bk_frozen_pair() RETURNS [0, 3], committed reference frozen_pair is [3, 5]
+  -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in
+     script-controls.yml can see it
+...
+The unmutated probe does not pass, so no row below means anything.
+```
+
+On this MR's own branch, unmutated, both workflows are green — so the failures above are the
+mutation, not the mechanism. The `Script controls` job on `polecat-7db4` ran in **1 m 12 s** with
+both new steps included, against 41–64 s before: the probe costs ~30 s on a hosted runner, which is
+what pm-onethird estimated and is inside the order-seconds rule.
+
+The demonstration mutation is **N1**, not M1, M2, M3 or M4. The check that caught it was written by
+mg-5ad1's author against a mutation they had never seen.
+
 ---
 
 ## §3 — What is still not covered
