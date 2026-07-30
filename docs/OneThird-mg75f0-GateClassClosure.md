@@ -503,14 +503,60 @@ Four points recorded rather than left implicit:
    *policy* rather than by mutation, which is the realistic way this defect returns) and **N7** (CONTROL
    E's properness clause dropped).
 
-**One consequence for another merged artifact, stated plainly.** `apply_pre_repair_gate` in
-`onethird_mg60d3_gate_mutation_demo.py` reconstructs the `87f0424` gate by substituting two predicates.
-The gate has since acquired two more failure conditions, so without a change that function would
-reconstruct "today's gate minus two predicates" rather than the gate mg-09ea measured, and the left
+### 6.1 Two consequences for `onethird_mg60d3_gate_mutation_demo.py`, one of them a real defect
+
+**The expected one.** `apply_pre_repair_gate` reconstructs the `87f0424` gate by substituting two
+predicates. The gate has since acquired two more failure conditions, so without a change that function
+would reconstruct "today's gate minus two predicates" rather than the gate mg-09ea measured, and the left
 column of its 2×3 matrix would stop being a statement about the pre-repair gate. Two lines were added to
 neutralise CONTROL E and CONTROL F in the reconstruction. **`EXPECTED` is unchanged, the 2×3 matrix is
 unchanged, and ledger claim 27 is untouched** — the substitutions still live in the demonstration and not
 in the gate, which has no switch that weakens it and must not acquire one.
+
+**The unexpected one, and it is the most interesting thing this ticket found by accident.** Running the
+demo against the widened gate, the **M1 / pre-repair** cell did not exit 0 — it died on
+`ValueError: too many values to unpack (expected 2)`.
+
+The cause is in the demo's mutation harness, not in the gate. `_rebind` applies a mutation by rebinding
+one replacement function into **every** loaded corpus module holding that name, on the stated reasoning
+that *"rebinding everywhere is the realistic case for a coding error"*. That reasoning holds only when
+every holder of the name has the **same signature** — and `bk_walk_matrix` does not:
+
+| module | returns |
+|---|---|
+| `onethird_mg4a86_standard_dominance_target_audit` | `W` |
+| `onethird_mg8b64_L1b_bk_transport_transfer_probe` | `(W, index)`, or `(None, None)` past the spectrum cap |
+
+M1's replacement was a copy of mg-4a86's body, so rebinding it over mg-8b64's name made every mg-8b64
+caller raise. **That was latent for as long as the gate never called mg-8b64's row builder** — which is
+to say, until the widening. It is the same shape as everything else in this chain: a defect that could
+not fire because the code path was not exercised, in the harness whose job is to prove things fire.
+
+Fixed by expressing M1 as **the arithmetic of the mutation** instead of as a copy of one implementation.
+Doubling the step from `1/(2(n−1))` to `1/(n−1)` is exactly "double every off-diagonal entry and
+re-lazify the diagonal", which is signature-agnostic; `_rebind_wrap` wraps each module's **own** function
+so both shapes survive. And because *"the mutation is unchanged"* would otherwise be a claim in a
+docstring, `_m1_selftest` **asserts** it: the doubling must reproduce the pre-mg-75f0 step-edited matrix
+to `1e-14`, checked against a verbatim copy of the old body kept as the oracle, before the demo runs.
+**So M1 is the same mutation, ledger claim 27 is about the same thing it was, and what changed is only
+that it survives contact with both signatures.** `_rebind` is kept for M2, whose target
+`one_particle_span` has exactly one definition in the corpus.
+
+**Confirmed three further ways, after the fix.** (i) The demo's 2×3 exit-code matrix is **bit-identical
+to the copy on `main`** — all six cells, expected and actual. (ii) Every pre-existing figure in
+`data/onethird-mg60d3-gate-mutation-demo.json` is unchanged; the diff is the two new posets `#52`/`#88`
+joining the identity population, plus richer failure text. (iii) Doubling the step maps the walk
+`W ↦ 2W − I`, an affine map, so eigenvalues go `λ ↦ 2λ − 1` and eigenvectors are untouched — which is
+exactly why mg-5ad1 measured `c` bit-identical and `CHECK-0 = 0.00e+00` under M1. The measured λ₂ values
+confirm it to the last digit printed: `#3` `0.980923095 → 0.961846190`, `#809`
+`0.969494540 → 0.938989081`, and the two new rows `#52` `0.979541240 → 0.959082481`, `#88`
+`0.967126595 → 0.934253190`.
+
+**A note in favour of the source-level route.** This class of harness artifact cannot arise in
+`onethird_mg75f0_gate_class_closure_demo.py` or in mg-7db4's battery: both mutate **source text in an
+isolated tree** and run the gate as a subprocess, so no name is ever rebound across modules and no
+signature can be crossed. In-process monkeypatching is faster and is what makes mg-60d3's 2×3 matrix
+cheap; it also has this failure mode, and it is worth knowing which instrument carries which risk.
 
 ---
 
@@ -580,3 +626,4 @@ host has no numpy.
 | **8** | Every compared float field reproduces to `0.00e+00` at 7/7 posets against a `1e-9` tolerance — the widening introduces no tolerance risk. And non-float fields are compared exactly, which is what catches M9, whose float distance is `0.00e+00` | **note** | §2, §4.2 |
 | **9** | **CONTROL B's failure message misattributed its own cause**, found by running M4 against the widened gate: it read *"antichain c != 1 (Aldous/CLR)"* while `c` was exactly 1 and `dim U` was what had failed. It now prints all three conjuncts per failing row | **fixed, found in flight** | §5 |
 | **10** | mg-5ad1 finding 2 was **closed by mg-7db4**, not by this ticket. mg-7db4 owns the trigger, mg-75f0 owns what is triggered; the closure demo sits in the informational tier by mg-7db4's own cost split, and the fast gate's `timeout-minutes` is back to 10 on a corrected measurement | **ownership, stated** | §6 |
+| **11** | **mg-60d3's mutation harness had a latent defect, found by running it against the widened gate.** `_rebind` overwrote *both* `bk_walk_matrix` functions with mg-4a86's, but mg-8b64's returns `(W, index)` — so the M1/pre-repair cell raised instead of exiting 0. Latent only because the pre-widening gate never called mg-8b64's row builder: the same "unexercised code path" shape as the rest of this chain, in the harness whose job is to prove things fire. M1 is now expressed as the mutation's arithmetic (double the off-diagonals), which is signature-agnostic, with a self-test **asserting** it reproduces the old step-edited matrix to `1e-14` so the mutation is provably unchanged | **fixed, found by accident** | §6.1 |

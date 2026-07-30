@@ -3,7 +3,7 @@
   "probe_command": "python3 scripts/onethird_mg5ad1_gate_blindspot_probe.py",
   "reading": {
     "expected_exit_1": "the scheduled check catches this mutation",
-    "expected_exit_0": "NOTHING in the fast gate catches it; recorded as a blind spot rather than left implicit"
+    "expected_exit_0": "THIS PROBE does not catch it; recorded as a blind spot rather than left implicit.  Read the scope exactly: it means the probe is blind, NOT that the repo is.  M4 is caught by the gate's CONTROL E in the same workflow (mg-75f0)"
   },
   "rows": [
     {
@@ -25,11 +25,11 @@
       "PASS": true,
       "caught": true,
       "probe_failures": [
-        "enum-n7-#3: bk_frozen_pair() RETURNS [0, 1], committed reference frozen_pair is [3, 5] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it",
-        "enum-n7-#20: bk_frozen_pair() RETURNS [0, 1], committed reference frozen_pair is [4, 5] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it",
-        "enum-n7-#600: bk_frozen_pair() RETURNS [5, 6], committed reference frozen_pair is [2, 4] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it",
-        "enum-n7-#945: bk_frozen_pair() RETURNS [0, 1], committed reference frozen_pair is [1, 2] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it",
-        "enum-n7-#809: bk_frozen_pair() RETURNS [0, 1], committed reference frozen_pair is [1, 3] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it"
+        "enum-n7-#3: bk_frozen_pair() RETURNS [0, 1], committed reference frozen_pair is [3, 5] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it",
+        "enum-n7-#20: bk_frozen_pair() RETURNS [0, 1], committed reference frozen_pair is [4, 5] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it",
+        "enum-n7-#600: bk_frozen_pair() RETURNS [5, 6], committed reference frozen_pair is [2, 4] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it",
+        "enum-n7-#945: bk_frozen_pair() RETURNS [0, 1], committed reference frozen_pair is [1, 2] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it",
+        "enum-n7-#809: bk_frozen_pair() RETURNS [0, 1], committed reference frozen_pair is [1, 3] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it"
       ]
     },
     {
@@ -42,25 +42,58 @@
       "caught": true,
       "probe_failures": [
         "enum-n7-#3: the corpus argmin-ratio selector gives [0, 3], committed reference says [3, 5] -- no comparison is available after all",
-        "enum-n7-#3: bk_frozen_pair() RETURNS [0, 3], committed reference frozen_pair is [3, 5] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it",
+        "enum-n7-#3: bk_frozen_pair() RETURNS [0, 3], committed reference frozen_pair is [3, 5] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it",
         "enum-n7-#20: the corpus argmin-ratio selector gives [1, 5], committed reference says [4, 5] -- no comparison is available after all",
-        "enum-n7-#20: bk_frozen_pair() RETURNS [1, 5], committed reference frozen_pair is [4, 5] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it",
+        "enum-n7-#20: bk_frozen_pair() RETURNS [1, 5], committed reference frozen_pair is [4, 5] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it",
         "enum-n7-#600: the corpus argmin-ratio selector gives [2, 5], committed reference says [2, 4] -- no comparison is available after all",
-        "enum-n7-#600: bk_frozen_pair() RETURNS [2, 5], committed reference frozen_pair is [2, 4] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it",
+        "enum-n7-#600: bk_frozen_pair() RETURNS [2, 5], committed reference frozen_pair is [2, 4] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it",
         "enum-n7-#809: the corpus argmin-ratio selector gives [1, 4], committed reference says [1, 3] -- no comparison is available after all",
-        "enum-n7-#809: bk_frozen_pair() RETURNS [1, 4], committed reference frozen_pair is [1, 3] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it"
+        "enum-n7-#809: bk_frozen_pair() RETURNS [1, 4], committed reference frozen_pair is [1, 3] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it"
       ]
     },
     {
       "id": "N2",
-      "mutation": "the gate drops match_bk_lambda2 -- the mg-09ea F3 repair, reverted",
+      "mutation": "the gate's widened identity check goes all() -> any() -- mg-75f0's whole-row comparison, reverted",
       "target": "scripts/onethird_mg2c34_n7_overlap_test.py",
       "expected_exit": 1,
       "actual_exit": 1,
       "PASS": true,
       "caught": true,
       "probe_failures": [
-        "PART B: bk_lambda2 is NOT in the identity conjunction -- the mg-60d3 F3 repair is absent"
+        "PART B2: perturbing 'bk_gap' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'bk_lambda2' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'delta' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'frozen_p' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'frozen_pair' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'frozen_phi_bk' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'frozen_phi_t_image' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'frozen_ratio' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'frozen_sep_k' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'lambda_std' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'max_bias' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'min_phi_bk' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'min_phi_bk_pair' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'minphi_phi_t_image' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'n' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'num_LE' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'num_incomp_pairs' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'phi_t_cheeger' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'phi_t_min_prefix' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'ratio_of_sums' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'transport_gap' does NOT make the gate's identity check fail -- the field is compared in name only",
+        "PART B2: perturbing 'width' does NOT make the gate's identity check fail -- the field is compared in name only"
+      ]
+    },
+    {
+      "id": "N6",
+      "mutation": "frozen_pair is moved into the gate's exclusion list with a plausible-looking reason -- mg-5ad1's M3 made green by policy rather than by mutation",
+      "target": "scripts/onethird_mg2c34_n7_overlap_test.py",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "PASS": true,
+      "caught": true,
+      "probe_failures": [
+        "PART B1: frozen_pair is NOT compared -- mg-5ad1's M3 (the Theorem-E selector flip that moves the quantity ledger claim 8 rests on) is live again"
       ]
     },
     {
@@ -73,12 +106,12 @@
       "caught": true,
       "probe_failures": [
         "enum-n7-#3: the corpus argmin-ratio selector gives [3, 5], committed reference says [0, 1] -- no comparison is available after all",
-        "enum-n7-#3: bk_frozen_pair() RETURNS [3, 5], committed reference frozen_pair is [0, 1] -- the Theorem-E pair ledger claim 8 rests on has moved, and no control in script-controls.yml can see it"
+        "enum-n7-#3: bk_frozen_pair() RETURNS [3, 5], committed reference frozen_pair is [0, 1] -- the Theorem-E pair ledger claim 8 rests on has moved -- as of mg-75f0 the gate compares this field too, so this fires alongside it rather than instead of it"
       ]
     },
     {
       "id": "M4",
-      "mutation": "projector_U rank filter dropped -- UNCOVERED (mg-5ad1 M4)",
+      "mutation": "projector_U rank filter dropped -- UNCOVERED BY THIS PROBE (mg-5ad1 M4); the GATE catches it on CONTROL E, see the docstring",
       "target": "scripts/onethird_mg4a86_sdquant_overlap.py",
       "expected_exit": 0,
       "actual_exit": 0,
@@ -88,17 +121,31 @@
     },
     {
       "id": "N3",
-      "mutation": "the gate drops the c_min clause -- the F4 repair reverted; UNCOVERED by the fast gate, caught by the mg-60d3 demonstration",
+      "mutation": "the gate drops the c_min clause -- the F4 repair reverted; now CAUGHT by mg-75f0's part D, previously uncovered by the fast gate",
       "target": "scripts/onethird_mg2c34_n7_overlap_test.py",
-      "expected_exit": 0,
-      "actual_exit": 0,
+      "expected_exit": 1,
+      "actual_exit": 1,
       "PASS": true,
-      "caught": false,
-      "probe_failures": []
+      "caught": true,
+      "probe_failures": [
+        "PART D: CONTROL B / c_min (mg-09ea F4) ACCEPTED a row it must reject -- M2's signature: c_max survives a shrink of U, c_min does not"
+      ]
+    },
+    {
+      "id": "N7",
+      "mutation": "the gate drops CONTROL E's properness clause -- U may be the whole function space again, c = null = 1 and vacuous",
+      "target": "scripts/onethird_mg2c34_n7_overlap_test.py",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "PASS": true,
+      "caught": true,
+      "probe_failures": [
+        "PART D: CONTROL E / vacuity (mg-5ad1 M4) ACCEPTED a row it must reject -- U is the whole space, so c = null = 1 and the measurement is vacuous by sec 2's own criterion"
+      ]
     },
     {
       "id": "N5",
-      "mutation": "BK step rescaled (mg-09ea M1) -- UNCOVERED by the fast gate, caught by the mg-60d3 demonstration",
+      "mutation": "BK step rescaled (mg-09ea M1) -- UNCOVERED BY THIS PROBE, caught by the mg-60d3 demonstration",
       "target": "scripts/onethird_mg4a86_standard_dominance_target_audit.py",
       "expected_exit": 0,
       "actual_exit": 0,

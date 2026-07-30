@@ -18,7 +18,9 @@
         "enum-n7-#20": 0.981202326,
         "enum-n7-#600": 0.979920569,
         "enum-n7-#945": 0.943488102,
-        "enum-n7-#809": 0.96949454
+        "enum-n7-#809": 0.96949454,
+        "enum-n7-#52": 0.97954124,
+        "enum-n7-#88": 0.967126595
       },
       "c_max": {
         "enum-n7-#3": 0.995552,
@@ -46,7 +48,9 @@
         "enum-n7-#20": 0.981202326,
         "enum-n7-#600": 0.979920569,
         "enum-n7-#945": 0.943488102,
-        "enum-n7-#809": 0.96949454
+        "enum-n7-#809": 0.96949454,
+        "enum-n7-#52": 0.97954124,
+        "enum-n7-#88": 0.967126595
       },
       "c_max": {
         "enum-n7-#3": 0.995552,
@@ -74,7 +78,9 @@
         "enum-n7-#20": 0.962404652,
         "enum-n7-#600": 0.959841138,
         "enum-n7-#945": 0.886976203,
-        "enum-n7-#809": 0.938989081
+        "enum-n7-#809": 0.938989081,
+        "enum-n7-#52": 0.959082481,
+        "enum-n7-#88": 0.93425319
       },
       "c_max": {
         "enum-n7-#3": 0.995552,
@@ -102,7 +108,9 @@
         "enum-n7-#20": 0.962404652,
         "enum-n7-#600": 0.959841138,
         "enum-n7-#945": 0.886976203,
-        "enum-n7-#809": 0.938989081
+        "enum-n7-#809": 0.938989081,
+        "enum-n7-#52": 0.959082481,
+        "enum-n7-#88": 0.93425319
       },
       "c_max": {
         "enum-n7-#3": 0.995552,
@@ -117,11 +125,13 @@
         "antichain-6  |L|=  720  dimU= 26  c_max=1.000000000 c_min=1.000000000 (PASS)  broken c=0.124694 (PASS)"
       ],
       "gate_failures": [
-        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)",
-        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)",
-        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)",
-        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)",
-        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False)"
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False); ALL mismatched fields of the 22 compared: bk_gap,bk_lambda2",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False); ALL mismatched fields of the 22 compared: bk_gap,bk_lambda2",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False); ALL mismatched fields of the 22 compared: bk_gap,bk_lambda2",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False); ALL mismatched fields of the 22 compared: bk_gap,bk_lambda2",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False); ALL mismatched fields of the 22 compared: bk_gap,bk_lambda2",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False); ALL mismatched fields of the 22 compared: bk_gap,bk_lambda2",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=False); ALL mismatched fields of the 22 compared: bk_gap,bk_lambda2"
       ]
     },
     {
@@ -136,7 +146,9 @@
         "enum-n7-#20": 0.981202326,
         "enum-n7-#600": 0.979920569,
         "enum-n7-#945": 0.943488102,
-        "enum-n7-#809": 0.96949454
+        "enum-n7-#809": 0.96949454,
+        "enum-n7-#52": 0.97954124,
+        "enum-n7-#88": 0.967126595
       },
       "c_max": {
         "enum-n7-#3": 0.986571,
@@ -164,7 +176,9 @@
         "enum-n7-#20": 0.981202326,
         "enum-n7-#600": 0.979920569,
         "enum-n7-#945": 0.943488102,
-        "enum-n7-#809": 0.96949454
+        "enum-n7-#809": 0.96949454,
+        "enum-n7-#52": 0.97954124,
+        "enum-n7-#88": 0.967126595
       },
       "c_max": {
         "enum-n7-#3": 0.986571,
@@ -179,7 +193,8 @@
         "antichain-6  |L|=  720  dimU= 21  c_max=1.000000000 c_min=-0.000000000 (FAIL)  broken c=0.104472 (PASS)"
       ],
       "gate_failures": [
-        "CONTROL B: antichain c != 1 (Aldous/CLR)"
+        "CONTROL B: the antichain known-answer check failed.  Required: c_max = c_min = 1 (the whole gap EIGENSPACE inside U -- see _antichain_row_ok for what licenses that, which is NOT Aldous/CLR) AND dim U = (n-1)^2+1 (the known rank of the one-particle span on S_n).  antichain-4: c_max=1.000000000 c_min=-0.000000000 dim_U=7 (known 10); antichain-5: c_max=1.000000000 c_min=-0.000000000 dim_U=13 (known 17); antichain-6: c_max=1.000000000 c_min=-0.000000000 dim_U=21 (known 26)",
+        "CONTROL F: two-sided reading-dependence on a real poset with degenerate lambda_2 -- either c_max != c_min, or the degeneracy that gives this control its coverage has gone (see _two_sided_row_ok)"
       ]
     }
   ],

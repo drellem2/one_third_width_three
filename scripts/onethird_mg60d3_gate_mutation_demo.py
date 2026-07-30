@@ -89,7 +89,17 @@ def _rebind(name, fn):
     would leave the importers on the original.  Rebinding everywhere is the
     realistic case for a coding error: both the measurement and mg-4a86's
     reference instrument see the same bug, which is exactly why CHECK-0 is
-    blind to it."""
+    blind to it.
+
+    ONE CAVEAT, and mg-75f0 hit it.  Rebinding a single replacement function
+    everywhere is only faithful when every holder of that name has the SAME
+    SIGNATURE.  `bk_walk_matrix` does not: mg-4a86's returns `W`, mg-8b64's
+    returns `(W, index)`.  A mutation that overwrites both with one
+    mg-4a86-shaped function is not "the realistic coding error" -- it is a
+    harness artifact that makes mg-8b64's callers raise.  It went unnoticed
+    because the pre-mg-75f0 gate never called mg-8b64's row builder, so that
+    branch was never executed.  Use `_rebind_wrap` for any name with more than
+    one shape; see `apply_M1`."""
     hits = []
     for modname, mod in list(sys.modules.items()):
         if mod is None or not modname.startswith("onethird_"):
@@ -102,19 +112,90 @@ def _rebind(name, fn):
     return hits
 
 
+def _rebind_wrap(name, wrap):
+    """Like `_rebind`, but each module gets a wrapper around ITS OWN function.
+
+    Signature-preserving by construction, which is what `_rebind` cannot be for
+    a name that several modules define differently.  `wrap(original)` is called
+    once per holder and must return a replacement with the original's shape."""
+    hits = []
+    for modname, mod in list(sys.modules.items()):
+        if mod is None or not modname.startswith("onethird_"):
+            continue
+        orig = getattr(mod, name, None)
+        if orig is None or not callable(orig):
+            continue
+        setattr(mod, name, wrap(orig))
+        hits.append(modname)
+    if not hits:
+        raise SystemExit(f"mutation target {name!r} not found in any module")
+    return hits
+
+
 def apply_M1():
-    """BK step 1/(n-1) instead of 1/(2(n-1)).  Copy of
-    `onethird_mg4a86_standard_dominance_target_audit.bk_walk_matrix` with the
-    one constant changed."""
+    """BK step 1/(n-1) instead of 1/(2(n-1)) -- a global rate rescaling.
+
+    HOW THIS IS APPLIED, and why it changed at mg-75f0 without the mutation
+    changing.  It used to be a hand-written copy of mg-4a86's `bk_walk_matrix`
+    with the one constant edited, rebound over EVERY module holding that name.
+    mg-8b64's `bk_walk_matrix` returns `(W, index)` rather than `W`, so that
+    rebind made mg-8b64's callers raise `ValueError: too many values to unpack`
+    -- latent until mg-75f0's widened identity check started calling mg-8b64's
+    row builder, at which point the M1/pre-repair cell died on a traceback
+    instead of exiting 0.
+
+    So M1 is now expressed as the ARITHMETIC of the mutation rather than as a
+    copy of one implementation: take each module's own matrix and double every
+    off-diagonal entry, then re-lazify the diagonal.  Doubling the step from
+    1/(2(n-1)) to 1/(n-1) is exactly that, and `_m1_selftest` below asserts the
+    equivalence against the old hand-written copy before anything else runs --
+    so THE MUTATION IS THE SAME MUTATION and ledger claim 27 is untouched.  What
+    changed is only that it now survives contact with both signatures."""
     import numpy as np
 
-    def bk_walk_matrix_MUTATED(P):
+    def double_offdiag(W):
+        """step -> 2*step, expressed on the assembled matrix."""
+        D = W - np.diag(np.diag(W))
+        Wm = 2.0 * D
+        np.fill_diagonal(Wm, 1.0 - Wm.sum(axis=1))
+        return Wm
+
+    def wrap(orig):
+        def bk_walk_matrix_MUTATED(P):
+            out = orig(P)
+            if isinstance(out, tuple):            # mg-8b64: (W, index)
+                if out[0] is None:                # over the spectrum cap
+                    return out
+                return (double_offdiag(out[0]),) + tuple(out[1:])
+            if out is None:
+                return out
+            return double_offdiag(out)            # mg-4a86: W
+        return bk_walk_matrix_MUTATED
+
+    _m1_selftest(double_offdiag)
+    return _rebind_wrap("bk_walk_matrix", wrap)
+
+
+def _m1_selftest(double_offdiag):
+    """The doubling must reproduce the old hand-written step-edited copy exactly.
+
+    Without this, "M1 is the same mutation as before" would be an assertion in a
+    docstring.  Checked on a poset small enough to cost nothing, against a
+    verbatim copy of the pre-mg-75f0 mutated function."""
+    import numpy as np
+    from onethird_mgb0a6_spectral_killshot_probe import Poset
+    from onethird_mg4a86_standard_dominance_target_audit import (
+        bk_walk_matrix as bk_a,
+    )
+
+    def bk_walk_matrix_MUTATED_OLD(P):
+        """The pre-mg-75f0 body, verbatim, kept only as this check's oracle."""
         les = P.linear_extensions()
         m = len(les)
         n = P.n
         index = {perm: i for i, perm in enumerate(les)}
         W = np.zeros((m, m))
-        step = 1.0 / (n - 1) if n > 1 else 0.0        # <-- MUTATION (was 2*(n-1))
+        step = 1.0 / (n - 1) if n > 1 else 0.0     # <-- MUTATION (was 2*(n-1))
         for perm in les:
             i0 = index[perm]
             for i in range(n - 1):
@@ -127,7 +208,15 @@ def apply_M1():
             W[i0, i0] += 1.0 - W[i0].sum()
         return (W + W.T) / 2.0
 
-    return _rebind("bk_walk_matrix", bk_walk_matrix_MUTATED)
+    P = Poset(5, [(0, 1), (2, 3)])
+    want = bk_walk_matrix_MUTATED_OLD(P)
+    got = double_offdiag(bk_a(P))
+    err = float(np.max(np.abs(got - want)))
+    if err > 1e-14:
+        raise SystemExit(
+            f"M1 SELF-TEST FAILED: the off-diagonal doubling does not reproduce "
+            f"the pre-mg-75f0 step-edited matrix (max |diff| = {err:.3e}).  M1 "
+            f"would no longer be the mutation ledger claim 27 is about.")
 
 
 def apply_M2():

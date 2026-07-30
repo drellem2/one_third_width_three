@@ -210,8 +210,8 @@ ROWS = [
     ("N5", "scripts/onethird_mg4a86_standard_dominance_target_audit.py",
      "    step = 1.0 / (2 * (n - 1)) if n > 1 else 0.0\n",
      "    step = 1.0 / (n - 1) if n > 1 else 0.0\n",
-     0, "BK step rescaled (mg-09ea M1) -- UNCOVERED by the fast gate, caught "
-        "by the mg-60d3 demonstration"),
+     0, "BK step rescaled (mg-09ea M1) -- UNCOVERED BY THIS PROBE, caught by "
+        "the mg-60d3 demonstration"),
 ]
 
 
