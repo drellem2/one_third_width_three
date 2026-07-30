@@ -3,7 +3,10 @@
 **Ticket:** mg-7db4, filed as an ownership problem and rewritten by pm-onethird on 2026-07-30 into
 two required halves after the mg-5ad1 audit landed.
 **Depends on:** mg-5ad1 (`docs/OneThird-mg60d3-GateRepair-IndependentAudit.md`, merged `c48d238`).
-**Does not close:** mg-75f0 (widen the gate's identity conjunction past 4 of 22 reference fields).
+**Does not close:** mg-75f0 (widen the gate's identity conjunction past 4 of 22 reference fields) —
+**closed 2026-07-30 by mg-75f0**, `docs/OneThird-mg75f0-GateClassClosure.md`. That ticket's closure
+demonstration is wired into this document's job; **mg-7db4 owns the trigger, mg-75f0 owns what is
+triggered.**
 
 ---
 
@@ -143,10 +146,10 @@ on the unmutated gate is unchanged at 4 of 22 fields, and the reverted-F3 mutati
 **Both of §2.1a and §2.2 were found by building the battery, not by reading the probe.** That is the
 argument for the battery being a committed, re-running artifact rather than a one-off check.
 
-*Coordination note, recorded because the code will move.* mg-75f0 is rewriting Part B to import the
-gate and **call** its comparison function rather than parse its source, which removes the window
-class of bug entirely rather than bounding it. When that lands, the fix in this repo's history
-disappears from the file. The finding is the durable part and it belongs here: **a census that parses
+*Coordination note, and it has now happened.* mg-75f0 rewrote Part B to import the gate and **call**
+its comparison function rather than parse its source, which removes the window class of bug entirely
+rather than bounding it. So the window fix no longer exists in the file — it is quoted inside the new
+`part_B` docstring, and the census on the unmutated gate is no longer 4 of 22 but 22 of 23. The finding is the durable part and it belongs here: **a census that parses
 the thing it censuses can be defeated by the source layout of that thing**, silently, in the exact
 case it exists to detect. That is the argument for the call-based design, and it was measured, not
 predicted.
@@ -187,15 +190,31 @@ eight rows as asserted. Committed at `data/onethird-mg7db4-probe-mutation-batter
 | `baseline` | none | — | passes (no false positive) |
 | `M3` | Theorem-E frozen-pair selector `min(` → `max(` | `mg8b64` transport probe | **CAUGHT** (Part C, mg-7db4 column) |
 | `N1` | Bernoulli variance `p(1-p)` → `p` in `bk_pair_cut` | `mg8b64` transport probe | **CAUGHT** (Part C, mg-5ad1's own check) |
-| `N2` | gate drops `match_bk_lambda2` from `_identity_row_ok` | the gate | **CAUGHT** (Part B, after §2.1a) |
+| `N2` | gate's widened identity check `all(...)` → `any(...)` | the gate | **CAUGHT** (Part B2) |
+| `N6` | `frozen_pair` moved into the gate's exclusion list with a plausible reason | the gate | **CAUGHT** (Part B1) |
 | `N4` | committed reference row for `enum-n7-#3` edited to agree with a mutated instrument | the mg-8b64 dataset | **CAUGHT** (Part C) |
-| `M4` | `projector_U` rank filter `s > max(tol, 1e-10)` → `s > 0.0` | `mg4a86` sdquant overlap | not caught — §3.1 |
-| `N3` | gate drops the `c_min` clause from `_antichain_row_ok` | the gate | not caught by the fast gate; **caught by the mg-60d3 demonstration** |
-| `N5` | BK step `1/(2(n−1))` → `1/(n−1)` (= mg-09ea's M1) | `mg4a86` target audit | not caught by the fast gate; **caught by the mg-60d3 demonstration** |
+| `N3` | gate drops the `c_min` clause from `_antichain_row_ok` | the gate | **CAUGHT** (Part D) — was *not caught* before mg-75f0 |
+| `N7` | gate drops CONTROL E's properness clause | the gate | **CAUGHT** (Part D) |
+| `M4` | `projector_U` rank filter `s > max(tol, 1e-10)` → `s > 0.0` | `mg4a86` sdquant overlap | not caught **by the probe** — §3.1 |
+| `N5` | BK step `1/(2(n−1))` → `1/(n−1)` (= mg-09ea's M1) | `mg4a86` target audit | not caught by the probe; **caught by the mg-60d3 demonstration** |
 
-`N3` and `N5` are the reason both jobs exist: neither instrument subsumes the other. `M3` is a
-mutation only the probe sees; `N3` and `N5` are mutations only the demonstration sees. A claim that
-either one alone is sufficient would be false, and this table is what makes that checkable.
+> **[UPDATED 2026-07-30 by mg-75f0, at mg-7db4's request — `docs/OneThird-mg75f0-GateClassClosure.md`.]**
+> Four rows moved and two were added, all in the direction of more coverage.
+> `N2`'s original anchor (the four-key `match_*` conjunction) dropped to **zero occurrences** once the
+> identity check was widened, so `apply_mutation` refused to run rather than reporting an untested blind
+> spot — the anchor assertion working as designed. It was re-pointed at `all(...)` → `any(...)`, which
+> reverts the widening wholesale and which **no census of "which fields are compared" can see**, since
+> all 22 still are; `N6` is the same defect arriving as *policy* instead, an exclusion with a
+> plausible-sounding reason. `N3` moves from *not caught* to **CAUGHT**: mg-75f0's Part D hands every
+> gate predicate a row it must reject. `N7` holds a control mg-75f0 **added** to that same standard.
+> `M4` stays expected-exit-0 and the row is still correct — but its verdict now reads *"not caught by
+> the probe"*, because the gate's new CONTROL E **does** catch M4 in this same workflow. See §3.1.
+
+`N5` is the reason both jobs still exist: neither instrument subsumes the other. `M3` is a mutation
+only the probe sees; `N5` is a mutation only the demonstration sees. A claim that either one alone is
+sufficient would be false, and this table is what makes that checkable. (`N3` was in that second
+category until mg-75f0's Part D; it is still *also* caught by the demonstration, which is why that job
+is kept rather than deleted.)
 
 Every mutation is applied source-level to an isolated copy of `scripts/` + `data/` under a temporary
 directory, with an anchor assertion — exactly one occurrence before, exactly one after — so a
@@ -255,11 +274,20 @@ mg-5ad1's author against a mutation they had never seen.
 
 Stated plainly, because the alternative is a green tick that means less than it looks like.
 
-1. **M4 is caught by nothing** — not by the gate's controls (structurally: enlarging `U` can only
-   increase overlap, so CONTROL B survives; CONTROL C builds its own subspace; CHECK-0 shares
-   `projector_U`), and not by the probe, which rebuilds its basis from definitions and never imports
-   `projector_U`. It is on the record as an expected-exit-0 row in the battery.
-2. **The gate compares 4 of 22 reference fields.** mg-75f0. Not touched here.
+1. ~~**M4 is caught by nothing**~~ — **CLOSED 2026-07-30 by mg-75f0's CONTROL E.** As written this
+   was true of `main` at the time and the reasoning was right: enlarging `U` can only increase overlap,
+   so CONTROL B survived; CONTROL C builds its own subspace; CHECK-0 shares `projector_U`; and the probe
+   rebuilds its basis from definitions and never imports `projector_U`. mg-75f0 added a control for it
+   directly — `dim U ≤ (n−1)²+1` and `dim U < |L(P)|` — and measured the gate failing on M4 at every
+   measured poset. **The sting is worth keeping**: widening the identity comparison does *not* catch M4
+   (`mismatched: none` at all seven identity posets), which is exactly why CONTROL E had to exist
+   separately. **What is still true** is the narrower statement: *the probe* is blind to M4, and its
+   expected-exit-0 row in the battery means "the probe is blind", not "the repo is blind".
+2. ~~**The gate compares 4 of 22 reference fields.**~~ **CLOSED 2026-07-30 by mg-75f0**: 22 of 23, one
+   declared exclusion, iterating the committed row so a field added to it is compared automatically.
+   The residual that replaces it is narrower and is stated in that document's §7 — a quantity the corpus
+   computes but never **commits** still has no reference row to be compared against, and this mechanism
+   cannot manufacture one.
 3. **The rest of `script-controls.yml` is advisory in this repo.** The mg-8489, mg-8ff1, mg-2c34 and
    mg-5ad1 steps run on Actions only, and Actions does not block a refinery merge. Mirroring the
    whole fast gate into `refinery_gate.sh` would add minutes to every merge for every author; that is

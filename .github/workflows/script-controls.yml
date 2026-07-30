@@ -34,11 +34,21 @@ on:
 jobs:
   controls:
     runs-on: ubuntu-latest
-    # Raised 10 -> 20 (mg-75f0, landed here by mg-7db4 to avoid a conflict on
-    # this file): the mg-2c34 gate and the mg-5ad1 probe both enumerate the 946
-    # n=7 both-connected posets, and a hosted runner is slower than the fleet
-    # host.  Still order-seconds per step; this is headroom, not a budget.
-    timeout-minutes: 20
+    # PUT BACK TO 10 BY mg-75f0, whose reasoning the 10 -> 20 raise was carried
+    # on.  mg-7db4 landed that raise here to avoid a conflict on this file and
+    # was right to; the reasoning behind it was wrong, and correcting it is
+    # mg-75f0's to do rather than mg-7db4's to inherit.
+    #
+    # The raise assumed the mg-5ad1 probe was expensive, on a 2m33s reading taken
+    # while a multi-gate mutation demonstration was saturating the same host
+    # (mg-1b8c: concurrent heavy jobs here inflate each other by roughly 10x).
+    # Uncontended, measured on the fleet host: the probe is 26.5 s and the
+    # mg-2c34 gate is 45 s; mg-7db4 measured this whole workflow going 41-64 s ->
+    # 1m12s with both new steps on a hosted runner.  10 minutes was never close
+    # to tight, and a bound loosened on a bad measurement is worse than one left
+    # alone -- it stops being a wedge detector, which is the only thing a
+    # timeout on an order-seconds job is for.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
 
