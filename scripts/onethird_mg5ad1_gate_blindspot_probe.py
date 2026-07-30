@@ -58,8 +58,26 @@ PART C -- IS THE F3 PATTERN STILL LIVE?  `frozen_pair` is one of the uncompared
   the selector is load-bearing).  mg-5ad1 confirmed separately that the flip
   passes the full CI gate with exit 0.
 
+  mg-7db4 ADDED THE THIRD CHECK, and the reason is worth stating because it is
+  the same defect one more time.  As mg-5ad1 committed it, Part C recomputed
+  `argmin` over the pair list ITSELF and compared THAT to the committed
+  reference.  `bk_frozen_pair`'s own `frozen` field -- the value the gate
+  actually consumes -- was never read.  So M3, the audit's own primary witness
+  (flip `min` -> `max` at the selector, leaving the pair LIST untouched), ran
+  clean through this probe: verified, exit 0.  A census that says "a comparison
+  IS available" and does not make it is the F3 shape verbatim, in the file
+  written to report the F3 shape.  The `sel. ok` column is that comparison.
+
 Exits NON-ZERO if any check fails.  Order-seconds; no sweep, no enumeration
 beyond the corpus's own n=7 both-connected list.
+
+WHAT THIS FILE STILL DOES NOT COVER, so a green run is not read as more than
+it is: the gate's identity conjunction compares 4 of the committed reference
+row's 22 fields, and closing that class is mg-75f0, not this file.  Part C
+guards ONE of the eighteen (`frozen_pair`), because Part C was already about
+it.  M4 -- dropping the rank filter in `projector_U` -- is caught by nothing
+here and nothing in script-controls.yml; see
+docs/OneThird-mg7db4-GateDemo-Trigger.md for the measured catch matrix.
 
 Run:  /usr/bin/python3 scripts/onethird_mg5ad1_gate_blindspot_probe.py
       (numpy required; bare python3 on this host has no numpy)
@@ -217,18 +235,32 @@ def part_B():
 
     Parsed out of the gate source so this census cannot drift away from the
     gate: `_identity_row_ok` names the match_* keys, and each match_* key is
-    built from exactly one `ref[...]` lookup."""
+    built from exactly one `ref[...]` lookup.
+
+    mg-7db4 BOUNDED THE WINDOW, and the reason is the point of the file.  The
+    240-character scan below used to run on past the end of the assignment it
+    was reading and into the NEXT `rec["match_*"] = ...` line.  In the gate as
+    committed, `match_delta` and `match_bk_lambda2` are adjacent, so the window
+    opened at `match_delta` swept up `ref["bk_lambda2"]` from the line below
+    it.  Consequence, measured: deleting `match_bk_lambda2` from the identity
+    conjunction -- the mg-09ea F3 repair, reverted, one line -- left this
+    census still reporting `bk_lambda2` as COMPARED, and the probe exited 0.
+    The one assertion Part B makes is that the F3 repair is present, and it
+    could not see the repair being removed.  Cutting the window at the next
+    `rec["match_` is the fix; mg-7db4's battery is what caught it."""
     src = open(os.path.join(REPO, "scripts", GATE)).read()
     body = src.split("def _identity_row_ok(rec):")[1].split("\ndef ")[0]
     asserted = sorted(set(re.findall(r'rec\["(match_[a-zA-Z0-9_]+)"\]', body)))
     # each match_* key is built from exactly one `ref[...]` lookup; the
-    # assignment may wrap across lines, so scan a bounded window after it
+    # assignment may wrap across lines, so scan a bounded window after it --
+    # bounded BOTH by length and by the start of the next match_* assignment
     compared_refs = set()
     for key in asserted:
         anchor = f'rec["{key}"]'
         for piece in src.split(anchor + " =")[1:]:
+            window = piece[:240].split('rec["match_')[0]
             compared_refs.update(re.findall(r'ref\["([a-zA-Z0-9_]+)"\]',
-                                            piece[:240]))
+                                            window))
     compared_refs = sorted(compared_refs)
     with open(os.path.join(REPO, "data", REF)) as f:
         ref_rows = {r["name"]: r for r in json.load(f)["rows"]}
@@ -265,25 +297,32 @@ def part_C():
     Ps = enumerate_both_connected(7)
     print()
     print("=" * 78)
-    print("PART C -- the frozen-pair selector: a comparison IS available, and")
-    print("          the selector is load-bearing")
+    print("PART C -- the frozen-pair selector: a comparison IS available, the")
+    print("          selector is load-bearing, and it is MADE (mg-7db4)")
     print("=" * 78)
     print(f"{'poset':>14} {'committed':>11} {'argmin ratio':>13} "
-          f"{'argmax ratio':>13}  {'agrees':>7} {'flip moves it':>14}")
+          f"{'argmax ratio':>13} {'corpus sel.':>12}  {'agrees':>7} "
+          f"{'flip moves it':>14} {'sel. ok':>8}")
     rows, failures = [], []
     for name in NAMED:
         i = int(name.split("#")[1])
-        pairs = [pc for pc in bk_frozen_pair(Ps[i])["pairs"]
-                 if pc["ratio"] is not None]
+        res = bk_frozen_pair(Ps[i])
+        pairs = [pc for pc in res["pairs"] if pc["ratio"] is not None]
         lo = min(pairs, key=lambda pc: pc["ratio"])
         hi = max(pairs, key=lambda pc: pc["ratio"])
         committed = list(ref_rows[name]["frozen_pair"])
         argmin = [int(lo["x"]), int(lo["y"])]
         argmax = [int(hi["x"]), int(hi["y"])]
+        # mg-7db4: what the corpus function ACTUALLY returns, as opposed to
+        # what this file recomputes.  See the note below on why these differ.
+        fz = res["frozen"]
+        selector = [int(fz["x"]), int(fz["y"])] if fz is not None else None
         agrees = argmin == committed
         moves = argmax != argmin
+        selector_ok = selector == committed
         print(f"{name:>14} {str(committed):>11} {str(argmin):>13} "
-              f"{str(argmax):>13}  {str(agrees):>7} {str(moves):>14}")
+              f"{str(argmax):>13} {str(selector):>12}  {str(agrees):>7} "
+              f"{str(moves):>14} {str(selector_ok):>8}")
         if not agrees:
             failures.append(f"{name}: the corpus argmin-ratio selector gives "
                             f"{argmin}, committed reference says {committed} "
@@ -291,12 +330,20 @@ def part_C():
         if not moves:
             failures.append(f"{name}: argmax == argmin, so flipping the "
                             f"selector is not a mutation at this poset")
+        if not selector_ok:
+            failures.append(
+                f"{name}: bk_frozen_pair() RETURNS {selector}, committed "
+                f"reference frozen_pair is {committed} -- the Theorem-E pair "
+                f"ledger claim 8 rests on has moved, and no control in "
+                f"script-controls.yml can see it")
         rows.append({"name": name, "committed_frozen_pair": committed,
                      "argmin_ratio_pair": argmin, "argmax_ratio_pair": argmax,
+                     "corpus_selector_pair": selector,
                      "argmin_ratio": float(lo["ratio"]),
                      "argmax_ratio": float(hi["ratio"]),
                      "reproduces_committed": agrees,
-                     "flip_moves_the_pair": moves})
+                     "flip_moves_the_pair": moves,
+                     "selector_matches_committed": selector_ok})
     return rows, failures
 
 
@@ -342,8 +389,11 @@ def main():
           f"fields are in the identity conjunction.")
     print("  C  the frozen-pair selector reproduces the committed reference "
           "at 5/5 posets")
-    print("     (a comparison is available) and a one-character flip moves it "
-          "at 5/5.")
+    print("     (a comparison is available), a one-character flip moves it at "
+          "5/5, and")
+    print("     bk_frozen_pair() still RETURNS the committed pair at 5/5 "
+          "(mg-7db4: the")
+    print("     comparison is now made, not merely reported available).")
     return 0
 
 

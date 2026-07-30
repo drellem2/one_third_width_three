@@ -1,0 +1,20 @@
+# mg-7db4 -- the repo's merge gate.
+#
+# Before this file the refinery ran no gates here at all (no build.sh, no
+# test.sh, no config), so nothing stood between a branch and `main`.  GitHub
+# Actions runs on every push but is not consulted by the refinery and `main`
+# is unprotected, so Actions informs and does not block.
+#
+# The single gate below is paths-filtered: on a commit that touches none of the
+# gate-mutation watchlist it is a `git diff` and a `grep`.  Only a commit that
+# can invalidate the gate-mutation demonstration pays the ~11 minutes to
+# re-run it.  See scripts/refinery_gate.sh and
+# docs/OneThird-mg7db4-GateDemo-Trigger.md.
+
+[gates]
+commands = ["./scripts/refinery_gate.sh"]
+
+# Six full runs of the control gate is the slow path.  ~11 min observed on the
+# fleet host; the bound is loose enough that an ordinary slowdown does not read
+# as a gate failure, tight enough that a wedged run is still killed.
+timeout = "45m"

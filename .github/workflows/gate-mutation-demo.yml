@@ -1,0 +1,154 @@
+name: Gate mutation demo
+
+# THE POSITIVE CONTROL FOR THE CONTROL GATE (mg-7db4).
+#
+# `script-controls.yml` decides whether the delta-engine controls pass.  This
+# workflow decides whether those controls can still FAIL.  It runs
+# `scripts/onethird_mg60d3_gate_mutation_demo.py`, which mutates the gated
+# instrument two ways and asserts the 2x3 exit-code matrix -- both mutations
+# fatal under the repaired gate, neither fatal under the pre-repair gate, and
+# no false positive on the unmutated instrument.
+#
+# WHY IT IS NOT IN script-controls.yml.  It is six full runs of that gate,
+# ~11 min locally, against the order-seconds rule stated at the top of that
+# file.  That rule is real and this workflow does not violate it: the paths
+# filter below means an ordinary commit -- a doc, a data drop, a new probe --
+# never pays for this job at all.  Only commits that can break it pay.
+#
+# WHAT THIS REPLACES.  The gate comment used to say "run it on demand when the
+# gate changes."  The mg-5ad1 audit (docs/OneThird-mg60d3-GateRepair-Independent
+# Audit.md, sec 4) established that this had no owner and no mechanism: four
+# things had to happen, all human, all silent on failure.  The paths filter
+# below IS the trigger the sentence named -- the same event, expressed as
+# something that cannot forget.
+#
+# ENFORCEMENT IS NOT HERE.  This repo has no branch protection and its merges
+# are performed by the pogo refinery, which fast-forwards to main without
+# consulting GitHub Actions.  A green or red check here therefore INFORMS but
+# does not BLOCK.  The blocking copy of this same paths filter lives in
+# `scripts/refinery_gate.sh`, wired in by `.pogo/refinery.toml`, and the two
+# lists are kept in step by `scripts/onethird_mg7db4_watchlist_consistency.py`,
+# which runs in the order-seconds gate.  See docs/OneThird-mg7db4-GateDemo-
+# Trigger.md.
+#
+# WHAT THE LIST BELOW IS.  The gate, the demo, the gated instrument, the
+# transitive closure of the corpus modules that instrument imports, and the one
+# committed dataset its identity check reads.  It is NOT "every control script
+# in script-controls.yml": the demo exercises the mg-2c34 step only, so the
+# mg-8489 and mg-8ff1 scripts are deliberately absent -- each carries its own
+# negative control and a change to either cannot alter what this demo asserts.
+# Editing script-controls.yml itself is watched, so adding a step is covered.
+#
+# WHAT THE DEMO DOES NOT DO, and why this job has a second step.  The demo
+# answers "do the two known repairs still fire?", not "is the gate blind
+# anywhere?".  Its EXPECTED matrix is hardcoded over {none, M1, M2}, so mg-5ad1
+# is right that scheduling it alone would leave the coverage gap open.  The
+# standing blindness check is `onethird_mg5ad1_gate_blindspot_probe.py`, which
+# is fast enough to live in script-controls.yml and does; the second step here
+# is the battery that proves that probe can actually FAIL, and records the
+# mutations nothing catches.  Neither instrument subsumes the other -- the
+# battery's N3 and N5 rows are mutations only the demo sees, and its M3 row is
+# a mutation only the probe sees.
+#
+# STILL NOT CLOSED, so a green run here is not read as more than it is: the
+# gate's identity conjunction compares 4 of the committed reference row's 22
+# fields.  Widening it is mg-75f0, filed separately with its own audit.  M4
+# (the `projector_U` rank filter) is caught by nothing in this repo and is on
+# the record as such, in the battery's expected-exit table and in
+# docs/OneThird-mg7db4-GateDemo-Trigger.md.
+
+on:
+  push:
+    paths:
+      - '.github/workflows/gate-mutation-demo.yml'
+      - '.github/workflows/script-controls.yml'
+      - '.pogo/refinery.toml'
+      - 'scripts/refinery_gate.sh'
+      - 'scripts/onethird_mg7db4_watchlist_consistency.py'
+      - 'scripts/onethird_mg7db4_probe_mutation_battery.py'
+      - 'scripts/onethird_mg5ad1_gate_blindspot_probe.py'
+      - 'scripts/onethird_mg60d3_gate_mutation_demo.py'
+      - 'scripts/onethird_mg2c34_n7_overlap_test.py'
+      - 'scripts/onethird_mg4a86_sdquant_overlap.py'
+      - 'scripts/onethird_mg4a86_sector_leakage_and_tempering.py'
+      - 'scripts/onethird_mg4a86_standard_dominance_target_audit.py'
+      - 'scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py'
+      - 'scripts/onethird_mgb0a6_spectral_killshot_probe.py'
+      - 'data/onethird-mg8b64-L1b-bk-transport-transfer.json'
+  pull_request:
+    paths:
+      - '.github/workflows/gate-mutation-demo.yml'
+      - '.github/workflows/script-controls.yml'
+      - '.pogo/refinery.toml'
+      - 'scripts/refinery_gate.sh'
+      - 'scripts/onethird_mg7db4_watchlist_consistency.py'
+      - 'scripts/onethird_mg7db4_probe_mutation_battery.py'
+      - 'scripts/onethird_mg5ad1_gate_blindspot_probe.py'
+      - 'scripts/onethird_mg60d3_gate_mutation_demo.py'
+      - 'scripts/onethird_mg2c34_n7_overlap_test.py'
+      - 'scripts/onethird_mg4a86_sdquant_overlap.py'
+      - 'scripts/onethird_mg4a86_sector_leakage_and_tempering.py'
+      - 'scripts/onethird_mg4a86_standard_dominance_target_audit.py'
+      - 'scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py'
+      - 'scripts/onethird_mgb0a6_spectral_killshot_probe.py'
+      - 'data/onethird-mg8b64-L1b-bk-transport-transfer.json'
+  workflow_dispatch:
+
+jobs:
+  mutation-demo:
+    runs-on: ubuntu-latest
+    # Six full --no-sweep gate runs.  ~11 min on this machine; the bound is
+    # generous because a hosted runner is slower and a timeout here reads as
+    # "the demo could not be shown to fire", which is the failure this job
+    # exists to make impossible to miss.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install numpy
+        run: pip install --quiet numpy
+
+      # Cheap and first: if the two copies of the paths list have drifted, or
+      # if the gated instrument has grown an import nobody added to them, say
+      # so in seconds rather than after the 11-minute demo.
+      - name: 'mg-7db4 watchlist consistency (is the trigger still complete?)'
+        run: python3 scripts/onethird_mg7db4_watchlist_consistency.py
+
+      # The cheaper of the two demonstrations, so it runs first: eight probe
+      # runs against eight one-line mutations, asserting which the standing
+      # blindness check catches AND which it is blind to.  ~6 min.
+      - name: 'mg-7db4 probe mutation battery (can the standing check fail?)'
+        run: python3 scripts/onethird_mg7db4_probe_mutation_battery.py
+
+      - name: 'mg-60d3 gate mutation demo (do the F3/F4 repairs still fire?)'
+        run: python3 scripts/onethird_mg60d3_gate_mutation_demo.py
+
+      # A THIRD DEMONSTRATION BELONGS HERE and is deliberately not added yet.
+      # mg-75f0 is landing `scripts/onethird_mg75f0_gate_class_closure_demo.py`
+      # (~25 min, twelve gate runs, five mutations of which three are new).  It
+      # is the same shape as the two steps above -- too slow for the fast gate,
+      # invalidated by exactly the paths this job filters on -- so it goes in
+      # this job, not that one.  Adding it means three edits, and the third is
+      # enforced: the step here, the path in BOTH `paths:` lists above and in
+      # `scripts/refinery_gate.sh`, and the script's name in `ROOTS` in
+      # `scripts/onethird_mg7db4_watchlist_consistency.py` -- without the last
+      # one the consistency check rejects the path as unwatchable, which is the
+      # mechanism refusing to let a demonstration be added without a trigger.
+      # Left to mg-75f0's own MR because a step naming a script that is not on
+      # `main` yet would break this job for everyone else in the meantime.
+
+      # Both write their reports before exiting non-zero, so a failing run is
+      # the one where this matters most.
+      - name: Upload the demonstration reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gate-mutation-demo-report
+          path: |
+            data/onethird-mg60d3-gate-mutation-demo.json
+            data/onethird-mg7db4-probe-mutation-battery.json
+          if-no-files-found: warn

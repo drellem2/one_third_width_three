@@ -32,6 +32,11 @@ scripts/__pycache__/
 __pycache__/
 *.pyc
 
-# Pogo workspace metadata
-.pogo/
+# Pogo workspace metadata -- transient state, except the one file that is
+# source: .pogo/refinery.toml names this repo's merge gate and the refinery
+# reads it out of the checked-out tree, so it has to be committed (mg-7db4).
+# The directory itself must be un-ignored with `.pogo/*` rather than `.pogo/`,
+# or git never descends far enough for the negation to apply.
+.pogo/*
+!.pogo/refinery.toml
 .claude/

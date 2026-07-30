@@ -34,7 +34,11 @@ on:
 jobs:
   controls:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Raised 10 -> 20 (mg-75f0, landed here by mg-7db4 to avoid a conflict on
+    # this file): the mg-2c34 gate and the mg-5ad1 probe both enumerate the 946
+    # n=7 both-connected posets, and a hosted runner is slower than the fleet
+    # host.  Still order-seconds per step; this is headroom, not a budget.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
 
@@ -75,10 +79,52 @@ jobs:
       # fetching it and discarding it (a rescaled BK step was invisible to
       # every other control).  Both repairs are demonstrated to FIRE by
       # scripts/onethird_mg60d3_gate_mutation_demo.py, which is NOT run here:
-      # it is six full runs of this step (~12 min), far outside the
-      # order-seconds rule at the top of this file.  Run it on demand when the
-      # gate changes.
+      # it is six full runs of this step (~11 min), far outside the
+      # order-seconds rule at the top of this file.
+      #
+      # It IS run, automatically, by `.github/workflows/gate-mutation-demo.yml`
+      # and -- blockingly, since the refinery does not read GitHub checks -- by
+      # `scripts/refinery_gate.sh`.  Both are filtered to the paths that can
+      # invalidate it, THIS FILE AMONG THEM, so an edit to the step below
+      # re-runs the demonstration against the edit.  This comment used to say
+      # "run it on demand when the gate changes", which named no owner and no
+      # mechanism; mg-5ad1 sec 4 established that four separate human steps
+      # stood between a gate edit and the demo ever running again, and that
+      # each of them fails silently.  mg-7db4 replaced the sentence with the
+      # trigger it described.  See docs/OneThird-mg7db4-GateDemo-Trigger.md.
       - name: 'mg-2c34 SD-quant overlap controls (can the instrument fail?)'
         run: |
           pip install --quiet numpy
           python3 scripts/onethird_mg2c34_n7_overlap_test.py --no-sweep
+
+      # mg-7db4: the trigger above has two copies of one paths list -- the one
+      # in gate-mutation-demo.yml and the one in scripts/refinery_gate.sh --
+      # because the visible copy and the blocking copy cannot share a file.
+      # This step is why they cannot silently disagree, and why the list cannot
+      # go stale against the corpus: it derives the transitive import closure
+      # of everything the two jobs run and fails if the list has stopped
+      # naming it.  Standard library only, no numpy, self-testing (five
+      # synthetic drifts, each of which must be caught).  Order-milliseconds.
+      - name: 'mg-7db4 watchlist consistency (is the trigger still complete?)'
+        run: python3 scripts/onethird_mg7db4_watchlist_consistency.py
+
+      # mg-5ad1 / mg-7db4: the STANDING BLINDNESS CHECK, and the reason it is
+      # here rather than in the paths-filtered job.
+      #
+      # The mg-60d3 demonstration is a regression test on two known mutations
+      # (M1, M2).  It answers "do the two repairs still fire?", not "is the
+      # gate blind anywhere?", so scheduling it would have closed the
+      # ownership gap and left the coverage gap open -- mg-5ad1 sec 4.  This
+      # probe is the coverage half.  Part B parses the gate's identity
+      # conjunction OUT OF THE GATE SOURCE, so the census cannot drift away
+      # from the thing it censuses; Part C compares the corpus's Theorem-E
+      # frozen-pair selector against the committed reference, which is the
+      # quantity ledger claim 8 rests on and which the gate does not compare.
+      #
+      # It is order-seconds -- the runtime objection that excluded the demo
+      # does not apply -- so it runs on every commit, not only on gate edits.
+      # That it can FAIL is not asserted here: it is demonstrated by
+      # scripts/onethird_mg7db4_probe_mutation_battery.py in the paths-filtered
+      # job, which also records what this probe is blind to (M4).
+      - name: 'mg-5ad1 gate blindspot probe (is the gate blind anywhere?)'
+        run: python3 scripts/onethird_mg5ad1_gate_blindspot_probe.py
