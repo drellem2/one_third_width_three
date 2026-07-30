@@ -55,6 +55,7 @@ scripts/onethird_mg7db4_watchlist_consistency.py
 scripts/onethird_mg7db4_probe_mutation_battery.py
 scripts/onethird_mg5ad1_gate_blindspot_probe.py
 scripts/onethird_mg60d3_gate_mutation_demo.py
+scripts/onethird_mg75f0_gate_class_closure_demo.py
 scripts/onethird_mg2c34_n7_overlap_test.py
 scripts/onethird_mg4a86_sdquant_overlap.py
 scripts/onethird_mg4a86_sector_leakage_and_tempering.py

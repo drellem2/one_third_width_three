@@ -50,12 +50,20 @@ name: Gate mutation demo
 # battery's N3 and N5 rows are mutations only the demo sees, and its M3 row is
 # a mutation only the probe sees.
 #
-# STILL NOT CLOSED, so a green run here is not read as more than it is: the
-# gate's identity conjunction compares 4 of the committed reference row's 22
-# fields.  Widening it is mg-75f0, filed separately with its own audit.  M4
-# (the `projector_U` rank filter) is caught by nothing in this repo and is on
-# the record as such, in the battery's expected-exit table and in
-# docs/OneThird-mg7db4-GateDemo-Trigger.md.
+# WHAT mg-75f0 CLOSED, and what it did not.  This header used to say the gate's
+# identity conjunction compared 4 of the committed reference row's 22 fields and
+# that M4 was caught by nothing in the repo.  Both were true and both have
+# changed: the identity check now compares the whole row (22 of 22, one declared
+# exclusion) and the gate's CONTROL E catches M4.  The third step below is the
+# demonstration, including on five mutations neither mg-60d3 nor mg-5ad1 used.
+#
+# STILL OPEN, so a green run here is not read as more than it is.  The widening
+# gates on the fields of the COMMITTED mg-8b64 row; a quantity the corpus computes
+# and never commits still has no reference to be compared against, and this
+# mechanism cannot manufacture one.  And the standing probe remains blind to M4
+# specifically (the gate is not) -- recorded in the battery's expected-exit table
+# and in docs/OneThird-mg7db4-GateDemo-Trigger.md.  See
+# docs/OneThird-mg75f0-GateClassClosure.md sec on the residual.
 
 on:
   push:
@@ -68,6 +76,7 @@ on:
       - 'scripts/onethird_mg7db4_probe_mutation_battery.py'
       - 'scripts/onethird_mg5ad1_gate_blindspot_probe.py'
       - 'scripts/onethird_mg60d3_gate_mutation_demo.py'
+      - 'scripts/onethird_mg75f0_gate_class_closure_demo.py'
       - 'scripts/onethird_mg2c34_n7_overlap_test.py'
       - 'scripts/onethird_mg4a86_sdquant_overlap.py'
       - 'scripts/onethird_mg4a86_sector_leakage_and_tempering.py'
@@ -85,6 +94,7 @@ on:
       - 'scripts/onethird_mg7db4_probe_mutation_battery.py'
       - 'scripts/onethird_mg5ad1_gate_blindspot_probe.py'
       - 'scripts/onethird_mg60d3_gate_mutation_demo.py'
+      - 'scripts/onethird_mg75f0_gate_class_closure_demo.py'
       - 'scripts/onethird_mg2c34_n7_overlap_test.py'
       - 'scripts/onethird_mg4a86_sdquant_overlap.py'
       - 'scripts/onethird_mg4a86_sector_leakage_and_tempering.py'
@@ -97,11 +107,14 @@ on:
 jobs:
   mutation-demo:
     runs-on: ubuntu-latest
-    # Six full --no-sweep gate runs.  ~11 min on this machine; the bound is
-    # generous because a hosted runner is slower and a timeout here reads as
-    # "the demo could not be shown to fire", which is the failure this job
-    # exists to make impossible to miss.
-    timeout-minutes: 45
+    # Three demonstrations: six --no-sweep gate runs (~11 min), ten probe runs
+    # (~5 min), and eighteen more gate runs (~13 min) -- about 30 min on the
+    # fleet host.  Raised 45 -> 75 by mg-75f0 when it added the third step, in
+    # the same commit, so the bound tracks the work rather than lagging it.  The
+    # bound is generous because a hosted runner is slower and a timeout here
+    # reads as "the demonstrations could not be shown to fire", which is the
+    # failure this job exists to make impossible to miss.
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v5
 
@@ -127,22 +140,37 @@ jobs:
       - name: 'mg-60d3 gate mutation demo (do the F3/F4 repairs still fire?)'
         run: python3 scripts/onethird_mg60d3_gate_mutation_demo.py
 
-      # A THIRD DEMONSTRATION BELONGS HERE and is deliberately not added yet.
-      # mg-75f0 is landing `scripts/onethird_mg75f0_gate_class_closure_demo.py`
-      # (~25 min, twelve gate runs, five mutations of which three are new).  It
-      # is the same shape as the two steps above -- too slow for the fast gate,
-      # invalidated by exactly the paths this job filters on -- so it goes in
-      # this job, not that one.  Adding it means three edits, and the third is
-      # enforced: the step here, the path in BOTH `paths:` lists above and in
-      # `scripts/refinery_gate.sh`, and the script's name in `ROOTS` in
-      # `scripts/onethird_mg7db4_watchlist_consistency.py` -- without the last
-      # one the consistency check rejects the path as unwatchable, which is the
-      # mechanism refusing to let a demonstration be added without a trigger.
-      # Left to mg-75f0's own MR because a step naming a script that is not on
-      # `main` yet would break this job for everyone else in the meantime.
+      # THE THIRD DEMONSTRATION, added by mg-75f0 -- the slot above this comment
+      # was reserved for it and the four edits it required were all made
+      # together: this step, the path in BOTH `paths:` lists above, the same path
+      # in `scripts/refinery_gate.sh`, and the script's name in `ROOTS` in
+      # `scripts/onethird_mg7db4_watchlist_consistency.py`.  The last one is
+      # enforced rather than optional: a watched path reachable from nothing in
+      # `ROOTS` is rejected as "watched but not part of the gate", which is the
+      # mechanism refusing to let a demonstration be wired into a job without
+      # also being watched, and refusing the converse too.
+      #
+      # WHAT IT ANSWERS that the two steps above do not.  The demo above asks
+      # "do the two known repairs still fire?" and the battery asks "can the
+      # standing probe fail?".  Both are regression tests over mutations their
+      # authors already knew about.  This one asks whether the widened identity
+      # check catches mutations NOBODY had used against it: five of its seven
+      # rows were used by neither mg-60d3 nor mg-5ad1, and one of those five was
+      # authored by mg-7db4 for a different purpose, so it is the only row not
+      # chosen by whoever built the thing under test.  It also measures, per
+      # row, whether the pre-widening gate COMPUTED the moved quantity and
+      # absorbed it or never reached the mutated code at all -- two findings of
+      # different strength that an exit code alone averages together.
+      #
+      # ~13 min, eighteen full --no-sweep gate runs.  It is here and not in
+      # script-controls.yml for the same reason as the two above: the
+      # order-seconds rule at the top of that file is real, and the paths filter
+      # means an ordinary commit never pays for this job.
+      - name: 'mg-75f0 gate class-closure demo (does the widening catch UNSEEN mutations?)'
+        run: python3 scripts/onethird_mg75f0_gate_class_closure_demo.py
 
-      # Both write their reports before exiting non-zero, so a failing run is
-      # the one where this matters most.
+      # All three write their reports before exiting non-zero, so a failing run
+      # is the one where this matters most.
       - name: Upload the demonstration reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -151,4 +179,5 @@ jobs:
           path: |
             data/onethird-mg60d3-gate-mutation-demo.json
             data/onethird-mg7db4-probe-mutation-battery.json
+            data/onethird-mg75f0-gate-class-closure.json
           if-no-files-found: warn

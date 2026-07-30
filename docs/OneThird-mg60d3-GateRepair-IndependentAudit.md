@@ -432,6 +432,19 @@ bare `python3` on this host has no numpy.
 
 ## §10 — Findings ledger
 
+> **[DISPOSITION, 2026-07-30 (mg-75f0) — `docs/OneThird-mg75f0-GateClassClosure.md`.]** Findings **1**,
+> **3** and **4** are closed, and finding **2** was closed by **mg-7db4** while this ticket was in
+> flight. Nothing in this audit was contradicted: the repair mg-60d3 made, and ledger claim 27, both
+> stand exactly as this audit records them.
+>
+> | # | disposition |
+> |---|---|
+> | **1** | **CLOSED.** The identity check now compares the **whole** committed row — 22 of 23 fields, one exclusion (`name`) with its reason in the source — by iterating the reference row rather than a conjunction, so a field *added* to that row is compared automatically. `dim U`'s **rank** is the one surface that field-widening does not reach (no reference field moves when the rank filter breaks), so **CONTROL E** was added for it. **Acceptance was not M3/M4:** five further one-line mutations that neither mg-60d3 nor this audit used were run, all five were fatal to nothing before the widening, and all five are fatal to the widened gate. One of the five is **mg-7db4's**, authored for a different purpose — the only row in the table not chosen by whoever built the thing under test. |
+> | **2** | **CLOSED BY mg-7db4, not by this ticket** (`docs/OneThird-mg7db4-GateDemo-Trigger.md`, merged `df7db8b`/`245085e`). Both halves: this audit's own probe is a step in `script-controls.yml`, and the ~11 min mg-60d3 demonstration has a paths-filtered Actions job **and** a blocking copy in `scripts/refinery_gate.sh`, since the refinery does not read GitHub checks. mg-75f0's contribution here is additive — a new **part D** in the probe that exercises every gate predicate for firing in milliseconds, and its own class-closure demo wired into mg-7db4's job. **mg-7db4 owns the wiring; mg-75f0 owns what is wired.** |
+> | **3** | **FIXED, docstring only, no behaviour change.** `_antichain_row_ok` now cites Aldous/CLR for the gap **eigenvalue** alone and cites the eigenspace containment as a **verified property of `A₄/A₅/A₆/A₇`**, with the consequence stated: if it ever fails at larger `n`, narrow the control's *population*, do not loosen the *assertion*. The CONTROL B failure message no longer cites the theorem either — under a broken rank filter `c` **is** 1 and it is `dim U` that is wrong, so the old message named the one conjunct that had not failed. |
+> | **4** | **CLOSED as a coverage gap.** **CONTROL F** measures `enum-n7-#52` and `#88` — with `#209`/`#420`, the committed sweep's only posets with `dim_E > 1`, and `#209`/`#420` measure identically to them — and asserts `dim_E > 1` as well as `\|c_max − c_min\| ≤ 1e-9`, so the coverage cannot quietly evaporate into the vacuous check it replaces. |
+> | **5, 6, 7** | Untouched. §7's *"three" → "five"* correction landed with this audit; the identity population is now **seven**, `#52`/`#88` having joined it. Finding 6 (the signed-zero print) and finding 7 (`onethird_program` has no CI) are out of mg-75f0's scope. |
+
 | # | finding | severity | site |
 |---|---|---|---|
 | **1** | **The repair is a patch on two instances, not a fix for the class.** M3 (frozen-pair selector, one character) and M4 (`projector_U` rank filter, one expression) both pass the repaired gate with *"All controls and identity checks PASSED."* M3 is F3 verbatim: `frozen_pair` is in the same committed reference row the gate has open, and **4 of 22** fields in that row are compared | **RED** | §3 |

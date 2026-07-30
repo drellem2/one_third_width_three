@@ -34,50 +34,75 @@ silently-inapplicable mutation cannot masquerade as an uncaught one.
          scheduled check fail on something unseen?" without the answer being
          circular -- the guard predates the mutation by an author who had not
          thought of it.
-    N2   the gate drops `match_bk_lambda2` from `_identity_row_ok` -- the F3
-         repair, reverted.  Part B parses the conjunction out of the gate
-         source, so it fires.  IT DID NOT, on the first run of this battery:
-         Part B's 240-character scan window ran past the end of the assignment
-         it was reading and borrowed `ref["bk_lambda2"]` from the adjacent
-         line, so the census reported the field as compared while the
-         conjunction no longer compared it, and the probe exited 0.  Part B's
-         only assertion is that the F3 repair is present, and it could not see
-         the repair removed.  Fixed by bounding the window at the next
-         `rec["match_`.  This row is why the battery was worth building.
+    N2   the gate's widened identity check goes `all(...)` -> `any(...)` -- the
+         mg-75f0 whole-row comparison, reverted wholesale.  Part B2 fires: with
+         `any`, perturbing one field leaves the other 21 matching, so the
+         predicate still returns True.  Note that a census which only asks WHICH
+         FIELDS ARE COMPARED cannot see this mutation -- all 22 still are.
 
-         N2 WILL STOP APPLYING when mg-75f0 lands: that ticket replaces the
-         `match_*` conjunction with `all(rec["field_matches"].values())` over
-         the whole committed row, so N2's anchor drops to zero occurrences and
-         `apply_mutation` refuses to run rather than reporting a blind spot it
-         never tested.  That refusal is the mechanism working.  Re-point the
-         row at the widened predicate -- mutating an ENTRY of the exclusion
-         list is the strictly stronger replacement -- rather than deleting it.
+         THIS ROW WAS RE-POINTED BY mg-75f0 and the mechanism worked exactly as
+         its predecessor predicted.  It used to mutate the four-key `match_*`
+         conjunction (the mg-09ea F3 repair, reverted).  When mg-75f0 replaced
+         that conjunction with `all(rec["field_matches"].values())`, the old
+         anchor dropped to zero occurrences and `apply_mutation` REFUSED TO RUN
+         rather than reporting a blind spot it never tested.  The predecessor is
+         also why this battery was worth building: it caught Part B's
+         240-character scan window running past the end of the assignment it was
+         reading and borrowing `ref["bk_lambda2"]` from the adjacent line, so the
+         census reported a field as compared while the conjunction no longer
+         compared it, and the probe exited 0.  mg-75f0 removed that failure mode
+         at the root -- Part B now CALLS the gate's comparison function instead
+         of parsing its source, so there is no second representation left to
+         disagree with the first.
+    N6   `frozen_pair` is moved into the gate's `IDENTITY_EXCLUDED_REF_FIELDS`
+         with a plausible-sounding reason -- mg-5ad1's M3 made green by POLICY
+         rather than by mutation, which is the realistic way this defect returns.
+         Caught by Part B1's named check on `frozen_pair`.  The planted reason is
+         deliberately long enough to clear B1's reason-length check, so this row
+         tests the named check and not that one.
+    N3   the gate drops the `c_min` clause from `_antichain_row_ok` -- the F4
+         repair, reverted.  Caught by Part D.  RECORDED HERE AS A BLIND SPOT
+         UNTIL mg-75f0: the probe did not read that predicate at all, and this
+         was caught only by the 11-minute mg-60d3 demonstration.  mg-75f0's
+         Part D hands every gate predicate a row it must REJECT, so the fast
+         gate sees it now too.  Still ALSO covered by the demonstration, which is
+         why that job is still wired in rather than deleted.
+    N7   the gate drops CONTROL E's properness clause, so U may be the whole
+         function space again and `c = null = 1` is vacuous by the document's own
+         criterion.  Caught by Part D.  Included so a control mg-75f0 ADDED is
+         held to the same standard as the ones it inherited.
     N4   the committed reference row is edited to agree with a mutated
          instrument.  Part C fires: the census compares against the file.
 
-  CAUGHT BY NOTHING IN THE FAST GATE, recorded as such:
+  CAUGHT BY NOTHING IN THIS PROBE, recorded as such:
     M4   `projector_U`'s rank filter dropped, so numerically-null directions
          enter U and the measurement becomes vacuous by the document's own
-         criterion (c = null = 1.0000 at two posets).  The probe rebuilds its
-         own basis from definitions and never imports `projector_U`; the gate's
-         own controls are structurally blind (mg-5ad1 sec 3.2).  UNCOVERED.
-    N3   the gate drops the `c_min` clause from `_antichain_row_ok` -- the F4
-         repair, reverted.  The probe does not read that predicate.  This one
-         is caught by the 11-minute mg-60d3 demonstration instead (its
-         M2/repaired case stops exiting 1), which is why that demonstration is
-         still wired in on the paths filter rather than deleted.  UNCOVERED BY
-         THE FAST GATE, covered by the paths-filtered job.
+         criterion (c = null = 1.0000 at two posets).  The probe rebuilds its own
+         basis from definitions and never imports `projector_U`, so it cannot see
+         this and the expected exit stays 0.
+
+         WHAT CHANGED, and the scope matters.  mg-75f0's CONTROL E
+         (`_projector_row_ok`: dim U <= (n-1)^2+1, and dim U < |L| so U cannot be
+         the whole space) makes THE GATE fail on M4 -- measured in
+         `data/onethird-mg75f0-gate-class-closure.json`.  The gate and this probe
+         both run in script-controls.yml, so the old heading here, "caught by
+         nothing in the fast gate", stopped being true and was corrected rather
+         than left standing: the only thing worse than a documented blind spot is
+         one that used to be documented, and its mirror image is a blind spot
+         still advertised after it closed.  What remains true, and is what this
+         row measures, is that THIS PROBE is blind to M4.  Part D covers M4's
+         SIGNATURE on synthetic rows; it does not exercise `projector_U`.
     N5   the BK step rescaled, 1/(2(n-1)) -> 1/(n-1) -- mg-09ea's M1.  Part A
          rebuilds the interchange matrix from its definition and never imports
-         `bk_walk_matrix`, so the probe cannot see it.  Also covered by the
-         demonstration, not by the fast gate.
+         `bk_walk_matrix`, so the probe cannot see it.  Covered by the mg-60d3
+         demonstration, not by this probe.
 
-  N3 and N5 are the reason both jobs exist.  Neither instrument subsumes the
+  N5 is the reason both jobs still exist.  Neither instrument subsumes the
   other, and a table showing that is more useful than a claim that one of them
   is sufficient.
 
 Run:  /usr/bin/python3 scripts/onethird_mg7db4_probe_mutation_battery.py
-      (numpy required; ~6 min -- eight probe runs)
+      (numpy required; ~5 min -- ten probe runs, mg-75f0 added two)
 Writes `data/onethird-mg7db4-probe-mutation-battery.json`.
 Exits NON-ZERO if any row does not behave as the table says.
 """
@@ -111,12 +136,34 @@ ROWS = [
      1, "Bernoulli variance p(1-p) -> p in bk_pair_cut (unseen by any author "
         "of any check here)"),
 
+    # RE-POINTED BY mg-75f0, as the note in the docstring above required.  The
+    # old anchor was the four-key `match_*` conjunction, which mg-75f0 replaced
+    # with `all(rec["field_matches"].values())` over the whole committed row --
+    # so the old anchor drops to zero occurrences and `apply_mutation` refuses to
+    # run.  The replacement is the strictly stronger mutation the note asked for:
+    # `all` -> `any` reverts THE WIDENING ITSELF rather than one field of it, and
+    # is invisible to any census that only asks which fields are compared, since
+    # all 22 still are.  Part B2 is what sees it: with `any`, perturbing one
+    # field leaves the other 21 matching, so the predicate still returns True.
     ("N2", "scripts/onethird_mg2c34_n7_overlap_test.py",
-     '    return (rec["match_num_LE"] and rec["match_lambda_std"]\n'
-     '            and rec["match_delta"] and rec["match_bk_lambda2"])\n',
-     '    return (rec["match_num_LE"] and rec["match_lambda_std"]\n'
-     '            and rec["match_delta"])\n',
-     1, "the gate drops match_bk_lambda2 -- the mg-09ea F3 repair, reverted"),
+     '    return all(rec["field_matches"].values())\n',
+     '    return any(rec["field_matches"].values())\n',
+     1, "the gate's widened identity check goes all() -> any() -- mg-75f0's "
+        "whole-row comparison, reverted"),
+
+    # mg-75f0: the second half of the same note -- "mutating an ENTRY of the
+    # exclusion list is the strictly stronger replacement".  The added exclusion
+    # is deliberately given a PLAUSIBLE, long-enough reason, so it is not caught
+    # by B1's reason-length check but by the named check on frozen_pair.  An
+    # exclusion that looks reasonable is the realistic way this defect returns.
+    ("N6", "scripts/onethird_mg2c34_n7_overlap_test.py",
+     'IDENTITY_EXCLUDED_REF_FIELDS = {\n',
+     'IDENTITY_EXCLUDED_REF_FIELDS = {\n'
+     '    "frozen_pair": "excluded because the pair labels are not a numerical '
+     'quantity and the ratio is compared anyway.",\n',
+     1, "frozen_pair is moved into the gate's exclusion list with a "
+        "plausible-looking reason -- mg-5ad1's M3 made green by policy rather "
+        "than by mutation"),
 
     # Not a text anchor: `"frozen_pair": [3, 5]` occurs at 54 rows of the
     # committed dataset, so a textual replace would rewrite 54 posets and
@@ -132,12 +179,32 @@ ROWS = [
      "    Q = Uu[:, s > 0.0]\n",
      0, "projector_U rank filter dropped -- UNCOVERED (mg-5ad1 M4)"),
 
+    # RE-POINTED AND RE-EXPECTED BY mg-75f0.  The anchor moved because
+    # `_antichain_row_ok` gained the dim-U conjunct, and the EXPECTATION moved
+    # from 0 to 1 because mg-75f0's part D hands CONTROL B a row with
+    # c_min = 0 that it must reject.  This row used to record a blind spot and
+    # now records coverage; the flip is the news, so it is stated rather than
+    # quietly edited.  It remains ALSO covered by the 11-minute mg-60d3
+    # demonstration, which is why that job is still wired in.
     ("N3", "scripts/onethird_mg2c34_n7_overlap_test.py",
-     '    return abs(row["c_max"] - 1.0) < 1e-8 and abs(row["c_min"] - 1.0) '
-     '< 1e-8\n',
-     '    return abs(row["c_max"] - 1.0) < 1e-8\n',
-     0, "the gate drops the c_min clause -- the F4 repair reverted; UNCOVERED "
-        "by the fast gate, caught by the mg-60d3 demonstration"),
+     '    return (abs(row["c_max"] - 1.0) < 1e-8 and abs(row["c_min"] - 1.0) '
+     '< 1e-8\n            and row["dim_U"] == row["dim_U_known"])\n',
+     '    return (abs(row["c_max"] - 1.0) < 1e-8\n'
+     '            and row["dim_U"] == row["dim_U_known"])\n',
+     1, "the gate drops the c_min clause -- the F4 repair reverted; now CAUGHT "
+        "by mg-75f0's part D, previously uncovered by the fast gate"),
+
+    # mg-75f0: the same question asked of a control mg-75f0 itself added, so the
+    # new controls are held to the standard the old ones are.  Dropping CONTROL
+    # E's properness conjunct is the half that catches M4 at #945/#809, where U
+    # becomes the whole space and c = null = 1 is vacuous by the document's own
+    # criterion.  Part D's "CONTROL E / vacuity" row is what sees it.
+    ("N7", "scripts/onethird_mg2c34_n7_overlap_test.py",
+     '    return (row["dim_U"] <= (row["n"] - 1) ** 2 + 1\n'
+     '            and row["dim_U"] < row["num_LE"])\n',
+     '    return row["dim_U"] <= (row["n"] - 1) ** 2 + 1\n',
+     1, "the gate drops CONTROL E's properness clause -- U may be the whole "
+        "function space again, c = null = 1 and vacuous"),
 
     ("N5", "scripts/onethird_mg4a86_standard_dominance_target_audit.py",
      "    step = 1.0 / (2 * (n - 1)) if n > 1 else 0.0\n",

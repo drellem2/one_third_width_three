@@ -81,13 +81,17 @@ MECHANISM = {
 # path that is watched but reachable from nothing in ROOTS is rejected below as
 # "watched but not part of the gate" -- which is the check refusing to let a
 # watchlist grow entries nobody can justify, and equally refusing to let a new
-# demonstration be wired into a job without also being watched.  mg-75f0's
-# onethird_mg75f0_gate_class_closure_demo.py is the next one due here.
+# demonstration be wired into a job without also being watched.
+#
+# mg-75f0 took that route: `onethird_mg75f0_gate_class_closure_demo.py` is the
+# closure demonstration for the widened identity check, added below at the same
+# time as its step in gate-mutation-demo.yml and its path in both watchlists.
 ROOTS = (
     "scripts/onethird_mg60d3_gate_mutation_demo.py",
     "scripts/onethird_mg2c34_n7_overlap_test.py",
     "scripts/onethird_mg5ad1_gate_blindspot_probe.py",
     "scripts/onethird_mg7db4_probe_mutation_battery.py",
+    "scripts/onethird_mg75f0_gate_class_closure_demo.py",
 )
 
 _IMPORT_RE = re.compile(r"^\s*(?:from|import)\s+(onethird_\w+)", re.M)

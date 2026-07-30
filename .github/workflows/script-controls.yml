@@ -77,16 +77,33 @@ jobs:
       # leaves the favourable reading at 1), and the identity check now
       # compares lambda_2^BK against its committed reference instead of
       # fetching it and discarding it (a rescaled BK step was invisible to
-      # every other control).  Both repairs are demonstrated to FIRE by
-      # scripts/onethird_mg60d3_gate_mutation_demo.py, which is NOT run here:
-      # it is six full runs of this step (~11 min), far outside the
-      # order-seconds rule at the top of this file.
+      # every other control).
       #
-      # It IS run, automatically, by `.github/workflows/gate-mutation-demo.yml`
+      # WIDENED after the mg-5ad1 audit (mg-75f0), because those two repairs were
+      # derived FROM the two failures mg-09ea found and so closed two instances
+      # rather than the class.  mg-5ad1 measured the residual -- the identity
+      # check opened the committed mg-8b64 reference row and compared 4 of its 22
+      # fields -- and beat the repaired gate with two more one-line mutations.
+      # The identity check now recomputes the WHOLE row with mg-8b64's own row
+      # builder and compares every field of it (22 of 22, one declared exclusion,
+      # iterating the committed row so a field ADDED to it is compared
+      # automatically); CONTROL E bounds dim U by its structural rank and
+      # requires U to stay a PROPER subspace; CONTROL F gives the
+      # reading-dependence check real-data coverage at enum-n7-#52/#88, whose
+      # lambda_2 is degenerate, so the identity population is seven posets rather
+      # than five.  The two repairs are demonstrated to FIRE by
+      # scripts/onethird_mg60d3_gate_mutation_demo.py and the widening by
+      # scripts/onethird_mg75f0_gate_class_closure_demo.py, NEITHER of which runs
+      # here: between them they are twenty-four full runs of this step (~24 min),
+      # far outside the order-seconds rule at the top of this file.
+      #
+      # They ARE run, automatically, by `.github/workflows/gate-mutation-demo.yml`
       # and -- blockingly, since the refinery does not read GitHub checks -- by
-      # `scripts/refinery_gate.sh`.  Both are filtered to the paths that can
-      # invalidate it, THIS FILE AMONG THEM, so an edit to the step below
-      # re-runs the demonstration against the edit.  This comment used to say
+      # `scripts/refinery_gate.sh` (which runs the mg-60d3 demo blockingly and
+      # leaves the mg-75f0 closure demo to Actions -- the blocking layer gets the
+      # cheap total check, see that file's split).  Both are filtered to the paths
+      # that can invalidate them, THIS FILE AMONG THEM, so an edit to the step
+      # below re-runs the demonstrations against the edit.  This comment used to say
       # "run it on demand when the gate changes", which named no owner and no
       # mechanism; mg-5ad1 sec 4 established that four separate human steps
       # stood between a gate edit and the demo ever running again, and that

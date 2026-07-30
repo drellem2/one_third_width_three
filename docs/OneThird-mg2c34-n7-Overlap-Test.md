@@ -228,6 +228,17 @@ alongside the existing mg-8489 and mg-8ff1 controls.
 > `OFF_REGIME + IN_REGIME`, and §2.6.1's own table already listed all five (`#3/#20/#600/#809/#945`);
 > mg-5ad1's M1 run fails 5 of 5. The error understated the gate's coverage.*
 
+> **[SUPERSEDED IN THE STRENGTHENING DIRECTION, 2026-07-30 (mg-75f0) — see
+> `docs/OneThird-mg75f0-GateClassClosure.md`.]** *"on any of `|L|`, `λ_std`, `δ` or `λ₂^BK`"* was
+> **4 of the reference row's 22 non-key fields**, which is mg-5ad1's RED finding. The gate now
+> recomputes the whole mg-8b64 row with mg-8b64's own `analyze_poset` and compares **every field of the
+> committed row** — 22 of 23, one declared exclusion (`name`, the lookup key, whose reason sits next to
+> it in the source) — over **seven** posets rather than five (`#52` and `#88` join, carrying CONTROL F).
+> Two controls were added: **CONTROL E** (`dim U ≤ (n−1)²+1` and `dim U < |L|`, which is what catches a
+> broken rank filter — *no* reference field moves under that mutation) and **CONTROL F** (the two-sided
+> reading-dependence check, previously vacuous on real data, now with real coverage). Unmutated, every
+> compared float field reproduces to `0.00e+00` at 7/7 posets.
+
 **Mutation-tested, because "exits non-zero on failure" is itself a claim:**
 
 | mutation | caught by | exit |
@@ -330,6 +341,33 @@ top. Run it on demand when the gate changes.
 > does over-reach: Aldous/CLR gives the gap *eigenvalue*, while `c_min = 1` asserts gap-*eigenspace*
 > containment in the one-particle sector — verified here at `n = 4,5,6` **and `7`**, but not licensed
 > by that theorem for a larger antichain.
+
+> **[mg-75f0, 2026-07-30 — closing the CLASS rather than the two instances. See
+> `docs/OneThird-mg75f0-GateClassClosure.md`.]** All three mg-5ad1 findings above are addressed, and
+> the AMBER justification is corrected in the docstring with **no behaviour change**.
+>
+> 1. **The comparison is no longer a list.** `identity_field_comparisons` iterates the **committed
+>    reference row** and compares every field in it — 22 of 23, one exclusion (`name`) with its reason
+>    in the source. A field *added* to that row is therefore compared automatically. That is the
+>    property that matters, because the failure mode of a hand-maintained conjunction is not "wrong
+>    today" but "silently stays passing when someone adds a field" — which is F3 and M3 one turn later.
+>    The blindspot probe (in CI since mg-7db4) tests that exact scenario at part B3, and now also
+>    requires every one of the 22 fields to *fire* when perturbed (B2) and every gate predicate to
+>    reject a row it must reject (part D). `dim U`'s **rank** is the one mutation surface the field
+>    widening does not reach — no reference field moves when the rank filter breaks — so **CONTROL E**
+>    was added for it, and **CONTROL F** gives the previously-vacuous two-sided check real coverage.
+> 2. **Acceptance was not "does it catch M3 and M4".** It does — M3 at 7/7 identity rows, M4 via
+>    CONTROL B and CONTROL E. But catching the two mutations the fix was written after is the same
+>    mistake one level down, so `scripts/onethird_mg75f0_gate_class_closure_demo.py` also runs **five
+>    one-line mutations neither mg-60d3 nor mg-5ad1 used**: the `minphi` selector (M3's twin, one line
+>    down), the transport prefix selector, `_transport_label_cheeger`'s volume normalisation (a
+>    normalisation, not a selector), `_width`'s antichain search direction (purely combinatorial,
+>    no spectral quantity involved), and — **not chosen by this author** — mg-7db4's Bernoulli-variance
+>    row. **All five are fatal to the widened gate and were fatal to nothing before it.**
+> 3. **The trigger finding (mg-5ad1 §4) is mg-7db4's and has landed**: `gate-mutation-demo.yml` plus
+>    the blocking `scripts/refinery_gate.sh`. mg-75f0's closure demo is wired into that same job, and
+>    the four edits that required — step, both `paths:` lists, `WATCHED`, and `ROOTS` in the watchlist
+>    check — were made together, which the watchlist check enforces rather than trusts.
 
 ### 2.7 What this instrument adds over mg-4a86's
 
@@ -800,7 +838,8 @@ Every claim, including reductions asserted in prose. `PROVEN[c]` = proven by com
 | 24 | **`c` is substantially informative about `R`** — `corr(c,R) = +0.4991` ⟹ `c` accounts for **25%** of `R`'s variance; the bottom `c`-decile confines `R` to `[1.073, 5.770]` (24.8% of the span) and median `R` rises monotonically `2.90 → 7.99` across deciles; `R > 15` forces `c ≥ 0.994228` | **PROVEN[c]** | **added 2026-07-29 (mg-60d3), landing mg-09ea §4.1. This is what REPLACES the struck §6(a).** Computed on mg-09ea's independent 956-class sweep; re-derived here from `data/onethird-mg09ea-independent-audit.json`. **It strengthens claim 12, it does not weaken it** — the information runs the wrong way for a control inequality. Scope `n = 7`, both-connected |
 | 25 | **`δ` does not control `R` either at `n = 7`**: `corr(δ, R) = +0.096` (`corr(δ, log R) = +0.076`); the eight lowest-`δ` classes (`δ ≤ 0.3929`) span `R ∈ [0.99, 6.96]`, median `3.73`, against `5.88` in the `δ = 0.5` block | **PROVEN[c]** | added 2026-07-29 (mg-60d3), landing mg-09ea §4.2. Closes the *"but the conditional picture is fine in-regime"* escape **in this document's favour**. Scope `n = 7`, both-connected; **it does not and cannot reach `δ < 1/3`** (claim 14) |
 | 26 | **§6's conclusion is drawn entirely off L1b's hypothesis class** — L1b is the *conditional* all-pairs-frozen ⇒ standard dominance, and every one of the 956 classes measured has `δ ∈ [0.359, 0.5]` | **PROVEN** | added 2026-07-29 (mg-60d3), landing mg-09ea F2. §6 refutes the *unconditional* implication, which L1b does not assert. §7's `c` claim is a valid a-fortiori; **no a-fortiori is available for `R`**. Claim 20 already carried the honest form; §6's prose did not |
-| 27 | The CI gate **fires** on both mutations that previously passed it: M1 (BK step rescaled) via `match_bk_lambda2`, M2 (`U` shrunk by element block) via CONTROL B's `c_min`; and neither repair fires on the unmutated instrument | **PROVEN[c]** | added 2026-07-29 (mg-60d3), landing mg-09ea F3/F4. Full 2×3 exit-code matrix in §2.6.1 and `data/onethird-mg60d3-gate-mutation-demo.json`; the demo asserts the matrix and exits non-zero otherwise. **CONFIRMED 2026-07-30 by mg-5ad1** by a disjoint route (real pre-repair source at `87f0424` + source-level mutations). **Scope, as worded: these two mutations.** It is **not** a claim that the gate is mutation-tested in general — mg-5ad1 exhibits two further one-line mutations of the same family that pass it (§2.6.1 annotation) |
+| 27 | The CI gate **fires** on both mutations that previously passed it: M1 (BK step rescaled) via `match_bk_lambda2`, M2 (`U` shrunk by element block) via CONTROL B's `c_min`; and neither repair fires on the unmutated instrument | **PROVEN[c]** | added 2026-07-29 (mg-60d3), landing mg-09ea F3/F4. Full 2×3 exit-code matrix in §2.6.1 and `data/onethird-mg60d3-gate-mutation-demo.json`; the demo asserts the matrix and exits non-zero otherwise. **CONFIRMED 2026-07-30 by mg-5ad1** by a disjoint route (real pre-repair source at `87f0424` + source-level mutations). **Scope, as worded: these two mutations.** It is **not** a claim that the gate is mutation-tested in general — mg-5ad1 exhibits two further one-line mutations of the same family that pass it (§2.6.1 annotation) |. **Claim 28 is the general statement mg-75f0 established; this row stands exactly as worded and is neither weakened nor superseded by it**
+| 28 | The CI gate's identity check compares the **whole** committed mg-8b64 reference row — **22 of 23 fields**, one declared exclusion — and the widened gate **fires on 5 of 5 one-line mutations that neither mg-60d3 nor mg-5ad1 used**, each of which was fatal to nothing before the widening | **PROVEN[c]** | added 2026-07-30 (mg-75f0), landing mg-5ad1 finding 1. Route: one isolated tree per case, one source-level edit with an anchor-count assertion, the pre-widening gate the **real** source at the pinned `af7fc2df`. Matrix in `docs/OneThird-mg75f0-GateClassClosure.md` §4 and `data/onethird-mg75f0-gate-class-closure.json`; the demo asserts it and exits non-zero otherwise. One of the five (the Bernoulli-variance row) was authored by **mg-7db4** for a different purpose, so it is not a mutation chosen by whoever built the thing under test. **Scope:** the mg-8b64 identity surface plus `projector_U`'s rank. A mutation that moves no committed reference field and no dimension of `U` is covered only as far as CONTROL A/B/C/D/F reach, and a quantity the corpus never commits has no reference to be compared against at all — stated in §7 of that document rather than implied |
 
 ### 11.1 The one caveat on every `PROVEN[c]` label
 
