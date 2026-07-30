@@ -41,8 +41,8 @@
         "lambda2_BK": 0.952254248593738,
         "dim_eigenspace": 4,
         "dim_eigenspace_expected": 4,
-        "c_max": 1.0000000000000013,
-        "c_min": 1.0000000000000007,
+        "c_max": 1.0000000000000016,
+        "c_min": 1.0000000000000009,
         "eigenspace_internal_spread": 1.3322676295501878e-15,
         "nearest_excluded_eigenvalue_gap": 0.055078038481326974,
         "gap_over_EIG_TOL": 55078038.48132697,
@@ -50,12 +50,12 @@
           "0": {
             "dim_U": 17,
             "c_max": 1.0000000000000013,
-            "c_min": 1.0000000000000002
+            "c_min": 0.9999999999999998
           },
           "0,1": {
             "dim_U": 13,
-            "c_max": 1.000000000000001,
-            "c_min": -1.0988520168067454e-16
+            "c_max": 1.0000000000000009,
+            "c_min": -1.1102230246251607e-16
           }
         }
       },
@@ -65,24 +65,24 @@
         "num_LE": 720,
         "dim_U": 26,
         "dim_U_expected": 26,
-        "lambda2_BK": 0.9732050807568882,
+        "lambda2_BK": 0.9732050807568895,
         "dim_eigenspace": 5,
         "dim_eigenspace_expected": 5,
-        "c_max": 1.000000000000001,
-        "c_min": 0.9999999999999973,
-        "eigenspace_internal_spread": 2.220446049250313e-15,
-        "nearest_excluded_eigenvalue_gap": 0.030478061366690512,
-        "gap_over_EIG_TOL": 30478061.36669051,
+        "c_max": 1.0000000000000016,
+        "c_min": 0.9999999999999962,
+        "eigenspace_internal_spread": 2.4424906541753444e-15,
+        "nearest_excluded_eigenvalue_gap": 0.030478061366691955,
+        "gap_over_EIG_TOL": 30478061.366691954,
         "U_shrunk": {
           "0": {
             "dim_U": 26,
-            "c_max": 1.000000000000001,
-            "c_min": 0.999999999999999
+            "c_max": 1.0000000000000024,
+            "c_min": 0.9999999999999981
           },
           "0,1": {
             "dim_U": 21,
-            "c_max": 1.0000000000000024,
-            "c_min": -1.1948870581400904e-62
+            "c_max": 1.0000000000000038,
+            "c_min": 7.098613619934468e-17
           }
         }
       }
@@ -377,6 +377,38 @@
         "accepted": false,
         "PASS": true,
         "why": "lambda_2 simple, so this control would be VACUOUS -- the state mg-5ad1 finding 4 found the real-data two-sided check in"
+      },
+      {
+        "predicate": "_indicator_centred_ok",
+        "label": "CONTROL G",
+        "must_accept": true,
+        "accepted": true,
+        "PASS": true,
+        "why": "a mean-centred indicator sums to zero"
+      },
+      {
+        "predicate": "_indicator_centred_ok",
+        "label": "CONTROL G / centring lost (mg-bd53 C2)",
+        "must_accept": false,
+        "accepted": false,
+        "PASS": true,
+        "why": "C2's signature: `f -= f.mean()` becomes a no-op, so the sum leaves 0 by sixteen orders of magnitude -- against a reference the corpus cannot regenerate"
+      },
+      {
+        "predicate": "_overlap_proper_ok",
+        "label": "CONTROL H",
+        "must_accept": true,
+        "accepted": true,
+        "PASS": true,
+        "why": "the frozen-pair indicator is well outside U, as the corpus claims"
+      },
+      {
+        "predicate": "_overlap_proper_ok",
+        "label": "CONTROL H / indicator in U (mg-5ad1 M3)",
+        "must_accept": false,
+        "accepted": false,
+        "PASS": true,
+        "why": "M3's signature under REGENERATION: the max-ratio pair drives the overlap to exactly 1, the identity check is absorbed by the refreshed store, and the vacuity floor is what is left"
       }
     ]
   },

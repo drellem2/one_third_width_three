@@ -155,6 +155,23 @@ CONTROL D (dimension-artifact null, must fail on the in-regime posets).
          c ~ 1 that survives this substitution was an artifact of dim U, not
          evidence of standard dominance.
 
+CONTROL G (the pair indicator sums to ZERO -- a reference the corpus cannot
+         regenerate).  `frozen_pair_indicator` centres f, so sum_sigma f = 0 by
+         arithmetic.  Required at every measured poset, for both pair selectors:
+         |sum f| < 1e-9.  This is mg-bd53's C2 -- the one-line loss of centring
+         that survived FOUR generations of this gate, printed and exit 0 every
+         time -- caught by sixteen orders of magnitude (|sum f| goes from
+         <= 2.3e-16 to 8.12 / 10.10 / 13.42).  See `_indicator_centred_ok`.
+
+CONTROL H (the pair indicator is not IN U -- the integer ONE as a vacuity floor).
+         The floor CONTROL E applies to dim U, applied to the overlap: required
+         at the OFF-REGIME measured posets, f^T P_U f < 1 - 1e-6.  This is
+         mg-5ad1's M3 selector flip caught UNDER REGENERATION -- the case
+         mg-4f9b measured as exit 0 everywhere -- because the reference is 1 and
+         no re-run of any probe moves 1.  SCOPED, and the scoping is the
+         assertion: there are posets where f lies in U legitimately (the sweep's
+         `lemma_3_1_check` counts them).  See `_overlap_proper_ok`.
+
 CONTROL F (two-sided reading-dependence, ON REAL DATA).  The gate's
          reading-dependence check (`dim_eigenspace > 1` and
          `|c_max - c_min| > 1e-9`) was VACUOUS on real data: lambda_2^BK is
@@ -177,10 +194,14 @@ an audit exhibiting a mutation that sailed through.  The outcome record:
     mg-5ad1  AUDIT     one-character selector flip passes      CAUGHT
     mg-75f0  gate fix  widened 4 fields -> the whole row       class survived
     mg-bd53  AUDIT     a REGRESSION, and the class still open  CAUGHT
+    mg-4f9b  gate fix  repaired the route axis; diagnosed WHY  class survived
+    mg-56be  AUDIT     the "gate CANNOT" negative is refuted   CAUGHT
 
-The audit stage is 3 for 3 and the gate is 0 for 2.  mg-4f9b measured why rather
-than widening a fourth time; `scripts/onethird_mg4f9b_route_axis_probe.py`
-part 3 is the experiment and `data/onethird-mg4f9b-route-axis.json` the record.
+The audit stage is 4 for 4.  mg-4f9b measured why rather than widening a fourth
+time; `scripts/onethird_mg4f9b_route_axis_probe.py` part 3 is the experiment and
+`data/onethird-mg4f9b-route-axis.json` the record.  mg-48dd then landed CONTROLS
+G and H, which close the two instances mg-4f9b recorded as open -- see the
+CORRECTION below.
 
     THE MECHANISM.  The identity check compares a recomputation against
     `data/onethird-mg8b64-L1b-bk-transport-transfer.json`.  That file is not an
@@ -202,8 +223,38 @@ part 3 is the experiment and `data/onethird-mg4f9b-route-axis.json` the record.
     from the stored value.  Neither changes where the stored value came from.  A
     mutation that moves the computation AND its own reference together is
     invisible to any number of comparisons against that reference.  This is the
-    diagnosis mg-4f9b was asked for, and the honest answer to "can the gate
-    close the class" is NO -- not by comparing more.
+    diagnosis mg-4f9b was asked for, it is right, and it stands: NO COMPARISON
+    AGAINST THE STORED REFERENCE CAN CLOSE THE CLASS.
+
+    CORRECTION (mg-48dd, landing mg-56be finding 1).  What this file used to say
+    next did not follow from the paragraph above, and it was wrong.  It said the
+    gate therefore CANNOT close this class and that the class belongs to the
+    audit stage.  **A CONTROL NEED NOT BE A COMPARISON AGAINST A STORED
+    REFERENCE.**  mg-4f9b evaluated exactly one candidate -- have the gate read
+    its own committed output back -- rejected it correctly, on the grounds that a
+    read-back only relocates the mutation, and generalised from a single
+    rejection to a negative about every possible control.  mg-56be attacked that
+    negative, at mg-4f9b's own request, and refuted it by exhibiting references
+    the corpus cannot produce.  CONTROLS G and H are two of them, in about
+    sixteen lines, on quantities this file already computes:
+
+        CONTROL G   reference = the integer 0    catches mg-bd53's C2
+        CONTROL H   reference = the integer 1    catches mg-5ad1's M3 UNDER
+                                                 REGENERATION
+
+    Neither reference is a number this corpus produced, so no re-run of any probe
+    moves either one.  That is mg-4f9b's own design rule -- "a new control is
+    worth more than a wider comparison exactly when its reference is one the
+    corpus cannot regenerate" -- applied to mg-4f9b's own open instances.
+
+    HONEST SCOPE, because overstating this would be the sixth generation of this
+    arc's signature defect in the commit that finally fixed something.  G and H
+    close `frozen_pair_overlap_with_U`, the quantity mg-4f9b named as open, and
+    they close it under regeneration.  THEY DO NOT CLOSE THE CLASS IN GENERAL: a
+    selector flip landing on a legitimately-different pair without driving the
+    overlap to 1 passes both.  What is refuted is the specific proposition that
+    the gate cannot and must hand the class over.  It can, cheaply, with
+    theorem-grade references -- and the general class is still open.
 
     WHAT DOES SURVIVE IT, and it is the same experiment's control.  CONTROL A
     (c = cos^2 theta), CONTROL B (c = 1 on the antichain, dim U = (n-1)^2+1),
@@ -216,21 +267,25 @@ part 3 is the experiment and `data/onethird-mg4f9b-route-axis.json` the record.
     control is worth more than a wider comparison exactly when it has a
     reference the corpus cannot regenerate.
 
-    WHERE THE CLASS IS ACTUALLY DETECTED: the independent audit stage, 3 for 3,
-    by a party who reads the selector and asks whether it is the right one --
-    a semantic question no stored value can answer.  That is not a gap to be
-    closed by this file; it is the division of labour, and it is recorded here
-    so that the next reader of a green gate run knows what green does and does
-    not mean.
+    WHERE THE RESIDUAL CLASS IS DETECTED: the independent audit stage, 4 for 4,
+    by a party who reads the selector and asks whether it is the right one -- a
+    semantic question no stored value can answer.  What is NOT true, and what
+    this paragraph used to say, is that the whole class is a division of labour
+    this file cannot touch.  Two of its instances were closed here in fifteen
+    lines the moment somebody looked for a reference outside the corpus instead
+    of a wider comparison inside it.  Recorded so that the next reader of a green
+    gate run knows what green does and does not mean -- and so that the next
+    author who is about to write "cannot" enumerates what they tried first.
 
 Reproducibility: no randomness except CONTROL D, which is seeded
 (`numpy.random.default_rng(20260729)`).  Every number in the deliverable comes
 from `data/onethird-mg2c34-n7-overlap.json`, written by this file.  Note that
 this is the gate's OWN output and the gate never reads it back, so nothing in
-it is under comparison -- mg-bd53 finding 2 (`frozen_pair_overlap_with_U` moved
-by one line of `frozen_pair_indicator`, printed, exit 0) lives here, and per the
-paragraph above a read-back would catch that mutation only until someone
-regenerated this file too.
+it is under comparison.  mg-bd53 finding 2 (`frozen_pair_overlap_with_U` moved
+by one line of `frozen_pair_indicator`, printed, exit 0) USED to live here; per
+the paragraph above a read-back would have caught it only until someone
+regenerated this file too, which is why the repair is CONTROL G instead -- it
+compares the same vector against 0 and reads nothing back at all.
 
 Run:  python3 scripts/onethird_mg2c34_n7_overlap_test.py
       (numpy required; ~2 min for the full n=7 sweep)
@@ -592,6 +647,62 @@ def _projector_row_ok(row):
             and row["dim_U"] < row["num_LE"])
 
 
+INDICATOR_SUM_TOL = 1e-9      # CONTROL G's tolerance around the integer 0
+OVERLAP_VACUITY_EPS = 1e-6    # CONTROL H's floor below the integer 1
+
+
+def _indicator_centred_ok(row, tag):
+    """CONTROL G: sum_sigma f = 0, referenced against THE INTEGER ZERO.
+
+    `frozen_pair_indicator` centres f before normalising it, and a mean-centred
+    vector sums to zero.  That is a fact about arithmetic, so the reference here
+    is the integer 0 -- NOT a number this corpus computed, committed or can
+    regenerate.  That is the whole point of it (mg-56be finding 1, invariant I1):
+    the gate's identity check is a REGENERATION DETECTOR because its reference is
+    a frozen snapshot of the same code path, and no re-run of any probe in this
+    repo moves 0.
+
+    This closes mg-bd53's C2 -- `f -= f.mean()` -> `f -= 0.0 * f.mean()`, the
+    instance that survived four generations of this gate.  Under C2 the sum goes
+    from <= 2.3e-16 to 8.12 / 10.10 / 13.42 at the three off-regime posets: it
+    fires by sixteen orders of magnitude, which is why the tolerance below is
+    not a number anybody has to defend.
+
+    POPULATION.  The identity is universal -- it holds on every poset, for both
+    pair selectors -- so the population below is a COST choice and not a validity
+    scope.  Contrast CONTROL H, where the scoping is load-bearing."""
+    v = row.get(f"{tag}_pair_indicator_sum")
+    return v is None or abs(v) < INDICATOR_SUM_TOL
+
+
+def _overlap_proper_ok(row, tag):
+    """CONTROL H: f^T P_U f < 1 - eps, referenced against THE INTEGER ONE.
+
+    The same vacuity floor `_projector_row_ok` already applies to dim U, applied
+    to the overlap itself: if the frozen-pair indicator lies IN U then the
+    corpus's degree-2 inference ("degree-2 slow mode => c ~ 0") has nothing left
+    to be about, and the printed 1.000000 carries no signal in either direction.
+    The reference is the integer 1 -- again mathematics, not a stored row, so a
+    mutation cannot move it and a regeneration cannot absorb it.
+
+    This closes mg-5ad1's M3 UNDER REGENERATION (mg-56be finding 1, invariant
+    I6), which is the case mg-4f9b measured as exit 0 everywhere: the max-ratio
+    selector drives the overlap to exactly 1.000000 at 3/3 off-regime posets
+    (1 - ov = 2.2e-15, -2.9e-15, 0.0).  The identity check absorbs that mutation
+    the moment the store is refreshed by the mutated code; this control does not,
+    because it never reads the store.
+
+    POPULATION, and here the scoping IS the assertion.  Off-regime measured
+    posets only.  There are posets where f lies in U legitimately -- the sweep's
+    own `lemma_3_1_check` counts them and asks whether they satisfy the threshold
+    hypothesis -- so an unscoped floor would fire on correct input.  Off-regime is
+    where the corpus's own claim is that the overlap is ~0.81 and emphatically
+    not 1.  If this ever fires legitimately the fix is to narrow the POPULATION,
+    not to loosen the number, per `_antichain_row_ok`'s precedent."""
+    v = row.get(f"{tag}_pair_overlap_with_U")
+    return v is None or v < 1.0 - OVERLAP_VACUITY_EPS
+
+
 def _two_sided_row_ok(row):
     """CONTROL F: the reading-dependence check, with REAL coverage.
 
@@ -710,6 +821,10 @@ def measure(P, name=None, with_mechanism=True):
             # inference is only valid if degree-2 pair indicators have small
             # overlap with U on L(P).
             row[f"{tag}_pair_overlap_with_U"] = float(f @ (PU @ f))
+            # CONTROL G's input.  f is mean-centred, so it sums to zero -- a
+            # reference the corpus did not produce and cannot regenerate.  See
+            # `_indicator_centred_ok`; CONTROL H reads the overlap above.
+            row[f"{tag}_pair_indicator_sum"] = float(f.sum())
         if mf is not None:
             row["most_frozen_p_maxbias"] = mf[2]
         # back-compat key used by the sweep summary
@@ -1382,6 +1497,27 @@ def main():
                             f"projector's rank filter is admitting directions "
                             f"the one-particle span does not contain, and "
                             f"c = null is vacuous by sec 2's own criterion")
+        # CONTROLS G and H (mg-48dd, landing mg-56be finding 1).  Both reference
+        # an INTEGER rather than a committed row, which is why they survive the
+        # regeneration the paragraph in this file's header describes.
+        for tag in ("frozen", "maxbias"):
+            if not _indicator_centred_ok(r, tag):
+                failures.append(
+                    f"{r['name']}: CONTROL G -- the {tag} pair indicator does "
+                    f"not sum to zero (sum = "
+                    f"{r[f'{tag}_pair_indicator_sum']:.6g}); "
+                    f"`frozen_pair_indicator` has stopped centring f, so every "
+                    f"quantity computed from it is measuring the wrong vector "
+                    f"(see _indicator_centred_ok)")
+        if r.get("regime") == "off-regime" and not _overlap_proper_ok(r, "frozen"):
+            failures.append(
+                f"{r['name']}: CONTROL H -- the frozen-pair indicator lies IN U "
+                f"(overlap = {r['frozen_pair_overlap_with_U']:.9f} >= "
+                f"1 - {OVERLAP_VACUITY_EPS:g}) at an OFF-REGIME poset, where "
+                f"the corpus's own claim is ~0.81.  The overlap is vacuous by "
+                f"the same criterion CONTROL E applies to dim U, and the usual "
+                f"cause is that the frozen-pair SELECTOR is no longer choosing "
+                f"the Theorem-E pair (see _overlap_proper_ok)")
     if failures:
         print("\nCONTROL FAILURES:")
         for m in failures:
