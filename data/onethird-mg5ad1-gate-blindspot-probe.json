@@ -1,0 +1,250 @@
+{
+  "what": "mg-5ad1 independent-audit probe for the mg-60d3 CI-gate repair (af7fc2df) to scripts/onethird_mg2c34_n7_overlap_test.py",
+  "part_A_control_B_two_sided": {
+    "question": "does asserting c_min forbid a case the mathematics permits, and is it non-vacuous?",
+    "EIG_TOL": 1e-09,
+    "rows": [
+      {
+        "poset": "antichain-4",
+        "n": 4,
+        "num_LE": 24,
+        "dim_U": 10,
+        "dim_U_expected": 10,
+        "lambda2_BK": 0.9023689270621833,
+        "dim_eigenspace": 3,
+        "dim_eigenspace_expected": 3,
+        "c_max": 1.0000000000000009,
+        "c_min": 0.9999999999999991,
+        "eigenspace_internal_spread": 1.3322676295501878e-15,
+        "nearest_excluded_eigenvalue_gap": 0.11369379246737044,
+        "gap_over_EIG_TOL": 113693792.46737044,
+        "U_shrunk": {
+          "0": {
+            "dim_U": 10,
+            "c_max": 1.0000000000000007,
+            "c_min": 0.9999999999999988
+          },
+          "0,1": {
+            "dim_U": 7,
+            "c_max": 1.0000000000000002,
+            "c_min": -2.775557561563186e-17
+          }
+        }
+      },
+      {
+        "poset": "antichain-5",
+        "n": 5,
+        "num_LE": 120,
+        "dim_U": 17,
+        "dim_U_expected": 17,
+        "lambda2_BK": 0.952254248593738,
+        "dim_eigenspace": 4,
+        "dim_eigenspace_expected": 4,
+        "c_max": 1.0000000000000016,
+        "c_min": 1.0000000000000009,
+        "eigenspace_internal_spread": 1.3322676295501878e-15,
+        "nearest_excluded_eigenvalue_gap": 0.055078038481326974,
+        "gap_over_EIG_TOL": 55078038.48132697,
+        "U_shrunk": {
+          "0": {
+            "dim_U": 17,
+            "c_max": 1.0000000000000013,
+            "c_min": 0.9999999999999998
+          },
+          "0,1": {
+            "dim_U": 13,
+            "c_max": 1.0000000000000009,
+            "c_min": -1.1102230246251607e-16
+          }
+        }
+      },
+      {
+        "poset": "antichain-6",
+        "n": 6,
+        "num_LE": 720,
+        "dim_U": 26,
+        "dim_U_expected": 26,
+        "lambda2_BK": 0.9732050807568895,
+        "dim_eigenspace": 5,
+        "dim_eigenspace_expected": 5,
+        "c_max": 1.0000000000000016,
+        "c_min": 0.9999999999999962,
+        "eigenspace_internal_spread": 2.4424906541753444e-15,
+        "nearest_excluded_eigenvalue_gap": 0.030478061366691955,
+        "gap_over_EIG_TOL": 30478061.366691954,
+        "U_shrunk": {
+          "0": {
+            "dim_U": 26,
+            "c_max": 1.0000000000000024,
+            "c_min": 0.9999999999999981
+          },
+          "0,1": {
+            "dim_U": 21,
+            "c_max": 1.0000000000000038,
+            "c_min": 7.098613619934468e-17
+          }
+        }
+      }
+    ]
+  },
+  "part_B_reference_field_census": {
+    "predicates": [
+      "match_bk_lambda2",
+      "match_delta",
+      "match_lambda_std",
+      "match_num_LE"
+    ],
+    "reference_fields_compared": [
+      "bk_lambda2",
+      "delta",
+      "lambda_std",
+      "num_LE"
+    ],
+    "reference_fields_present": [
+      "bk_gap",
+      "bk_lambda2",
+      "delta",
+      "frozen_p",
+      "frozen_pair",
+      "frozen_phi_bk",
+      "frozen_phi_t_image",
+      "frozen_ratio",
+      "frozen_sep_k",
+      "lambda_std",
+      "max_bias",
+      "min_phi_bk",
+      "min_phi_bk_pair",
+      "minphi_phi_t_image",
+      "n",
+      "num_LE",
+      "num_incomp_pairs",
+      "phi_t_cheeger",
+      "phi_t_min_prefix",
+      "ratio_of_sums",
+      "transport_gap",
+      "width"
+    ],
+    "reference_fields_uncompared": [
+      "bk_gap",
+      "frozen_p",
+      "frozen_pair",
+      "frozen_phi_bk",
+      "frozen_phi_t_image",
+      "frozen_ratio",
+      "frozen_sep_k",
+      "max_bias",
+      "min_phi_bk",
+      "min_phi_bk_pair",
+      "minphi_phi_t_image",
+      "n",
+      "num_incomp_pairs",
+      "phi_t_cheeger",
+      "phi_t_min_prefix",
+      "ratio_of_sums",
+      "transport_gap",
+      "width"
+    ]
+  },
+  "part_C_frozen_pair_selector": {
+    "question": "is the F3 shape -- a committed reference value fetched/available and never compared -- still live?",
+    "rows": [
+      {
+        "name": "enum-n7-#3",
+        "committed_frozen_pair": [
+          3,
+          5
+        ],
+        "argmin_ratio_pair": [
+          3,
+          5
+        ],
+        "argmax_ratio_pair": [
+          0,
+          1
+        ],
+        "argmin_ratio": 0.1111111111111111,
+        "argmax_ratio": 0.2222222222222222,
+        "reproduces_committed": true,
+        "flip_moves_the_pair": true
+      },
+      {
+        "name": "enum-n7-#20",
+        "committed_frozen_pair": [
+          4,
+          5
+        ],
+        "argmin_ratio_pair": [
+          4,
+          5
+        ],
+        "argmax_ratio_pair": [
+          0,
+          1
+        ],
+        "argmin_ratio": 0.11121323529411764,
+        "argmax_ratio": 0.2037037037037037,
+        "reproduces_committed": true,
+        "flip_moves_the_pair": true
+      },
+      {
+        "name": "enum-n7-#600",
+        "committed_frozen_pair": [
+          2,
+          4
+        ],
+        "argmin_ratio_pair": [
+          2,
+          4
+        ],
+        "argmax_ratio_pair": [
+          5,
+          6
+        ],
+        "argmin_ratio": 0.1111111111111111,
+        "argmax_ratio": 0.20202020202020202,
+        "reproduces_committed": true,
+        "flip_moves_the_pair": true
+      },
+      {
+        "name": "enum-n7-#945",
+        "committed_frozen_pair": [
+          1,
+          2
+        ],
+        "argmin_ratio_pair": [
+          1,
+          2
+        ],
+        "argmax_ratio_pair": [
+          0,
+          1
+        ],
+        "argmin_ratio": 0.21875,
+        "argmax_ratio": 0.2692307692307692,
+        "reproduces_committed": true,
+        "flip_moves_the_pair": true
+      },
+      {
+        "name": "enum-n7-#809",
+        "committed_frozen_pair": [
+          1,
+          3
+        ],
+        "argmin_ratio_pair": [
+          1,
+          3
+        ],
+        "argmax_ratio_pair": [
+          0,
+          1
+        ],
+        "argmin_ratio": 0.16534391534391535,
+        "argmax_ratio": 0.2604166666666667,
+        "reproduces_committed": true,
+        "flip_moves_the_pair": true
+      }
+    ]
+  },
+  "failures": [],
+  "ALL_PASS": true
+}

@@ -219,10 +219,14 @@ that could differ from it.
 
 A control nobody can fail is indistinguishable from no control at all — the mg-4ad1 lesson, applied
 to this file. The script **exits non-zero** if CONTROL A, B or C fails, if CHECK-0 disagrees by more
-than `1e-12`, if any of the three posets stops matching its committed mg-8b64 row **on any of
-`|L|`, `λ_std`, `δ` or `λ₂^BK`**, or if a degenerate `λ₂` ever makes the reported `c`
+than `1e-12`, if any of the **five** named posets stops matching its committed mg-8b64 row **on any
+of `|L|`, `λ_std`, `δ` or `λ₂^BK`**, or if a degenerate `λ₂` ever makes the reported `c`
 reading-dependent. It is wired into `.github/workflows/script-controls.yml` in `--no-sweep` mode,
 alongside the existing mg-8489 and mg-8ff1 controls.
+
+> *"three" → "**five**" corrected 2026-07-30 (mg-5ad1, §7). The identity loop runs over `named` =
+> `OFF_REGIME + IN_REGIME`, and §2.6.1's own table already listed all five (`#3/#20/#600/#809/#945`);
+> mg-5ad1's M1 run fails 5 of 5. The error understated the gate's coverage.*
 
 **Mutation-tested, because "exits non-zero on failure" is itself a claim:**
 
@@ -300,6 +304,32 @@ bodies; the deliverable's gate has no switch that weakens it and must not acquir
 **itself a control** — it exits non-zero if that matrix is not observed exactly. It is **not** in CI:
 six full gate runs is ~12 min, far outside the order-seconds rule `script-controls.yml` states at the
 top. Run it on demand when the gate changes.
+
+> **[mg-5ad1, independent audit of this repair, 2026-07-30 — see
+> `docs/OneThird-mg60d3-GateRepair-IndependentAudit.md`.]** The 2×3 matrix above **REPRODUCES** by a
+> disjoint route (the actual pre-repair source at `87f0424` plus source-level mutations of the
+> defining modules, rather than the demo's in-process predicate substitution); every figure in §2.6
+> and §2.6.1 is confirmed exactly, and ledger claim 27 stands. Two findings on the **residual**, which
+> this section does not claim to have closed:
+>
+> 1. **The repairs close two instances of a class, not the class.** Two further one-line mutations of
+>    the same family pass the repaired gate with *"All controls and identity checks PASSED"*: flipping
+>    mg-8b64's Theorem-E frozen-pair selector `min` → `max` (which moves `frozen_pair` at 5/5 posets
+>    and `frozen_pair_overlap_with_U` from `0.807/0.809/0.810` to exactly `1.0000` — the quantity
+>    **ledger claim 8** rests on), and dropping `projector_U`'s rank filter (which inflates `dim U` to
+>    `|L|` at `#945`/`#809`, so `c = null = 1.0000` and the measurement is vacuous by this document's
+>    own §2 criterion). The first is **F3 verbatim**: `frozen_pair` is a field of the *same* committed
+>    mg-8b64 row the gate already opens, and the identity conjunction compares **4 of its 22 fields**.
+> 2. **"Run it on demand when the gate changes" is insufficient even when obeyed.** The demo's
+>    `EXPECTED` is a hardcoded 2×3 matrix over two fixed mutations, so it is a regression test on the
+>    two known repairs and would not have caught either mutation above.
+>
+> Audited in both directions as well: the F4 `c_min` assertion is **non-vacuous**
+> (`dim λ₂-eigenspace = n−1 = 3/4/5`), **not over-tight** (`1 − c_min ≤ 2.7e-15` against a `1e-8`
+> tolerance), and **not knife-edge** (`3.0e7–1.1e8 ×` `EIG_TOL` of margin). Its stated justification
+> does over-reach: Aldous/CLR gives the gap *eigenvalue*, while `c_min = 1` asserts gap-*eigenspace*
+> containment in the one-particle sector — verified here at `n = 4,5,6` **and `7`**, but not licensed
+> by that theorem for a larger antichain.
 
 ### 2.7 What this instrument adds over mg-4a86's
 
@@ -770,7 +800,7 @@ Every claim, including reductions asserted in prose. `PROVEN[c]` = proven by com
 | 24 | **`c` is substantially informative about `R`** — `corr(c,R) = +0.4991` ⟹ `c` accounts for **25%** of `R`'s variance; the bottom `c`-decile confines `R` to `[1.073, 5.770]` (24.8% of the span) and median `R` rises monotonically `2.90 → 7.99` across deciles; `R > 15` forces `c ≥ 0.994228` | **PROVEN[c]** | **added 2026-07-29 (mg-60d3), landing mg-09ea §4.1. This is what REPLACES the struck §6(a).** Computed on mg-09ea's independent 956-class sweep; re-derived here from `data/onethird-mg09ea-independent-audit.json`. **It strengthens claim 12, it does not weaken it** — the information runs the wrong way for a control inequality. Scope `n = 7`, both-connected |
 | 25 | **`δ` does not control `R` either at `n = 7`**: `corr(δ, R) = +0.096` (`corr(δ, log R) = +0.076`); the eight lowest-`δ` classes (`δ ≤ 0.3929`) span `R ∈ [0.99, 6.96]`, median `3.73`, against `5.88` in the `δ = 0.5` block | **PROVEN[c]** | added 2026-07-29 (mg-60d3), landing mg-09ea §4.2. Closes the *"but the conditional picture is fine in-regime"* escape **in this document's favour**. Scope `n = 7`, both-connected; **it does not and cannot reach `δ < 1/3`** (claim 14) |
 | 26 | **§6's conclusion is drawn entirely off L1b's hypothesis class** — L1b is the *conditional* all-pairs-frozen ⇒ standard dominance, and every one of the 956 classes measured has `δ ∈ [0.359, 0.5]` | **PROVEN** | added 2026-07-29 (mg-60d3), landing mg-09ea F2. §6 refutes the *unconditional* implication, which L1b does not assert. §7's `c` claim is a valid a-fortiori; **no a-fortiori is available for `R`**. Claim 20 already carried the honest form; §6's prose did not |
-| 27 | The CI gate **fires** on both mutations that previously passed it: M1 (BK step rescaled) via `match_bk_lambda2`, M2 (`U` shrunk by element block) via CONTROL B's `c_min`; and neither repair fires on the unmutated instrument | **PROVEN[c]** | added 2026-07-29 (mg-60d3), landing mg-09ea F3/F4. Full 2×3 exit-code matrix in §2.6.1 and `data/onethird-mg60d3-gate-mutation-demo.json`; the demo asserts the matrix and exits non-zero otherwise |
+| 27 | The CI gate **fires** on both mutations that previously passed it: M1 (BK step rescaled) via `match_bk_lambda2`, M2 (`U` shrunk by element block) via CONTROL B's `c_min`; and neither repair fires on the unmutated instrument | **PROVEN[c]** | added 2026-07-29 (mg-60d3), landing mg-09ea F3/F4. Full 2×3 exit-code matrix in §2.6.1 and `data/onethird-mg60d3-gate-mutation-demo.json`; the demo asserts the matrix and exits non-zero otherwise. **CONFIRMED 2026-07-30 by mg-5ad1** by a disjoint route (real pre-repair source at `87f0424` + source-level mutations). **Scope, as worded: these two mutations.** It is **not** a claim that the gate is mutation-tested in general — mg-5ad1 exhibits two further one-line mutations of the same family that pass it (§2.6.1 annotation) |
 
 ### 11.1 The one caveat on every `PROVEN[c]` label
 
