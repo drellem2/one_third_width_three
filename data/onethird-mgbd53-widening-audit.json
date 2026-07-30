@@ -1,0 +1,1224 @@
+{
+  "what": "mg-bd53 independent audit of the mg-75f0 gate widening: does the widened gate catch a mutation it was not built from, and did the widening cost any coverage?",
+  "pre_widening_gate_revision": "af7fc2df",
+  "part_1_second_routes": {
+    "legacy_match_keys_are_inert": true,
+    "row_wide_comparison_decides": true,
+    "lambda_std_has_two_implementations": true,
+    "routes": {
+      "num_LE": {
+        "gate_route": "Poset.linext_count",
+        "row_route": "Poset.linext_count",
+        "independent": false
+      },
+      "lambda_std": {
+        "gate_route": "onethird_mg4a86_standard_dominance_target_audit.lambda_std",
+        "row_route": "onethird_mgb0a6_spectral_killshot_probe.standard_block_and_lambda",
+        "independent": true
+      },
+      "delta": {
+        "gate_route": "gate.delta_and_frozen_pair (before_prob_dp + its own max-min aggregation)",
+        "row_route": "mg8b64.bk_frozen_pair (before_prob_dp + its own max-min aggregation)",
+        "independent": true
+      },
+      "bk_lambda2": {
+        "gate_route": "mg4a86.bk_walk_matrix (kept, ANDed)",
+        "row_route": "mg8b64.bk_walk_matrix",
+        "independent": true
+      }
+    },
+    "still_gated_after_mg75f0": {
+      "num_LE": false,
+      "lambda_std": false,
+      "delta": false,
+      "bk_lambda2": true
+    },
+    "lost_second_route": [
+      "delta",
+      "lambda_std"
+    ]
+  },
+  "cases": [
+    {
+      "mutation": "none",
+      "gate": "pre-widening",
+      "applied": null,
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "8bf0aba1c14b92de823bcbd5b77f37d35c8d0f430c6ad13e17aa11f0d79749b4",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "unmutated instrument",
+      "moves_reference_fields": [],
+      "why_this_one": ""
+    },
+    {
+      "mutation": "none",
+      "gate": "widened",
+      "applied": null,
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "4aebabe84ce934c70bf1855b44093150bf80f7e9085244d5ac81c051457412ac",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "unmutated instrument",
+      "moves_reference_fields": [],
+      "why_this_one": ""
+    },
+    {
+      "mutation": "A1",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mgb0a6_spectral_killshot_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "8bf0aba1c14b92de823bcbd5b77f37d35c8d0f430c6ad13e17aa11f0d79749b4",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "standard_block_and_lambda's eigenvalue selector argmax -> argmin: lambda_std reports the SLOWEST mode on H instead of the dominant one.  Moves lambda_std and transport_gap",
+      "moves_reference_fields": [
+        "lambda_std",
+        "transport_gap"
+      ],
+      "why_this_one": "transport_gap is moved by none of mg-75f0's seven rows, so this is field coverage its acceptance run did not measure",
+      "stdout_differs_from_unmutated": false,
+      "verdict": "NEVER EXERCISED"
+    },
+    {
+      "mutation": "A1",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mgb0a6_spectral_killshot_probe.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: lambda_std,transport_gap",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: lambda_std,transport_gap",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: lambda_std,transport_gap",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: lambda_std,transport_gap",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: lambda_std,transport_gap",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: lambda_std,transport_gap",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: lambda_std,transport_gap"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/False/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/False/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/False/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/False/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/False/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/False/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/False/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "eb97bbcff45267f5cc59a2a50d43cc9f42e28e4a2515c280f497bffceb9988d4",
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "desc": "standard_block_and_lambda's eigenvalue selector argmax -> argmin: lambda_std reports the SLOWEST mode on H instead of the dominant one.  Moves lambda_std and transport_gap",
+      "moves_reference_fields": [
+        "lambda_std",
+        "transport_gap"
+      ],
+      "why_this_one": "transport_gap is moved by none of mg-75f0's seven rows, so this is field coverage its acceptance run did not measure",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "CAUGHT"
+    },
+    {
+      "mutation": "A2",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "8bf0aba1c14b92de823bcbd5b77f37d35c8d0f430c6ad13e17aa11f0d79749b4",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "bk_frozen_pair's MAX-BIAS selector max -> min: the most unbalanced incomparable pair becomes the most balanced one.  Moves max_bias",
+      "moves_reference_fields": [
+        "max_bias"
+      ],
+      "why_this_one": "the THIRD selector in the function M3 and M5 mutate.  If the widening covered those two lines rather than the function, this is where it shows",
+      "stdout_differs_from_unmutated": false,
+      "verdict": "NEVER EXERCISED"
+    },
+    {
+      "mutation": "A2",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: max_bias",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: max_bias",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: max_bias",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: max_bias",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: max_bias",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: max_bias",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: max_bias"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "f8a02baa58c906391b33ca51663a3ea4134d8a58d6d9b4748dd4d79be22c8da6",
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "desc": "bk_frozen_pair's MAX-BIAS selector max -> min: the most unbalanced incomparable pair becomes the most balanced one.  Moves max_bias",
+      "moves_reference_fields": [
+        "max_bias"
+      ],
+      "why_this_one": "the THIRD selector in the function M3 and M5 mutate.  If the widening covered those two lines rather than the function, this is where it shows",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "CAUGHT"
+    },
+    {
+      "mutation": "B1",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg4a86_standard_dominance_target_audit.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True)",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True)",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True)",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True)",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=False delta=True lambda2_BK=True)"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=-0.048288466 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/False/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=-0.181724581 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/False/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=-0.073676760 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/False/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=-0.119047619 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/False/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=-0.155506706 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/False/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "-0.048288",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "-0.181725",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "-0.073677",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "-0.119048",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "-0.155507",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "f030b7b4ca488e8266dbeed0c1c34f55b2d574d32f8b256ef54f34ce3da4582d",
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "desc": "mg-4a86's OWN lambda_std, np.max(w) -> np.min(w).  The pre-widening gate CATCHES this; the widened gate does not.  A coverage REGRESSION, not a pre-existing gap",
+      "moves_reference_fields": [
+        "-- nothing in mg-8b64's recomputation: the mutated route is mg-4a86's, which the widened gate no longer compares"
+      ],
+      "why_this_one": "mg-75f0 kept bk_lambda2's second route on the stated reasoning that a mutation in EITHER walk matrix must be fatal.  lambda_std has the identical two-route structure (mg-4a86's own implementation vs mgb0a6's standard_block_and_lambda) and did not get the same treatment",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "CAUGHT"
+    },
+    {
+      "mutation": "B1",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg4a86_standard_dominance_target_audit.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=-0.048288466 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=-0.181724581 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=-0.073676760 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=-0.119047619 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=-0.155506706 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=-0.098539321 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=-0.033333333 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "-0.048288",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "-0.181725",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "-0.073677",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "-0.119048",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "-0.155507",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "225b9f31604abfa6d03f72eb311f0a6f172ebf0ebf96c8fb456beb623c66e8bd",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "mg-4a86's OWN lambda_std, np.max(w) -> np.min(w).  The pre-widening gate CATCHES this; the widened gate does not.  A coverage REGRESSION, not a pre-existing gap",
+      "moves_reference_fields": [
+        "-- nothing in mg-8b64's recomputation: the mutated route is mg-4a86's, which the widened gate no longer compares"
+      ],
+      "why_this_one": "mg-75f0 kept bk_lambda2's second route on the stated reasoning that a mutation in EITHER walk matrix must be fatal.  lambda_std has the identical two-route structure (mg-4a86's own implementation vs mgb0a6's standard_block_and_lambda) and did not get the same treatment",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "EXERCISED AND ABSORBED"
+    },
+    {
+      "mutation": "C1",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "8bf0aba1c14b92de823bcbd5b77f37d35c8d0f430c6ad13e17aa11f0d79749b4",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "bk_cheeger_exhaustive's volume normalisation min(k,m-k) -> max(k,m-k) -- M7's shape, a different function.  Moves h_bk_exhaustive in 54 of the 1091 committed mg-8b64 rows",
+      "moves_reference_fields": [
+        "h_bk_exhaustive",
+        "h_bk_argmin_is_pair_cut"
+      ],
+      "why_this_one": "the census is per-ROW, not per-DATASET.  These two fields exist only on rows with |L| <= 15; the seven identity posets are n = 7 and their rows have 23 fields, so the fields are compared at zero posets and part B1's '0 silently uncompared' cannot see them",
+      "stdout_differs_from_unmutated": false,
+      "verdict": "NEVER EXERCISED"
+    },
+    {
+      "mutation": "C1",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8072"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8094"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8096"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "4aebabe84ce934c70bf1855b44093150bf80f7e9085244d5ac81c051457412ac",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "bk_cheeger_exhaustive's volume normalisation min(k,m-k) -> max(k,m-k) -- M7's shape, a different function.  Moves h_bk_exhaustive in 54 of the 1091 committed mg-8b64 rows",
+      "moves_reference_fields": [
+        "h_bk_exhaustive",
+        "h_bk_argmin_is_pair_cut"
+      ],
+      "why_this_one": "the census is per-ROW, not per-DATASET.  These two fields exist only on rows with |L| <= 15; the seven identity posets are n = 7 and their rows have 23 fields, so the fields are compared at zero posets and part B1's '0 silently uncompared' cannot see them",
+      "stdout_differs_from_unmutated": false,
+      "verdict": "NEVER EXERCISED"
+    },
+    {
+      "mutation": "C2",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg2c34_n7_overlap_test.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.1960",
+          "frozen_pair_overlap_with_U": "0.9036"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.2086",
+          "frozen_pair_overlap_with_U": "0.9076"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.3057",
+          "frozen_pair_overlap_with_U": "0.9048"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.0823",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.1304",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "ced888f99153a57ab5de6d6e718890e2c9c27b0a522190615492f216eb5292d8",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "the gate's own frozen_pair_indicator loses its centring.  Moves frozen_pair_overlap_with_U -- the quantity ledger claim 8 rests on -- from 0.807/0.809/0.810 to 0.904/0.908/0.905, printed, exit 0 on both columns",
+      "moves_reference_fields": [
+        "frozen_pair_overlap_with_U",
+        "frozen_pairmode_capture",
+        "maxbias_pair_overlap_with_U",
+        "maxbias_pairmode_capture"
+      ],
+      "why_this_one": "the widening secured WHICH PAIR is chosen and not the NUMBER computed from it.  mg-75f0 sec 7.2 states the residual as 'a quantity the corpus computes but never COMMITS'; this quantity IS committed -- in data/onethird-mg2c34-n7-overlap.json, the gate's own output, which the gate never reads back",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "EXERCISED AND ABSORBED"
+    },
+    {
+      "mutation": "C2",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg2c34_n7_overlap_test.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.1960",
+          "frozen_pair_overlap_with_U": "0.9036"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.2086",
+          "frozen_pair_overlap_with_U": "0.9076"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.3057",
+          "frozen_pair_overlap_with_U": "0.9048"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.0823",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.1304",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "2b1710fd4a07c7db046852170333e47484d41af84a7134e3418cc958333dfa9e",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "the gate's own frozen_pair_indicator loses its centring.  Moves frozen_pair_overlap_with_U -- the quantity ledger claim 8 rests on -- from 0.807/0.809/0.810 to 0.904/0.908/0.905, printed, exit 0 on both columns",
+      "moves_reference_fields": [
+        "frozen_pair_overlap_with_U",
+        "frozen_pairmode_capture",
+        "maxbias_pair_overlap_with_U",
+        "maxbias_pairmode_capture"
+      ],
+      "why_this_one": "the widening secured WHICH PAIR is chosen and not the NUMBER computed from it.  mg-75f0 sec 7.2 states the residual as 'a quantity the corpus computes but never COMMITS'; this quantity IS committed -- in data/onethird-mg2c34-n7-overlap.json, the gate's own output, which the gate never reads back",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "EXERCISED AND ABSORBED"
+    },
+    {
+      "mutation": "M3",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.2325",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.2727",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.2647",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.1522",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.1526",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "6219579247c24f1fc7cf2df168b90accce6f0cce1a3153dcd2c01d56ac893806",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "mg-5ad1's Theorem-E frozen-pair selector min -> max, reproduced here rather than taken on report",
+      "moves_reference_fields": [
+        "frozen_pair",
+        "frozen_ratio",
+        "frozen_phi_bk",
+        "frozen_p",
+        "frozen_phi_t_image",
+        "frozen_sep_k"
+      ],
+      "why_this_one": "the acceptance run's primary row.  An audit that accepts the fires on report has audited a table",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "EXERCISED AND ABSORBED"
+    },
+    {
+      "mutation": "M3",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "24",
+          "lam_std": "0.785048",
+          "c_max": "0.995552",
+          "null": "0.0667",
+          "frozen_pairmode_capture": "0.2325",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#20": {
+          "dim_U": "22",
+          "lam_std": "0.767529",
+          "c_max": "0.996857",
+          "null": "0.1111",
+          "frozen_pairmode_capture": "0.2727",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#600": {
+          "dim_U": "20",
+          "lam_std": "0.773911",
+          "c_max": "0.996549",
+          "null": "0.1515",
+          "frozen_pairmode_capture": "0.2647",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#945": {
+          "dim_U": "7",
+          "lam_std": "0.943926",
+          "c_max": "0.987947",
+          "null": "0.3333",
+          "frozen_pairmode_capture": "0.1522",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "9",
+          "lam_std": "0.902015",
+          "c_max": "0.995256",
+          "null": "0.3600",
+          "frozen_pairmode_capture": "0.1526",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "2ddc170314f67f13cd77380c1d9a61630b36cfa794834e6b2e9fc052d09b2f55",
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "desc": "mg-5ad1's Theorem-E frozen-pair selector min -> max, reproduced here rather than taken on report",
+      "moves_reference_fields": [
+        "frozen_pair",
+        "frozen_ratio",
+        "frozen_phi_bk",
+        "frozen_p",
+        "frozen_phi_t_image",
+        "frozen_sep_k"
+      ],
+      "why_this_one": "the acceptance run's primary row.  An audit that accepts the fires on report has audited a table",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "CAUGHT"
+    },
+    {
+      "mutation": "M4",
+      "gate": "pre-widening",
+      "applied": {
+        "file": "scripts/onethird_mg4a86_sdquant_overlap.py",
+        "occurrences": 1
+      },
+      "exit": 0,
+      "gate_failures": [],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "49",
+          "lam_std": "0.785048",
+          "c_max": "0.995805",
+          "null": "0.1361",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8221"
+        },
+        "enum-n7-#20": {
+          "dim_U": "49",
+          "lam_std": "0.767529",
+          "c_max": "0.997237",
+          "null": "0.2475",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8451"
+        },
+        "enum-n7-#600": {
+          "dim_U": "49",
+          "lam_std": "0.773911",
+          "c_max": "0.997853",
+          "null": "0.3712",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8732"
+        },
+        "enum-n7-#945": {
+          "dim_U": "21",
+          "lam_std": "0.943926",
+          "c_max": "1.000000",
+          "null": "1.0000",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "25",
+          "lam_std": "0.902015",
+          "c_max": "1.000000",
+          "null": "1.0000",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "48eb0686148e9c75dab38670ebe23f9288af917818ad251fdd948cfd68a695f1",
+      "stderr_tail": "",
+      "expected_exit": 0,
+      "PASS": true,
+      "desc": "mg-5ad1's projector_U rank filter s > max(tol,1e-10) -> s > 0.0, reproduced",
+      "moves_reference_fields": [
+        "-- none; this is CONTROL E's case"
+      ],
+      "why_this_one": "same reason as M3, and it is the row mg-75f0 says the widening does NOT catch, so the claim that CONTROL E does is worth measuring separately",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "EXERCISED AND ABSORBED"
+    },
+    {
+      "mutation": "M4",
+      "gate": "widened",
+      "applied": {
+        "file": "scripts/onethird_mg4a86_sdquant_overlap.py",
+        "occurrences": 1
+      },
+      "exit": 1,
+      "gate_failures": [
+        "CONTROL B: the antichain known-answer check failed.  Required: c_max = c_min = 1 (the whole gap EIGENSPACE inside U -- see _antichain_row_ok for what licenses that, which is NOT Aldous/CLR) AND dim U = (n-1)^2+1 (the known rank of the one-particle span on S_n).  antichain-4: c_max=1.000000000 c_min=1.000000000 dim_U=16 (known 10); antichain-5: c_max=1.000000000 c_min=1.000000000 dim_U=25 (known 17); antichain-6: c_max=1.000000000 c_min=1.000000000 dim_U=36 (known 26)",
+        "CONTROL F: two-sided reading-dependence on a real poset with degenerate lambda_2 -- either c_max != c_min, or the degeneracy that gives this control its coverage has gone (see _two_sided_row_ok)",
+        "enum-n7-#3: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 360 (null = 0.1361); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#20: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 198 (null = 0.2475); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#600: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 132 (null = 0.3712); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#945: CONTROL E -- dim U = 21 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 21 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#809: CONTROL E -- dim U = 25 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 25 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion"
+      ],
+      "identity_lines": {
+        "enum-n7-#3": "enum-n7-#3  |L|= 360 (ref 360)  lam_std=0.785048292 (ref 0.7850482917286934)  delta=0.500000  lam2_BK=0.980923095 (ref 0.9809230949067392)  match=True/True/True/True",
+        "enum-n7-#20": "enum-n7-#20  |L|= 198 (ref 198)  lam_std=0.767528688 (ref 0.767528687717884)  delta=0.500000  lam2_BK=0.981202326 (ref 0.981202325964234)  match=True/True/True/True",
+        "enum-n7-#600": "enum-n7-#600  |L|= 132 (ref 132)  lam_std=0.773910913 (ref 0.7739109127920598)  delta=0.500000  lam2_BK=0.979920569 (ref 0.979920568765699)  match=True/True/True/True",
+        "enum-n7-#945": "enum-n7-#945  |L|=  21 (ref 21)  lam_std=0.943925792 (ref 0.9439257921522968)  delta=0.380952  lam2_BK=0.943488102 (ref 0.9434881015120073)  match=True/True/True/True",
+        "enum-n7-#809": "enum-n7-#809  |L|=  25 (ref 25)  lam_std=0.902014883 (ref 0.9020148833073525)  delta=0.360000  lam2_BK=0.969494540 (ref 0.9694945404615061)  match=True/True/True/True",
+        "enum-n7-#52": "enum-n7-#52  |L|= 288 (ref 288)  lam_std=0.725834527 (ref 0.7258345265971695)  delta=0.500000  lam2_BK=0.979541240 (ref 0.9795412404328048)  match=True/True/True/True",
+        "enum-n7-#88": "enum-n7-#88  |L|= 180 (ref 180)  lam_std=0.890012626 (ref 0.890012626081469)  delta=0.500000  lam2_BK=0.967126595 (ref 0.9671265949366099)  match=True/True/True/True"
+      },
+      "measured_lines": {
+        "enum-n7-#3": {
+          "dim_U": "49",
+          "lam_std": "0.785048",
+          "c_max": "0.995805",
+          "null": "0.1361",
+          "frozen_pairmode_capture": "0.3920",
+          "frozen_pair_overlap_with_U": "0.8221"
+        },
+        "enum-n7-#20": {
+          "dim_U": "49",
+          "lam_std": "0.767529",
+          "c_max": "0.997237",
+          "null": "0.2475",
+          "frozen_pairmode_capture": "0.4303",
+          "frozen_pair_overlap_with_U": "0.8451"
+        },
+        "enum-n7-#600": {
+          "dim_U": "49",
+          "lam_std": "0.773911",
+          "c_max": "0.997853",
+          "null": "0.3712",
+          "frozen_pairmode_capture": "0.6114",
+          "frozen_pair_overlap_with_U": "0.8732"
+        },
+        "enum-n7-#945": {
+          "dim_U": "21",
+          "lam_std": "0.943926",
+          "c_max": "1.000000",
+          "null": "1.0000",
+          "frozen_pairmode_capture": "0.3456",
+          "frozen_pair_overlap_with_U": "1.0000"
+        },
+        "enum-n7-#809": {
+          "dim_U": "25",
+          "lam_std": "0.902015",
+          "c_max": "1.000000",
+          "null": "1.0000",
+          "frozen_pairmode_capture": "0.4656",
+          "frozen_pair_overlap_with_U": "1.0000"
+        }
+      },
+      "stdout_sha256": "9502007017b8bc425d1220d9b6973c94bf4ccde7729a1b0c01150b1f8804c434",
+      "stderr_tail": "",
+      "expected_exit": 1,
+      "PASS": true,
+      "desc": "mg-5ad1's projector_U rank filter s > max(tol,1e-10) -> s > 0.0, reproduced",
+      "moves_reference_fields": [
+        "-- none; this is CONTROL E's case"
+      ],
+      "why_this_one": "same reason as M3, and it is the row mg-75f0 says the widening does NOT catch, so the claim that CONTROL E does is worth measuring separately",
+      "stdout_differs_from_unmutated": true,
+      "verdict": "CAUGHT"
+    }
+  ],
+  "ALL_ROWS_AS_MEASURED": true
+}
