@@ -158,7 +158,19 @@ def apply_M2():
 # ---------------------------------------------------------- gate variants ---
 def apply_pre_repair_gate(tmod):
     """The gate as merged at 87f0424, before the mg-09ea repairs: lambda_2^BK
-    absent from the identity conjunction (F3), CONTROL B on c_max only (F4)."""
+    absent from the identity conjunction (F3), CONTROL B on c_max only (F4).
+
+    mg-75f0 UPDATE, and the reason this function had to change.  The gate has
+    since acquired two more failure conditions -- CONTROL E (`_projector_row_ok`,
+    dim U's structural bound and properness) and CONTROL F (`_two_sided_row_ok`,
+    two-sided coverage on real data).  87f0424 had neither.  So without the two
+    lines below this function would reconstruct "today's gate minus two
+    predicates", not the gate mg-09ea measured, and the left column of the 2x3
+    matrix would stop being a statement about the pre-repair gate at all.  The
+    EXPECTED matrix is unchanged, and so is what it claims.
+
+    The substitutions live HERE, in the demonstration, and not in the gate: the
+    deliverable's gate has no switch that weakens it and must not acquire one."""
 
     def identity_row_ok_PRE(rec):
         return (rec["match_num_LE"] and rec["match_lambda_std"]
@@ -169,6 +181,8 @@ def apply_pre_repair_gate(tmod):
 
     tmod._identity_row_ok = identity_row_ok_PRE
     tmod._antichain_row_ok = antichain_row_ok_PRE
+    tmod._projector_row_ok = lambda row: True      # mg-75f0 CONTROL E: absent
+    tmod._two_sided_row_ok = lambda row: True      # mg-75f0 CONTROL F: absent
 
 
 # --------------------------------------------------------------- one case ---

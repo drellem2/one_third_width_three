@@ -83,11 +83,17 @@ CHECK-0  instrument equivalence: this file's c_max must equal mg-4a86's
          call the same `bk_walk_matrix` and the same `projector_U`, so the
          agreement is by construction and bounds no numerical risk.
 
-IDENTITY  |L(P)|, lambda_std, delta AND lambda_2^BK are recomputed and compared
-         against the committed mg-8b64 rows.  The lambda_2^BK comparison is the
-         mg-09ea F3 repair: the reference value was previously fetched into the
-         report and never compared, leaving the only dynamical quantity in the
-         document with no control that could fail.  See `_identity_row_ok`.
+IDENTITY  THE WHOLE committed mg-8b64 reference row is recomputed and compared,
+         field by field -- 22 of 22 fields, one declared exclusion (the lookup
+         key).  mg-09ea F3 added lambda_2^BK to a conjunction of three fields;
+         mg-5ad1 then measured that the resulting conjunction compared 4 of the
+         row's 22 fields, and that a ONE-CHARACTER flip of mg-8b64's Theorem-E
+         frozen-pair selector (min -> max) moved `frozen_pair` at 5/5 posets and
+         `frozen_pair_overlap_with_U` -- the quantity ledger claim 8 rests on --
+         to exactly 1.0000, with this gate printing PASSED and exiting 0.  The
+         fix is not "compare two more fields": see `IDENTITY_EXCLUDED_REF_FIELDS`
+         and `identity_field_comparisons`, which iterate the committed row
+         itself so a field ADDED to that row is compared automatically.
 
 CONTROL A (graded, analytic, CAN FAIL AT EVERY POINT).  On a real L(P), build a
          synthetic symmetric walk whose lambda_2 eigenvector is
@@ -99,12 +105,27 @@ CONTROL A (graded, analytic, CAN FAIL AT EVERY POINT).  On a real L(P), build a
          to output 0: an instrument that cannot output 0 cannot refute
          SD-quant, and an instrument that cannot output 1 cannot confirm it.
 
-CONTROL B (known-answer poset).  Antichain A_n, n = 4,5,6: L(P) = S_n, the BK
-         chain is the interchange process on the path, and by Aldous/CLR the
-         slowest mode IS the single-particle mode, which lies in U.  Required:
-         c_max = 1 AND c_min = 1.  Both readings, per mg-09ea F4: c_max is a
+CONTROL B (known-answer poset).  Antichain A_n, n = 4,5,6: L(P) = S_n and the
+         BK chain is the interchange process on the path.  Aldous/CLR gives the
+         gap EIGENVALUE: gap(interchange) = gap(one-particle).  Required:
+         c_max = 1 AND c_min = 1, i.e. the whole gap EIGENSPACE lies in U -- and
+         that is STRICTLY STRONGER than the theorem, see `_antichain_row_ok` for
+         what actually licenses it.  Both readings, per mg-09ea F4: c_max is a
          maximum over the lambda_2 eigenspace, so it survives a shrink of U
-         that the adversarial reading does not.  See `_antichain_row_ok`.
+         that the adversarial reading does not.  Also required, per mg-5ad1's
+         residual: dim U = (n-1)^2 + 1 exactly, the known rank of the
+         one-particle span on S_n.
+
+CONTROL E (structural bound on dim U, must fail if the projector's rank filter
+         is wrong).  U = span{sigma |-> 1[sigma(a) = x]} is spanned by n^2
+         position indicators that satisfy 2n-2 independent homogeneous
+         relations (the n row-sums are all the constant 1, and so are the n
+         column-sums), so ALWAYS dim U <= (n-1)^2 + 1 -- the rank
+         `onethird_mg4a86_sector_leakage_and_tempering.sector_leakage` states
+         in its own docstring, saturated on S_n.  Required on every measured
+         poset: dim U <= (n-1)^2 + 1, and dim U < |L(P)| (if U is the WHOLE
+         function space then c == 1 identically and the measurement is vacuous
+         by sec 2's own `null` criterion).  See `_projector_row_ok`.
 
 CONTROL C (deliberately BROKEN instrument, must fail control B).  Replace U by
          a fixed coordinate subspace of the SAME dimension.  On the antichain
@@ -115,6 +136,17 @@ CONTROL D (dimension-artifact null, must fail on the in-regime posets).
          Replace U by a RANDOM subspace of the same dimension (seeded).  Any
          c ~ 1 that survives this substitution was an artifact of dim U, not
          evidence of standard dominance.
+
+CONTROL F (two-sided reading-dependence, ON REAL DATA).  The gate's
+         reading-dependence check (`dim_eigenspace > 1` and
+         `|c_max - c_min| > 1e-9`) was VACUOUS on real data: lambda_2^BK is
+         simple at all five measured posets (mg-5ad1 finding 4).  The committed
+         sweep names exactly four n=7 both-connected posets with a DEGENERATE
+         lambda_2 -- #52, #88, #209, #420 -- so the coverage was available and
+         unused.  #52 and #88 (the two non-duplicate ones) are measured here:
+         required dim_E > 1 (so the check is not vacuous) AND
+         |c_max - c_min| <= 1e-9.  See `_two_sided_row_ok`.  Non-vacuity is
+         asserted, not hoped for.
 
 Reproducibility: no randomness except CONTROL D, which is seeded
 (`numpy.random.default_rng(20260729)`).  Every number in the deliverable comes
@@ -152,6 +184,7 @@ from onethird_mg4a86_sdquant_overlap import (  # noqa: E402
 from onethird_mg8b64_L1b_bk_transport_transfer_probe import (  # noqa: E402
     bk_frozen_pair as mg8b64_bk_frozen_pair,
     biased_families as mg8b64_biased_families,
+    analyze_poset as mg8b64_analyze_poset,
 )
 
 EIG_TOL = 1e-9            # mg-4a86's degeneracy tolerance, kept verbatim
@@ -162,6 +195,13 @@ SEED = 20260729
 # OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:295-300.
 OFF_REGIME = [3, 20, 600]
 IN_REGIME = [945, 809]
+
+# CONTROL F's population: the n=7 both-connected posets whose lambda_2^BK is
+# DEGENERATE, read off the committed sweep (`dim_eigenspace = 2` at #52, #88,
+# #209, #420 and nowhere else in the 946).  #209/#420 measure identically to
+# #52/#88 respectively, so two suffice.  Identity is re-verified on these as
+# well, so the identity population is SEVEN posets, not five.
+DEGENERATE_LAMBDA2 = [52, 88]
 
 
 # --------------------------------------------------------------- helpers ----
@@ -180,34 +220,183 @@ def slow_eigenspace(W, tol=EIG_TOL):
     return float(lam2), V[:, idx], ev
 
 
+# ------------------------------------------- the identity field comparison ---
+# mg-5ad1's RED finding, measured: the identity conjunction opened the committed
+# mg-8b64 reference row and compared FOUR of its TWENTY-TWO fields.  Eighteen
+# were fetched-or-available and never looked at -- frozen_pair, frozen_ratio,
+# frozen_p, min_phi_bk_pair, width, num_incomp_pairs, transport_gap among them.
+# A one-character flip of mg-8b64's own Theorem-E selector (min -> max) moved
+# frozen_pair at 5/5 posets and frozen_pair_overlap_with_U from 0.807/0.809/0.810
+# to EXACTLY 1.0000 -- the quantity ledger claim 8 (PROVEN[c]) rests on, in a row
+# that itself says "argmin ratio, not the max-bias pair" -- and this gate printed
+# "All controls and identity checks PASSED" and exited 0.
+#
+# The repair mg-60d3 made was derived FROM the two failures mg-09ea found, which
+# is why the class survived it: a repair derived from a known failure carries no
+# information about the class.  So this is not "add frozen_pair to the
+# conjunction".  DEFAULT IS TO COMPARE: the recomputed row is compared against
+# the committed row field by field, ITERATING THE COMMITTED ROW, with every
+# exclusion named below and given a reason.  A field added to the mg-8b64 row is
+# compared automatically; a hand-maintained list would go wrong silently the
+# first time someone added one, which is this same defect one turn later.
+
+IDENTITY_EXCLUDED_REF_FIELDS = {
+    "name": "the lookup key itself.  The row is FETCHED BY this value "
+            "(`ref_rows[name]`), so comparing it is a tautology that cannot "
+            "fail.  This is the only exclusion.",
+}
+
+IDENTITY_FLOAT_TOL = 1e-9   # the tolerance the mg-09ea F3 repair already used
+
+# Kept for the printed identity line and for the pre-repair reconstruction in
+# `scripts/onethird_mg60d3_gate_mutation_demo.py`, which rebinds
+# `_identity_row_ok` to a conjunction over exactly these four keys.  They are
+# now ALIASES of four of the row-wide comparisons, not the comparison itself.
+IDENTITY_LEGACY_FIELDS = [("match_num_LE", "num_LE"),
+                          ("match_lambda_std", "lambda_std"),
+                          ("match_delta", "delta"),
+                          ("match_bk_lambda2", "bk_lambda2")]
+
+_MISSING = object()
+
+
+def _field_match(got, want, tol=IDENTITY_FLOAT_TOL):
+    """(ok, abs_diff_or_None) for one reference field.
+
+    Floats to `tol` (they come off an eigendecomposition and must survive a
+    different BLAS); ints, bools, lists and None EXACTLY -- `frozen_pair` is a
+    pair of labels, and "nearly the same pair" is not a thing."""
+    if got is _MISSING:
+        return False, None
+    if isinstance(want, bool) or isinstance(got, bool):
+        return got == want, None
+    if isinstance(want, float) and isinstance(got, (int, float)):
+        if math.isnan(want) or math.isnan(float(got)):
+            return math.isnan(want) and math.isnan(float(got)), None
+        d = abs(float(got) - float(want))
+        return d < tol, d
+    return got == want, None
+
+
+def identity_field_comparisons(rec_row, ref_row, tol=IDENTITY_FLOAT_TOL):
+    """Compare a recomputed mg-8b64 row against the committed one, FIELD BY
+    FIELD, over the WHOLE committed row.
+
+    Returns (matches, diffs): `matches[field] -> bool` and, for float fields,
+    `diffs[field] -> |recomputed - committed|`.
+
+    Iterating `ref_row` rather than a hardcoded field list is the load-bearing
+    property, and the reason this is a function rather than a conjunction: PART B
+    of `scripts/onethird_mg5ad1_gate_blindspot_probe.py` calls it directly with
+    ONE field of the committed row perturbed at a time and requires that EVERY
+    non-excluded field can drive `_identity_row_ok` to False.  A field that
+    cannot make the gate fail is a field the gate is not checking."""
+    matches, diffs = {}, {}
+    for k in sorted(ref_row):
+        if k in IDENTITY_EXCLUDED_REF_FIELDS:
+            continue
+        ok, d = _field_match(rec_row.get(k, _MISSING), ref_row[k], tol)
+        matches[k] = ok
+        if d is not None:
+            diffs[k] = d
+    return matches, diffs
+
+
 # --------------------------------------------------------- gate predicates --
-# The two predicates repaired after the mg-09ea independent audit (F3, F4).
-# They live at module level, separately named, for two reasons: the gate's
-# conjunction is then readable in one place, and the mutation demonstration
-# (`scripts/onethird_mg60d3_gate_mutation_demo.py`) can substitute the
-# PRE-REPAIR forms to show that the two mutations M1/M2 used to pass and now
-# do not.  Neither predicate has a switch to weaken it at run time.
+# The gate's failure conditions, at module level and separately named, for two
+# reasons: the conjunction is readable in one place, and the mutation
+# demonstrations (`scripts/onethird_mg60d3_gate_mutation_demo.py`, and the
+# source-level route in `scripts/onethird_mg75f0_gate_class_closure_demo.py`)
+# can substitute PRE-REPAIR forms to show which mutations used to pass.  No
+# predicate has a switch to weaken it at run time -- the substitution lives in
+# the demonstration, never in this file.
 
 def _identity_row_ok(rec):
-    """Every committed mg-8b64 reference value fetched must also be COMPARED.
+    """The recomputed mg-8b64 row must match the committed one in EVERY field.
 
-    mg-09ea F3: `ref_bk_lambda2` was loaded into the report and never used, so
-    lambda_2^BK -- the denominator of R, and the only genuinely DYNAMICAL
-    quantity in the document -- had no control that could fail.  A global
-    rescaling of the BK step is invisible to CONTROL A (which synthesises its
-    own W), to CONTROL B/C (eigenvector-only), and to CHECK-0 (shared code)."""
-    return (rec["match_num_LE"] and rec["match_lambda_std"]
-            and rec["match_delta"] and rec["match_bk_lambda2"])
+    mg-09ea F3 was the instance: `ref_bk_lambda2` was loaded into the report and
+    never used, so lambda_2^BK -- the denominator of R, and the only genuinely
+    DYNAMICAL quantity in the document -- had no control that could fail.
+    mg-5ad1 measured the class: after that repair, 4 of the row's 22 fields were
+    compared.  This now gates on all 22 (see `identity_field_comparisons` and
+    `IDENTITY_EXCLUDED_REF_FIELDS`), so a mutation anywhere in mg-8b64's own row
+    builder that moves any committed quantity is fatal."""
+    if "field_matches" not in rec:
+        return False          # no committed reference row: nothing was compared
+    return all(rec["field_matches"].values())
 
 
 def _antichain_row_ok(row):
-    """CONTROL B must gate on BOTH readings, not only the favourable one.
+    """CONTROL B: both readings, and the known rank of U.
 
     mg-09ea F4: c_max is a MAXIMUM over the lambda_2 eigenspace, so a shrunk U
     that still meets that eigenspace leaves c_max = 1 while c_min collapses to
     0.  This is the one-sidedness sec 2.7 identifies as the reason to report
-    c_min at all; it was added to the measurement and not to the control."""
-    return abs(row["c_max"] - 1.0) < 1e-8 and abs(row["c_min"] - 1.0) < 1e-8
+    c_min at all; it was added to the measurement and not to the control.
+
+    WHAT LICENSES c_min = 1 (mg-5ad1 finding 3, AMBER-latent, docstring only).
+    Aldous' spectral-gap conjecture as proved by Caputo-Liggett-Richthammer
+    gives the gap EIGENVALUE: gap(interchange on the path) = gap(one-particle).
+    `c_min = 1` is the strictly stronger statement that the WHOLE gap eigenspace
+    lies in the one-particle sector, which additionally requires that no other
+    S_n-irrep component of the generator attains that eigenvalue -- and CLR does
+    not supply that.  So the licence here is NOT the theorem: it is a VERIFIED
+    property of these specific matrices, measured at A_4/A_5/A_6 (and A_7,
+    |L| = 5040) by `scripts/onethird_mg5ad1_gate_blindspot_probe.py` part A:
+    dim_E = n-1 > 1, 1 - c_min <= 2.7e-15 against a 1e-8 tolerance, and the
+    nearest EXCLUDED eigenvalue 3.0e7-1.1e8 x EIG_TOL away, so it is neither
+    vacuous nor knife-edge.  Four for four at n = 4,5,6,7.
+    The distinction is not pedantry: if this control is ever extended to a
+    larger antichain and a legitimate cross-irrep eigenvalue coincidence makes
+    it fail, the fix is to narrow the control's POPULATION, not to loosen the
+    assertion -- which is what happens when the stated reason is stronger than
+    the real one.
+
+    dim U = (n-1)^2 + 1 is the known rank of the one-particle span on S_n (see
+    CONTROL E).  Asserted here because it is a known answer on a known-answer
+    poset, and because without it a projector whose rank filter admits
+    numerically-null directions inflates U and still reads c_max = c_min = 1:
+    enlarging U can only INCREASE overlap, so both readings survive it."""
+    return (abs(row["c_max"] - 1.0) < 1e-8 and abs(row["c_min"] - 1.0) < 1e-8
+            and row["dim_U"] == row["dim_U_known"])
+
+
+def _projector_row_ok(row):
+    """CONTROL E: dim U must respect its structural bound and stay PROPER.
+
+    U = span{sigma |-> 1[sigma(a) = x]} is spanned by the n^2 position
+    indicators, which satisfy 2n-2 independent homogeneous relations (the n
+    row-sums all equal the constant function 1, and so do the n column-sums), so
+    dim U <= n^2 - (2n-2) = (n-1)^2 + 1 on EVERY poset -- the rank
+    `onethird_mg4a86_sector_leakage_and_tempering.sector_leakage` states in its
+    own docstring, saturated on S_n and verified against the committed sweep
+    (0 violations in 946 + 29 + 10 rows).
+
+    The second half is a vacuity floor, not an aesthetic: if dim U = |L(P)| then
+    U is the WHOLE function space, c == 1 identically, and sec 2's own criterion
+    ("c near `null` is NO signal in either direction") says the measurement
+    carries none -- printed as `null = 1.0000` beside `c_max = 1.000000` in the
+    same row.  Scoped to the MEASURED posets: on tiny hosts (|L| <= n, e.g. the
+    `fam:1||chain*` family) U legitimately is everything, and those rows are a
+    falsification probe, not a measurement."""
+    return (row["dim_U"] <= (row["n"] - 1) ** 2 + 1
+            and row["dim_U"] < row["num_LE"])
+
+
+def _two_sided_row_ok(row):
+    """CONTROL F: the reading-dependence check, with REAL coverage.
+
+    The gate has always failed when `dim_eigenspace > 1` and
+    `|c_max - c_min| > 1e-9` -- a reported c that depends on which reading you
+    take is not a measurement.  mg-5ad1 finding 4: that check is VACUOUS on real
+    data, because lambda_2^BK is simple at all five measured posets, so mg-60d3's
+    F4 repair bought two-sided coverage on three synthetic antichains only.
+    Coverage was available and unused: the committed sweep has dim_E = 2 at
+    enum-n7-#52/#88/#209/#420.  Non-vacuity (dim_E > 1) is asserted here rather
+    than assumed, so this control cannot quietly become the vacuous one it
+    replaces."""
+    return (row["dim_eigenspace"] > 1
+            and abs(row["c_max"] - row["c_min"]) <= 1e-9)
 
 
 def overlap_stats(Vs, PU):
@@ -392,6 +581,8 @@ def control_B_and_C(ns=(4, 5, 6)):
         cb_max, cb_min = overlap_stats(Vs, PUb)
         row = {
             "poset": f"antichain-{n}", "num_LE": m, "dim_U": int(dimU),
+            # the known rank of the one-particle span on S_n (CONTROL E)
+            "dim_U_known": (n - 1) ** 2 + 1,
             "lambda2_BK": lam2, "c_max": c_max, "c_min": c_min,
             "broken_c_max": cb_max, "broken_c_min": cb_min,
             "C_PASS_broken_is_not_1": abs(cb_max - 1.0) > 1e-3,
@@ -545,30 +736,55 @@ def main():
     # -------- identity check against the committed mg-8b64 dataset ---------
     print()
     print("-" * 78)
-    print("IDENTITY CHECK -- recomputed vs committed mg-8b64 rows")
+    print("IDENTITY CHECK -- recomputed vs committed mg-8b64 rows, ALL FIELDS")
     print("-" * 78)
     with open(os.path.join(REPO, "data",
                            "onethird-mg8b64-L1b-bk-transport-transfer.json")) as f:
         ref_rows = {r["name"]: r for r in json.load(f)["rows"]}
-    for name, P in named.items():
+    identity_targets = dict(named)
+    for i in DEGENERATE_LAMBDA2:                     # CONTROL F's two posets
+        identity_targets[f"enum-n7-#{i}"] = Ps[i]
+    for name, P in identity_targets.items():
         ref = ref_rows.get(name)
         rec = {"name": name, "num_LE": P.linext_count(),
                "lambda_std": float(lambda_std(P))}
         d, _ = delta_and_frozen_pair(P)
         rec["delta"] = d
         # mg-09ea F3 repair: recompute lambda_2^BK here so the committed
-        # reference value has something to be compared AGAINST.
+        # reference value has something to be compared AGAINST.  Kept as a
+        # SECOND, independent route to bk_lambda2: this one goes through
+        # mg-4a86's `bk_walk_matrix`, the row-wide comparison below goes
+        # through mg-8b64's, so a mutation in EITHER walk matrix is fatal.
         rec["lambda2_BK"] = slow_eigenspace(bk_walk_matrix(P))[0]
         if ref:
+            # mg-5ad1 finding 1: recompute the WHOLE mg-8b64 row with mg-8b64's
+            # own row builder and compare every field of the committed row.
+            # The committed JSON is the frozen ground truth; the recomputation
+            # is what a mutation moves.
+            rec_row = mg8b64_analyze_poset(P, name)
+            matches, diffs = identity_field_comparisons(rec_row, ref)
+            rec["field_matches"] = matches
+            rec["field_abs_diffs"] = diffs
+            rec["fields_compared"] = len(matches)
+            rec["fields_in_reference_row"] = len(ref)
+            rec["fields_excluded"] = sorted(IDENTITY_EXCLUDED_REF_FIELDS)
+            rec["fields_mismatched"] = sorted(k for k, ok in matches.items()
+                                              if not ok)
+            rec["max_abs_diff_over_float_fields"] = (max(diffs.values())
+                                                     if diffs else 0.0)
             rec["ref_num_LE"] = ref["num_LE"]
             rec["ref_lambda_std"] = ref["lambda_std"]
             rec["ref_delta"] = ref["delta"]
             rec["ref_bk_lambda2"] = ref["bk_lambda2"]
-            rec["match_num_LE"] = rec["num_LE"] == ref["num_LE"]
-            rec["match_lambda_std"] = abs(rec["lambda_std"] - ref["lambda_std"]) < 1e-9
-            rec["match_delta"] = abs(rec["delta"] - ref["delta"]) < 1e-9
-            rec["match_bk_lambda2"] = abs(rec["lambda2_BK"]
-                                          - ref["bk_lambda2"]) < 1e-9
+            # the four legacy keys, now ALIASES of four of the 22 comparisons
+            for key, field in IDENTITY_LEGACY_FIELDS:
+                rec[key] = matches.get(field, False)
+            # ... except match_bk_lambda2, which additionally requires the
+            # second (mg-4a86) route to agree; both must hold.
+            rec["match_bk_lambda2"] = bool(
+                rec["match_bk_lambda2"]
+                and abs(rec["lambda2_BK"] - ref["bk_lambda2"]) < 1e-9)
+            rec["field_matches"]["bk_lambda2"] = rec["match_bk_lambda2"]
         report["identity_check"].append(rec)
         print(f"  {name:>14}  |L|={rec['num_LE']:>4} (ref {rec.get('ref_num_LE')})  "
               f"lam_std={rec['lambda_std']:.9f} (ref {rec.get('ref_lambda_std')})  "
@@ -576,6 +792,13 @@ def main():
               f"lam2_BK={rec['lambda2_BK']:.9f} (ref {rec.get('ref_bk_lambda2')})  "
               f"match={rec.get('match_num_LE')}/{rec.get('match_lambda_std')}/"
               f"{rec.get('match_delta')}/{rec.get('match_bk_lambda2')}")
+        if "field_matches" in rec:
+            print(f"{'':>16}fields compared {rec['fields_compared']}"
+                  f"/{rec['fields_in_reference_row']} "
+                  f"(excluded: {','.join(rec['fields_excluded'])})  "
+                  f"max|diff| over float fields = "
+                  f"{rec['max_abs_diff_over_float_fields']:.2e}  "
+                  f"mismatched: {rec['fields_mismatched'] or 'none'}")
 
     # -------- THE MEASUREMENT ----------------------------------------------
     print()
@@ -614,6 +837,37 @@ def main():
               f"max={d['random_c_max_max']:.6f}  "
               f"analytic null={d['analytic_null_dimU_over_m']:.6f}")
     report["controls"]["D_random_subspace"] = Dres
+
+    # -------- CONTROL F -- two-sided reading-dependence, on REAL data --------
+    # mg-5ad1 finding 4: the reading-dependence check is vacuous at the five
+    # measured posets because lambda_2^BK is simple there, so mg-60d3's F4
+    # repair bought coverage on three synthetic antichains only.  These two
+    # posets are the real-data coverage, and dim_E > 1 is ASSERTED so the
+    # coverage cannot quietly evaporate.
+    print()
+    print("-" * 78)
+    print("CONTROL F -- two-sided reading-dependence on real posets with a "
+          "DEGENERATE lambda_2")
+    print("-" * 78)
+    Frows = []
+    for i in DEGENERATE_LAMBDA2:
+        nm = f"enum-n7-#{i}"
+        r = measure(Ps[i], nm)
+        r["F_PASS_two_sided"] = _two_sided_row_ok(r)
+        Frows.append(r)
+        print(f"  deg {nm:>14}  |L|={r['num_LE']:>4} dimU={r['dim_U']:>3} "
+              f"dimE={r['dim_eigenspace']:>2} c_max={r['c_max']:.9f} "
+              f"c_min={r['c_min']:.9f} |c_max-c_min|="
+              f"{abs(r['c_max'] - r['c_min']):.2e} "
+              f"({'PASS' if r['F_PASS_two_sided'] else 'FAIL'})")
+    report["controls"]["F_two_sided_real_coverage"] = {
+        "why": "the dim_eigenspace > 1 branch of the gate is vacuous at the "
+               "five measured posets (lambda_2^BK simple); these are the n=7 "
+               "both-connected posets where it is not",
+        "rows": Frows,
+        "F_ALL_PASS": all(r["F_PASS_two_sided"] for r in Frows)}
+    print(f"  F_ALL_PASS = "
+          f"{report['controls']['F_two_sided_real_coverage']['F_ALL_PASS']}")
 
     # -------- families / named stress posets, n up to 10 --------------------
     # NOT a population: these are the corpus's own mandated stress cases
@@ -739,13 +993,35 @@ def main():
     if not A["ALL_PASS"]:
         failures.append("CONTROL A (graded analytic) did not reproduce cos^2(theta)")
     if not BC["B_ALL_PASS"]:
-        failures.append("CONTROL B: antichain c != 1 (Aldous/CLR)")
+        # mg-75f0: this message used to read "antichain c != 1 (Aldous/CLR)",
+        # which misattributed the cause once `_antichain_row_ok` gained the
+        # dim-U conjunct -- under a broken rank filter c IS 1 and it is dim U
+        # that is wrong, so the message named the one thing that had not
+        # failed, and cited a theorem that does not license the assertion
+        # anyway.  A diagnostic that misdirects the reader is the same genre of
+        # defect as a control that cannot fail.  All three conjuncts are now
+        # printed for every failing row, so the reader does not have to guess.
+        bad = "; ".join(
+            f"{r['poset']}: c_max={r['c_max']:.9f} c_min={r['c_min']:.9f} "
+            f"dim_U={r['dim_U']} (known {r['dim_U_known']})"
+            for r in BC["rows"] if not r["B_PASS_c_is_1"])
+        failures.append(
+            "CONTROL B: the antichain known-answer check failed.  Required: "
+            "c_max = c_min = 1 (the whole gap EIGENSPACE inside U -- see "
+            "_antichain_row_ok for what licenses that, which is NOT "
+            "Aldous/CLR) AND dim U = (n-1)^2+1 (the known rank of the "
+            f"one-particle span on S_n).  {bad}")
     if not BC["C_ALL_PASS"]:
         failures.append("CONTROL C: the BROKEN projector still returned 1 -- "
                         "CONTROL B is vacuous")
     if maxdiff > 1e-12:
         failures.append(f"CHECK-0: disagreement with mg-4a86's instrument "
                         f"({maxdiff:.2e})")
+    if not report["controls"]["F_two_sided_real_coverage"]["F_ALL_PASS"]:
+        failures.append("CONTROL F: two-sided reading-dependence on a real "
+                        "poset with degenerate lambda_2 -- either c_max != "
+                        "c_min, or the degeneracy that gives this control its "
+                        "coverage has gone (see _two_sided_row_ok)")
     for rec in report["identity_check"]:
         if "ref_num_LE" not in rec:
             failures.append(f"{rec['name']}: no mg-8b64 reference row found")
@@ -755,11 +1031,29 @@ def main():
                             f"(num_LE={rec['match_num_LE']} "
                             f"lambda_std={rec['match_lambda_std']} "
                             f"delta={rec['match_delta']} "
-                            f"lambda2_BK={rec['match_bk_lambda2']})")
+                            f"lambda2_BK={rec['match_bk_lambda2']})"
+                            + (f"; ALL mismatched fields of the 22 compared: "
+                               f"{','.join(rec['fields_mismatched'])}"
+                               if rec.get("fields_mismatched") else ""))
+    # CONTROL E's population is `report["measured"]`, the five named posets.
+    # NOT the family block: on hosts with |L| <= n (the `fam:1||chain*` family)
+    # U legitimately IS everything, and those rows are a falsification probe
+    # rather than a measurement.  Not CONTROL F's two either -- `projector_U` is
+    # global, so a rank-filter mutation cannot hide from five posets and appear
+    # at a sixth; adding them would be more lines and no more coverage.
     for r in report["measured"]:
         if r["dim_eigenspace"] > 1 and abs(r["c_max"] - r["c_min"]) > 1e-9:
             failures.append(f"{r['name']}: lambda_2 degenerate with c_max != "
                             f"c_min -- the reported c is reading-dependent")
+        if not _projector_row_ok(r):
+            failures.append(f"{r['name']}: CONTROL E -- dim U = {r['dim_U']} "
+                            f"violates its structural bound "
+                            f"(n-1)^2+1 = {(r['n'] - 1) ** 2 + 1} or is not a "
+                            f"PROPER subspace of |L| = {r['num_LE']} "
+                            f"(null = {r['null_random_subspace']:.4f}); the "
+                            f"projector's rank filter is admitting directions "
+                            f"the one-particle span does not contain, and "
+                            f"c = null is vacuous by sec 2's own criterion")
     if failures:
         print("\nCONTROL FAILURES:")
         for m in failures:
