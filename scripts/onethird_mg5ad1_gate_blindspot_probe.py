@@ -609,11 +609,19 @@ def main():
           "to < 1e-12,")
     print("     and not knife-edge (>= 1e6 x EIG_TOL of margin) on all three "
           "antichains.")
+    # mg-bd53 finding 4 / mg-4f9b: this census reads ONE row (`NAMED[0]`), so
+    # every number below is per ROW and the sentence has to say so.  "0 silently
+    # uncompared" was true of this row and false of the dataset it comes from
+    # for as long as `h_bk_exhaustive` and `h_bk_argmin_is_pair_cut` -- which
+    # exist only on the 54 small-|L| rows -- were compared at zero posets.  The
+    # per-DATASET census is the gate's own, beside its identity loop, because no
+    # single-row census can make that statement.
     print(f"  B  {len(B_census['reference_fields_compared'])} of "
-          f"{len(B_census['reference_fields_present'])} committed reference "
-          f"fields are COMPARED by the gate,")
+          f"{len(B_census['reference_fields_present'])} fields OF THE ROW "
+          f"{NAMED[0]!r} are COMPARED by the gate,")
     print(f"     {len(B_census['reference_fields_excluded'])} excluded with a "
-          f"stated reason, 0 silently uncompared; "
+          f"stated reason, 0 uncompared IN THIS ROW (the per-dataset census "
+          f"is the gate's); "
           f"{B_census['fields_that_fire']}/"
           f"{len(B_census['reference_fields_compared'])} fire the")
     print("     gate when perturbed, and a field newly ADDED to the reference "
