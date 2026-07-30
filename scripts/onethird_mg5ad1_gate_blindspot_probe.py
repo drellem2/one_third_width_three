@@ -96,11 +96,19 @@ PART C -- IS THE F3 PATTERN STILL LIVE?  `frozen_pair` was one of the uncompared
   mutation rather than one the corpus has drifted past.
 
 PART D -- CAN EACH OF THE GATE'S OTHER PREDICATES FAIL?  The same question as
-  B2, asked of CONTROL B, CONTROL E and CONTROL F: each is handed a row it must
-  accept and a row it must REJECT.  mg-5ad1 finding 2 was that the gate's
-  proof-of-firing is a ~12-minute hardcoded matrix over two fixed mutations that
-  nothing ran; this is the part of that question which is fast enough to answer
-  on every commit.
+  B2, asked of CONTROL B, CONTROL E, CONTROL F and -- since mg-48dd -- CONTROL G
+  and CONTROL H: each is handed a row it must accept and a row it must REJECT.
+  mg-5ad1 finding 2 was that the gate's proof-of-firing is a ~12-minute hardcoded
+  matrix over two fixed mutations that nothing ran; this is the part of that
+  question which is fast enough to answer on every commit.
+
+  THE LIST IS EXPLICIT, so it is exactly as complete as whoever last added a
+  predicate made it.  mg-48dd added the two corpus-independent controls here
+  rather than leaving them to its own unwired probe, because "all N
+  predicate-firing probes agree" is read by a later author as "all of them", and
+  a gate predicate sitting outside this battery is this arc's own defect one
+  level in.  A predicate added to the gate and not added here is a hole this
+  file cannot report.
 
 Exits NON-ZERO if any check fails.  Order-seconds; no sweep, no enumeration
 beyond the corpus's own n=7 both-connected list.
@@ -450,6 +458,17 @@ def part_D():
     good_proj = {"n": 7, "num_LE": 360, "dim_U": 24,
                  "null_random_subspace": 24 / 360}
     good_two = {"dim_eigenspace": 2, "c_max": 0.5, "c_min": 0.5}
+    # mg-48dd's two corpus-independent controls.  Both take (row, tag) because
+    # the gate applies them to each pair selector, so they are bound to the
+    # `frozen` selector here to keep the one-argument shape of this table.
+    good_centred = {"frozen_pair_indicator_sum": 2.22e-16}
+    good_overlap = {"frozen_pair_overlap_with_U": 0.807168}
+
+    def _indicator_centred_ok(row):
+        return gate._indicator_centred_ok(row, "frozen")
+
+    def _overlap_proper_ok(row):
+        return gate._overlap_proper_ok(row, "frozen")
 
     cases = [
         (gate._antichain_row_ok, "CONTROL B", good_antichain, True,
@@ -480,6 +499,25 @@ def part_D():
          dict(good_two, dim_eigenspace=1), False,
          "lambda_2 simple, so this control would be VACUOUS -- the state "
          "mg-5ad1 finding 4 found the real-data two-sided check in"),
+        # mg-48dd: the two corpus-INDEPENDENT controls.  Added here rather than
+        # left to this ticket's own probe, because "all 10 predicate-firing
+        # probes agree" is read by later authors as "all of them", and a gate
+        # predicate outside the standing battery is this arc's own defect one
+        # level in.
+        (_indicator_centred_ok, "CONTROL G", good_centred, True,
+         "a mean-centred indicator sums to zero"),
+        (_indicator_centred_ok, "CONTROL G / centring lost (mg-bd53 C2)",
+         dict(good_centred, frozen_pair_indicator_sum=13.4164), False,
+         "C2's signature: `f -= f.mean()` becomes a no-op, so the sum leaves 0 "
+         "by sixteen orders of magnitude -- against a reference the corpus "
+         "cannot regenerate"),
+        (_overlap_proper_ok, "CONTROL H", good_overlap, True,
+         "the frozen-pair indicator is well outside U, as the corpus claims"),
+        (_overlap_proper_ok, "CONTROL H / indicator in U (mg-5ad1 M3)",
+         dict(good_overlap, frozen_pair_overlap_with_U=1.0), False,
+         "M3's signature under REGENERATION: the max-ratio pair drives the "
+         "overlap to exactly 1, the identity check is absorbed by the refreshed "
+         "store, and the vacuity floor is what is left"),
     ]
 
     print()

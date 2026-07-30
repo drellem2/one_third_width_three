@@ -1,0 +1,259 @@
+{
+  "probe": "mg-48dd corpus-independent controls G and H",
+  "gate": "scripts/onethird_mg2c34_n7_overlap_test.py",
+  "part_a": {
+    "rows": [
+      {
+        "poset": "enum-n7-#3",
+        "num_LE": 360,
+        "frozen_pair": [
+          3,
+          5
+        ],
+        "M3_pair": [
+          0,
+          1
+        ],
+        "M3_moves_the_pair": true,
+        "I1_sum_baseline": -2.220446049250313e-16,
+        "I1_sum_under_C2": 13.416407864998739,
+        "I6_overlap_baseline": 0.8071680803388113,
+        "I6_overlap_under_M3": 0.9999999999999978,
+        "G_fires_on_baseline": false,
+        "G_fires_under_C2": true,
+        "H_fires_on_baseline": false,
+        "H_fires_under_M3": true
+      },
+      {
+        "poset": "enum-n7-#20",
+        "num_LE": 198,
+        "frozen_pair": [
+          4,
+          5
+        ],
+        "M3_pair": [
+          0,
+          1
+        ],
+        "M3_moves_the_pair": true,
+        "I1_sum_baseline": 0.0,
+        "I1_sum_under_C2": 10.09950493836208,
+        "I6_overlap_baseline": 0.8094213452264991,
+        "I6_overlap_under_M3": 1.0000000000000029,
+        "G_fires_on_baseline": false,
+        "G_fires_under_C2": true,
+        "H_fires_on_baseline": false,
+        "H_fires_under_M3": true
+      },
+      {
+        "poset": "enum-n7-#600",
+        "num_LE": 132,
+        "frozen_pair": [
+          2,
+          4
+        ],
+        "M3_pair": [
+          5,
+          6
+        ],
+        "M3_moves_the_pair": true,
+        "I1_sum_baseline": 2.220446049250313e-16,
+        "I1_sum_under_C2": 8.12403840463596,
+        "I6_overlap_baseline": 0.8096497764530539,
+        "I6_overlap_under_M3": 1.0,
+        "G_fires_on_baseline": false,
+        "G_fires_under_C2": true,
+        "H_fires_on_baseline": false,
+        "H_fires_under_M3": true
+      }
+    ],
+    "G_PASS": true,
+    "H_PASS": true
+  },
+  "part_b": [
+    {
+      "case": "none",
+      "mutation": null,
+      "regenerated": null,
+      "edits_applied": [],
+      "exit": 0,
+      "failures": [],
+      "n_CONTROL_G": 0,
+      "n_CONTROL_H": 0,
+      "n_identity": 0,
+      "stdout_sha256": "c6675f4f484172b58c51d8ec4b78f49aa1addc0ed1f2584fee334c95620ddd61",
+      "stderr_tail": ""
+    },
+    {
+      "case": "C2",
+      "mutation": "C2",
+      "regenerated": null,
+      "edits_applied": [
+        "scripts/onethird_mg2c34_n7_overlap_test.py x1"
+      ],
+      "exit": 1,
+      "failures": [
+        "enum-n7-#3: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 13.4164); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#3: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 18); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#20: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 10.0995); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#20: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 13.4164); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#600: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 8.12404); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#600: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 10.8628); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#945: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 4); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#945: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 4); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#809: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 4.24264); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#809: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 4.79583); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)"
+      ],
+      "n_CONTROL_G": 10,
+      "n_CONTROL_H": 0,
+      "n_identity": 0,
+      "stdout_sha256": "b8b37d9fa65eb3763594066719f6bfd53a4981ccf385541992eebee641624385",
+      "stderr_tail": ""
+    },
+    {
+      "case": "C2+regen",
+      "mutation": "C2",
+      "regenerated": [
+        "enum-n7-#3",
+        "enum-n7-#20",
+        "enum-n7-#600",
+        "enum-n7-#945",
+        "enum-n7-#809",
+        "enum-n7-#52",
+        "enum-n7-#88",
+        "fam:N (2+2)"
+      ],
+      "edits_applied": [
+        "scripts/onethird_mg2c34_n7_overlap_test.py x1"
+      ],
+      "exit": 1,
+      "failures": [
+        "enum-n7-#3: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 13.4164); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#3: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 18); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#20: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 10.0995); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#20: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 13.4164); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#600: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 8.12404); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#600: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 10.8628); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#945: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 4); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#945: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 4); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#809: CONTROL G -- the frozen pair indicator does not sum to zero (sum = 4.24264); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)",
+        "enum-n7-#809: CONTROL G -- the maxbias pair indicator does not sum to zero (sum = 4.79583); `frozen_pair_indicator` has stopped centring f, so every quantity computed from it is measuring the wrong vector (see _indicator_centred_ok)"
+      ],
+      "n_CONTROL_G": 10,
+      "n_CONTROL_H": 0,
+      "n_identity": 0,
+      "stdout_sha256": "74e5edbdd689f28dd6f9a0e318546dcd0e312199e7e15b52a5da61c36ce5e739",
+      "stderr_tail": ""
+    },
+    {
+      "case": "M3",
+      "mutation": "M3",
+      "regenerated": null,
+      "edits_applied": [
+        "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py x1"
+      ],
+      "exit": 1,
+      "failures": [
+        "enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#809: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#52: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "fam:N (2+2): does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 24 compared: frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k",
+        "enum-n7-#3: CONTROL H -- the frozen-pair indicator lies IN U (overlap = 1.000000000 >= 1 - 1e-06) at an OFF-REGIME poset, where the corpus's own claim is ~0.81.  The overlap is vacuous by the same criterion CONTROL E applies to dim U, and the usual cause is that the frozen-pair SELECTOR is no longer choosing the Theorem-E pair (see _overlap_proper_ok)",
+        "enum-n7-#20: CONTROL H -- the frozen-pair indicator lies IN U (overlap = 1.000000000 >= 1 - 1e-06) at an OFF-REGIME poset, where the corpus's own claim is ~0.81.  The overlap is vacuous by the same criterion CONTROL E applies to dim U, and the usual cause is that the frozen-pair SELECTOR is no longer choosing the Theorem-E pair (see _overlap_proper_ok)",
+        "enum-n7-#600: CONTROL H -- the frozen-pair indicator lies IN U (overlap = 1.000000000 >= 1 - 1e-06) at an OFF-REGIME poset, where the corpus's own claim is ~0.81.  The overlap is vacuous by the same criterion CONTROL E applies to dim U, and the usual cause is that the frozen-pair SELECTOR is no longer choosing the Theorem-E pair (see _overlap_proper_ok)"
+      ],
+      "n_CONTROL_G": 0,
+      "n_CONTROL_H": 3,
+      "n_identity": 8,
+      "stdout_sha256": "f8693e945d6e96b68300018ab6f995ce303fbd3af7c4391c13dae9f2c55c6738",
+      "stderr_tail": ""
+    },
+    {
+      "case": "M3+regen",
+      "mutation": "M3",
+      "regenerated": [
+        "enum-n7-#3",
+        "enum-n7-#20",
+        "enum-n7-#600",
+        "enum-n7-#945",
+        "enum-n7-#809",
+        "enum-n7-#52",
+        "enum-n7-#88",
+        "fam:N (2+2)"
+      ],
+      "edits_applied": [
+        "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py x1"
+      ],
+      "exit": 1,
+      "failures": [
+        "enum-n7-#3: CONTROL H -- the frozen-pair indicator lies IN U (overlap = 1.000000000 >= 1 - 1e-06) at an OFF-REGIME poset, where the corpus's own claim is ~0.81.  The overlap is vacuous by the same criterion CONTROL E applies to dim U, and the usual cause is that the frozen-pair SELECTOR is no longer choosing the Theorem-E pair (see _overlap_proper_ok)",
+        "enum-n7-#20: CONTROL H -- the frozen-pair indicator lies IN U (overlap = 1.000000000 >= 1 - 1e-06) at an OFF-REGIME poset, where the corpus's own claim is ~0.81.  The overlap is vacuous by the same criterion CONTROL E applies to dim U, and the usual cause is that the frozen-pair SELECTOR is no longer choosing the Theorem-E pair (see _overlap_proper_ok)",
+        "enum-n7-#600: CONTROL H -- the frozen-pair indicator lies IN U (overlap = 1.000000000 >= 1 - 1e-06) at an OFF-REGIME poset, where the corpus's own claim is ~0.81.  The overlap is vacuous by the same criterion CONTROL E applies to dim U, and the usual cause is that the frozen-pair SELECTOR is no longer choosing the Theorem-E pair (see _overlap_proper_ok)"
+      ],
+      "n_CONTROL_G": 0,
+      "n_CONTROL_H": 3,
+      "n_identity": 0,
+      "stdout_sha256": "632bb0ed4153d22123070dfa9de71137ce351828601b60bb0703fed2bf283298",
+      "stderr_tail": ""
+    },
+    {
+      "case": "M4",
+      "mutation": "M4",
+      "regenerated": null,
+      "edits_applied": [
+        "scripts/onethird_mg4a86_sdquant_overlap.py x1"
+      ],
+      "exit": 1,
+      "failures": [
+        "CONTROL B: the antichain known-answer check failed.  Required: c_max = c_min = 1 (the whole gap EIGENSPACE inside U -- see _antichain_row_ok for what licenses that, which is NOT Aldous/CLR) AND dim U = (n-1)^2+1 (the known rank of the one-particle span on S_n).  antichain-4: c_max=1.000000000 c_min=1.000000000 dim_U=16 (known 10); antichain-5: c_max=1.000000000 c_min=1.000000000 dim_U=25 (known 17); antichain-6: c_max=1.000000000 c_min=1.000000000 dim_U=36 (known 26)",
+        "CONTROL F: two-sided reading-dependence on a real poset with degenerate lambda_2 -- either c_max != c_min, or the degeneracy that gives this control its coverage has gone (see _two_sided_row_ok)",
+        "enum-n7-#3: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 360 (null = 0.1361); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#20: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 198 (null = 0.2475); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#600: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 132 (null = 0.3712); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#945: CONTROL E -- dim U = 21 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 21 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#809: CONTROL E -- dim U = 25 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 25 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion"
+      ],
+      "n_CONTROL_G": 0,
+      "n_CONTROL_H": 0,
+      "n_identity": 0,
+      "stdout_sha256": "b93366a419d039086442880c7e98b8b1837a93305c9da592057c2a17717b58b9",
+      "stderr_tail": ""
+    },
+    {
+      "case": "M4+regen",
+      "mutation": "M4",
+      "regenerated": [
+        "enum-n7-#3",
+        "enum-n7-#20",
+        "enum-n7-#600",
+        "enum-n7-#945",
+        "enum-n7-#809",
+        "enum-n7-#52",
+        "enum-n7-#88",
+        "fam:N (2+2)"
+      ],
+      "edits_applied": [
+        "scripts/onethird_mg4a86_sdquant_overlap.py x1"
+      ],
+      "exit": 1,
+      "failures": [
+        "CONTROL B: the antichain known-answer check failed.  Required: c_max = c_min = 1 (the whole gap EIGENSPACE inside U -- see _antichain_row_ok for what licenses that, which is NOT Aldous/CLR) AND dim U = (n-1)^2+1 (the known rank of the one-particle span on S_n).  antichain-4: c_max=1.000000000 c_min=1.000000000 dim_U=16 (known 10); antichain-5: c_max=1.000000000 c_min=1.000000000 dim_U=25 (known 17); antichain-6: c_max=1.000000000 c_min=1.000000000 dim_U=36 (known 26)",
+        "CONTROL F: two-sided reading-dependence on a real poset with degenerate lambda_2 -- either c_max != c_min, or the degeneracy that gives this control its coverage has gone (see _two_sided_row_ok)",
+        "enum-n7-#3: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 360 (null = 0.1361); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#20: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 198 (null = 0.2475); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#600: CONTROL E -- dim U = 49 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 132 (null = 0.3712); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#945: CONTROL E -- dim U = 21 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 21 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion",
+        "enum-n7-#809: CONTROL E -- dim U = 25 violates its structural bound (n-1)^2+1 = 37 or is not a PROPER subspace of |L| = 25 (null = 1.0000); the projector's rank filter is admitting directions the one-particle span does not contain, and c = null is vacuous by sec 2's own criterion"
+      ],
+      "n_CONTROL_G": 0,
+      "n_CONTROL_H": 0,
+      "n_identity": 0,
+      "stdout_sha256": "0608cd0318c3a1884d00785d7aa8f575e063780cd56d79f1ad17d7fb56f75a3a",
+      "stderr_tail": ""
+    }
+  ]
+}
