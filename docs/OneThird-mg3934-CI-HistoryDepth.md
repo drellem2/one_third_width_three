@@ -196,7 +196,9 @@ same mistake one level down.
 ### 4.2 The fix, in a full clone
 
 Same repository cloned without `--depth`: 394 commits, `is-shallow-repository` = `false`,
-`git show af7fc2df:<gate>` resolves, and the mg-75f0 demo runs. Full-run result recorded in §4.5.
+`git show af7fc2df:<gate>` resolves, and the mg-75f0 demo proceeds past the point that killed it
+in the shallow clone. The authoritative full execution is the CI one in §5 — that is the
+environment in question, and a local pass would not have settled it.
 
 ### 4.3 The new control, in both checkout depths
 
@@ -215,14 +217,84 @@ Same repository cloned without `--depth`: 394 commits, `is-shallow-repository` =
 exit 0. `gh` absent from `PATH` → prints the by-hand command, exit 0. Lookup returning nothing →
 prints "no completed run readable", exit 0. `sh -n scripts/refinery_gate.sh` clean.
 
-### 4.5 The acceptance run — the mg-75f0 demo's first execution in CI
+### 4.5 The acceptance run
 
-*(Filled in from the real CI run on this branch, which is the environment in question.)*
-
-See §5.
+Real GitHub Actions, on this branch, at `fetch-depth: 0`. See §5.
 
 ---
 
-## 5. Acceptance run
+## 5. Acceptance run — the mg-75f0 demo's first execution in CI, ever
 
-<!-- ACCEPTANCE -->
+Commit `acbf972` on `polecat-3934`.
+
+**`Gate mutation demo` — run 30608564140 — SUCCESS**, 06:04:20Z → 06:25:28Z, 21m08s.
+
+| step | conclusion | duration |
+|---|---|---|
+| `actions/checkout@v5` (**`fetch-depth: 0`**) | success | **2 s** (1 s at depth 1 — this is the entire cost) |
+| Install numpy | success | 7 s |
+| **mg-3934 CI history-depth control** | success | **<1 s** |
+| mg-7db4 watchlist consistency | success | <1 s |
+| mg-7db4 probe mutation battery | success | 5m44s |
+| mg-60d3 gate mutation demo | success | 4m07s |
+| **mg-75f0 gate class-closure demo** | **success** | **10m58s — first execution** |
+| Upload the demonstration reports | success | 1 s |
+
+Against the `timeout-minutes: 75` bound: 21m08s. The bound was raised 45 → 75 by mg-75f0 for work
+that then never ran; this is the first measurement of the job it was raised for, and it is
+comfortable.
+
+**What the step said, now that it can say anything** — the full 8×2 matrix, every cell as
+EXPECTED:
+
+```
+mutation   first used by                           pre-widening        widened
+none       -                                          exit 0 ok      exit 0 ok
+M3         mg-5ad1 (audit finding 1, primary witn     exit 0 ok      exit 1 ok
+M4         mg-5ad1 (audit finding 1, corroboratin     exit 0 ok      exit 1 ok
+M5         UNSEEN -- used by neither mg-60d3 nor      exit 0 ok      exit 1 ok
+M6         UNSEEN -- used by neither mg-60d3 nor      exit 0 ok      exit 1 ok
+M7         UNSEEN -- used by neither mg-60d3 nor      exit 0 ok      exit 1 ok
+M8         UNSEEN by mg-60d3/mg-5ad1; and NOT CHO     exit 0 ok      exit 1 ok
+M9         UNSEEN -- used by neither mg-60d3 nor      exit 0 ok      exit 1 ok
+
+HOW THE PRE-WIDENING GATE MISSED EACH ONE (measured, not asserted)
+M3  EXERCISED AND ABSORBED   M4  EXERCISED AND ABSORBED   M5  NEVER EXERCISED
+M6  NEVER EXERCISED          M7  NEVER EXERCISED          M8  EXERCISED AND ABSORBED
+M9  NEVER EXERCISED
+
+Demonstration complete.  5/5 mutations that NEITHER mg-60d3 nor mg-5ad1 used are
+caught by the widened gate, and 5/5 of them were fatal to nothing before it -- so
+the widening is not a patch on its own witnesses.
+```
+
+**This is new information, not a restored green.** The question "does the widening catch mutations
+nobody enumerated?" now has CI evidence for the first time since it was posed, and the answer is
+yes, on all five unseen rows.
+
+**The preflight, in the runner** — self-test 7/7, and all five pinned literals resolving at
+`fetch-depth: 0` on a hosted runner, which is the claim that could not be made from this side:
+
+```
+SELF-TEST PASSED
+=== (A) workflows x history-reading code
+  .github/workflows/gate-mutation-demo.yml     fetch-depth 0
+      reads history: scripts/onethird_mg75f0_gate_class_closure_demo.py  [af7fc2df]
+  .github/workflows/lean.yml                   fetch-depth unset (=1)   reads no history
+  .github/workflows/script-controls.yml        fetch-depth unset (=1)   reads no history
+=== (B) pinned revisions in scripts/ (5 literal(s) in 3 file(s))     all ok
+OK -- every workflow that reads history fetches it, and every pinned revision checked here resolves.
+```
+
+**`Script controls` — run 30608564048 — SUCCESS**, 2m34s against its `timeout-minutes: 10`. The
+`--static-only` step measured **<1 s** at depth 1, and every pre-existing step still passes.
+
+## 6. What is NOT claimed
+
+* Nobody is paged. §3.4.
+* A revision computed rather than written down is invisible to the new control. §3.2.
+* mg-75f0's own residual is untouched by this ticket: the widening still gates on the fields of
+  the *committed* mg-8b64 row, and a quantity the corpus computes and never commits still has no
+  reference to compare against. That stands where mg-75f0 left it.
+* The first green says the demonstration executes and asserts what it claims. It says nothing new
+  about the mathematics.
