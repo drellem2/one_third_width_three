@@ -1,0 +1,67 @@
+mg-3946 -- raw transcripts of the PART 1/2 drift battery, kept because the
+committed JSON is one run and these are two: the five-case battery against the
+demo AS mg-3934 LEFT IT, and the two-case re-run against the mg-3946 repair.
+Predictions were written before each run and are in PREDICTIONS below.
+
+=================== PREDICTIONS (written first) ===================
+mg-3946 PART 1/2 predictions, written before the run, kept as written:
+  control            demo exit 0   (already run standalone as R1 -> 0, HELD)
+  neutered-widening  demo exit 1
+  noop-mutation      demo exit 1
+  rotted-anchor      demo exit 1
+  rebaselined        demo exit 1
+  crash-not-catch    demo exit 0   <- the prediction IS the finding
+
+Re-run against the REPAIRED demo (mg-3946 strengthening applied):
+  control            demo exit 0   (the repair must not break the normal path)
+  crash-not-catch    demo exit 1   (the repair must reject the crash row)
+
+=========== RUN 1: five cases vs the UNREPAIRED demo ===========
+=== PART 1/2  the drift battery over the demo (5 cases, predictions stated first)
+
+  neutered-widening      predict demo exit 1   args --only M9 --gates widened
+      drift: the widened gate's identity comparison narrowed back to the four pre-mg-75f0 fields
+      --> exit 1 in 467.9s  PREDICTION HELD
+      demo said: --> exit 1 (expected 0)  DEMONSTRATION FAILED
+      demo said: DEMONSTRATION FAILED: the exit-code matrix is not as asserted. If an UNSEEN
+
+  noop-mutation          predict demo exit 1   args --only M9 --gates widened
+      drift: M9's replacement made byte-identical to its anchor (a no-op edit)
+      --> exit 1 in 445.9s  PREDICTION HELD
+      demo said: --> exit 0 (expected 1)  DEMONSTRATION FAILED
+      demo said: DEMONSTRATION FAILED: the exit-code matrix is not as asserted. If an UNSEEN
+
+  rotted-anchor          predict demo exit 1   args --only M9 --gates widened
+      drift: M9's anchor rewritten in the corpus (semantics unchanged)
+      --> exit 1 in 371.6s  PREDICTION HELD
+
+  rebaselined            predict demo exit 1   args --only M9 --gates pre-widening
+      drift: PRE_WIDENING_REV re-pinned from af7fc2df (mg-60d3) to 9fa4aaa (the mg-75f0 landing), so the left column IS the widened gate
+      --> exit 1 in 279.2s  PREDICTION HELD
+      demo said: --> exit 1 (expected 0)  DEMONSTRATION FAILED
+      demo said: DEMONSTRATION FAILED: the exit-code matrix is not as asserted. If an UNSEEN
+
+  crash-not-catch        predict demo exit 0   args --only MX --gates pre-widening,widened
+      drift: a row whose 'mutation' is an unconditional raise in _width, reached by the widened gate and not by the pre-widening one
+      --> exit 0 in 557.2s  PREDICTION HELD
+      demo said: Demonstration complete.  1/6 mutations that NEITHER mg-60d3 nor
+
+wrote data/onethird-mg3946-closure-demo-falsifier.json
+EXIT=0
+
+=========== RUN 2: control + crash vs the REPAIRED demo ===========
+=== PART 1/2  the drift battery over the demo (2 cases, predictions stated first)
+
+  control                predict demo exit 0   args --only M9 --gates widened
+      drift: undrifted -- the demo's subject as committed
+      --> exit 0 in 151.2s  PREDICTION HELD
+      demo said: Demonstration complete.  1/5 mutations that NEITHER mg-60d3 nor
+
+  crash-not-catch        predict demo exit 1   args --only MX --gates pre-widening,widened
+      drift: a row whose 'mutation' is an unconditional raise in _width, reached by the widened gate and not by the pre-widening one
+      --> exit 1 in 251.4s  PREDICTION HELD
+      demo said: --> exit 1 (expected 1)  DEMONSTRATION FAILED
+      demo said: DEMONSTRATION FAILED: the exit-code matrix is not as asserted. If an UNSEEN
+
+wrote data/onethird-mg3946-closure-demo-falsifier.json
+EXIT=0

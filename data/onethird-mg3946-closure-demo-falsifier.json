@@ -1,0 +1,130 @@
+{
+  "what": "mg-3946 independent audit: can the mg-75f0 class-closure demo fail, and is the population of historical-SHA reads closed?",
+  "cases_requested": [],
+  "partial_run": true,
+  "part1_2_cases": [],
+  "part1_predictions_missed": [],
+  "part2_finding": null,
+  "part3_workflows": [
+    {
+      "workflow": ".github/workflows/gate-mutation-demo.yml",
+      "fetch_depths": [
+        0
+      ],
+      "entry_scripts": [
+        "scripts/onethird_mg3934_ci_history_depth_control.py",
+        "scripts/onethird_mg60d3_gate_mutation_demo.py",
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+        "scripts/onethird_mg7db4_probe_mutation_battery.py",
+        "scripts/onethird_mg7db4_watchlist_consistency.py"
+      ],
+      "closure_size": 11,
+      "missing_from_closure": [],
+      "inline_git_in_step_bodies": [],
+      "git_calling_modules": {
+        "scripts/onethird_mg3934_ci_history_depth_control.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": []
+        },
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": [
+            "af7fc2df"
+          ]
+        }
+      },
+      "real_revisions_read": {
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py": [
+          "af7fc2df"
+        ]
+      }
+    },
+    {
+      "workflow": ".github/workflows/lean.yml",
+      "fetch_depths": [
+        null
+      ],
+      "entry_scripts": [],
+      "closure_size": 0,
+      "missing_from_closure": [],
+      "inline_git_in_step_bodies": [],
+      "git_calling_modules": {},
+      "real_revisions_read": {}
+    },
+    {
+      "workflow": ".github/workflows/script-controls.yml",
+      "fetch_depths": [
+        null
+      ],
+      "entry_scripts": [
+        "scripts/onethird_mg2c34_n7_overlap_test.py",
+        "scripts/onethird_mg3934_ci_history_depth_control.py",
+        "scripts/onethird_mg5ad1_gate_blindspot_probe.py",
+        "scripts/onethird_mg7db4_watchlist_consistency.py",
+        "scripts/onethird_mg8489_fastq_gate_control.py",
+        "scripts/onethird_mg8a71_audit_instrument.py",
+        "scripts/onethird_mg8a71_live_claim_control.py",
+        "scripts/onethird_mg8ff1_lemma32b_counterexample.py",
+        "scripts/onethird_mgfccb_direction_check.py"
+      ],
+      "closure_size": 23,
+      "missing_from_closure": [],
+      "inline_git_in_step_bodies": [],
+      "git_calling_modules": {
+        "scripts/onethird_mg3934_ci_history_depth_control.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": []
+        }
+      },
+      "real_revisions_read": {}
+    }
+  ],
+  "part4_scripts_pin_population": {
+    "scripts/onethird_mg4f9b_route_axis_probe.py": [
+      "91fa25f",
+      "9fa4aaa",
+      "af7fc2df"
+    ],
+    "scripts/onethird_mg75f0_gate_class_closure_demo.py": [
+      "af7fc2df"
+    ],
+    "scripts/onethird_mgbd53_widening_audit_probe.py": [
+      "af7fc2df"
+    ],
+    "scripts/refinery_gate.sh": [
+      "069f",
+      "9991380",
+      "9fa4aaa"
+    ]
+  },
+  "part4_remote_reachability": {
+    "069f": {
+      "reachable": true,
+      "via": "refs/remotes/origin/polecat-d4bb"
+    },
+    "91fa25f": {
+      "reachable": true,
+      "via": "refs/remotes/origin/HEAD"
+    },
+    "9991380": {
+      "reachable": true,
+      "via": "refs/remotes/origin/polecat-069f"
+    },
+    "9fa4aaa": {
+      "reachable": true,
+      "via": "refs/remotes/origin/HEAD"
+    },
+    "af7fc2df": {
+      "reachable": true,
+      "via": "refs/remotes/origin/HEAD"
+    }
+  },
+  "part3_4_problems": [],
+  "ALL_PASS": true
+}

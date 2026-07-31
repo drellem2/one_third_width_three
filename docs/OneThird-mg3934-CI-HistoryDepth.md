@@ -144,7 +144,7 @@ the measured grounds mg-7db4 and mg-75f0 used when they kept the expensive demon
 stretched every concurrent run tenfold. A blocking gate long enough that people want it bypassed
 has a shorter life expectancy than the defect it guards.
 
-*But consumed.* The 21 hours happened because nothing read the result — a permanently-red
+*But consumed.* The 24 h happened because nothing read the result — a permanently-red
 informational check cannot be told apart from a working one, and it trains every reader to skip
 the column. So `scripts/refinery_gate.sh` now **prints this workflow's latest conclusion on `main`
 into the refinery's Gate Output**, which `pogo refinery show <mr>` displays to the author of the

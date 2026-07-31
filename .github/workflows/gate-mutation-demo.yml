@@ -32,10 +32,14 @@ name: Gate mutation demo
 # Trigger.md.
 #
 # RED IS TOLERATED HERE, AND WHO SEES IT (mg-3934).  The sentence above was
-# true and incomplete, and the gap cost 21 hours: nothing consumed this
-# workflow's result, so a step that had NEVER ONCE run was indistinguishable
-# from a step that was running and passing.  A permanently-red informational
-# check is worse than no check -- it trains every reader to skip the column.
+# true and incomplete, and the gap cost 24 h 09 m -- twelve consecutive red
+# runs, 2026-07-30T05:36:59Z to 2026-07-31T05:45:54Z, five of them on `main`;
+# the "21 hours" this line used to say was the ticket's undercount, which the
+# mg-3934 doc corrected and this comment did not (mg-3946).  Nothing consumed
+# this workflow's result, so a step that had NEVER ONCE run was
+# indistinguishable from a step that was running and passing.  A
+# permanently-red informational check is worse than no check -- it trains
+# every reader to skip the column.
 #
 # Making it block was considered and rejected on the same measured grounds
 # mg-7db4 and mg-75f0 used to keep the expensive demonstrations out of the
@@ -49,6 +53,13 @@ name: Gate mutation demo
 #     non-blocking by construction and cannot fail a merge -- see the READOUT
 #     section of that file.  That is the audience: the people whose commits
 #     can invalidate these demonstrations, at the moment they merge one.
+#     mg-3946 measured that audience and it is smaller than that sentence:
+#     the polecat merge protocol reads `pogo refinery show <id> --json | jq -r
+#     .status` and no other field, pogod reaps the author seconds after the
+#     merge lands, and nothing else here or on the fleet reads an Actions
+#     result.  A human running `pogo refinery show` by hand is the whole of
+#     it.  mg-3946 also found the readout reporting an IN-PROGRESS run as red
+#     -- on its first live firing -- and repaired that.
 #   * The mg-3934 preflight below turns THIS class of red -- a step that cannot
 #     run in the environment it is run in -- into a named, seconds-long failure
 #     at the top of the job instead of a ten-minute one at the bottom.
@@ -92,10 +103,14 @@ name: Gate mutation demo
 #
 # HOW TO READ THE FIRST GREEN AFTER 2026-07-31 (mg-3934).  The mg-75f0 step had
 # never executed in CI: it was added on 2026-07-30 and died on `invalid object
-# name af7fc2df` on that run and on all eight after it, because it resolves a
-# historical commit and `actions/checkout` had not been asked for one.  The
-# three steps before it did run and did pass throughout, so what was lost is
-# narrower than "the positive control is dead" -- it is exactly the question
+# name af7fc2df` on that run and on all eleven after it -- twelve red runs, the
+# step reached on eleven and skipped on the twelfth (mg-3946 corrects the
+# "eight" this line used to say) -- because it resolves a historical commit
+# and `actions/checkout` had not been asked for one.  The three steps before
+# it did run and did pass throughout -- re-verified by mg-3946 against run
+# 30606216109, where steps 5-7 are `success` and only step 8 is `failure` --
+# so what was lost is narrower than "the positive control is dead": it is
+# exactly the question
 # "does the widening catch mutations nobody enumerated?", which had no CI
 # evidence at all.  Its first green is therefore its FIRST EXECUTION and is new
 # information, not a restoration.  See docs/OneThird-mg3934-CI-HistoryDepth.md.
