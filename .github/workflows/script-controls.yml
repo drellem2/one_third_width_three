@@ -273,3 +273,65 @@ jobs:
       #   python3 scripts/onethird_mg8a71_live_claim_control.py /tmp/pre.md  # -> 1
       - name: 'mg-8a71 live-claim control (is the refuted inference still asserted?)'
         run: python3 scripts/onethird_mg8a71_live_claim_control.py
+
+      # mg-0242 (independent audit of the mg-069f closeout, bb1cb9b): three
+      # instruments, each built for one half of the verdict this audit was given.
+      #
+      # (1) POPULATION CENSUS.  mg-8a71 finding F2 was found by reading a
+      # helper's name; it would have been found sooner by calling the helper and
+      # counting.  This step does that for every population the corpus's controls
+      # NAME: it calls posets_with_identity_extension (404 / 6 385 / 31 625),
+      # all_labelled_posets (4 469 / 43 842 / 218 166, per-n against A001035) and
+      # the audit instrument's own generator, and checks the two all-labelled
+      # generators are the same SET and not merely the same COUNT -- nobody had.
+      # It exercises poset_family at a genuinely LABEL-DEPENDENT property ("is the
+      # identity a linear extension of P": 100% on the small family by
+      # construction, 9.0% on the labelled one) and confirms it sweeps all
+      # labellings when told to and REFUSES (TypeError) when not told.
+      #
+      # It carries a BASELINE of two doc-level NAME-vs-COUNT gaps found by this
+      # audit and left for pm-onethird: the closeout's §6.1 table says the
+      # live-claim control sweeps "537/537 lines" (it sweeps 539), and the
+      # direction check's docstring labels the 404 -> 4 469 POSET row "6.9x
+      # larger" (it is 11.06x; 6.9x is the PAIR and TRIPLE ratio).  A baseline gap
+      # closing fails the step, so repairing one forces a re-baseline.
+      # Demonstrated against a commit where F2 is still present:
+      #   python3 scripts/onethird_mg0242_population_census.py --demonstrate 2697c07
+      #     -> all_posets(), docstring "All posets on n labelled elements", 404
+      #        enumerated: an 11.06x gap, found by counting rather than reading.
+      - name: 'mg-0242 population census (does every NAMED population equal the SWEPT one?)'
+        run: python3 scripts/onethird_mg0242_population_census.py
+
+      # (2) STRUCK vs REFUTED.  The mg-fccb -> mg-8a71 -> mg-069f arc proved ten
+      # claims false; this ledger checks each against the repair's OWN live/marked
+      # convention (the predicates are imported from the live-claim control, so
+      # the standard applied is the one the repair set).  At HEAD: 10 refuted,
+      # 8 removed from live body text, 2 live -- both baselined:
+      #   C5  §5 rec 1's "This is the single pin", which mg-069f flagged and
+      #       routed to pm-onethird rather than reversing mg-8a71's adjudication;
+      #   C9  mgd112 §2.2's POPULATION CORRECTION block, which says a sentence
+      #       "is struck with it" and does not strike it -- the exact hole
+      #       mg-069f found by mutation and closed in the control, reappearing one
+      #       document over in text mg-069f itself wrote.  Not flagged anywhere.
+      # A third live site fails; a baseline site being struck also fails.
+      # It also sweeps all 240 documents in docs/ with the same signatures (the
+      # repair's control is one file, by design), and runs three mutants that
+      # locate the remaining blind spot: a refuted sentence in the TAIL of an
+      # ANNOTATION block is missed, while the same sentence as a paragraph or in
+      # the tail of a STRIKE block is caught.  Demonstrated where F1 is present:
+      #   python3 scripts/onethird_mg0242_struck_vs_refuted.py --tree 1b00147
+      #     -> LIVE 7 at mg-fccb HEAD vs LIVE 2 here.
+      - name: 'mg-0242 struck-vs-refuted ledger (is every refuted claim gone from the body?)'
+        run: python3 scripts/onethird_mg0242_struck_vs_refuted.py
+
+      # (3) IDENTITY RE-RUN.  A third implementation, sharing no line with the two
+      # above, of everything the verdict said to preserve: (F1) Sum_x m_x =
+      # 2E[inv_e] and (star) E[Sum disp^2] = 2E[inv_e] + Cross exact on all 43 842
+      # (poset, reference-order) pairs -- (star) as the decomposition it factors
+      # into, plus Cross recomputed from its own double sum on n = 3,4 -- the four
+      # W_m closed forms, the ratio exactly 1/3, and Var(pos_sigma z) = m(m+2)/12.
+      # That last one is the reason this step exists: mg-069f put it into LIVE
+      # body text in the F5 restoration and no control asserts it anywhere.
+      # ~25 s, exact rational arithmetic, stdlib only.
+      - name: 'mg-0242 identity re-run (the checks no direction check can see)'
+        run: python3 scripts/onethird_mg0242_identity_recheck.py
