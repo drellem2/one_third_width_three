@@ -163,3 +163,22 @@ jobs:
       # job, which also records what this probe is blind to (M4).
       - name: 'mg-5ad1 gate blindspot probe (is the gate blind anywhere?)'
         run: python3 scripts/onethird_mg5ad1_gate_blindspot_probe.py
+
+      # mg-fccb: the inequality-direction check behind the §2.3 repair in
+      # docs/OneThird-L1b-Spread-Locality.md.  Inequality direction is this
+      # programme's recurring load-bearing failure -- mg-0ed7 §7.5 (caught by
+      # mg-8f56) and mg-dbd1 §2.3 (caught by mg-d112) are the same defect twice
+      # -- and both survived review because a reversed inequality type-checks.
+      # This is the standing machine check for the one direction those repairs
+      # rest on.
+      #
+      # It sweeps ALL posets on n = 3,4,5 against EVERY reference linear
+      # extension (31 625 element/order pairs) and asserts b_x <= m_x with zero
+      # exceptions, i.e. it actively hunts a counterexample to the fix rather
+      # than confirming it on the witness that motivated it.  It also pins the
+      # equality case at the e-minimum (6 385/6 385), which is why §3.1 remains
+      # VALID and must not be "corrected" alongside §2.3 -- the trap in that
+      # repair.  Exact Fraction arithmetic, standard library only, no numpy, no
+      # sampling; ~8 s.  Exits non-zero on any assertion.
+      - name: 'mg-fccb inequality-direction check (is b_x <= m_x, ever violated?)'
+        run: python3 scripts/onethird_mgfccb_direction_check.py

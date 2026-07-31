@@ -178,11 +178,30 @@ where `A_x` = #(`e`-above elements before `x`), `B_x` = #(`e`-below elements aft
 ```
 Σ_x E[disp(x)]²  ≤  Σ_x m_x²  ≤  (max_x m_x) · Σ_x m_x  =  2 (max_x m_x) E[inv_e].
 ```
-So **`max_x m_x = O(1)` ⟹ the deterministic part of (B) holds**; and by Jensen
-`E[disp(x)²] ≥ E[disp(x)]²`, so if any single `m_x = Θ(n)` while `E[inv_e] = Θ(n)`, then
-`E[Σ disp²] ≥ m_x² = Θ(n²)` and **(B) fails by a factor `n`**. Lemma (B) therefore hinges on
-whether the frozen structure caps the per-element inversion degree `m_x` (and the analogous
-variance tails).
+So **`max_x m_x = O(1)` ⟹ the deterministic part of (B) holds**.
+
+> ~~and by Jensen `E[disp(x)²] ≥ E[disp(x)]²`, so if any single `m_x = Θ(n)` while
+> `E[inv_e] = Θ(n)`, then `E[Σ disp²] ≥ m_x² = Θ(n²)` and **(B) fails by a factor `n`**. Lemma (B)
+> therefore hinges on whether the frozen structure caps the per-element inversion degree `m_x` (and
+> the analogous variance tails).~~
+>
+> **STRUCK 2026-07-31 (mg-fccb) — inequality-direction error.** Retained struck rather than deleted
+> so the corpus keeps the record of what was asserted. Diagnosis in the annotation below; the
+> correct replacement is stated immediately.
+
+**What §2.3 actually supplies (corrected, mg-fccb).** Only the **sufficiency** direction, and only
+for the deterministic part:
+
+```
+max_x m_x = O(1)   ⟹   Σ_x E[disp(x)]² = O(E[inv_e])          [valid, via b_x ≤ m_x]
+max_x m_x = Θ(n)   ⇏   (B) fails                              [INVALID — needs b_x ≥ m_x]
+```
+
+Jensen gives `E[Σ disp²] ≥ Σ_x E[disp(x)]² = Σ_x b_x²` correctly; what fails is the *next*
+substitution `b_x² → m_x²`, which needs `b_x ≥ m_x` when only `b_x ≤ m_x` is available. So a large
+per-element inversion **degree** `m_x` does not by itself force a large **bias** `b_x`, and lemma (B)
+does **not** hinge on capping `max_x m_x`. The quantity a falsifier must make large is the bias
+`b_x`, not the degree `m_x` — which is exactly mg-a58f's **(EQ)**, `max_x b_x = O(1)`.
 
 > ### ⚠️ ANNOTATION (2026-07-29, mg-1fdb): the sentence beginning *"and by Jensen"* above is **WRONG — an inequality-direction error.**
 >
@@ -216,6 +235,48 @@ variance tails).
 > instance of the same defect family — an unflagged inequality-direction error in merged work, the
 > first being mg-0ed7 §7.5, caught by mg-8f56. Both survived a prior review. The corresponding process
 > repair is `STATE.md` Appendix A step **4b** (strength check + falsifier-quantifier check).
+
+> ### ✅ INDEPENDENT RE-DERIVATION (2026-07-31, mg-fccb) — the direction above is CONFIRMED, and sharpened
+>
+> The annotation above was written from the mg-d112 audit report. mg-fccb re-derived the inequality
+> **from scratch, from the definitions, without consulting that report's argument**, and reached the
+> same verdict. Recorded because a direction error confirmed only against the report that found it is
+> not independently confirmed.
+>
+> **The derivation.** With `disp_σ(x) = A_x − B_x` (§2.3's own decomposition: `A_x` = #`e`-above
+> elements before `x`, `B_x` = #`e`-below elements after `x`, both `≥ 0`),
+> ```
+> m_x = E[A_x] + E[B_x]        a SUM of two non-negative terms
+> b_x = |E[A_x] − E[B_x]|      a DIFFERENCE of the same two terms
+> ```
+> so `b_x ≤ m_x` by the triangle inequality, with **equality iff one of the two masses vanishes**.
+> The struck sentence needs `b_x ≥ m_x`. That is available only in the equality case, i.e. only where
+> the inversion mass is entirely one-sided. **Direction confirmed: `b_x ≤ m_x`, never the reverse.**
+>
+> **Exact refutation on `W_m`, recomputed from the definitions.** `W_m = C_m ⊔ C_1`, `n = m+1`,
+> `|L(W_m)| = m+1` (`z` into one of `m+1` slots, uniform); `Pr[z <_σ c_i] = i/(m+1)`;
+> `m_{zc_i} = min(i, m+1−i)/(m+1)`. For `m = 2s`:
+> ```
+> m_z = s(s+1)/(2s+1) = Θ(n)          E[inv_e] = m_z = Θ(n)          b_z = 0
+> Σ_x b_x² = s(s+1)/(3(2s+1))         so   Σ_x b_x² / E[inv_e] = 1/3   EXACTLY, every even m
+> ```
+> The hypothesis of the struck sentence (`m_x = Θ(n)` and `E[inv_e] = Θ(n)`) holds on `W_m`, and its
+> conclusion (`Θ(n²)`) is false there by a factor `n`: the deterministic part of (B) is satisfied on
+> the nose, with constant `1/3`. The **exact ratio `1/3`** is new here — mg-d112 §2.3 established only
+> the bound `Σ_x b_x² ≤ n`.
+>
+> **Where (B) does fail on `W_m`, quantified.** `Var(pos_σ z) = m(m+2)/12 = Θ(n²)` while
+> `E[inv_e] = Θ(n)`, so `E[Σ disp²]/E[inv_e]` grows linearly in `m` (asymptotically `~ m/3`). The
+> failure is **entirely** in the variance term; the deterministic term the struck sentence names is
+> the one part of the sum that is healthy. *(`W_m` has `δ = 1/2`, so this separates the **quantities**,
+> not the frozen-conditional **statements**.)*
+>
+> **Machine-checked.** `scripts/onethird_mgfccb_direction_check.py`, exact rational arithmetic, no
+> sampling: `b_x ≤ m_x` holds in **31 625/31 625** (element, reference-order) cases over all posets on
+> `n = 3,4,5` and every reference order, with **0** cases of `b_x > m_x` and `13 545` strictly lossy;
+> `b_x = m_x` at the `e`-minimum in **6 385/6 385** cases (which is why §3.1 stands — see there); and
+> the `1/3` ratio and the closed form `s(s+1)/(3(2s+1))` are confirmed exactly at every even
+> `m ≤ 8`.
 
 ---
 
@@ -352,6 +413,51 @@ was built to enable. (A) removes one of the two obstructions outright.
    explicit refuter of (B). If it does not exist, that non-existence *is* (B).
 3. **Settle `Λ = O(1)`** (no `O(n)` gap in the expected-rank spectrum) — a separable, likely
    easier smoothness lemma than (B).
+
+> ### ⚠️ ANNOTATION (2026-07-31, mg-fccb): **recommendations 1 and 2 both consumed §2.3's struck inference** — this is the propagation, and it was not previously flagged
+>
+> §2.3's annotation notes that the struck sentence is "the origin of §5's recommendation 1" but
+> §5 itself was never marked. A direction error propagates silently — every consumer of it
+> type-checks — so the consumers are annotated here explicitly. **Neither correction changes any
+> proven statement in this document; both change what it recommends doing next.**
+>
+> **Recommendation 1 — "show `max_x m_x = O(1)` … This is the single pin." Two defects.**
+> 1. **Mis-derived as a pin.** "Single pin" inherits §2.3's struck "lemma (B) therefore hinges on
+>    … `m_x`". Since `max_x m_x = Θ(n)` does *not* falsify (B), `max_x m_x` is not the quantity (B)
+>    hinges on, and rec 1 is not a pin. The quantity that does this job is the **bias** `b_x`.
+> 2. **Mis-priced (this is mg-a58f's finding, recorded here at the consuming site).** By (F1)
+>    `Σ_x m_x = 2E[inv_e]`, a uniform `max_x m_x ≤ C` gives `E[inv_e] ≤ Cn/2` — which *is* LIB,
+>    `γ`-free — and with mg-210d's master bound that already yields `1 − λ_std = O(1/n)`, the whole
+>    of L1b's conclusion. So rec 1 is **not a cheap step toward (B); it is at least as strong as the
+>    wall it was proposed as an approach to.** (Nothing about it is false — it remains a valid
+>    sufficient condition — it is simply not the small, separable target the wording offers.)
+>
+> **The replacement.** mg-a58f's **(EQ)** — `max_x b_x = O(1)`, `b_x := |E[pos_σ x] − rank_e x|` —
+> is the negation of §3.1's falsifier *at every element* rather than only at the `e`-min. It is
+> proven there to imply the deterministic part (B-bias) unconditionally and to imply §3.4's
+> auxiliary `Λ = O(1)`, and it is strictly weaker than `max_x m_x = O(1)`. It leaves **(B-cov)** —
+> the covariance/variance half — as the residual. **(EQ) does not close (B); it closes the half
+> §2.3 is about.**
+>
+> **Recommendation 2 — "If it does not exist, that non-existence *is* (B)" is a converse over-read.**
+> §3.1 proves one direction: a bimodal chain-cross at the `e`-min ⟹ (B) false. Its contrapositive is
+> (B) ⟹ no such cross. Rec 2 asserts the **converse** — no cross ⟹ (B) — which does not follow.
+> (B) governs the whole of `E[Σ_x disp²]`, and the deterministic term rec 2 rules out is only one of
+> the two. On `W_m` the deterministic term is healthy (ratio exactly `1/3`) and **(B) fails anyway,
+> entirely through the variance term** — the exact configuration rec 2's non-existence argument
+> cannot see. Corrected reading: **the non-existence of a bimodal chain-cross is necessary for (B),
+> not sufficient for it.**
+>
+> **Status-table row for (B).** "bimodal chain-cross realizability open" names one of the two ways
+> (B) can fail. The variance/covariance route — `Cross` in §2.2, `(B-cov)` in mg-dcae's split — is
+> the other, and is the one that actually breaks (B) on the document's own witness family. The row
+> is narrow, not wrong; read `Cross` (already named in the same cell) as carrying that half.
+>
+> *(Cross-doc references in this annotation were checked at the far end: mg-a58f Thm 3.2/5.1/5.3 and
+> the (EQ) definition in `OneThird-Bbias-Locality-Lemma.md`; the master bound in
+> `probe-lambda-constant-bound.md` **Theorem 2.4** (§2, `[proven]`), which mg-a58f cites as (F2);
+> (B-cov) in `OneThird-k1-Stanley-Stability-Scoping.md` §5 (mg-dcae). Verification ledger:
+> `OneThird-mgd112-DroppedVerdict-Closeout.md` §4.)*
 
 *(A) is done; (B) is reduced from a program-scale conjecture to a single named correlation
 inequality with an explicit candidate refuter — the honest remaining content of L1b.*

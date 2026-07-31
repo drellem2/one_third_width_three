@@ -38,11 +38,15 @@ Stanley, no Alexandrov–Fenchel, no Ma–Shenfeld, no combinatorial atlas is us
 > is REFUTED**; the advertised regime of the (A)+(B) route — *"tolerating quadratic `E[inv_e]`"* —
 > is **empty**, so the stated reason for abandoning LIB does not hold; and given (B), the wall
 > follows from the mg-210d master bound alone, with **(A) SPREAD and `Λ = O(1)` both off the critical
-> path**. Net (Finding 3.4): **LIB is the weakest sufficient condition on the table and alone
-> suffices; everything the program has attacked since mg-8201 is a strictly-at-least-as-strong
-> surrogate for it.** And LIB is not the floor either — `STATE.md`'s stated conclusion `λ_std → 1`
+> path**. Net (Finding 3.4): **LIB is the weakest _of the three_ sufficient conditions on the table
+> and alone suffices; both objects the (A)+(B) route has attacked since mg-8201 — (B), and the
+> locality lemma offered as a step toward it — are strictly-at-least-as-strong surrogates for it.**
+> And LIB is not the floor even among those three — `STATE.md`'s stated conclusion `λ_std → 1`
 > needs only **(LIB-weak)** `E[inv_e] = o(n²)`, which no arc has ever attacked. Whether the program
 > needs the limit or a rate is a scoping question I flag for pm-onethird rather than settle (§3.4).
+>
+> *(Both quantifiers narrowed 2026-07-31, mg-fccb, per the mg-d112 audit §4.1 — see §13. The
+> unrestricted forms said more than §3.4 proves.)*
 >
 > **AMBER.** The mis-pricing is **one identifiable lossy step**, and removing it yields a strictly
 > weaker replacement that does the same job. Both mg-dbd1 §2.3 and mg-dcae §5.4 bound the per-element
@@ -814,7 +818,7 @@ ticket's refinery submit. The exact text is provided here and mailed to pm-oneth
 
 **Attempt-index row to add:**
 
-> | **RED-for-lever · AMBER-redirect · CORRECTS MERGED WORK (mg-a58f)** | (B-bias) `O(1)` locality lemma (doc: `OneThird-Bbias-Locality-Lemma.md`) | **⚠️ Largest item first — (B) IMPLIES LIB (Thm 3.3, elementary, unconditional):** `E[inv_e] ≤ E[Σ\|disp\|] ≤ √(n·E[Σdisp²])` by the lower half of Diaconis–Graham + Cauchy–Schwarz, so (B) with constant `C` forces `E[inv_e] ≤ Cn`. **Four corrections:** (1) **this row's own §"single lemma" line — "the two faces are logically independent" — is false in one direction**; (B) is the *stronger* face. (2) mg-dbd1 §2.1's "(B) is weaker than LIB" is **REFUTED**. (3) The (A)+(B) route's advertised advantage — "tolerating quadratic `E[inv_e]`" (mg-dbd1 §0/§5, mg-8201 §2) — is **vacuous**: (B) is unsatisfiable when `E[inv_e] = ω(n)`, so the stated reason for abandoning LIB does not hold. (4) Given (B), the mg-210d master bound alone yields `1−λ_std = O(1/n)`, so **(A) SPREAD and `Λ = O(1)` are off the critical path** (both still true; (F2) simply postdates the certificate). **Net: LIB is the weakest sufficient condition on the table and alone suffices; everything attacked since mg-8201 is a strictly-at-least-as-strong surrogate.** And `λ_std → 1` as stated here needs only **(LIB-weak)** `E[inv_e] = o(n²)` — never attacked by any arc. **Scoping question flagged, not picked:** STATE.md states the conclusion as a limit, mg-7ae7 states the operative target as the rate `1−λ_std ≤ C/(γn)`; those differ by a factor `n` in the inversion requirement and pm-onethird should pin which one L4 consumes. **On the ticket's own target: the lemma implies the wall.** `Σ_x m_x = 2E[inv_e]` identically, so `max_x m_x ≤ C` ⟹ `E[inv_e] ≤ Cn/2` = **LIB** (γ-free) ⟹ (mg-210d master bound) `1 − λ_std ≤ 3Cn/(n²−1) → 0` = L1b's conclusion. So it is **not** an elementary reserve route below the crux; it is at least as strong as the crux, and it silently re-imposes the `E[inv_e] = O(n)` requirement mg-8201 retired as "structurally unnecessary". All three arcs that recommended it (mg-dbd1 §5.1, mg-dcae §7.2, mg-0ed7 §7.5) mis-priced it. **The lossy step is located exactly:** both derivations bound the per-element **bias** `b_x = \|E[pos_σ x] − rank_e x\|` by the per-element **inversion mass** `m_x` *before* taking the max, discarding the cancellation between `e`-above and `e`-below inversion mass — worth a factor `n` (witness `C_m ⊔ C_1`: `max b_x ≤ 1`, `max m_x = Θ(n)`, `E[inv_e] = Θ(n)`, all exact by hand). **Redirect — (EQ):** `max_x \|E[pos_σ(x)] − rank_e(x)\| = O(1)`. Proven here: (EQ) ⟹ (B-bias) (unconditionally); (EQ) ⟹ mg-dbd1 §3.4's auxiliary `Λ = O(1)`; (EQ) is exactly the negation *at every element* of mg-dbd1 §3.1's named (B)-falsifier (which was stated only at the `e`-min, where `b_x = m_x`); (EQ) is strictly weaker than the locality lemma. Leaves **(B-cov)** as the sole residual on the certificate route — the same edge STATE.md already names, reached without over-shooting. Also new: `m_x = E\|σ_{<x} Δ D_x\|` (per-element leak identity); conditional-uniformity window bound `locality ⟹ E[W_x] = O(1)`; the 3-element system is provably inert (satisfied by the two-atom law with `m ≡ ε`). Kills none of the three routes to (B-cov); withdraws the side-door three arcs recommended. Zero computation. |
+> | **RED-for-lever · AMBER-redirect · CORRECTS MERGED WORK (mg-a58f)** | (B-bias) `O(1)` locality lemma (doc: `OneThird-Bbias-Locality-Lemma.md`) | **⚠️ Largest item first — (B) IMPLIES LIB (Thm 3.3, elementary, unconditional):** `E[inv_e] ≤ E[Σ\|disp\|] ≤ √(n·E[Σdisp²])` by the lower half of Diaconis–Graham + Cauchy–Schwarz, so (B) with constant `C` forces `E[inv_e] ≤ Cn`. **Four corrections:** (1) **this row's own §"single lemma" line — "the two faces are logically independent" — is false in one direction**; (B) is the *stronger* face. (2) mg-dbd1 §2.1's "(B) is weaker than LIB" is **REFUTED**. (3) The (A)+(B) route's advertised advantage — "tolerating quadratic `E[inv_e]`" (mg-dbd1 §0/§5, mg-8201 §2) — is **vacuous**: (B) is unsatisfiable when `E[inv_e] = ω(n)`, so the stated reason for abandoning LIB does not hold. (4) Given (B), the mg-210d master bound alone yields `1−λ_std = O(1/n)`, so **(A) SPREAD and `Λ = O(1)` are off the critical path** (both still true; (F2) simply postdates the certificate). **Net: LIB is the weakest _of the three_ sufficient conditions on the table and alone suffices; both objects the (A)+(B) route has attacked since mg-8201 — (B), and the locality lemma — are strictly-at-least-as-strong surrogates.** And `λ_std → 1` as stated here needs only **(LIB-weak)** `E[inv_e] = o(n²)` — never attacked by any arc. **Scoping question flagged, not picked:** STATE.md states the conclusion as a limit, mg-7ae7 states the operative target as the rate `1−λ_std ≤ C/(γn)`; those differ by a factor `n` in the inversion requirement and pm-onethird should pin which one L4 consumes. **On the ticket's own target: the lemma implies the wall.** `Σ_x m_x = 2E[inv_e]` identically, so `max_x m_x ≤ C` ⟹ `E[inv_e] ≤ Cn/2` = **LIB** (γ-free) ⟹ (mg-210d master bound) `1 − λ_std ≤ 3Cn/(n²−1) → 0` = L1b's conclusion. So it is **not** an elementary reserve route below the crux; it is at least as strong as the crux, and it silently re-imposes the `E[inv_e] = O(n)` requirement mg-8201 retired as "structurally unnecessary". All three arcs that recommended it (mg-dbd1 §5.1, mg-dcae §7.2, mg-0ed7 §7.5) mis-priced it. **The lossy step is located exactly:** both derivations bound the per-element **bias** `b_x = \|E[pos_σ x] − rank_e x\|` by the per-element **inversion mass** `m_x` *before* taking the max, discarding the cancellation between `e`-above and `e`-below inversion mass — worth a factor `n` (witness `C_m ⊔ C_1`: `max b_x ≤ 1`, `max m_x = Θ(n)`, `E[inv_e] = Θ(n)`, all exact by hand). **Redirect — (EQ):** `max_x \|E[pos_σ(x)] − rank_e(x)\| = O(1)`. Proven here: (EQ) ⟹ (B-bias) (unconditionally); (EQ) ⟹ mg-dbd1 §3.4's auxiliary `Λ = O(1)`; (EQ) is exactly the negation *at every element* of mg-dbd1 §3.1's named (B)-falsifier (which was stated only at the `e`-min, where `b_x = m_x`); (EQ) is strictly weaker than the locality lemma. Leaves **(B-cov)** as the sole residual on the certificate route — the same edge STATE.md already names, reached without over-shooting. Also new: `m_x = E\|σ_{<x} Δ D_x\|` (per-element leak identity); conditional-uniformity window bound `locality ⟹ E[W_x] = O(1)`; the 3-element system is provably inert (satisfied by the two-atom law with `m ≡ ε`). Kills none of the three routes to (B-cov); withdraws the side-door three arcs recommended. Zero computation. |
 
 **Narrative line to add after the mg-8f56 paragraph:**
 
@@ -822,8 +826,9 @@ ticket's refinery submit. The exact text is provided here and mailed to pm-oneth
 > Two elementary re-pricings, both unconditional. **(B) implies LIB** (Diaconis–Graham `I ≤ D` plus
 > Cauchy–Schwarz: `E[inv_e] ≤ √(n·E[Σdisp²])`), so the two "logically independent faces" are ordered
 > rather than independent, (B) is the stronger, and the (A)+(B) certificate's advertised tolerance of
-> quadratic `E[inv_e]` describes an empty regime. **LIB is therefore the weakest sufficient condition
-> we hold, and it alone suffices** — and for the `λ_std → 1` form stated above, `E[inv_e] = o(n²)`
+> quadratic `E[inv_e]` describes an empty regime. **LIB is therefore the weakest of the three
+> sufficient conditions we hold on this route — LIB, (B), and the `O(1)` locality lemma — and it
+> alone suffices** — and for the `λ_std → 1` form stated above, `E[inv_e] = o(n²)`
 > already does it. Separately, the `O(1)` locality lemma that
 > mg-dbd1, mg-dcae and mg-0ed7 each independently recommended as the cheap, Stanley-free first step
 > **also implies L1b** — `Σ_x m_x = 2E[inv_e]`, so a uniform per-element bound *is* LIB, γ-free. Being
@@ -834,6 +839,42 @@ ticket's refinery submit. The exact text is provided here and mailed to pm-oneth
 > **(B-cov)** (the sharp edge, untouched), **(R)** (mg-210d, elementary), **(EQ)** (new, elementary,
 > and the only one of the three that is a *cancellation* statement rather than a decay statement —
 > which places it outside the family the 3-element inequalities are proven inert on).
+
+---
+
+## 13. Disposition of the mg-d112 independent audit (added 2026-07-31, mg-fccb)
+
+`docs/OneThird-Bbias-Locality-Lemma-IndependentAudit.md` (mg-d112, landed `cd261b9`) returned
+**CONFIRMED** on the mathematics — 45/47 claims CONFIRMED, 2 PLAUSIBLE, **0 BROKEN** — with six
+routed actions. All six are now closed. Recorded here because the audit lives in a separate file and
+a reader of *this* document had no way to tell which of its findings had been acted on.
+
+| # | audit finding | disposition | where |
+|---|---|---|---|
+| 1 | Accept the mathematics; nothing withdrawn | no action needed | — |
+| 2 | **OVERSTATEMENT** — "the weakest sufficient condition on the table" drops the body's "of the three"; "everything attacked since mg-8201 is a surrogate" is a **false universal** | **closed** — quantifiers restored at all three sites (§0, §12 row, §12 narrative) to the body's Finding 3.4 form | this doc, mg-fccb |
+| 3 | **CROSS-DOC MISS** — `STATE.md`:86 already asserted `LIB ⟺ (B)`, contradicting :102; reconcile **both**, not just :102 | **closed** — reconciled in `onethird_program`, both sites together | `STATE.md`, pm-onethird |
+| 4 | **CROSS-DOC MISS** — unflagged inequality-direction error in mg-dbd1 §2.3, and §3.2's "Equivalently" | **closed** — annotated (mg-1fdb, `b169561`); erroneous sentence struck at the site, re-derived independently, and its §5 consumers annotated (mg-fccb) | `OneThird-L1b-Spread-Locality.md` |
+| 5 | **LABEL** — downgrade §7.3's insufficiency row PROVEN → PLAUSIBLE | **closed** (mg-1fdb, `b169561`) | `OneThird-L1b-Spread-Locality.md` |
+| 6 | Adopt the "strength check" + falsifier-quantifier check in Appendix A | **closed** — Appendix A step 4b | `STATE.md`, pm-onethird |
+
+**On finding 2, the substance.** The audit's counterexamples to the universal were re-verified at the
+far end by mg-fccb, and all four arcs postdate mg-8201 (2026-07-13): **mg-4a86**
+(`OneThird-StandardDominance-ComparisonRoute.md`) attacks the *dynamical* `λ₂^BK`-vs-`λ_std`
+comparison and is not an inversion-counting condition at all; **mg-210d**'s residual **(R)**
+(`probe-lambda-constant-bound.md` §5) yields only a constant floor `λ_std > 1 − D`, not `λ_std → 1`,
+and is not known to imply LIB; the **entropy probes** (mg-61bb, mg-f82f, mg-92e6, mg-e2de) target the
+Kahn–Saks/BFT `0.2764` bound and `δ` directly. None is a LIB surrogate, so the universal was false.
+The restricted claim — **two** objects, (B) and the locality lemma — is what §3.4 proves and is what
+now stands at every site.
+
+**On finding 3, what the far end now says.** `STATE.md` ledger row 8 now reads *"Sufficient
+conditions, **one-way**: **(B) ⟹ LIB ⟹ `λ_std→1`**. The reverse arrows are **UNPROVEN — not merely
+absent**"*, and the § *The single lemma to prove* line now reads *"the two faces are **not** logically
+independent (corrected 2026-07-29; mg-a58f Thm 3.3, audited mg-d112 CONFIRMED)"* and closes *"Both
+this line and ledger row 8 previously asserted an equivalence; they are reconciled together here."*
+The `W_m` caveat (`δ = 1/2`, so it separates the **quantities**, not the frozen-conditional
+**statements**) is carried there correctly. **The internal inconsistency the audit found is gone.**
 
 ---
 
