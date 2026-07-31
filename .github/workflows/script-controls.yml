@@ -192,27 +192,41 @@ jobs:
       # This is the standing machine check for the one direction those repairs
       # rest on.
       #
-      # It sweeps ALL posets on n = 3,4,5 against EVERY reference linear
-      # extension (31 625 element/order pairs) and asserts b_x <= m_x with zero
-      # exceptions, i.e. it actively hunts a counterexample to the fix rather
-      # than confirming it on the witness that motivated it.  It also pins the
-      # equality case at the e-minimum (6 385/6 385), which is why §3.1 remains
-      # VALID and must not be "corrected" alongside §2.3 -- the trap in that
-      # repair.  Exact Fraction arithmetic, standard library only, no numpy, no
-      # sampling; ~8 s.  Exits non-zero on any assertion.
+      # POPULATION, corrected by mg-069f (mg-8a71 finding F2).  This comment used
+      # to say the step sweeps "ALL posets on n = 3,4,5".  It does not: the
+      # generator draws relations only from pairs (a,b) with a < b, so it sweeps
+      # the 404 posets on n = 3,4,5 having the IDENTITY as a linear extension --
+      # 6 385 (poset, reference-order) pairs, 31 625 element triples -- which is
+      # 14.5% of the 4 469 labelled posets the old wording named (A001035:
+      # 19, 219, 4231).  The verdict is unaffected and the true statement is the
+      # stronger one: b_x and m_x are relabelling-invariant, so those 404 are a
+      # complete set of representatives of (P, e) pairs up to isomorphism and the
+      # sweep is exhaustive.  All three counts are now asserted in the script, so
+      # a generator drifting off its stated family fails instead of silently
+      # under-sweeping.  The all-labelled sweep is the next step.
+      #
+      # It asserts b_x <= m_x with zero exceptions, i.e. it actively hunts a
+      # counterexample to the fix rather than confirming it on the witness that
+      # motivated it.  It also pins the equality case at the e-minimum AND (added
+      # mg-069f, finding F3) at the e-maximum, 6 385/6 385 each -- which is why
+      # §3.1 remains VALID and must not be "corrected" alongside §2.3 (the trap in
+      # that repair), and why its falsifier has a symmetric second instantiation.
+      # Exact Fraction arithmetic, standard library only, no numpy, no sampling.
+      # Runtime: 14.5 s measured on the fleet host -- this comment said "~8 s",
+      # which mg-8a71 measured and mg-069f corrected.  Exits non-zero on any
+      # assertion.
       - name: 'mg-fccb inequality-direction check (is b_x <= m_x, ever violated?)'
         run: python3 scripts/onethird_mgfccb_direction_check.py
 
       # mg-8a71 (independent audit of the mg-fccb repair): the same direction on
-      # the population the step above NAMES but does not sweep.  mg-fccb's
-      # all_posets() generates relations only from pairs (a,b) with a < b, so it
-      # yields the 404 posets on n = 3,4,5 that have the IDENTITY as a linear
-      # extension -- not all 4 469 labelled posets (A001035: 19, 219, 4231).
-      # Its conclusion is unaffected (that family is a complete set of
-      # representatives up to isomorphism of (P, e) pairs, and b_x/m_x are
-      # relabelling-invariant), but the count 31 625 is 14.5% of the population
-      # the comment above claims.  This step sweeps the full labelled family:
-      # 43 842 (poset, reference-order) pairs, 218 166 element triples.
+      # the genuinely all-labelled population -- 4 469 posets on n = 3,4,5,
+      # 43 842 (poset, reference-order) pairs, 218 166 element triples.  This is
+      # 6.9x the family the step above sweeps.  That gap is not a defect in the
+      # step above (its family is a complete set of representatives up to
+      # isomorphism, and b_x/m_x are relabelling-invariant) -- it was a defect in
+      # how both were DESCRIBED, which mg-069f corrected at every site.  The step
+      # is kept because the isomorphism argument that licenses the smaller family
+      # is an argument, and this checks it against an enumeration.
       #
       # It also re-verifies the two identities the CORRECTED §2.3 sentence rests
       # on and that no direction check can see -- (F1) Sum_x m_x = 2E[inv_e] and
@@ -231,12 +245,30 @@ jobs:
       # docs/OneThird-L1b-Spread-Locality.md, where "live" excludes blockquotes
       # marked ~~struck~~ / ANNOTATION / RE-DERIVATION.
       #
-      # Two sites are recorded as an explicit BASELINE (mg-8a71 finding F1):
-      # §3.2's "Equivalently" and §5 recommendation 2's converse, both still
-      # unstruck.  The control fails on a NEW site, on §2.3's sentence returning
-      # to live text, AND on a baseline site disappearing -- so fixing F1 forces
-      # a re-baseline to zero rather than passing silently.  Demonstrated to FAIL
-      # on 1b00147^, the commit where the §2.3 error is still live:
+      # BASELINE IS NOW EMPTY (mg-069f).  mg-8a71 recorded two sites as a named
+      # baseline -- §3.2's "Equivalently" and §5 recommendation 2's converse,
+      # both then unstruck (finding F1) -- and built the control to fail when a
+      # baseline site DISAPPEARED, so that fixing F1 forced a re-baseline rather
+      # than passing silently.  mg-069f struck both at the site, the control
+      # failed as designed, and the baseline was reset to zero.  The control is
+      # now a plain assertion: the refuted inference is asserted in live body
+      # text NOWHERE in that document.
+      #
+      # mg-069f also tightened two things: an inline ~~struck~~ span inside a
+      # plain paragraph counts as marked (needed to strike one sentence of a
+      # numbered-list item), and a blockquote that merely DECLARES "STRUCK" is no
+      # longer exempted on the strength of its label -- it is checked with the
+      # inline strikes removed, so deleting the ~~ markup and keeping the label
+      # now fails.  Only ANNOTATION / RE-DERIVATION blocks are exempt, because
+      # commentary about a refuted claim must quote it.
+      #
+      # Exit codes, all measured, all predicted correctly before running:
+      #   HEAD                                                        -> 0
+      #   1b00147^  (pre-repair; §2.3's error live in the body)       -> 1
+      #   1b00147   (mg-fccb HEAD; F1's two sites live)               -> 1
+      #   HEAD with §3.2's ~~ deleted but "STRUCK" label kept         -> 1
+      #   HEAD with §5 rec 2's ~~ deleted                             -> 1
+      # Reproduce the first mutant-free one:
       #   git show 1b00147^:docs/OneThird-L1b-Spread-Locality.md > /tmp/pre.md
       #   python3 scripts/onethird_mg8a71_live_claim_control.py /tmp/pre.md  # -> 1
       - name: 'mg-8a71 live-claim control (is the refuted inference still asserted?)'

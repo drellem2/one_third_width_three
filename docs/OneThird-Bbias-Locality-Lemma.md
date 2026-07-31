@@ -852,11 +852,32 @@ a reader of *this* document had no way to tell which of its findings had been ac
 | # | audit finding | disposition | where |
 |---|---|---|---|
 | 1 | Accept the mathematics; nothing withdrawn | no action needed | — |
-| 2 | **OVERSTATEMENT** — "the weakest sufficient condition on the table" drops the body's "of the three"; "everything attacked since mg-8201 is a surrogate" is a **false universal** | **closed** — quantifiers restored at all three sites (§0, §12 row, §12 narrative) to the body's Finding 3.4 form | this doc, mg-fccb |
+| 2 | **OVERSTATEMENT** — "the weakest sufficient condition on the table" drops the body's "of the three"; "everything attacked since mg-8201 is a surrogate" is a **false universal** | **closed** — quantifiers narrowed at all three sites (§0, §12 row, §12 narrative); **not** to a form identical with the body's — see the correction below | this doc, mg-fccb; corrected mg-069f |
 | 3 | **CROSS-DOC MISS** — `STATE.md`:86 already asserted `LIB ⟺ (B)`, contradicting :102; reconcile **both**, not just :102 | **closed** — reconciled in `onethird_program`, both sites together | `STATE.md`, pm-onethird |
 | 4 | **CROSS-DOC MISS** — unflagged inequality-direction error in mg-dbd1 §2.3, and §3.2's "Equivalently" | **closed** — annotated (mg-1fdb, `b169561`); erroneous sentence struck at the site, re-derived independently, and its §5 consumers annotated (mg-fccb) | `OneThird-L1b-Spread-Locality.md` |
 | 5 | **LABEL** — downgrade §7.3's insufficiency row PROVEN → PLAUSIBLE | **closed** (mg-1fdb, `b169561`) | `OneThird-L1b-Spread-Locality.md` |
 | 6 | Adopt the "strength check" + falsifier-quantifier check in Appendix A | **closed** — Appendix A step 4b | `STATE.md`, pm-onethird |
+
+> **CORRECTION to row 2 (2026-07-31, mg-069f — mg-8a71 finding F4).** Row 2 said the quantifiers were
+> restored *"to the body's Finding 3.4 form"* at all three sites. **They were narrowed, but not to the
+> body's form, and the three sites do not agree with each other.** Read at the far end, verbatim:
+>
+> | site | what it says | vs the body |
+> |---|---|---|
+> | body, Finding 3.4 (§3.4) | *"the weakest of the three sufficient conditions **the program has** on the table … Both objects **the program** has attacked since mg-8201"* | — |
+> | §0 | *"the weakest **of the three** sufficient conditions on the table … both objects **the (A)+(B) route** has attacked since mg-8201"* | **narrower** |
+> | §12 attempt-index row | same phrasing as §0: *"both objects **the (A)+(B) route** has attacked since mg-8201"* | **narrower** |
+> | §12 narrative | *"the weakest of the three sufficient conditions we hold **on this route**"*; the *"both objects … since mg-8201"* clause is **absent entirely** | **narrower still** |
+>
+> **Nothing here overstates** — every site is at most as strong as what §3.4 proves, which is the
+> direction that matters and is why this is a LOW finding and not a reopening of finding 2. What was
+> wrong is only row 2's description of the fix. mg-8a71 recorded this for §0 alone and stated that
+> *"§12's row and narrative match the body"*; re-read at the far end, **the §12 row does not either**
+> — it carries the same *"(A)+(B) route"* as §0 — and the §12 narrative dropped the clause rather than
+> matching it. The finding is confirmed and slightly wider than reported. **Left as is** rather than
+> re-widened to *"the program"*: three narrower-than-proven statements are a correct record, and
+> editing proven-safe text a third time to chase verbal uniformity is the over-correction risk this
+> audit family exists to name.
 
 **On finding 2, the substance.** The audit's counterexamples to the universal were re-verified at the
 far end by mg-fccb, and all four arcs postdate mg-8201 (2026-07-13): **mg-4a86**

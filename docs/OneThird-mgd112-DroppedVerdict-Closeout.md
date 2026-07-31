@@ -131,15 +131,34 @@ no external engine, deterministic. Results:
 
 | check | result |
 |---|---|
-| `b_x ≤ m_x` over **all** posets on `n = 3,4,5` × **every** reference order | **31 625/31 625**; `0` cases of `b_x > m_x`; `13 545` strictly lossy; max `b_x/m_x = 1` |
-| `b_x = m_x` at the `e`-minimum | **6 385/6 385** — why §3.1 stands (§4) |
+| `b_x ≤ m_x` over the **404** posets on `n = 3,4,5` with the identity as a linear extension × **every** reference order | **31 625/31 625**; `0` cases of `b_x > m_x`; `13 545` strictly lossy; max `b_x/m_x = 1` |
+| `b_x = m_x` at the `e`-minimum, and at the `e`-**maximum** | **6 385/6 385** each — why §3.1 stands, and why it has two instantiations (§4) |
 | `Σ_x b_x²/E[inv_e]` on `W_m`, even `m ≤ 8` | `1/3` **exactly**, every case; closed form `s(s+1)/(3(2s+1))` matches |
 | `Σ_x b_x² ≤ n` on `W_m`, `m ≤ 8` | holds — direct refutation of the `Θ(n²)` conclusion |
 | `E[Σdisp²]/E[inv_e]` on `W_m` | `2, 2, 5/2, 8/3, 28/9, 10/3, 15/4, 4` — grows; growth entirely in the variance part |
 | `Σ_x m_x = 2E[inv_e]` (mg-a58f (F1)) | holds exactly on every `W_m` |
 
-The `b_x ≤ m_x` sweep is the important one: it is a search for a counterexample to the fix itself, over
-every poset and every reference order at those sizes, and it found none.
+The `b_x ≤ m_x` sweep is the important one: it is a search for a counterexample to the fix itself, and
+it found none.
+
+> **POPULATION CORRECTION (2026-07-31, mg-069f — mg-8a71 finding F2).** The row above and §6 both
+> originally described this sweep as running over ***all* posets** on `n ≤ 5` × all reference orders.
+> It does not, and the sentence that followed — *"over every poset and every reference order at those
+> sizes"* — is struck with it. `all_posets()` (now renamed `posets_with_identity_extension()`) builds
+> relations only from pairs `(a,b)` with `a < b`, so it yields the **404** posets on `n = 3,4,5`
+> having the identity as a linear extension, **not** the **4 469** labelled posets (A001035:
+> 19/219/4231). **31 625 is 14.5% of the population named.**
+>
+> **The verdict is unaffected, and the corrected statement is the stronger one.** `b_x`, `m_x` are
+> invariant under simultaneous relabelling, and relabelling any `(P, e)` by `e`-rank lands it in this
+> family — so the 404 are a **complete set of representatives of `(P, e)` pairs up to isomorphism**
+> and the sweep is exhaustive for a label-independent property, which `b_x ≤ m_x` is. Verified two
+> ways rather than asserted: by that argument, and by a genuinely all-labelled sweep — **4 469 posets,
+> 43 842 pairs, 218 166 element triples, 0 violations** (`scripts/onethird_mg8a71_audit_instrument.py`,
+> in CI). Both scripts now assert their population counts; the helper is renamed to what it returns,
+> and `poset_family(n, label_dependent=...)` forces every future call site to state which family it
+> needs, because for a **label-dependent** property the old helper would have under-swept 6.9× in
+> silence.
 
 ---
 
@@ -234,8 +253,8 @@ The ticket requires it: *this deliverable is of the same kind as the defect it r
 
 | assertion | direction | check |
 |---|---|---|
-| `b_x ≤ m_x` | `b` is bounded **above** by `m` | triangle inequality on non-negatives, from the definitions; **plus** an exhaustive counterexample sweep over all posets `n ≤ 5` × all reference orders (31 625 cases, 0 violations) |
-| equality iff mass one-sided | — | forced by the equality case of the triangle inequality; checked at the `e`-min (6 385/6 385) |
+| `b_x ≤ m_x` | `b` is bounded **above** by `m` | triangle inequality on non-negatives, from the definitions; **plus** a counterexample sweep over the 404 posets `n ≤ 5` with the identity as a linear extension × all reference orders (31 625 cases, 0 violations) — exhaustive up to isomorphism of `(P, e)`, *not* over all 4 469 labelled posets; corrected and re-verified all-labelled by mg-069f, §2.2 |
+| equality iff mass one-sided | — | forced by the equality case of the triangle inequality; checked at the `e`-min **and** the `e`-max (6 385/6 385 each; the `e`-max half added by mg-069f) |
 | Jensen `E[X²] ≥ (E[X])²` | `≥` | convexity of `x ↦ x²`; used only to bound `E[Σdisp²]` from **below** by `Σ b_x²`, which is the direction that helps a *falsifier* — and is not the failing step |
 | `Σ_x b_x² ≤ Σ_x m_x² ≤ (max m_x)Σ_x m_x` | upper | each step upper; `Σ_x m_x = 2E[inv_e]` verified numerically |
 | `Σ_x b_x²/E[inv_e] = 1/3` on even `m` | **equality**, not a bound | closed form derived by hand, then confirmed exactly (`Fraction`) at `m = 2,4,6,8`; the closed form `s(s+1)/(3(2s+1))` separately asserted and checked |

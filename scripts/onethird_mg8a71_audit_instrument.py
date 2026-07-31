@@ -309,6 +309,16 @@ def main():
               f"{t:>6} (poset, order, element) triples")
     print(f"    TOTAL: {R['tot_posets']} posets, {R['tot_pairs']} pairs, "
           f"{R['tot_triples']} triples")
+    # The population NAMED must be the population SWEPT (mg-069f).  This
+    # instrument was written to expose exactly that gap in mg-fccb's control, so
+    # it pins its own counts: 19+219+4231 = 4469 is A001035 for n = 3,4,5.
+    if ns == [3, 4, 5]:
+        assert (R["tot_posets"], R["tot_pairs"], R["tot_triples"]) \
+            == (4469, 43842, 218166), (
+                f"population changed: {(R['tot_posets'], R['tot_pairs'], R['tot_triples'])} "
+                "!= (4469, 43842, 218166) — A001035 for n = 3,4,5")
+        assert [R["per_n"][n][0] for n in ns] == [19, 219, 4231], \
+            "per-n poset counts no longer match A001035"
     print()
     print(f"    b_x <= m_x                 : {R['tot_triples'] - R['viol_direction']}"
           f"/{R['tot_triples']}   violations = {R['viol_direction']}")
@@ -334,13 +344,18 @@ def main():
     fail = (R["viol_direction"] or R["viol_F1"] or R["viol_star"]
             or R["viol_jensen"] or R["viol_det_upper"] or bad_wm
             or R["emin_equal"] != R["emin_total"]
+            # the e-MAX equality was measured and printed here but never made a
+            # failure condition; §3.1's mirror falsifier now rests on it in body
+            # text, so it is enforced (mg-069f, closing finding F3)
+            or R["emax_equal"] != R["emax_total"]
             or R["struck_fails"] == 0)
     print("\n" + "=" * 78)
     if fail:
         print("RESULT: FAIL — an audited assertion did not hold; see above.")
         return 1
     print("RESULT: PASS — direction b_x <= m_x holds with no exception;")
-    print("        equality is pinned at the e-minimum (so §3.1 stands);")
+    print("        equality is pinned at the e-minimum AND the e-maximum (so §3.1")
+    print("        stands, and its falsifier has a mirror instantiation);")
     print("        the identities (F1) and (star) that §2.3 rests on hold;")
     print("        the struck inference fails on a named, counted population.")
     return 0
