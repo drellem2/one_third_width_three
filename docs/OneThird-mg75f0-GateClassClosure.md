@@ -605,8 +605,16 @@ cheap; it also has this failure mode, and it is worth knowing which instrument c
 /usr/bin/python3 scripts/onethird_mg2c34_n7_overlap_test.py --no-sweep
 
 # the acceptance test: 18 gate runs, 7 mutations, 5 of them unseen        ~13 min
+# THIS is the demonstration -- the whole matrix, no --only and no --gates.
 /usr/bin/python3 scripts/onethird_mg75f0_gate_class_closure_demo.py
-/usr/bin/python3 scripts/onethird_mg75f0_gate_class_closure_demo.py --only M5,M6,M7,M9
+
+# a SUBSET is not the demonstration and no longer pretends to be (mg-a471).
+# It writes ...-gate-class-closure.PARTIAL.json instead of the committed report,
+# records cases_requested/gates_requested/partial_run, quotes both headline
+# ratios over the rows IT ran, and exits 2.  --partial-ok says "I know this is a
+# subset" and restores the 0/1 answer over those rows.
+/usr/bin/python3 scripts/onethird_mg75f0_gate_class_closure_demo.py \
+    --only M5,M6,M7,M9 --partial-ok
 
 # the probe's own mutation battery (mg-7db4), ten probe runs              ~5 min
 /usr/bin/python3 scripts/onethird_mg7db4_probe_mutation_battery.py
@@ -618,6 +626,12 @@ cheap; it also has this failure mode, and it is worth knowing which instrument c
 `data/onethird-mg75f0-gate-class-closure.json` is the acceptance run's committed output;
 `data/onethird-mg5ad1-gate-blindspot-probe.json` the probe's. Interpreter matters: bare `python3` on this
 host has no numpy.
+
+**Only a full run may write that first path** (mg-a471, closing mg-3946's F5). A subset run used to
+overwrite it with a two-row report carrying the same schema, the same `ALL_PASS: true`, no marker,
+and exit 0 — it cost mg-3946's audit two `git checkout --`s, and any reader who found the file
+would have believed it was the full report. A subset run now lands on
+`data/onethird-mg75f0-gate-class-closure.PARTIAL.json`, which is gitignored.
 
 ---
 

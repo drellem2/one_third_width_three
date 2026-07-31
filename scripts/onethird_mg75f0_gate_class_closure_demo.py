@@ -108,12 +108,48 @@ than only for exit > 1, which discarded the traceback in precisely the case
 that needed it; and a row that exits 1 saying nothing is named
 `crashed_rather_than_failed` in the report and fails the run.
 
+A SUBSET RUN IS NOT THE DEMONSTRATION (mg-a471, closing mg-3946's F5).  `--only`
+and `--gates` used to write `data/onethird-mg75f0-gate-class-closure.json` -- the
+COMMITTED report, the file a reader opens to learn what the demonstration showed
+-- with a two-row report carrying the same schema, the same `ALL_PASS: true`, no
+marker of any kind, and exit 0.  It bit mg-3946's audit twice and the committed
+record had to be restored with `git checkout --` both times.
+
+Three defects compounded there and all three are fixed here:
+
+  * the partial artifact sat AT THE CANONICAL PATH with nothing saying it was
+    partial, so anyone who found it believed it was the full report;
+  * the headline ratio's numerator was over the rows RUN and its denominator over
+    the FULL mutation set -- `1/5`, and `1/6` once mg-3946 added a row -- so its
+    two halves counted different populations;
+  * and the run exited 0 over both, so `demo.py --only M3 && echo passed` said
+    the demonstration passed.
+
+So: a subset run NEVER writes the canonical path -- it writes
+`data/onethird-mg75f0-gate-class-closure.PARTIAL.json`, which is gitignored, and
+leaves the committed report untouched.  Every report, at whichever path, records
+`cases_requested`, `gates_requested` and `partial_run` -- copied straight from
+mg-3946's own falsifier, which records exactly those "so it does not ship the
+defect it reports".  Both headline ratios are quoted over the UNSEEN rows THIS
+RUN exercised IN THE COLUMN BEING QUOTED, so their halves share a population.
+And an unacknowledged subset run exits 2 rather than 0.
+
+`--partial-ok` is the acknowledgement.  It says "I know this is a subset" and
+restores the 0/1 answer to the narrower question -- did every case that RAN hold
+its assertion? -- which is the question mg-3946's falsifier asks of this file and
+the only one a subset run can answer.  The report is still written to the PARTIAL
+path and still says `partial_run`, because acknowledging a subset at the command
+line says nothing to whoever reads the artifact later.
+
 Run:  /usr/bin/python3 scripts/onethird_mg75f0_gate_class_closure_demo.py
       (numpy required; ~13 min -- eighteen full runs of the CI gate)
-      --only M3,M5      run a subset
-      --gates widened   run one gate column only
+      --only M3,M5      run a subset          } either makes the run PARTIAL:
+      --gates widened   run one gate column   } exit 2, report to the PARTIAL
+                                                path, canonical path untouched
+      --partial-ok      acknowledge the subset: exit 0/1 over the rows that ran
 
-Writes `data/onethird-mg75f0-gate-class-closure.json`.
+Writes `data/onethird-mg75f0-gate-class-closure.json` on a FULL run and
+`data/onethird-mg75f0-gate-class-closure.PARTIAL.json` on a subset run.
 """
 
 import os
@@ -128,6 +164,20 @@ import subprocess
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GATE = os.path.join("scripts", "onethird_mg2c34_n7_overlap_test.py")
+
+# The two gate columns, in the order the matrix prints them.  Named rather than
+# spelled inline because `--gates` is compared against this to decide whether a
+# run is partial (mg-a471), and a run that asks for both in the other order is
+# not partial -- the comparison is over sets.
+ALL_GATES = ["pre-widening", "widened"]
+
+# mg-a471, closing mg-3946's F5.  TWO PATHS, and the split is the fix: the
+# canonical one is the committed record of the demonstration and only a FULL run
+# may write it; a subset run goes to the PARTIAL one, which is gitignored so it
+# cannot be committed by accident either.
+REPORT = os.path.join("data", "onethird-mg75f0-gate-class-closure.json")
+PARTIAL_REPORT = os.path.join(
+    "data", "onethird-mg75f0-gate-class-closure.PARTIAL.json")
 
 # The dataset the gate opens: the mg-8b64 reference row block, read by the
 # identity check.  `--no-sweep` never writes, so nothing else is needed.
@@ -376,7 +426,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="",
                     help="comma-separated subset, e.g. M3,M5 (none is implied)")
-    ap.add_argument("--gates", default="pre-widening,widened")
+    ap.add_argument("--gates", default=",".join(ALL_GATES))
+    ap.add_argument("--partial-ok", action="store_true",
+                    help="acknowledge that this is a subset run: answer 0/1 "
+                         "over the rows that RAN instead of exiting 2.  The "
+                         "report still goes to the PARTIAL path and still "
+                         "records partial_run -- see the module docstring")
     args = ap.parse_args()
 
     rev, pre_src = pre_widening_gate_source()
@@ -393,8 +448,32 @@ def main():
               "demonstrate anything")
 
     gates = [g for g in args.gates.split(",") if g]
+    all_cases = ["none"] + sorted(MUTATIONS)
     wanted = ["none"] + (sorted(MUTATIONS) if not args.only
                          else [m for m in args.only.split(",") if m != "none"])
+
+    # mg-a471, closing mg-3946's F5.  IS THIS THE DEMONSTRATION, OR A SUBSET OF
+    # IT?  Decided once, here, and consulted by the output path, the headline
+    # ratios, the report body and the exit code -- the four places that used to
+    # answer it independently by not asking.  Compared over SETS: asking for
+    # both columns in the other order, or naming every mutation by hand, is the
+    # full matrix and is not partial.
+    partial_run = (set(wanted) != set(all_cases)
+                   or set(gates) != set(ALL_GATES))
+    if partial_run:
+        print()
+        print("  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***")
+        print(f"  cases this run will run  : {','.join(wanted)}")
+        print(f"  gate columns             : {','.join(gates)}")
+        print(f"  the full matrix is       : {','.join(all_cases)}"
+              f"  x  {','.join(ALL_GATES)}")
+        print(f"  report goes to           : {PARTIAL_REPORT}")
+        print(f"  the committed report at {REPORT}")
+        print("                             is NOT written and NOT touched.")
+        if not args.partial_ok:
+            print("  this run will exit 2, not 0 -- pass --partial-ok if you "
+                  "meant to ask")
+            print("  only about the rows you named.")
 
     results, ok = [], True
     for mutation in wanted:
@@ -504,15 +583,32 @@ def main():
                   f"{r['pre_widening_verdict'].split(' -- ')[0]}")
 
     unseen = [m for m in MUTATIONS if MUTATIONS[m]["seen_by"].startswith("UNSEEN")]
+
+    # mg-a471, closing mg-3946's F5 -- BOTH HALVES OF EACH RATIO OVER ONE
+    # POPULATION.  `caught` was counted over the rows this run exercised while
+    # `unseen` was every UNSEEN row in the table, so `--only M9` printed
+    # "1/5 mutations ... are caught" -- four rows in the denominator that this
+    # run never ran, and a reader cannot tell that from the sentence.  Each
+    # denominator below is the UNSEEN rows this run actually exercised IN THE
+    # COLUMN BEING QUOTED.  There are two of them because the two columns are
+    # independently requestable: `--gates widened` runs no left column at all,
+    # and "fatal to nothing before it" is a statement about the left column.
+    def _ran(mutation, gate_variant):
+        return any(r["mutation"] == mutation and r["gate"] == gate_variant
+                   for r in results)
+
+    unseen_run_widened = [m for m in unseen if _ran(m, "widened")]
+    unseen_run_pre = [m for m in unseen if _ran(m, "pre-widening")]
+
     # mg-3946: "caught" means the gate REPORTED a control failure, not merely
     # that the process exited 1.  See the PASS criterion above.
-    caught = [m for m in unseen
+    caught = [m for m in unseen_run_widened
               if any(r["mutation"] == m and r["gate"] == "widened"
                      and r["exit"] == 1 and r.get("reported_a_failure")
                      for r in results)]
     crashed = [r["mutation"] for r in results
                if r.get("crashed_rather_than_failed")]
-    invisible = [m for m in unseen
+    invisible = [m for m in unseen_run_pre
                  if any(r["mutation"] == m and r["gate"] == "pre-widening"
                         and r["exit"] == 0 for r in results)]
     absorbed = [r["mutation"] for r in results
@@ -524,6 +620,18 @@ def main():
                 "class -- a quantity the document asserts, computed by code the "
                 "CI gate exercises, with no control that can fail -- closed?",
         "gate_command": f"python3 {GATE} --no-sweep",
+        # mg-a471, closing mg-3946's F5.  WHAT THIS RUN ACTUALLY RAN, on every
+        # report, at whichever path it lands, first in the file rather than
+        # buried.  Copied from mg-3946's own falsifier, which records
+        # `cases_requested` and `partial_run` "so it does not ship the defect it
+        # reports" -- this is that same pair, in the instrument it reported it
+        # against.  A partial report also no longer lands at the canonical path
+        # at all, so this field is the second line of defence and not the first.
+        "cases_requested": wanted,
+        "gates_requested": gates,
+        "full_matrix": {"cases": all_cases, "gates": ALL_GATES},
+        "partial_run": partial_run,
+        "IS_THE_DEMONSTRATION": not partial_run,
         "pre_widening_gate_revision": rev,
         "gate_sources_differ": widened_is_different,
         "route": "isolated tree per case (copy of scripts/ + the mg-8b64 "
@@ -545,6 +653,11 @@ def main():
                       for k, v in MUTATIONS.items()},
         "cases": results,
         "unseen_mutations": sorted(unseen),
+        # mg-a471.  The DENOMINATORS, written down next to the numerators, so
+        # the two ratios in the closing sentence can be checked against the
+        # report rather than taken on trust.  On a full run both are `unseen`.
+        "unseen_mutations_run_pre_widening": sorted(unseen_run_pre),
+        "unseen_mutations_run_widened": sorted(unseen_run_widened),
         "unseen_invisible_to_the_pre_widening_gate": sorted(invisible),
         "unseen_caught_by_the_widened_gate": sorted(caught),
         # mg-3946.  Non-empty means some row exited 1 without the gate naming a
@@ -553,11 +666,18 @@ def main():
         "crashed_rather_than_failed": sorted(crashed),
         "ALL_PASS": ok,
     }
-    out = os.path.join(REPO, "data", "onethird-mg75f0-gate-class-closure.json")
+    # mg-a471.  A PARTIAL RUN DOES NOT GET THE CANONICAL PATH.  This is the
+    # first of mg-3946's two named repairs; the `partial_run` field above is the
+    # second, and both are here because they answer different readers -- one
+    # who finds the file, and one who parses it.
+    out = os.path.join(REPO, PARTIAL_REPORT if partial_run else REPORT)
     with open(out, "w") as f:
         json.dump(report, f, indent=2)
     print()
     print(f"wrote {os.path.relpath(out, REPO)}")
+    if partial_run:
+        print(f"      PARTIAL -- the committed {REPORT}")
+        print("      was neither written nor read by this run.")
 
     if not ok:
         print("\nDEMONSTRATION FAILED: the matrix is not as asserted.  If an "
@@ -568,11 +688,45 @@ def main():
               "instrument fell over and\nthat is not the widening firing; "
               "read the stderr printed above the matrix.")
         return 1
-    print(f"\nDemonstration complete.  {len(caught)}/{len(unseen)} mutations "
-          f"that NEITHER mg-60d3 nor\nmg-5ad1 used are caught by the widened "
-          f"gate, and {len(invisible)}/{len(unseen)} of them were fatal to "
-          f"nothing before\nit -- so the widening is not a patch on its own "
-          f"witnesses.")
+
+    # mg-a471, the third of mg-3946's F5 defects: this used to be one sentence
+    # and one exit code for both a full run and a two-row subset of it.  A
+    # subset cannot say anything about the demonstration, so it does not get
+    # the demonstration's sentence and it does not get the demonstration's
+    # exit code either.
+    if partial_run:
+        # A column that was not requested at all gets said in words rather than
+        # quoted as `0/0`, which reads like a measurement and is not one.
+        right = (f"{len(caught)}/{len(unseen_run_widened)} were caught by the "
+                 f"widened gate" if unseen_run_widened else
+                 "the widened column was not run")
+        left = (f"{len(invisible)}/{len(unseen_run_pre)} were fatal to nothing "
+                f"before it" if unseen_run_pre else
+                "the pre-widening column was not run")
+        print("\nPARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN "
+              "held its assertion,")
+        print("and that is the whole of what this says.  Of the UNSEEN rows "
+              "this run exercised:")
+        print(f"  {right}")
+        print(f"  {left}")
+        print(f"Any ratio there is over the rows THIS RUN ran, which is why it "
+              f"is not over\nthe full table of {len(unseen)}.  The "
+              f"demonstration is the whole matrix: run it with\nno --only and "
+              f"no --gates.")
+        if args.partial_ok:
+            print("--partial-ok was given: exiting 0 on the rows that ran.")
+            return 0
+        print("Exiting 2: a subset run is not a passing demonstration, and "
+              "`... && echo ok`\nmust not be able to say it was.  Pass "
+              "--partial-ok if you meant to ask only\nabout the rows you "
+              "named.")
+        return 2
+
+    print(f"\nDemonstration complete.  {len(caught)}/{len(unseen_run_widened)} "
+          f"mutations that NEITHER mg-60d3 nor\nmg-5ad1 used are caught by the "
+          f"widened gate, and {len(invisible)}/{len(unseen_run_pre)} of them "
+          f"were fatal to\nnothing before it -- so the widening is not a patch "
+          f"on its own witnesses.")
     return 0
 
 

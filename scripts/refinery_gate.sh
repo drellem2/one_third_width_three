@@ -141,14 +141,14 @@ for h in $HITS; do echo "    $h"; done
 #
 # `.github/workflows/gate-mutation-demo.yml` says of itself that it INFORMS and
 # does not BLOCK.  That was true and it was also the whole defect: that
-# workflow was red on EVERY run for 24 h 09 m -- twelve consecutive failures,
-# first 2026-07-30T05:36:59Z (9fa4aaa) and last 2026-07-31T05:45:54Z (9991380),
-# five of them on `main` -- because its last step resolved a historical commit
-# that is not in a depth-1 `actions/checkout` clone, and nothing consumed the
-# result, so a demonstration that had NEVER ONCE EXECUTED was indistinguishable
-# from one running and passing.  A permanently-red check nobody reads is worse
-# than no check: it cannot be told apart from a working one and it trains every
-# reader to skip the column.
+# workflow was red on EVERY run for 24 h 08 m 55 s -- twelve consecutive
+# failures, first 2026-07-30T05:36:59Z (9fa4aaa) and last 2026-07-31T05:45:54Z
+# (9991380), five of them on `main` -- because its last step resolved a
+# historical commit that is not in a depth-1 `actions/checkout` clone, and
+# nothing consumed the result, so a demonstration that had NEVER ONCE EXECUTED
+# was indistinguishable from one running and passing.  A permanently-red check
+# nobody reads is worse than no check: it cannot be told apart from a working
+# one and it trains every reader to skip the column.
 #
 # THOSE FIGURES ARE mg-3946'S, AND THEY REPLACE "21 hours, eight consecutive
 # runs".  That sentence was the ticket's own undercount; the mg-3934 doc
@@ -157,6 +157,14 @@ for h in $HITS; do echo "    $h"; done
 # over-wide statement surviving in a file's own description of itself, where
 # nobody is watching.  Re-derived from `gh run list --workflow='Gate mutation
 # demo'`, which is the record both figures were meant to be read off.
+#
+# THE WINDOW IS THE MEASURED ONE, NOT A ROUNDED ONE (mg-a471).  mg-3946 wrote
+# "24 h 09 m" here and in the workflow header and left "~24 hours" standing in
+# the mg-3934 doc -- the same pattern one turn later, in the same finding that
+# names it.  86 935 s between those two timestamps is 24 h 08 m 55 s, and that
+# is now the figure at all FIVE sites: this comment, the branch text ~90 lines
+# below (the only one a reader of a merge actually sees), the workflow header,
+# and docs/OneThird-mg3934-CI-HistoryDepth.md secs 2 and 3.4.
 #
 # Making the ~30-minute job blocking was rejected for the reason stated above
 # this section -- a gate long enough to want bypassed does not survive.  So the
@@ -239,7 +247,8 @@ else
             echo "    it now.  It is red, which means one of the demonstrations"
             echo "    that these controls can still FAIL is not currently being"
             echo "    made.  If nobody looks at it, it stays red -- that is what"
-            echo "    happened for 24 h on 2026-07-30/31 (mg-3934, mg-3946)."
+            echo "    happened for 24 h 08 m 55 s on 2026-07-30/31 -- twelve"
+            echo "    consecutive red runs (mg-3934, mg-3946, mg-a471)."
         fi
     fi
     if [ -n "$PENDING" ]; then

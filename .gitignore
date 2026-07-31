@@ -27,6 +27,14 @@ lean/lake-packages/
 scripts/_n6_cache/
 scripts/_*.log
 
+# Subset-run reports (mg-a471, closing mg-3946's F5).  A `--only`/`--gates` run
+# of a demonstration cannot establish what a full run establishes, so it must
+# not be able to become the committed record of one.  The demonstrations write
+# their partial output to a `.PARTIAL.json` sibling of their canonical path; a
+# partial file that cannot be committed by accident is the second half of the
+# fix, the first being that it never lands on the canonical path at all.
+data/*.PARTIAL.json
+
 # Python bytecode cache
 scripts/__pycache__/
 __pycache__/
