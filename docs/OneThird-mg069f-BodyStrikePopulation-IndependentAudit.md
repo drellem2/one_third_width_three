@@ -88,6 +88,33 @@ identities on 43 842 pairs, all four `W_m` closed forms, the exact `1/3`, `Var =
 population counts at every granularity, the label-dependence guard, the two negative controls, the
 four-hunk locality-lemma constraint, and the contamination disclosure.
 
+> ### ✅ DISPOSITION (2026-07-31, mg-cd04): **G1 and G2 are CLOSED.** G3 and G4 stand.
+>
+> The findings above are left exactly as filed — this is the record of what was found, and an audit
+> that is edited by the repair that answers it is no longer a record. What was done to each:
+>
+> * **G1 — closed at the site and at the population.** The markup was added in `mgd112` §2.2, and
+>   the ledger's C9 baseline was removed (the "baseline site disappeared" gate fired as designed).
+>   The population question this audit named but could not act on —
+>   *"why the control does not look at that document"* — is answered by a new corpus-wide control on
+>   the **structure** rather than the signatures: `scripts/onethird_mgcd04_declared_strike_control.py`,
+>   242 documents, 2 hits, both of them **this report** quoting the defect it found, and both
+>   baselined by name.
+> * **G2 — closed.** An `EXEMPT` label now reaches its own sub-paragraph (bounded at 6 lines) plus
+>   each later sub-paragraph that carries a quotation. Exempt lines in the target document fall from
+>   **147 to 88**; the M1 mutant this audit built now exits **1**, and all three mutants are an
+>   assertion rather than a report.
+> * **One correction to §3, found by the G2 fix and not by re-reading.** With the exemption bounded,
+>   the same ledger at `1b00147` reports **LIVE 8, not 7**: **C7** — the *"over all posets on
+>   `n = 3,4,5`"* population claim mg-8a71 F2 proved false — sat in the *Machine-checked*
+>   sub-paragraph of the 53-line `RE-DERIVATION` block, quoting nothing, **inside the very blind spot
+>   §4.1 names**. So G2 was not only demonstrable by mutation; it was hiding a real ledger claim at
+>   this audit's own demonstration commit. The reading §3 gives the drift — the repair working — is
+>   unaffected and now **computed claim by claim** rather than narrated.
+> * **G3 and G4 are NOT addressed here** and remain open; mg-cd04's scope was G1 + G2.
+>
+> Full account: `docs/OneThird-mg0242-G1G2-Repair.md`.
+
 ---
 
 ## 3. Primary: STRUCK against REFUTED

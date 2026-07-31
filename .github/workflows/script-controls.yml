@@ -262,17 +262,64 @@ jobs:
       # now fails.  Only ANNOTATION / RE-DERIVATION blocks are exempt, because
       # commentary about a refuted claim must quote it.
       #
-      # Exit codes, all measured, all predicted correctly before running:
+      # mg-cd04 CLOSED mg-0242 FINDING G2: that tightening covered ONE of the two
+      # marker classes.  An EXEMPT block was still skipped ENTIRELY on a label
+      # read from its first three lines, with NO bound on how long the block ran --
+      # the longest in this file runs 53 lines and swallowed the §2.3 population
+      # correction mg-069f itself wrote.  An EXEMPT label now reaches only:
+      #   * its own sub-paragraph, and only for MAX_LABEL_LINES (6) lines -- the
+      #     one exemption still granted on a label's word, and now bounded; plus
+      #   * each further sub-paragraph that carries a QUOTATION.  Commentary
+      #     earns its exemption by quoting the claim it diagnoses; a
+      #     sub-paragraph that quotes nothing is body text wearing a distant
+      #     label, and is checked.
+      # Effect on this file: exempt lines 147 -> 88, checked 319 -> 378, and the
+      # ANNOTATION-tail mutant that mg-0242 demonstrated (exit 0, MISSED) is now
+      # caught.  Same rule as the strike form -- BACK THE LABEL WITH MARKUP --
+      # applied to the class it was missing.  NO new live sites at HEAD.
+      #
+      # Exit codes, all measured:
       #   HEAD                                                        -> 0
       #   1b00147^  (pre-repair; §2.3's error live in the body)       -> 1
       #   1b00147   (mg-fccb HEAD; F1's two sites live)               -> 1
       #   HEAD with §3.2's ~~ deleted but "STRUCK" label kept         -> 1
       #   HEAD with §5 rec 2's ~~ deleted                             -> 1
+      #   HEAD with a refuted sentence in an ANNOTATION tail          -> 1  (was 0)
       # Reproduce the first mutant-free one:
       #   git show 1b00147^:docs/OneThird-L1b-Spread-Locality.md > /tmp/pre.md
       #   python3 scripts/onethird_mg8a71_live_claim_control.py /tmp/pre.md  # -> 1
       - name: 'mg-8a71 live-claim control (is the refuted inference still asserted?)'
         run: python3 scripts/onethird_mg8a71_live_claim_control.py
+
+      # mg-cd04 (closes mg-0242 finding G1, at the site AND at the population).
+      # mg-069f closed, by mutation, the hole where a block could exempt itself by
+      # DECLARING a strike without the ~~ markup -- and in the SAME COMMIT wrote a
+      # POPULATION CORRECTION block into mgd112 §2.2 that said a sentence "is
+      # struck with it" and did not strike it.  One document over from where the
+      # live-claim control looks, so no control could see it.  mg-cd04 added the
+      # markup; this step is the other half -- the finding is really about the
+      # POPULATION, and a control whose population stops at one document is the
+      # same defect one level up.
+      #
+      # mg-0242 §8 measured the obvious generalisation and rejected it: running the
+      # live-claim control's four SIGNATURES corpus-wide is ~94% false positive,
+      # because audit documents discuss refuted claims in prose the convention
+      # cannot mark.  What generalises is the STRUCTURE, not the content: "a
+      # sentence that says text is struck must carry ~~" is claim-free, so quoting
+      # a refuted sentence does not trip it.  Scoped to the SENTENCE, not the
+      # block -- mg-8a71-VerdictRepairs §0 quotes a standard in one sentence and
+      # reports strikes made elsewhere in the next, and that is a true report, not
+      # a defect; it is printed as a NEAR MISS so the narrowing stays visible.
+      #
+      # 242 documents, 100 527 lines, every line classified and asserted to sum.
+      # At HEAD: 2 hits, both baselined -- the mg-0242 report QUOTING the defect
+      # it found, which is what an audit document is for.  A baseline site ceasing
+      # to match also fails, so repairing one forces a re-baseline.
+      # Demonstrated against the commit where G1 is present:
+      #   python3 scripts/onethird_mgcd04_declared_strike_control.py --demonstrate bb1cb9b
+      #     -> finds mgd112 §2.2, and nothing else in the 239 that tree holds.
+      - name: 'mg-cd04 declared-strike control (does any document promise a strike it did not make?)'
+        run: python3 scripts/onethird_mgcd04_declared_strike_control.py
 
       # mg-0242 (independent audit of the mg-069f closeout, bb1cb9b): three
       # instruments, each built for one half of the verdict this audit was given.
@@ -306,21 +353,29 @@ jobs:
       # claims false; this ledger checks each against the repair's OWN live/marked
       # convention (the predicates are imported from the live-claim control, so
       # the standard applied is the one the repair set).  At HEAD: 10 refuted,
-      # 8 removed from live body text, 2 live -- both baselined:
+      # 9 removed from live body text, 1 live -- baselined:
       #   C5  §5 rec 1's "This is the single pin", which mg-069f flagged and
-      #       routed to pm-onethird rather than reversing mg-8a71's adjudication;
-      #   C9  mgd112 §2.2's POPULATION CORRECTION block, which says a sentence
-      #       "is struck with it" and does not strike it -- the exact hole
-      #       mg-069f found by mutation and closed in the control, reappearing one
-      #       document over in text mg-069f itself wrote.  Not flagged anywhere.
-      # A third live site fails; a baseline site being struck also fails.
-      # It also sweeps all 240 documents in docs/ with the same signatures (the
-      # repair's control is one file, by design), and runs three mutants that
-      # locate the remaining blind spot: a refuted sentence in the TAIL of an
-      # ANNOTATION block is missed, while the same sentence as a paragraph or in
-      # the tail of a STRIKE block is caught.  Demonstrated where F1 is present:
+      #       routed to pm-onethird rather than reversing mg-8a71's adjudication.
+      # RE-BASELINED by mg-cd04.  C9 -- mgd112 §2.2's POPULATION CORRECTION block,
+      # which said a sentence "is struck with it" and did not strike it -- was the
+      # second baselined site and mg-0242's finding G1.  mg-cd04 added the markup,
+      # the "baseline site disappeared" gate fired exactly as built, and C9 is
+      # removed from the baseline rather than left to pass silently.
+      # A second live site fails; a baseline site being struck also fails.
+      # It also sweeps all 242 documents in docs/ with the same signatures (the
+      # repair's control is one file, by design), and runs three mutants which are
+      # now an ASSERTION rather than a report: all three must exit 1.  M1 (a
+      # refuted sentence in the TAIL of an ANNOTATION block) was mg-0242's finding
+      # G2 and exited 0; mg-cd04 closed it, and M1 returning to 0 now fails this
+      # step as a G2 regression.  Demonstrated where F1 is present:
       #   python3 scripts/onethird_mg0242_struck_vs_refuted.py --tree 1b00147
-      #     -> LIVE 7 at mg-fccb HEAD vs LIVE 2 here.
+      #     -> LIVE 8 at mg-fccb HEAD vs LIVE 1 here, ITEMISED claim by claim.
+      # (mg-0242 read that number as 7.  It was 7 under the un-bounded exemption:
+      # C7, the "over all posets on n = 3,4,5" population claim mg-8a71 F2 proved
+      # false, sat in the Machine-checked sub-paragraph of the 53-line
+      # RE-DERIVATION block, quoting nothing, inside the G2 blind spot.  With the
+      # exemption bounded the same ledger sees it.  The drift reading -- the
+      # repair working -- holds and is now computed rather than narrated.)
       - name: 'mg-0242 struck-vs-refuted ledger (is every refuted claim gone from the body?)'
         run: python3 scripts/onethird_mg0242_struck_vs_refuted.py
 

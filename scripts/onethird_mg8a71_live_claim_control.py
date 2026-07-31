@@ -24,6 +24,33 @@ which is the same convention applied at sentence granularity and is stripped
 before the signatures are applied (added mg-069f, when the §5 fix below needed to
 strike one sentence of a numbered-list item without striking the item).
 
+HOW FAR A MARKER REACHES (mg-cd04, closing mg-0242 finding G2).  mg-069f stopped
+a STRIKE block exempting itself by its label alone -- such a block is now checked
+with inline `~~` spans removed, so declaring STRUCK without the markup fails.
+That tightening was applied to ONE of the two marker classes.  EXEMPT blocks
+(`ANNOTATION` / `RE-DERIVATION`) were still skipped ENTIRELY on a label read from
+`block[:3]`, with NO bound on how long the block ran; mg-0242 demonstrated the
+gap by mutation (refuted sentence in an ANNOTATION tail -> exit 0, MISSED; the
+same sentence as a paragraph -> exit 1, caught) and showed it was not
+hypothetical -- the longest ANNOTATION block in this file runs 53 lines and
+swallows load-bearing prose that mg-069f itself wrote.
+
+An EXEMPT marker now reaches only as far as the thing it is a marker FOR:
+
+  * the block is split into sub-paragraphs at its own blank (`>`-only) lines;
+  * the sub-paragraph carrying the label is exempt;
+  * each following sub-paragraph is exempt only while it carries a QUOTATION --
+    a `~~struck~~` span or a quoted sentence.  Commentary about a refuted claim
+    has to quote the claim, and that quotation is the whole reason the exemption
+    exists; a sub-paragraph that quotes nothing is not commentary, it is body
+    text, and the exempt run ENDS there;
+  * and in no case does a label exempt more than MAX_EXEMPT_LINES lines.
+
+Everything past the exempt prefix is checked as an ordinary quote unit.  This is
+the same rule as the strike tightening -- BACK THE LABEL WITH MARKUP -- applied
+to the class it was missing, plus the length bound the strike form gets for free
+by being per-sentence.
+
 BASELINE: EMPTY, as of 2026-07-31 (mg-069f).  This control was written with two
 known-live sites as an explicit baseline -- §3.2's "Equivalently" and §5
 recommendation 2's converse, the two sites mg-8a71 finding F1 recorded as still
@@ -44,6 +71,21 @@ labels and never scanned -- while this paragraph claimed "all of it"; that is th
 same NAMED-vs-SWEPT defect this control's own subject matter is about, so it is
 recorded rather than quietly fixed.
 
+ONE FILE IS STILL THE POPULATION, AND THAT IS ITS OWN LIMIT.  mg-0242 finding G1
+was a block in `docs/OneThird-mgd112-DroppedVerdict-Closeout.md` that declared a
+sentence struck and did not strike it -- the exact defect the paragraph above
+closed, one document over from where this control looks, so this control could
+not see it.  The population is deliberately not widened here: mg-0242 measured a
+corpus-wide run of THESE signatures at ~94% false positive, because audit
+documents discuss refuted claims in tables and prose the convention has no way to
+mark.  What generalises is not the signature but the STRUCTURE -- "a sentence
+that declares a strike must carry the markup" is content-free -- and that check
+is now corpus-wide in `scripts/onethird_mgcd04_declared_strike_control.py` (2
+baselined hits over 242 documents, and it bites at bb1cb9b where G1 is live).
+Read the two together: this one asks whether a named claim is
+live in one document; that one asks whether any document in the corpus declares a
+strike it did not make.
+
 USAGE
     onethird_mg8a71_live_claim_control.py [path]        # default: the doc in-repo
 Demonstration against a commit where the defect IS present:
@@ -60,7 +102,9 @@ DOC = "docs/OneThird-L1b-Spread-Locality.md"
 #
 # EXEMPT: commentary ABOUT the refuted claim — an annotation has to quote and
 # discuss the inference to diagnose it, so signatures fired there would be pure
-# false positives.  Skipped entirely.
+# false positives.  Skipped — but only as far as the quotation runs, and never
+# past MAX_EXEMPT_LINES (mg-cd04, mg-0242 G2; before that, skipped ENTIRELY on
+# the strength of the label, for a block of any length).
 #
 # STRIKE: a block retaining a refuted claim as a record.  These are NOT skipped.
 # They are checked after inline ~~struck~~ spans are removed, so a block that
@@ -69,6 +113,21 @@ DOC = "docs/OneThird-L1b-Spread-Locality.md"
 # and a mutant that deleted the ~~ markup and kept the label passed.
 EXEMPT_MARKERS = ("ANNOTATION", "RE-DERIVATION")
 STRIKE_MARKERS = ("~~", "STRUCK")
+
+# The bound on the ONE exemption still granted on a label's word alone: the
+# label's own sub-paragraph (mg-cd04).  A label is a line or two; 6 is generous
+# against every marker in this corpus and far short of the 53-line block mg-0242
+# found a three-line label covering.  Every exempt line beyond it has to be
+# backed by markup in its own sub-paragraph, so no further global cap is needed —
+# the same shape as the strike rule, where each struck sentence carries its ~~.
+MAX_LABEL_LINES = 6
+
+# What makes a sub-paragraph of an EXEMPT block commentary rather than body text:
+# it QUOTES the thing it is commenting on.  A struck span, or a quoted sentence
+# long enough not to be a stray pair of quote marks.  Deliberately NOT inline
+# code — `m_x` appears in nearly every line of this corpus, so accepting it would
+# hand the exemption straight back.
+QUOTATION = re.compile(r'~~.+?~~|"[^"\n]{8,}"|“[^”\n]{8,}”', re.DOTALL)
 
 # Signatures of the refuted inference.  Each is (id, description, predicate).
 SIGNATURES = [
@@ -95,6 +154,75 @@ BASELINE = set()
 
 # An inline ~~struck~~ span is marked text, not live text.
 INLINE_STRIKE = re.compile(r"~~.+?~~", re.DOTALL)
+
+
+def sub_paragraphs(block):
+    """Half-open (start, end) index pairs of a blockquote's own sub-paragraphs.
+
+    A blockquote's internal blank lines are `>` or `>` + whitespace; markdown
+    keeps them inside the block, which is exactly how a 53-line block ends up
+    with one label at the top and six paragraphs of body text under it.
+    """
+    subs = []
+    i = 0
+    n = len(block)
+    while i < n:
+        if not block[i].lstrip(">").strip():
+            i += 1
+            continue
+        j = i
+        while j < n and block[j].lstrip(">").strip():
+            j += 1
+        subs.append((i, j))
+        i = j
+    return subs
+
+
+def exempt_partition(block):
+    """Split an EXEMPT blockquote into (exempt lines, checkable sub-paragraphs).
+
+    mg-cd04 (mg-0242 finding G2).  The label used to exempt `len(block)`, whatever
+    that was.  Two rules replace that, and between them every exempt line is now
+    either close to the label or backed by its own markup:
+
+      * the LABEL's own sub-paragraph is exempt on the label's word alone — that
+        is what a label is — but only for MAX_LABEL_LINES lines.  This is the one
+        unbacked exemption left, and it is the one that is bounded;
+      * every OTHER sub-paragraph is exempt only if it carries a QUOTATION.  An
+        annotation earns its exemption by quoting the claim it diagnoses; a
+        sub-paragraph that quotes nothing is body text wearing a label three
+        lines up, which is precisely the mg-0242 G2 blind spot.
+
+    Judged per sub-paragraph rather than as a prefix run, deliberately: a genuine
+    annotation interleaves quoting paragraphs with non-quoting ones (§2.3's
+    mg-1fdb block does), and cutting the run at the first non-quoting paragraph
+    would merge every quotation after it into one checked unit and fire on the
+    quotations themselves.  Per sub-paragraph, each is judged on its own markup —
+    and the appended-tail mutant is still caught, because the mutant quotes
+    nothing.
+
+    Returns (n_exempt_lines, [(start, end), ...]) over indices into `block`.
+    """
+    subs = sub_paragraphs(block)
+    if not subs:
+        return len(block), []          # nothing but blank quote lines
+    n_exempt = 0
+    checkable = []
+    for idx, (start, end) in enumerate(subs):
+        if idx == 0:
+            cut = min(end, start + MAX_LABEL_LINES)
+            n_exempt += cut - start
+            if cut < end:
+                checkable.append((cut, end))
+            continue
+        text = " ".join(b.lstrip("> ").rstrip() for b in block[start:end])
+        if QUOTATION.search(text):
+            n_exempt += end - start
+        else:
+            checkable.append((start, end))
+    # the block's own blank lines are exempt bookkeeping, not text
+    n_exempt += sum(1 for b in block if not b.lstrip(">").strip())
+    return n_exempt, checkable
 
 
 def live_paragraphs(lines, coverage=None):
@@ -140,8 +268,17 @@ def live_paragraphs(lines, coverage=None):
                 j += 1
             head = " ".join(block[:3]).lower()
             exempt = any(mk.lower() in head for mk in EXEMPT_MARKERS)
+            # mg-cd04: the label no longer exempts the block.  It exempts a
+            # bounded label sub-paragraph plus whichever sub-paragraphs back
+            # themselves with a quotation; the rest are ordinary quote units.
             if exempt:
-                count("exempt_annotation", j - i)
+                n_exempt, checkable = exempt_partition(block)
+                count("exempt_annotation", n_exempt)
+                for a, b_ in checkable:
+                    count("quote", b_ - a)
+                    text = " ".join(x.lstrip("> ").rstrip() for x in block[a:b_])
+                    if text.strip():
+                        yield i + 1 + a, section, text
             else:
                 count("quote", j - i)
                 text = " ".join(b.lstrip("> ").rstrip() for b in block)

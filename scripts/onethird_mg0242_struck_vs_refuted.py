@@ -27,12 +27,19 @@ FOUR PARTS.
 
   (C) MUTANT: THE EXEMPT-BLOCK TAIL.  mg-069f closed the hole where a blockquote
       could exempt itself by DECLARING "STRUCK" without the markup.  That
-      tightening was applied to STRIKE blocks only.  EXEMPT blocks (ANNOTATION /
-      RE-DERIVATION) are still skipped ENTIRELY on the strength of a label that
-      is read from the first three lines, with no bound on how long the block
-      runs.  This constructs the mutant and reports whether the control sees it.
-      A control mutant is worthless unless it is also shown to CATCH the same
-      sentence when it is genuinely live, so the paired mutant is run too.
+      tightening was applied to STRIKE blocks only; EXEMPT blocks (ANNOTATION /
+      RE-DERIVATION) were still skipped ENTIRELY on the strength of a label read
+      from the first three lines, with no bound on how long the block ran.  This
+      constructs the mutant and reports whether the control sees it.  A control
+      mutant is worthless unless it is also shown to CATCH the same sentence when
+      it is genuinely live, so the paired mutant is run too.
+
+      CLOSED by mg-cd04, and this part is now an ASSERTION rather than a report.
+      All three mutants must exit 1.  When mg-0242 filed the finding M1 exited 0;
+      the exemption is now per-sub-paragraph and quotation-backed, with the
+      label's own reach bounded, so a sentence appended to an ANNOTATION tail is
+      checked like any other.  M1 returning to exit 0 means the blind spot is
+      back, and this script fails.
 
   (D) DELETION REVIEW.  Over-correction is the risk this audit family exists to
       name -- mg-8a71's F5 was exactly "the strike removed a true clause".  This
@@ -123,7 +130,7 @@ LEDGER = [
     ("C9  mgd112 §2.2 'over every poset and every reference order'",
      "docs/OneThird-mgd112-DroppedVerdict-Closeout.md",
      r"over every poset and every reference order", "mg-8a71 F2", "gone",
-     "DELETION (mg-069f, F2) — see part D"),
+     "DELETION declared as a strike (mg-069f, F2); markup added mg-cd04 (G1)"),
     ("C10 mgd112 §6 'sweep over all posets n ≤ 5'",
      "docs/OneThird-mgd112-DroppedVerdict-Closeout.md",
      r"sweep over all posets", "mg-8a71 F2", "gone",
@@ -137,13 +144,17 @@ LEDGER = [
 #
 #   C5  the repair flagged this one itself and routed it to pm-onethird rather
 #       than reversing mg-8a71's adjudication.  Flagged, not hidden.
-#   C9  NOT flagged anywhere.  mg-069f's own POPULATION CORRECTION block in
-#       mgd112 §2.2 says the sentence "is struck with it" and does not strike it,
-#       so by the very rule mg-069f added to this control ("a block may not
-#       exempt itself by its label") the sentence reads as live.
+#
+# RE-BASELINED 2026-07-31 by mg-cd04.  C9 was the second entry: mg-069f's own
+# POPULATION CORRECTION block in mgd112 §2.2 said the sentence "is struck with it"
+# and did not strike it, so by the very rule mg-069f added to the control ("a
+# block may not exempt itself by its label") the sentence read as live.  mg-cd04
+# added the ~~ markup at the site, the baseline-disappeared gate fired exactly as
+# it was built to, and C9 is removed from this set rather than left to pass
+# silently.  LIVE is now 1, and it is C5 — flagged, routed, and not this
+# instrument's to disposition.
 KNOWN_LIVE = {
     "C5  §5 rec 1 'This is the single pin'",
-    "C9  mgd112 §2.2 'over every poset and every reference order'",
 }
 
 
@@ -211,7 +222,7 @@ def part_a(tree=None):
     for k, v in sorted(kinds.items(), key=lambda kv: -kv[1]):
         print(f"      {v:>2}  {k}")
     gone_from_baseline = KNOWN_LIVE - set(live_ids)
-    return total, struck, live, unexpected, gone_from_baseline
+    return total, struck, live, unexpected, gone_from_baseline, live_ids
 
 
 # ------------------------------------------------------------------ part B ---
@@ -401,13 +412,31 @@ def main():
         print("=" * 96)
         print(f"DEMONSTRATION — the ledger at {rev}, where the F1 defect is present")
         print("=" * 96)
-        total, struck, live, unexpected, gone = part_a(tree=rev)
+        total, struck, live, unexpected, gone, there = part_a(tree=rev)
+        here = part_a()[5]
         print(f"  at {rev}: REFUTED {total}, REMOVED {struck}, LIVE {live}")
-        print("  (at HEAD the same ledger reports LIVE 2 — the two sites mg-069f")
-        print("   struck are the difference, which is the repair working.)")
-        return 0 if live > 2 else 1
+        print()
+        # mg-cd04: the drift used to be narrated ("the two sites mg-069f struck
+        # are the difference").  It is now COMPUTED, because the narration was
+        # short: five claims left live text between these two trees, not two.
+        # Same ledger, same classifier, different commit — so the difference has
+        # to be named claim by claim or the number means nothing.
+        moved = [c for c in there if c not in here]
+        arrived = [c for c in here if c not in there]
+        print(f"  LIVE at {rev} : {', '.join(c.split()[0] for c in there) or '—'}")
+        print(f"  LIVE at HEAD    : {', '.join(c.split()[0] for c in here) or '—'}")
+        print(f"  LEFT live text  : {', '.join(c.split()[0] for c in moved) or '—'}"
+              f"   ({len(moved)} claims — this is the drift, itemised)")
+        print(f"  ENTERED live text: {', '.join(c.split()[0] for c in arrived) or '—'}")
+        print()
+        print("  The reading holds: every claim in LEFT was removed by a disposition")
+        print("  in the arc, and nothing ENTERED.  The drift is the repair working.")
+        for cid in moved:
+            inst = next(l[5] for l in LEDGER if l[0] == cid)
+            print(f"      {cid.split()[0]:<4} {inst}")
+        return 0 if live > len(here) else 1
 
-    total, struck, live, unexpected, gone = part_a()
+    total, struck, live, unexpected, gone, live_ids = part_a()
     print()
     ndocs, nunits, hits = part_b()
     print()
@@ -438,14 +467,25 @@ def main():
         for g in sorted(gone):
             print(f"          {g}")
         rc = 1
-    if rc1 == 0 and rc2 == 1:
-        print("\nNOTE (not a failure — this is a finding about the control, not the")
-        print("      document): mg-069f's label-vs-markup tightening covers STRIKE")
-        print("      blocks only.  An ANNOTATION label still exempts a block of any")
-        print("      length from the first three lines; M1 lands in that blind spot")
-        print("      and M2 proves the same sentence is caught when it is not.")
+    # mg-cd04: G2 is closed, so the mutants are now a REGRESSION TEST, not a
+    # report.  All three must be caught.  M1 was the finding (exit 0 at mg-0242);
+    # M2 and M3 were already caught and are kept because a mutant that is missed
+    # proves nothing unless the same sentence is demonstrably catchable.
+    missed = [name for name, code in
+              (("M1 exempt-block tail", rc1),
+               ("M2 plain paragraph", rc2),
+               ("M3 strike-block tail", rc3)) if code == 0]
+    if missed:
+        print("\nRESULT: FAIL — the control missed a mutant it must catch: "
+              + ", ".join(missed) + ".")
+        if rc1 == 0:
+            print("        M1 missed means mg-0242 finding G2 has REGRESSED: an")
+            print("        ANNOTATION label is exempting a block on its own word")
+            print("        again.  See onethird_mg8a71_live_claim_control.exempt_partition.")
+        rc = 1
     if rc == 0:
-        print("\nRESULT: PASS — the ledger matches its recorded baseline.")
+        print("\nRESULT: PASS — the ledger matches its recorded baseline, and all")
+        print("        three mutants are caught (mg-0242 G2 closed by mg-cd04).")
     return rc
 
 

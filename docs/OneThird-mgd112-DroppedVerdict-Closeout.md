@@ -143,11 +143,17 @@ it found none.
 
 > **POPULATION CORRECTION (2026-07-31, mg-069f — mg-8a71 finding F2).** The row above and §6 both
 > originally described this sweep as running over ***all* posets** on `n ≤ 5` × all reference orders.
-> It does not, and the sentence that followed — *"over every poset and every reference order at those
-> sizes"* — is struck with it. `all_posets()` (now renamed `posets_with_identity_extension()`) builds
-> relations only from pairs `(a,b)` with `a < b`, so it yields the **404** posets on `n = 3,4,5`
-> having the identity as a linear extension, **not** the **4 469** labelled posets (A001035:
-> 19/219/4231). **31 625 is 14.5% of the population named.**
+> It does not, and the sentence that followed — ~~*"over every poset and every reference order at
+> those sizes"*~~ — is struck with it. `all_posets()` (now renamed
+> `posets_with_identity_extension()`) builds relations only from pairs `(a,b)` with `a < b`, so it
+> yields the **404** posets on `n = 3,4,5` having the identity as a linear extension, **not** the
+> **4 469** labelled posets (A001035: 19/219/4231). **31 625 is 14.5% of the population named.**
+>
+> *(Markup added 2026-07-31 by mg-cd04, closing mg-0242 finding **G1**. This block declared the
+> sentence struck and did not strike it — the defect mg-069f closed in the live-claim control in the
+> same commit that wrote this block. The declaration is now backed by markup, and
+> `scripts/onethird_mgcd04_declared_strike_control.py` checks that pairing across all of `docs/`, so
+> the class cannot recur unseen in a document no signature control reads.)*
 >
 > **The verdict is unaffected, and the corrected statement is the stronger one.** `b_x`, `m_x` are
 > invariant under simultaneous relabelling, and relabelling any `(P, e)` by `e`-rank lands it in this
