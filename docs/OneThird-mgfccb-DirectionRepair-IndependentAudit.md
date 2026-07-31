@@ -371,8 +371,29 @@ untouched by this repair.
   and F2 (rename/re-document `all_posets`, restate the CI comment's population). Neither changes a
   proven statement.
 * **Not routed:** F3, F4, F5 — recorded here, no action required.
+  *(pm-onethird routed them anyway, under mg-069f, and all three were actionable. See §9.)*
 * **Confirmed and closed:** the direction, the `W_m` forms, the §3.1 trap, the cross-doc ledger, and
   the untouched locality-lemma mathematics.
+
+---
+
+---
+
+## 9. Disposition (added 2026-07-31, mg-069f)
+
+All five findings closed. Full record and enumeration of what was re-checked:
+`docs/OneThird-mg8a71-VerdictRepairs-Closeout.md`.
+
+| # | finding | disposition |
+|---|---|---|
+| **F1** | two consumers still assert the refuted inference in live body text | **CLOSED** — §3.2's *"Equivalently"* display and §5 rec 2's converse both **struck at the site**, retained struck, corrected text stated immediately. The live-claim control's baseline is now **empty**; it failed with *"baseline site disappeared"* first, exactly as designed. |
+| **F2** | the control names a population it does not sweep | **CLOSED** — counts independently re-derived (404 → 6 385 → 31 625; 4 469 → 43 842 → 218 166; A001035 confirmed), every misstatement corrected (2 doc sites, 1 CI comment, the script header), `all_posets` renamed `posets_with_identity_extension`, `all_labelled_posets` added, and `poset_family(n, label_dependent=…)` now forces each call site to state which family it needs. Both scripts assert their population counts. |
+| **F3** | the `e`-maximum is an equality site too, and goes unnamed | **CLOSED** — named in §3.1 as the falsifier's mirror instantiation (an `e`-max element *leading* a frozen chain), and pinned by a new check in `onethird_mgfccb_direction_check.py` (6 385/6 385 at each end). Also measured: at every **interior** `e`-rank the equality is *not* forced (both equalities and strict losses occur), which is the fact §3.2's failure actually rests on. |
+| **F4** | §0's restored quantifier is narrower than the body's; §13 says they are identical | **CLOSED, and slightly wider than reported** — corrected in `OneThird-Bbias-Locality-Lemma.md` §13. F4 states *"§12's row and narrative match the body"*; re-read at the far end, **the §12 row does not** (it carries the same *"(A)+(B) route"* as §0) and the §12 narrative drops the clause entirely. Text left narrow; only the description of the fix was wrong. |
+| **F5** | the strike is wider than the error — it removed a true *variance tails* clause | **CLOSED** — the clause is **restored as live text** in §2.3 with the two-term decomposition and the `W_m` numbers that make it true, and the strike is explicitly recorded as not retracting it. |
+
+*Also fixed, from the parenthetical at the end of §5:* the CI comment advertised `~8 s` for the
+mg-fccb check; measured here at **14.5 s**, matching this audit and not the comment. Corrected.
 
 ---
 

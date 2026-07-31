@@ -203,6 +203,19 @@ per-element inversion **degree** `m_x` does not by itself force a large **bias**
 does **not** hinge on capping `max_x m_x`. The quantity a falsifier must make large is the bias
 `b_x`, not the degree `m_x` — which is exactly mg-a58f's **(EQ)**, `max_x b_x = O(1)`.
 
+**RESTORED (2026-07-31, mg-069f — mg-8a71 finding F5): the strike above was wider than the error.**
+The struck sentence closed *"(and the analogous variance tails)"*, and that clause is **true**; only
+the clause before it was false. Restated live, so the strike is not later read as retracting it:
+
+```
+E[Σ_x disp²]  =  Σ_x Var(disp_σ(x))  +  Σ_x b_x²          [the two terms, §2.3's opening line]
+```
+
+and **(B) does turn on the first sum.** On `W_m` it is the *only* thing that fails:
+`Var(pos_σ z) = m(m+2)/12 = Θ(n²)` against `E[inv_e] = Θ(n)`, while the second sum sits at ratio
+exactly `1/3`. So the variance half of the struck sentence survives the strike intact and is the live
+residual — §2.2's `Cross`, mg-dcae's **(B-cov)**. What died is only the *degree* half.
+
 > ### ⚠️ ANNOTATION (2026-07-29, mg-1fdb): the sentence beginning *"and by Jensen"* above is **WRONG — an inequality-direction error.**
 >
 > **What is wrong.** The display `Σ_x E[disp(x)]² ≤ Σ_x m_x²` at line 179 is **correct** — it is an
@@ -272,11 +285,23 @@ does **not** hinge on capping `max_x m_x`. The quantity a falsifier must make la
 > not the frozen-conditional **statements**.)*
 >
 > **Machine-checked.** `scripts/onethird_mgfccb_direction_check.py`, exact rational arithmetic, no
-> sampling: `b_x ≤ m_x` holds in **31 625/31 625** (element, reference-order) cases over all posets on
-> `n = 3,4,5` and every reference order, with **0** cases of `b_x > m_x` and `13 545` strictly lossy;
-> `b_x = m_x` at the `e`-minimum in **6 385/6 385** cases (which is why §3.1 stands — see there); and
-> the `1/3` ratio and the closed form `s(s+1)/(3(2s+1))` are confirmed exactly at every even
-> `m ≤ 8`.
+> sampling: `b_x ≤ m_x` holds in **31 625/31 625** (element, reference-order) cases, with **0** cases
+> of `b_x > m_x` and `13 545` strictly lossy; `b_x = m_x` at the `e`-minimum **and** at the `e`-maximum
+> in **6 385/6 385** cases each (which is why §3.1 stands, and why it has two instantiations — see
+> there); and the `1/3` ratio and the closed form `s(s+1)/(3(2s+1))` are confirmed exactly at every
+> even `m ≤ 8`.
+>
+> **POPULATION, corrected 2026-07-31 (mg-069f, mg-8a71 finding F2).** This paragraph first said those
+> counts ran *"over all posets on `n = 3,4,5`"*. They do not. The generator draws relations only from
+> pairs `(a,b)` with `a < b`, so it yields the **404** posets on `n = 3,4,5` having the **identity** as
+> a linear extension — not the **4 469** labelled posets on those ground sets (A001035: 19/219/4231).
+> **31 625 is 14.5% of the population the sentence named.** The verdict is unaffected, and the honest
+> statement is the *stronger* one: `b_x` and `m_x` are relabelling-invariant and relabelling any
+> `(P, e)` by `e`-rank lands it in this family, so the 404 are a **complete set of representatives of
+> `(P, e)` pairs up to isomorphism** and the sweep is exhaustive. Confirmed independently by a
+> genuinely all-labelled sweep — **4 469 posets, 43 842 pairs, 218 166 element triples, 0 violations**
+> (`scripts/onethird_mg8a71_audit_instrument.py`). Both scripts now assert their population counts, so
+> a generator drifting off its stated family fails rather than silently under-sweeping.
 
 ---
 
@@ -301,10 +326,52 @@ all of `Y`* (`slot = p`) w.p. `≈ 1/3` — i.e. `x` **crosses the entire frozen
 block** a constant fraction of the time. This is the ticket's named risk verbatim ("an element
 could cross a whole frozen chain and contribute `Θ(n)` to a displacement").
 
+**The mechanism has a second, mirror instantiation at the `e`-MAXIMUM (added 2026-07-31, mg-069f —
+mg-8a71 finding F3).** What licenses the argument above is not minimality but **one-sidedness of the
+inversion mass**: `b_x = m_x` exactly when `min(E[A_x], E[B_x]) = 0`. At the `e`-min that holds
+because `B_x = 0`; at the `e`-**max** it holds because `A_x ≡ 0` (there are no `e`-above elements), so
+`disp_σ(x) = −B_x`, `b_x = m_x` again, and `E[B_x²] ≥ d_n²` bounds the (B) sum from below by the same
+step. Machine-confirmed at **both** ends — `b_x = m_x` in **6 385/6 385** (poset, reference-order)
+pairs at the `e`-min *and* **6 385/6 385** at the `e`-max here
+(`scripts/onethird_mgfccb_direction_check.py` check 4), and **43 842/43 842** at each end over the
+full labelled population (`scripts/onethird_mg8a71_audit_instrument.py`).
+
+So the falsifier reads symmetrically: **an `e`-maximal element that *leads* an entire incomparable
+frozen chain a constant fraction of the time refutes (B) exactly as an `e`-minimal element that
+trails one does.** These two ends are the *only* positions at which the equality is **forced**.
+Equality still occurs at interior positions — often, whenever the mass happens to be one-sided — but
+never forced by the position: at every interior `e`-rank the sweep finds both equalities and strict
+losses (e.g. at `n = 3`, `e`-rank 1: equality in **11 of 20** pairs, strict in the other 9). So the
+one-sidedness a falsifier needs is guaranteed only at the two ends, which is why §3.2's
+generalisation to `max_x` over *all* elements fails.
+
 ### 3.2 The open question (the wall)
 
 > **Is a bimodal chain-cross realizable under a single frozen `e` in width 3?**
-> Equivalently: can `max_x m_x = ω(1)` (indeed `Θ(n)`) with `E[inv_e] = O(n)`, δ < 1/3, width 3?
+
+> ~~Equivalently: can `max_x m_x = ω(1)` (indeed `Θ(n)`) with `E[inv_e] = O(n)`, δ < 1/3, width 3?~~
+>
+> **STRUCK 2026-07-31 (mg-069f) — the second display is not equivalent to the first, and this
+> document had already proved it is not.** Struck at the site rather than left standing under an
+> annotation, by the rule mg-fccb stated when it struck §2.3: an annotation *"leaves the wrong claim
+> in the body"*. Retained struck so the corpus keeps the record. Diagnosis in the mg-1fdb annotation
+> immediately below; the correct replacement is stated immediately.
+
+**What §3.2's second display actually is (corrected, mg-069f).** Not an equivalent restatement of the
+wall but a **strictly stronger** question — strictly stronger in the *unhelpful* direction, since a
+positive answer to it does **not** refute (B). The witness is in this document already: `W_m` has
+`max_x m_x = Θ(n)` with `E[inv_e] = Θ(n)`, so it answers the struck display **yes**, and yet (B)'s
+deterministic part holds on it at ratio exactly `1/3`. The quantity whose largeness would refute the
+deterministic half is the **bias**:
+
+```
+can max_x b_x = ω(1) with E[inv_e] = O(n), δ < 1/3, width 3?     [the right question]
+can max_x m_x = ω(1) with E[inv_e] = O(n), δ < 1/3, width 3?     [strictly stronger; answered YES by W_m; refutes nothing]
+```
+
+The first display remains the wall as stated. Its element-level restatement is the negation of
+mg-a58f's **(EQ)**, `max_x b_x = O(1)` — and even that governs only the deterministic half, leaving
+**(B-cov)** (§2.2's `Cross`, mg-dcae's split) as the other way (B) can fail.
 
 > ### ⚠️ ANNOTATION (2026-07-29, mg-1fdb): **"Equivalently" is not an equivalence** — same `b`-vs-`m` conflation as §2.3.
 >
@@ -409,8 +476,16 @@ was built to enable. (A) removes one of the two obstructions outright.
 1. **Attack (B) as a correlation inequality**, not as "prove near-ordinal-sum": show
    `max_x m_x = O(1)` under frozen width-3, or bound `Cross` directly. This is the single pin.
 2. **Or hunt the bimodal chain-cross** as a *large-`n`* construction (an `e`-min element trailing
-   an incomparable frozen chain a constant fraction of the time with `E[inv_e] = O(n)`) — the
-   explicit refuter of (B). If it does not exist, that non-existence *is* (B).
+   an incomparable frozen chain a constant fraction of the time with `E[inv_e] = O(n)` — or, by the
+   symmetric equality case named in §3.1, an `e`-max element *leading* one) — the explicit refuter of
+   (B). ~~If it does not exist, that non-existence *is* (B).~~ **[Last sentence STRUCK 2026-07-31,
+   mg-069f — converse over-read, refuted by this document's own witness; retained struck for the
+   record.]** **Corrected:** its non-existence is **necessary but not sufficient** for (B). §3.1 proves
+   only *cross ⟹ (B) false*; the converse *no cross ⟹ (B)* does not follow, because the cross is a
+   falsifier of the **deterministic** term alone, and `E[Σ_x disp²]` has two terms. On `W_m` the
+   deterministic term is healthy (ratio exactly `1/3`) and **(B) fails anyway, entirely through the
+   variance term** — precisely the configuration a non-existence argument cannot see. Closing the
+   hunt would leave **(B-cov)** open.
 3. **Settle `Λ = O(1)`** (no `O(n)` gap in the expected-rank spectrum) — a separable, likely
    easier smoothness lemma than (B).
 
