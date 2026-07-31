@@ -65,3 +65,22 @@ EXIT=0
 
 wrote data/onethird-mg3946-closure-demo-falsifier.json
 EXIT=0
+
+=========== RUN 3: all six cases vs the REPAIRED demo, STOPPED after two ===========
+(stopped deliberately under host contention; it was re-measuring rows RUN 1 already
+ measured, so no evidence was lost -- recorded rather than silently omitted)
+=== PART 1/2  the drift battery over the demo (6 cases, predictions stated first)
+
+  control                predict demo exit 0   args --only M9 --gates widened
+      drift: undrifted -- the demo's subject as committed
+      --> exit 0 in 195.1s  PREDICTION HELD
+      demo said: Demonstration complete.  1/5 mutations that NEITHER mg-60d3 nor
+
+  neutered-widening      predict demo exit 1   args --only M9 --gates widened
+      drift: the widened gate's identity comparison narrowed back to the four pre-mg-75f0 fields
+      --> exit 1 in 150.9s  PREDICTION HELD
+      demo said: --> exit 1 (expected 0)  DEMONSTRATION FAILED
+      demo said: DEMONSTRATION FAILED: the matrix is not as asserted.  If an UNSEEN mutation passed
+
+  noop-mutation          predict demo exit 1   args --only M9 --gates widened
+EXIT=143

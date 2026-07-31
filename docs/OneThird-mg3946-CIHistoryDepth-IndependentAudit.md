@@ -77,7 +77,14 @@ distinct ways of making it fail.
   assertion. That assertion was already there and is now shown to fire.
 
 Total measured cost of the battery: **2 131 s (35 min)** for five cases, eleven full `--no-sweep`
-gate runs, on a loaded fleet host.
+gate runs, on a loaded fleet host. Raw transcripts, with the predictions as written before each
+run, are committed at `data/onethird-mg3946-battery-transcripts.txt`.
+
+*A third, all-six-case run was started as a consistency re-run against the repaired subject and
+**stopped after two cases** — `control` (0) and `neutered-widening` (1), both holding again — when
+it passed 25 minutes on a single case under host contention. It was re-measuring rows the first
+battery had already measured, so stopping it cost no evidence; saying so is cheaper than a
+transcript with a gap in it.*
 
 ## 2. What the demo cannot distinguish, and the repair
 
@@ -146,6 +153,23 @@ regression control with its prediction flipped to 1 — revert the strengthening
 
 The repaired run now prints the `RuntimeError: mg-3946 MX` traceback above the matrix, which the
 `returncode > 1` guard had been throwing away.
+
+**And the strengthened demo is green in CI, on the branch carrying it** — run
+[`30616570050`](https://github.com/drellem2/one_third_width_three/actions/runs/30616570050),
+job success in 21 m 01 s against the 75 min bound, all four steps green, with the new fields in the
+uploaded artifact:
+
+```
+ALL_PASS True     crashed_rather_than_failed: []
+caught: ['M5', 'M6', 'M7', 'M8', 'M9']
+M3 widened exit=1 nfail=11 reported=True     M7 widened exit=1 nfail=7  reported=True
+M4 widened exit=1 nfail=7  reported=True     M8 widened exit=1 nfail=8  reported=True
+M5 widened exit=1 nfail=7  reported=True     M9 widened exit=1 nfail=8  reported=True
+M6 widened exit=1 nfail=8  reported=True
+```
+
+So the five UNSEEN rows are still all caught — now on the stronger criterion, in the environment
+where the demonstration had never run at all until yesterday.
 
 ## 3. The population of historical-SHA reads
 
@@ -254,6 +278,21 @@ column, whose first act is to invent a red, is the same disease one layer out.**
 Repaired: ask for the latest **completed** run (`--status=completed`, `.[0] // empty`), and report
 any newer unfinished run separately as *not a conclusion yet* — because "the last completed run was
 green" and "a newer run is still deciding" are different facts and a merge author needs both.
+
+**Demonstrated against a live in-progress run**, which is the state in which the defect is present.
+Both branches run back to back at 2026-07-31 09:33 against run `30616570050` (this branch's own
+`Gate mutation demo`, then `in_progress`):
+
+```
+--- OLD (as mg-3934 shipped it) ---
+    ***  as of 2026-07-31T08:30:53Z ***          <- FALSE RED, empty conclusion
+--- NEW (mg-3946) ---
+    no completed run readable (no credential, no network, or none yet)
+    a newer run is in_progress since 2026-07-31T08:30:53Z -- not a conclusion yet
+```
+
+The old branch invents a red. The new one says the two true things: there is no completed run on
+this ref yet, and one is running.
 
 ### 4.3 What would actually reach somebody
 
