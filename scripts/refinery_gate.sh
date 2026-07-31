@@ -140,20 +140,38 @@ for h in $HITS; do echo "    $h"; done
 # here rather than anywhere else.
 #
 # `.github/workflows/gate-mutation-demo.yml` says of itself that it INFORMS and
-# does not BLOCK.  That was true and it was also the whole defect: from
-# 2026-07-30 that workflow was red on `main` for 21 hours, on eight consecutive
-# runs, because its last step resolved a historical commit that is not in a
-# depth-1 `actions/checkout` clone -- and nothing consumed the result, so a
-# demonstration that had NEVER ONCE EXECUTED was indistinguishable from one
-# running and passing.  A permanently-red check nobody reads is worse than no
-# check: it cannot be told apart from a working one and it trains every reader
-# to skip the column.
+# does not BLOCK.  That was true and it was also the whole defect: that
+# workflow was red on EVERY run for 24 h 09 m -- twelve consecutive failures,
+# first 2026-07-30T05:36:59Z (9fa4aaa) and last 2026-07-31T05:45:54Z (9991380),
+# five of them on `main` -- because its last step resolved a historical commit
+# that is not in a depth-1 `actions/checkout` clone, and nothing consumed the
+# result, so a demonstration that had NEVER ONCE EXECUTED was indistinguishable
+# from one running and passing.  A permanently-red check nobody reads is worse
+# than no check: it cannot be told apart from a working one and it trains every
+# reader to skip the column.
+#
+# THOSE FIGURES ARE mg-3946'S, AND THEY REPLACE "21 hours, eight consecutive
+# runs".  That sentence was the ticket's own undercount; the mg-3934 doc
+# corrected it to twelve runs in the same commit that wrote this file and left
+# the stale count standing here, which is this arc's named pattern -- the
+# over-wide statement surviving in a file's own description of itself, where
+# nobody is watching.  Re-derived from `gh run list --workflow='Gate mutation
+# demo'`, which is the record both figures were meant to be read off.
 #
 # Making the ~30-minute job blocking was rejected for the reason stated above
 # this section -- a gate long enough to want bypassed does not survive.  So the
 # result is put where somebody already looks: the refinery's Gate Output, which
 # `pogo refinery show <mr>` prints to the author of the merge, on exactly the
 # commits that can invalidate the demonstrations.
+#
+# WHAT THAT SENTENCE STILL DOES NOT ESTABLISH (mg-3946).  `pogo refinery show`
+# prints it; the polecat merge protocol polls `pogo refinery show <id> --json |
+# jq -r .status` and reads no other field, and pogod reaps the author seconds
+# after the merge lands.  Nothing else in this repository or on the fleet reads
+# a GitHub Actions result -- no workflow_run trigger, no scheduled sweep, no
+# notifier.  So in the automated merge flow this readout has no reader at all,
+# and its audience is exactly a human who runs `pogo refinery show` by hand.
+# That is better than nothing and it is not "somebody already looks".
 #
 # NON-BLOCKING BY CONSTRUCTION, and deliberately NOT fail-closed -- the only
 # thing in this file that is not.  The fail-closed rule in the header is about
@@ -165,16 +183,45 @@ for h in $HITS; do echo "    $h"; done
 # line and a zero exit.
 echo
 echo "=== gate-mutation-demo on main (informational check; not blocking)"
+# mg-3946.  THE READOUT ASKS FOR THE LATEST *COMPLETED* RUN, and that is a
+# correction rather than a refinement.  The first version asked for the latest
+# run of any kind and guarded against an unfinished one by testing the
+# conclusion field against the string `null`.  `gh --jq` interpolates a JSON
+# null into a STRING as the empty string, never as "null", so the guard could
+# not fire and an in-progress run was printed as red -- with the "it is red"
+# paragraph under it.
+#
+# That was not a latent risk: it fired on this readout's FIRST live use.  MR
+# mr-d9m4fr2tjv1tur4p9e40 (mg-069f, 2026-07-31 08:24) printed
+#
+#     ***  as of 2026-07-31T07:13:45Z ***
+#
+# -- an empty conclusion where the word GREEN belonged -- against run
+# 30612119957, which was in progress at that moment and completed SUCCESS.
+# The window is not narrow: this gate takes ~11 min and the workflow it reads
+# takes ~16-21 min, on the same commit, so a gate-touching merge lands INSIDE
+# the run it is reporting on more often than not.  A consumer added to stop a
+# red check being ignored, whose first act is to invent a red, is the disease
+# it was prescribed for.
 if ! command -v gh >/dev/null 2>&1; then
     echo "    gh not on PATH -- cannot read it.  Check by hand:"
     echo "    gh run list --workflow='Gate mutation demo' --branch=main --limit=1"
 else
     RUN=$(GH_PAGER=cat gh run list --workflow='Gate mutation demo' \
-              --branch=main --limit=1 \
+              --branch=main --status=completed --limit=1 \
               --json conclusion,createdAt,displayTitle,url \
-              --jq '.[0] | "\(.conclusion)\t\(.createdAt)\t\(.url)\t\(.displayTitle)"' \
+              --jq '.[0] // empty | "\(.conclusion)\t\(.createdAt)\t\(.url)\t\(.displayTitle)"' \
           2>/dev/null) || RUN=''
-    if [ -z "$RUN" ] || [ "${RUN%%	*}" = "null" ]; then
+    # Reported separately, because "the last completed run was green" and "a
+    # newer run is still deciding" are different facts and the reader needs
+    # both: the green may be about a commit older than the one being merged.
+    PENDING=$(GH_PAGER=cat gh run list --workflow='Gate mutation demo' \
+                  --branch=main --limit=1 \
+                  --json status,createdAt,url \
+                  --jq '.[0] // empty | select(.status != "completed")
+                        | "\(.status)\t\(.createdAt)\t\(.url)"' \
+              2>/dev/null) || PENDING=''
+    if [ -z "$RUN" ]; then
         echo "    no completed run readable (no credential, no network, or none yet)"
     else
         CONC=$(printf '%s' "$RUN" | cut -f1)
@@ -192,8 +239,17 @@ else
             echo "    it now.  It is red, which means one of the demonstrations"
             echo "    that these controls can still FAIL is not currently being"
             echo "    made.  If nobody looks at it, it stays red -- that is what"
-            echo "    happened for 21 hours on 2026-07-30 (mg-3934)."
+            echo "    happened for 24 h on 2026-07-30/31 (mg-3934, mg-3946)."
         fi
+    fi
+    if [ -n "$PENDING" ]; then
+        PSTAT=$(printf '%s' "$PENDING" | cut -f1)
+        PWHEN=$(printf '%s' "$PENDING" | cut -f2)
+        PURL=$(printf '%s' "$PENDING" | cut -f3)
+        echo "    a newer run is $PSTAT since $PWHEN -- not a conclusion yet"
+        echo "    $PURL"
+        echo "    The line above is the last COMPLETED run and may be about an"
+        echo "    older commit than the one you are merging."
     fi
 fi
 

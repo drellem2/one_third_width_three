@@ -95,6 +95,19 @@ The left column is the part that makes the right column mean anything: each
 mutation is shown to have been fatal to nothing before, so "exit 1" is the
 widening firing and not a pre-existing control doing its job.
 
+AND EXIT 1 ALONE IS NOT ENOUGH (mg-3946, the independent audit of mg-3934).
+A gate that CRASHES exits 1 as well, and the four rows whose left-column
+verdict is NEVER EXERCISED are exactly where that is indistinguishable: a
+mutation that raises inside code the pre-widening gate does not reach gives
+exit 0 on the left and exit 1 on the right, i.e. a full PASS, and this file
+used to print "N/N mutations caught" over it.  mg-3946 built that row -- a
+bare `raise` in `_width` -- and this file scored the crash as a catch.  So the
+right column now requires the gate to have REPORTED at least one line under
+its own CONTROL FAILURES banner; `stderr_tail` is kept unconditionally rather
+than only for exit > 1, which discarded the traceback in precisely the case
+that needed it; and a row that exits 1 saying nothing is named
+`crashed_rather_than_failed` in the report and fails the run.
+
 Run:  /usr/bin/python3 scripts/onethird_mg75f0_gate_class_closure_demo.py
       (numpy required; ~13 min -- eighteen full runs of the CI gate)
       --only M3,M5      run a subset
@@ -347,7 +360,12 @@ def run_case(mutation, gate_variant, pre_src, keep=False):
                 "stdout_sha256": hashlib.sha256(
                     proc.stdout.encode()).hexdigest(),
                 "stdout_bytes": len(proc.stdout),
-                "stderr_tail": proc.stderr[-2000:] if proc.returncode > 1 else ""}
+                # mg-3946.  UNCONDITIONAL, and the condition it replaces was
+                # `returncode > 1` -- which threw the stderr away in exactly
+                # the case where it is the evidence.  A gate that raises exits
+                # 1, the same code as a gate that FAILS, and the traceback is
+                # the only thing that tells them apart.
+                "stderr_tail": proc.stderr[-2000:]}
     finally:
         if not keep:
             shutil.rmtree(root, ignore_errors=True)
@@ -393,7 +411,27 @@ def main():
             print("-" * 78, flush=True)
             r = run_case(mutation, gate_variant, pre_src)
             r["expected_exit"] = want
-            r["PASS"] = (r["exit"] == want)
+            # mg-3946 -- EXIT 1 IS NOT ENOUGH, and the gap was demonstrated
+            # rather than argued.  `want == 1` used to be the whole right-hand
+            # column: "the widened gate rejected this mutation".  But a gate
+            # that CRASHES exits 1 too, and for the four rows whose own
+            # left-column verdict is NEVER EXERCISED a crash-shaped mutation
+            # produces exit 0 on the left (the pre-widening gate does not reach
+            # the code) and exit 1 on the right (the widened gate reaches it
+            # and dies) -- a full PASS, printed as "N/N mutations caught",
+            # with nothing caught.  mg-3946 built exactly that row (a bare
+            # `raise` in `_width`) and this file reported it as caught.
+            #
+            # So a rejection must also be a rejection the gate REPORTED: at
+            # least one line under its own CONTROL FAILURES banner.  The
+            # information was already being extracted and printed one line
+            # above -- "(no gate failure reported)" -- and simply never
+            # asserted on.
+            r["reported_a_failure"] = bool(r["gate_failures"])
+            r["crashed_rather_than_failed"] = (r["exit"] == 1
+                                               and not r["reported_a_failure"])
+            r["PASS"] = (r["exit"] == want
+                         and (want != 1 or r["reported_a_failure"]))
             r["moves_reference_fields"] = mu["fields"]
             r["desc"] = mu["desc"]
             r["seen_by"] = mu["seen_by"]
@@ -403,6 +441,10 @@ def main():
                 print(f"      GATE FAILURE: {f}")
             if not r["gate_failures"]:
                 print("      (no gate failure reported)")
+            if r["crashed_rather_than_failed"]:
+                print("      *** THE GATE CRASHED, IT DID NOT FAIL: exit 1 "
+                      "with no CONTROL FAILURES line.  This is NOT the "
+                      "widening firing (mg-3946). ***")
             if not r["PASS"]:
                 ok = False
                 print(r["stderr_tail"])
@@ -462,9 +504,14 @@ def main():
                   f"{r['pre_widening_verdict'].split(' -- ')[0]}")
 
     unseen = [m for m in MUTATIONS if MUTATIONS[m]["seen_by"].startswith("UNSEEN")]
+    # mg-3946: "caught" means the gate REPORTED a control failure, not merely
+    # that the process exited 1.  See the PASS criterion above.
     caught = [m for m in unseen
               if any(r["mutation"] == m and r["gate"] == "widened"
-                     and r["exit"] == 1 for r in results)]
+                     and r["exit"] == 1 and r.get("reported_a_failure")
+                     for r in results)]
+    crashed = [r["mutation"] for r in results
+               if r.get("crashed_rather_than_failed")]
     invisible = [m for m in unseen
                  if any(r["mutation"] == m and r["gate"] == "pre-widening"
                         and r["exit"] == 0 for r in results)]
@@ -500,6 +547,10 @@ def main():
         "unseen_mutations": sorted(unseen),
         "unseen_invisible_to_the_pre_widening_gate": sorted(invisible),
         "unseen_caught_by_the_widened_gate": sorted(caught),
+        # mg-3946.  Non-empty means some row exited 1 without the gate naming a
+        # single control failure -- the instrument fell over and this file used
+        # to score that as the widening firing.
+        "crashed_rather_than_failed": sorted(crashed),
         "ALL_PASS": ok,
     }
     out = os.path.join(REPO, "data", "onethird-mg75f0-gate-class-closure.json")
@@ -509,10 +560,13 @@ def main():
     print(f"wrote {os.path.relpath(out, REPO)}")
 
     if not ok:
-        print("\nDEMONSTRATION FAILED: the exit-code matrix is not as asserted. "
-              "If an UNSEEN\nmutation passed the widened gate, the class is "
-              "STILL OPEN and must be reported\nas such rather than papered "
-              "over.")
+        print("\nDEMONSTRATION FAILED: the matrix is not as asserted.  If an "
+              "UNSEEN mutation passed\nthe widened gate, the class is STILL "
+              "OPEN and must be reported as such rather\nthan papered over.  "
+              "If a row is marked crashed_rather_than_failed (mg-3946), the\n"
+              "gate exited 1 without naming a control failure -- the "
+              "instrument fell over and\nthat is not the widening firing; "
+              "read the stderr printed above the matrix.")
         return 1
     print(f"\nDemonstration complete.  {len(caught)}/{len(unseen)} mutations "
           f"that NEITHER mg-60d3 nor\nmg-5ad1 used are caught by the widened "
