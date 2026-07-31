@@ -188,25 +188,45 @@ def drift_crash_row(tree):
             "reached by the widened gate and not by the pre-widening one")
 
 
+# EVERY CASE BELOW PASSES `--partial-ok`, AND NO PREDICTION CHANGED WITH IT
+# (mg-a471).  This battery drives the demo over ONE mutation row, which is
+# exactly the subset run this audit reported as F5: the demo used to answer such
+# a run with the canonical report path, a ratio whose halves counted different
+# populations, and exit 0.  mg-a471 made an unacknowledged subset run exit 2 and
+# write elsewhere.  The battery is the caller that legitimately wants the
+# narrower question answered -- did the one row that RAN hold? -- so it now says
+# so at the command line, and the 0/1 answer it predicts is unchanged, still over
+# the same rows, still measured against the same drifts.  The six predictions in
+# the table below are the ones stated before the original run and they are not
+# revised here; only the invocation is.
+#
+# A useful side effect: revert mg-a471 and `--partial-ok` becomes an unrecognised
+# argument, argparse exits 2, and `control` fails loudly here instead of the fix
+# rotting out quietly.
 CASES = [
     {"name": "control", "drift": drift_none,
-     "args": ["--only", "M9", "--gates", "widened"], "predict": 0,
+     "args": ["--only", "M9", "--gates", "widened", "--partial-ok"],
+     "predict": 0,
      "means": "the undrifted demo accepts its own subject; if this is not 0 "
               "nothing else in PART 1 can be read"},
     {"name": "neutered-widening", "drift": drift_neuter_widening,
-     "args": ["--only", "M9", "--gates", "widened"], "predict": 1,
+     "args": ["--only", "M9", "--gates", "widened", "--partial-ok"],
+     "predict": 1,
      "means": "exit 0 here would mean the demo passes with the widening "
               "removed -- it would be asserting nothing about the widening"},
     {"name": "noop-mutation", "drift": drift_mutation_is_noop,
-     "args": ["--only", "M9", "--gates", "widened"], "predict": 1,
+     "args": ["--only", "M9", "--gates", "widened", "--partial-ok"],
+     "predict": 1,
      "means": "exit 0 here would mean a 'mutated' run that mutated nothing "
               "still counts as a mutation caught"},
     {"name": "rotted-anchor", "drift": drift_rotted_anchor,
-     "args": ["--only", "M9", "--gates", "widened"], "predict": 1,
+     "args": ["--only", "M9", "--gates", "widened", "--partial-ok"],
+     "predict": 1,
      "means": "exit 0 here would mean a refactor silently converts a mutation "
               "row into an unmutated run"},
     {"name": "rebaselined", "drift": drift_baseline_is_the_widened_gate,
-     "args": ["--only", "M9", "--gates", "pre-widening"], "predict": 1,
+     "args": ["--only", "M9", "--gates", "pre-widening", "--partial-ok"],
+     "predict": 1,
      "means": "exit 0 here would mean the left column can be re-pinned onto "
               "the widened gate and the demo would not notice it had stopped "
               "being a comparison"},
@@ -228,7 +248,9 @@ CASES = [
     # subject is 1 and this case becomes a standing regression control: revert
     # the strengthening and this row goes back to 0 and fails here.
     {"name": "crash-not-catch", "drift": drift_crash_row,
-     "args": ["--only", "MX", "--gates", "pre-widening,widened"], "predict": 1,
+     "args": ["--only", "MX", "--gates", "pre-widening,widened",
+              "--partial-ok"],
+     "predict": 1,
      "means": "PART 2.  exit 1 = the demo distinguishes a crash from a catch "
               "(the mg-3946 repair, live).  exit 0 = the repair has been "
               "reverted and a crashing gate is again scored as the widening "

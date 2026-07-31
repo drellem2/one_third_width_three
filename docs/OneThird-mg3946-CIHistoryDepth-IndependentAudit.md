@@ -18,8 +18,8 @@ consumer that was added alongside it.**
 | **F1** | The mg-75f0 demo's right column asserts `exit == 1` and nothing else, so **a gate that CRASHES is scored as a mutation the widening CAUGHT** — and for the four rows whose own left-column verdict is `NEVER EXERCISED` a crash-shaped mutation produces a full PASS. `stderr_tail` is captured only when `returncode > 1`, i.e. it is discarded in exactly the case where it is the evidence. Demonstrated by construction; **repaired here**. | **high** |
 | **F2** | The `refinery_gate.sh` READOUT — the consumer mg-3934 added *because* nothing consumed the red — **reports an in-progress run as red.** `gh --jq` renders a JSON `null` conclusion as the empty string, never as `"null"`, so the guard cannot fire. It fired wrongly on its **first live use**: MR `mr-d9m4fr2tjv1tur4p9e40` printed `*** as of 2026-07-31T07:13:45Z ***` against a run that completed SUCCESS. **Repaired here.** | **high** |
 | **F3** | **Nobody is still nobody.** `refinery_gate.sh` is the only consumer of Actions status in the repository or the fleet. It prints into the refinery's `gate_output`, and the documented polecat merge loop reads `--json … .status` only. mg-3934 says "nobody is paged"; the stronger true statement is that in the automated merge flow **the readout has no reader at all**. | **high** |
-| **F4** | **Three counting claims in the remediation that its own record contradicts.** (a) "5 literals, **4 distinct revisions**, 3 scripts" over a table naming **three**, contradicted nine lines later by "All **three** revisions" — re-derived here as **5 / 3 / 3**. (b) "**21 hours**" in the workflow header, `refinery_gate.sh` and the doc, against a measured **24 h 09 m** (first red `2026-07-30T05:36:59Z`, last `2026-07-31T05:45:54Z`). (c) `refinery_gate.sh` still said "**eight** consecutive runs" — the ticket's undercount, which the mg-3934 doc corrects to **twelve** in the *same commit that wrote that file*. All corrected at their sites. | low |
-| **F5** | A `--only`/`--gates` subset run of the mg-75f0 demo **overwrites the committed full report with a partial one**, with no marker, and prints a headline (`1/5 mutations … are caught`) whose numerator is over the rows run and denominator over the full set — exiting 0. Hit twice during this audit; the committed record had to be restored with `git checkout --` both times. **Named, not fixed** — see §6. | low |
+| **F4** | **Three counting claims in the remediation that its own record contradicts.** (a) "5 literals, **4 distinct revisions**, 3 scripts" over a table naming **three**, contradicted nine lines later by "All **three** revisions" — re-derived here as **5 / 3 / 3**. (b) "**21 hours**" in the workflow header, `refinery_gate.sh` and the doc, against a measured **24 h 08 m 55 s** (first red `2026-07-30T05:36:59Z`, last `2026-07-31T05:45:54Z`). (c) `refinery_gate.sh` still said "**eight** consecutive runs" — the ticket's undercount, which the mg-3934 doc corrects to **twelve** in the *same commit that wrote that file*. ~~All corrected at their sites.~~ **This row said "corrected at every site" and (a) and (b) were not** — see the mg-a471 note below. All corrected now. | low |
+| **F5** | A `--only`/`--gates` subset run of the mg-75f0 demo **overwrites the committed full report with a partial one**, with no marker, and prints a headline (`1/5 mutations … are caught`) whose numerator is over the rows run and denominator over the full set — exiting 0. Hit twice during this audit; the committed record had to be restored with `git checkout --` both times. ~~**Named, not fixed**~~ — **REPAIRED by mg-a471**; see §6. | low |
 | **F6** | The reachability question mg-3934 identifies in its own KNOWN LIMITS — a pin reachable from no remote ref is unfetchable at `fetch-depth: 0` — was answered **by hand** ("checked explicitly") and left unmechanised. Made a control here (PART 4). | low |
 
 **Not found:** any second historical-SHA read masked behind the first. See §3 — the population is
@@ -352,6 +352,41 @@ what a reader consults to learn what the demonstration showed, and a subset run 
 outside this audit's remit to redesign: the honest repairs are either to refuse to write the
 canonical path on a subset run, or to record the requested subset in the report and make the
 headline quote its own denominator. Both are one-liners; neither is mine to choose.
+
+> ### REPAIRED 2026-07-31 by mg-a471 — and it took **both** named repairs, not either
+>
+> The choice this section declined to make was made, and made as *and* rather than *or*, because
+> the two repairs answer two different readers: one who **finds** the artifact and one who
+> **parses** it. Doing only the first leaves a `.PARTIAL.json` that a parser cannot tell from a
+> full report; doing only the second leaves the canonical path overwritten, which is the thing
+> that actually cost this audit two `git checkout --`s.
+>
+> 1. **A subset run never writes the canonical path.** It writes
+>    `data/onethird-mg75f0-gate-class-closure.PARTIAL.json`, which is gitignored (`data/*.PARTIAL.json`)
+>    so it cannot become a committed record by accident either.
+> 2. **Every report says what it ran** — `cases_requested`, `gates_requested`, `full_matrix`,
+>    `partial_run`, `IS_THE_DEMONSTRATION` — copied from this audit's own falsifier, which carries
+>    `cases_requested`/`partial_run` for exactly this reason.
+> 3. **Both headline ratios are over one population.** Each denominator is now the UNSEEN rows the
+>    run exercised *in the column being quoted*, and the two denominators are written into the
+>    report (`unseen_mutations_run_widened`, `unseen_mutations_run_pre_widening`) so the sentence
+>    can be checked against the artifact. There are two because `--gates` can request one column:
+>    `--only M9 --gates widened` prints `1/1 were caught` and *"the pre-widening column was not
+>    run"*, where it used to print `1/5 … are caught` and `0/5 of them were fatal to nothing
+>    before it` — the `0` there being the sharpest form of the defect, since that run asked for no
+>    pre-widening column at all and the sentence read as a measurement of five rows.
+> 4. **The third defect this section did not name: the exit code.** `demo.py --only M3 && echo ok`
+>    said the demonstration passed. An unacknowledged subset run now exits **2**. `--partial-ok`
+>    is the acknowledgement — it restores the 0/1 answer to the narrower question a subset can
+>    actually answer, *did every case that RAN hold?*, which is the question this audit's own
+>    falsifier asks of the demo. That battery now passes `--partial-ok` on all six invocations;
+>    **its six predictions are unchanged and unrevised**, only the invocation moved.
+>
+> Measured, not asserted: `--only M9 --gates widened` exits **2**, writes the `.PARTIAL.json`, and
+> leaves `data/onethird-mg75f0-gate-class-closure.json` byte-identical at
+> `39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318`; the same run with
+> `--partial-ok` exits **0** and leaves the same digest. See
+> `docs/OneThird-mg3946-VerdictCloseout.md`.
 
 ## 7. Predictions, and the misses
 

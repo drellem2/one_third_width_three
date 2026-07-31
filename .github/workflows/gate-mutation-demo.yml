@@ -32,10 +32,12 @@ name: Gate mutation demo
 # Trigger.md.
 #
 # RED IS TOLERATED HERE, AND WHO SEES IT (mg-3934).  The sentence above was
-# true and incomplete, and the gap cost 24 h 09 m -- twelve consecutive red
-# runs, 2026-07-30T05:36:59Z to 2026-07-31T05:45:54Z, five of them on `main`;
-# the "21 hours" this line used to say was the ticket's undercount, which the
-# mg-3934 doc corrected and this comment did not (mg-3946).  Nothing consumed
+# true and incomplete, and the gap cost 24 h 08 m 55 s -- twelve consecutive
+# red runs, 2026-07-30T05:36:59Z to 2026-07-31T05:45:54Z, five of them on
+# `main`; the "21 hours" this line used to say was the ticket's undercount,
+# which the mg-3934 doc corrected and this comment did not (mg-3946), and the
+# "24 h 09 m" that replaced it was that window rounded to the minute while
+# "~24 hours" went on standing in the doc (mg-a471).  Nothing consumed
 # this workflow's result, so a step that had NEVER ONCE run was
 # indistinguishable from a step that was running and passing.  A
 # permanently-red informational check is worse than no check -- it trains

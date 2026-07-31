@@ -50,8 +50,17 @@ goes and it undercounts. The full record, from `gh run list --workflow="Gate mut
 | 2026-07-31T05:13:36Z | main | failure | ditto |
 | 2026-07-31T05:45:54Z | polecat-069f | failure | ditto |
 
-**12 consecutive red runs over ~24 hours; the mg-75f0 step was reached on 11 of them and failed on
-all 11, and was skipped on the 12th. It has executed zero times.**
+**12 consecutive red runs over 24 h 08 m 55 s — first `2026-07-30T05:36:59Z`, last
+`2026-07-31T05:45:54Z`; the mg-75f0 step was reached on 11 of them and failed on all 11, and was
+skipped on the 12th. It has executed zero times.**
+
+> **Corrected 2026-07-31 (mg-3946 F4, landed by mg-a471).** This said "~24 hours" and the ticket
+> said "21 hours"; the window is the difference of the first and last timestamps in the table
+> above, which is **86 935 s = 24 h 08 m 55 s**. That is the figure stated here, in
+> `scripts/refinery_gate.sh` and in `.github/workflows/gate-mutation-demo.yml` — the same one in
+> every place, since the whole of F4 is a count corrected in one place and left stale in the
+> others. Where those two files previously said "24 h 09 m", that was this figure rounded to the
+> minute.
 
 What is **not** lost, and the ticket is right to insist on the narrower statement: the three
 earlier steps — mg-7db4 watchlist consistency, mg-7db4 probe mutation battery, mg-60d3 gate
@@ -120,11 +129,20 @@ Every quoted hex literal of 7–40 characters in `scripts/`, and what runs it:
 | `onethird_mgbd53_widening_audit_probe.py` | `af7fc2df` | yes | no |
 | `onethird_mg4f9b_route_axis_probe.py` | `af7fc2df`, `91fa25f`, `9fa4aaa` | yes | no |
 
-**5 literals, 4 distinct revisions, 3 scripts. Exactly one of the three is executed by CI, and it
+**5 literals, 3 distinct revisions, 3 scripts. Exactly one of the three is executed by CI, and it
 is the one that was red.** The other two are audit probes run by hand on a full clone; they are
 not broken today and cannot silently become broken tomorrow, because property (A) fails the
 workflow the moment either is wired into a job whose checkout is shallow, and property (B) fails
-the deep job the moment any of the four revisions stops resolving.
+the deep job the moment any of the three revisions stops resolving.
+
+> **Corrected 2026-07-31 (mg-3946 F4, landed by mg-a471).** This sentence said "**4** distinct
+> revisions" and "any of the **four** revisions" over a table naming three, and contradicted itself
+> nine lines later with "All **three** revisions". The union of the `pinned revs` column above is
+> `{af7fc2df, 91fa25f, 9fa4aaa}` — **three**. Re-derived from the scripts rather than from this
+> table: `af7fc2df` at `onethird_mg75f0_gate_class_closure_demo.py:PRE_WIDENING_REV`,
+> `onethird_mgbd53_widening_audit_probe.py:PRE_WIDENING_REV` and
+> `onethird_mg4f9b_route_axis_probe.py:PRE_WIDENING_REV`; `91fa25f` at that file's `MG75F0_REV`;
+> `9fa4aaa` at its `gate_source("9fa4aaa")` call. **5 literals over 3 revisions in 3 scripts.**
 
 All three revisions are ancestors of `origin/main`, checked explicitly — a pin reachable from no
 surviving branch would still be unfetchable at `fetch-depth: 0`, and (B) is what would see it.
@@ -144,7 +162,7 @@ the measured grounds mg-7db4 and mg-75f0 used when they kept the expensive demon
 stretched every concurrent run tenfold. A blocking gate long enough that people want it bypassed
 has a shorter life expectancy than the defect it guards.
 
-*But consumed.* The 24 h happened because nothing read the result — a permanently-red
+*But consumed.* The 24 h 08 m 55 s happened because nothing read the result — a permanently-red
 informational check cannot be told apart from a working one, and it trains every reader to skip
 the column. So `scripts/refinery_gate.sh` now **prints this workflow's latest conclusion on `main`
 into the refinery's Gate Output**, which `pogo refinery show <mr>` displays to the author of the
