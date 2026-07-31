@@ -182,3 +182,42 @@ jobs:
       # sampling; ~8 s.  Exits non-zero on any assertion.
       - name: 'mg-fccb inequality-direction check (is b_x <= m_x, ever violated?)'
         run: python3 scripts/onethird_mgfccb_direction_check.py
+
+      # mg-8a71 (independent audit of the mg-fccb repair): the same direction on
+      # the population the step above NAMES but does not sweep.  mg-fccb's
+      # all_posets() generates relations only from pairs (a,b) with a < b, so it
+      # yields the 404 posets on n = 3,4,5 that have the IDENTITY as a linear
+      # extension -- not all 4 469 labelled posets (A001035: 19, 219, 4231).
+      # Its conclusion is unaffected (that family is a complete set of
+      # representatives up to isomorphism of (P, e) pairs, and b_x/m_x are
+      # relabelling-invariant), but the count 31 625 is 14.5% of the population
+      # the comment above claims.  This step sweeps the full labelled family:
+      # 43 842 (poset, reference-order) pairs, 218 166 element triples.
+      #
+      # It also re-verifies the two identities the CORRECTED §2.3 sentence rests
+      # on and that no direction check can see -- (F1) Sum_x m_x = 2E[inv_e] and
+      # (star) E[Sum disp^2] = 2E[inv_e] + Cross -- exactly, where §4 of the
+      # target doc reports (star) only to 1e-9.  Exact Fractions, stdlib only,
+      # no sampling; ~25 s.  Exits non-zero on any assertion.
+      - name: 'mg-8a71 direction re-check on ALL labelled posets + the identities under it'
+        run: python3 scripts/onethird_mg8a71_audit_instrument.py
+
+      # mg-8a71: a DOCUMENT-level control, because the numeric checks above
+      # cannot see the defect they were written for.  That defect was never a
+      # false number -- it was a false sentence in live body text, and mg-fccb's
+      # own reason for striking it rather than annotating it was that an
+      # annotation "left the wrong claim in the body".  This asserts the refuted
+      # m_x-falsifier inference is not asserted in live body text of
+      # docs/OneThird-L1b-Spread-Locality.md, where "live" excludes blockquotes
+      # marked ~~struck~~ / ANNOTATION / RE-DERIVATION.
+      #
+      # Two sites are recorded as an explicit BASELINE (mg-8a71 finding F1):
+      # §3.2's "Equivalently" and §5 recommendation 2's converse, both still
+      # unstruck.  The control fails on a NEW site, on §2.3's sentence returning
+      # to live text, AND on a baseline site disappearing -- so fixing F1 forces
+      # a re-baseline to zero rather than passing silently.  Demonstrated to FAIL
+      # on 1b00147^, the commit where the §2.3 error is still live:
+      #   git show 1b00147^:docs/OneThird-L1b-Spread-Locality.md > /tmp/pre.md
+      #   python3 scripts/onethird_mg8a71_live_claim_control.py /tmp/pre.md  # -> 1
+      - name: 'mg-8a71 live-claim control (is the refuted inference still asserted?)'
+        run: python3 scripts/onethird_mg8a71_live_claim_control.py
