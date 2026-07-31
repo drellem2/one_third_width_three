@@ -59,6 +59,26 @@ jobs:
       - name: Python version
         run: python3 --version
 
+      # mg-3934, STATIC HALF ONLY, and the flag is the point.  This job's
+      # checkout is depth 1 -- `actions/checkout`'s default, deliberate here,
+      # and correct as long as nothing this job runs reads history.  That
+      # condition is what `--static-only` checks: it derives the scripts each
+      # workflow executes, their import closure, and which of those read a
+      # pinned historical revision, then fails any workflow that reads one
+      # without `fetch-depth: 0`.  It resolves nothing, so it is sound in a
+      # shallow checkout; the resolvability half runs in gate-mutation-demo.yml,
+      # where the history is actually fetched.
+      #
+      # It runs on EVERY commit under scripts/, data/ or docs/, and that is the
+      # reason it is here and not only in the paths-filtered job: the defect it
+      # is for -- mg-75f0's class-closure demo dead on arrival in CI for 21
+      # hours because af7fc2df is not in a depth-1 clone -- was found by a red
+      # run, and a second instance in a step that runs later would have been
+      # just as invisible.  Order-milliseconds, standard library only,
+      # self-testing (seven synthetic drifts, each of which must fire).
+      - name: 'mg-3934 CI history-depth control (static half)'
+        run: python3 scripts/onethird_mg3934_ci_history_depth_control.py --static-only
+
       # mg-8489: negative control for the fast_Q engine gate.  Corrupts fast_Q
       # three ways and Q_primary once, and requires five_engine_check to RAISE
       # on each; also requires it to stay green before and after patching.

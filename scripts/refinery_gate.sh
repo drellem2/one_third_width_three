@@ -51,6 +51,7 @@ WATCHED='.github/workflows/gate-mutation-demo.yml
 .github/workflows/script-controls.yml
 .pogo/refinery.toml
 scripts/refinery_gate.sh
+scripts/onethird_mg3934_ci_history_depth_control.py
 scripts/onethird_mg7db4_watchlist_consistency.py
 scripts/onethird_mg7db4_probe_mutation_battery.py
 scripts/onethird_mg5ad1_gate_blindspot_probe.py
@@ -133,6 +134,68 @@ fi
 
 echo "=== watched paths changed:"
 for h in $HITS; do echo "    $h"; done
+
+# --------------------------------------------------------------- READOUT ----
+# mg-3934 -- THE CONSUMER FOR THE INFORMATIONAL CHECK, and the reason it is
+# here rather than anywhere else.
+#
+# `.github/workflows/gate-mutation-demo.yml` says of itself that it INFORMS and
+# does not BLOCK.  That was true and it was also the whole defect: from
+# 2026-07-30 that workflow was red on `main` for 21 hours, on eight consecutive
+# runs, because its last step resolved a historical commit that is not in a
+# depth-1 `actions/checkout` clone -- and nothing consumed the result, so a
+# demonstration that had NEVER ONCE EXECUTED was indistinguishable from one
+# running and passing.  A permanently-red check nobody reads is worse than no
+# check: it cannot be told apart from a working one and it trains every reader
+# to skip the column.
+#
+# Making the ~30-minute job blocking was rejected for the reason stated above
+# this section -- a gate long enough to want bypassed does not survive.  So the
+# result is put where somebody already looks: the refinery's Gate Output, which
+# `pogo refinery show <mr>` prints to the author of the merge, on exactly the
+# commits that can invalidate the demonstrations.
+#
+# NON-BLOCKING BY CONSTRUCTION, and deliberately NOT fail-closed -- the only
+# thing in this file that is not.  The fail-closed rule in the header is about
+# the DEMONSTRATION: not knowing whether the gate still works must not resolve
+# to "proceed".  This is a report on a different repository's CI, over the
+# network, on a host that may have no `gh` and no credential.  Failing a merge
+# because a status lookup timed out would be a new way to make merges flaky,
+# which is the same disease.  Every branch below therefore ends in a printed
+# line and a zero exit.
+echo
+echo "=== gate-mutation-demo on main (informational check; not blocking)"
+if ! command -v gh >/dev/null 2>&1; then
+    echo "    gh not on PATH -- cannot read it.  Check by hand:"
+    echo "    gh run list --workflow='Gate mutation demo' --branch=main --limit=1"
+else
+    RUN=$(GH_PAGER=cat gh run list --workflow='Gate mutation demo' \
+              --branch=main --limit=1 \
+              --json conclusion,createdAt,displayTitle,url \
+              --jq '.[0] | "\(.conclusion)\t\(.createdAt)\t\(.url)\t\(.displayTitle)"' \
+          2>/dev/null) || RUN=''
+    if [ -z "$RUN" ] || [ "${RUN%%	*}" = "null" ]; then
+        echo "    no completed run readable (no credential, no network, or none yet)"
+    else
+        CONC=$(printf '%s' "$RUN" | cut -f1)
+        WHEN=$(printf '%s' "$RUN" | cut -f2)
+        URL=$(printf '%s' "$RUN" | cut -f3)
+        TITLE=$(printf '%s' "$RUN" | cut -f4)
+        if [ "$CONC" = "success" ]; then
+            echo "    GREEN as of $WHEN -- $TITLE"
+            echo "    $URL"
+        else
+            echo "    *** $CONC as of $WHEN ***"
+            echo "    $TITLE"
+            echo "    $URL"
+            echo "    This check does not block your merge and is not blocking"
+            echo "    it now.  It is red, which means one of the demonstrations"
+            echo "    that these controls can still FAIL is not currently being"
+            echo "    made.  If nobody looks at it, it stays red -- that is what"
+            echo "    happened for 21 hours on 2026-07-30 (mg-3934)."
+        fi
+    fi
+fi
 
 # WHAT RUNS HERE AND WHAT DOES NOT, decided by measurement rather than taste.
 #

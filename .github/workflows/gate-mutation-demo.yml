@@ -31,6 +31,31 @@ name: Gate mutation demo
 # which runs in the order-seconds gate.  See docs/OneThird-mg7db4-GateDemo-
 # Trigger.md.
 #
+# RED IS TOLERATED HERE, AND WHO SEES IT (mg-3934).  The sentence above was
+# true and incomplete, and the gap cost 21 hours: nothing consumed this
+# workflow's result, so a step that had NEVER ONCE run was indistinguishable
+# from a step that was running and passing.  A permanently-red informational
+# check is worse than no check -- it trains every reader to skip the column.
+#
+# Making it block was considered and rejected on the same measured grounds
+# mg-7db4 and mg-75f0 used to keep the expensive demonstrations out of the
+# refinery gate: this job is ~30 min, and a blocking gate long enough that
+# people want it bypassed outlives nothing.  So red stays tolerated, and the
+# fix is a CONSUMER rather than a policy:
+#
+#   * `scripts/refinery_gate.sh` reads this workflow's latest conclusion on
+#     `main` and prints it in the refinery's Gate Output, which `pogo refinery
+#     show` displays to the author of every gate-touching merge.  It is
+#     non-blocking by construction and cannot fail a merge -- see the READOUT
+#     section of that file.  That is the audience: the people whose commits
+#     can invalidate these demonstrations, at the moment they merge one.
+#   * The mg-3934 preflight below turns THIS class of red -- a step that cannot
+#     run in the environment it is run in -- into a named, seconds-long failure
+#     at the top of the job instead of a ten-minute one at the bottom.
+#
+# What is still not claimed: nobody is paged. The readout makes red visible to
+# a reader who is already looking at a merge; it does not make anyone look.
+#
 # WHAT THE LIST BELOW IS.  The gate, the demo, the gated instrument, the
 # transitive closure of the corpus modules that instrument imports, and the one
 # committed dataset its identity check reads.  It is NOT "every control script
@@ -64,6 +89,16 @@ name: Gate mutation demo
 # specifically (the gate is not) -- recorded in the battery's expected-exit table
 # and in docs/OneThird-mg7db4-GateDemo-Trigger.md.  See
 # docs/OneThird-mg75f0-GateClassClosure.md sec on the residual.
+#
+# HOW TO READ THE FIRST GREEN AFTER 2026-07-31 (mg-3934).  The mg-75f0 step had
+# never executed in CI: it was added on 2026-07-30 and died on `invalid object
+# name af7fc2df` on that run and on all eight after it, because it resolves a
+# historical commit and `actions/checkout` had not been asked for one.  The
+# three steps before it did run and did pass throughout, so what was lost is
+# narrower than "the positive control is dead" -- it is exactly the question
+# "does the widening catch mutations nobody enumerated?", which had no CI
+# evidence at all.  Its first green is therefore its FIRST EXECUTION and is new
+# information, not a restoration.  See docs/OneThird-mg3934-CI-HistoryDepth.md.
 
 on:
   push:
@@ -72,6 +107,7 @@ on:
       - '.github/workflows/script-controls.yml'
       - '.pogo/refinery.toml'
       - 'scripts/refinery_gate.sh'
+      - 'scripts/onethird_mg3934_ci_history_depth_control.py'
       - 'scripts/onethird_mg7db4_watchlist_consistency.py'
       - 'scripts/onethird_mg7db4_probe_mutation_battery.py'
       - 'scripts/onethird_mg5ad1_gate_blindspot_probe.py'
@@ -90,6 +126,7 @@ on:
       - '.github/workflows/script-controls.yml'
       - '.pogo/refinery.toml'
       - 'scripts/refinery_gate.sh'
+      - 'scripts/onethird_mg3934_ci_history_depth_control.py'
       - 'scripts/onethird_mg7db4_watchlist_consistency.py'
       - 'scripts/onethird_mg7db4_probe_mutation_battery.py'
       - 'scripts/onethird_mg5ad1_gate_blindspot_probe.py'
@@ -116,7 +153,23 @@ jobs:
     # failure this job exists to make impossible to miss.
     timeout-minutes: 75
     steps:
+      # fetch-depth: 0 IS LOAD-BEARING (mg-3934).  The mg-75f0 step below
+      # resolves a pinned historical commit -- `git show af7fc2df:<gate>` -- to
+      # build its pre-widening column.  `actions/checkout` defaults to depth 1,
+      # so from the day that step was added until 2026-07-31 it died on
+      # `invalid object name` before doing anything, on every run, and the
+      # demonstration it performs had never once executed in CI.  The code was
+      # correct; the environment was not the one it was verified in.
+      #
+      # The cost is nothing to speak of: the whole history is 2.6 MiB packed
+      # over ~380 commits, and the checkout step measured 1 s at depth 1.
+      #
+      # The preflight step below is what stops this being fixed once and
+      # regressing quietly -- it derives which workflows run history-reading
+      # code and fails any that has not deepened its checkout.
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -124,6 +177,18 @@ jobs:
 
       - name: Install numpy
         run: pip install --quiet numpy
+
+      # FIRST, and it is the cheapest thing in the file: every pinned revision
+      # any script in the corpus reads must resolve in THIS checkout, and every
+      # workflow that runs history-reading code must have deepened its
+      # checkout.  Order-milliseconds, standard library only.
+      #
+      # It runs here, ahead of the ~30 minutes below, because the failure it
+      # catches is one the demonstrations cannot distinguish from their own:
+      # `cannot read <gate> at <rev>` looked exactly like a demo failure for 21
+      # hours.  Named at the top of the job it is unmistakable.
+      - name: 'mg-3934 CI history-depth control (can the pinned revs be read here?)'
+        run: python3 scripts/onethird_mg3934_ci_history_depth_control.py
 
       # Cheap and first: if the two copies of the paths list have drifted, or
       # if the gated instrument has grown an import nobody added to them, say

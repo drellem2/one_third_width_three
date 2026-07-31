@@ -71,6 +71,13 @@ MECHANISM = {
     ".pogo/refinery.toml",
     "scripts/refinery_gate.sh",
     "scripts/onethird_mg7db4_watchlist_consistency.py",
+    # mg-3934: the preflight that decides whether the workflow's checkout is
+    # deep enough for the code it runs.  It is mechanism, not a demonstration
+    # -- reachable from nothing in ROOTS -- so it is named here.  A step
+    # wired into the job without also being watched can be neutered without
+    # the job re-running to notice, which is the shape of defect this whole
+    # mechanism exists to refuse.
+    "scripts/onethird_mg3934_ci_history_depth_control.py",
 }
 
 # Roots of the import closure: everything the two jobs actually execute --
