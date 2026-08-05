@@ -24,7 +24,7 @@ any of those; §3 lists what it preserves and why each item is load-bearing.
 ### 1.1 What it was
 
 `scripts/onethird_mg75f0_gate_class_closure_demo.py` is the demonstration that mg-5ad1's class is
-closed: eighteen gate runs, seven mutations, five of them chosen by neither of the tickets whose
+closed: sixteen gate runs, seven mutations, five of them chosen by neither of the tickets whose
 repairs are under test. `data/onethird-mg75f0-gate-class-closure.json` is its committed record —
 **the file a reader opens to learn what the demonstration showed.**
 
@@ -213,6 +213,16 @@ committed report has exactly 16 entries in `cases`. It is the same shape as F4 �
 artifact beside it contradicts — but it is not one of the three F4 named, and mg-3946's verdict
 scoped this item to those three.
 
+> **mg-76d0 (independent audit), 2026-08-05 — corrected, and the note undercounted its own
+> finding.** There were **six** sites, not two: the demo docstring and §8 of the closure document as
+> named here, plus `docs/OneThird-mg75f0-GateClassClosure.md` §4, two comments in
+> `.github/workflows/gate-mutation-demo.yml`, and **this document's own §1 opening**, 144 lines
+> above this note, which asserted "eighteen gate runs" while the note said the number was 16. A
+> document that both states a count and states the count is wrong answers whichever a reader reaches
+> first. All six now say sixteen, with `8 × 2` written beside the number; a full run measured in the
+> audit produced `n_cases: 16`. Disclosing and not fixing was a defensible scoping call and it is
+> credited as one — the site count was not.
+
 ---
 
 ## 2. OPEN 2 (F4) — the three counts, at every site this time
@@ -260,6 +270,14 @@ mg-3946 corrected the ticket's "21 hours" to "24 h 09 m" in the two *code* sites
 "~24 hours" and "The 24 h" standing in the doc. "24 h 09 m" was the measured window rounded to the
 minute; all seven sites now carry the same measured figure, which is what makes the next reader's
 grep agree with itself.
+
+> **Independently confirmed 2026-08-05 (mg-76d0).** Auditing `9072f34` **as merged**, from a base
+> that predates `8d1e17a`, mg-76d0 swept the corpus with comment continuations flattened and found
+> the same two sites and the same count — **5 corrected of 7 asserting sites** — and pre-registered
+> it as a refutation of *"all five sites"* before running anything. Two arcs converging on the same
+> pair from different directions is the useful part: this one had the corrections in a dead
+> polecat's working tree, that one had only the merged commit and a wrap-aware sweep. See
+> `docs/OneThird-mg76d0-PartialReportRepair-IndependentAudit.md` §3b.
 
 **The last two rows are the finding eating its own tail, and they were nearly missed the same way
 everyone else missed them.** A plain `grep -rn '21 h'` does not find either: both sit in wrapped

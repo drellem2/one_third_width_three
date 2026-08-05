@@ -142,7 +142,11 @@ path and still says `partial_run`, because acknowledging a subset at the command
 line says nothing to whoever reads the artifact later.
 
 Run:  /usr/bin/python3 scripts/onethird_mg75f0_gate_class_closure_demo.py
-      (numpy required; ~13 min -- eighteen full runs of the CI gate)
+      (numpy required; ~13 min -- SIXTEEN full runs of the CI gate: 8 cases,
+       the 7 mutations plus the unmutated one, x 2 gate columns.  This said
+       "eighteen"; the committed report's `cases` has 16 entries and a full
+       run measured here produces 16 -- mg-a471 found the discrepancy and
+       scoped it out, mg-76d0 corrected it at all six sites)
       --only M3,M5      run a subset          } either makes the run PARTIAL:
       --gates widened   run one gate column   } exit 2, report to the PARTIAL
                                                 path, canonical path untouched

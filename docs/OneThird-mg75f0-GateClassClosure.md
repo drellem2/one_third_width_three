@@ -240,7 +240,8 @@ impossible; the gate run in that tree. The pre-widening gate is the **real sourc
 derived from branch topology, so the left column does not silently become the widened gate once this
 lands.
 
-`scripts/onethird_mg75f0_gate_class_closure_demo.py`, eighteen full `--no-sweep` gate runs, ~13 min:
+`scripts/onethird_mg75f0_gate_class_closure_demo.py`, **sixteen** full `--no-sweep` gate runs
+(8 cases × 2 gate columns), ~13 min:
 
 | mutation | one-line change | first used by | pre-widening gate | widened gate |
 |---|---|---|---|---|
@@ -604,7 +605,9 @@ cheap; it also has this failure mode, and it is worth knowing which instrument c
 # the widened gate itself                                                ~45 s
 /usr/bin/python3 scripts/onethird_mg2c34_n7_overlap_test.py --no-sweep
 
-# the acceptance test: 18 gate runs, 7 mutations, 5 of them unseen        ~13 min
+# the acceptance test: 16 gate runs, 7 mutations, 5 of them unseen        ~13 min
+#   16 = (7 mutations + 1 unmutated) x 2 gate columns; `cases` in the committed
+#   report has 16 entries.  Said "18" until mg-76d0 counted it.
 # THIS is the demonstration -- the whole matrix, no --only and no --gates.
 /usr/bin/python3 scripts/onethird_mg75f0_gate_class_closure_demo.py
 
