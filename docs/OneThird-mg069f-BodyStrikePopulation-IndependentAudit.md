@@ -314,7 +314,7 @@ permutation a linear extension of `P`?"*, which is 100% on the small family **by
 |---|---|
 | `poset_family(n)` | **REFUSES** — `TypeError: missing 1 required keyword-only argument: 'label_dependent'` |
 | `poset_family(n, label_dependent=True)` | sweeps **4 469** posets → **404/4 469 = 9.0%**, the true answer |
-| `poset_family(n, label_dependent=False)` | sweeps 404 → **404/404 = 100.0%**, the wrong answer, **11.06× under-swept** |
+| `poset_family(n, label_dependent=False)` | sweeps 404 → **404/404 = 100.0%**, the wrong answer, **11.06× under-swept in posets** |
 
 The keyword is keyword-only and has no default, so **a caller cannot fail to choose**. That is the
 right design and it closes F2's stated hazard.

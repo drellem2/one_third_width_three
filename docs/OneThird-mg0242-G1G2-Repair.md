@@ -216,7 +216,8 @@ confirmed.
 | E5 | declared-strike control `--demonstrate bb1cb9b` | finds the G1 site | **found, and only it** |
 
 Also re-run green, unchanged by this work: the mg-0242 population census (the live-claim control's
-line count is still 539, so G3's `537` gap is untouched and still baselined) and the mg-3934 CI
+line count is still 539, so G3's `537` gap is untouched and still baselined — true as written here;
+**mg-1d03 closed both G3 gaps on 2026-08-05 and the census baseline is now empty**) and the mg-3934 CI
 history-depth static control — the new script names no pinned revision on its default path, taking
 both history-reading modes from `argv`, which is the discipline mg-3934's control enforces and which
 caught an earlier instrument in this same family.

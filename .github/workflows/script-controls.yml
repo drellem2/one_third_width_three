@@ -245,7 +245,9 @@ jobs:
       # mg-8a71 (independent audit of the mg-fccb repair): the same direction on
       # the genuinely all-labelled population -- 4 469 posets on n = 3,4,5,
       # 43 842 (poset, reference-order) pairs, 218 166 element triples.  This is
-      # 6.9x the family the step above sweeps.  That gap is not a defect in the
+      # 11.06x the family the step above sweeps in posets -- 6.87x in pairs and
+      # 6.90x in triples, and mg-0242 G3 was one of those written on another's
+      # row, so every ratio here names its grain.  That gap is not a defect in the
       # step above (its family is a complete set of representatives up to
       # isomorphism, and b_x/m_x are relabelling-invariant) -- it was a defect in
       # how both were DESCRIBED, which mg-069f corrected at every site.  The step
@@ -360,16 +362,19 @@ jobs:
       # construction, 9.0% on the labelled one) and confirms it sweeps all
       # labellings when told to and REFUSES (TypeError) when not told.
       #
-      # It carries a BASELINE of two doc-level NAME-vs-COUNT gaps found by this
-      # audit and left for pm-onethird: the closeout's §6.1 table says the
-      # live-claim control sweeps "537/537 lines" (it sweeps 539), and the
-      # direction check's docstring labels the 404 -> 4 469 POSET row "6.9x
-      # larger" (it is 11.06x; 6.9x is the PAIR and TRIPLE ratio).  A baseline gap
-      # closing fails the step, so repairing one forces a re-baseline.
+      # Its BASELINE is EMPTY as of mg-1d03.  It carried two doc-level
+      # NAME-vs-COUNT gaps -- mg-0242 finding G3 -- and mg-1d03 fixed both: the
+      # closeout's §6.1 table said the live-claim control sweeps "537/537 lines"
+      # (it sweeps 539), and the direction check's docstring labelled the
+      # 404 -> 4 469 POSET row "6.9x larger" (it is 11.06x in posets; 6.9x is the
+      # PAIR and TRIPLE ratio).  A baseline gap closing fails the step, so the
+      # repair could not pass silently: it exited 1 with two BASELINE GAP CLOSED
+      # lines until the entries were removed.
       # Demonstrated against a commit where F2 is still present:
       #   python3 scripts/onethird_mg0242_population_census.py --demonstrate 2697c07
       #     -> all_posets(), docstring "All posets on n labelled elements", 404
-      #        enumerated: an 11.06x gap, found by counting rather than reading.
+      #        enumerated: an 11.06x gap in posets, found by counting rather than
+      #        reading.
       - name: 'mg-0242 population census (does every NAMED population equal the SWEPT one?)'
         run: python3 scripts/onethird_mg0242_population_census.py
 
@@ -506,3 +511,64 @@ jobs:
         run: |
           python3 scripts/onethird_mg9d7b_exemption_channel_census.py --selftest
           python3 scripts/onethird_mg9d7b_exemption_channel_census.py
+
+      # (mg-1d03) mg-0242 G3 — THE TWO MIS-STATED TABLES, ROW BY ROW.  G3 was two
+      # named-vs-counted gaps that the mg-069f REPAIR introduced, one of them
+      # inside the very table whose purpose is to report named-vs-swept: the
+      # closeout's §6.1 said the live-claim control sweeps "537/537 lines" (539),
+      # and the direction check's docstring labelled the 404 -> 4 469 POSET row
+      # "6.9x larger" (11.06x in posets; 6.9x is the PAIR ratio 6.87x and the
+      # TRIPLE ratio 6.90x -- a real number from an adjacent GRAIN, which is why
+      # it read as plausible).  mg-0242's instruction was not "fix the two
+      # figures": a table that got its own row wrong has not earned trust on its
+      # neighbours, so check the rest by CALLING the helper.
+      #
+      # This step does exactly that, and no figure in it is a literal copied from
+      # the table it audits:
+      #   * it PARSES the three rows of §6.1 out of the closeout and matches every
+      #     integer against a fresh enumeration -- rows 1 and 2 were correct, 0
+      #     gaps in 6 figures, and that is now asserted rather than believed;
+      #   * it PARSES the 4 x 2 docstring table and recomputes the ratio label,
+      #     which must carry its GRAIN;
+      #   * it sweeps docs/, scripts/ and .github/ for every family-ratio literal
+      #     and fails any ASSERTION that omits its grain or is wrong at it.  15
+      #     sites beyond the one baselined figure said "6.9x" with no grain or
+      #     the wrong one; all are corrected.  This comment is inside that
+      #     population and was caught by it while being written.  Two structural
+      #     classes are listed and
+      #     never failed on -- a literal in backticks or a quoted span (a
+      #     quotation is not an assertion), and a line carrying BOTH figures (a
+      #     report OF the defect).  Both are printed line by line, because
+      #     "exempt and silent" is the failure this corpus keeps finding in
+      #     itself.
+      - name: 'mg-1d03 table-row audit (does every ROW equal what the helper returns?)'
+        run: python3 scripts/onethird_mg1d03_table_row_audit.py
+
+      # (mg-1d03) mg-0242 G4 — FIVE REMEDIATION INSTRUMENTS, ONE STANDARD.  The
+      # arc removed ten refuted claims from live body text five different ways --
+      # strike-at-site x4, rewrite-in-place x2, rewrite + annotation x2, a
+      # DELETION declared as a strike x1, none x1 -- and named only
+      # strike-at-site.  G4 is a finding about a MISSING STANDARD, not about five
+      # mistakes: a worker who rewrote in place was not violating a rule, the
+      # rule did not cover what they did.
+      #
+      # The standard now lives in this script: which instrument is preferred and
+      # WHY, when each of the other four is acceptable, and which one a control
+      # can see.  The last column is the load-bearing one, so it is MEASURED, not
+      # asserted -- 7 mutants x 2 controls = 14 exit codes, one refuted claim
+      # (ledger C3) remediated each way in a scratch corpus:
+      #   I1 strike-at-site, I2 rewrite-in-place, I3 rewrite + annotation and
+      #   I4 an UNDECLARED DELETION -> 0/0.  All four are pairwise
+      #      indistinguishable to both controls.
+      #   I5a a declared deletion quoting a short form -> 0/1, caught by the
+      #      declared-strike control: the ONE boundary CI can see.
+      #   I5b the same declaration quoting the sentence verbatim -> 1/1.  The
+      #      quotation itself reads as a live assertion, which refuted mg-1d03's
+      #      own prediction P8 in its unrestricted form.
+      #   I6 the claim RESTORED LIVE -> 1/0, the positive control.  Without it the
+      #      six rows of zeros would measure nothing.
+      # It also asserts the live-claim control STATES that reach where it reports
+      # (its output named the word "instrument" 0 times before mg-1d03), so a
+      # green run can no longer be read as "no unremediated claims".
+      - name: 'mg-1d03 remediation instruments (which of the five can any control see?)'
+        run: python3 scripts/onethird_mg1d03_remediation_instruments.py

@@ -215,12 +215,22 @@ def part_a(tree=None):
     print(f"  STILL LIVE                                      : {live}"
           f"   ({', '.join(c.split()[0] for c in live_ids) or '—'})")
     print()
-    print("  BY INSTRUMENT (the repair used three, and named only one):")
     kinds = {}
     for cid, f, pat, by, expect, instrument in LEDGER:
         kinds[instrument.split(" (")[0]] = kinds.get(instrument.split(" (")[0], 0) + 1
+    # The count is COUNTED.  This line used to read "the repair used three, and
+    # named only one" directly above a tally of FIVE keys -- a named-vs-counted
+    # error inside the line that reports the count, the same class as mg-0242 G3
+    # and found by mg-1d03 while enumerating the instruments for G4.
+    print(f"  BY INSTRUMENT (the repair used {len(kinds)}, and named only one as "
+          f"the standard):")
     for k, v in sorted(kinds.items(), key=lambda kv: -kv[1]):
         print(f"      {v:>2}  {k}")
+    print(f"  the standard, and when each of the other {len(kinds) - 1} is "
+          f"acceptable: see")
+    print(f"      scripts/onethird_mg1d03_remediation_instruments.py (mg-0242 G4)")
+    print(f"  what any control in CI can actually SEE of this column: exactly one")
+    print(f"      boundary -- a strike DECLARED but not MADE.  Measured there.")
     gone_from_baseline = KNOWN_LIVE - set(live_ids)
     return total, struck, live, unexpected, gone_from_baseline, live_ids
 

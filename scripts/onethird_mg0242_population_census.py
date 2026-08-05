@@ -2,7 +2,7 @@
 """mg-0242 — census of every poset population the corpus's controls NAME.
 
 WHY THIS EXISTS.  mg-8a71 finding F2 was that a control NAMED 4 469 labelled
-posets and SWEPT 404 -- a 6.9x gap, invisible because nobody had called the
+posets and SWEPT 404 -- an 11.06x gap in posets, invisible because nobody had called the
 helper and counted; the name and the docstring were read instead.  mg-069f fixed
 that gap.  This instrument is the audit of the fix, and it obeys the same rule
 that produced the finding: for every population a control names, CALL the helper
@@ -65,15 +65,27 @@ NS = (3, 4, 5)
 # passing silently.  Adding to this set is how a future reader would tolerate a
 # population that is named wrongly; so don't, without a finding that says why.
 #
-#   G1  docs/OneThird-mg8a71-VerdictRepairs-Closeout.md §6.1 states the
-#       live-claim control sweeps "537/537 lines"; it sweeps 539.
-#   G2  scripts/onethird_mgfccb_direction_check.py's docstring table labels the
+#
+# RE-BASELINED TO EMPTY 2026-08-05 by mg-1d03, which fixed both entries.  They
+# were mg-0242 finding G3, filed by the mg-069f audit and never ticketed until
+# then.  Recorded here because a closed gap that leaves no trace is a gap that
+# can reopen unnoticed:
+#
+#   G1  docs/OneThird-mg8a71-VerdictRepairs-Closeout.md §6.1 said the live-claim
+#       control sweeps "537/537 lines"; it sweeps 539.  The row now says 539/539
+#       and part (5) below asserts it on every push.
+#   G2  scripts/onethird_mgfccb_direction_check.py's docstring table labelled the
 #       404 -> 4 469 POSET row "(6.9x larger)".  4 469/404 = 11.06x.  6.9x is the
-#       ratio of PAIRS (6.87x) and TRIPLES (6.90x), not of posets.
-BASELINE = {
-    "closeout §6.1: live-claim control lines named vs swept",
-    "direction_check docstring: poset-row ratio named vs computed",
-}
+#       ratio of PAIRS (6.87x) and TRIPLES (6.90x), not of posets -- a right
+#       number on the wrong GRAIN.  The label now carries its grain, part (6)
+#       below compares at two decimal places and requires the grain word, and
+#       scripts/onethird_mg1d03_table_row_audit.py takes the same rule
+#       corpus-wide.
+#
+# The gate fired exactly as designed on the way through: with both figures fixed
+# and this set still holding them, the run exited 1 with two BASELINE GAP CLOSED
+# lines.  That is what forced this edit rather than a silent pass.
+BASELINE = set()
 
 FAILURES = []
 SEEN_GAPS = set()
@@ -314,20 +326,35 @@ def live_claim_control_population(lc):
 
 
 def docstring_ratio(dc_path):
-    """The '(6.9x larger)' label on the docstring's POSET row (part of F2's fix)."""
+    """The ratio label on the docstring's POSET row (part of F2's fix).
+
+    Compared at TWO decimal places and required to NAME ITS GRAIN, both since
+    mg-1d03.  At one decimal place the label was `6.9x` against a computed
+    `11.1x`; the gap was real but the rounding hid which quantity either figure
+    was about, and mg-0242 G3 was exactly a right number on the wrong grain.
+    """
     print()
     print("(6) THE RATIO THE REPAIR'S OWN DOCSTRING PUTS ON ITS POSET ROW")
     text = pathlib.Path(dc_path).read_text(encoding="utf-8")
-    m = re.search(r"tot \|\s*(\d+)\s*\|\s*(\d+)\s*\((\d+(?:\.\d+)?)x larger\)", text)
+    m = re.search(r"tot \|\s*(\d+)\s*\|\s*(\d+)\s*"
+                  r"\((\d+(?:\.\d+)?)x larger,?\s*([a-z]*)\)", text)
     if not m:
-        print("  no '(Nx larger)' label found on the totals row")
+        print("  no '(Nx larger, <grain>)' label found on the totals row")
+        FAILURES.append("the direction_check docstring totals row carries no "
+                        "grain-named ratio label")
         return None
-    small, big, named = int(m.group(1)), int(m.group(2)), float(m.group(3))
-    computed = round(big / small, 1)
-    print(f"  docstring totals row: {small} -> {big}, labelled '{named}x larger'")
-    print(f"  {big}/{small} = {big/small:.4f}  -> {computed}x")
-    print(f"  6.9x is the ratio of PAIRS (43842/6385 = {43842/6385:.4f}) and of")
-    print(f"  TRIPLES (218166/31625 = {218166/31625:.4f}), not of posets.")
+    small, big = int(m.group(1)), int(m.group(2))
+    named, grain = float(m.group(3)), m.group(4)
+    computed = round(big / small, 2)
+    print(f"  docstring totals row: {small} -> {big}, labelled "
+          f"'{named}x larger, {grain or '(no grain)'}'")
+    print(f"  {big}/{small} = {big/small:.4f}  -> {computed}x in posets")
+    print(f"  6.87x is the ratio of PAIRS (43842/6385 = {43842/6385:.4f}) and")
+    print(f"  6.90x that of TRIPLES (218166/31625 = {218166/31625:.4f}).")
+    if grain != "posets":
+        FAILURES.append(f"the docstring totals-row ratio names grain "
+                        f"{grain or '(none)'}, and the row is a POSET row")
+        print(f"  [GAP ] the row's ratio does not name POSETS as its grain")
     check("direction_check docstring: poset-row ratio named vs computed",
           named, computed,
           "direction_check docstring: poset-row ratio named vs computed")
@@ -440,7 +467,8 @@ def main():
             print(f"  - {f}")
         return 1
     print("RESULT: PASS — every population NAMED equals the population COUNTED,")
-    print("        except the two doc-level gaps recorded in the baseline above.")
+    print(f"        with {len(BASELINE)} gap(s) tolerated by baseline"
+          f"{' — the two doc-level gaps of mg-0242 G3 were closed by mg-1d03' if not BASELINE else ''}.")
     return 0
 
 

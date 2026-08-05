@@ -163,8 +163,8 @@ it found none.
 > 43 842 pairs, 218 166 element triples, 0 violations** (`scripts/onethird_mg8a71_audit_instrument.py`,
 > in CI). Both scripts now assert their population counts; the helper is renamed to what it returns,
 > and `poset_family(n, label_dependent=...)` forces every future call site to state which family it
-> needs, because for a **label-dependent** property the old helper would have under-swept 6.9× in
-> silence.
+> needs, because for a **label-dependent** property the old helper would have under-swept 11.06× in
+> posets, in silence (6.87× in pairs, 6.90× in triples — mg-0242 G3, grain named by mg-1d03).
 
 ---
 

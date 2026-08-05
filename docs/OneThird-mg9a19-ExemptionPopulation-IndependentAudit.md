@@ -292,7 +292,7 @@ working.** Neither the ledger nor its baseline moved in a direction that would f
 | 5 | the live-claim control **covers rather than carries** the two F1 sites | **confirmed**: `BASELINE` is empty; removing §3.2's `~~` → exit 1, removing §5 rec 2's `~~` → exit 1 |
 | 6 | negative controls `1b00147^` and `1b00147` still exit 1 | **confirmed** (4 and 2 new sites) |
 | 7 | `--demonstrate bb1cb9b` finds `mgd112` §2.2 and nothing else in 239 documents | **confirmed** |
-| 8 | population census still green, `537 → 539` G3 gap untouched | **confirmed**, 2 baselined gaps seen |
+| 8 | population census still green, `537 → 539` G3 gap untouched | **confirmed**, 2 baselined gaps seen (as of this audit; **mg-1d03 closed both, and the census baseline is empty from 2026-08-05**) |
 | 9 | M1/M2/M3 all exit 1 | **confirmed** |
 
 Nothing in this audit's changes touches any of the nine.

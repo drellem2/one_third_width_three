@@ -16,7 +16,7 @@ site, find its two unflagged §5 consumers, narrow 2 overstatements (mg-fccb)"*,
 
 | axis | verdict |
 |---|---|
-| **The direction** `b_x ≤ m_x` | **CONFIRMED, independently re-derived and machine-confirmed on a population 6.9× larger than the repair's.** The repair is right; mg-d112 was right; the struck sentence was wrong. |
+| **The direction** `b_x ≤ m_x` | **CONFIRMED, independently re-derived and machine-confirmed on a population 6.90× larger in triples than the repair's — 11.06× in posets.** The repair is right; mg-d112 was right; the struck sentence was wrong. |
 | **The equality case pinning §3.1 as VALID** | **CONFIRMED.** §3.1 must not be "corrected". Verified 43 842/43 842. |
 | **`W_m` closed forms (incl. the new exact `1/3`)** | **CONFIRMED**, all four, by hand *and* by exhaustive enumeration of `L(W_m)`. |
 | **Consumer trace** | **INCOMPLETE AS REMEDIATION, complete as enumeration** — see **F1**. Two consumers the repair itself identified as carrying a *false* claim were left asserting it in live body text. |
@@ -247,7 +247,7 @@ escape. (ii) *Measurement:* my instrument sweeps the genuinely-all-labeled popul
 142 050 equalities.
 
 So: **sound result, misstated population.** Two live consequences: a CI comment asserting coverage it
-does not have, and a mis-documented helper that would **silently** under-sweep by 6.9× if reused for
+does not have, and a mis-documented helper that would **silently** under-sweep by 11.06× in posets if reused for
 any *label-dependent* property — where the isomorphism argument that rescues it here does not apply.
 **Recommendation:** rename to `posets_with_identity_extension` and restate the counts as
 "complete up to isomorphism of `(P, e)`", which is both true and the stronger claim.
@@ -355,7 +355,8 @@ things I chose that no list names:
    exact rational equality on a larger population.)*
 2. **The population behind the repair's own headline number.** "31 625/31 625, zero violations" is a
    bare total. Naming the population is what turned it into **F2** — a claim of exhaustiveness over
-   a set 6.9× larger than the one actually swept. The number is right; the sentence around it is not.
+   a set 11.06× larger in posets than the one actually swept. The number is right; the sentence
+   around it is not.
 
 I also checked the `e`-max equality case (**F3**) and re-read the target doc's §§1–4 for any *other*
 inequality whose direction is load-bearing; §1.1's band bound `(2/3)k ≤ d_k ≤ (2/3)k + (n−1)/3` and

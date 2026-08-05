@@ -15,8 +15,10 @@ which mg-8a71 confirmed and this deliverable did not re-open beyond the checks e
 
 The audited repair **stated a remediation standard** — *"an annotation leaves the wrong claim in the
 body"* — struck one site by it, and left the same standard unapplied at two sites **it had itself
-proved false**. Both are now struck at the site. Separately, its control **named a population 6.9×
-larger than the one it swept**; the population is now stated correctly at every site, the helper is
+proved false**. Both are now struck at the site. Separately, its control **named a population 11.06×
+larger in posets than the one it swept** (6.87× in pairs, 6.90× in triples — the grains differ and
+mg-0242 G3 was one written on another's row); the population is now stated correctly at every site
+with its grain named, the helper is
 renamed to what it returns, and both scripts **assert their own population counts** so the gap cannot
 reopen silently.
 
@@ -106,8 +108,8 @@ poset_family(n, *, label_dependent)
 ```
 
 so a call site cannot pick a family without stating which case it is in. This is the actual danger
-mg-8a71 named: for a **label-dependent** property the old helper would have under-swept **6.9× in
-silence**, and nothing at the call site said so.
+mg-8a71 named: for a **label-dependent** property the old helper would have under-swept **11.06× in
+posets, in silence**, and nothing at the call site said so.
 
 **Both scripts now assert their population counts** (404 / 6 385 / 31 625 and 4 469 / 43 842 /
 218 166, the latter checked per-`n` against A001035). A generator drifting off its stated family now
@@ -184,9 +186,25 @@ Per the verdict's instruction to enumerate. **Predictions were written before ru
 
 | control | population NAMED | population SWEPT | agree? |
 |---|---|---|---|
-| `onethird_mgfccb_direction_check.py` | 404 posets / 6 385 pairs / 31 625 triples | **404 / 6 385 / 31 625**, asserted in-script | ✅ (was *"ALL posets"*, 6.9× too large — this is F2) |
+| `onethird_mgfccb_direction_check.py` | 404 posets / 6 385 pairs / 31 625 triples | **404 / 6 385 / 31 625**, asserted in-script | ✅ (was *"ALL posets"*, 11.06× too large in posets — this is F2) |
 | `onethird_mg8a71_audit_instrument.py` | 4 469 posets / 43 842 pairs / 218 166 triples | **4 469 / 43 842 / 218 166**, asserted in-script and per-`n` against A001035 | ✅ correct as written; now enforced |
-| `onethird_mg8a71_live_claim_control.py` | *"one file, all of it"* | **537/537 lines**, each in exactly one of {paragraph, quote, heading, exempt-annotation, blank}, asserted to sum | ⚠️ **headings were silently dropped** while the docstring claimed "all of it" — my own instance of the F2 defect, found by applying F2's test to myself. Fixed: headings are scanned, and coverage is now proven rather than asserted. |
+| `onethird_mg8a71_live_claim_control.py` | *"one file, all of it"* | **539/539 lines**, each in exactly one of {paragraph, quote, heading, exempt_annotation, blank}, asserted to sum | ⚠️ **headings were silently dropped** while the docstring claimed "all of it" — my own instance of the F2 defect, found by applying F2's test to myself. Fixed: headings are scanned, and coverage is now proven rather than asserted. |
+
+> ### ⚠️ ANNOTATION (2026-08-05, mg-1d03): **two figures in this table were wrong, and this is the
+> table whose purpose is to report named-vs-swept.**
+>
+> mg-0242 finding **G3**, filed by the mg-069f audit and never ticketed until mg-1d03. Row 3 read
+> ***"537/537 lines"***; the control sweeps **539** — the row is now `539/539`, and the bucket name
+> `exempt-annotation` is now `exempt_annotation`, which is the scanner's actual key. Row 1's note read
+> ***"6.9× too large"*** on a **poset** comparison; 4 469/404 = **11.06× in posets**. `6.9×` is the
+> ratio of **pairs** (6.87×) and of **triples** (6.90×) — a real number from an adjacent GRAIN, which
+> is why it read as plausible.
+>
+> **Every other figure in this table was then re-obtained by CALLING the helper**, not by reading the
+> table: `scripts/onethird_mg1d03_table_row_audit.py` parses these rows out of this file and compares
+> each integer against a fresh enumeration. Rows 1 and 2 were correct — **0 gaps in 6 figures** — and
+> that is now asserted on every push rather than believed. Population: the 3 data rows of this
+> section. Grain: one integer per (row × column × quantity).
 
 ### 6.2 Exit codes — predicted before running, all five hit
 

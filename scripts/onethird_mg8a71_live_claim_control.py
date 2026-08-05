@@ -518,6 +518,35 @@ def print_channels(channels, total):
           f"0 channels unbounded and silent.")
 
 
+def print_reach():
+    """What a green run here does and does NOT mean (mg-0242 finding G4).
+
+    The arc removed refuted claims from live body text FIVE ways and named ONE
+    as the standard.  This control sees only whether the CLAIM IS LIVE, so four
+    of the five look identical to it -- and mg-0242's instruction was that if the
+    control can only see one, it must SAY SO AT THE POINT IT REPORTS, otherwise
+    "no un-struck claims" is read as "no unremediated claims".  The matrix below
+    is measured by mutation in
+    scripts/onethird_mg1d03_remediation_instruments.py, which fails if this
+    statement and that measurement drift apart.
+    """
+    print()
+    print("  REACH — what a PASS here does NOT mean (mg-0242 G4):")
+    print("    5 remediation instruments are in use in this arc: strike-at-site")
+    print("    (the STANDARD), rewrite-in-place, rewrite + annotation, deletion")
+    print("    declared as a strike, and none (flagged and routed).")
+    print("    This control detects only whether the CLAIM IS LIVE.  Measured by")
+    print("    mutation: strike-at-site, rewrite-in-place, rewrite + annotation")
+    print("    and an UNDECLARED DELETION all leave it at exit 0 and are")
+    print("    indistinguishable to it; only a claim left LIVE trips it.  An")
+    print("    unmade DECLARED strike is caught by a different instrument")
+    print("    (onethird_mgcd04_declared_strike_control.py), and that is the one")
+    print("    boundary between instruments any control in CI can see.")
+    print("    So: PASS = 'no refuted claim is live in this one document'.")
+    print("    PASS is NOT 'every refutation was remediated', and it is NOT")
+    print("    'remediated to the standard'.")
+
+
 def main():
     path = sys.argv[1] if len(sys.argv) > 1 else DOC
     total, n_live, hits, coverage, channels = scan(path)
@@ -554,6 +583,7 @@ def main():
     for sig_id, section in sorted(gone):
         print(f"  FAIL: baseline site disappeared (re-baseline this control): "
               f"{sig_id} in {section}")
+    print_reach()
     print("=" * 78)
     if new or gone:
         print("RESULT: FAIL — the live-claim set differs from the recorded baseline.")
