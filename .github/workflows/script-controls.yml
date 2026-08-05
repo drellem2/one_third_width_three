@@ -572,3 +572,48 @@ jobs:
       # green run can no longer be read as "no unremediated claims".
       - name: 'mg-1d03 remediation instruments (which of the five can any control see?)'
         run: python3 scripts/onethird_mg1d03_remediation_instruments.py
+
+      # (mg-5854) INDEPENDENT AUDIT of the mg-1d03 G3+G4 repair.  Not a re-run of
+      # the two steps above -- both pass, and were re-run.  This asks the two
+      # questions an audit of them has to ask and that they cannot ask of
+      # themselves.
+      #
+      # (1) The row audit above obtains every figure by CALLING the helper.  If
+      #     the HELPER were wrong the table and the audit would agree and both be
+      #     wrong, and if the audit's ROW SELECTOR is narrower than the table a
+      #     row can be present and unchecked.  So this counts the same six
+      #     populations from an enumerator that shares no line with either helper
+      #     -- brute force over all 2^(n(n-1)) relations on [n], tested for the
+      #     three axioms directly -- and checks the A001035 literals as a third
+      #     leg.  All six agree.  Rows are then matched PER COLUMN (§6.1's columns
+      #     ARE `population NAMED` and `population SWEPT`; a rule that pools them
+      #     cannot see what the table exists to report) and every data row must be
+      #     known: rows PRESENT and rows CHECKED are printed as two numbers.
+      #     Measured: the row audit above exits 0 on a column-swap mutant and on a
+      #     fourth row naming no script.  Both are coverage, not wrong answers.
+      #
+      # (2) The instruments matrix above measures 7 mutants at ONE site -- ledger
+      #     C3, in the one document the live-claim control reads.  4 of the
+      #     ledger's 10 entries do not live there.  This remediates a claim by all
+      #     five instruments at two sites in mgd112, against THREE controls
+      #     (adding the struck-vs-refuted ledger, whose part B sweeps all of
+      #     docs/): 2 subjects x 7 mutants x 3 controls = 42 exit codes.  Result:
+      #     for a claim the ledger does not name, LEAVING IT LIVE is
+      #     indistinguishable from striking it at the site -- 2 exit-code classes,
+      #     not 4 -- and the ledger's corpus sweep SEES it (21 -> 22 hits) and
+      #     exits 0 anyway.
+      #
+      # BASELINE: 1 entry, and it is a finding.  §6.1 row 3 and the live-claim
+      # control's own report say "539 lines"; the document has 538 (`wc -l`).
+      # 539 is the `split("\n")` fragment count, whose last element is the empty
+      # string after the trailing newline.  Coverage is unaffected -- 539 is a
+      # superset -- but the GRAIN of the label is wrong by one unit, in the SWEPT
+      # column of the table whose purpose is to report named-vs-swept, one row
+      # below where mg-0242 G3 was found.  Routed to pm-onethird rather than
+      # repaired: an audit that edits its subject destroys the record.  A
+      # baselined gap that CLOSES fails this step, so the fix forces a
+      # re-baseline.  Report: docs/OneThird-mg5854-G3G4-IndependentAudit.md.
+      # `--vs-parent` materialises a tree and is OFF the default path (mg-3934):
+      # this job checks out at depth 1 by design.
+      - name: 'mg-5854 independent audit (do the rows survive a second enumerator, and what does the control miss?)'
+        run: python3 scripts/onethird_mg5854_row_and_instrument_audit.py
