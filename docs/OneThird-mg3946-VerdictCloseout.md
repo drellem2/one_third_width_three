@@ -95,7 +95,47 @@ unchanged and unrevised**; only the invocation moved, and a useful side effect i
 this repair makes `--partial-ok` an unrecognised argument, so the battery's `control` case fails
 loudly rather than the fix rotting out quietly.
 
-### 1.3 Measured, not asserted
+### 1.3 And it is a standing control, not a hand-check
+
+`scripts/onethird_mga471_partial_run_control.py`, wired into `script-controls.yml`, which runs on
+every commit under `scripts/`, `data/` or `docs/`.
+
+**It does not run the gate, and that is the design rather than a shortcut.** The repair lives
+entirely in the demo's driver — which path it writes, which population each denominator is over,
+which exit code it returns — and none of that depends on what the mg-2c34 gate computes. A full
+matrix is sixteen gate runs: 21 min in CI, and ~10 min *per case* on a loaded developer box, which
+is how this closeout found out. A control that expensive is a control nobody runs, which is the
+failure mode mg-3946 named about its own 35-minute falsifier **in the same finding this closes**.
+So it substitutes a fake `run_case` and drives the real `main()`: **0.3 s**, standard library only,
+no gate, no numpy, no network.
+
+The trade is stated rather than hidden: this control cannot tell you whether the widened gate still
+catches M5, and it does not try — that is the demo's job and the demo still does it. It asks the
+one question the demo cannot ask about itself: *does a subset of it know that it is a subset?*
+
+Seven properties (A–G) over seven invocations — canonical path on a full run; `partial_run` and the
+full denominators on a full run; the PARTIAL path and a byte-identical canonical file on a subset
+run; `cases_requested`/`gates_requested`/`full_matrix` recorded; denominators over the rows run and
+an unrequested column said in words; exit 2 / 0 / **1** (a subset run containing a *failed* case
+must exit 1 either way — the failure path dominates the partiality path, which is what keeps the
+falsifier's six predictions meaning what they meant); and partiality decided over **sets**, so
+`--gates widened,pre-widening` reordered and `--only` naming every mutation by hand are the full
+matrix.
+
+**It self-tests first**, three drifts of its own subject, each of which must fire before any of the
+above is believed — and all three were caught on the first run:
+
+| drift | what it undoes | caught as |
+|---|---|---|
+| `PARTIAL_REPORT = REPORT` | defect (1) | *"subset run changed the canonical report"* |
+| denominators put back over the full UNSEEN set | defect (3) | *"widened denominator is `['M5','M6','M7','M8','M9']`, not `['M9']`"* |
+| the subset exit code put back to `0` | defect (4) | *"subset run exited 0, expected 2"* |
+
+Property **A/B** is what a full end-to-end matrix would have established about the repair — full
+run exits 0, writes the canonical path, reports `partial_run: false`, prints `5/5` — reached in
+0.3 s instead of ~2.5 h, and reached on *every* commit rather than once.
+
+### 1.4 Measured, not asserted
 
 Canonical report digest before any of it:
 
@@ -142,7 +182,7 @@ unseen_caught_by_the_widened_gate   ['M9']
 Where the same invocation used to print `1/5` and overwrite the record, it now prints `1/1`, writes
 elsewhere, says `partial_run: True`, and exits 2.
 
-### 1.4 What this does NOT claim
+### 1.5 What this does NOT claim
 
 * **Not claimed: that the demo's other artifacts are swept.** This is the mg-75f0 demo's report
   path only. mg-3946's falsifier still writes its own canonical
@@ -151,10 +191,10 @@ elsewhere, says `partial_run: True`, and exits 2.
   the path. Named here rather than fixed: it is a different instrument, and mg-3946's verdict
   routed its `cases_requested`/`partial_run` pair as the thing to copy, not that file's path
   handling. Other `--only`-bearing probes in `scripts/` were not audited.
-* **Not claimed: that exit 2 is enforced anywhere.** CI runs the full matrix with no flags, so the
-  new code path is exercised by no automated caller. The falsifier exercises `--partial-ok` and is
-  hand-run — which is the standing residual mg-3946 stated about itself and this closeout does not
-  improve.
+* **Not claimed: that any *gate* runs in the new control.** §1.3 is explicit — it drives the demo's
+  driver over a fake `run_case`. If the demo's *matrix* rots, this control will not notice; the
+  demo will, and `gate-mutation-demo.yml` runs it. Nothing here reduces the standing residual
+  mg-3946 stated about its own falsifier: **that** instrument still runs nowhere automatically.
 * **Not claimed: that the committed report was refreshed.**
   `data/onethird-mg75f0-gate-class-closure.json` is still mg-75f0's own acceptance run from
   `9fa4aaa` and therefore carries neither mg-3946's `reported_a_failure` fields nor the
@@ -212,12 +252,24 @@ runs, first `2026-07-30T05:36:59Z`, last `2026-07-31T05:45:54Z`. The difference 
 | `docs/…-CI-HistoryDepth.md` §3.4 | "The 24 h" | "The 24 h 08 m 55 s" |
 | `scripts/refinery_gate.sh` (READOUT header) | "24 h 09 m" | 24 h 08 m 55 s |
 | `scripts/refinery_gate.sh` (the red branch a reader actually sees) | "for 24 h" | "for 24 h 08 m 55 s — twelve consecutive red runs" |
-| `.github/workflows/gate-mutation-demo.yml` header | "24 h 09 m" | 24 h 08 m 55 s |
+| `.github/workflows/gate-mutation-demo.yml` (header) | "24 h 09 m" | 24 h 08 m 55 s |
+| `.github/workflows/gate-mutation-demo.yml` (mg-3934 control step) | **"21 hours"** | 24 h 08 m 55 s |
+| `.github/workflows/script-controls.yml` (mg-3934 static-half step) | **"21 hours"** | 24 h 08 m 55 s |
 
 mg-3946 corrected the ticket's "21 hours" to "24 h 09 m" in the two *code* sites and left
 "~24 hours" and "The 24 h" standing in the doc. "24 h 09 m" was the measured window rounded to the
-minute; all five sites now carry the same measured figure, which is what makes the next reader's
+minute; all seven sites now carry the same measured figure, which is what makes the next reader's
 grep agree with itself.
+
+**The last two rows are the finding eating its own tail, and they were nearly missed the same way
+everyone else missed them.** A plain `grep -rn '21 h'` does not find either: both sit in wrapped
+comments where the phrase is split across a line boundary — `# … for 21` / `# hours because …`. So
+the sweep here re-ran over each file with comment markers and newlines flattened to single spaces,
+and that is what surfaced them. One of the two is **inside `gate-mutation-demo.yml` itself** — the
+very file whose header mg-3946 corrected in `0322264`, with the same undercount still standing 170
+lines further down. F4's shape is "corrected in one place, left stale in the others"; it turns out
+to hold *within a single file*, and a line-oriented grep is structurally unable to see it. That is
+the method note worth keeping, more than the numbers.
 
 ### (c) "eight consecutive runs" — verified already correct
 
@@ -284,6 +336,21 @@ grep -n 'PRE_WIDENING_REV\|MG75F0_REV\|gate_source("' \
     scripts/onethird_mg4f9b_route_axis_probe.py
 /usr/bin/python3 -c "from datetime import datetime as d; \
   print(d.fromisoformat('2026-07-31T05:45:54') - d.fromisoformat('2026-07-30T05:36:59'))"
+
+# the standing control for the F5 repair, self-test first             ~0.3 s
+/usr/bin/python3 scripts/onethird_mga471_partial_run_control.py
+
+# the F4 sweep that finds LINE-SPLIT claims a plain grep cannot -- flatten
+# comment markers and newlines to single spaces before matching
+for f in $(git ls-files | grep -E '\.(md|sh|py|yml|txt)$'); do
+  /usr/bin/python3 - "$f" <<'PY'
+import re, sys
+s = open(sys.argv[1], errors='replace').read()
+flat = re.sub(r'\s*(?:#|//|\*)?\s*\n\s*(?:#|//|\*)?\s*', ' ', s)
+for m in re.finditer(r'(21 hours?|eight consecutive|~?24 hours|24 h 09 m)', flat):
+    print(sys.argv[1], '...', flat[max(0, m.start()-70):m.end()+40], '...')
+PY
+done
 ```
 
 Interpreter matters: bare `python3` on this host has no numpy.
