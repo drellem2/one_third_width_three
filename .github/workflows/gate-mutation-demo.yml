@@ -202,8 +202,11 @@ jobs:
       #
       # It runs here, ahead of the ~30 minutes below, because the failure it
       # catches is one the demonstrations cannot distinguish from their own:
-      # `cannot read <gate> at <rev>` looked exactly like a demo failure for 21
-      # hours.  Named at the top of the job it is unmistakable.
+      # `cannot read <gate> at <rev>` looked exactly like a demo failure for
+      # 24 h 08 m 55 s.  Named at the top of the job it is unmistakable.
+      # ("21 hours" here is the same undercount the header above corrects; it
+      # survived at this second site inside the very file that fixed the first,
+      # which is F4's whole shape -- mg-a471.)
       - name: 'mg-3934 CI history-depth control (can the pinned revs be read here?)'
         run: python3 scripts/onethird_mg3934_ci_history_depth_control.py
 

@@ -71,13 +71,37 @@ jobs:
       #
       # It runs on EVERY commit under scripts/, data/ or docs/, and that is the
       # reason it is here and not only in the paths-filtered job: the defect it
-      # is for -- mg-75f0's class-closure demo dead on arrival in CI for 21
-      # hours because af7fc2df is not in a depth-1 clone -- was found by a red
+      # is for -- mg-75f0's class-closure demo dead on arrival in CI for
+      # 24 h 08 m 55 s (mg-a471; "21 hours" was the ticket's undercount, and
+      # this is the fourth site it was left standing at)
+      # because af7fc2df is not in a depth-1 clone -- was found by a red
       # run, and a second instance in a step that runs later would have been
       # just as invisible.  Order-milliseconds, standard library only,
       # self-testing (seven synthetic drifts, each of which must fire).
       - name: 'mg-3934 CI history-depth control (static half)'
         run: python3 scripts/onethird_mg3934_ci_history_depth_control.py --static-only
+
+      # mg-a471: can a SUBSET run of the mg-75f0 class-closure demo be mistaken
+      # for the demonstration?  That was mg-3946's F5 -- a `--only`/`--gates`
+      # run overwrote the committed report with an unmarked partial one and
+      # printed a ratio whose numerator was over the rows run and denominator
+      # over the full set, exiting 0.  It bit that audit twice.
+      #
+      # It is HERE, in the order-seconds job, and not in the ~30-minute demo
+      # workflow, because the repair lives entirely in the demo's driver --
+      # which path it writes, which population each denominator is over, which
+      # exit code it returns -- and none of that depends on what the gate
+      # computes.  So this substitutes a fake `run_case` and drives the real
+      # `main()`: no gate, no numpy, no network, 0.3 s.  A control that costs
+      # sixteen gate runs is a control nobody runs, which is this arc's own
+      # named failure mode.
+      #
+      # Self-testing: three drifts of its subject (the partial path re-pointed
+      # at the canonical one, the denominators put back over the full set, the
+      # subset exit code put back to 0), each of which must fire before the
+      # real assertions are believed.
+      - name: 'mg-a471 subset-run control (is a --only run mistakable for the demonstration?)'
+        run: python3 scripts/onethird_mga471_partial_run_control.py
 
       # mg-8489: negative control for the fast_Q engine gate.  Corrupts fast_Q
       # three ways and Q_primary once, and requires five_engine_check to RAISE

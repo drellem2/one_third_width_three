@@ -382,6 +382,15 @@ headline quote its own denominator. Both are one-liners; neither is mine to choo
 >    falsifier asks of the demo. That battery now passes `--partial-ok` on all six invocations;
 >    **its six predictions are unchanged and unrevised**, only the invocation moved.
 >
+> 5. **And it is a standing control, not a hand-check.**
+>    `scripts/onethird_mga471_partial_run_control.py` in `script-controls.yml`, **0.3 s**: it
+>    drives the real `main()` over a *fake* `run_case`, because the repair is entirely in the
+>    driver and a sixteen-gate-run control is a control nobody runs — the failure mode this audit
+>    named about its own falsifier in this same finding. Seven properties, seven invocations, and
+>    three self-test drifts (the partial path re-pointed at the canonical one, the denominators
+>    put back over the full set, the subset exit code put back to 0) which must fire before the
+>    rest is believed. All three fired.
+>
 > Measured, not asserted: `--only M9 --gates widened` exits **2**, writes the `.PARTIAL.json`, and
 > leaves `data/onethird-mg75f0-gate-class-closure.json` byte-identical at
 > `39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318`; the same run with
