@@ -1,0 +1,35 @@
+==============================================================================
+mg-a471 -- A SUBSET RUN IS NOT THE DEMONSTRATION
+  standing control for the mg-3946 F5 repair in
+  scripts/onethird_mg75f0_gate_class_closure_demo.py
+==============================================================================
+
+=== SELF-TEST: 3 drifts of the subject, each of which MUST be caught
+  CAUGHT   D1 partial report path re-pointed at the canonical path
+           -> C: subset run (no --partial-ok) changed the canonical report
+  CAUGHT   D2 both denominators put back over the full UNSEEN set
+           -> E: subset run (no --partial-ok) widened denominator is ['M5', 'M6', 'M7', 'M8', 'M9'], not ['M9']
+  CAUGHT   D3 the subset exit code put back to 0
+           -> F: subset run (no --partial-ok) exited 0, expected 2
+
+=== THE SUBJECT AS COMMITTED
+  population examined: 11 invocations of the demo's main(), 70 individual assertions
+  13 of 70 assertions FAILED:
+    - H: zero-gate-run run (empty --gates, acknowledged) exited 0, expected 2 -- a run that performed no gate runs answered a question it never asked
+    - H: zero-gate-run run (empty --gates, acknowledged) report has n_gate_runs None, expected 0 -- the population size must be ON the artifact, not inferred from len(cases)
+    - H: zero-gate-run run (empty --gates, acknowledged) reported ALL_PASS True over an EMPTY cases list -- true and vacuous, which is the defect verbatim
+    - H: zero-gate-run run (empty --gates, acknowledged) did not say in words that it ran nothing
+    - H: zero-gate-run run (empty --gates, unacknowledged) report has n_gate_runs None, expected 0 -- the population size must be ON the artifact, not inferred from len(cases)
+    - H: zero-gate-run run (empty --gates, unacknowledged) reported ALL_PASS True over an EMPTY cases list -- true and vacuous, which is the defect verbatim
+    - H: zero-gate-run run (empty --gates, unacknowledged) did not say in words that it ran nothing
+    - I: --only M3 (both columns run, no UNSEEN row) printed "the widened column was not run" about a column it RAN (2 gate runs in it) -- a false sentence in a report
+    - I: --only M3 (both columns run, no UNSEEN row) said nothing at all about the widened column, which ran and holds no UNSEEN row -- silence reads as absence
+    - I: --only M3 (both columns run, no UNSEEN row) printed "the pre-widening column was not run" about a column it RAN (2 gate runs in it) -- a false sentence in a report
+    - I: --only M3 (both columns run, no UNSEEN row) said nothing at all about the pre-widening column, which ran and holds no UNSEEN row -- silence reads as absence
+    - I: --only M3 --gates widened (one of each state) printed "the widened column was not run" about a column it RAN (2 gate runs in it) -- a false sentence in a report
+    - I: --only M3 --gates widened (one of each state) said nothing at all about the widened column, which ran and holds no UNSEEN row -- silence reads as absence
+
+==============================================================================
+FAILED: the mg-3946 F5 repair is not holding.  A --only/--gates subset run of
+the mg-75f0 demo must not write the canonical report, must quote both halves
+of each ratio over one population, and must not exit 0 unacknowledged.
