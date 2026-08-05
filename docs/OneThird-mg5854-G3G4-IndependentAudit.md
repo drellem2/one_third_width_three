@@ -184,8 +184,12 @@ site**. Every control passes.
 
 **And the ledger control SEES it.** Its corpus sweep counts **22** live hits with the mutant present
 against **21** at HEAD, and names `OneThird-mgd112-DroppedVerdict-Closeout.md` in its listing — then
-**exits 0**. *Population: 248 documents in `docs/`, 23 691 live text units, 5 signatures. Grain: one
-(document, signature, line) hit.* There is no baseline on that number, so a 22nd hit is
+**exits 0**. *Population: **248** documents in `docs/`, 23 691 live text units, 5 signatures. Grain:
+one (document, signature, line) hit.* **That population is the MUTANT TREE's, copied before this
+report existed** — re-run at HEAD it reads **249 documents, 23 767 live text units, 21 hits**, and
+this document adds none. Stated rather than left to drift: a figure whose population is one commit
+older than the reader's is how the last three findings in this lineage started. There is no baseline
+on the hit count, so a 22nd hit is
 indistinguishable from the 21 adjudicated ones. **A corpus-wide sweep that reports and does not
 assert is the "sees but does not fail" channel** — the same shape mg-9d7b closed for exemptions,
 one level up.
