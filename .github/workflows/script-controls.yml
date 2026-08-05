@@ -399,19 +399,32 @@ jobs:
       # code of seven mutants aimed at the boundary mg-cd04 drew rather than at the
       # one it removed.
       #
+      # RE-RECORDED ONCE, BY mg-9d7b.  M4 and M8 below moved 0 -> 1 when mg-9d7b
+      # bounded the two channels that were letting them through.  The values are
+      # what this step asserts TODAY; the mg-9a19 readings are kept beside them,
+      # because a table whose whole purpose is that a residual cannot move
+      # quietly must not lose the movement when it is written down.
+      #
       #   M4  refuted sentence appended to a QUOTATION-BACKED EXEMPT sub-paragraph
-      #       -> 0, MISSED.  mg-cd04 bounded the LABEL's sub-paragraph at
-      #       MAX_LABEL_LINES = 6 and left every quotation-backed sub-paragraph
-      #       exempt at any length.  mg-0242's M1 opens a NEW sub-paragraph, which
-      #       quotes nothing and is caught; joining an existing one is not.
+      #       -> 1, caught (was 0, MISSED, at mg-9a19).  mg-cd04 bounded the
+      #       LABEL's sub-paragraph at MAX_LABEL_LINES = 6 and left every
+      #       quotation-backed sub-paragraph exempt at any length; mg-9d7b bounds
+      #       it at MAX_QUOTED_LINES = 11, the measured reach with no headroom.
+      #       A cap of 12 would NOT have closed it -- M4 appends exactly one line.
       #   M5/M6/M7  the label bound probed from both sides -> 0, 0, 1.  The bound
-      #       is enforced EXACTLY at 6 lines.  (The control's own docstring names
-      #       a bound `MAX_EXEMPT_LINES` twice; no such identifier exists.)
-      #   M8  a declared strike under an UNCLOSED fence -> 0, MISSED.  The
-      #       declared-strike control's fence skip has no length bound and runs to
-      #       EOF -- the same shape as the label exemption G2 removed.
-      #   M9  a declared strike in a block holding an unrelated ~~ span -> 0.  The
-      #       DECLARATION test is per sentence; the BACKING test is per block.
+      #       is enforced EXACTLY at 6 lines.  (`MAX_EXEMPT_LINES`, which this
+      #       control's docstring named twice from mg-cd04 to mg-9d7b while no
+      #       such identifier existed anywhere in the repository, now exists and
+      #       bounds a block's exempt text at 27 lines.)
+      #   M8  a declared strike under an UNCLOSED fence -> 1, caught (was 0).  The
+      #       fence skip ran to EOF; mg-9d7b stopped treating an unclosed fence as
+      #       a fence, so the marker line is checked and the site is named.
+      #   M9  a declared strike in a block holding an unrelated ~~ span -> 0, still
+      #       missed.  The DECLARATION test is per sentence; the BACKING test is
+      #       per block.  mg-9d7b left this OPEN and made it REPORTED -- the
+      #       control now prints every sentence exempted this way (1 at HEAD, the
+      #       mg-9a19 audit quoting the rule).  Failing on it would buy a
+      #       permanent tolerance to close a LOW finding.
       #   M10 the bare defect -> 1, so M8 and M9 are about the exemption.
       #
       # This step FAILS IF A RECORDED OUTCOME MOVES IN EITHER DIRECTION.  A mutant
@@ -428,3 +441,44 @@ jobs:
       # classifier (C7) while 2->1 at HEAD is the text (C9).
       - name: 'mg-9a19 exemption/population audit (how far does each exemption still reach?)'
         run: python3 scripts/onethird_mg9a19_exemption_population_audit.py
+
+      # mg-9d7b — THE CHANNEL CENSUS.  The step above measures how far each KNOWN
+      # exemption reaches.  This one asserts that the SET of them is complete and
+      # that none is invisible:
+      #
+      #     every route by which a line leaves a control unchecked is either
+      #     BOUNDED by a named constant, or REPORTED with a number in that
+      #     control's own output.  Unbounded-and-reported is a decision.
+      #     Bounded-and-quiet is fine.  UNBOUNDED AND SILENT is the defect.
+      #
+      # It exists because mg-cd04 bounded ONE channel of two and mg-9a19 found the
+      # other still open and carrying MORE lines (66 against 59) -- and because
+      # the control mg-cd04 wrote to close that finding reintroduced the same
+      # shape in its own fence skip.  Repairing the next field and leaving the set
+      # is what this arc keeps doing; the invariant is the repair for the class.
+      #
+      # It is deliberately NOT a table of channels copied out of two docstrings,
+      # which would pass exactly when its author's reading was complete -- the
+      # thing in question.  Both halves are mechanical:
+      #   * it fails on a COVERAGE BUCKET it was never told about, which is what a
+      #     new exemption channel looks like from outside the control;
+      #   * it fails when the lines in a non-checking bucket are not claimed, TO
+      #     THE LINE, by a declared channel;
+      #   * it fails when a channel declared BOUNDED names an identifier the
+      #     module does not define -- exactly the `MAX_EXEMPT_LINES` defect;
+      #   * it captures each control's real STDOUT and fails when an unbounded
+      #     channel's reach appears nowhere in it.
+      #
+      # Can it fail?  Both answers are executable and neither is asserted in prose:
+      #   python3 scripts/onethird_mg9d7b_exemption_channel_census.py --selftest
+      #     -> builds four broken controls, one per half; 4 of 4 rejected.
+      #   python3 scripts/onethird_mg9d7b_exemption_channel_census.py --demonstrate 1e996fb
+      #     -> loads BOTH controls from the parent tree and finds 9 violations
+      #        there, including the two the ticket names.  0 here.
+      # 15 channels are declared across the two controls; the two that remain
+      # unbounded (closed fences at 4.30% of the corpus, and the inline ~~ strip)
+      # are unbounded BY DESIGN and print their own numbers.
+      - name: 'mg-9d7b exemption-channel census (is any exemption unbounded AND silent?)'
+        run: |
+          python3 scripts/onethird_mg9d7b_exemption_channel_census.py --selftest
+          python3 scripts/onethird_mg9d7b_exemption_channel_census.py
