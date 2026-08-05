@@ -38,18 +38,76 @@ swallows load-bearing prose that mg-069f itself wrote.
 An EXEMPT marker now reaches only as far as the thing it is a marker FOR:
 
   * the block is split into sub-paragraphs at its own blank (`>`-only) lines;
-  * the sub-paragraph carrying the label is exempt;
+  * the sub-paragraph carrying the label is exempt, for at most MAX_LABEL_LINES
+    lines;
   * each following sub-paragraph is exempt only while it carries a QUOTATION --
     a `~~struck~~` span or a quoted sentence.  Commentary about a refuted claim
     has to quote the claim, and that quotation is the whole reason the exemption
     exists; a sub-paragraph that quotes nothing is not commentary, it is body
     text, and the exempt run ENDS there;
-  * and in no case does a label exempt more than MAX_EXEMPT_LINES lines.
+  * a quotation-backed sub-paragraph is exempt for at most MAX_QUOTED_LINES
+    lines (mg-9d7b);
+  * and in no case does one block's labels and quotations exempt more than
+    MAX_EXEMPT_LINES lines of text between them (mg-9d7b).
 
 Everything past the exempt prefix is checked as an ordinary quote unit.  This is
 the same rule as the strike tightening -- BACK THE LABEL WITH MARKUP -- applied
 to the class it was missing, plus the length bound the strike form gets for free
 by being per-sentence.
+
+THE SECOND CHANNEL, AND WHY THE DOCSTRING ABOVE USED TO BE FICTION (mg-9d7b,
+closing mg-9a19 finding H1).  Between mg-cd04 and mg-9d7b the two paragraphs
+above named `MAX_EXEMPT_LINES` twice and NO SUCH IDENTIFIER EXISTED.  The only
+constant was `MAX_LABEL_LINES`, and it bounded the label's own sub-paragraph.
+So the bound a reader was promised was block-level and the bound the code had
+was sub-paragraph-level, and a reader taking the docstring at its word concluded
+that appending body text to a quotation-backed sub-paragraph was impossible.  It
+was not: mg-9a19's M4 did exactly that and exited 0.  mg-cd04 bounded ONE of the
+two ways a line can leave this control on a marker's say-so and left the other
+exempt entire, at any length -- 66 lines over 9 sub-paragraphs at that tree,
+against 59 it had just moved out of the blind spot.  Both are bounded now, the
+identifier exists, and the docstring is a description rather than a promise.
+
+EVERY CHANNEL, AND WHAT EACH ONE COSTS.  This control is a filter, so the useful
+question is not "what does it check" but "by what routes does text leave it".
+There are eight, and `--channels` prints the reach of all of them on every run:
+
+    A1  the EXEMPT label sub-paragraph        BOUNDED MAX_LABEL_LINES
+    A2  a quotation-backed sub-paragraph      BOUNDED MAX_QUOTED_LINES  <- H1
+    A3  one block's exempt total              BOUNDED MAX_EXEMPT_LINES
+    A4  a blockquote's own blank `>` lines    not text; counted
+    A5  inline ~~struck~~ spans               UNBOUNDED BY DESIGN, reach printed
+    A6  the population: one document          UNBOUNDED BY SCOPE, argued, printed
+    A7  fenced code                           NOT a channel here -- fences are
+                                              CHECKED (see the asymmetry note)
+    A8  label detected in block[:3] but the
+        exemption granted to sub-paragraph 0  mismatches reported
+
+A5 is the one nobody had named.  `INLINE_STRIKE.sub(" ", text)` deletes text from
+EVERY checked unit -- paragraph, heading and STRIKE block alike -- before a
+signature ever sees it, at any length, and until mg-9d7b no run printed a number
+for it.  It stays unbounded, and that is a decision rather than an oversight:
+inline `~~` IS the markup this whole convention is built on, so bounding it would
+bound the retain-as-record mechanism itself.  What it gets instead is a number.
+
+A7 is an asymmetry worth stating rather than fixing.  This control has no fence
+rule at all: a ` ``` ` line is not `#`, not `>` and not blank, so fenced content
+is swept up as an ordinary paragraph and CHECKED.  Its sibling
+`onethird_mgcd04_declared_strike_control.py` skips fences deliberately.  The two
+controls therefore disagree about whether a fence is data, and this one is on the
+fail-closed side of that disagreement, so it is left alone and recorded here.
+
+THE RULE THE BOUNDS ARE SET BY.  MAX_QUOTED_LINES and MAX_EXEMPT_LINES are the
+MEASURED REACH at the tree that introduced them, with no headroom, and that is
+deliberate.  A bound with slack does not close H1: mg-9a19's M4 appends ONE line
+to an 11-line sub-paragraph, so any cap of 12 or more still lets it through --
+the same evasion, one line further along.  Set at the reach, the bound is exact
+in the way mg-9a19 confirmed the label bound is exact (missed AT the bound,
+caught one line past it), and growth is CHECKED rather than tolerated.  The cost
+is that legitimately lengthening a quoting sub-paragraph puts its tail into
+checked text; the run prints the headroom on every channel so that is visible
+before it bites, and raising a bound is a one-line change with a finding attached
+-- which is the same contract as adding a BASELINE entry.
 
 BASELINE: EMPTY, as of 2026-07-31 (mg-069f).  This control was written with two
 known-live sites as an explicit baseline -- §3.2's "Equivalently" and §5
@@ -114,13 +172,30 @@ DOC = "docs/OneThird-L1b-Spread-Locality.md"
 EXEMPT_MARKERS = ("ANNOTATION", "RE-DERIVATION")
 STRIKE_MARKERS = ("~~", "STRUCK")
 
-# The bound on the ONE exemption still granted on a label's word alone: the
+# A1 — the bound on the ONE exemption granted on a label's word alone: the
 # label's own sub-paragraph (mg-cd04).  A label is a line or two; 6 is generous
 # against every marker in this corpus and far short of the 53-line block mg-0242
-# found a three-line label covering.  Every exempt line beyond it has to be
-# backed by markup in its own sub-paragraph, so no further global cap is needed —
-# the same shape as the strike rule, where each struck sentence carries its ~~.
+# found a three-line label covering.
 MAX_LABEL_LINES = 6
+
+# A2 — the bound on a QUOTATION-BACKED sub-paragraph (mg-9d7b, closing mg-9a19
+# finding H1).  mg-cd04's comment here used to end "so no further global cap is
+# needed", and that sentence was the defect: backing a sub-paragraph with a
+# quotation was treated as backing every line of it, at any length, so a refuted
+# sentence appended to one stayed exempt (mg-9a19 M4 -> exit 0).
+#
+# 11 is the longest quotation-backed sub-paragraph in this document, measured,
+# with no headroom — see THE RULE THE BOUNDS ARE SET BY in the module docstring.
+# A cap of 12 would leave M4 passing, because M4 appends exactly one line.
+MAX_QUOTED_LINES = 11
+
+# A3 — the block-level total the docstring has promised since mg-cd04 and which
+# did not exist until mg-9d7b.  Bounds the exempt TEXT lines of one EXEMPT block
+# (A1 + A2 together); a block's own blank `>` lines are A4 and are not text, so
+# they do not spend it.  27 is the largest such total in this document (the
+# 44-line block at §5: 1 label line + 26 quotation-backed).  Past it, every
+# further sub-paragraph is checked however well it quotes.
+MAX_EXEMPT_LINES = 27
 
 # What makes a sub-paragraph of an EXEMPT block commentary rather than body text:
 # it QUOTES the thing it is commenting on.  A struck span, or a quoted sentence
@@ -178,20 +253,25 @@ def sub_paragraphs(block):
     return subs
 
 
-def exempt_partition(block):
+def exempt_partition(block, channels=None):
     """Split an EXEMPT blockquote into (exempt lines, checkable sub-paragraphs).
 
     mg-cd04 (mg-0242 finding G2).  The label used to exempt `len(block)`, whatever
-    that was.  Two rules replace that, and between them every exempt line is now
-    either close to the label or backed by its own markup:
+    that was.  Three rules replace that, and between them every exempt line is now
+    either close to the label or backed by its own markup, AND bounded:
 
       * the LABEL's own sub-paragraph is exempt on the label's word alone — that
         is what a label is — but only for MAX_LABEL_LINES lines.  This is the one
-        unbacked exemption left, and it is the one that is bounded;
+        unbacked exemption left, and it is the one mg-cd04 bounded;
       * every OTHER sub-paragraph is exempt only if it carries a QUOTATION.  An
         annotation earns its exemption by quoting the claim it diagnoses; a
         sub-paragraph that quotes nothing is body text wearing a label three
-        lines up, which is precisely the mg-0242 G2 blind spot.
+        lines up, which is precisely the mg-0242 G2 blind spot;
+      * a quotation-backed sub-paragraph is exempt for at most MAX_QUOTED_LINES
+        lines, and one block's exempt text totals at most MAX_EXEMPT_LINES
+        (mg-9d7b, mg-9a19 finding H1).  Backing a sub-paragraph with a quotation
+        used to back every line of it at any length, which is the same
+        marker-with-no-bound shape one level in.
 
     Judged per sub-paragraph rather than as a prefix run, deliberately: a genuine
     annotation interleaves quoting paragraphs with non-quoting ones (§2.3's
@@ -201,31 +281,67 @@ def exempt_partition(block):
     and the appended-tail mutant is still caught, because the mutant quotes
     nothing.
 
+    And bounded by LENGTH rather than by which lines the quotation physically
+    touches, also deliberately, also measured: exempting only the lines a
+    QUOTATION span covers and checking the rest was tried first and fires
+    `S2-hinges-on-degree` on a false positive at line 502 of the audited document.
+    Prose here is hard-wrapped, so a quotation and the commentary that earns it
+    interleave line by line.  The docstring said so before this was implemented;
+    it was right, and the attempt is recorded in this repair's PREDICTIONS as E3.
+
+    `channels`, if given, accumulates a line count per exemption channel so the
+    caller can print what each one skipped.
+
     Returns (n_exempt_lines, [(start, end), ...]) over indices into `block`.
     """
+    if channels is None:
+        channels = {}
+
+    def note(bucket, k=1):
+        channels[bucket] = channels.get(bucket, 0) + k
+
     subs = sub_paragraphs(block)
+    blanks = sum(1 for b in block if not b.lstrip(">").strip())
     if not subs:
+        note("A4_blank", len(block))
         return len(block), []          # nothing but blank quote lines
     n_exempt = 0
     checkable = []
+    spent = 0                          # exempt TEXT lines used by this block
     for idx, (start, end) in enumerate(subs):
+        size = end - start
         if idx == 0:
-            cut = min(end, start + MAX_LABEL_LINES)
-            n_exempt += cut - start
-            if cut < end:
-                checkable.append((cut, end))
-            continue
-        text = " ".join(b.lstrip("> ").rstrip() for b in block[start:end])
-        if QUOTATION.search(text):
-            n_exempt += end - start
+            cap, bucket = MAX_LABEL_LINES, "A1_label"
         else:
-            checkable.append((start, end))
+            text = " ".join(b.lstrip("> ").rstrip() for b in block[start:end])
+            if not QUOTATION.search(text):
+                checkable.append((start, end))
+                continue
+            cap, bucket = MAX_QUOTED_LINES, "A2_quoted"
+        hard = min(size, cap)                       # what the per-sub bound allows
+        allow = max(0, min(hard, MAX_EXEMPT_LINES - spent))
+        n_exempt += allow
+        spent += allow
+        note(bucket, allow)
+        if size > hard:                             # clipped by A1/A2's own bound
+            note(bucket + "_over_bound", size - hard)
+        if hard > allow:                            # clipped by the block total
+            note("A3_over_block", hard - allow)
+        if allow < size:
+            # the tail past the bound is ordinary body text and is CHECKED
+            checkable.append((start + allow, end))
     # the block's own blank lines are exempt bookkeeping, not text
-    n_exempt += sum(1 for b in block if not b.lstrip(">").strip())
+    note("A4_blank", blanks)
+    n_exempt += blanks
+    # A3 is a PER-BLOCK bound, so the useful number is the largest block total,
+    # not the sum of them.  Summing was this reporter's own first defect: it
+    # printed 70 against a bound of 27 and read like a breach.
+    channels["A3_block_max"] = max(channels.get("A3_block_max", 0), spent)
+    channels["A3_blocks"] = channels.get("A3_blocks", 0) + 1
     return n_exempt, checkable
 
 
-def live_paragraphs(lines, coverage=None):
+def live_paragraphs(lines, coverage=None, channels=None):
     """Yield (start_line_no, section_heading, paragraph_text) for checkable text.
 
     EXEMPT blockquotes (ANNOTATION / RE-DERIVATION) are dropped here; everything
@@ -239,9 +355,14 @@ def live_paragraphs(lines, coverage=None):
     """
     if coverage is None:
         coverage = {}
+    if channels is None:
+        channels = {}
 
     def count(bucket, k=1):
         coverage[bucket] = coverage.get(bucket, 0) + k
+
+    def note(bucket, k=1):
+        channels[bucket] = channels.get(bucket, 0) + k
 
     section = "(preamble)"
     i = 0
@@ -270,9 +391,23 @@ def live_paragraphs(lines, coverage=None):
             exempt = any(mk.lower() in head for mk in EXEMPT_MARKERS)
             # mg-cd04: the label no longer exempts the block.  It exempts a
             # bounded label sub-paragraph plus whichever sub-paragraphs back
-            # themselves with a quotation; the rest are ordinary quote units.
+            # themselves with a quotation, each bounded (mg-9d7b); the rest are
+            # ordinary quote units.
             if exempt:
-                n_exempt, checkable = exempt_partition(block)
+                # A8 (mg-9d7b) — the marker is looked for in block[:3]; the label
+                # exemption is granted to sub-paragraph 0.  Those are different
+                # spans, and when they differ sub-paragraph 0 is exempt on the
+                # strength of a label it does not carry.  Reported, not repaired:
+                # narrowing detection to sub-paragraph 0 would change which
+                # blocks are exempt at all, which is a bigger change than the
+                # finding warrants.  0 occurrences in this document.
+                _subs = sub_paragraphs(block)
+                if _subs:
+                    _s, _e = _subs[0]
+                    _head0 = " ".join(block[_s:_e]).lower()
+                    if not any(mk.lower() in _head0 for mk in EXEMPT_MARKERS):
+                        note("A8_label_not_in_sub0", _e - _s)
+                n_exempt, checkable = exempt_partition(block, channels)
                 count("exempt_annotation", n_exempt)
                 for a, b_ in checkable:
                     count("quote", b_ - a)
@@ -303,28 +438,89 @@ def live_paragraphs(lines, coverage=None):
 
 def scan(path):
     with open(path, encoding="utf-8") as fh:
-        lines = fh.read().split("\n")
+        raw = fh.read()
+    lines = raw.split("\n")
     hits = []
     n_live = 0
     coverage = {}
-    for lineno, section, text in live_paragraphs(lines, coverage):
+    channels = {}
+    for lineno, section, text in live_paragraphs(lines, coverage, channels):
         n_live += 1
         # inline ~~strikethrough~~ is the retain-as-record convention at sentence
-        # granularity; drop those spans before testing what the text asserts
+        # granularity; drop those spans before testing what the text asserts.
+        # A5 (mg-9d7b) — this is an exemption channel and it is measured here:
+        # unbounded by design, because it IS the markup, but no longer silent.
+        for m in INLINE_STRIKE.finditer(text):
+            span = m.group(0)
+            channels["A5_inline_strike"] = channels.get("A5_inline_strike", 0) + 1
+            channels["A5_inline_strike_chars"] = (
+                channels.get("A5_inline_strike_chars", 0) + len(span))
+            channels["A5_inline_strike_longest"] = max(
+                channels.get("A5_inline_strike_longest", 0), len(span))
         low = INLINE_STRIKE.sub(" ", text).lower()
         for sig_id, desc, pred in SIGNATURES:
             if pred(low):
                 hits.append((sig_id, section, lineno, desc, text[:150]))
+    # A5 is counted again over the RAW file, before paragraphs are formed, so a
+    # span that straddles a structural boundary is not lost to the flattening
+    channels["A5_raw_spans"] = len(INLINE_STRIKE.findall(raw))
+    channels["A5_raw_markers"] = raw.count("~~")
+    # A7 — fenced lines, which this control does NOT exempt.  Counted so the
+    # asymmetry with the declared-strike control has a number rather than a note.
+    channels["A7_fence_lines_CHECKED"] = sum(
+        1 for l in lines if l.lstrip().startswith(("```", "~~~")))
     # the population NAMED must be the population SWEPT: every line accounted for
     assert sum(coverage.values()) == len(lines), (
         f"coverage gap: {sum(coverage.values())} lines classified of {len(lines)}"
     )
-    return len(lines), n_live, hits, coverage
+    return len(lines), n_live, hits, coverage, channels
+
+
+def print_channels(channels, total):
+    """A5's number, A2's headroom, A8's mismatches — every route out, priced.
+
+    mg-9d7b.  The standard this repair is held to: an exemption that reports its
+    own reach is acceptable, an exemption that is silent is not.  So every
+    channel prints, including the ones that skipped nothing — a zero is a
+    measurement and an absent line is not.
+    """
+    g = channels.get
+    print("  EXEMPTION CHANNELS — every route by which a line leaves this check")
+    print(f"    A1 label sub-paragraph          {g('A1_label', 0):>5} lines exempt   "
+          f"BOUNDED  {MAX_LABEL_LINES}/sub-paragraph"
+          + (f"   [{g('A1_label_over_bound', 0)} clipped -> CHECKED]"
+             if g("A1_label_over_bound", 0) else ""))
+    print(f"    A2 quotation-backed sub-para    {g('A2_quoted', 0):>5} lines exempt   "
+          f"BOUNDED  {MAX_QUOTED_LINES}/sub-paragraph   <- mg-9a19 H1"
+          + (f"   [{g('A2_quoted_over_bound', 0)} clipped -> CHECKED]"
+             if g("A2_quoted_over_bound", 0) else ""))
+    print(f"    A3 block exempt-text total      {g('A3_block_max', 0):>5} lines exempt   "
+          f"BOUNDED  {MAX_EXEMPT_LINES}/block   (largest of {g('A3_blocks', 0)} blocks; "
+          f"headroom {MAX_EXEMPT_LINES - g('A3_block_max', 0)})"
+          + (f"   [{g('A3_over_block', 0)} clipped -> CHECKED]"
+             if g("A3_over_block", 0) else ""))
+    print(f"    A4 blockquote blank `>` lines   {g('A4_blank', 0):>5} lines exempt   "
+          f"not text")
+    print(f"    A5 inline ~~struck~~ spans      {g('A5_raw_spans', 0):>5} spans        "
+          f"  UNBOUNDED BY DESIGN — it IS the markup")
+    print(f"         reach                      {g('A5_inline_strike_chars', 0):>5} chars "
+          f"in checked units, longest {g('A5_inline_strike_longest', 0)}, "
+          f"{g('A5_raw_markers', 0)} raw `~~` markers")
+    print(f"    A6 population                       1 document      UNBOUNDED BY SCOPE "
+          f"— argued in mg-cd04, see the docstring")
+    print(f"    A7 fenced code                  {g('A7_fence_lines_CHECKED', 0):>5} fence lines  "
+          f"NOT A CHANNEL HERE — fenced text is CHECKED")
+    print(f"    A8 label not in sub-paragraph 0 {g('A8_label_not_in_sub0', 0):>5} lines        "
+          f"  reported; detection reads block[:3]")
+    left = g("A1_label", 0) + g("A2_quoted", 0) + g("A4_blank", 0)
+    print(f"    -> {left} of {total} lines left the check by an exemption "
+          f"({100.0 * left / total:.1f}%).  A5 and A6 are unbounded and PRINTED; "
+          f"0 channels unbounded and silent.")
 
 
 def main():
     path = sys.argv[1] if len(sys.argv) > 1 else DOC
-    total, n_live, hits, coverage = scan(path)
+    total, n_live, hits, coverage, channels = scan(path)
     print("=" * 78)
     print("mg-8a71 live-claim control — the refuted m_x-falsifier inference")
     print("=" * 78)
@@ -338,6 +534,8 @@ def main():
     print(f"            -> {n_live} checkable units; inline ~~struck~~ spans dropped "
           f"before matching")
     print(f"signatures: {len(SIGNATURES)}; baseline: {len(BASELINE)} tolerated live sites")
+    print()
+    print_channels(channels, total)
     print()
     found = set()
     for sig_id, section, lineno, desc, snippet in hits:

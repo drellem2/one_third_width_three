@@ -228,27 +228,39 @@ def part_b():
           f"{sum(min(r[1], LC.MAX_LABEL_LINES) for r in label_rows)} unbacked line(s) "
           f"used of {len(label_rows) * LC.MAX_LABEL_LINES} available")
     print(f"    channel 2  EXEMPT sub-paragraph carrying a QUOTATION")
-    print(f"               BOUND: NONE — a sub-paragraph of any length is exempt "
-          f"entire on one quotation")
+    print(f"               BOUND: MAX_QUOTED_LINES = "
+          f"{getattr(LC, 'MAX_QUOTED_LINES', None)}  (added by mg-9d7b closing H1; "
+          f"was NONE at mg-9a19 — exempt entire, any length)")
     print(f"               reach at HEAD: {len(quoted_rows)} sub-paragraph(s), "
           f"{sum(r[1] for r in quoted_rows)} line(s), longest "
           f"{max((r[1] for r in quoted_rows), default=0)}")
+    print(f"    channel 2b BLOCK exempt-text total")
+    print(f"               BOUND: MAX_EXEMPT_LINES = "
+          f"{getattr(LC, 'MAX_EXEMPT_LINES', None)}  (added by mg-9d7b; the "
+          f"identifier this control's docstring named twice and never defined)")
     print(f"    (for contrast, CHECKED: {len(checked_rows)} non-quoting "
           f"sub-paragraph(s), {sum(r[1] for r in checked_rows)} line(s))")
     print()
     print(f"  declared-strike control (docs/*.md):")
-    print(f"    channel 3  FENCED CODE")
-    print(f"               BOUND: NONE — the skip runs to the closing fence, or to "
-          f"EOF if there is none")
+    print(f"    channel 3  FENCED CODE (closed)")
+    print(f"               BOUND: NONE, BY DESIGN — the skip runs to the closing "
+          f"fence, and a fence is length-independently 'this is data'")
     print(f"               reach at HEAD: {fenced} of {total} lines "
-          f"({100 * fenced / total:.1f}%), unreported by the control's own output")
-    print(f"               documents with an ODD fence count (skip runs to EOF): "
+          f"({100 * fenced / total:.1f}%), NOW PRINTED by the control's own output "
+          f"(mg-9d7b; it was silent at mg-9a19)")
+    print(f"    channel 3b UNCLOSED FENCE")
+    print(f"               BOUND: n/a — mg-9d7b stopped treating it as a fence at "
+          f"all; the marker line is checked and the site is named")
+    print(f"               documents with an ODD fence count: "
           f"{len(unclosed)}  {', '.join(unclosed) or '—'}")
+    print(f"               (at mg-9a19 each of these skipped to EOF, silently)")
     print(f"    channel 4  '{DS.STRIKE_MARKUP}' ANYWHERE IN THE BLOCK")
     print(f"               BOUND: n/a — the DECLARATION test is per SENTENCE, the "
           f"BACKING test is per BLOCK")
     print(f"               so one unrelated struck span exempts every declaration "
           f"in its block (mutant M9)")
+    print(f"               mg-9d7b left this OPEN and made it REPORTED: the control "
+          f"now prints every sentence exempted this way")
     print()
     return (len(label_rows), len(quoted_rows),
             max((r[1] for r in quoted_rows), default=0), fenced, total, unclosed)
@@ -295,15 +307,27 @@ def exempt_blocks(lines):
 # EITHER direction fails: a mutant that starts being caught is a repair and a
 # mutant that stops being caught is a regression, and both have to be recorded
 # rather than absorbed.
+# RE-RECORDED ONCE, by mg-9d7b, and this is the whole entry for that event.
+# M4 and M8 moved 0 -> 1 because mg-9d7b bounded the channels that were letting
+# them through: H1's quotation-backed sub-paragraph (MAX_QUOTED_LINES) and H2's
+# unclosed fence (no longer treated as a fence at all).  Both moved in the REPAIR
+# direction.  The pre-mg-9d7b values are kept in the third column rather than
+# overwritten, because this table's whole purpose is that a residual cannot move
+# quietly -- including when it moves the right way.
 RECORDED = {
-    "M4": 0,   # live-claim: appended to a QUOTATION-BACKED sub-paragraph
+    "M4": 1,   # live-claim: appended to a QUOTATION-BACKED sub-paragraph  (was 0 — mg-9d7b closed it)
     "M5": 0,   # live-claim: inside the label sub-paragraph, line 2
     "M6": 0,   # live-claim: at the label bound, line 6
     "M7": 1,   # live-claim: one line past the bound, line 7
-    "M8": 0,   # declared-strike: unclosed fence above the defect
-    "M9": 0,   # declared-strike: an unrelated ~~ elsewhere in the block
+    "M8": 1,   # declared-strike: unclosed fence above the defect          (was 0 — mg-9d7b closed it)
+    "M9": 0,   # declared-strike: an unrelated ~~ elsewhere in the block    (still missed; now REPORTED by the control)
     "M10": 1,  # declared-strike: the bare defect, to prove M8/M9 mean something
 }
+
+# What each mutant was at mg-9a19, kept so the movement stays legible after the
+# table above is read at face value by someone who never saw the audit.
+RECORDED_AT_MG9A19 = {"M4": 0, "M5": 0, "M6": 0, "M7": 1,
+                      "M8": 0, "M9": 0, "M10": 1}
 
 
 def part_m():
@@ -587,14 +611,21 @@ def main():
           f"live-claim control (where G2 was repaired) reads {n_lc};")
     print(f"              the ledger's ten refuted claims live in {n_led}; "
           f"{n_rem} unswept, carrying {n_rem_hits} hit(s).")
-    print(f"  BOUNDS      one bound added by mg-cd04 (MAX_LABEL_LINES="
-          f"{LC.MAX_LABEL_LINES}, enforced exactly — M6/M7).")
-    print(f"              UNBOUNDED still: quotation-backed EXEMPT sub-paragraphs "
-          f"({n_quoted}, longest {longest} lines) and")
-    print(f"              fenced code ({fenced} of {total} lines corpus-wide; "
-          f"{len(unclosed)} document(s) skip to EOF).")
-    print(f"  MUTANTS     M4 (quotation-backed tail) -> {results['M4']}, "
-          f"M8 (unclosed fence) -> {results['M8']}, "
+    print(f"  BOUNDS      mg-cd04 added one (MAX_LABEL_LINES={LC.MAX_LABEL_LINES}, "
+          f"enforced exactly — M6/M7); mg-9d7b added two more")
+    print(f"              (MAX_QUOTED_LINES={getattr(LC, 'MAX_QUOTED_LINES', None)}, "
+          f"MAX_EXEMPT_LINES={getattr(LC, 'MAX_EXEMPT_LINES', None)}) and stopped "
+          f"unclosed fences skipping to EOF.")
+    print(f"              BOUNDED now: quotation-backed sub-paragraphs "
+          f"({n_quoted} of them, longest {longest}).")
+    print(f"              UNBOUNDED still, but BY DESIGN and no longer SILENT: closed "
+          f"fenced code, {fenced} of {total} lines corpus-wide,")
+    print(f"              printed by the control itself.  {len(unclosed)} unclosed "
+          f"fence(s), formerly skipping to EOF, are now CHECKED.")
+    print(f"  MUTANTS     M4 (quotation-backed tail) -> {results['M4']} "
+          f"(was {RECORDED_AT_MG9A19['M4']} at mg-9a19), "
+          f"M8 (unclosed fence) -> {results['M8']} "
+          f"(was {RECORDED_AT_MG9A19['M8']}), "
           f"M9 (block-scope backing) -> {results['M9']}.")
     print(f"  SELF        the repair's own report evades "
           f"{rows[0][4]} lines in {rows[0][3]} fenced region(s); with the fences "

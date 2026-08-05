@@ -107,13 +107,15 @@ BASELINE = {
 FENCE = re.compile(r"^\s*(```|~~~)")
 
 
-def blocks(lines, coverage=None):
+def blocks(lines, coverage=None, channels=None, name=None):
     """Yield (start_line_no, block_lines) for every maximal non-blank run.
 
     Blocks, not paragraphs: a declaration and the markup that should back it are
     in the same visual unit, and a blockquote's internal `>` lines are non-blank,
     so a whole blockquote is one block.  `coverage` accumulates a line count per
-    disposition so the caller can assert NAMED == SWEPT.
+    disposition so the caller can assert NAMED == SWEPT.  `channels` accumulates
+    the reach of each exemption channel, so no route out of this check is silent
+    (mg-9d7b).
 
     FENCED CODE IS SKIPPED, and that is a rule, not a convenience.  Inside a
     fence the corpus is showing text as literal data, not asserting it -- a `~~`
@@ -124,12 +126,38 @@ def blocks(lines, coverage=None):
     tripped this control.  The alternative was a baseline entry per document that
     ever discusses the defect, which is a control that grows a tolerance every
     time it is right.
+
+    A CLOSED FENCE STAYS UNBOUNDED, AND NOW PRINTS ITS REACH (mg-9d7b, mg-9a19
+    finding H2).  The rule above is length-independent -- the thousandth line of
+    a code block is no more an assertion than the first -- so capping it would be
+    a bound with no reason behind it.  What was wrong was not the absence of a
+    cap but the absence of a NUMBER: this control classified 4.3% of the corpus
+    as `fenced_code` and never printed the figure, while its report said "ALL
+    classified".  An exemption that reports its own reach is a decision; a silent
+    one is a blind spot, and this is the difference mg-cd04 itself is about.
+
+    AN UNCLOSED FENCE IS NOT A FENCE (mg-9d7b).  It used to skip to END OF FILE:
+    one stray ``` and the rest of the document left the check, silently, with the
+    skip growing to whatever the file's remaining length happened to be.  That is
+    malformed input, not a marked region, and answering it with a length bound
+    would be answering the wrong question -- a bound would still let a fence at
+    line 3 of a 400-line document swallow the declared bound's worth of text and
+    would still be quiet about why.  So an opening marker with no closing marker
+    is treated as ordinary text: the marker line itself is checked as a one-line
+    block, everything after it parses normally, and the site is REPORTED by name.
+    Fail-closed, reach zero, and loud.  Live at the time of writing:
+    `OneThird-AP-2-Prong3I-beta-RungUniqueness-SD-FLOOR.md:138`.
     """
     if coverage is None:
         coverage = {}
+    if channels is None:
+        channels = {}
 
     def count(bucket, k=1):
         coverage[bucket] = coverage.get(bucket, 0) + k
+
+    def note(bucket, k=1):
+        channels[bucket] = channels.get(bucket, 0) + k
 
     i = 0
     n = len(lines)
@@ -138,8 +166,21 @@ def blocks(lines, coverage=None):
             j = i + 1
             while j < n and not FENCE.match(lines[j]):
                 j += 1
+            if j >= n:
+                # B2 — UNCLOSED.  Do not skip; check it and say where it is.
+                note("B2_unclosed_fences")
+                channels.setdefault("B2_sites", []).append((name, i + 1, n - i))
+                count("block", 1)
+                yield i + 1, [lines[i]]
+                i += 1
+                continue
             j = min(j + 1, n)             # consume the closing fence
             count("fenced_code", j - i)
+            note("B1_fenced_regions")
+            note("B1_fenced_lines", j - i)
+            if j - i > channels.get("B1_longest", 0):
+                channels["B1_longest"] = j - i
+                channels["B1_longest_at"] = (name, i + 1)
             i = j
             continue
         if lines[i].strip() == "":
@@ -157,7 +198,7 @@ def blocks(lines, coverage=None):
 SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+")
 
 
-def scan_text(name, text):
+def scan_text(name, text, channels=None):
     """Return (hits, near_misses, coverage) for one document.
 
     A hit is a SENTENCE that declares a strike, quotes the sentence it is
@@ -174,15 +215,33 @@ def scan_text(name, text):
     """
     lines = text.split("\n")
     coverage = {}
+    if channels is None:
+        channels = {}
     hits = []
     near = []
-    for lineno, blk in blocks(lines, coverage):
+    for lineno, blk in blocks(lines, coverage, channels, name):
         # Flatten before matching.  Prose here is hard-wrapped at ~100 columns
         # and a quoted sentence routinely straddles the wrap -- the G1 site
         # itself does.  A line-oriented match would have missed the one defect
         # this control was built for.
         flat = " ".join(l.lstrip("> ").rstrip() for l in blk)
         if STRIKE_MARKUP in flat:
+            # B3 (mg-9d7b, mg-9a19 finding H3) — the DECLARATION test is per
+            # sentence and this BACKING test is per block, so one unrelated `~~`
+            # anywhere in a block exempts every declaration in it.  REPORTED,
+            # never failed on: the only site in the corpus is the mg-9a19 audit
+            # quoting this control's own rule, and failing there would buy a new
+            # permanent tolerance in order to close a LOW finding.  Reporting is
+            # the convention this control already uses for its near misses, and
+            # it keeps the narrowing visible rather than silent -- which is the
+            # whole standard mg-9d7b is applying.
+            if DECLARATION.search(flat):
+                for sentence in SENTENCE_SPLIT.split(flat):
+                    if (DECLARATION.search(sentence)
+                            and QUOTATION.search(sentence)
+                            and STRIKE_MARKUP not in sentence):
+                        channels.setdefault("B3_sites", []).append(
+                            (name, lineno, sentence[:110]))
             continue                      # the declaration is backed; done
         if not DECLARATION.search(flat):
             continue
@@ -206,6 +265,8 @@ def scan_text(name, text):
 def scan_corpus(rev=None):
     hits = []
     near = []
+    channels = {}
+    coverage = {}
     n_docs = n_lines = 0
     if rev:
         listing = subprocess.run(
@@ -220,16 +281,78 @@ def scan_corpus(rev=None):
                                   capture_output=True, text=True, cwd=ROOT).stdout
         else:
             text = (ROOT / DOCS / name).read_text(encoding="utf-8")
-        h, nm, cov = scan_text(name, text)
+        h, nm, cov = scan_text(name, text, channels)
         hits.extend(h)
         near.extend(nm)
+        for k, v in cov.items():
+            coverage[k] = coverage.get(k, 0) + v
         n_docs += 1
         n_lines += sum(cov.values())
-    return names, n_docs, n_lines, hits, near
+    # B6 — the population channel.  `docs/*.md` does not descend, so documents in
+    # `docs/`'s subdirectories are never read at all: an exemption granted before
+    # any rule runs.  mg-9a19 finding H4 measured the unread part and found it
+    # clean, and widening the glob is mg-cd04's still-open G3, so this is PRINTED
+    # rather than changed -- but it is printed, which is the point.
+    if not rev:
+        tree = sorted(p for p in (ROOT / DOCS).rglob("*.md"))
+        channels["B6_in_tree"] = len(tree)
+        channels["B6_read"] = len(names)
+        channels["B6_unread"] = sorted(
+            str(p.relative_to(ROOT / DOCS)) for p in tree if p.parent != (ROOT / DOCS))
+    return names, n_docs, n_lines, hits, near, channels, coverage
+
+
+def print_channels(channels, coverage, n_docs, n_lines):
+    """Every route by which a line leaves this control, with its reach (mg-9d7b).
+
+    The standard: an unbounded exemption that reports its own reach is
+    acceptable; a silent one is not.  Zeros print too — an absent line is not a
+    measurement.
+    """
+    g = channels.get
+    fenced = g("B1_fenced_lines", 0)
+    longest_at = g("B1_longest_at", (None, 0))
+    print("  EXEMPTION CHANNELS — every route by which a line leaves this check")
+    print(f"    B1 closed fenced regions   {g('B1_fenced_regions', 0):>6} regions, "
+          f"{fenced:>6} lines ({100.0 * fenced / n_lines:.2f}% of the corpus)")
+    print(f"         longest              {g('B1_longest', 0):>6} lines"
+          f"   at {longest_at[0]}:{longest_at[1]}"
+          f"        UNBOUNDED BY DESIGN — fence = literal data")
+    print(f"    B2 UNCLOSED fences         {g('B2_unclosed_fences', 0):>6} "
+          f"        NOT A CHANNEL — checked, not skipped (mg-9d7b)")
+    for nm, ln, reach in g("B2_sites", []):
+        print(f"         {nm}:{ln} — would have skipped {reach} lines to EOF; "
+              f"now checked")
+    print(f"    B3 backing per BLOCK,      {len(g('B3_sites', [])):>6} sentence(s) "
+          f"     REPORTED, never failed on (mg-9a19 H3)")
+    print(f"       declaration per SENTENCE")
+    for nm, ln, snip in g("B3_sites", []):
+        print(f"         {nm}:{ln}")
+        print(f"             > {snip}")
+    print(f"    B4 declaration without a same-sentence quotation      "
+          f"REPORTED as a near miss, below")
+    print(f"    B5 BASELINE                {len(BASELINE):>6} site(s)"
+          f"        BOUNDED, printed, fails on drift in either direction")
+    if "B6_unread" in channels:
+        unread = g("B6_unread", [])
+        print(f"    B6 population: `{DOCS}/*.md` does not descend      "
+              f"{g('B6_read', 0)} read of {g('B6_in_tree', 0)} in the {DOCS}/ tree")
+        print(f"         {len(unread)} document(s) never read, an exemption granted "
+              f"before any rule runs:")
+        for u in unread:
+            print(f"             {DOCS}/{u}")
+        print(f"         mg-9a19 H4 swept these and found them clean; widening the "
+              f"glob is mg-cd04's open G3.")
+    print(f"    B7 blank lines             {coverage.get('blank', 0):>6} lines"
+          f"        not text")
+    left = fenced
+    print(f"    -> {left} of {n_lines} lines ({100.0 * left / n_lines:.2f}%) left the "
+          f"check by an exemption.  B1 is unbounded and PRINTED;")
+    print(f"       0 channels unbounded and silent.")
 
 
 def report(rev=None):
-    names, n_docs, n_lines, hits, near = scan_corpus(rev)
+    names, n_docs, n_lines, hits, near, channels, coverage = scan_corpus(rev)
     where = f"at {rev}" if rev else "at HEAD"
     print("=" * 84)
     print("mg-cd04 declared-strike control — a block that declares a strike must "
@@ -237,12 +360,15 @@ def report(rev=None):
     print("=" * 84)
     print(f"tree      : {where}")
     print(f"population: {n_docs} documents in {DOCS}/, {n_lines} lines, ALL "
-          f"classified (block | fenced code | blank)")
+          f"classified — {coverage.get('block', 0)} block + "
+          f"{coverage.get('fenced_code', 0)} fenced + {coverage.get('blank', 0)} blank")
     print(f"            the mg-8a71 live-claim control reads 1 of these {n_docs}; "
           f"that is mg-0242 G1.")
     print(f"rule      : DECLARATION + QUOTATION in the SAME SENTENCE, and no "
           f"'{STRIKE_MARKUP}' in the block")
     print(f"baseline  : {len(BASELINE)} tolerated site(s)")
+    print()
+    print_channels(channels, coverage, n_docs, n_lines)
     print()
     found = set()
     for name, lineno, quote, snippet in hits:

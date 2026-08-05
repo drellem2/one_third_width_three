@@ -284,7 +284,14 @@ def live_claim_control_population(lc):
     """
     print()
     print("(5) THE LIVE-CLAIM CONTROL'S OWN POPULATION — F2's test applied to F2's fix")
-    total, n_live, hits, coverage = lc.scan(str(ROOT / lc.DOC))
+    # mg-9d7b added a fifth return value (the exemption-channel accounting) and
+    # this call site broke on it, because this census loads the control
+    # DYNAMICALLY and no grep for importers finds it.  Unpacked by position so a
+    # control from either side of that change works here -- which matters, since
+    # this census is pointed at older revisions on purpose.
+    res = lc.scan(str(ROOT / lc.DOC))
+    total, n_live, hits, coverage = res[0], res[1], res[2], res[3]
+    channels = res[4] if len(res) > 4 else {}
     text = (ROOT / CLOSEOUT).read_text(encoding="utf-8")
     m = re.search(r"\*\*(\d+)/(\d+) lines\*\*", text)
     named = int(m.group(2)) if m else None
@@ -294,6 +301,11 @@ def live_claim_control_population(lc):
     checked = total - coverage.get("blank", 0) - coverage.get("exempt_annotation", 0)
     print(f"  of which CHECKED {checked} / {total} = {100.0*checked/total:.1f}%;"
           f"  EXEMPT {coverage.get('exempt_annotation', 0)}"
+          f" = {100.0*coverage.get('exempt_annotation', 0)/total:.1f}%"
+          f" (mg-9d7b: A1 {channels.get('A1_label', 0)} label"
+          f" + A2 {channels.get('A2_quoted', 0)} quotation-backed"
+          f" + A4 {channels.get('A4_blank', 0)} blank, each bounded or counted)"
+          if channels else
           f" = {100.0*coverage.get('exempt_annotation', 0)/total:.1f}%"
           f" (granted per-block from 3 label lines, no length bound)")
     check("closeout §6.1: live-claim control lines named vs swept", named, total,
