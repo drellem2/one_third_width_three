@@ -512,6 +512,36 @@ jobs:
           python3 scripts/onethird_mg9d7b_exemption_channel_census.py --selftest
           python3 scripts/onethird_mg9d7b_exemption_channel_census.py
 
+      # mg-77e6 — THE INDEPENDENT AUDIT OF THE STEP ABOVE.  The census asserts
+      # that no DECLARED channel is unbounded and silent.  mg-9d7b's E13 asked a
+      # different question -- would it find a channel its author had NOT declared
+      # -- recorded the answer as MISSED, and read that as a complete reading.
+      #
+      # A negative needs an instrument that could have shown the positive, so this
+      # step BUILDS SIXTEENTH CHANNELS: real edits to real controls, run through
+      # the census's own unmodified observe() and audit().  Measured:
+      #
+      #   CAUGHT  a new coverage bucket that today's corpus exercises (X4)
+      #   CAUGHT  lines in `exempt_annotation` no declared channel claims (X5)
+      #   MISSED  text deleted from inside a checked unit -- A5's own class (X1)
+      #   MISSED  a skip folded into the existing `blank` bucket (X2)
+      #   MISSED  whole documents dropped from the population (X3)
+      #   MISSED  a new bucket keyed on a marker today's corpus never triggers (X6)
+      #
+      # X1 and X2 are shown to be REAL routes out: a planted claim that trips
+      # S2-hinges-on-degree under the pristine control scores 0 under the mutant.
+      # And deleting each of the census's own 15 rows in turn shows it would
+      # re-discover 4 of them (A1, A2, A4, B1) -- not A5 and not A8, the two
+      # mg-9d7b reports as discoveries.  So the census is a REGRESSION TEST on a
+      # declared enumeration, which is real and useful, and is not the discovery
+      # instrument E13 was a prediction about.
+      #
+      # This step FAILS IF A RECORDED OUTCOME MOVES IN EITHER DIRECTION.  Widening
+      # the census SHOULD move them; re-record RECORDED in the probe, in the
+      # commit that widens it, with the old values kept visible.
+      - name: 'mg-77e6 sixteenth-channel probe (can the census DISCOVER a channel, or only check one?)'
+        run: python3 scripts/onethird_mg77e6_sixteenth_channel_probe.py
+
       # (mg-1d03) mg-0242 G3 — THE TWO MIS-STATED TABLES, ROW BY ROW.  G3 was two
       # named-vs-counted gaps that the mg-069f REPAIR introduced, one of them
       # inside the very table whose purpose is to report named-vs-swept: the
