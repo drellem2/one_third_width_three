@@ -104,10 +104,21 @@ CHECKS = [
     {"id": "X4", "cmd": [DEMO, "--gates", ""],
      "predict": 2,
      "asks": "an empty gate list: every case requested, no column run at all"},
+    # mg-9a59 CLOSED THIS HOLE.  `predict: 0` is left EXACTLY as pre-registered
+    # -- it was a correct prediction about the subject at 9072f34, it was
+    # confirmed, and a prediction is not revised because a later commit changed
+    # the world it was about.  So a re-run of this battery against main now
+    # reports X5 in `predictions_missed` and this script exits 1.  THAT
+    # DISAGREEMENT IS THE REPAIR LANDING, NOT A REGRESSION: the demo now exits
+    # 2 with `ALL_PASS: false` and `n_gate_runs: 0`.  The standing control for
+    # it is `onethird_mga471_partial_run_control.py`, property H, which is
+    # order-seconds and wired into script-controls.yml.
     {"id": "X5", "cmd": [DEMO, "--gates", "", "--partial-ok"],
      "predict": 0,
      "asks": "PREDICTED HOLE -- an acknowledged run that exercises NOTHING.  "
-             "Does it pass vacuously with ALL_PASS true over zero cases?"},
+             "Does it pass vacuously with ALL_PASS true over zero cases?  "
+             "(CONFIRMED at 9072f34; CLOSED by mg-9a59, so a re-run now "
+             "misses this prediction and that is the fix)"},
     {"id": "X6", "cmd": [DEMO, "--only", "NOPE", "--partial-ok"],
      "predict": 1,
      "asks": "PREDICTED HOLE -- --only is never validated against MUTATIONS, "
@@ -317,7 +328,15 @@ def main():
         "checks": results,
         "predictions_missed": missed,
         "checks_that_wrote_the_canonical_path": wrote_canon,
-        "ALL_PREDICTIONS_HELD": not missed,
+        # mg-9a59.  THIS INSTRUMENT CARRIED THE DEFECT IT REPORTED.  `--only ","`
+        # selects no checks -- the list comprehension drops empty ids and the
+        # unknown-id guard has nothing to reject -- so `missed` was empty
+        # because nothing ran, `ALL_PREDICTIONS_HELD` was true over zero checks,
+        # and with `--partial-ok` this audit exited 0.  The same shape as X5,
+        # in the instrument that found X5.  The count is now on the artifact and
+        # the verdict is conjoined with there being something to hold.
+        "n_checks_run": len(results),
+        "ALL_PREDICTIONS_HELD": bool(results) and not missed,
     }
     out = os.path.join(REPO, PARTIAL_REPORT if partial_run else REPORT)
     with open(out, "w") as f:
@@ -335,6 +354,16 @@ def main():
     print(f"wrote the canonical report : "
           f"{','.join(wrote_canon) if wrote_canon else 'none'}")
     print("=" * 78)
+
+    # mg-9a59, and it precedes every other verdict for the same reason it does
+    # in the demo: over zero checks there is no verdict to give.  --partial-ok
+    # is not consulted -- it acknowledges a SUBSET of the battery and answers
+    # over the checks that RAN, and here none did.
+    if not results:
+        print("ZERO CHECKS RAN -- THIS AUDIT MEASURED NOTHING (mg-9a59).  "
+              "ALL_PREDICTIONS_HELD is\nwritten FALSE, not "
+              "true-over-an-empty-list.  Exiting 2 even with --partial-ok.")
+        return 2
 
     if missed:
         return 1
