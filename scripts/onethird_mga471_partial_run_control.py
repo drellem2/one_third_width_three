@@ -29,7 +29,10 @@ widened gate still catches M5, and it does not try.  That is the mg-75f0 demo's
 job and the demo still does it.  This asks the one question the demo cannot ask
 about itself -- does a subset of it know that it is a subset?
 
-WHAT IT ASSERTS, nine properties over thirteen invocations:
+WHAT IT ASSERTS, nine properties over eleven invocations and 70 assertions --
+counts this file PRINTS rather than asserts, because a control that reports a
+verdict without the size of the population behind it is the exact shape of the
+defect H was added for:
 
   A  a FULL run writes the CANONICAL path and nothing else
   B  a FULL run reports partial_run False / IS_THE_DEMONSTRATION True, and both
@@ -71,14 +74,20 @@ so the vacuous exit 0 was never reached.  A control whose invocation set cannot
 reach the defect it looks like it covers is this arc's most repeated finding.
 The invocation set was extended and seen RED before the demo was touched.
 
-AND IT SELF-TESTS FIRST (five synthetic drifts of its own subject, each of
+AND IT SELF-TESTS FIRST (six synthetic drifts of its own subject, each of
 which MUST be caught), because an assertion nobody has seen fail is a claim:
 
   D1  PARTIAL_REPORT re-pointed at the canonical path  -> C must fire
   D2  the denominators put back over the full UNSEEN set -> E must fire
   D3  the subset exit code put back to 0                -> F must fire
   D4  the zero-population guard removed                -> H must fire
-  D5  the column sentence collapsed back to two states -> I must fire
+  D5  ALL_PASS put back over an empty population       -> H must fire
+  D6  the column sentence collapsed back to two states -> I must fire
+
+D4 and D5 are separate drifts of one repair on purpose: the exit code and the
+artifact are read by different people at different times, and a report can go
+on saying `ALL_PASS: true` over `cases: []` long after the exit code stopped
+saying it.
 
 IT PRINTS THE POPULATION IT RANGED OVER -- invocations and individual assertions
 -- next to its verdict, for the same reason: a vacuous pass and a real pass are
@@ -570,6 +579,43 @@ def drift_subset_exits_zero(src):
                 "D3 subset-exits-zero")
 
 
+def drift_zero_population_guard_removed(src):
+    """mg-9a59.  The exit-code half of the zero-population repair.  Without it
+    `--gates "" --partial-ok` is back to exiting 0 over an empty matrix."""
+    return _sub(src,
+                "    if not results:\n"
+                "        print()\n",
+                "    if False:\n"
+                "        print()\n",
+                "D4 zero-population-guard-removed")
+
+
+def drift_all_pass_over_empty_population(src):
+    """mg-9a59.  The artifact half, drifted separately because a report can go
+    on saying `ALL_PASS: true` over `cases: []` long after the exit code was
+    fixed -- and the report is what a later reader actually opens."""
+    return _sub(src,
+                '        "ALL_PASS": bool(results) and ok,',
+                '        "ALL_PASS": ok,',
+                "D5 all-pass-over-an-empty-population")
+
+
+def drift_column_sentence_two_states(src):
+    """mg-9a59.  The exact pre-repair condition: test whether any UNSEEN row
+    ran in the column, rather than whether the column was requested."""
+    return _sub(src,
+                "            if column not in gates:\n"
+                '                return f"the {column} column was not run"\n'
+                "            if not unseen_ran:\n"
+                '                return (f"the {column} column ran {n_ran} '
+                'case(s), none of "\n'
+                '                        f"them UNSEEN rows -- there is no '
+                'ratio to quote")',
+                "            if not unseen_ran:\n"
+                '                return f"the {column} column was not run"',
+                "D6 column-sentence-back-to-two-states")
+
+
 SELFTESTS = [
     ("D1 partial report path re-pointed at the canonical path",
      drift_partial_path_is_canonical,
@@ -580,6 +626,15 @@ SELFTESTS = [
     ("D3 the subset exit code put back to 0",
      drift_subset_exits_zero,
      "F: `--only M3 && echo ok` would say the demonstration passed"),
+    ("D4 the zero-population guard removed",
+     drift_zero_population_guard_removed,
+     "H: `--gates '' --partial-ok` would exit 0 over ZERO gate runs"),
+    ("D5 ALL_PASS put back over an empty population",
+     drift_all_pass_over_empty_population,
+     "H: the report would say ALL_PASS true over an empty cases list"),
+    ("D6 the column sentence collapsed back to two states",
+     drift_column_sentence_two_states,
+     "I: `--only M3` would say a column it RAN was not run"),
 ]
 
 
@@ -636,13 +691,18 @@ def main():
         print("FAILED: the mg-3946 F5 repair is not holding.  A --only/--gates "
               "subset run of\nthe mg-75f0 demo must not write the canonical "
               "report, must quote both halves\nof each ratio over one "
-              "population, and must not exit 0 unacknowledged.")
+              "population, must not exit 0 unacknowledged, must not\nreport a "
+              "PASS over ZERO gate runs (mg-9a59 H), and must not say a column "
+              "it\nRAN was not run (mg-9a59 I).")
         return 1
     print("PASSED: a subset run writes the PARTIAL path, leaves the committed "
           "report\nbyte-identical, records cases_requested/gates_requested/"
-          "partial_run, quotes\neach denominator over the rows it ran, and "
-          "exits 2 unless acknowledged -- and\nthree drifts that would undo "
-          "each of those were caught.")
+          "partial_run, quotes\neach denominator over the rows it ran, exits 2 "
+          "unless acknowledged, refuses to\nreport a PASS over an empty matrix, "
+          "and never describes a column it ran as not\nrun.")
+    print(f"        {led.checks} assertions over {led.invocations} invocations, "
+          f"{led.checks - len(problems)} held; "
+          f"{len(SELFTESTS)} drifts that would undo them were caught.")
     return 0
 
 

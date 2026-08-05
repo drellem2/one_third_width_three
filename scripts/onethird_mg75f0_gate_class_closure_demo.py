@@ -151,9 +151,30 @@ Run:  /usr/bin/python3 scripts/onethird_mg75f0_gate_class_closure_demo.py
       --gates widened   run one gate column   } exit 2, report to the PARTIAL
                                                 path, canonical path untouched
       --partial-ok      acknowledge the subset: exit 0/1 over the rows that ran
+      --gates ""        ZERO gate runs: exit 2 EVEN WITH --partial-ok, and
+                        `ALL_PASS: false` -- see below
 
 Writes `data/onethird-mg75f0-gate-class-closure.json` on a FULL run and
-`data/onethird-mg75f0-gate-class-closure.PARTIAL.json` on a subset run.
+`data/onethird-mg75f0-gate-class-closure.PARTIAL.json` on a subset run.  Every
+report records `n_gate_runs` -- the size of the population the verdict is over.
+
+A RUN THAT MEASURED NOTHING DOES NOT GET TO SAY PASS (mg-9a59, from mg-76d0's
+audit).  `--gates "" --partial-ok` used to exit 0 with `ALL_PASS: true` over an
+empty `cases` list: true, vacuous, and identical in a transcript to a real
+pass.  `--partial-ok` does not rescue it and is not consulted -- the flag
+acknowledges a SUBSET and restores the narrower question "did every case that
+RAN hold its assertion?", and over an empty matrix there are no cases that ran,
+so there is no narrower question left to answer.  Zero gate runs happens
+exactly when the gate list is empty, since `wanted` is always seeded with
+"none"; the guard is written over the results anyway, so any future route to an
+empty matrix hits the same line.
+
+AND A COLUMN THAT RAN IS NEVER SAID NOT TO HAVE RUN (mg-9a59).  The partial
+summary's fallback tested whether any UNSEEN row ran in a column, not whether
+the column was requested, so `--only M3` -- a SEEN row, run in BOTH columns --
+printed "the widened column was not run" about a column it had just run twice.
+There are three states, not two: not requested / ran but holds no UNSEEN row /
+a ratio over the rows it ran.
 """
 
 import os
@@ -668,7 +689,18 @@ def main():
         # single control failure -- the instrument fell over and this file used
         # to score that as the widening firing.
         "crashed_rather_than_failed": sorted(crashed),
-        "ALL_PASS": ok,
+        # mg-9a59.  THE SIZE OF THE POPULATION THE VERDICT IS OVER, on the
+        # artifact, next to the verdict.  `ALL_PASS: true` with `cases: []` was
+        # a true sentence about nothing, and a reader parsing the report could
+        # not tell it from a real pass without counting `cases` themselves --
+        # which is exactly the check nobody performs.  So the count is written
+        # down, and `ALL_PASS` is conjoined with "and there was something to
+        # pass": an empty conjunction over an empty matrix is vacuously true
+        # and must not be reported as a pass.
+        "n_gate_runs": len(results),
+        "gate_runs_per_column": {g: sum(1 for r in results if r["gate"] == g)
+                                 for g in gates},
+        "ALL_PASS": bool(results) and ok,
     }
     # mg-a471.  A PARTIAL RUN DOES NOT GET THE CANONICAL PATH.  This is the
     # first of mg-3946's two named repairs; the `partial_run` field above is the
@@ -682,6 +714,43 @@ def main():
     if partial_run:
         print(f"      PARTIAL -- the committed {REPORT}")
         print("      was neither written nor read by this run.")
+
+    # mg-9a59, and it comes BEFORE every other verdict because it is the one
+    # case where no verdict is available.  `--gates ""` ran the matrix loop
+    # zero times: `ok` was never assigned False because nothing was tested, the
+    # report carried ALL_PASS over an empty `cases` list, and with
+    # `--partial-ok` the process EXITED 0.  A control that passes because it
+    # examined nothing is worse than no control, because its green is cited as
+    # evidence by everything downstream.
+    #
+    # --partial-ok cannot rescue this and is deliberately not consulted.  It
+    # acknowledges "I know this is a SUBSET" and restores the 0/1 answer to the
+    # narrower question -- did every case that RAN hold its assertion?  Over an
+    # empty matrix there are no cases that ran, so the narrower question is
+    # empty too and there is nothing left for the flag to acknowledge.  Exit 2
+    # is the same code an unacknowledged subset gets, and for the same reason:
+    # `... && echo ok` must not be able to say this run demonstrated anything.
+    #
+    # Zero gate runs happens exactly when `gates` is empty: the matrix is
+    # len(wanted) x len(gates), and `wanted` is unconditionally seeded with
+    # "none", so no `--only` can empty it.  The guard is written over
+    # `results` rather than over `gates` anyway, so a future edit that finds
+    # another route to an empty matrix is caught by the same line.
+    if not results:
+        print()
+        print("ZERO GATE RUNS -- THIS RUN MEASURED NOTHING (mg-9a59).")
+        print(f"  cases requested          : {','.join(wanted)}")
+        print(f"  gate columns requested   : "
+              f"{','.join(gates) if gates else '(none)'}")
+        print(f"  the matrix is {len(wanted)} case(s) x {len(gates)} column(s) "
+              f"= 0 gate runs.")
+        print("  ALL_PASS is written FALSE, not true-over-an-empty-list, and "
+              "the report")
+        print(f"  records n_gate_runs: 0.  Exiting 2 even with --partial-ok: "
+              "there is no")
+        print("  subset here to acknowledge, so there is no narrower question "
+              "to answer.")
+        return 2
 
     if not ok:
         print("\nDEMONSTRATION FAILED: the matrix is not as asserted.  If an "
@@ -699,14 +768,47 @@ def main():
     # the demonstration's sentence and it does not get the demonstration's
     # exit code either.
     if partial_run:
-        # A column that was not requested at all gets said in words rather than
-        # quoted as `0/0`, which reads like a measurement and is not one.
-        right = (f"{len(caught)}/{len(unseen_run_widened)} were caught by the "
-                 f"widened gate" if unseen_run_widened else
-                 "the widened column was not run")
-        left = (f"{len(invisible)}/{len(unseen_run_pre)} were fatal to nothing "
-                f"before it" if unseen_run_pre else
-                "the pre-widening column was not run")
+        # mg-a471's comment here stated the intent: "a column that was not
+        # requested at all gets said in words rather than quoted as `0/0`,
+        # which reads like a measurement and is not one".  The condition
+        # implemented a DIFFERENT question -- whether any UNSEEN row ran in the
+        # column -- and the two come apart on `--only M3`.  M3 is a SEEN row,
+        # so both columns RAN it, and both `unseen_run_*` lists were empty, and
+        # the run printed "the widened column was not run" about a column it
+        # had just run twice.
+        #
+        # mg-9a59 KEEPS THE COMMENT AND FIXES THE CONDITION, and the reason is
+        # about what the fallback protects against rather than about which text
+        # is older.  The fallback guards a READER against reading an empty
+        # population as a measurement.  There are two ways to fail that reader:
+        # quote `0/0` as though it were measured, or assert a column was not
+        # run when it was.  The second is strictly worse -- `0/0` is at least
+        # arithmetic a reader can interrogate, while "was not run" is a false
+        # claim about this run's own conduct, and a reader who believes it will
+        # go looking for a column that is sitting in `cases` -- and the
+        # two-state condition avoided the first defect by committing the second
+        # every time a subset happened to contain no UNSEEN row.
+        #
+        # So: THREE states, not two.  The missing one is "ran, and holds no
+        # UNSEEN row", which is a fact about the population and not about the
+        # run.  Naming it satisfies the comment's intent -- still no `0/0` --
+        # without asserting anything false.  Note this is NOT the same as
+        # making prose and predicate agree by reflex: the alternative repair,
+        # rewording the comment to describe the coded behaviour, would freeze
+        # the false sentence in place and bless it.
+        def _column_line(column, unseen_ran, numerator, claim):
+            n_ran = sum(1 for r in results if r["gate"] == column)
+            if column not in gates:
+                return f"the {column} column was not run"
+            if not unseen_ran:
+                return (f"the {column} column ran {n_ran} case(s), none of "
+                        f"them UNSEEN rows -- there is no ratio to quote")
+            return f"{numerator}/{len(unseen_ran)} {claim}"
+
+        right = _column_line("widened", unseen_run_widened, len(caught),
+                             "were caught by the widened gate")
+        left = _column_line("pre-widening", unseen_run_pre, len(invisible),
+                            "were fatal to nothing before it")
         print("\nPARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN "
               "held its assertion,")
         print("and that is the whole of what this says.  Of the UNSEEN rows "
@@ -726,6 +828,11 @@ def main():
               "named.")
         return 2
 
+    # mg-9a59.  The population, printed next to the verdict on the happy path
+    # too -- not only in the failure messages.  "Demonstration complete" over
+    # sixteen gate runs and over zero read identically without it.
+    print(f"\n{len(results)} gate runs: {len(wanted)} case(s) x {len(gates)} "
+          f"column(s).")
     print(f"\nDemonstration complete.  {len(caught)}/{len(unseen_run_widened)} "
           f"mutations that NEITHER mg-60d3 nor\nmg-5ad1 used are caught by the "
           f"widened gate, and {len(invisible)}/{len(unseen_run_pre)} of them "
