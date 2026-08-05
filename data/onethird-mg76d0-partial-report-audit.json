@@ -1,0 +1,465 @@
+{
+  "what": "mg-76d0 independent audit of the mg-a471 partial-report repair: can a subset run still overwrite the canonical report, print a cross-population ratio, or exit 0 -- each tested separately",
+  "subject_commit": "9072f34",
+  "checks_requested": [
+    "X1",
+    "X2",
+    "X3",
+    "X4",
+    "X5",
+    "X6",
+    "X7",
+    "X8"
+  ],
+  "full_battery": [
+    "X1",
+    "X2",
+    "X3",
+    "X4",
+    "X5",
+    "X6",
+    "X7",
+    "X8"
+  ],
+  "partial_run": false,
+  "IS_THE_AUDIT": true,
+  "canonical_report_path": "data/onethird-mg75f0-gate-class-closure.json",
+  "canonical_sha_at_start": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+  "canonical_sha_asserted_by_mg_a471": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+  "baseline_agrees_with_mg_a471": true,
+  "checks": [
+    {
+      "id": "X4",
+      "asks": "an empty gate list: every case requested, no column run at all",
+      "argv": [
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+        "--gates",
+        ""
+      ],
+      "predicted_exit": 2,
+      "exit": 2,
+      "PREDICTION_HELD": true,
+      "seconds": 0.1,
+      "canonical_sha_before": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_sha_after": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_path_written": false,
+      "partial_path_exists_after": true,
+      "partial_sha_after": "f864c471d49fd283f8914ab85e949c898173ea99b6f2cfe4a09695ba413f5cd9",
+      "partial_sha_of_previous_check": null,
+      "canonical_report_fields": null,
+      "partial_report_fields": {
+        "cases_requested": [
+          "none",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "M7",
+          "M8",
+          "M9"
+        ],
+        "gates_requested": [],
+        "partial_run": true,
+        "IS_THE_DEMONSTRATION": false,
+        "ALL_PASS": true,
+        "n_cases": 0,
+        "unseen_mutations_run_widened": [],
+        "unseen_mutations_run_pre_widening": []
+      },
+      "headline_lines": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "  report goes to           : data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "wrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json",
+        "PARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN held its assertion,",
+        "  the widened column was not run",
+        "  the pre-widening column was not run",
+        "Exiting 2: a subset run is not a passing demonstration, and `... && echo ok`"
+      ],
+      "stderr_tail": [],
+      "git_status_data_after": [],
+      "canonical_restored_by_this_audit": false
+    },
+    {
+      "id": "X5",
+      "asks": "PREDICTED HOLE -- an acknowledged run that exercises NOTHING.  Does it pass vacuously with ALL_PASS true over zero cases?",
+      "argv": [
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+        "--gates",
+        "",
+        "--partial-ok"
+      ],
+      "predicted_exit": 0,
+      "exit": 0,
+      "PREDICTION_HELD": true,
+      "seconds": 0.1,
+      "canonical_sha_before": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_sha_after": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_path_written": false,
+      "partial_path_exists_after": true,
+      "partial_sha_after": "f864c471d49fd283f8914ab85e949c898173ea99b6f2cfe4a09695ba413f5cd9",
+      "partial_sha_of_previous_check": "f864c471d49fd283f8914ab85e949c898173ea99b6f2cfe4a09695ba413f5cd9",
+      "canonical_report_fields": null,
+      "partial_report_fields": {
+        "cases_requested": [
+          "none",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "M7",
+          "M8",
+          "M9"
+        ],
+        "gates_requested": [],
+        "partial_run": true,
+        "IS_THE_DEMONSTRATION": false,
+        "ALL_PASS": true,
+        "n_cases": 0,
+        "unseen_mutations_run_widened": [],
+        "unseen_mutations_run_pre_widening": []
+      },
+      "headline_lines": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "  report goes to           : data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "wrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json",
+        "PARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN held its assertion,",
+        "  the widened column was not run",
+        "  the pre-widening column was not run",
+        "--partial-ok was given: exiting 0 on the rows that ran."
+      ],
+      "stderr_tail": [],
+      "git_status_data_after": [],
+      "canonical_restored_by_this_audit": false
+    },
+    {
+      "id": "X6",
+      "asks": "PREDICTED HOLE -- --only is never validated against MUTATIONS, so an unknown row should KeyError rather than be rejected",
+      "argv": [
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+        "--only",
+        "NOPE",
+        "--partial-ok"
+      ],
+      "predicted_exit": 1,
+      "exit": 1,
+      "PREDICTION_HELD": true,
+      "seconds": 328.4,
+      "canonical_sha_before": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_sha_after": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_path_written": false,
+      "partial_path_exists_after": false,
+      "partial_sha_after": null,
+      "partial_sha_of_previous_check": "f864c471d49fd283f8914ab85e949c898173ea99b6f2cfe4a09695ba413f5cd9",
+      "canonical_report_fields": null,
+      "partial_report_fields": null,
+      "headline_lines": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "  report goes to           : data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: none",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none"
+      ],
+      "stderr_tail": [
+        "    sys.exit(main())",
+        "  File \"/Users/daniel/.pogo/polecats/w76d0/scripts/onethird_mg75f0_gate_class_closure_demo.py\", line 481, in main",
+        "    want = EXPECTED[(mutation, gate_variant)]",
+        "KeyError: ('NOPE', 'pre-widening')"
+      ],
+      "git_status_data_after": [],
+      "canonical_restored_by_this_audit": false
+    },
+    {
+      "id": "X1",
+      "asks": "the unacknowledged subset run mg-3946's audit was bitten by twice: exit code, output path, and both ratio sentences",
+      "argv": [
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+        "--only",
+        "M9",
+        "--gates",
+        "widened"
+      ],
+      "predicted_exit": 2,
+      "exit": 2,
+      "PREDICTION_HELD": true,
+      "seconds": 173.5,
+      "canonical_sha_before": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_sha_after": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_path_written": false,
+      "partial_path_exists_after": true,
+      "partial_sha_after": "3086a2320907f6f698cc5808726f85a55f80271caa36a79c9e489968916b9859",
+      "partial_sha_of_previous_check": null,
+      "canonical_report_fields": null,
+      "partial_report_fields": {
+        "cases_requested": [
+          "none",
+          "M9"
+        ],
+        "gates_requested": [
+          "widened"
+        ],
+        "partial_run": true,
+        "IS_THE_DEMONSTRATION": false,
+        "ALL_PASS": true,
+        "n_cases": 2,
+        "unseen_mutations_run_widened": [
+          "M9"
+        ],
+        "unseen_mutations_run_pre_widening": []
+      },
+      "headline_lines": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "  report goes to           : data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: none",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: ['width']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']",
+        "wrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json",
+        "PARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN held its assertion,",
+        "  1/1 were caught by the widened gate",
+        "  the pre-widening column was not run",
+        "Exiting 2: a subset run is not a passing demonstration, and `... && echo ok`"
+      ],
+      "stderr_tail": [],
+      "git_status_data_after": [],
+      "canonical_restored_by_this_audit": false
+    },
+    {
+      "id": "X2",
+      "asks": "the acknowledged subset: does --partial-ok restore 0/1 over the rows that ran WITHOUT restoring the canonical path",
+      "argv": [
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+        "--only",
+        "M9",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "predicted_exit": 0,
+      "exit": 0,
+      "PREDICTION_HELD": true,
+      "seconds": 217.9,
+      "canonical_sha_before": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_sha_after": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_path_written": false,
+      "partial_path_exists_after": true,
+      "partial_sha_after": "3086a2320907f6f698cc5808726f85a55f80271caa36a79c9e489968916b9859",
+      "partial_sha_of_previous_check": "3086a2320907f6f698cc5808726f85a55f80271caa36a79c9e489968916b9859",
+      "canonical_report_fields": null,
+      "partial_report_fields": {
+        "cases_requested": [
+          "none",
+          "M9"
+        ],
+        "gates_requested": [
+          "widened"
+        ],
+        "partial_run": true,
+        "IS_THE_DEMONSTRATION": false,
+        "ALL_PASS": true,
+        "n_cases": 2,
+        "unseen_mutations_run_widened": [
+          "M9"
+        ],
+        "unseen_mutations_run_pre_widening": []
+      },
+      "headline_lines": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "  report goes to           : data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: none",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: ['width']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']",
+        "wrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json",
+        "PARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN held its assertion,",
+        "  1/1 were caught by the widened gate",
+        "  the pre-widening column was not run",
+        "--partial-ok was given: exiting 0 on the rows that ran."
+      ],
+      "stderr_tail": [],
+      "git_status_data_after": [],
+      "canonical_restored_by_this_audit": false
+    },
+    {
+      "id": "X3",
+      "asks": "partial on the CASE axis only -- both gate columns run, so both ratios have a denominator and neither may quote the full table",
+      "argv": [
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+        "--only",
+        "M3"
+      ],
+      "predicted_exit": 2,
+      "exit": 2,
+      "PREDICTION_HELD": true,
+      "seconds": 330.6,
+      "canonical_sha_before": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_sha_after": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_path_written": false,
+      "partial_path_exists_after": true,
+      "partial_sha_after": "a2b8365587f0ab93ea82aed53bade0dcf08940dc00ff3bc13a25b16e035f96a0",
+      "partial_sha_of_previous_check": "3086a2320907f6f698cc5808726f85a55f80271caa36a79c9e489968916b9859",
+      "canonical_report_fields": null,
+      "partial_report_fields": {
+        "cases_requested": [
+          "none",
+          "M3"
+        ],
+        "gates_requested": [
+          "pre-widening",
+          "widened"
+        ],
+        "partial_run": true,
+        "IS_THE_DEMONSTRATION": false,
+        "ALL_PASS": true,
+        "n_cases": 4,
+        "unseen_mutations_run_widened": [],
+        "unseen_mutations_run_pre_widening": []
+      },
+      "headline_lines": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "  report goes to           : data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: none",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "      Theorem-E frozen-pair selector min -> max (mg-5ad1 M3): moves frozen_pair at 5/5 posets and frozen_pair_overlap_with_U to exactly 1.0000, the quantity ledger claim 8 rests on",
+        "      Theorem-E frozen-pair selector min -> max (mg-5ad1 M3): moves frozen_pair at 5/5 posets and frozen_pair_overlap_with_U to exactly 1.0000, the quantity ledger claim 8 rests on",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.22e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.35e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "wrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json",
+        "      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json",
+        "PARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN held its assertion,",
+        "  the widened column was not run",
+        "  the pre-widening column was not run",
+        "Exiting 2: a subset run is not a passing demonstration, and `... && echo ok`"
+      ],
+      "stderr_tail": [],
+      "git_status_data_after": [],
+      "canonical_restored_by_this_audit": false
+    },
+    {
+      "id": "X7",
+      "asks": "THE FLOOR.  A FULL run is not a subset, so none of the three repairs is in its path: does it overwrite the committed acceptance record in place, exit 0, and say nothing?",
+      "argv": [
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py"
+      ],
+      "predicted_exit": 0,
+      "exit": 0,
+      "PREDICTION_HELD": true,
+      "seconds": 1780.9,
+      "canonical_sha_before": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_sha_after": "0cb9031105b6c93996fb315a96f233aff1dfa636021954fde15403e0faf3ecfe",
+      "canonical_path_written": true,
+      "partial_path_exists_after": false,
+      "partial_sha_after": null,
+      "partial_sha_of_previous_check": "a2b8365587f0ab93ea82aed53bade0dcf08940dc00ff3bc13a25b16e035f96a0",
+      "canonical_report_fields": {
+        "cases_requested": [
+          "none",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "M7",
+          "M8",
+          "M9"
+        ],
+        "gates_requested": [
+          "pre-widening",
+          "widened"
+        ],
+        "partial_run": false,
+        "IS_THE_DEMONSTRATION": true,
+        "ALL_PASS": true,
+        "n_cases": 16,
+        "unseen_mutations_run_widened": [
+          "M5",
+          "M6",
+          "M7",
+          "M8",
+          "M9"
+        ],
+        "unseen_mutations_run_pre_widening": [
+          "M5",
+          "M6",
+          "M7",
+          "M8",
+          "M9"
+        ]
+      },
+      "partial_report_fields": null,
+      "headline_lines": [
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: none",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "      Theorem-E frozen-pair selector min -> max (mg-5ad1 M3): moves frozen_pair at 5/5 posets and frozen_pair_overlap_with_U to exactly 1.0000, the quantity ledger claim 8 rests on",
+        "      Theorem-E frozen-pair selector min -> max (mg-5ad1 M3): moves frozen_pair at 5/5 posets and frozen_pair_overlap_with_U to exactly 1.0000, the quantity ledger claim 8 rests on",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.22e-01  mismatched: ['frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 2.35e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k']",
+        "      projector_U's rank filter s > max(tol,1e-10) -> s > 0.0 (mg-5ad1 M4): numerically-null singular directions enter U, dim U inflates 24/22/20/7/9 -> 49/49/49/21/25, and at #945 and #809 U becomes the WHOLE space so c = null = 1.0000",
+        "      projector_U's rank filter s > max(tol,1e-10) -> s > 0.0 (mg-5ad1 M4): numerically-null singular directions enter U, dim U inflates 24/22/20/7/9 -> 49/49/49/21/25, and at #945 and #809 U becomes the WHOLE space so c = null = 1.0000",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: none",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.11e-01  mismatched: ['min_phi_bk', 'min_phi_bk_pair', 'minphi_phi_t_image']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 8.16e-02  mismatched: ['min_phi_bk', 'min_phi_bk_pair', 'minphi_phi_t_image']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.70e-01  mismatched: ['phi_t_min_prefix']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.55e-01  mismatched: ['phi_t_min_prefix']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.00e-01  mismatched: ['phi_t_cheeger']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 1.21e-01  mismatched: ['phi_t_cheeger']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 4.00e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k', 'ratio_of_sums']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 3.94e-01  mismatched: ['frozen_p', 'frozen_pair', 'frozen_phi_bk', 'frozen_phi_t_image', 'frozen_ratio', 'frozen_sep_k', 'ratio_of_sums']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: ['width']",
+        "      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: ['width']",
+        "wrote data/onethird-mg75f0-gate-class-closure.json",
+        "Demonstration complete.  5/5 mutations that NEITHER mg-60d3 nor",
+        "mg-5ad1 used are caught by the widened gate, and 5/5 of them were fatal to"
+      ],
+      "stderr_tail": [],
+      "git_status_data_after": [
+        " M data/onethird-mg75f0-gate-class-closure.json"
+      ],
+      "canonical_restored_by_this_audit": true,
+      "canonical_sha_after_restore": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318"
+    },
+    {
+      "id": "X8",
+      "asks": "do-not-disturb: mg-3946's battery, six drifts with their exit codes predicted before mg-a471 existed and not revised by it",
+      "argv": [
+        "scripts/onethird_mg3946_closure_demo_falsifier.py"
+      ],
+      "predicted_exit": 0,
+      "exit": 0,
+      "PREDICTION_HELD": true,
+      "seconds": 847.1,
+      "canonical_sha_before": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_sha_after": "39a4ca340ffeb74f2a9d78c60b4b147813b739633e8fc785f76e225ec6c97318",
+      "canonical_path_written": false,
+      "partial_path_exists_after": false,
+      "partial_sha_after": null,
+      "partial_sha_of_previous_check": null,
+      "canonical_report_fields": null,
+      "partial_report_fields": null,
+      "headline_lines": [
+        "=== PART 3/4 self-test",
+        "=== PART 1/2  the drift battery over the demo (6 cases, predictions stated first)",
+        "      demo said: *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "      demo said: PARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN held its assertion,",
+        "      demo said: *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "      demo said: *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "      demo said: *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "      demo said: *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "      demo said: *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "wrote data/onethird-mg3946-closure-demo-falsifier.json"
+      ],
+      "stderr_tail": [],
+      "git_status_data_after": [
+        " M data/onethird-mg3946-closure-demo-falsifier.json"
+      ],
+      "canonical_restored_by_this_audit": false
+    }
+  ],
+  "predictions_missed": [],
+  "checks_that_wrote_the_canonical_path": [
+    "X7"
+  ],
+  "ALL_PREDICTIONS_HELD": true
+}

@@ -1,0 +1,366 @@
+{
+  "what": "mg-3946 independent audit: can the mg-75f0 class-closure demo fail, and is the population of historical-SHA reads closed?",
+  "cases_requested": [
+    "control",
+    "neutered-widening",
+    "noop-mutation",
+    "rotted-anchor",
+    "rebaselined",
+    "crash-not-catch"
+  ],
+  "partial_run": false,
+  "part1_2_cases": [
+    {
+      "case": "control",
+      "drift": "undrifted -- the demo's subject as committed",
+      "args": [
+        "--only",
+        "M9",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "predicted_exit": 0,
+      "exit": 0,
+      "PREDICTION_HELD": true,
+      "seconds": 162.2,
+      "means": "the undrifted demo accepts its own subject; if this is not 0 nothing else in PART 1 can be read",
+      "demo_matrix": [
+        "mutation   first used by                                widened",
+        "none       -                                          exit 0 ok",
+        "M9         UNSEEN -- used by neither mg-60d3 nor      exit 1 ok"
+      ],
+      "demo_verdict": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "PARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN held its assertion,"
+      ],
+      "gate_failure_lines": [
+        "GATE FAILURE: enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "GATE FAILURE: enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "GATE FAILURE: enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "GATE FAILURE: enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width"
+      ],
+      "no_gate_failure_reported": 1,
+      "stdout_tail": "tched fields of the 22 compared: width\n      GATE FAILURE: enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width\n      GATE FAILURE: fam:N (2+2): does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 24 compared: width\n      --> exit 1 (expected 1)  OK\n\n==============================================================================\nTHE MATRIX\n==============================================================================\nmutation   first used by                                widened\nnone       -                                          exit 0 ok\nM9         UNSEEN -- used by neither mg-60d3 nor      exit 1 ok\n\nwrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json\n      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json\n      was neither written nor read by this run.\n\nPARTIAL RUN -- NOT THE DEMONSTRATION.  Every case that RAN held its assertion,\nand that is the whole of what this says.  Of the UNSEEN rows this run exercised:\n  1/1 were caught by the widened gate\n  the pre-widening column was not run\nAny ratio there is over the rows THIS RUN ran, which is why it is not over\nthe full table of 5.  The demonstration is the whole matrix: run it with\nno --only and no --gates.\n--partial-ok was given: exiting 0 on the rows that ran.\n",
+      "stderr_tail": ""
+    },
+    {
+      "case": "neutered-widening",
+      "drift": "the widened gate's identity comparison narrowed back to the four pre-mg-75f0 fields",
+      "args": [
+        "--only",
+        "M9",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "predicted_exit": 1,
+      "exit": 1,
+      "PREDICTION_HELD": true,
+      "seconds": 102.1,
+      "means": "exit 0 here would mean the demo passes with the widening removed -- it would be asserting nothing about the widening",
+      "demo_matrix": [
+        "mutation   first used by                                widened",
+        "none       -                                         exit 1 BAD",
+        "M9         UNSEEN -- used by neither mg-60d3 nor      exit 1 ok"
+      ],
+      "demo_verdict": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "      --> exit 1 (expected 0)  DEMONSTRATION FAILED",
+        "DEMONSTRATION FAILED: the matrix is not as asserted.  If an UNSEEN mutation passed"
+      ],
+      "gate_failure_lines": [
+        "GATE FAILURE: IDENTITY CENSUS: 20 field(s) of the committed mg-8b64 dataset are compared at NO poset and are not declared exclusions: bk_gap,frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k,h_bk_argmin_is_pair_cut,h_bk_exhaustive,max_bias,min_phi_bk,min_phi_bk_pair,minphi_phi_t_image,n,num_incomp_pairs,phi_t_cheeger,phi_t_min_prefix,ratio_of_sums,transport_gap,width.  Either add a poset to the identity population whose row carries them, or list them in IDENTITY_EXCLUDED_REF_FIELDS with a reason -- an undeclared exclusion is the mg-09ea/mg-5ad1 defect one field later",
+        "GATE FAILURE: IDENTITY CENSUS: 20 field(s) of the committed mg-8b64 dataset are compared at NO poset and are not declared exclusions: bk_gap,frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k,h_bk_argmin_is_pair_cut,h_bk_exhaustive,max_bias,min_phi_bk,min_phi_bk_pair,minphi_phi_t_image,n,num_incomp_pairs,phi_t_cheeger,phi_t_min_prefix,ratio_of_sums,transport_gap,width.  Either add a poset to the identity population whose row carries them, or list them in IDENTITY_EXCLUDED_REF_FIELDS with a reason -- an undeclared exclusion is the mg-09ea/mg-5ad1 defect one field later"
+      ],
+      "no_gate_failure_reported": 0,
+      "stdout_tail": "ompared at NO poset and are not declared exclusions: bk_gap,frozen_p,frozen_pair,frozen_phi_bk,frozen_phi_t_image,frozen_ratio,frozen_sep_k,h_bk_argmin_is_pair_cut,h_bk_exhaustive,max_bias,min_phi_bk,min_phi_bk_pair,minphi_phi_t_image,n,num_incomp_pairs,phi_t_cheeger,phi_t_min_prefix,ratio_of_sums,transport_gap,width.  Either add a poset to the identity population whose row carries them, or list them in IDENTITY_EXCLUDED_REF_FIELDS with a reason -- an undeclared exclusion is the mg-09ea/mg-5ad1 defect one field later\n      --> exit 1 (expected 1)  OK\n\n==============================================================================\nTHE MATRIX\n==============================================================================\nmutation   first used by                                widened\nnone       -                                         exit 1 BAD\nM9         UNSEEN -- used by neither mg-60d3 nor      exit 1 ok\n\nwrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json\n      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json\n      was neither written nor read by this run.\n\nDEMONSTRATION FAILED: the matrix is not as asserted.  If an UNSEEN mutation passed\nthe widened gate, the class is STILL OPEN and must be reported as such rather\nthan papered over.  If a row is marked crashed_rather_than_failed (mg-3946), the\ngate exited 1 without naming a control failure -- the instrument fell over and\nthat is not the widening firing; read the stderr printed above the matrix.\n",
+      "stderr_tail": ""
+    },
+    {
+      "case": "noop-mutation",
+      "drift": "M9's replacement made byte-identical to its anchor (a no-op edit)",
+      "args": [
+        "--only",
+        "M9",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "predicted_exit": 1,
+      "exit": 1,
+      "PREDICTION_HELD": true,
+      "seconds": 167.4,
+      "means": "exit 0 here would mean a 'mutated' run that mutated nothing still counts as a mutation caught",
+      "demo_matrix": [
+        "mutation   first used by                                widened",
+        "none       -                                          exit 0 ok",
+        "M9         UNSEEN -- used by neither mg-60d3 nor     exit 0 BAD"
+      ],
+      "demo_verdict": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "      --> exit 0 (expected 1)  DEMONSTRATION FAILED",
+        "DEMONSTRATION FAILED: the matrix is not as asserted.  If an UNSEEN mutation passed"
+      ],
+      "gate_failure_lines": [],
+      "no_gate_failure_reported": 2,
+      "stdout_tail": "es to 1 on every poset.  Not a selector and not a normalisation -- a search direction, in a purely combinatorial field\n      first used by: UNSEEN -- used by neither mg-60d3 nor mg-5ad1\n------------------------------------------------------------------------------\n      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: none\n      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none\n      (no gate failure reported)\n\n      --> exit 0 (expected 1)  DEMONSTRATION FAILED\n\n==============================================================================\nTHE MATRIX\n==============================================================================\nmutation   first used by                                widened\nnone       -                                          exit 0 ok\nM9         UNSEEN -- used by neither mg-60d3 nor     exit 0 BAD\n\nwrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json\n      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json\n      was neither written nor read by this run.\n\nDEMONSTRATION FAILED: the matrix is not as asserted.  If an UNSEEN mutation passed\nthe widened gate, the class is STILL OPEN and must be reported as such rather\nthan papered over.  If a row is marked crashed_rather_than_failed (mg-3946), the\ngate exited 1 without naming a control failure -- the instrument fell over and\nthat is not the widening firing; read the stderr printed above the matrix.\n",
+      "stderr_tail": ""
+    },
+    {
+      "case": "rotted-anchor",
+      "drift": "M9's anchor rewritten in the corpus (semantics unchanged)",
+      "args": [
+        "--only",
+        "M9",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "predicted_exit": 1,
+      "exit": 1,
+      "PREDICTION_HELD": true,
+      "seconds": 76.2,
+      "means": "exit 0 here would mean a refactor silently converts a mutation row into an unmutated run",
+      "demo_matrix": [],
+      "demo_verdict": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***"
+      ],
+      "gate_failure_lines": [],
+      "no_gate_failure_reported": 1,
+      "stdout_tail": " THE DEMONSTRATION (mg-a471) ***\n  cases this run will run  : none,M9\n  gate columns             : widened\n  the full matrix is       : none,M3,M4,M5,M6,M7,M8,M9  x  pre-widening,widened\n  report goes to           : data/onethird-mg75f0-gate-class-closure.PARTIAL.json\n  the committed report at data/onethird-mg75f0-gate-class-closure.json\n                             is NOT written and NOT touched.\n\n------------------------------------------------------------------------------\nCASE  none  gate=widened       (expect exit 0)\n      unmutated instrument\n      first used by: -\n------------------------------------------------------------------------------\n      fields compared 22/23 (excluded: name)  max|diff| over float fields = 6.66e-16  mismatched: none\n      fields compared 22/23 (excluded: name)  max|diff| over float fields = 0.00e+00  mismatched: none\n      (no gate failure reported)\n      --> exit 0 (expected 0)  OK\n\n------------------------------------------------------------------------------\nCASE  M9    gate=widened       (expect exit 1)\n      _width's antichain search direction range(n,0,-1) -> range(1,n+1): the max-antichain scan returns the FIRST r that admits an antichain instead of the LAST, so width collapses to 1 on every poset.  Not a selector and not a normalisation -- a search direction, in a purely combinatorial field\n      first used by: UNSEEN -- used by neither mg-60d3 nor mg-5ad1\n------------------------------------------------------------------------------\n",
+      "stderr_tail": "M9: anchor found 0 times in scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py, expected 1 -- the mutation would be a NO-OP and the run would be a lie.  Anchor:\n    for r in range(n, 0, -1):\n"
+    },
+    {
+      "case": "rebaselined",
+      "drift": "PRE_WIDENING_REV re-pinned from af7fc2df (mg-60d3) to 9fa4aaa (the mg-75f0 landing), so the left column IS the widened gate",
+      "args": [
+        "--only",
+        "M9",
+        "--gates",
+        "pre-widening",
+        "--partial-ok"
+      ],
+      "predicted_exit": 1,
+      "exit": 1,
+      "PREDICTION_HELD": true,
+      "seconds": 103.7,
+      "means": "exit 0 here would mean the left column can be re-pinned onto the widened gate and the demo would not notice it had stopped being a comparison",
+      "demo_matrix": [
+        "mutation   first used by                           pre-widening",
+        "none       -                                          exit 0 ok",
+        "M9         UNSEEN -- used by neither mg-60d3 nor     exit 1 BAD",
+        "mutation   stdout moved   verdict",
+        "M9         True           EXERCISED AND ABSORBED"
+      ],
+      "demo_verdict": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "      --> exit 1 (expected 0)  DEMONSTRATION FAILED",
+        "DEMONSTRATION FAILED: the matrix is not as asserted.  If an UNSEEN mutation passed"
+      ],
+      "gate_failure_lines": [
+        "GATE FAILURE: enum-n7-#3: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "GATE FAILURE: enum-n7-#20: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "GATE FAILURE: enum-n7-#600: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width",
+        "GATE FAILURE: enum-n7-#945: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width"
+      ],
+      "no_gate_failure_reported": 1,
+      "stdout_tail": " mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width\n      GATE FAILURE: enum-n7-#88: does not match its committed mg-8b64 row -- poset identity is WRONG (num_LE=True lambda_std=True delta=True lambda2_BK=True); ALL mismatched fields of the 22 compared: width\n\n      --> exit 1 (expected 0)  DEMONSTRATION FAILED\n\n==============================================================================\nTHE MATRIX\n==============================================================================\nmutation   first used by                           pre-widening\nnone       -                                          exit 0 ok\nM9         UNSEEN -- used by neither mg-60d3 nor     exit 1 BAD\n\nHOW THE PRE-WIDENING GATE MISSED EACH ONE (measured, not asserted)\nmutation   stdout moved   verdict\nM9         True           EXERCISED AND ABSORBED\n\nwrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json\n      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json\n      was neither written nor read by this run.\n\nDEMONSTRATION FAILED: the matrix is not as asserted.  If an UNSEEN mutation passed\nthe widened gate, the class is STILL OPEN and must be reported as such rather\nthan papered over.  If a row is marked crashed_rather_than_failed (mg-3946), the\ngate exited 1 without naming a control failure -- the instrument fell over and\nthat is not the widening firing; read the stderr printed above the matrix.\n",
+      "stderr_tail": ""
+    },
+    {
+      "case": "crash-not-catch",
+      "drift": "a row whose 'mutation' is an unconditional raise in _width, reached by the widened gate and not by the pre-widening one",
+      "args": [
+        "--only",
+        "MX",
+        "--gates",
+        "pre-widening,widened",
+        "--partial-ok"
+      ],
+      "predicted_exit": 1,
+      "exit": 1,
+      "PREDICTION_HELD": true,
+      "seconds": 222.9,
+      "means": "PART 2.  exit 1 = the demo distinguishes a crash from a catch (the mg-3946 repair, live).  exit 0 = the repair has been reverted and a crashing gate is again scored as the widening firing -- which is what it did before this ticket",
+      "demo_matrix": [
+        "mutation   first used by                           pre-widening        widened",
+        "none       -                                          exit 0 ok      exit 0 ok",
+        "MX         UNSEEN -- mg-3946's crash-vs-detection     exit 0 ok     exit 1 BAD",
+        "mutation   stdout moved   verdict",
+        "MX         False          NEVER EXERCISED"
+      ],
+      "demo_verdict": [
+        "  *** PARTIAL RUN -- THIS IS NOT THE DEMONSTRATION (mg-a471) ***",
+        "      --> exit 1 (expected 1)  DEMONSTRATION FAILED",
+        "DEMONSTRATION FAILED: the matrix is not as asserted.  If an UNSEEN mutation passed"
+      ],
+      "gate_failure_lines": [],
+      "no_gate_failure_reported": 4,
+      "stdout_tail": "k_transport_transfer_probe.py\", line 455, in analyze_poset\n    width=_width(P),\n  File \"/private/var/folders/4n/9xszbbx91_jb05tp4h48w2340000gn/T/mg75f0-MX-widened-qj2b3_eb/scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py\", line 496, in _width\n    raise RuntimeError('mg-3946 MX')\nRuntimeError: mg-3946 MX\n\n      --> exit 1 (expected 1)  DEMONSTRATION FAILED\n\n==============================================================================\nTHE MATRIX\n==============================================================================\nmutation   first used by                           pre-widening        widened\nnone       -                                          exit 0 ok      exit 0 ok\nMX         UNSEEN -- mg-3946's crash-vs-detection     exit 0 ok     exit 1 BAD\n\nHOW THE PRE-WIDENING GATE MISSED EACH ONE (measured, not asserted)\nmutation   stdout moved   verdict\nMX         False          NEVER EXERCISED\n\nwrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json\n      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json\n      was neither written nor read by this run.\n\nDEMONSTRATION FAILED: the matrix is not as asserted.  If an UNSEEN mutation passed\nthe widened gate, the class is STILL OPEN and must be reported as such rather\nthan papered over.  If a row is marked crashed_rather_than_failed (mg-3946), the\ngate exited 1 without naming a control failure -- the instrument fell over and\nthat is not the widening firing; read the stderr printed above the matrix.\n",
+      "stderr_tail": ""
+    }
+  ],
+  "part1_predictions_missed": [],
+  "part2_finding": "the demo rejects a crash-shaped mutation",
+  "part3_workflows": [
+    {
+      "workflow": ".github/workflows/gate-mutation-demo.yml",
+      "fetch_depths": [
+        0
+      ],
+      "entry_scripts": [
+        "scripts/onethird_mg3934_ci_history_depth_control.py",
+        "scripts/onethird_mg60d3_gate_mutation_demo.py",
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+        "scripts/onethird_mg7db4_probe_mutation_battery.py",
+        "scripts/onethird_mg7db4_watchlist_consistency.py"
+      ],
+      "closure_size": 11,
+      "missing_from_closure": [],
+      "inline_git_in_step_bodies": [],
+      "git_calling_modules": {
+        "scripts/onethird_mg3934_ci_history_depth_control.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": []
+        },
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": [
+            "af7fc2df"
+          ]
+        }
+      },
+      "real_revisions_read": {
+        "scripts/onethird_mg75f0_gate_class_closure_demo.py": [
+          "af7fc2df"
+        ]
+      }
+    },
+    {
+      "workflow": ".github/workflows/lean.yml",
+      "fetch_depths": [
+        null
+      ],
+      "entry_scripts": [],
+      "closure_size": 0,
+      "missing_from_closure": [],
+      "inline_git_in_step_bodies": [],
+      "git_calling_modules": {},
+      "real_revisions_read": {}
+    },
+    {
+      "workflow": ".github/workflows/script-controls.yml",
+      "fetch_depths": [
+        null
+      ],
+      "entry_scripts": [
+        "scripts/onethird_mg0242_identity_recheck.py",
+        "scripts/onethird_mg0242_population_census.py",
+        "scripts/onethird_mg0242_struck_vs_refuted.py",
+        "scripts/onethird_mg2c34_n7_overlap_test.py",
+        "scripts/onethird_mg3934_ci_history_depth_control.py",
+        "scripts/onethird_mg5ad1_gate_blindspot_probe.py",
+        "scripts/onethird_mg7db4_watchlist_consistency.py",
+        "scripts/onethird_mg8489_fastq_gate_control.py",
+        "scripts/onethird_mg8a71_audit_instrument.py",
+        "scripts/onethird_mg8a71_live_claim_control.py",
+        "scripts/onethird_mg8ff1_lemma32b_counterexample.py",
+        "scripts/onethird_mg9a19_exemption_population_audit.py",
+        "scripts/onethird_mgcd04_declared_strike_control.py",
+        "scripts/onethird_mgfccb_direction_check.py"
+      ],
+      "closure_size": 28,
+      "missing_from_closure": [],
+      "inline_git_in_step_bodies": [],
+      "git_calling_modules": {
+        "scripts/onethird_mg0242_population_census.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": []
+        },
+        "scripts/onethird_mg0242_struck_vs_refuted.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": []
+        },
+        "scripts/onethird_mg3934_ci_history_depth_control.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": []
+        },
+        "scripts/onethird_mg9a19_exemption_population_audit.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": [
+            "abcd"
+          ]
+        },
+        "scripts/onethird_mgcd04_declared_strike_control.py": {
+          "git": [
+            "argv[0]=git"
+          ],
+          "candidates": []
+        }
+      },
+      "real_revisions_read": {}
+    }
+  ],
+  "part4_scripts_pin_population": {
+    "scripts/onethird_mg4f9b_route_axis_probe.py": [
+      "91fa25f",
+      "9fa4aaa",
+      "af7fc2df"
+    ],
+    "scripts/onethird_mg75f0_gate_class_closure_demo.py": [
+      "af7fc2df"
+    ],
+    "scripts/onethird_mg76d0_partial_report_audit.py": [
+      "9072f34"
+    ],
+    "scripts/onethird_mgbd53_widening_audit_probe.py": [
+      "af7fc2df"
+    ],
+    "scripts/refinery_gate.sh": [
+      "069f",
+      "9991380",
+      "9fa4aaa"
+    ]
+  },
+  "part4_remote_reachability": {
+    "069f": {
+      "reachable": true,
+      "via": "refs/remotes/origin/polecat-d4bb"
+    },
+    "9072f34": {
+      "reachable": true,
+      "via": "refs/remotes/origin/HEAD"
+    },
+    "91fa25f": {
+      "reachable": true,
+      "via": "refs/remotes/origin/HEAD"
+    },
+    "9991380": {
+      "reachable": true,
+      "via": "refs/remotes/origin/polecat-069f"
+    },
+    "9fa4aaa": {
+      "reachable": true,
+      "via": "refs/remotes/origin/HEAD"
+    },
+    "af7fc2df": {
+      "reachable": true,
+      "via": "refs/remotes/origin/HEAD"
+    }
+  },
+  "part3_4_problems": [],
+  "ALL_PASS": true
+}

@@ -162,7 +162,7 @@ jobs:
   mutation-demo:
     runs-on: ubuntu-latest
     # Three demonstrations: six --no-sweep gate runs (~11 min), ten probe runs
-    # (~5 min), and eighteen more gate runs (~13 min) -- about 30 min on the
+    # (~5 min), and sixteen more gate runs (~13 min) -- about 30 min on the
     # fleet host.  Raised 45 -> 75 by mg-75f0 when it added the third step, in
     # the same commit, so the bound tracks the work rather than lagging it.  The
     # bound is generous because a hosted runner is slower and a timeout here
@@ -207,6 +207,13 @@ jobs:
       # ("21 hours" here is the same undercount the header above corrects; it
       # survived at this second site inside the very file that fixed the first,
       # which is F4's whole shape -- mg-a471.)
+      # mg-76d0 found this site and its twin in script-controls.yml
+      # independently, auditing 9072f34 as merged, and landed on the same two
+      # corrections mg-a75e rescued here.  Worth keeping: both wrap the phrase
+      # across a comment continuation -- `for 21` ends a line, `# hours` begins
+      # the next -- so `grep -rn "21 hours"` returns NEITHER.  A sweep for a
+      # stale figure in a hard-wrapped corpus must flatten the continuations
+      # first, or its "no sites left" means "none left ON ONE LINE".
       - name: 'mg-3934 CI history-depth control (can the pinned revs be read here?)'
         run: python3 scripts/onethird_mg3934_ci_history_depth_control.py
 
@@ -247,7 +254,9 @@ jobs:
       # absorbed it or never reached the mutated code at all -- two findings of
       # different strength that an exit code alone averages together.
       #
-      # ~13 min, eighteen full --no-sweep gate runs.  It is here and not in
+      # ~13 min, sixteen full --no-sweep gate runs (8 cases x 2 columns; this
+      # said "eighteen" until mg-76d0 counted it against the report).  It is
+      # here and not in
       # script-controls.yml for the same reason as the two above: the
       # order-seconds rule at the top of that file is real, and the paths filter
       # means an ordinary commit never pays for this job.

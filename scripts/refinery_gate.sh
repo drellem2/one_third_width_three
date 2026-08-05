@@ -162,9 +162,18 @@ for h in $HITS; do echo "    $h"; done
 # "24 h 09 m" here and in the workflow header and left "~24 hours" standing in
 # the mg-3934 doc -- the same pattern one turn later, in the same finding that
 # names it.  86 935 s between those two timestamps is 24 h 08 m 55 s, and that
-# is now the figure at all FIVE sites: this comment, the branch text ~90 lines
+# is now the figure at all SEVEN sites: this comment, the branch text ~90 lines
 # below (the only one a reader of a merge actually sees), the workflow header,
-# and docs/OneThird-mg3934-CI-HistoryDepth.md secs 2 and 3.4.
+# docs/OneThird-mg3934-CI-HistoryDepth.md secs 2 and 3.4, and -- added by
+# mg-76d0 -- the mg-3934 control's step comment in gate-mutation-demo.yml and
+# the static-half step comment in script-controls.yml.
+#
+# THIS LINE SAID *FIVE* AND THERE WERE SEVEN (mg-76d0).  The two it missed both
+# wrap the phrase across a comment continuation -- `for 21` ends one line and
+# `# hours` begins the next -- so `grep -rn "21 hours"` returned neither, twice
+# in a row, for two different authors.  A sweep for a stale number in a corpus
+# that hard-wraps its comments must flatten the continuations before matching,
+# or its "no sites left" means "no sites left ON ONE LINE".
 #
 # Making the ~30-minute job blocking was rejected for the reason stated above
 # this section -- a gate long enough to want bypassed does not survive.  So the
