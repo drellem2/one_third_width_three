@@ -41,16 +41,17 @@ with the load recorded around every row; full output in §7.)*
 
 | | before | after | on |
 |---|---|---|---|
-| blocking slow path | **5256.5 s = 1 h 27 m 36 s** | 0.4 s + the readout's `gh` calls | a merge whose only watched change is `script-controls.yml` |
-| every other merge | 0.2 s | 0.4 s | the new control adds ~0.2 s, unconditionally |
+| blocking slow path | **5256.5 s = 1 h 27 m 36 s** | 0.25 s + the readout's two `gh` calls | a merge whose only watched change is `script-controls.yml` |
+| every other merge | 0.12 s | 0.25 s | the new control, unconditionally |
 
 * **Saving:** ~1 h 27 m of the refinery's **one serial slot** on ~57% of the
   merges that currently pay it — 12 MRs in 7.5 days, **1.6 MRs/day**. Under the
-  quiet-box figures already in the file (~11 min) the same 12 MRs would be
-  ~2 h 20 m of serial slot; under the conditions actually measured they are
+  quiet-box figures already in the file (26.5 s + ~11 min) the same 12 MRs are
+  ~2 h 17 m of serial slot; under the conditions actually measured they are
   **~17.5 hours**.
-* **Cost:** ~0.2 s per merge for the new exemption control, on every merge
-  including the ones that skip nothing.
+* **Cost:** +0.12 s per merge for the new exemption control (best of 3, load 77;
+  the mg-7db4 check beside it measures the same), on every merge including the
+  ones that skip nothing.
 * **Coverage removed:** none. §5 makes that a claim with a proof rather than an
   assurance.
 
@@ -166,22 +167,44 @@ serial refinery time demonstrating something the file cannot affect.
 
 ### 3.2 Measured, not inferred
 
-`scripts/onethird_mg856d_watch_sensitivity_probe.py` runs each blocking
-instrument under a `sitecustomize` that wraps `builtins.open`, `io.open` and
-`os.open` and records every path inside the repository opened for reading;
-`subprocess.Popen` is wrapped too, so `git show <rev>:<path>` is recorded
-*separately* — reading a file at a revision is not sensitivity to that file's
-current bytes, and merging the two would overstate coverage.
+`scripts/onethird_mg856d_watch_sensitivity_probe.py` runs each instrument the
+gate runs under a `sitecustomize` that installs a `sys.addaudithook`, recording
+every repository path opened for reading and every module body executed;
+`subprocess.Popen` is recorded *separately*, because `git show <rev>:<path>`
+reads a file at a revision and that is not sensitivity to the file's current
+bytes.
 
-**It carries a positive control, because a blind tracer and an insensitive
-instrument produce identical reports.** Before any verdict is printed the trace
-must contain `scripts/onethird_mg2c34_n7_overlap_test.py` and
-`data/onethird-mg8b64-L1b-bk-transport-transfer.json`. If either is missing the
-probe exits non-zero and prints nothing at all about sensitivity. A probe
-reporting "not read" for all 18 paths because it cannot see would be a very
-convincing instance of exactly the defect this arc keeps finding.
+**Two columns, and only one of them is the answer.** The mg-7db4 consistency
+check runs on every merge whether or not anything watched changed, and it reads
+nearly every watched path *by design* — that is its job. An exemption never
+skips it. So the verdict is computed over the **slow-path instruments** alone
+(the mg-5ad1 probe and the mg-60d3 demonstration), and the consistency check's
+reads get their own column so they cannot be mistaken for sensitivity.
 
-Result: see `data/onethird-mg856d-watch-sensitivity.json` and §7.
+**Two things had to be fixed before the measurement could be believed, and both
+are recorded because they are the same defect this ticket is about.**
+
+1. The first version aggregated reads across all three instruments and reported
+   **all 18 watched paths as READ**. True, and useless: the reader was the
+   consistency check. Hence the two columns.
+2. The first tracer monkey-patched `builtins.open` / `io.open` / `os.open` and
+   **missed every import**. CPython loads modules through `io.open_code`, which
+   no Python-level name intercepts, and Apple's `/usr/bin/python3` redirects
+   bytecode to `~/Library/Caches/com.apple.python/<abs path>.pyc`, so even the
+   raw `open` event names a file outside the repository. The probe reported the
+   gated instrument as NOT READ by an instrument whose own docstring says it
+   imports it. The `exec` audit event carries each module body's `co_filename`;
+   that is what it keys on now.
+
+Neither was caught by the probe's own positive control, because that control was
+a single aggregate over both columns and the consistency check satisfied it
+single-handed — **a control that could not fail, inside the probe written to
+find controls that cannot fail.** It is now per-column: the slow-path column
+must show the gated instrument and its dataset, the always-run column must show
+the gate script and the demo workflow, and any miss makes the probe exit
+non-zero having printed no verdict at all.
+
+Result: `data/onethird-mg856d-watch-sensitivity.json` and §7.
 
 ### 3.3 The claim in the workflow header, tested
 
@@ -418,20 +441,158 @@ figure and its conditions in that file and have **not** changed the timeout —
 raising it would be the response of someone who had not noticed that the thing
 to bound is the duration.
 
-Sensitivity, so that the numbers reproduce: every (b) figure is sensitive to
-fleet load and to nothing else observed to matter. The mg-60d3 demonstration is
-**not a single-core job** — measured at ~460% CPU on this 10-core host — so it
-contends with itself as well as with the rest of the fleet, which is why its
-inflation under load is superlinear rather than proportional to the load
-average.
+### 6.5 The demonstration is not one process, and no figure in the file said so
+
+Observed by the mayor mid-measurement and confirmed here: the mg-60d3 demo
+**runs its cases concurrently** — `--case M1 --gate repaired` and
+`--case M1 --gate pre-repair` start in the same second — so one "gate step" is a
+multi-core job. Measured on this 10-core host: **829% CPU** for a single gate
+run with the box to itself, **~290% each** when three demonstrations competed.
+
+Two consequences the duration table now carries:
+
+* The (b) figures are sensitive to fleet load *and* the demo contends with
+  itself, which is why its inflation is superlinear in the load average rather
+  than proportional to it — 7.8× at a load average that never exceeded 15× the
+  core count.
+* **The refinery's one-serial-slot model costs a gate as one unit of work.**
+  This one is most of the machine. Its cost to the fleet is not captured by the
+  slot count at all, which is a second and independent reason a demonstration of
+  this size does not belong on the blocking path.
+
+*(Grain: one process, sampled by `ps -o pcpu` during the measurement runs.
+Population: the mg-60d3 demo's gate-run children. These are point samples, not
+integrated CPU-seconds, and I have not claimed a total.)*
 
 ---
 
 ## 7. Evidence
 
-*(This section is the raw output of the runs the sections above cite.)*
+*(Raw output of the runs the sections above cite.)*
 
-<!-- EVIDENCE -->
+### 7.1 Sensitivity — `scripts/onethird_mg856d_watch_sensitivity_probe.py`
+
+Full run, 2026-08-06/07, `/usr/bin/python3` on the fleet host. Both per-column
+positive controls pass, so the NOT-READ verdicts are observations rather than
+blindness.
+
+```
+  mg-7db4 watchlist consistency                     0.3s  rc=0   84 repo reads
+  mg-5ad1 gate blindspot probe                    228.7s  rc=0   36 repo reads
+  mg-60d3 gate mutation demo                     7665.5s  rc=0  371 repo reads
+
+positive control (SLOW PATH): OK -- observed
+    scripts/onethird_mg2c34_n7_overlap_test.py,
+    data/onethird-mg8b64-L1b-bk-transport-transfer.json
+positive control (always-run check): OK -- observed
+    scripts/refinery_gate.sh, .github/workflows/gate-mutation-demo.yml
+
+WATCHED path                                               SLOW PATH  always-run
+.github/workflows/gate-mutation-demo.yml                   NOT READ   read
+.github/workflows/script-controls.yml                      NOT READ   read     <—
+.pogo/refinery.toml                                        NOT READ   read
+scripts/refinery_gate.sh                                   NOT READ   read
+scripts/onethird_mg3934_ci_history_depth_control.py        NOT READ   read
+scripts/onethird_mg7db4_watchlist_consistency.py           NOT READ   read
+scripts/onethird_mg856d_exemption_control.py               NOT READ   read
+scripts/onethird_mg7db4_probe_mutation_battery.py          NOT READ   read
+scripts/onethird_mg5ad1_gate_blindspot_probe.py            READ       read
+scripts/onethird_mg60d3_gate_mutation_demo.py              READ       read
+scripts/onethird_mg75f0_gate_class_closure_demo.py         NOT READ   read
+scripts/onethird_mg2c34_n7_overlap_test.py                 READ       read
+scripts/onethird_mg4a86_sdquant_overlap.py                 READ       read
+scripts/onethird_mg4a86_sector_leakage_and_tempering.py    READ       read
+scripts/onethird_mg4a86_standard_dominance_target_audit.py READ       read
+scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py READ       read
+scripts/onethird_mgb0a6_spectral_killshot_probe.py         READ       read
+data/onethird-mg8b64-L1b-bk-transport-transfer.json        READ       -
+
+9 of 18 watched paths are NOT READ by the slow-path instruments.
+```
+
+**`.github/workflows/script-controls.yml` is NOT READ by either instrument the
+exemption skips.** That is the measurement §0 and §3 rest on.
+
+The READ set is exactly the mg-7db4 import closure plus its one dataset plus the
+two instruments themselves — i.e. the *derived* half of the watchlist, read
+because it is derived. The nine NOT-READ paths are exactly the *hand-declared*
+`MECHANISM` half plus the two Actions-only demonstrations. The split falls
+precisely where the consistency checker's own data structure says it should,
+which is a check on the probe as much as on the watchlist.
+
+**This run's 7665.5 s is NOT a duration figure and is not offered as one.** It
+is a traced run (an audit hook on every file open) taken while two orphaned
+demonstrations of my own were competing for the same box — see §8. The duration
+figure is §6.4's 5150.4 s, measured untraced by the dedicated instrument.
+
+### 7.2 The exemption control and its self-test
+
+```
+demo exemptions sound: 1 of 18 watched paths exempt from the BLOCKING demo;
+                       all still in the Actions trigger
+    .github/workflows/script-controls.yml
+      <- caught by scripts/onethird_mg3934_ci_history_depth_control.py
+         in .github/workflows/script-controls.yml
+SELF-TEST -- each drift must be caught
+  P2  a closure member is exempted                           CAUGHT
+  P3  the gate script itself is exempted                     CAUGHT
+  P1  a path outside WATCHED is exempted                     CAUGHT
+  P4  the declared catcher step is deleted                   CAUGHT
+  P5  every watched path is exempted                         CAUGHT
+```
+
+### 7.3 mg-7db4's own self-test, re-run after the change
+
+The ticket asked for this explicitly. All five drifts still fire:
+
+```
+watchlist consistent: 18 paths; import closure 10 modules; datasets read 1
+SELF-TEST -- each drift must be caught
+  shell WATCHED loses an entry the workflow still has        CAUGHT
+  workflow loses its pull_request paths filter               CAUGHT
+  gated instrument imports a module nobody watched           CAUGHT
+  gated instrument reads a dataset nobody watched            CAUGHT
+  watchlist grows a path unrelated to the gate               CAUGHT
+```
+
+### 7.4 The gate, both branches, end to end
+
+Exempt-only diff (`GATE_DEMO_BASE` set to a commit differing only in
+`script-controls.yml`):
+
+```
+=== watched paths changed:
+    .github/workflows/script-controls.yml   (mg-856d: demonstrated on Actions, not blocking here)
+
+=== gate-mutation-demo on main (informational check; not blocking)
+    GREEN as of 2026-08-06T11:48:20Z -- ci+docs: GET MAIN GREEN ...
+
+=== mg-856d: every watched path that changed is on DEMO_INSENSITIVE
+    The blocking demonstrations are NOT re-run. ...
+GATE EXIT=0
+```
+
+Mixed diff (this branch vs `origin/main`) — the exemption correctly does **not**
+apply, because other watched paths changed too:
+
+```
+=== watched paths changed:
+    .github/workflows/gate-mutation-demo.yml
+    .github/workflows/script-controls.yml   (mg-856d: demonstrated on Actions, not blocking here)
+    .pogo/refinery.toml
+    scripts/refinery_gate.sh
+    ...
+=== mg-5ad1 gate blindspot probe (is the gate blind anywhere?)     [slow path entered]
+```
+
+### 7.5 The step-deletion mutation of §3.3
+
+```
+mutation: delete the `mg-5ad1 gate blindspot probe` step from script-controls.yml
+  onethird_mg7db4_watchlist_consistency.py                  -> exit 0
+  onethird_mga471_partial_run_control.py                    -> exit 0
+  onethird_mg3934_ci_history_depth_control.py --static-only -> exit 0
+```
 
 ---
 
@@ -444,12 +605,18 @@ average.
   there.
 * **I did not narrow `WATCHED`.** The list is one longer than it was (18), not
   shorter. Nothing left the Actions trigger.
-* **I did not touch the other 17 watched paths' status.** The sensitivity probe
-  reports on all of them and several besides `script-controls.yml` are also
-  NOT READ by the blocking instruments (§7). Each of those is a candidate for
-  the same treatment and **none is exempted here** — a cost argument is not a
-  licence to sweep, and each would need its own catcher named and verified.
-  That is a follow-up, not an omission I am hiding.
+* **I did not touch the other 17 watched paths' status.** The probe found
+  **nine** of the eighteen NOT READ by the slow path, and I exempted exactly
+  one. The other eight are named in §7.1 and each has its own reason to stay:
+  four are the trigger's own decision files (`refinery_gate.sh`, the demo
+  workflow, `refinery.toml`, the consistency check) which P3 forbids exempting
+  outright; one is the new exemption control, for the same reason; three are
+  instruments the *Actions* job runs (`mg-3934`, the mg-7db4 battery, the
+  mg-75f0 closure demo) where an edit genuinely should re-demonstrate. So the
+  count is nine and the honest number of further candidates is close to zero —
+  but I have not worked each of them through, and **a cost argument is not a
+  licence to sweep**. Any further exemption needs its own catcher named and
+  verified.
 * **I did not fix the step-deletion hole** of §3.3 — that no control asserts the
   mechanism's own steps are still wired into `script-controls.yml`. It predates
   this change, is not widened by it, and fixing it properly means deriving
@@ -459,6 +626,21 @@ average.
   load average of 88–105 throughout, from other polecats' work and from my own
   measurement's ~460% CPU. Every figure I report says so. I did not round any of
   them toward the uncontended figures already in the file.
+* **I left two orphaned demonstrations running for about two hours**, and it is
+  in the record because the trap is reusable. I restarted the sensitivity probe
+  twice after finding real defects in its tracer, killed the probe parents, and
+  cleaned up with `pkill -f "^/usr/bin/python3 scripts/onethird_mg60d3..."` —
+  anchored to my own worktree exactly as the fleet rules require. The demo
+  re-execs *itself* per case using the **resolved** interpreter and an absolute
+  script path (`/Applications/Xcode.app/.../MacOS/Python /Users/.../scripts/…`),
+  so the anchored pattern matched nothing, reported success, and left two
+  multi-core jobs with `ppid 1`. **An anchor on the interpreter is not an anchor
+  on the job.** The mayor spotted the load, asked rather than killing, and the
+  orphans were killed by PID. Two `pogo agent spawn-polecat` timeouts are
+  downstream of it. The related non-finding is worth keeping too: on this host
+  *0% CPU for 90 minutes is the signature of a healthy long numpy job*, because
+  only the leaf burns CPU — `ppid` is what separates a sleeping parent from an
+  orphan, and an orphan has `ppid 1`.
 * **I did not re-measure clock (a).** The 21m of 2026-08-06T11:48 is
   pm-onethird's, re-derived by them from the Actions run, and I have marked it
   as theirs rather than re-running a hosted workflow to own the number.

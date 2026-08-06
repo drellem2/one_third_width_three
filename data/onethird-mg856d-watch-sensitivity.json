@@ -1,0 +1,145 @@
+{
+  "generated_by": "scripts/onethird_mg856d_watch_sensitivity_probe.py",
+  "instruments_traced": [
+    "mg-7db4 watchlist consistency",
+    "mg-5ad1 gate blindspot probe",
+    "mg-60d3 gate mutation demo"
+  ],
+  "instruments_skipped": [],
+  "positive_control_slow": [
+    "scripts/onethird_mg2c34_n7_overlap_test.py",
+    "data/onethird-mg8b64-L1b-bk-transport-transfer.json"
+  ],
+  "positive_control_always": [
+    "scripts/refinery_gate.sh",
+    ".github/workflows/gate-mutation-demo.yml"
+  ],
+  "positive_control_ok": true,
+  "watched_count": 18,
+  "rows": [
+    {
+      "path": ".github/workflows/gate-mutation-demo.yml",
+      "slow_path": "NOT READ",
+      "always_run_check": true
+    },
+    {
+      "path": ".github/workflows/script-controls.yml",
+      "slow_path": "NOT READ",
+      "always_run_check": true
+    },
+    {
+      "path": ".pogo/refinery.toml",
+      "slow_path": "NOT READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/refinery_gate.sh",
+      "slow_path": "NOT READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg3934_ci_history_depth_control.py",
+      "slow_path": "NOT READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg7db4_watchlist_consistency.py",
+      "slow_path": "NOT READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg856d_exemption_control.py",
+      "slow_path": "NOT READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg7db4_probe_mutation_battery.py",
+      "slow_path": "NOT READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg5ad1_gate_blindspot_probe.py",
+      "slow_path": "READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg60d3_gate_mutation_demo.py",
+      "slow_path": "READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+      "slow_path": "NOT READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg2c34_n7_overlap_test.py",
+      "slow_path": "READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg4a86_sdquant_overlap.py",
+      "slow_path": "READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg4a86_sector_leakage_and_tempering.py",
+      "slow_path": "READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg4a86_standard_dominance_target_audit.py",
+      "slow_path": "READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+      "slow_path": "READ",
+      "always_run_check": true
+    },
+    {
+      "path": "scripts/onethird_mgb0a6_spectral_killshot_probe.py",
+      "slow_path": "READ",
+      "always_run_check": true
+    },
+    {
+      "path": "data/onethird-mg8b64-L1b-bk-transport-transfer.json",
+      "slow_path": "READ",
+      "always_run_check": false
+    }
+  ],
+  "slow_path_reads_observed": [
+    "3",
+    "5",
+    "<string>",
+    "data/onethird-mg8b64-L1b-bk-transport-transfer.json",
+    "scripts/onethird_mg2c34_n7_overlap_test.py",
+    "scripts/onethird_mg4a86_sdquant_overlap.py",
+    "scripts/onethird_mg4a86_sector_leakage_and_tempering.py",
+    "scripts/onethird_mg4a86_standard_dominance_target_audit.py",
+    "scripts/onethird_mg5ad1_gate_blindspot_probe.py",
+    "scripts/onethird_mg60d3_gate_mutation_demo.py",
+    "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+    "scripts/onethird_mgb0a6_spectral_killshot_probe.py"
+  ],
+  "always_run_reads_observed": [
+    ".github/workflows/gate-mutation-demo.yml",
+    ".github/workflows/script-controls.yml",
+    ".pogo/refinery.toml",
+    "<string>",
+    "scripts/onethird_mg2c34_n7_overlap_test.py",
+    "scripts/onethird_mg3934_ci_history_depth_control.py",
+    "scripts/onethird_mg4a86_sdquant_overlap.py",
+    "scripts/onethird_mg4a86_sector_leakage_and_tempering.py",
+    "scripts/onethird_mg4a86_standard_dominance_target_audit.py",
+    "scripts/onethird_mg5ad1_gate_blindspot_probe.py",
+    "scripts/onethird_mg60d3_gate_mutation_demo.py",
+    "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+    "scripts/onethird_mg7db4_probe_mutation_battery.py",
+    "scripts/onethird_mg7db4_watchlist_consistency.py",
+    "scripts/onethird_mg856d_exemption_control.py",
+    "scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py",
+    "scripts/onethird_mgb0a6_spectral_killshot_probe.py",
+    "scripts/refinery_gate.sh"
+  ]
+}
