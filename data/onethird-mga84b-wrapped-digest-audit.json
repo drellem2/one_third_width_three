@@ -1,0 +1,264 @@
+{
+  "disjunction": {
+    "cases": [
+      {
+        "category": "a COMMIT (the control's happy path)",
+        "control_detail": "e9e78c97fce112cf77399ffb5ad42e5f6b30ec64",
+        "control_resolves": true,
+        "disjunction_wrong_here": false,
+        "expected_kind": "commit",
+        "git_cat_file_type": "commit",
+        "literal": "e9e78c97fce1"
+      },
+      {
+        "category": "a TREE object that exists in this repo",
+        "control_detail": "error: b6aa17081dc5^{commit}: expected commit type, but the object dereferences to tree type",
+        "control_resolves": false,
+        "disjunction_wrong_here": true,
+        "expected_kind": "tree",
+        "git_cat_file_type": "tree",
+        "literal": "b6aa17081dc5"
+      },
+      {
+        "category": "a BLOB object that exists in this repo",
+        "control_detail": "error: 44026233673a^{commit}: expected commit type, but the object dereferences to blob type",
+        "control_resolves": false,
+        "disjunction_wrong_here": true,
+        "expected_kind": "blob",
+        "git_cat_file_type": "blob",
+        "literal": "44026233673a"
+      },
+      {
+        "category": "a well-formed hex string that is no object at all",
+        "control_detail": "no such object",
+        "control_resolves": false,
+        "disjunction_wrong_here": false,
+        "expected_kind": "nothing",
+        "git_cat_file_type": "(none)",
+        "literal": "38d27c16b05a"
+      }
+    ],
+    "short_head": "e9e78c97fce1"
+  },
+  "dropped": [
+    {
+      "inside_long_hex_run": true,
+      "justified": true,
+      "literal": "8fc785f76e225ec6c97318",
+      "run_len": 64,
+      "script": "scripts/onethird_mg76d0_partial_report_audit.py"
+    }
+  ],
+  "join": [
+    {
+      "control_join_agrees": true,
+      "control_regex_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "fixture": "plain 42+22 wrap of a digest",
+      "literals_offered": [],
+      "python_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "seen_as_pin": false,
+      "verdict_ok": true,
+      "want_seen_as_pin": false
+    },
+    {
+      "control_join_agrees": true,
+      "control_regex_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "fixture": "digest wrapped 32+32",
+      "literals_offered": [],
+      "python_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "seen_as_pin": false,
+      "verdict_ok": true,
+      "want_seen_as_pin": false
+    },
+    {
+      "control_join_agrees": true,
+      "control_regex_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "fixture": "digest wrapped in THREE pieces 22+21+21",
+      "literals_offered": [],
+      "python_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "seen_as_pin": false,
+      "verdict_ok": true,
+      "want_seen_as_pin": false
+    },
+    {
+      "control_join_agrees": false,
+      "control_regex_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f",
+      "fixture": "digest wrapped with a RAW prefix on the tail",
+      "literals_offered": [
+        "6d4b2907e5c3a18f6d4b29"
+      ],
+      "python_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "seen_as_pin": true,
+      "verdict_ok": false,
+      "want_seen_as_pin": false
+    },
+    {
+      "control_join_agrees": false,
+      "control_regex_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f",
+      "fixture": "digest wrapped with an f prefix on the tail",
+      "literals_offered": [
+        "6d4b2907e5c3a18f6d4b29"
+      ],
+      "python_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "seen_as_pin": true,
+      "verdict_ok": false,
+      "want_seen_as_pin": false
+    },
+    {
+      "control_join_agrees": false,
+      "control_regex_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f",
+      "fixture": "digest wrapped with a b prefix on the tail",
+      "literals_offered": [
+        "6d4b2907e5c3a18f6d4b29"
+      ],
+      "python_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "seen_as_pin": true,
+      "verdict_ok": false,
+      "want_seen_as_pin": false
+    },
+    {
+      "control_join_agrees": false,
+      "control_regex_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f",
+      "fixture": "digest wrapped across a backslash continuation",
+      "literals_offered": [
+        "6d4b2907e5c3a18f6d4b29"
+      ],
+      "python_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "seen_as_pin": true,
+      "verdict_ok": false,
+      "want_seen_as_pin": false
+    },
+    {
+      "control_join_agrees": false,
+      "control_regex_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f",
+      "fixture": "digest wrapped with a COMMENT between the fragments",
+      "literals_offered": [
+        "6d4b2907e5c3a18f6d4b29"
+      ],
+      "python_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "seen_as_pin": true,
+      "verdict_ok": false,
+      "want_seen_as_pin": false
+    },
+    {
+      "control_join_agrees": true,
+      "control_regex_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "fixture": "digest with mixed quote styles",
+      "literals_offered": [],
+      "python_join": "07e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b2907e5c3a18f6d4b29",
+      "seen_as_pin": false,
+      "verdict_ok": true,
+      "want_seen_as_pin": false
+    },
+    {
+      "control_join_agrees": true,
+      "control_regex_join": "0369cf258be147ad0369cf258be147ad0369cf25",
+      "fixture": "real 40-char revision wrapped 20+20",
+      "literals_offered": [
+        "0369cf258be147ad0369cf258be147ad0369cf25"
+      ],
+      "python_join": "0369cf258be147ad0369cf258be147ad0369cf25",
+      "seen_as_pin": true,
+      "verdict_ok": true,
+      "want_seen_as_pin": true
+    },
+    {
+      "control_join_agrees": true,
+      "control_regex_join": "0369cf258be147ad0369cf258be147ad0369cf25",
+      "fixture": "real 40-char revision wrapped 8+32",
+      "literals_offered": [
+        "0369cf258be147ad0369cf258be147ad0369cf25"
+      ],
+      "python_join": "0369cf258be147ad0369cf258be147ad0369cf25",
+      "seen_as_pin": true,
+      "verdict_ok": true,
+      "want_seen_as_pin": true
+    },
+    {
+      "control_join_agrees": null,
+      "control_regex_join": "0369cf258be147ad0369cf258be147ad0369cf25",
+      "fixture": "real 40-char revision, NOT wrapped",
+      "literals_offered": [
+        "0369cf258be147ad0369cf258be147ad0369cf25"
+      ],
+      "python_join": null,
+      "seen_as_pin": true,
+      "verdict_ok": true,
+      "want_seen_as_pin": true
+    },
+    {
+      "control_join_agrees": null,
+      "control_regex_join": "0369cf2",
+      "fixture": "short 7-char abbreviation, not wrapped",
+      "literals_offered": [
+        "0369cf2"
+      ],
+      "python_join": null,
+      "seen_as_pin": true,
+      "verdict_ok": true,
+      "want_seen_as_pin": true
+    }
+  ],
+  "kept": [
+    {
+      "literal": "9fa4aaa",
+      "script": "scripts/onethird_mg3946_closure_demo_falsifier.py"
+    },
+    {
+      "literal": "af7fc2df",
+      "script": "scripts/onethird_mg3946_closure_demo_falsifier.py"
+    },
+    {
+      "literal": "91fa25f",
+      "script": "scripts/onethird_mg4f9b_route_axis_probe.py"
+    },
+    {
+      "literal": "9fa4aaa",
+      "script": "scripts/onethird_mg4f9b_route_axis_probe.py"
+    },
+    {
+      "literal": "af7fc2df",
+      "script": "scripts/onethird_mg4f9b_route_axis_probe.py"
+    },
+    {
+      "literal": "af7fc2df",
+      "script": "scripts/onethird_mg75f0_gate_class_closure_demo.py"
+    },
+    {
+      "literal": "9072f34",
+      "script": "scripts/onethird_mg76d0_partial_report_audit.py"
+    },
+    {
+      "literal": "c64fe68",
+      "script": "scripts/onethird_mga266_split_phrase_control.py"
+    },
+    {
+      "literal": "af7fc2df",
+      "script": "scripts/onethird_mga266_vacuity_enumeration.py"
+    },
+    {
+      "literal": "af7fc2df",
+      "script": "scripts/onethird_mgbd53_widening_audit_probe.py"
+    }
+  ],
+  "problems": [
+    "join misverdicts 'digest wrapped with a RAW prefix on the tail': offered ['6d4b2907e5c3a18f6d4b29']",
+    "join misverdicts 'digest wrapped with an f prefix on the tail': offered ['6d4b2907e5c3a18f6d4b29']",
+    "join misverdicts 'digest wrapped with a b prefix on the tail': offered ['6d4b2907e5c3a18f6d4b29']",
+    "join misverdicts 'digest wrapped across a backslash continuation': offered ['6d4b2907e5c3a18f6d4b29']",
+    "join misverdicts 'digest wrapped with a COMMENT between the fragments': offered ['6d4b2907e5c3a18f6d4b29']"
+  ],
+  "sweep": [
+    {
+      "fragments_in_window_pre_join": [
+        "8fc785f76e225ec6c97318"
+      ],
+      "len": 64,
+      "line": 65,
+      "mentions_git": true,
+      "script": "scripts/onethird_mg76d0_partial_report_audit.py",
+      "still_offered_post_join": []
+    }
+  ],
+  "unparsed": []
+}
