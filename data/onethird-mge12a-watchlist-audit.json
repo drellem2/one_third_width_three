@@ -1,0 +1,487 @@
+{
+  "ablation": [
+    {
+      "base_problems": [],
+      "check": "UNMUTATED (control)",
+      "missed_drifts": [],
+      "selftest_would_exit": 0
+    },
+    {
+      "base_problems": [],
+      "check": "check() blinded entirely",
+      "missed_drifts": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "selftest_would_exit": 1
+    },
+    {
+      "base_problems": [],
+      "check": "P1 agreement: workflow paths == WATCHED",
+      "missed_drifts": [],
+      "selftest_would_exit": 0
+    },
+    {
+      "base_problems": [],
+      "check": "P1 both paths: blocks present",
+      "missed_drifts": [
+        2
+      ],
+      "selftest_would_exit": 1
+    },
+    {
+      "base_problems": [],
+      "check": "P1 WATCHED has no duplicates",
+      "missed_drifts": [],
+      "selftest_would_exit": 0
+    },
+    {
+      "base_problems": [],
+      "check": "P3 completeness: reachable => watched",
+      "missed_drifts": [
+        3,
+        4
+      ],
+      "selftest_would_exit": 1
+    },
+    {
+      "base_problems": [],
+      "check": "P2 identity: watched => part of the gate",
+      "missed_drifts": [
+        5
+      ],
+      "selftest_would_exit": 1
+    },
+    {
+      "base_problems": [],
+      "check": "P3 closure: no broken import target",
+      "missed_drifts": [],
+      "selftest_would_exit": 0
+    }
+  ],
+  "admission": {
+    "double_quoted_workflow_entry": {
+      "block_sizes": [
+        0,
+        0
+      ],
+      "caught": true,
+      "problems": [
+        "workflow `paths:` block 1 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow []; only in shell ['.github/workflows/gate-mutation-demo.yml', '.github/workflows/script-controls.yml', '.pogo/refinery.toml', 'data/onethird-mg8b64-L1b-bk-transport-transfer.json', 'scripts/onethird_mg2c34_n7_overlap_test.py', 'scripts/onethird_mg3934_ci_history_depth_control.py', 'scripts/onethird_mg4a86_sdquant_overlap.py', 'scripts/onethird_mg4a86_sector_leakage_and_tempering.py', 'scripts/onethird_mg4a86_standard_dominance_target_audit.py', 'scripts/onethird_mg5ad1_gate_blindspot_probe.py', 'scripts/onethird_mg60d3_gate_mutation_demo.py', 'scripts/onethird_mg75f0_gate_class_closure_demo.py', 'scripts/onethird_mg7db4_probe_mutation_battery.py', 'scripts/onethird_mg7db4_watchlist_consistency.py', 'scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py', 'scripts/onethird_mgb0a6_spectral_killshot_probe.py', 'scripts/refinery_gate.sh']",
+        "workflow `paths:` block 2 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow []; only in shell ['.github/workflows/gate-mutation-demo.yml', '.github/workflows/script-controls.yml', '.pogo/refinery.toml', 'data/onethird-mg8b64-L1b-bk-transport-transfer.json', 'scripts/onethird_mg2c34_n7_overlap_test.py', 'scripts/onethird_mg3934_ci_history_depth_control.py', 'scripts/onethird_mg4a86_sdquant_overlap.py', 'scripts/onethird_mg4a86_sector_leakage_and_tempering.py', 'scripts/onethird_mg4a86_standard_dominance_target_audit.py', 'scripts/onethird_mg5ad1_gate_blindspot_probe.py', 'scripts/onethird_mg60d3_gate_mutation_demo.py', 'scripts/onethird_mg75f0_gate_class_closure_demo.py', 'scripts/onethird_mg7db4_probe_mutation_battery.py', 'scripts/onethird_mg7db4_watchlist_consistency.py', 'scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py', 'scripts/onethird_mgb0a6_spectral_killshot_probe.py', 'scripts/refinery_gate.sh']"
+      ]
+    },
+    "invisible_data_sites": [
+      {
+        "file": "scripts/onethird_mg2c34_n7_overlap_test.py",
+        "join_REPO_data_sites": 2,
+        "matched_by_DATA_RE": 1
+      },
+      {
+        "file": "scripts/onethird_mg5ad1_gate_blindspot_probe.py",
+        "join_REPO_data_sites": 3,
+        "matched_by_DATA_RE": 0
+      },
+      {
+        "file": "scripts/onethird_mg60d3_gate_mutation_demo.py",
+        "join_REPO_data_sites": 1,
+        "matched_by_DATA_RE": 0
+      },
+      {
+        "file": "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+        "join_REPO_data_sites": 1,
+        "matched_by_DATA_RE": 0
+      },
+      {
+        "file": "scripts/onethird_mg7db4_probe_mutation_battery.py",
+        "join_REPO_data_sites": 1,
+        "matched_by_DATA_RE": 0
+      }
+    ],
+    "multi_module_import_lines": [],
+    "non_onethird_local_imports": [],
+    "shell_hostile_watch_entries": [],
+    "single_quoted_workflow_entry": {
+      "caught": true,
+      "problems": [
+        "workflow `paths:` block 1 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow ['.github/workflows/lean.yml']; only in shell []",
+        "workflow `paths:` block 2 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow ['.github/workflows/lean.yml']; only in shell []"
+      ]
+    }
+  },
+  "attribution": [
+    {
+      "desc": "shell WATCHED loses an entry the workflow still has",
+      "drift": 1,
+      "problems": [
+        "workflow `paths:` block 1 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow ['scripts/onethird_mgb0a6_spectral_killshot_probe.py']; only in shell []",
+        "workflow `paths:` block 2 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow ['scripts/onethird_mgb0a6_spectral_killshot_probe.py']; only in shell []",
+        "scripts/onethird_mgb0a6_spectral_killshot_probe.py is reachable from the gate but NOT watched -- editing it would not re-run the mutation demo"
+      ]
+    },
+    {
+      "desc": "workflow loses its pull_request paths filter",
+      "drift": 2,
+      "problems": [
+        ".github/workflows/gate-mutation-demo.yml has 1 `paths:` block(s); expected 2 (push and pull_request). A missing filter is a trigger that does not fire."
+      ]
+    },
+    {
+      "desc": "gated instrument imports a module nobody watched",
+      "drift": 3,
+      "problems": [
+        "scripts/onethird_mg7db4_hypothetical_new_instrument.py is reachable from the gate but NOT watched -- editing it would not re-run the mutation demo"
+      ]
+    },
+    {
+      "desc": "gated instrument reads a dataset nobody watched",
+      "drift": 4,
+      "problems": [
+        "data/onethird-mg7db4-unwatched.json is reachable from the gate but NOT watched -- editing it would not re-run the mutation demo"
+      ]
+    },
+    {
+      "desc": "watchlist grows a path unrelated to the gate",
+      "drift": 5,
+      "problems": [
+        "docs/OneThird-L1b-Bwall-state.md is watched but is not part of the gate, the mechanism, or the import closure -- it makes ordinary commits pay for the demo"
+      ]
+    }
+  ],
+  "counts": {
+    "MECHANISM_size": 6,
+    "ROOTS_size": 5,
+    "WATCHED_distinct": 17,
+    "WATCHED_rows": 17,
+    "datasets_read": 1,
+    "import_closure_modules": 10,
+    "workflow_block_distinct": [
+      17,
+      17
+    ],
+    "workflow_block_sizes": [
+      17,
+      17
+    ],
+    "workflow_paths_blocks": 2
+  },
+  "duration_classes": {
+    "A": 7,
+    "B": 2,
+    "C": 1,
+    "D": 8
+  },
+  "duration_literals": [
+    {
+      "class": "A",
+      "context": "# `git diff` and a `grep`: milliseconds.  The ~17 minutes of demonstrations are",
+      "line": 21,
+      "literal": "~17 minutes",
+      "states_regime": false,
+      "subject": "the demonstrations this gate runs (its own blocking path)"
+    },
+    {
+      "class": "D",
+      "context": "# workflow was red on EVERY run for 24 h 08 m 55 s -- twelve consecutive",
+      "line": 144,
+      "literal": "24 h 08 m 55 s",
+      "states_regime": false,
+      "subject": "the historical red WINDOW of the Actions workflow"
+    },
+    {
+      "class": "D",
+      "context": "# THOSE FIGURES ARE mg-3946'S, AND THEY REPLACE \"21 hours, eight consecutive",
+      "line": 153,
+      "literal": "21 hours",
+      "states_regime": false,
+      "subject": "the historical red WINDOW (the superseded undercount)"
+    },
+    {
+      "class": "D",
+      "context": "# \"24 h 09 m\" here and in the workflow header and left \"~24 hours\" standing in",
+      "line": 162,
+      "literal": "24 h 09 m",
+      "states_regime": false,
+      "subject": "the historical red WINDOW (rounded, and the doc's ~24h)"
+    },
+    {
+      "class": "D",
+      "context": "# \"24 h 09 m\" here and in the workflow header and left \"~24 hours\" standing in",
+      "line": 162,
+      "literal": "~24 hours",
+      "states_regime": false,
+      "subject": "the historical red WINDOW (rounded, and the doc's ~24h)"
+    },
+    {
+      "class": "D",
+      "context": "# names it.  86 935 s between those two timestamps is 24 h 08 m 55 s, and that",
+      "line": 164,
+      "literal": "86 935 s",
+      "states_regime": false,
+      "subject": "the historical red WINDOW, re-derived in seconds"
+    },
+    {
+      "class": "D",
+      "context": "# names it.  86 935 s between those two timestamps is 24 h 08 m 55 s, and that",
+      "line": 164,
+      "literal": "24 h 08 m 55 s",
+      "states_regime": false,
+      "subject": "the historical red WINDOW, re-derived in seconds"
+    },
+    {
+      "class": "D",
+      "context": "# `# hours` begins the next -- so `grep -rn \"21 hours\"` returned neither, twice",
+      "line": 173,
+      "literal": "21 hours",
+      "states_regime": false,
+      "subject": "the historical red WINDOW (quoted as a grep target)"
+    },
+    {
+      "class": "B",
+      "context": "# Making the ~30-minute job blocking was rejected for the reason stated above",
+      "line": 178,
+      "literal": "~30-minute",
+      "states_regime": false,
+      "subject": "the GitHub Actions job"
+    },
+    {
+      "class": "A",
+      "context": "# The window is not narrow: this gate takes ~11 min and the workflow it reads",
+      "line": 218,
+      "literal": "~11 min",
+      "states_regime": false,
+      "subject": "this gate, end to end"
+    },
+    {
+      "class": "B",
+      "context": "# takes ~16-21 min, on the same commit, so a gate-touching merge lands INSIDE",
+      "line": 219,
+      "literal": "~16-21 min",
+      "states_regime": false,
+      "subject": "the GitHub Actions workflow this gate reads"
+    },
+    {
+      "class": "D",
+      "context": "echo \"    happened for 24 h 08 m 55 s on 2026-07-30/31 -- twelve\"",
+      "line": 259,
+      "literal": "24 h 08 m 55 s",
+      "states_regime": false,
+      "subject": "the historical red WINDOW, in the branch text"
+    },
+    {
+      "class": "C",
+      "context": "# then sat in the refinery for 22 minutes and held the queue for every other",
+      "line": 277,
+      "literal": "22 minutes",
+      "states_regime": false,
+      "subject": "an end-to-end refinery MR wall-clock"
+    },
+    {
+      "class": "A",
+      "context": "# author on the fleet, while a concurrent 25-minute demonstration on the same",
+      "line": 278,
+      "literal": "25-minute",
+      "states_regime": true,
+      "subject": "a demonstration's runtime, under stated contention"
+    },
+    {
+      "class": "A",
+      "context": "#                     mg-5ad1 blindness probe      ~30 s on CI, ~2.5 min loaded",
+      "line": 289,
+      "literal": "~30 s",
+      "states_regime": true,
+      "subject": "one step of this gate (mg-5ad1 blindness probe)"
+    },
+    {
+      "class": "A",
+      "context": "#                     mg-5ad1 blindness probe      ~30 s on CI, ~2.5 min loaded",
+      "line": 289,
+      "literal": "~2.5 min",
+      "states_regime": true,
+      "subject": "one step of this gate (mg-5ad1 blindness probe)"
+    },
+    {
+      "class": "A",
+      "context": "#                     mg-60d3 mutation demo        ~11 min -- the ticket's named",
+      "line": 290,
+      "literal": "~11 min",
+      "states_regime": false,
+      "subject": "one step of this gate (mg-60d3 mutation demo)"
+    },
+    {
+      "class": "A",
+      "context": "echo \"    six full runs of the control gate; ~11 min idle, more under load\"",
+      "line": 306,
+      "literal": "~11 min",
+      "states_regime": true,
+      "subject": "one step of this gate, in the branch text"
+    }
+  ],
+  "live_tree_problems": [],
+  "missing_drifts": [
+    {
+      "drift": "workflow loses an entry the shell still has (converse of drift 1)",
+      "problems": [
+        "workflow `paths:` block 1 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow []; only in shell ['scripts/onethird_mgb0a6_spectral_killshot_probe.py']",
+        "workflow `paths:` block 2 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow []; only in shell ['scripts/onethird_mgb0a6_spectral_killshot_probe.py']"
+      ],
+      "verdict": "CAUGHT",
+      "why": "the only drift that would uniquely exercise AGREEMENT"
+    },
+    {
+      "drift": "workflow gains a DOUBLE-quoted path, LAST in each block",
+      "problems": [],
+      "verdict": "MISSED",
+      "why": "GitHub honours it; the parser never sees it"
+    },
+    {
+      "drift": "workflow gains a DOUBLE-quoted path, FIRST in each block",
+      "problems": [
+        "workflow `paths:` block 1 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow []; only in shell ['.github/workflows/gate-mutation-demo.yml', '.github/workflows/script-controls.yml', '.pogo/refinery.toml', 'data/onethird-mg8b64-L1b-bk-transport-transfer.json', 'scripts/onethird_mg2c34_n7_overlap_test.py', 'scripts/onethird_mg3934_ci_history_depth_control.py', 'scripts/onethird_mg4a86_sdquant_overlap.py', 'scripts/onethird_mg4a86_sector_leakage_and_tempering.py', 'scripts/onethird_mg4a86_standard_dominance_target_audit.py', 'scripts/onethird_mg5ad1_gate_blindspot_probe.py', 'scripts/onethird_mg60d3_gate_mutation_demo.py', 'scripts/onethird_mg75f0_gate_class_closure_demo.py', 'scripts/onethird_mg7db4_probe_mutation_battery.py', 'scripts/onethird_mg7db4_watchlist_consistency.py', 'scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py', 'scripts/onethird_mgb0a6_spectral_killshot_probe.py', 'scripts/refinery_gate.sh']",
+        "workflow `paths:` block 2 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow []; only in shell ['.github/workflows/gate-mutation-demo.yml', '.github/workflows/script-controls.yml', '.pogo/refinery.toml', 'data/onethird-mg8b64-L1b-bk-transport-transfer.json', 'scripts/onethird_mg2c34_n7_overlap_test.py', 'scripts/onethird_mg3934_ci_history_depth_control.py', 'scripts/onethird_mg4a86_sdquant_overlap.py', 'scripts/onethird_mg4a86_sector_leakage_and_tempering.py', 'scripts/onethird_mg4a86_standard_dominance_target_audit.py', 'scripts/onethird_mg5ad1_gate_blindspot_probe.py', 'scripts/onethird_mg60d3_gate_mutation_demo.py', 'scripts/onethird_mg75f0_gate_class_closure_demo.py', 'scripts/onethird_mg7db4_probe_mutation_battery.py', 'scripts/onethird_mg7db4_watchlist_consistency.py', 'scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py', 'scripts/onethird_mgb0a6_spectral_killshot_probe.py', 'scripts/refinery_gate.sh']"
+      ],
+      "verdict": "CAUGHT",
+      "why": "same edit, different position"
+    },
+    {
+      "drift": "workflow gains a BARE (unquoted) path, LAST in each block",
+      "problems": [],
+      "verdict": "MISSED",
+      "why": "GitHub honours it; the parser never sees it"
+    },
+    {
+      "drift": "gated instrument imports a local module not named onethird_*",
+      "problems": [],
+      "verdict": "MISSED",
+      "why": "outside the closure's name prefix"
+    },
+    {
+      "drift": "gated instrument reads a dataset through a VARIABLE name",
+      "problems": [],
+      "verdict": "MISSED",
+      "why": "the idiom the corpus already uses in mg5ad1 and mg75f0"
+    },
+    {
+      "drift": "gated instrument reads a dataset with an explicit \"r\" mode",
+      "problems": [],
+      "verdict": "MISSED",
+      "why": "one extra argument"
+    },
+    {
+      "drift": "gated instrument reads a dataset with SINGLE quotes",
+      "problems": [],
+      "verdict": "MISSED",
+      "why": "same call, other quote character"
+    }
+  ],
+  "narrowing": {
+    "three_file": {
+      "drifts": [
+        {
+          "drift": 1,
+          "problems": [
+            "workflow `paths:` block 1 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow ['scripts/onethird_mgb0a6_spectral_killshot_probe.py']; only in shell []",
+            "workflow `paths:` block 2 disagrees with scripts/refinery_gate.sh WATCHED: only in workflow ['scripts/onethird_mgb0a6_spectral_killshot_probe.py']; only in shell []",
+            "scripts/onethird_mgb0a6_spectral_killshot_probe.py is reachable from the gate but NOT watched -- editing it would not re-run the mutation demo"
+          ],
+          "verdict": "CAUGHT"
+        },
+        {
+          "drift": 2,
+          "problems": [
+            ".github/workflows/gate-mutation-demo.yml has 1 `paths:` block(s); expected 2 (push and pull_request). A missing filter is a trigger that does not fire."
+          ],
+          "verdict": "CAUGHT"
+        },
+        {
+          "drift": 3,
+          "problems": [
+            "scripts/onethird_mg7db4_hypothetical_new_instrument.py is reachable from the gate but NOT watched -- editing it would not re-run the mutation demo"
+          ],
+          "verdict": "CAUGHT"
+        },
+        {
+          "drift": 4,
+          "problems": [
+            "data/onethird-mg7db4-unwatched.json is reachable from the gate but NOT watched -- editing it would not re-run the mutation demo"
+          ],
+          "verdict": "CAUGHT"
+        },
+        {
+          "drift": 5,
+          "problems": [
+            "docs/OneThird-L1b-Bwall-state.md is watched but is not part of the gate, the mechanism, or the import closure -- it makes ordinary commits pay for the demo"
+          ],
+          "verdict": "CAUGHT"
+        }
+      ],
+      "problems": []
+    },
+    "two_file": {
+      "block_sizes": [
+        16,
+        16
+      ],
+      "problems": [
+        ".github/workflows/script-controls.yml is reachable from the gate but NOT watched -- editing it would not re-run the mutation demo"
+      ],
+      "watch_rows": 16
+    }
+  },
+  "rederivation_identical": [
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "shell_matcher": [
+    {
+      "case": "ordinary path (control)",
+      "changed": "scripts/refinery_gate.sh",
+      "hits": "scripts/refinery_gate.sh",
+      "matched": true,
+      "watched": "scripts/refinery_gate.sh"
+    },
+    {
+      "case": "watched path containing a SPACE",
+      "changed": "data/one third.json",
+      "hits": "",
+      "matched": false,
+      "watched": "data/one third.json"
+    },
+    {
+      "case": "watched path containing a glob '*'",
+      "changed": "scripts/onethird_*.py",
+      "hits": "",
+      "matched": false,
+      "watched": "scripts/onethird_*.py"
+    }
+  ],
+  "target_selftest_ok": true,
+  "target_selftest_verdicts": [
+    [
+      "shell WATCHED loses an entry the workflow still has",
+      "CAUGHT"
+    ],
+    [
+      "workflow loses its pull_request paths filter",
+      "CAUGHT"
+    ],
+    [
+      "gated instrument imports a module nobody watched",
+      "CAUGHT"
+    ],
+    [
+      "gated instrument reads a dataset nobody watched",
+      "CAUGHT"
+    ],
+    [
+      "watchlist grows a path unrelated to the gate",
+      "CAUGHT"
+    ]
+  ]
+}
