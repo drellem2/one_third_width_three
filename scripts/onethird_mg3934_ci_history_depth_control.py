@@ -69,7 +69,17 @@ KNOWN LIMITS, the same shape as the one mg-7db4 states.
     both properties.  The fix (A) imposes is nonetheless the fix for that case
     too, so the exposure is detection, not remedy.
   * The 40-character cap keeps a sha256 digest literal (64 characters) from
-    being mistaken for a revision.
+    being mistaken for a revision -- applied to the whole PYTHON string, after
+    adjacent literals are joined.  The join is not a nicety: 64 characters do
+    not fit a 79-column line, so every digest in this corpus is wrapped, and
+    before mg-ba2a the cap was applied per quoted piece.  A 42 + 22 wrap put
+    the 22 inside the window, (B) called the tail a rotted pin, and main was
+    red for eleven hours across four commits over a literal that had never
+    been a git object.  A digest whose fragments are joined is 64 characters
+    and is excluded, which is what this bullet always claimed.
+  * The cap also means this control cannot see a pin in a repository whose
+    object format is sha256, where 64 hex characters IS a revision.  This one
+    is sha1; if that ever changes, the cap changes with it.
   * (A) is stated per FILE, not per job: a workflow with two jobs, only one of
     which reads history, is required to deepen both checkouts.  Conservative in
     the safe direction, and this repo's workflows have one job each.
@@ -109,6 +119,35 @@ _REV_INLINE_RE = re.compile(r"[\"'](%s)[\"']" % _HEX)
 _GIT_CALL_RE = re.compile(r"[\"']git[\"']|(?<![\w-])git\s+(?:show|rev-parse|"
                           r"cat-file|log|diff|archive)")
 _IMPORT_RE = re.compile(r"^\s*(?:from|import)\s+(onethird_\w+)", re.M)
+# Python concatenates adjacent string literals, so `("39a4...3e" "8fc7...18")`
+# is ONE 64-character string and not a 42 next to a 22.  The cap above is
+# stated over the whole string, so it has to be applied AFTER that join --
+# otherwise a wrapped sha256 digest exposes a 22-character tail that lands
+# inside the 7-40 window, and (B) fails a pin that was never a revision at all.
+# That is not hypothetical: it is mg-ba2a, eleven hours of red main across four
+# commits, on the digest in onethird_mg76d0_partial_report_audit.py.  Wrapping
+# a 64-character constant is what a 79-column style REQUIRES, so the exposure
+# recurs on every digest added to a git-calling module until the join is here.
+# Contents exclude quotes, backslashes and newlines: an escape or a triple
+# quote simply is not joined, which leaves the old per-literal reading in place
+# for those and is the conservative direction.
+_ADJACENT_LITERAL_RE = re.compile(
+    r"([\"'])([^\"'\\\n]*)\1\s*([\"'])([^\"'\\\n]*)\3")
+
+
+def join_implicit_concat(src):
+    """Collapse runs of adjacent string literals into single literals.
+
+    Iterated to a fixpoint because one pass joins pairwise: `"a" "b" "c"`
+    needs two.  Line structure moves -- a joined literal ends up on the line
+    its FIRST fragment started on -- which is the reading the git-mentioning
+    line scan below wants anyway."""
+    prev = None
+    while prev != src:
+        prev = src
+        src = _ADJACENT_LITERAL_RE.sub(
+            lambda m: '"%s%s"' % (m.group(2), m.group(4)), src)
+    return src
 # A script an Actions step EXECUTES.  It must look like a command, not merely
 # like a path: gate-mutation-demo.yml names fifteen script paths in its two
 # `paths:` filters and neither list is a step.  Comment lines are dropped by
@@ -164,8 +203,12 @@ def revs_in(src):
     line.  A file-level pairing catches the third -- a literal handed to a
     helper that shells out to git elsewhere in the same file.
 
+    Adjacent literals are joined first, so the 7-40 window is applied to the
+    whole Python string rather than to a line-wrapped piece of one.
+
     No quoted hex literal appears in this file, here or anywhere else; see the
     note above the self-test fixtures for why that is load-bearing."""
+    src = join_implicit_concat(src)
     found = set(_REV_ASSIGN_RE.findall(src))
     for line in src.splitlines():
         if re.search(r"(?<![\w-])git(?![\w-])", line):
@@ -351,6 +394,27 @@ _PINNED_SRC = ('import subprocess\n'
                'PIN_REV = "%s"\n'
                'subprocess.run(["git", "show", PIN_REV])\n' % _FAKE_REV)
 _PLAIN_SRC = 'import os\nprint(os.getcwd())\n'
+# A 64-character sha256 digest, WRAPPED as two adjacent string literals the way
+# a 79-column style forces.  Python concatenates them into one 64-character
+# string; a per-quoted-string regex sees a 42 and a 22, and 22 is inside the
+# 7-40 window.  That is the mg-ba2a defect, and the tail it exposed can never
+# resolve because it was never an object.  Built, not written down, for the
+# reason above the fixtures.
+_FAKE_DIGEST = "".join("%x" % ((i * 7) % 16) for i in range(64))
+_WRAPPED_DIGEST_SRC = ('import subprocess\n'
+                       'ASSERTED_CANON_SHA = ("%s"\n'
+                       '                      "%s")\n'
+                       'print(ASSERTED_CANON_SHA)\n'
+                       'subprocess.run(["git", "status"])\n'
+                       % (_FAKE_DIGEST[:42], _FAKE_DIGEST[42:]))
+# The converse fixture: a REAL 40-character revision, wrapped the same way.
+# Joining must not hide it -- 20 + 20 is still 40 after the join, still inside
+# the window, still a pin this control has to see.
+_WRAPPED_REV_SRC = ('import subprocess\n'
+                    'PIN_REV = ("%s"\n'
+                    '           "%s")\n'
+                    'subprocess.run(["git", "show", PIN_REV])\n'
+                    % (_FAKE_REV[:20], _FAKE_REV[20:]))
 _IMPORTER_SRC = ('import onethird_helper\n'
                  'print(onethird_helper)\n')
 
@@ -365,7 +429,7 @@ def _wf(head, script):
 
 def _selftest():
     """Every drift must produce at least one problem, and the undrifted
-    snapshot must produce none.  Cases 1-5 are (A); case 6 is (B)."""
+    snapshot must produce none.  Cases 1-5 are (A); 6-9 are (B)."""
     ok = True
 
     def run(name, files, expect_problem, static_only=True, resolver=None):
@@ -428,6 +492,26 @@ def _selftest():
         {".github/workflows/a.yml": _wf(_WF_DEEP, "scripts/onethird_r.py"),
          "scripts/onethird_r.py": _PINNED_SRC},
         False, static_only=False, resolver=lambda rev: (True, "stub"))
+
+    # 8 and 9 are the mg-ba2a pair, and they pull in opposite directions on
+    # purpose.  8 is the defect that turned main red for eleven hours: a
+    # wrapped sha256 digest must be ONE 64-character string, out of the window,
+    # never handed to the resolver.  The resolver here fails everything, so any
+    # fragment that leaks through fires.  The workflow is the SHALLOW one --
+    # if the digest were (wrongly) a pin, the file would read history and (A)
+    # would fire too, so this case is covered from both sides.
+    def refuse(rev):
+        return False, "stub refuses every literal"
+
+    run("8. a WRAPPED sha256 digest is not a revision (the mg-ba2a defect)",
+        {".github/workflows/a.yml": _wf(_WF_HEAD, "scripts/onethird_d.py"),
+         "scripts/onethird_d.py": _WRAPPED_DIGEST_SRC},
+        False, static_only=False, resolver=refuse)
+
+    run("9. a WRAPPED 40-char revision is still seen (the join has no hole)",
+        {".github/workflows/a.yml": _wf(_WF_DEEP, "scripts/onethird_r.py"),
+         "scripts/onethird_r.py": _WRAPPED_REV_SRC},
+        True, static_only=False, resolver=refuse)
 
     print("SELF-TEST %s" % ("PASSED" if ok else "FAILED"))
     return 0 if ok else 1
