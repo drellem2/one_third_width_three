@@ -179,6 +179,30 @@ jobs:
       - name: 'mg-7db4 watchlist consistency (is the trigger still complete?)'
         run: python3 scripts/onethird_mg7db4_watchlist_consistency.py
 
+      # mg-856d: the step above checks that the watchlist covers what it claims
+      # to cover.  This one checks the list that lets an entry of that watchlist
+      # SKIP the blocking demonstration -- `DEMO_INSENSITIVE` in
+      # scripts/refinery_gate.sh, which mg-856d introduced with one entry
+      # (`.github/workflows/script-controls.yml`, THIS FILE) after measuring
+      # that neither blocking instrument reads it.
+      #
+      # An exemption list on a gate is the cheapest possible way to build a
+      # control that cannot fail: one appended line and the gate becomes a
+      # `git diff` and a `grep` forever, with no visible change in any output.
+      # So the list is checked rather than trusted -- an exempt path must stay
+      # inside WATCHED, must not be a member of the derived import closure, must
+      # not be one of the files the trigger's own decision is made of, must name
+      # a catcher that is verified as actually wired into a workflow that
+      # actually fires on it, and must leave the gate script and the demo itself
+      # unexempted.  Five drifts, each of which must be caught, self-tested on
+      # every run.  Standard library only, order-milliseconds.
+      #
+      # It runs here as well as in the blocking gate because THIS FILE is the
+      # exempt path: an edit that removes the catcher this file provides should
+      # not have to wait for someone to touch the gate script to be noticed.
+      - name: 'mg-856d demo-exemption control (can the gate skip what it must not skip?)'
+        run: python3 scripts/onethird_mg856d_exemption_control.py
+
       # mg-5ad1 / mg-7db4: the STANDING BLINDNESS CHECK, and the reason it is
       # here rather than in the paths-filtered job.
       #

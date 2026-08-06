@@ -21,4 +21,14 @@ commands = ["./scripts/refinery_gate.sh"]
 # would have turned contention into a spurious gate failure, which is the worst
 # kind: it teaches authors that the gate is noise.  90m is loose enough to
 # survive a busy host and still kills a genuinely wedged run.
+#
+# mg-856d, 2026-08-06: THAT HEADROOM IS THINNER THAN IT READS.  The slow path
+# measured 1 h 27 m 36 s end to end on this host with a 1-minute load average
+# between 38 and 149 -- 97.3% of the timeout, missing it by 2 m 23 s, on a busy
+# but unexceptional evening.  Clock: local process wall-clock, NOT end-to-end MR
+# wall-clock; the figure and its conditions are in the DURATION TABLE at the top
+# of scripts/refinery_gate.sh, which is the one place any of this file's timing
+# claims should be read against.  mg-856d did not change this timeout: it
+# reduced how often the slow path is entered (~57% of firings), which is a
+# different thing from bounding it, and bounding it is somebody's next ticket.
 timeout = "90m"

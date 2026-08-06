@@ -78,6 +78,14 @@ MECHANISM = {
     # the job re-running to notice, which is the shape of defect this whole
     # mechanism exists to refuse.
     "scripts/onethird_mg3934_ci_history_depth_control.py",
+    # mg-856d: the control that decides whether an entry of this very watchlist
+    # may skip the BLOCKING demonstration.  Mechanism by the same argument as
+    # the line above and one level sharper -- it is reachable from nothing in
+    # ROOTS, and an edit to it changes which commits the demonstration runs on
+    # at all.  It runs unconditionally in the gate, so watching it is not what
+    # makes it execute; watching it is what makes the ~30-minute Actions
+    # demonstration re-run when the rule for skipping it is rewritten.
+    "scripts/onethird_mg856d_exemption_control.py",
 }
 
 # Roots of the import closure: everything the two jobs actually execute --

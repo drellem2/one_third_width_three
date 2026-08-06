@@ -18,8 +18,128 @@
 #
 # THE COST RULE.  script-controls.yml opens by saying its steps must be
 # order-seconds.  On a commit that touches nothing in WATCHED this script is a
-# `git diff` and a `grep`: milliseconds.  The ~17 minutes of demonstrations are
-# paid only by commits that can invalidate them.
+# `git diff` and a `grep`: milliseconds.  The demonstrations below are paid only
+# by commits that can invalidate them -- see the DURATION TABLE for what "the
+# demonstrations" costs, on which clock, and under what load.
+#
+# ("~17 minutes" stood here from df7db8b until mg-856d.  It was right when it
+# was written -- probe + battery + demo, the three things the blocking gate ran
+# that day -- and 245085e moved the battery out to Actions eight hours later
+# without touching this line.  The figure did not rot; the configuration it
+# described was dismantled around it, which is the harder version of the same
+# defect and the reason the table below states a CONFIGURATION as well as a
+# number.)
+#
+# ============================ THE DURATION TABLE (mg-856d) ==================
+#
+# WHY A TABLE.  This file stated its own runtime in NINE places.  pm-onethird
+# found six and said so; the other three are the two in the WHAT RUNS HERE
+# ledger near the bottom and the echo above the final exec.  None of the nine
+# said which of three different clocks it was on, and while filing the ticket
+# about that, pm-onethird put a clock-(c) figure into it twice.  A quantity
+# stated nine times with no statement of what each instance measures is this
+# repo's most-audited defect class, sitting in the comments of the gate that
+# enforces it.
+#
+# THE THREE CLOCKS.  They are not convertible into one another and no figure
+# below has been carried across them:
+#   (a) GITHUB ACTIONS wall-clock, hosted runner.  Different machine, different
+#       CPU, no fleet contention, pays a pip install.
+#   (b) LOCAL PROCESS wall-clock on the fleet host.  What the refinery gate
+#       actually spends.  Sensitive to fleet load by roughly 10x (mg-1b8c).
+#   (c) END-TO-END REFINERY MR wall-clock: queue wait + (b) + the merge.  Bounded
+#       below by (b) and above by nothing, because the refinery has one serial
+#       slot and an MR waits behind every MR ahead of it.
+#
+# STATUS values: MEASURED (figure + clock + load all recorded), HISTORICAL (a
+# past incident, not a specification of present behaviour), DERIVED (arithmetic
+# on other rows), NOT KNOWN (conditions unrecoverable -- and the entry stays NOT
+# KNOWN rather than being replaced by the nearest available measurement, which
+# is pm-pogo's rule and is stricter than substituting a better-looking number).
+#
+#  SITE / PHRASE                     WHAT IS TIMED              CLOCK  STATUS
+#  ---------------------------------------------------------------------------
+#  header, THE COST RULE             probe + battery + demo,    (b)    HISTORICAL
+#    (was "~17 minutes")             the blocking gate as it
+#                                    stood on 2026-07-30 for
+#                                    8 h, before 245085e moved
+#                                    the battery to Actions.
+#                                    Removed: the configuration
+#                                    it described is gone.
+#  READOUT, "this gate takes         this file's slow path,     (b)    DERIVED
+#    ~11 min"                        uncontended.  It is the           and LOW
+#                                    demo's ~11 min with the           by ~2 min
+#                                    probe's ~30 s and the
+#                                    readout's own gh calls
+#                                    left out.
+#  READOUT, "the workflow it         gate-mutation-demo.yml     (a)    MEASURED
+#    reads takes ~16-21 min"         on a hosted runner.  21m          (not mine)
+#                                    at 2026-08-06T11:48 on a
+#                                    quiet box (load ~4),
+#                                    measured by pm-onethird;
+#                                    inside the stated range.
+#  "the ~30-minute job"              gate-mutation-demo.yml,    (a)    DERIVED
+#                                    all three demonstrations
+#                                    (11 + 6 + 13); the job's
+#                                    own header states the same
+#                                    split and a 75-minute bound.
+#  "sat in the refinery for          ONE past MR, mg-7db4's     (c)    HISTORICAL
+#    22 minutes"                     own, 2026-07-30.
+#  "a concurrent 25-minute           ONE past demonstration     (b)    HISTORICAL
+#    demonstration"                  running beside it, same
+#                                    host, same incident.
+#  ledger, "mg-5ad1 blindness        that one probe.  26.5 s    (b)    MEASURED
+#    probe ~30 s / ~2.5 min          uncontended is mg-75f0's;         (not mine)
+#    loaded"                         2m33s loaded is mg-7db4's,
+#                                    taken during a concurrent
+#                                    multi-gate demonstration.
+#  ledger + final echo,              that one demonstration,    (b)    MEASURED
+#    "mg-60d3 mutation demo          six full --no-sweep gate          (not mine)
+#    ~11 min"                        runs, uncontended.
+#  ---------------------------------------------------------------------------
+#  MEASURED BY mg-856d, 2026-08-06, and the first figure in this file that
+#  carries its own load.  scripts/onethird_mg856d_gate_cost_measure.sh, clock
+#  (b), this 10-core fleet host, /usr/bin/python3, DELIBERATELY UNDER
+#  CONTENTION (the point was a second point on mg-1b8c's ~10x curve, not a
+#  third quiet reading):
+#
+#      mg-7db4 watchlist consistency (+ self-test)     0.2 s   load 17 -> 17
+#      mg-5ad1 gate blindspot probe                  105.9 s   load 17 -> 38
+#      mg-60d3 gate mutation demo                   5150.4 s   load 38 -> 53
+#                                                              (peak 1-min 149)
+#      ------------------------------------------------------------------
+#      BLOCKING SLOW PATH, end to end               5256.5 s = 1 h 27 m 36 s
+#
+#  Against the uncontended figures above that is 4.0x for the probe and 7.8x
+#  for the demo -- consistent with mg-1b8c's ~10x and not equal to it, so the
+#  10x is an order of magnitude and not a coefficient.
+#
+#  THE NUMBER THAT MATTERS IS NOT THE 1 h 27 m.  It is that .pogo/refinery.toml
+#  sets timeout = "90m", and this run finished 2 m 23 s inside it -- 97.3% of
+#  the budget, on a host that was busy but not extraordinary.  The slow path is
+#  not bounded by anything except that timeout, and a load average of 149 is
+#  reachable on an ordinary evening.  mg-856d's narrowing does not bound the
+#  slow path; it removes ~57% of the merges that enter it.
+#  ---------------------------------------------------------------------------
+#  NOT IN THIS FILE, and recorded here because three agents reasoned from it:
+#  1 h 17 m -- mr-d9png12tjv1h244d8420, submitted 18:51:00, merged 20:08:43 on
+#  2026-08-05.  Clock (c).  It bundles queue wait, this gate and the merge, and
+#  it was taken while the 1-minute load average peaked near 300.  IT IS NOT A
+#  DURATION OF THIS GATE.  What this gate cost inside it is NOT KNOWN and is not
+#  recoverable: the refinery records MR start and end, not gate start and end.
+#  The quiet-box 21m of 2026-08-06 is NOT a substitute for it -- different clock
+#  AND different load regime -- and substituting it would be the same error
+#  wearing a better figure.
+#
+# SENSITIVITY, since a duration with no conditions is a claim that does not
+# reproduce.  Every (b) figure is sensitive to FLEET LOAD and to nothing else
+# that has been observed to matter.  The mg-60d3 demo is not a single-core job:
+# measured at ~460% CPU on this 10-core host, so it contends with itself as well
+# as with the rest of the fleet.  mg-1b8c measured roughly 10x inflation for
+# concurrent heavy jobs on this host, and the mg-856d measurement below was
+# taken deliberately UNDER load to put a second point on that curve.
+#
+# ============================================================================
 #
 # WHAT THIS DOES NOT ENFORCE, stated so nobody reads more into a green merge
 # than is there.  The rest of `script-controls.yml` -- the mg-8489 control, the
@@ -53,6 +173,7 @@ WATCHED='.github/workflows/gate-mutation-demo.yml
 scripts/refinery_gate.sh
 scripts/onethird_mg3934_ci_history_depth_control.py
 scripts/onethird_mg7db4_watchlist_consistency.py
+scripts/onethird_mg856d_exemption_control.py
 scripts/onethird_mg7db4_probe_mutation_battery.py
 scripts/onethird_mg5ad1_gate_blindspot_probe.py
 scripts/onethird_mg60d3_gate_mutation_demo.py
@@ -64,6 +185,38 @@ scripts/onethird_mg4a86_standard_dominance_target_audit.py
 scripts/onethird_mg8b64_L1b_bk_transport_transfer_probe.py
 scripts/onethird_mgb0a6_spectral_killshot_probe.py
 data/onethird-mg8b64-L1b-bk-transport-transfer.json'
+
+# ---------------------------------------- the BLOCKING-only exemption --------
+# mg-856d.  WATCHED answers "can this commit invalidate the demonstration?" for
+# TWO consumers with very different costs: the Actions job, which runs on
+# GitHub's machine and holds nothing, and this script, which holds the fleet
+# refinery's ONE serial slot while it runs.  The list below is the subset for
+# which the answer differs -- watched, still in both `paths:` blocks of
+# gate-mutation-demo.yml, still fully demonstrated on Actions, but NOT worth the
+# blocking demonstration here.
+#
+# THE STANDARD FOR BEING ON THIS LIST is not "cheap to skip" but MEASURED
+# INSENSITIVITY: scripts/onethird_mg856d_watch_sensitivity_probe.py traces every
+# file the blocking instruments open and reports which watched paths they read.
+# A path they never read cannot change the answer they give, so re-running them
+# on its account demonstrates nothing.  Everything else about the list --
+# that it stays inside WATCHED, that it can never reach a derived-closure member
+# or the gate's own decision files, and that each entry's catcher is really
+# wired -- is enforced on every merge by
+# scripts/onethird_mg856d_exemption_control.py, with a five-drift self-test.
+# An exemption list on a gate is the easiest place in this repository to build a
+# control that cannot fail, and it is not going to be left unguarded.
+#
+# WHAT THE ONE ENTRY BELOW STOPS PAYING FOR, said plainly rather than implied:
+# 12 of the 21 merge requests that fired this gate's slow path in its first
+# 7.5 days did so ONLY because they touched script-controls.yml -- 57% of the
+# firings, for a demonstration that does not read the file.  Full derivation,
+# and the exact list of mutations that no longer have a BLOCKING catcher (it is
+# empty, and that is argued rather than assumed), in
+# docs/OneThird-mg856d-GateScope-Duration.md.
+#
+# CATCHER .github/workflows/script-controls.yml scripts/onethird_mg3934_ci_history_depth_control.py .github/workflows/script-controls.yml
+DEMO_INSENSITIVE='.github/workflows/script-controls.yml'
 
 # ------------------------------------------------------- interpreter ---------
 # bare `python3` on the fleet host has no numpy (see the mg-5ad1 audit sec 4);
@@ -90,6 +243,14 @@ fi
 # WATCHED, and that is exactly the drift this catches.
 echo "=== mg-7db4 watchlist consistency"
 "$PY" scripts/onethird_mg7db4_watchlist_consistency.py
+
+# mg-856d.  Same rule, one level in: the exemption list that makes this gate
+# cheaper is checked before it is used, on every merge, whether or not anything
+# watched changed.  Milliseconds, standard library only, and it fails closed --
+# an unsound exemption stops the merge rather than quietly skipping the demo.
+echo
+echo "=== mg-856d demo-exemption control"
+"$PY" scripts/onethird_mg856d_exemption_control.py
 
 # --------------------------------------------------------- what changed ------
 if [ -n "${GATE_DEMO_FORCE:-}" ]; then
@@ -120,10 +281,28 @@ else
     fi
 fi
 
+# HITS is every watched path that changed -- what the Actions trigger fires on,
+# and what the readout below is for.  DEMANDING is the subset that is not on the
+# mg-856d exemption list: the paths that can actually change what the blocking
+# demonstrations assert.  Two lists because the two questions are different, and
+# collapsing them is what made 57% of this gate's slow runs demonstrate nothing.
 HITS=''
+DEMANDING=''
 for path in $WATCHED; do
     if printf '%s\n' "$CHANGED" | grep -qxF "$path"; then
         HITS="$HITS $path"
+        # Written as plain `if`s rather than `&&` chains on purpose: the
+        # `set -e` exemption for a failing non-final member of an AND-OR list is
+        # real but subtle, and a gate is the last place to depend on it.
+        exempt=0
+        for e in $DEMO_INSENSITIVE; do
+            if [ "$path" = "$e" ]; then
+                exempt=1
+            fi
+        done
+        if [ "$exempt" -eq 0 ]; then
+            DEMANDING="$DEMANDING $path"
+        fi
     fi
 done
 
@@ -133,7 +312,19 @@ if [ -z "$HITS" ]; then
 fi
 
 echo "=== watched paths changed:"
-for h in $HITS; do echo "    $h"; done
+for h in $HITS; do
+    exempt=0
+    for e in $DEMO_INSENSITIVE; do
+        if [ "$h" = "$e" ]; then
+            exempt=1
+        fi
+    done
+    if [ "$exempt" -eq 1 ]; then
+        echo "    $h   (mg-856d: demonstrated on Actions, not blocking here)"
+    else
+        echo "    $h"
+    fi
+done
 
 # --------------------------------------------------------------- READOUT ----
 # mg-3934 -- THE CONSUMER FOR THE INFORMATIONAL CHECK, and the reason it is
@@ -297,11 +488,33 @@ fi
 #                                                  ten minutes ago on the same
 #                                                  tree is not worth ten minutes
 #                                                  of everyone else's queue.
+
+# mg-856d.  The exemption is spent HERE and nowhere earlier, so everything above
+# -- the consistency check, the exemption control, the changed-paths listing and
+# the readout -- runs for an exempt-only merge exactly as it does for any other.
+# What is skipped is precisely the two instruments that were measured not to read
+# the exempt path.
+if [ -z "$DEMANDING" ]; then
+    echo
+    echo "=== mg-856d: every watched path that changed is on DEMO_INSENSITIVE"
+    echo "    The blocking demonstrations are NOT re-run.  They do not read"
+    echo "    these files, so re-running them here would demonstrate nothing"
+    echo "    about this change while holding the refinery's one serial slot."
+    echo "    They still run in full on Actions for this same commit: the paths"
+    echo "    are unchanged in gate-mutation-demo.yml.  What catches a mutation"
+    echo "    of each exempt path is named in DEMO_INSENSITIVE's CATCHER lines"
+    echo "    and verified as wired on every merge by the control above."
+    exit 0
+fi
+
 echo
 echo "=== mg-5ad1 gate blindspot probe (is the gate blind anywhere?)"
 "$PY" scripts/onethird_mg5ad1_gate_blindspot_probe.py
 
 echo
 echo "=== mg-60d3 gate mutation demo (do the F3/F4 repairs still fire?)"
-echo "    six full runs of the control gate; ~11 min idle, more under load"
+echo "    six full runs of the control gate.  ~11 min uncontended on the"
+echo "    fleet host (clock (b), mg-7db4's figure); 1 h 25 m 50 s measured by"
+echo "    mg-856d under a 1-min load average of 38-149 on the same host.  The"
+echo "    refinery's own timeout is 90m.  See the DURATION TABLE in the header."
 exec "$PY" scripts/onethird_mg60d3_gate_mutation_demo.py
