@@ -1,0 +1,2629 @@
+{
+  "what": "mg-a266 independent audit of mg-9a59: is a PASS over an empty population REACHABLE, and are emptiness and success distinguishable in the OUTPUT?",
+  "subject": "scripts/onethird_mg75f0_gate_class_closure_demo.py",
+  "subject_revision_pinned_for_the_positive_control": "c64fe68^",
+  "population": {
+    "argv_space": 128,
+    "grain": "one call to the subject's main() per invocation; one boolean per assertion",
+    "gate_executions": 0,
+    "note": "no mg-2c34 gate is executed: run_case is stubbed, so n_gate_runs counts DRIVER ITERATIONS.  Both defects under audit live in main(), above run_case."
+  },
+  "invariants": {
+    "V1": "no invocation writes an artifact carrying ALL_PASS true over n_gate_runs 0 -- the vacuous pass, in the artifact",
+    "V2": "no invocation exits 0 without a non-empty population behind it -- the vacuous pass, in the exit code",
+    "V3": "an empty population is ANNOUNCED: exit 2, and the literal words ZERO GATE RUNS in the output",
+    "V4": "the reported population size equals the reported population: n_gate_runs == len(cases), so the count cannot drift from the list",
+    "V5": "the committed canonical report is never overwritten except by a genuine FULL run"
+  },
+  "invariants_not_requested": [],
+  "enumeration": [
+    {
+      "argv": [],
+      "spelling": "(no flags)",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--partial-ok"
+      ],
+      "spelling": "--partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--gates",
+        "widened"
+      ],
+      "spelling": "--gates widened",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "spelling": "--gates widened --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        "pre-widening"
+      ],
+      "spelling": "--gates pre-widening",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        "pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--gates pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        "widened,pre-widening"
+      ],
+      "spelling": "--gates widened,pre-widening",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--gates",
+        "widened,pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--gates widened,pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--gates",
+        ""
+      ],
+      "spelling": "--gates ",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        "",
+        "--partial-ok"
+      ],
+      "spelling": "--gates  --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        ","
+      ],
+      "spelling": "--gates ,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        ",",
+        "--partial-ok"
+      ],
+      "spelling": "--gates , --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        ",,"
+      ],
+      "spelling": "--gates ,,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        ",,",
+        "--partial-ok"
+      ],
+      "spelling": "--gates ,, --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        "bogus"
+      ],
+      "spelling": "--gates bogus",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--gates",
+        "bogus",
+        "--partial-ok"
+      ],
+      "spelling": "--gates bogus --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ""
+      ],
+      "spelling": "--only ",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--partial-ok"
+      ],
+      "spelling": "--only  --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        "widened"
+      ],
+      "spelling": "--only  --gates widened",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "spelling": "--only  --gates widened --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        "pre-widening"
+      ],
+      "spelling": "--only  --gates pre-widening",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        "pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only  --gates pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        "widened,pre-widening"
+      ],
+      "spelling": "--only  --gates widened,pre-widening",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        "widened,pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only  --gates widened,pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        ""
+      ],
+      "spelling": "--only  --gates ",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        "",
+        "--partial-ok"
+      ],
+      "spelling": "--only  --gates  --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        ","
+      ],
+      "spelling": "--only  --gates ,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        ",",
+        "--partial-ok"
+      ],
+      "spelling": "--only  --gates , --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        ",,"
+      ],
+      "spelling": "--only  --gates ,,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        ",,",
+        "--partial-ok"
+      ],
+      "spelling": "--only  --gates ,, --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        "bogus"
+      ],
+      "spelling": "--only  --gates bogus",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "",
+        "--gates",
+        "bogus",
+        "--partial-ok"
+      ],
+      "spelling": "--only  --gates bogus --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9"
+      ],
+      "spelling": "--only M9",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 4,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--partial-ok"
+      ],
+      "spelling": "--only M9 --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 4,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        "widened"
+      ],
+      "spelling": "--only M9 --gates widened",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "spelling": "--only M9 --gates widened --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        "pre-widening"
+      ],
+      "spelling": "--only M9 --gates pre-widening",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        "pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only M9 --gates pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        "widened,pre-widening"
+      ],
+      "spelling": "--only M9 --gates widened,pre-widening",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 4,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        "widened,pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only M9 --gates widened,pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 4,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        ""
+      ],
+      "spelling": "--only M9 --gates ",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        "",
+        "--partial-ok"
+      ],
+      "spelling": "--only M9 --gates  --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        ","
+      ],
+      "spelling": "--only M9 --gates ,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        ",",
+        "--partial-ok"
+      ],
+      "spelling": "--only M9 --gates , --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        ",,"
+      ],
+      "spelling": "--only M9 --gates ,,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        ",,",
+        "--partial-ok"
+      ],
+      "spelling": "--only M9 --gates ,, --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        "bogus"
+      ],
+      "spelling": "--only M9 --gates bogus",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M9",
+        "--gates",
+        "bogus",
+        "--partial-ok"
+      ],
+      "spelling": "--only M9 --gates bogus --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3"
+      ],
+      "spelling": "--only M3",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 4,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3 --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 4,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        "widened"
+      ],
+      "spelling": "--only M3 --gates widened",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3 --gates widened --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        "pre-widening"
+      ],
+      "spelling": "--only M3 --gates pre-widening",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        "pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3 --gates pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        "widened,pre-widening"
+      ],
+      "spelling": "--only M3 --gates widened,pre-widening",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 4,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        "widened,pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3 --gates widened,pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 4,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        ""
+      ],
+      "spelling": "--only M3 --gates ",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        "",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3 --gates  --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        ","
+      ],
+      "spelling": "--only M3 --gates ,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        ",",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3 --gates , --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        ",,"
+      ],
+      "spelling": "--only M3 --gates ,,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        ",,",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3 --gates ,, --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        "bogus"
+      ],
+      "spelling": "--only M3 --gates bogus",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3",
+        "--gates",
+        "bogus",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3 --gates bogus --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none"
+      ],
+      "spelling": "--only none",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--partial-ok"
+      ],
+      "spelling": "--only none --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        "widened"
+      ],
+      "spelling": "--only none --gates widened",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 1,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "spelling": "--only none --gates widened --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 1,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        "pre-widening"
+      ],
+      "spelling": "--only none --gates pre-widening",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 1,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        "pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only none --gates pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 1,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        "widened,pre-widening"
+      ],
+      "spelling": "--only none --gates widened,pre-widening",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        "widened,pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only none --gates widened,pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 2,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        ""
+      ],
+      "spelling": "--only none --gates ",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        "",
+        "--partial-ok"
+      ],
+      "spelling": "--only none --gates  --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        ","
+      ],
+      "spelling": "--only none --gates ,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        ",",
+        "--partial-ok"
+      ],
+      "spelling": "--only none --gates , --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        ",,"
+      ],
+      "spelling": "--only none --gates ,,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        ",,",
+        "--partial-ok"
+      ],
+      "spelling": "--only none --gates ,, --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        "bogus"
+      ],
+      "spelling": "--only none --gates bogus",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "none",
+        "--gates",
+        "bogus",
+        "--partial-ok"
+      ],
+      "spelling": "--only none --gates bogus --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ","
+      ],
+      "spelling": "--only ,",
+      "exit": null,
+      "raised": "KeyError: ('', 'pre-widening')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--partial-ok"
+      ],
+      "spelling": "--only , --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('', 'pre-widening')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        "widened"
+      ],
+      "spelling": "--only , --gates widened",
+      "exit": null,
+      "raised": "KeyError: ('', 'widened')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "spelling": "--only , --gates widened --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('', 'widened')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        "pre-widening"
+      ],
+      "spelling": "--only , --gates pre-widening",
+      "exit": null,
+      "raised": "KeyError: ('', 'pre-widening')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        "pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only , --gates pre-widening --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('', 'pre-widening')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        "widened,pre-widening"
+      ],
+      "spelling": "--only , --gates widened,pre-widening",
+      "exit": null,
+      "raised": "KeyError: ('', 'widened')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        "widened,pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only , --gates widened,pre-widening --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('', 'widened')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        ""
+      ],
+      "spelling": "--only , --gates ",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        "",
+        "--partial-ok"
+      ],
+      "spelling": "--only , --gates  --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        ","
+      ],
+      "spelling": "--only , --gates ,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        ",",
+        "--partial-ok"
+      ],
+      "spelling": "--only , --gates , --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        ",,"
+      ],
+      "spelling": "--only , --gates ,,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        ",,",
+        "--partial-ok"
+      ],
+      "spelling": "--only , --gates ,, --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        "bogus"
+      ],
+      "spelling": "--only , --gates bogus",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        ",",
+        "--gates",
+        "bogus",
+        "--partial-ok"
+      ],
+      "spelling": "--only , --gates bogus --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ"
+      ],
+      "spelling": "--only MZZZ",
+      "exit": null,
+      "raised": "KeyError: ('MZZZ', 'pre-widening')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--partial-ok"
+      ],
+      "spelling": "--only MZZZ --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('MZZZ', 'pre-widening')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        "widened"
+      ],
+      "spelling": "--only MZZZ --gates widened",
+      "exit": null,
+      "raised": "KeyError: ('MZZZ', 'widened')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "spelling": "--only MZZZ --gates widened --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('MZZZ', 'widened')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        "pre-widening"
+      ],
+      "spelling": "--only MZZZ --gates pre-widening",
+      "exit": null,
+      "raised": "KeyError: ('MZZZ', 'pre-widening')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        "pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only MZZZ --gates pre-widening --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('MZZZ', 'pre-widening')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        "widened,pre-widening"
+      ],
+      "spelling": "--only MZZZ --gates widened,pre-widening",
+      "exit": null,
+      "raised": "KeyError: ('MZZZ', 'widened')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        "widened,pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only MZZZ --gates widened,pre-widening --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('MZZZ', 'widened')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        ""
+      ],
+      "spelling": "--only MZZZ --gates ",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        "",
+        "--partial-ok"
+      ],
+      "spelling": "--only MZZZ --gates  --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        ","
+      ],
+      "spelling": "--only MZZZ --gates ,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        ",",
+        "--partial-ok"
+      ],
+      "spelling": "--only MZZZ --gates , --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        ",,"
+      ],
+      "spelling": "--only MZZZ --gates ,,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        ",,",
+        "--partial-ok"
+      ],
+      "spelling": "--only MZZZ --gates ,, --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        "bogus"
+      ],
+      "spelling": "--only MZZZ --gates bogus",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "MZZZ",
+        "--gates",
+        "bogus",
+        "--partial-ok"
+      ],
+      "spelling": "--only MZZZ --gates bogus --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        "widened"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates widened",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        "widened",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates widened --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        "pre-widening"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates pre-widening",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        "pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 8,
+      "ALL_PASS": true,
+      "partial_written": true,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        "widened,pre-widening"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates widened,pre-widening",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        "widened,pre-widening",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates widened,pre-widening --partial-ok",
+      "exit": 0,
+      "raised": null,
+      "n_gate_runs": 16,
+      "ALL_PASS": true,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": false
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        ""
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates ",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        "",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates  --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        ","
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates ,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        ",",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates , --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        ",,"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates ,,",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        ",,",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates ,, --partial-ok",
+      "exit": 2,
+      "raised": null,
+      "n_gate_runs": 0,
+      "ALL_PASS": false,
+      "partial_written": true,
+      "said_zero_gate_runs": true,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        "bogus"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates bogus",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    },
+    {
+      "argv": [
+        "--only",
+        "M3,M4,M5,M6,M7,M8,M9",
+        "--gates",
+        "bogus",
+        "--partial-ok"
+      ],
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates bogus --partial-ok",
+      "exit": null,
+      "raised": "KeyError: ('none', 'bogus')",
+      "n_gate_runs": null,
+      "ALL_PASS": null,
+      "partial_written": false,
+      "said_zero_gate_runs": false,
+      "canonical_untouched": true
+    }
+  ],
+  "empty_population_invocations": [
+    "--gates ",
+    "--gates  --partial-ok",
+    "--gates ,",
+    "--gates , --partial-ok",
+    "--gates ,,",
+    "--gates ,, --partial-ok",
+    "--only  --gates ",
+    "--only  --gates  --partial-ok",
+    "--only  --gates ,",
+    "--only  --gates , --partial-ok",
+    "--only  --gates ,,",
+    "--only  --gates ,, --partial-ok",
+    "--only M9 --gates ",
+    "--only M9 --gates  --partial-ok",
+    "--only M9 --gates ,",
+    "--only M9 --gates , --partial-ok",
+    "--only M9 --gates ,,",
+    "--only M9 --gates ,, --partial-ok",
+    "--only M3 --gates ",
+    "--only M3 --gates  --partial-ok",
+    "--only M3 --gates ,",
+    "--only M3 --gates , --partial-ok",
+    "--only M3 --gates ,,",
+    "--only M3 --gates ,, --partial-ok",
+    "--only none --gates ",
+    "--only none --gates  --partial-ok",
+    "--only none --gates ,",
+    "--only none --gates , --partial-ok",
+    "--only none --gates ,,",
+    "--only none --gates ,, --partial-ok",
+    "--only , --gates ",
+    "--only , --gates  --partial-ok",
+    "--only , --gates ,",
+    "--only , --gates , --partial-ok",
+    "--only , --gates ,,",
+    "--only , --gates ,, --partial-ok",
+    "--only MZZZ --gates ",
+    "--only MZZZ --gates  --partial-ok",
+    "--only MZZZ --gates ,",
+    "--only MZZZ --gates , --partial-ok",
+    "--only MZZZ --gates ,,",
+    "--only MZZZ --gates ,, --partial-ok",
+    "--only M3,M4,M5,M6,M7,M8,M9 --gates ",
+    "--only M3,M4,M5,M6,M7,M8,M9 --gates  --partial-ok",
+    "--only M3,M4,M5,M6,M7,M8,M9 --gates ,",
+    "--only M3,M4,M5,M6,M7,M8,M9 --gates , --partial-ok",
+    "--only M3,M4,M5,M6,M7,M8,M9 --gates ,,",
+    "--only M3,M4,M5,M6,M7,M8,M9 --gates ,, --partial-ok"
+  ],
+  "raising_invocations": [
+    {
+      "spelling": "--gates bogus",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--gates bogus --partial-ok",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only  --gates bogus",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only  --gates bogus --partial-ok",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only M9 --gates bogus",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only M9 --gates bogus --partial-ok",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only M3 --gates bogus",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only M3 --gates bogus --partial-ok",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only none --gates bogus",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only none --gates bogus --partial-ok",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only ,",
+      "raised": "KeyError: ('', 'pre-widening')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only , --partial-ok",
+      "raised": "KeyError: ('', 'pre-widening')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only , --gates widened",
+      "raised": "KeyError: ('', 'widened')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only , --gates widened --partial-ok",
+      "raised": "KeyError: ('', 'widened')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only , --gates pre-widening",
+      "raised": "KeyError: ('', 'pre-widening')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only , --gates pre-widening --partial-ok",
+      "raised": "KeyError: ('', 'pre-widening')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only , --gates widened,pre-widening",
+      "raised": "KeyError: ('', 'widened')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only , --gates widened,pre-widening --partial-ok",
+      "raised": "KeyError: ('', 'widened')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only , --gates bogus",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only , --gates bogus --partial-ok",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ",
+      "raised": "KeyError: ('MZZZ', 'pre-widening')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ --partial-ok",
+      "raised": "KeyError: ('MZZZ', 'pre-widening')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ --gates widened",
+      "raised": "KeyError: ('MZZZ', 'widened')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ --gates widened --partial-ok",
+      "raised": "KeyError: ('MZZZ', 'widened')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ --gates pre-widening",
+      "raised": "KeyError: ('MZZZ', 'pre-widening')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ --gates pre-widening --partial-ok",
+      "raised": "KeyError: ('MZZZ', 'pre-widening')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ --gates widened,pre-widening",
+      "raised": "KeyError: ('MZZZ', 'widened')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ --gates widened,pre-widening --partial-ok",
+      "raised": "KeyError: ('MZZZ', 'widened')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ --gates bogus",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only MZZZ --gates bogus --partial-ok",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates bogus",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    },
+    {
+      "spelling": "--only M3,M4,M5,M6,M7,M8,M9 --gates bogus --partial-ok",
+      "raised": "KeyError: ('none', 'bogus')",
+      "exit": null,
+      "partial_written": false
+    }
+  ],
+  "distinguishability": {
+    "runs": {
+      "EMPTY": {
+        "exit": 2,
+        "artifact_ALL_PASS": false,
+        "artifact_n_gate_runs": 0,
+        "artifact_len_cases": 0,
+        "partial_written": true,
+        "stdout_banner": "ZERO GATE RUNS -- THIS RUN MEASURED NOTHING (mg-9a59)."
+      },
+      "FAILED": {
+        "exit": 1,
+        "artifact_ALL_PASS": false,
+        "artifact_n_gate_runs": 16,
+        "artifact_len_cases": 16,
+        "partial_written": false,
+        "stdout_banner": "--> exit 0 (expected 1)  DEMONSTRATION FAILED"
+      },
+      "PASSED": {
+        "exit": 0,
+        "artifact_ALL_PASS": true,
+        "artifact_n_gate_runs": 16,
+        "artifact_len_cases": 16,
+        "partial_written": false,
+        "stdout_banner": "Demonstration complete.  5/5 mutations that NEITHER mg-60d3 nor"
+      }
+    },
+    "field_separates_pair": {
+      "exit": {
+        "EMPTY-vs-PASSED": true,
+        "EMPTY-vs-FAILED": true,
+        "FAILED-vs-PASSED": true
+      },
+      "artifact_ALL_PASS": {
+        "EMPTY-vs-PASSED": true,
+        "EMPTY-vs-FAILED": false,
+        "FAILED-vs-PASSED": true
+      },
+      "artifact_n_gate_runs": {
+        "EMPTY-vs-PASSED": true,
+        "EMPTY-vs-FAILED": true,
+        "FAILED-vs-PASSED": false
+      },
+      "artifact_len_cases": {
+        "EMPTY-vs-PASSED": true,
+        "EMPTY-vs-FAILED": true,
+        "FAILED-vs-PASSED": false
+      },
+      "stdout_banner": {
+        "EMPTY-vs-PASSED": true,
+        "EMPTY-vs-FAILED": true,
+        "FAILED-vs-PASSED": true
+      }
+    },
+    "field_takes_three_distinct_values": {
+      "exit": true,
+      "artifact_ALL_PASS": false,
+      "artifact_n_gate_runs": false,
+      "artifact_len_cases": false,
+      "stdout_banner": true
+    },
+    "residual": {
+      "ALL_PASS_separates_EMPTY_from_PASSED": true,
+      "ALL_PASS_separates_EMPTY_from_FAILED": false,
+      "fields_separating_EMPTY_from_FAILED": [
+        "exit",
+        "artifact_n_gate_runs",
+        "artifact_len_cases",
+        "stdout_banner"
+      ],
+      "fields_taking_three_distinct_values": [
+        "exit",
+        "stdout_banner"
+      ],
+      "note": "no single ARTIFACT field takes three distinct values; the pair (ALL_PASS, n_gate_runs) does.  The exit code alone does."
+    }
+  },
+  "positive_controls": [
+    {
+      "subject": "PC1 pre-repair source at c64fe68^",
+      "what": "the vacuous exit 0 as the parent found it",
+      "violations": 144,
+      "assertions": 448,
+      "invocations": 128,
+      "first_three": [
+        "V1: `--gates ` wrote ALL_PASS True over n_gate_runs 0 -- a verdict over an empty population",
+        "V3: `--gates ` measured nothing and never said so: no 'ZERO GATE RUNS' in its output",
+        "V1: `--gates  --partial-ok` wrote ALL_PASS True over n_gate_runs 0 -- a verdict over an empty population"
+      ],
+      "invariants_that_fired": [
+        "V1",
+        "V2",
+        "V3"
+      ]
+    },
+    {
+      "subject": "PC2 zero-population guard removed",
+      "what": "the exit-code half of the repair drifted out",
+      "violations": 96,
+      "assertions": 544,
+      "invocations": 128,
+      "first_three": [
+        "V3: `--gates ` measured nothing and never said so: no 'ZERO GATE RUNS' in its output",
+        "V2: `--gates  --partial-ok` exited 0 with n_gate_runs 0",
+        "V3: `--gates  --partial-ok` measured nothing but exited 0, expected 2"
+      ],
+      "invariants_that_fired": [
+        "V2",
+        "V3"
+      ]
+    },
+    {
+      "subject": "PC3 ALL_PASS unconditioned",
+      "what": "the artifact half of the repair drifted out",
+      "violations": 48,
+      "assertions": 544,
+      "invocations": 128,
+      "first_three": [
+        "V1: `--gates ` wrote ALL_PASS True over n_gate_runs 0 -- a verdict over an empty population",
+        "V1: `--gates  --partial-ok` wrote ALL_PASS True over n_gate_runs 0 -- a verdict over an empty population",
+        "V1: `--gates ,` wrote ALL_PASS True over n_gate_runs 0 -- a verdict over an empty population"
+      ],
+      "invariants_that_fired": [
+        "V1"
+      ]
+    }
+  ],
+  "standing_control_coverage": {
+    "control_invocations_recorded": 77,
+    "distinct_argv_spellings_in_the_control": [
+      "(no flags)",
+      "--gates ",
+      "--gates  --partial-ok",
+      "--gates widened,pre-widening",
+      "--only M3 --gates widened --partial-ok",
+      "--only M3 --partial-ok",
+      "--only M3,M4,M5,M6,M7,M8,M9",
+      "--only M9 --gates widened",
+      "--only M9 --gates widened --partial-ok"
+    ],
+    "argv_space_size": 128,
+    "spellings_the_control_never_drives": [
+      "--gates ,",
+      "--gates , --partial-ok",
+      "--gates ,,",
+      "--gates ,, --partial-ok",
+      "--gates bogus",
+      "--gates bogus --partial-ok",
+      "--gates pre-widening",
+      "--gates pre-widening --partial-ok",
+      "--gates widened",
+      "--gates widened --partial-ok",
+      "--gates widened,pre-widening --partial-ok",
+      "--only ",
+      "--only  --gates ",
+      "--only  --gates  --partial-ok",
+      "--only  --gates ,",
+      "--only  --gates , --partial-ok",
+      "--only  --gates ,,",
+      "--only  --gates ,, --partial-ok",
+      "--only  --gates bogus",
+      "--only  --gates bogus --partial-ok",
+      "--only  --gates pre-widening",
+      "--only  --gates pre-widening --partial-ok",
+      "--only  --gates widened",
+      "--only  --gates widened --partial-ok",
+      "--only  --gates widened,pre-widening",
+      "--only  --gates widened,pre-widening --partial-ok",
+      "--only  --partial-ok",
+      "--only ,",
+      "--only , --gates ",
+      "--only , --gates  --partial-ok",
+      "--only , --gates ,",
+      "--only , --gates , --partial-ok",
+      "--only , --gates ,,",
+      "--only , --gates ,, --partial-ok",
+      "--only , --gates bogus",
+      "--only , --gates bogus --partial-ok",
+      "--only , --gates pre-widening",
+      "--only , --gates pre-widening --partial-ok",
+      "--only , --gates widened",
+      "--only , --gates widened --partial-ok",
+      "--only , --gates widened,pre-widening",
+      "--only , --gates widened,pre-widening --partial-ok",
+      "--only , --partial-ok",
+      "--only M3",
+      "--only M3 --gates ",
+      "--only M3 --gates  --partial-ok",
+      "--only M3 --gates ,",
+      "--only M3 --gates , --partial-ok",
+      "--only M3 --gates ,,",
+      "--only M3 --gates ,, --partial-ok",
+      "--only M3 --gates bogus",
+      "--only M3 --gates bogus --partial-ok",
+      "--only M3 --gates pre-widening",
+      "--only M3 --gates pre-widening --partial-ok",
+      "--only M3 --gates widened",
+      "--only M3 --gates widened,pre-widening",
+      "--only M3 --gates widened,pre-widening --partial-ok",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates ",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates  --partial-ok",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates ,",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates , --partial-ok",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates ,,",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates ,, --partial-ok",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates bogus",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates bogus --partial-ok",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates pre-widening",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates pre-widening --partial-ok",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates widened",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates widened --partial-ok",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates widened,pre-widening",
+      "--only M3,M4,M5,M6,M7,M8,M9 --gates widened,pre-widening --partial-ok",
+      "--only M3,M4,M5,M6,M7,M8,M9 --partial-ok",
+      "--only M9",
+      "--only M9 --gates ",
+      "--only M9 --gates  --partial-ok",
+      "--only M9 --gates ,",
+      "--only M9 --gates , --partial-ok",
+      "--only M9 --gates ,,",
+      "--only M9 --gates ,, --partial-ok",
+      "--only M9 --gates bogus",
+      "--only M9 --gates bogus --partial-ok",
+      "--only M9 --gates pre-widening",
+      "--only M9 --gates pre-widening --partial-ok",
+      "--only M9 --gates widened,pre-widening",
+      "--only M9 --gates widened,pre-widening --partial-ok",
+      "--only M9 --partial-ok",
+      "--only MZZZ",
+      "--only MZZZ --gates ",
+      "--only MZZZ --gates  --partial-ok",
+      "--only MZZZ --gates ,",
+      "--only MZZZ --gates , --partial-ok",
+      "--only MZZZ --gates ,,",
+      "--only MZZZ --gates ,, --partial-ok",
+      "--only MZZZ --gates bogus",
+      "--only MZZZ --gates bogus --partial-ok",
+      "--only MZZZ --gates pre-widening",
+      "--only MZZZ --gates pre-widening --partial-ok",
+      "--only MZZZ --gates widened",
+      "--only MZZZ --gates widened --partial-ok",
+      "--only MZZZ --gates widened,pre-widening",
+      "--only MZZZ --gates widened,pre-widening --partial-ok",
+      "--only MZZZ --partial-ok",
+      "--only none",
+      "--only none --gates ",
+      "--only none --gates  --partial-ok",
+      "--only none --gates ,",
+      "--only none --gates , --partial-ok",
+      "--only none --gates ,,",
+      "--only none --gates ,, --partial-ok",
+      "--only none --gates bogus",
+      "--only none --gates bogus --partial-ok",
+      "--only none --gates pre-widening",
+      "--only none --gates pre-widening --partial-ok",
+      "--only none --gates widened",
+      "--only none --gates widened --partial-ok",
+      "--only none --gates widened,pre-widening",
+      "--only none --gates widened,pre-widening --partial-ok",
+      "--only none --partial-ok",
+      "--partial-ok"
+    ],
+    "n_unreached": 119,
+    "note": "the control's population is 11 invocations of main(); this file's is 128 spellings.  The difference is not a defect in the control -- a control is allowed to be narrower than an audit -- but it IS the answer to 'what can the invocation set still not reach', which the parent's own doc says there will always be something of.",
+    "recording_error": null
+  },
+  "real_unstubbed_empty_run": {
+    "cmd": "scripts/onethird_mg75f0_gate_class_closure_demo.py --gates '' --partial-ok",
+    "exit": 2,
+    "said_zero_gate_runs": true,
+    "artifact_ALL_PASS": false,
+    "artifact_n_gate_runs": 0,
+    "artifact_len_cases": 0,
+    "canonical_report_unchanged": true,
+    "stdout_tail": "   UNSEEN by mg-60d3/mg-5ad1; and NOT CHO \nM9         UNSEEN -- used by neither mg-60d3 nor  \n\nwrote data/onethird-mg75f0-gate-class-closure.PARTIAL.json\n      PARTIAL -- the committed data/onethird-mg75f0-gate-class-closure.json\n      was neither written nor read by this run.\n\nZERO GATE RUNS -- THIS RUN MEASURED NOTHING (mg-9a59).\n  cases requested          : none,M3,M4,M5,M6,M7,M8,M9\n  gate columns requested   : (none)\n  the matrix is 8 case(s) x 0 column(s) = 0 gate runs.\n  ALL_PASS is written FALSE, not true-over-an-empty-list, and the report\n  records n_gate_runs: 0.  Exiting 2 even with --partial-ok: there is no\n  subset here to acknowledge, so there is no narrower question to answer.\n",
+    "stderr_tail": "",
+    "crash_family": [
+      {
+        "cmd": "scripts/onethird_mg75f0_gate_class_closure_demo.py --gates bogus",
+        "why": "an unknown gate column; note it dies at EXPECTED, so the `unknown gate variant` SystemExit in build_tree is never reached",
+        "exit": 1,
+        "exception": "KeyError: ('none', 'bogus')",
+        "names_the_bad_input": true,
+        "wrote_a_partial_report": false
+      },
+      {
+        "cmd": "scripts/onethird_mg75f0_gate_class_closure_demo.py --only , --gates widened",
+        "why": "a lone separator: the comprehension yields empty ids",
+        "exit": 1,
+        "exception": "KeyError: ('', 'widened')",
+        "names_the_bad_input": false,
+        "wrote_a_partial_report": false
+      },
+      {
+        "cmd": "scripts/onethird_mg75f0_gate_class_closure_demo.py --only MZZZ --gates bogus",
+        "why": "an unknown mutation row (paired with an unknown column so the run raises before any gate executes)",
+        "exit": 1,
+        "exception": "KeyError: ('none', 'bogus')",
+        "names_the_bad_input": true,
+        "wrote_a_partial_report": false
+      }
+    ]
+  },
+  "assertions": 564,
+  "assertions_per_invariant": {
+    "V1": 96,
+    "V2": 128,
+    "V4": 96,
+    "V5": 128,
+    "V3": 96,
+    "D": 6,
+    "PC": 3,
+    "R": 11
+  },
+  "invocations": 128,
+  "problems": [],
+  "ALL_HELD": true
+}

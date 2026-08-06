@@ -1,0 +1,316 @@
+{
+  "what": "mg-a266: a positive control on the split-phrase re-check, and a re-derivation of the parent's uninstrumented counts",
+  "phrase": "21 hours",
+  "finding_the_parents_sweep_is_not_committed": {
+    "claim": "mg-9a59 doc \u00a75(g): a flattening sweep found 30 occurrences across 8 tracked files, 0 asserting, and was demonstrated able to find a wrapped instance",
+    "status": "the sweep is not in the repository; c64fe68 adds one doc and edits three scripts, none of which contains it.  The counts and the demonstration are not reproducible from anything committed.",
+    "this_file_is_the_missing_instrument": true
+  },
+  "part1_planted_shapes": {
+    "population": "8 planted shapes x 4 instruments",
+    "grain": "one FOUND/MISSED per (shape, instrument)",
+    "shapes": [
+      {
+        "id": "S0",
+        "name": "unsplit, on one line",
+        "provenance": "baseline -- every instrument must find this or it is broken",
+        "must_find": true,
+        "file": "workflow.yml",
+        "found_by": {
+          "grep (line-oriented)": true,
+          "sweep A (comment-flattening)": true,
+          "sweep B (aggressive)": true,
+          "sweep C (mg-3946 snippet)": true
+        }
+      },
+      {
+        "id": "S1",
+        "name": "split across a YAML/shell comment continuation",
+        "provenance": "THE PARENT'S OWN SHAPE (`for 21` / `# hours`), the one its doc says was demonstrated; re-derived here",
+        "must_find": true,
+        "file": "gate-mutation-demo.yml",
+        "found_by": {
+          "grep (line-oriented)": false,
+          "sweep A (comment-flattening)": true,
+          "sweep B (aggressive)": true,
+          "sweep C (mg-3946 snippet)": true
+        }
+      },
+      {
+        "id": "S2",
+        "name": "split across a python comment continuation",
+        "provenance": "the same shape in a different comment syntax -- so the result is not one marker measured twice",
+        "must_find": true,
+        "file": "probe.py",
+        "found_by": {
+          "grep (line-oriented)": false,
+          "sweep A (comment-flattening)": true,
+          "sweep B (aggressive)": true,
+          "sweep C (mg-3946 snippet)": true
+        }
+      },
+      {
+        "id": "S3",
+        "name": "split across a STRING CONCATENATION",
+        "provenance": "NOT the parent's; a shape its stated technique was never claimed to cover",
+        "must_find": true,
+        "file": "runner.py",
+        "found_by": {
+          "grep (line-oriented)": false,
+          "sweep A (comment-flattening)": false,
+          "sweep B (aggressive)": true,
+          "sweep C (mg-3946 snippet)": false
+        }
+      },
+      {
+        "id": "S4",
+        "name": "split across a BACKSLASH line continuation",
+        "provenance": "NOT the parent's",
+        "must_find": true,
+        "file": "gate.sh",
+        "found_by": {
+          "grep (line-oriented)": false,
+          "sweep A (comment-flattening)": false,
+          "sweep B (aggressive)": true,
+          "sweep C (mg-3946 snippet)": false
+        }
+      },
+      {
+        "id": "S5",
+        "name": "soft-wrapped in prose (markdown)",
+        "provenance": "NOT the parent's; the commonest split in this repo's docs, where the phrase is discussed most",
+        "must_find": true,
+        "file": "note.md",
+        "found_by": {
+          "grep (line-oriented)": false,
+          "sweep A (comment-flattening)": true,
+          "sweep B (aggressive)": true,
+          "sweep C (mg-3946 snippet)": true
+        }
+      },
+      {
+        "id": "S6",
+        "name": "split across a comment AND a blank line",
+        "provenance": "NOT the parent's; the shape that defeats a flattener which only joins ADJACENT non-empty lines",
+        "must_find": true,
+        "file": "workflow-blank.yml",
+        "found_by": {
+          "grep (line-oriented)": false,
+          "sweep A (comment-flattening)": true,
+          "sweep B (aggressive)": true,
+          "sweep C (mg-3946 snippet)": true
+        }
+      },
+      {
+        "id": "S7",
+        "name": "NEGATIVE -- two unrelated tokens that flattening glues into the phrase",
+        "provenance": "NOT the parent's, and the one that measures the PRICE of the technique rather than its reach",
+        "must_find": false,
+        "file": "unrelated.py",
+        "found_by": {
+          "grep (line-oriented)": false,
+          "sweep A (comment-flattening)": true,
+          "sweep B (aggressive)": true,
+          "sweep C (mg-3946 snippet)": true
+        }
+      }
+    ],
+    "shapes_grep_cannot_see": [
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6"
+    ],
+    "shapes_sweep_A_cannot_see": [
+      "S3",
+      "S4"
+    ]
+  },
+  "part2_cost_of_flattening": {
+    "population": "612 git-tracked UTF-8 text files",
+    "grain": "one match",
+    "grep_matches": 28,
+    "sweepA_matches": 34,
+    "sweepB_matches": 34,
+    "matches_spanning_a_line_break": 2,
+    "split_matches": [
+      {
+        "file": "docs/OneThird-mg76d0-PartialReportRepair-IndependentAudit.md",
+        "line": 259,
+        "through_line": 260,
+        "split": true,
+        "how": "comment-flattening",
+        "text": "ead <gate> at <rev>` looked exactly like a demo failure for 21 hours.  Named at the top of the job it is unmistakable. ```  ```"
+      },
+      {
+        "file": "docs/OneThird-mg76d0-PartialReportRepair-IndependentAudit.md",
+        "line": 267,
+        "through_line": 268,
+        "split": true,
+        "how": "comment-flattening",
+        "text": "r -- mg-75f0's class-closure demo dead on arrival in CI for 21 hours because af7fc2df is not in a depth-1 clone -- was found by"
+      }
+    ]
+  },
+  "part3_population_rederived": {
+    "parents_claim": {
+      "occurrences": 30,
+      "files": 8,
+      "source": "mg-9a59 doc \u00a75(g) and its \u00a71 table",
+      "whose": "mg-9a59's, not mine"
+    },
+    "re_derivation_with_the_parents_own_instrument_at_parent_rev": {
+      "rev": "c64fe68",
+      "instrument": "mg-3946's published snippet, verbatim",
+      "file_filter": "\\.(md|sh|py|yml|txt)$",
+      "files_scanned": 416,
+      "occurrences": 32,
+      "files_with_a_match": 10,
+      "per_file": {
+        ".github/workflows/gate-mutation-demo.yml": 3,
+        ".github/workflows/script-controls.yml": 1,
+        "docs/OneThird-mg3934-CI-HistoryDepth.md": 1,
+        "docs/OneThird-mg3946-CIHistoryDepth-IndependentAudit.md": 3,
+        "docs/OneThird-mg3946-VerdictCloseout.md": 4,
+        "docs/OneThird-mg76d0-PartialReport-IndependentAudit-Predictions.md": 3,
+        "docs/OneThird-mg76d0-PartialReportRepair-IndependentAudit.md": 11,
+        "docs/OneThird-mg9a59-VacuousPass-ColumnSentence.md": 2,
+        "docs/OneThird-mg9a59-VacuousPass-Predictions.md": 2,
+        "scripts/refinery_gate.sh": 2
+      },
+      "grain": "one regex match over the flattened file"
+    },
+    "re_derivation_at_the_tree_the_sweep_would_have_seen": {
+      "rev": "c64fe68^",
+      "instrument": "mg-3946's published snippet, verbatim",
+      "file_filter": "\\.(md|sh|py|yml|txt)$",
+      "files_scanned": 415,
+      "occurrences": 30,
+      "files_with_a_match": 9,
+      "per_file": {
+        ".github/workflows/gate-mutation-demo.yml": 3,
+        ".github/workflows/script-controls.yml": 1,
+        "docs/OneThird-mg3934-CI-HistoryDepth.md": 1,
+        "docs/OneThird-mg3946-CIHistoryDepth-IndependentAudit.md": 3,
+        "docs/OneThird-mg3946-VerdictCloseout.md": 4,
+        "docs/OneThird-mg76d0-PartialReport-IndependentAudit-Predictions.md": 3,
+        "docs/OneThird-mg76d0-PartialReportRepair-IndependentAudit.md": 11,
+        "docs/OneThird-mg9a59-VacuousPass-Predictions.md": 2,
+        "scripts/refinery_gate.sh": 2
+      },
+      "grain": "one regex match over the flattened file"
+    },
+    "verdict_on_the_30": "CONFIRMED -- re-derived exactly, independently, with the parent's own published instrument over the tree at c64fe68^",
+    "verdict_on_the_8": "NOT REPRODUCED -- the same measurement yields 9 files, and every file in it holds at least one match, so no exclusion of a file recovers 8",
+    "same_instrument_at_HEAD": {
+      "rev": "HEAD",
+      "instrument": "mg-3946's published snippet, verbatim",
+      "file_filter": "\\.(md|sh|py|yml|txt)$",
+      "files_scanned": 417,
+      "occurrences": 34,
+      "files_with_a_match": 11,
+      "per_file": {
+        ".github/workflows/gate-mutation-demo.yml": 3,
+        ".github/workflows/script-controls.yml": 1,
+        "docs/OneThird-mg3934-CI-HistoryDepth.md": 1,
+        "docs/OneThird-mg3946-CIHistoryDepth-IndependentAudit.md": 3,
+        "docs/OneThird-mg3946-VerdictCloseout.md": 4,
+        "docs/OneThird-mg76d0-PartialReport-IndependentAudit-Predictions.md": 3,
+        "docs/OneThird-mg76d0-PartialReportRepair-IndependentAudit.md": 11,
+        "docs/OneThird-mg9a59-VacuousPass-ColumnSentence.md": 2,
+        "docs/OneThird-mg9a59-VacuousPass-Predictions.md": 2,
+        "docs/OneThird-mga266-VacuityAndSplitPhrase-Predictions.md": 2,
+        "scripts/refinery_gate.sh": 2
+      },
+      "grain": "one regex match over the flattened file"
+    },
+    "my_own_sweep_at_HEAD": {
+      "occurrences": 34,
+      "files": 11,
+      "instrument": "sweep A (comment-flattening), mine",
+      "file_set": "git ls-files, UTF-8-decodable",
+      "per_file": {
+        ".github/workflows/gate-mutation-demo.yml": 3,
+        ".github/workflows/script-controls.yml": 1,
+        "docs/OneThird-mg3934-CI-HistoryDepth.md": 1,
+        "docs/OneThird-mg3946-CIHistoryDepth-IndependentAudit.md": 3,
+        "docs/OneThird-mg3946-VerdictCloseout.md": 4,
+        "docs/OneThird-mg76d0-PartialReport-IndependentAudit-Predictions.md": 3,
+        "docs/OneThird-mg76d0-PartialReportRepair-IndependentAudit.md": 11,
+        "docs/OneThird-mg9a59-VacuousPass-ColumnSentence.md": 2,
+        "docs/OneThird-mg9a59-VacuousPass-Predictions.md": 2,
+        "docs/OneThird-mga266-VacuityAndSplitPhrase-Predictions.md": 2,
+        "scripts/refinery_gate.sh": 2
+      }
+    },
+    "agree_on_occurrences": true,
+    "agree_on_files": false,
+    "note": "three numbers over three populations.  Only the re-derivation at the parent's own commit with the parent's own instrument is a comparison; the other two differ from it for reasons that are not the parent's."
+  },
+  "part4_asserting_sites": {
+    "proxy_rule": "a \u00b160-char window containing any of 34 correction/narration markers is a quotation; otherwise ASSERTING",
+    "is_a_proxy_for_a_judgement": true,
+    "n_scored_asserting_by_the_proxy": 6,
+    "scored_asserting": [
+      {
+        "file": "docs/OneThird-mg3946-CIHistoryDepth-IndependentAudit.md",
+        "line": 21,
+        "text": "ree** revisions\" \u2014 re-derived here as **5 / 3 / 3**. (b) \"**21 hours**\" in the workflow header, `refinery_gate.sh` and the doc,",
+        "markers": [],
+        "hand_verdict": "quotation-in-a-correction",
+        "hand_reason": "row F4 quotes the superseded figure and immediately gives the measured 24 h 08 m 55 s against it"
+      },
+      {
+        "file": "docs/OneThird-mg3946-VerdictCloseout.md",
+        "line": 266,
+        "text": "rkflows/gate-mutation-demo.yml` (mg-3934 control step) | **\"21 hours\"** | 24 h 08 m 55 s | | `.github/workflows/script-controls",
+        "markers": [],
+        "hand_verdict": "quotation-in-a-corrections-table",
+        "hand_reason": "a table cell holding the WRONG value next to a cell holding the right one; the table's whole purpose is that the left column is superseded"
+      },
+      {
+        "file": "docs/OneThird-mg3946-VerdictCloseout.md",
+        "line": 368,
+        "text": ")?\\s*\\n\\s*(?:#|//|\\*)?\\s*', ' ', s) for m in re.finditer(r'(21 hours?|eight consecutive|~?24 hours|24 h 09 m)', flat): print(sy",
+        "markers": [],
+        "hand_verdict": "NEITHER -- a search pattern",
+        "hand_reason": "the phrase appears inside the sweep snippet's own regex literal.  It is not a claim about a window at all, and counting it as one would be a row name that is not its measurement"
+      },
+      {
+        "file": "docs/OneThird-mg76d0-PartialReport-IndependentAudit-Predictions.md",
+        "line": 66,
+        "text": "sserting sites** \u2014 the two `.yml` comments above are still `21 hours`, and one of them is in a file mg-a471 edited. This **refu",
+        "markers": [],
+        "hand_verdict": "quotation-in-a-prediction",
+        "hand_reason": "pre-registers that the two .yml comments STILL say the superseded figure; quoting a defect in order to predict it is not asserting it"
+      },
+      {
+        "file": "docs/OneThird-mg76d0-PartialReportRepair-IndependentAudit.md",
+        "line": 259,
+        "text": "ead <gate> at <rev>` looked exactly like a demo failure for 21 hours.  Named at the top of the job it is unmistakable. ```  ```",
+        "markers": [],
+        "hand_verdict": "narration-about-appearance",
+        "hand_reason": "describes how long a red CI job LOOKED broken, not how wide the window was; the same doc argues this explicitly at its own line 274"
+      },
+      {
+        "file": "docs/OneThird-mg76d0-PartialReportRepair-IndependentAudit.md",
+        "line": 274,
+        "text": "demo failure for 21 hours\"* and *\"dead on arrival in CI for 21 hours\"* are statements about how long the outage lasted. The mea",
+        "markers": [],
+        "hand_verdict": "meta-discussion-of-the-above",
+        "hand_reason": "the sentence that draws precisely this distinction, which cannot itself be an assertion of the figure"
+      }
+    ],
+    "n_asserting_after_hand_adjudication": 0,
+    "n_unadjudicated": 0,
+    "parents_claim": 0,
+    "whose_claim": "mg-9a59's; the hand count here re-derives it",
+    "agrees_with_parent_after_hand_adjudication": true,
+    "note": "the proxy over-flags by 6.  Every one was read; none asserts the figure as the window.  The proxy is kept because it is what would notice a NEW occurrence that nobody has read."
+  },
+  "assertions": 12,
+  "problems": [],
+  "ALL_HELD": true
+}

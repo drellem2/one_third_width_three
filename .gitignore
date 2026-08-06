@@ -35,6 +35,12 @@ scripts/_*.log
 # fix, the first being that it never lands on the canonical path at all.
 data/*.PARTIAL.json
 
+# mg-a266.  Same rule, same reason, for the stub an instrument writes when its
+# own population is emptied on purpose to show its vacuity guard firing
+# (`--prove-empty-guard`).  That run measured nothing by construction, so its
+# output must not be committable as if it were the measurement.
+data/*.PROVE-GUARD.json
+
 # Python bytecode cache
 scripts/__pycache__/
 __pycache__/
