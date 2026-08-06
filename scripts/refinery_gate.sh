@@ -133,11 +133,20 @@
 #
 # SENSITIVITY, since a duration with no conditions is a claim that does not
 # reproduce.  Every (b) figure is sensitive to FLEET LOAD and to nothing else
-# that has been observed to matter.  The mg-60d3 demo is not a single-core job:
-# measured at ~460% CPU on this 10-core host, so it contends with itself as well
-# as with the rest of the fleet.  mg-1b8c measured roughly 10x inflation for
-# concurrent heavy jobs on this host, and the mg-856d measurement below was
+# that has been observed to matter.  mg-1b8c measured roughly 10x inflation for
+# concurrent heavy jobs on this host, and the mg-856d measurement above was
 # taken deliberately UNDER load to put a second point on that curve.
+#
+# AND THE DEMO IS NOT ONE PROCESS, which no figure in this file said and which
+# changes what a duration here even means.  It runs its cases CONCURRENTLY --
+# `--case M1 --gate repaired` and `--case M1 --gate pre-repair` start in the
+# same second -- and mg-856d measured a single gate run at 829% CPU with the box
+# to itself, against ~290% each when three demonstrations competed.  One "gate
+# step" is therefore a 7-8-core job on a 10-core host.  The refinery's
+# one-serial-slot model costs a gate as one unit of work; this one is most of
+# the machine, so its duration is a function of what else the fleet is doing AND
+# its cost to the fleet is not captured by the slot count.  (Observed by the
+# mayor while three arms were running; measured here.)
 #
 # ============================================================================
 #
