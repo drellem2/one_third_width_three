@@ -102,11 +102,22 @@ any width, `U`/`U-id` throughout.
 
 > **`L1b ⟺ "all-pairs-frozen ⇒ standard dominance"`**, and LIB (§4) is its quantitative form.
 
-with the mechanism spelled out at `:288`:
+with the mechanism spelled out in §5 (line ref was `:288`; use the section anchor — mg-d1be's
+correction moved it):
 
 > `1 − λ₂^BK ≤ 2/(γn)` is rigorous (Theorem E) — **but `λ_std ≤ λ₂^BK`** (the standard sector is a
 > subspace): Theorem E bounds the gap **in the wrong direction** for the transport quotient. The
 > transfer needs the slow mode to have a real standard-sector component — **standard dominance**.
+
+> **RIDER 2026-08-07 (mg-d1be) — the quoted inner clause `λ_std ≤ λ₂^BK` is FALSE and has been
+> struck at its source.** See `OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md` §5.0′. Exact
+> counterexamples: `A₂ ⊕ A₂` (`λ_std = 1 > 2/3 = λ₂^BK`) and `A₃ ⊕ A₃` (`1 > 9/10`); the reverse
+> inequality fails on antichains, so the two are **incomparable** in general. **This document's use
+> of the quote is unaffected**: it cites it only for *"Theorem E bounds the gap in the wrong
+> direction"*, which is the struck bullet's conclusion, and that conclusion survives the correction —
+> on the stronger ground that no universal inequality holds in **either** direction, so Theorem E's
+> bound on `λ₂^BK` says nothing about `λ_std`. §1.4's finding (standard dominance is L1b's
+> conclusion, not its input) therefore stands as written.
 
 So on the Cheeger route, standard dominance is **exactly the missing implication** — i.e. the wall,
 i.e. row 8. Listing it at `:76` as *machinery L1b's reduction stands on* records **the open problem as
@@ -147,10 +158,23 @@ for a strictly stronger reason:
   `1 − λ_std ≤ 6E[inv]/(n²−1)` (Thm 2.4), whose whole proof spends **row 5** (Buser test vector on
   `S|_{1⊥}`) and **row 7** (Diaconis–Graham) and nothing else — as this document's own (A) SPREAD
   paragraph already says. On the Cheeger route standard dominance is the *missing* transfer
-  (`λ_std ≤ λ₂^BK`, so Theorem E bounds the gap in the wrong direction —
-  `OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:288`), i.e. **`L1b ⟺ all-pairs-frozen ⇒ standard
-  dominance`** (ibid. `:310`). It stays on the board as **row 8**, where it already is.
+  (`λ_std` and `λ₂^BK` are **incomparable** — no universal inequality holds in either direction —
+  so Theorem E's bound on `λ₂^BK` gives nothing for `λ_std`;
+  `OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md` §5 and §5.0′), i.e. **`L1b ⟺ all-pairs-frozen ⇒
+  standard dominance`** (ibid. §5). It stays on the board as **row 8**, where it already is.
 ```
+
+> **PATCH TEXT AMENDED 2026-08-07 (mg-d1be), before application.** The parenthetical above
+> originally read *"`λ_std ≤ λ₂^BK`, so Theorem E bounds the gap in the wrong direction"*, copied
+> from the Reverse-Cheeger bullet. **That inequality is false** (exact counterexamples: `A₂ ⊕ A₂`
+> gives `λ_std = 1 > 2/3 = λ₂^BK`; `A₃ ⊕ A₃` gives `1 > 9/10`; the reverse fails on antichains) and
+> has been struck at its source — see `OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md` §5.0′. It is
+> amended **here rather than left to be caught downstream** because this block is patch text bound
+> for `onethird_program/STATE.md`, and applying it as written would have moved a refuted inequality
+> into the canonical ledger. The patch's *conclusion* is unchanged — standard dominance is still the
+> missing transfer, still row 8 — only its stated reason is corrected, to the stronger one. The two
+> hard line references (`:288`, `:310`) are replaced by section anchors: they had already drifted,
+> and this correction moved them again.
 
 **`STATE.md:81`** — the UNRESOLVED paragraph is discharged; replace with:
 

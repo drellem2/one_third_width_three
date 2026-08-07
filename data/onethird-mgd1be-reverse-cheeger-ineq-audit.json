@@ -1,0 +1,303 @@
+{
+  "work_item": "mg-d1be",
+  "claim_audited": "lambda_std <= lambda_2^BK (Reverse-Cheeger:286-288, 'the standard sector is a subspace')",
+  "A_exact_witnesses": [
+    {
+      "poset": "A2 (+) A2",
+      "n": 4,
+      "num_linear_extensions": 4,
+      "width": 2,
+      "lambda_std": "1",
+      "lambda_2_BK": "2/3",
+      "excess": "1/3",
+      "certified_exact": true,
+      "lambda_std_eigenvector": [
+        "1",
+        "1",
+        "-1",
+        "-1"
+      ],
+      "lam2_upper_psd_certificate": true,
+      "lam2_lower_eigenvector_exact": true
+    },
+    {
+      "poset": "A3 (+) A3",
+      "n": 6,
+      "num_linear_extensions": 36,
+      "width": 3,
+      "lambda_std": "1",
+      "lambda_2_BK": "9/10",
+      "excess": "1/10",
+      "certified_exact": true,
+      "lambda_std_eigenvector": [
+        "1",
+        "1",
+        "1",
+        "-1",
+        "-1",
+        "-1"
+      ],
+      "lam2_upper_psd_certificate": true,
+      "lam2_lower_eigenvector_exact": true
+    }
+  ],
+  "B_reach_test_all_posets_n_le_6": [
+    {
+      "n": 2,
+      "classes_tested": 1,
+      "violations": 0,
+      "ordinal_sums": 0,
+      "sym_difference": 0,
+      "indecomposable_violators": 0,
+      "min_abs_margin": 0.0
+    },
+    {
+      "n": 3,
+      "classes_tested": 4,
+      "violations": 2,
+      "ordinal_sums": 2,
+      "sym_difference": 0,
+      "indecomposable_violators": 0,
+      "min_abs_margin": 0.24999999999999978
+    },
+    {
+      "n": 4,
+      "classes_tested": 15,
+      "violations": 8,
+      "ordinal_sums": 8,
+      "sym_difference": 0,
+      "indecomposable_violators": 0,
+      "min_abs_margin": 0.03418935934080125
+    },
+    {
+      "n": 5,
+      "classes_tested": 62,
+      "violations": 31,
+      "ordinal_sums": 31,
+      "sym_difference": 0,
+      "indecomposable_violators": 0,
+      "min_abs_margin": 0.019467707169090298
+    },
+    {
+      "n": 6,
+      "classes_tested": 317,
+      "violations": 133,
+      "ordinal_sums": 133,
+      "sym_difference": 0,
+      "indecomposable_violators": 0,
+      "min_abs_margin": 0.004796478400377113
+    }
+  ],
+  "C_width3_n7": {
+    "n": 7,
+    "width_le_3": true,
+    "classes_tested": 1284,
+    "violations": 538,
+    "ordinal_sums": 537,
+    "sym_difference": 1,
+    "indecomposable_violators": 1
+  },
+  "D_frozenness": [
+    {
+      "poset": "A2 (+) A2",
+      "delta": "1/2",
+      "is_gamma_counterexample": false,
+      "is_indecomposable": false
+    },
+    {
+      "poset": "A3 (+) A3",
+      "delta": "1/2",
+      "is_gamma_counterexample": false,
+      "is_indecomposable": false
+    },
+    {
+      "n": 2,
+      "frozen_posets": 0
+    },
+    {
+      "n": 3,
+      "frozen_posets": 0
+    },
+    {
+      "n": 4,
+      "frozen_posets": 0
+    },
+    {
+      "n": 5,
+      "frozen_posets": 0
+    },
+    {
+      "n": 6,
+      "frozen_posets": 0
+    }
+  ],
+  "E_indecomposable_violator_exact": {
+    "lt": [
+      [
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    ],
+    "n": 7,
+    "num_linear_extensions": 21,
+    "width": 2,
+    "order_relations": [
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        4
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        0,
+        6
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ]
+    ],
+    "incomparable_pairs": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "incomparability_graph_connected": true,
+    "is_ordinal_sum": false,
+    "delta": "8/21",
+    "separating_rational": "9437/10000",
+    "lambda_2_BK_le_c_exact_psd": true,
+    "lambda_std_rayleigh_exact": "19822422782423/20999980027278",
+    "lambda_std_gt_c": true,
+    "separation_proved_exactly": true,
+    "lambda_std_float": 0.9439257921522972,
+    "lambda_2_BK_float": 0.9434881015120073
+  },
+  "indecomposable_violators_found": 1
+}

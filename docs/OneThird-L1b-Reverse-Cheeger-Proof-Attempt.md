@@ -283,9 +283,133 @@ elements), living in the trivial ⊕ standard ⊕ degree-2 irreps. Two facts fol
 
 - **`1 − λ₂^{BK} ≤ 2/(γn)` is rigorous** (Theorem E: the BK spectral gap is small — some
   mode mixes slowly).
-- **But `λ_std ≤ λ₂^{BK}`** (the standard sector is a subspace): Theorem E bounds the gap
-  in the *wrong direction* for the transport quotient. The transfer needs the slow mode to
-  have a real standard-sector component — **standard dominance**.
+- > ~~**But `λ_std ≤ λ₂^{BK}`** (the standard sector is a subspace): Theorem E bounds the
+  > gap in the *wrong direction* for the transport quotient.~~
+  >
+  > **STRUCK 2026-08-07 (mg-d1be) — the inequality is FALSE, and the parenthetical is not a
+  > proof of it.** Retained struck rather than deleted so the corpus keeps the record of
+  > what was asserted. Owed since `mg-4a86` (`OneThird-StandardDominance-ComparisonRoute.md`
+  > §8, correction 2) and delivered here. Diagnosis, exact counterexamples and the correct
+  > replacement are in **§5.0′ immediately below**.
+  >
+  > **The bullet's *conclusion* survives** — Theorem E still gives nothing for the transport
+  > quotient — but for a strictly stronger reason than the one struck (§5.0′(d)). The
+  > transfer still needs the slow mode to have a real standard-sector component —
+  > **standard dominance**.
+
+### 5.0′ Correction to the bullet above (mg-d1be)
+
+Reproduce: `python3.11 scripts/onethird_mgd1be_reverse_cheeger_ineq_audit.py`;
+certificate `data/onethird-mgd1be-reverse-cheeger-ineq-audit.json`. Every number below is
+**exact rational arithmetic** — no floating point enters any certificate.
+
+**(a) The inequality is false, with exact witnesses.** `λ_std ≤ λ₂^{BK}` fails on ordinal
+sums, where `λ_std = 1` (`OneThird-L1b-ExpectedRank-Certificate.md:53-56`) while the BK
+walk on `L(P)` still mixes:
+
+| witness | `n` | width | `\|L(P)\|` | `λ_std` | `λ₂^{BK}` | excess |
+|---|---|---|---|---|---|---|
+| `A₂ ⊕ A₂` | 4 | 2 | 4 | **1** | **2/3** | **1/3** |
+| `A₃ ⊕ A₃` | 6 | **3** | 36 | **1** | **9/10** | **1/10** |
+
+Certified exactly in both cases: `λ_std = 1` by an exact eigenvector of `S_P` orthogonal to
+`𝟙` (and `λ_std ≤ 1` always, `S_P` doubly stochastic); `λ₂^{BK} ≥ c` by an exact rational
+eigenvector obtained from the exact nullspace of `W − cI`, and `λ₂^{BK} ≤ c` by exact
+symmetric elimination showing `cI + (1−c)J/N − W ⪰ 0`.
+
+**(b) Why the parenthetical is not a proof.** *"The standard sector is a subspace"* is a
+valid *schema* — restricting a max to a subspace lowers it, which is the direction claimed —
+but its hypothesis is false: **there is no containment, because the two numbers are extrema
+of different operators over different spaces.**
+
+- `λ_std = max` of the Rayleigh quotient of `S_P` over `𝟙^⊥ ⊂ ℝ^n` — **label** functions.
+  `S_P` is built from `(T_P)_{x,a} = Pr[σ(a)=x]`, i.e. from the **stationary measure alone**;
+  it is a *static* functional of `L(P)`, containing no dynamics.
+- `λ₂^{BK} = max` of the Rayleigh quotient of the BK operator `W` over `𝟙^⊥ ⊂ ℝ^{L(P)}` —
+  functions **on linear extensions**. This is a *dynamic* functional.
+
+The Dirichlet forms are not comparable term by term either: §1's transport identity pairs
+`f` at a *position* with `f` at the *element occupying it*, `½·E_σ Σ_a (f(a) − f(σ(a)))²`,
+whereas the BK form pairs two extensions differing by one adjacent transposition. And
+`L(P)` carries no `S_n` action, so there is no invariant "standard sector" of `L²(L(P))` for
+`λ_std` to be an extremum over at all (`ComparisonRoute` §3.2; `λ_std ∉ spec(W)` in
+**4306/4306** cases, `ComparisonRoute` §2.2). Since the *conclusion* is false by (a), every
+reading of the argument is unsound; (b) only says where.
+
+**(c) The correct statement: no universal inequality in either direction.** The reverse,
+`λ_std ≥ λ₂^{BK}`, is false too — on the antichain `A_n`, `λ_std = 0` while
+`λ₂^{BK} = 1 − (1−cos(π/n))/(n−1) → 1` (`ComparisonRoute` §2.1). So `λ_std` and `λ₂^{BK}`
+are **incomparable**: neither dominates, and they are never equal (0/4306). This is the
+statement that replaces the struck bullet.
+
+**(d) The struck bullet's conclusion survives, and is strengthened.** §5 used
+`λ_std ≤ λ₂^{BK}` to conclude that Theorem E's lower bound `λ₂^{BK} ≥ 1 − 2/(γn)` points the
+wrong way. That conclusion is *correct and now rests on (c) instead*: since neither
+inequality is universal, a bound on `λ₂^{BK}` carries **no** information about `λ_std` in
+either direction — a strictly stronger obstruction than a wrong-way inequality, which at
+least would have been an inequality. Sharper still, at every size we can check exhaustively
+(`n ≤ 6`) the direction that *would* have helped, `λ_std ≥ λ₂^{BK}`, holds **exactly on the
+ordinal sums** — i.e. exactly where `λ_std = 1` and the target `1 − λ_std ≤ C/(γn)` is
+already trivially true. **The helpful direction is available only where it is vacuous.**
+Nothing else in §5, §6 or the LIB statement depends on the struck bullet.
+
+**(e) ⚠ Do NOT restrict the claim to "off the ordinal sums" — that rescue is itself false.**
+`ComparisonRoute:75` (row C3) records *"`λ_std ≤ λ₂^{BK}` fails exactly on the ordinal sums,
+holds elsewhere"*, `[proven]` by exact set equality at `n = 4,5`. **That characterization
+does not extend, and must not be copied here as a hypothesis that saves the bullet.** This
+audit re-ran it over **every poset up to isomorphism** on `n ≤ 6` (1, 2, 5, 16, 63, 318
+classes — enumerator self-checked against those counts) and then one size further:
+
+| scan | classes tested | violations | ordinal sums | symmetric difference | **indecomposable violators** |
+|---|---|---|---|---|---|
+| all posets, `n = 4` | 15 | 8 | 8 | 0 | 0 |
+| all posets, `n = 5` | 62 | 31 | 31 | 0 | 0 |
+| all posets, `n = 6` | 317 | 133 | 133 | 0 | 0 |
+| **width ≤ 3, `n = 7`** | 1284 | 538 | 537 | **1** | **1** |
+
+The set equality holds through `n = 6` and **breaks at `n = 7`**. The witness is
+**indecomposable** (not an ordinal sum) and violates the inequality:
+
+```
+P on {0,…,6}:  0<3,4,5,6   1<2,3,4,5,6   2<4,5,6   3<5,6   4<6
+incomparable pairs: (0,1),(0,2),(2,3),(3,4),(4,5),(5,6)  — a PATH, hence the
+incomparability graph is connected, hence P is indecomposable.
+|L(P)| = 21,  width 2,  δ(P) = 8/21.
+λ_std = 0.943925792… > 0.943488101… = λ₂^{BK}
+```
+
+Certified exactly by the separating rational `c = 9437/10000`: `λ₂^{BK} ≤ c` by the exact
+PSD certificate, and `λ_std > c` by an exact rational Rayleigh quotient at an `f ⊥ 𝟙`.
+The margin is `4.4e-4` — small, but it is a *proved strict* separation, not a numerical one.
+
+**(f) What this does to §0's standing hypothesis.** §0 assumes `P` is a **width-3
+indecomposable γ-counterexample**. Three separate things are true of the struck bullet
+under that hypothesis, and they should not be conflated:
+
+1. The ordinal-sum witnesses of (a) are **decomposable**, so they refute the bullet as the
+   *general* fact the corpus consumes it as (`mg65f5:107`) but do not by themselves reach §0.
+2. The `n = 7` witness of (e) **is** indecomposable, so indecomposability does **not** rescue
+   the claim. This is why the repair is needed *at this site* and not only downstream.
+3. Neither witness is frozen (`δ = 1/2`, `δ = 8/21`, both `≥ 1/3`), and in fact **no poset on
+   `n ≤ 6` has `δ < 1/3` at all** — §0's hypothesis class is unpopulated at every size we can
+   enumerate, that emptiness being precisely the 1/3-conjecture the programme is trying to
+   prove. So under §0's full hypothesis the bullet is neither verified nor refuted by
+   example: it is simply **an unproven assertion about a conjecturally empty class, carried on
+   an invalid justification**. It cannot be used, and (d) is why nothing needs it.
+
+**(g) Why this sat undelivered for so long — the mechanism, not the instance.** `mg-4a86` found
+this defect and wrote it down correctly, as *"corrections owed to the repo"*, a **prose bullet list
+inside §8 of its own deliverable** (`ComparisonRoute:653-658`). It then landed that deliverable and
+was **archived**. No successor work item was ever filed — `mg list --all` shows `mg-4a86` and then
+nothing between it and `mg-d1be`, and the bullets survived two further commits *on the same ticket*
+(`45fe4d6`, `edbd356`) without being discharged. Correction 1 of the same list was discharged only
+because `mg-e2a0` happened to pass through the same file on unrelated business. So the record was
+never lost — it was **legible, accurate, and unscheduled**. A finding recorded as prose inside the
+artifact of the ticket that found it inherits that ticket's lifecycle: when the ticket closes, the
+finding stops being anybody's work while still reading as though it were. **A deferred half with no
+ticket of its own is dropped**, however well it is written down.
+
+---
 
 **Standard dominance is not universal**, and the `mg-8b64` data pins exactly where it
 fails and holds (BK-lazy-walk gap `bk_gap = 1−λ₂^{BK}` vs transport gap `1−λ_std`):
