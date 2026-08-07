@@ -365,10 +365,12 @@ classes — enumerator self-checked against those counts) and then one size furt
 | all posets, `n = 4` | 15 | 8 | 8 | 0 | 0 |
 | all posets, `n = 5` | 62 | 31 | 31 | 0 | 0 |
 | all posets, `n = 6` | 317 | 133 | 133 | 0 | 0 |
-| **width ≤ 3, `n = 7`** | 1284 | 538 | 537 | **1** | **1** |
+| **width ≤ 3, `n = 7`** | 1284 | 538 | 537 | **1** | **1** (width 2) |
+| **width ≤ 3, `n = 8`** | 7789 | 2876 | 2857 | **19** | **19** — of which **16 have width exactly 3** |
 
-The set equality holds through `n = 6` and **breaks at `n = 7`**. The witness is
-**indecomposable** (not an ordinal sum) and violates the inequality:
+The set equality holds through `n = 6` and **breaks at `n = 7`, then breaks wholesale at
+`n = 8`**. The `n = 7` witness is **indecomposable** (not an ordinal sum) and violates the
+inequality:
 
 ```
 P on {0,…,6}:  0<3,4,5,6   1<2,3,4,5,6   2<4,5,6   3<5,6   4<6
@@ -382,15 +384,28 @@ Certified exactly by the separating rational `c = 9437/10000`: `λ₂^{BK} ≤ c
 PSD certificate, and `λ_std > c` by an exact rational Rayleigh quotient at an `f ⊥ 𝟙`.
 The margin is `4.4e-4` — small, but it is a *proved strict* separation, not a numerical one.
 
+That witness has **width 2**, so on its own it would leave open whether width *exactly* 3 —
+§0's own width — escapes. **It does not.** At `n = 8` the same sweep finds **19**
+indecomposable violators, **16 of them of width exactly 3**. Best of them, certified exactly
+by the separating rational `c = 243/250`:
+
+```
+P on {0,…,7}:  0<5,6,7   1<3,4,5,6,7   2<3,4,5,6,7   3<4,5,6,7   5<6,7   6<7
+incomparable pairs: (0,1),(0,2),(0,3),(0,4),(1,2),(4,5),(4,6),(4,7)  — connected,
+so P is indecomposable.   |L(P)| = 34,  width EXACTLY 3,  δ(P) = 1/2.
+λ_std = 0.972972166878… > 0.971208968690… = λ₂^{BK}      (margin 1.8e-3)
+```
+
 **(f) What this does to §0's standing hypothesis.** §0 assumes `P` is a **width-3
 indecomposable γ-counterexample**. Three separate things are true of the struck bullet
 under that hypothesis, and they should not be conflated:
 
 1. The ordinal-sum witnesses of (a) are **decomposable**, so they refute the bullet as the
    *general* fact the corpus consumes it as (`mg65f5:107`) but do not by themselves reach §0.
-2. The `n = 7` witness of (e) **is** indecomposable, so indecomposability does **not** rescue
-   the claim. This is why the repair is needed *at this site* and not only downstream.
-3. Neither witness is frozen (`δ = 1/2`, `δ = 8/21`, both `≥ 1/3`), and in fact **no poset on
+2. The `n = 7` and `n = 8` witnesses of (e) **are** indecomposable, and 16 of the `n = 8` ones
+   have **width exactly 3**, so neither indecomposability nor width-3 rescues the claim. This
+   is why the repair is needed *at this site* and not only downstream.
+3. No witness is frozen (`δ = 1/2`, `8/21`, `1/2`, all `≥ 1/3`), and in fact **no poset on
    `n ≤ 6` has `δ < 1/3` at all** — §0's hypothesis class is unpopulated at every size we can
    enumerate, that emptiness being precisely the 1/3-conjecture the programme is trying to
    prove. So under §0's full hypothesis the bullet is neither verified nor refuted by

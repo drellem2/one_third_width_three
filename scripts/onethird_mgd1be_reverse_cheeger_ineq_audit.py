@@ -517,7 +517,7 @@ def part_D():
     return out
 
 
-def part_E(violator_lt):
+def part_E(violator_lt, c=Fraction(9437, 10000), label="n=7, width<=3"):
     """EXACT certification of an INDECOMPOSABLE violator.
 
     Both lambda_std and lambda_2^BK are algebraic, so they are separated by
@@ -528,7 +528,7 @@ def part_E(violator_lt):
     No floating point enters either certificate."""
     print()
     print("=" * 78)
-    print("PART E -- EXACT CERTIFICATION OF THE INDECOMPOSABLE VIOLATOR")
+    print(f"PART E -- EXACT CERTIFICATION OF AN INDECOMPOSABLE VIOLATOR [{label}]")
     print("=" * 78)
     P = Poset(len(violator_lt), violator_lt)
     les = P.linear_extensions()
@@ -562,8 +562,6 @@ def part_E(violator_lt):
     print(f"  float: lambda_std = {ls_f:.12f}   lambda_2^BK = {l2_f:.12f}"
           f"   margin = {ls_f - l2_f:.3e}")
 
-    # separating rational
-    c = Fraction(9437, 10000)
     upper_ok, why = certify_lam2_upper(W, c)
 
     # exact Rayleigh lower bound for lambda_std: rationalize the top eigenvector
@@ -604,12 +602,38 @@ def part_E(violator_lt):
             "lambda_std_float": ls_f, "lambda_2_BK_float": l2_f}
 
 
+# The n=8, width<=3 sweep (7789 classes with |L(P)|>=2) is a separate ~50-minute
+# run, not part of main().  Its summary, and the best of the 19 indecomposable
+# violators it found, are recorded here so part_F can re-certify in seconds.
+N8_SWEEP = {"n": 8, "width_le_3": True, "classes_tested": 7789,
+            "violations": 2876, "ordinal_sums": 2857, "sym_difference": 19,
+            "indecomposable_violators": 19,
+            "indecomposable_violators_of_width_exactly_3": 16,
+            "indecomposable_violators_of_width_2": 3,
+            "note": "separate long run; reproduce by calling "
+                    "posets_up_to_iso(8, max_width=3) and scanning as in part_C"}
+
+_F, _T = False, True
+N8_WITNESS = [[_F, _F, _F, _F, _F, _T, _T, _T],
+              [_F, _F, _F, _T, _T, _T, _T, _T],
+              [_F, _F, _F, _T, _T, _T, _T, _T],
+              [_F, _F, _F, _F, _T, _T, _T, _T],
+              [_F, _F, _F, _F, _F, _F, _F, _F],
+              [_F, _F, _F, _F, _F, _F, _T, _T],
+              [_F, _F, _F, _F, _F, _F, _F, _T],
+              [_F, _F, _F, _F, _F, _F, _F, _F]]
+
+
 def main():
     A = part_A()
     B = part_B()
     C = part_C()
     D = part_D()
     E = part_E(C.pop("violator_lt")) if C.get("violator_lt") else None
+    # The n=7 witness has width 2.  The n=8 sweep closes that caveat: it finds
+    # 16 indecomposable violators of width EXACTLY 3 -- sec 0's own width.
+    E8 = part_E(N8_WITNESS, c=Fraction(9720, 10000),
+                label="n=8, width EXACTLY 3, best of 19")
 
     print()
     print("=" * 78)
@@ -620,14 +644,17 @@ def main():
     print(f"  (1) The inequality lambda_std <= lambda_2^BK is FALSE: exact rational")
     print(f"      witnesses at n=4 (excess 1/3) and n=6 (excess 1/10), certified.")
     print(f"  (2) 'Fails EXACTLY on the ordinal sums' holds for every poset on")
-    print(f"      n <= 6 up to isomorphism -- and BREAKS at n = 7, width 3.")
-    print(f"  (3) INDECOMPOSABLE violators found: {indecomp_total}"
-          f"  (all at n=7; none at n<=6)")
-    if E:
-        print(f"      Certified EXACTLY (part E): the failure DOES reach the")
-        print(f"      indecomposable class, so sec 0's hypothesis does not save")
-        print(f"      the claim. mg-4a86's C3 marker is FALSE beyond n = 5 and")
-        print(f"      MUST NOT be copied to the site as a rescuing restriction.")
+    print(f"      n <= 6 up to isomorphism -- and BREAKS at n = 7 and n = 8.")
+    print(f"  (3) INDECOMPOSABLE violators: {indecomp_total} at n=7 (width 2), "
+          f"{N8_SWEEP['indecomposable_violators']} at n=8")
+    print(f"      of which {N8_SWEEP['indecomposable_violators_of_width_exactly_3']}"
+          f" have width EXACTLY 3 -- sec 0's own width.  None at n <= 6.")
+    if E and E8:
+        print(f"      Both witnesses certified EXACTLY (parts E, E8): the failure")
+        print(f"      DOES reach the indecomposable width-3 class, so sec 0's")
+        print(f"      hypothesis does not save the claim. mg-4a86's C3 marker is")
+        print(f"      FALSE beyond n = 5 and MUST NOT be copied to the site as a")
+        print(f"      rescuing restriction.")
     print(f"  (4) No poset on n <= 6 has delta < 1/3, so the frozen hypothesis")
     print(f"      cannot be instantiated at these sizes either way.")
 
@@ -639,7 +666,9 @@ def main():
                "B_reach_test_all_posets_n_le_6": B,
                "C_width3_n7": C,
                "D_frozenness": D,
-               "E_indecomposable_violator_exact": E,
+               "E_indecomposable_violator_exact_n7": E,
+               "E8_indecomposable_violator_exact_n8_width3": E8,
+               "C8_width3_n8_sweep": N8_SWEEP,
                "indecomposable_violators_found": indecomp_total}
     path = "data/onethird-mgd1be-reverse-cheeger-ineq-audit.json"
     with open(path, "w") as fh:
