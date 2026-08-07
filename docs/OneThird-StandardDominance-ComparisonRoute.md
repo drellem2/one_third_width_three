@@ -101,7 +101,7 @@ them is most of the work; once separated the verdicts are immediate.
 
 | Name | Statement | Status |
 |---|---|---|
-| **SD-Cayley** | `λ₂(Cayley walk) = λ_std` | Empirically supported, **0/132** (`mgb0a6`). Coherent and nontrivial. |
+| **SD-Cayley** | `λ₂(Cayley walk) = λ_std` | ~~Empirically supported, **0/132** (`mgb0a6`).~~ ⚠️ **THE BARE FIGURE IS WITHDRAWN (mg-e2a0, landing mg-55f2 / mg-65f5 §1.5): `0/132` IS A SAMPLING ARTIFACT AND CARRIES ITS FRAME OR IT IS NOT QUOTED.** Read: **`0` failures in `mgb0a6`'s own frame — `n ≤ 6` exhaustive + `n = 7` **top-λ spot only** — a frame that excludes the known moderate-λ `n = 7` refuters (166, mg-8b64). Not a clean sweep.** Coherent and nontrivial, and §1.1 below is unaffected. *Scope note kept honest in both directions:* the 166 refuters are **BK-side**, so by this document's own §1.1 they refute **SD-BK**, not SD-Cayley — SD-Cayley is not refuted here. What is withdrawn is the figure's **strength**, which is `mgb0a6`'s frame in either reading. `STATE.md` row 3b. |
 | **SD-BK** | `λ₂^BK = λ_std` | **FALSE** — 0/4306 (§2). *This is the ticket's target.* |
 | **SD-quant** | the slowest BK mode has an `Ω(1)` component in the standard sector | Coherent; the programme's actual need. Measured here for the first time (§7). |
 
@@ -652,7 +652,14 @@ reason for `λ_std` to be in the BK spectrum — confirmed by its absence in
 **Corrections owed to the repo** (both load-bearing elsewhere):
 1. `OneThird-Spectral-NearOrdinalSum-KillShot-Probe.md` — the "0/132" GREEN is
    **SD-Cayley** evidence and should not be read as support for any BK-chain
-   statement (§1.1).
+   statement (§1.1). ✅ **DISCHARGED — landed at the destination by `mg-e2a0`**, together with
+   the independent sampling-frame correction (`mg-55f2` / `mg-65f5` §1.5): that document now
+   carries a scope-correction banner at its head and in-place strikes at its executive-verdict
+   row, its *Kill-shot 2* heading, its *"standard dominance is universal"* sentence, and its
+   Data-appendix `0 / 132` row. (Named by section: the banner shifted every line below it by +59,
+   so the old refs `:20`/`:103`/`:249`/`:286` now read `:63`/`:146`/`:303`/`:345`.) This
+   correction had been owed since `mg-4a86` and had never reached the document a reader is sent
+   to.
 2. `OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:273-275` — "`λ_std ≤ λ₂^BK` (the
    standard sector is a subspace)" — the justification is invalid, and the
    inequality itself fails **exactly on the ordinal sums** (§2.4), i.e. exactly in

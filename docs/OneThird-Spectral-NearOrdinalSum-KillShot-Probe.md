@@ -12,12 +12,60 @@ one-third build-pause gate for THIS compute-only probe.
 
 ---
 
+> ## ⚠️ SCOPE CORRECTION TO KILL-SHOT 2 — READ BEFORE QUOTING ANY VERDICT BELOW (mg-e2a0, landing mg-55f2 / mg-65f5 §1.5)
+>
+> **`0 / 132` — the *Data appendix* row *"standard-dominance failures"* — IS A SAMPLING ARTIFACT,
+> NOT A CLEAN SWEEP, AND IS NEVER QUOTABLE BARE.** This document is the source
+> `onethird_program/STATE.md` **row 3b** sends the reader to, and until this note it was the one
+> place the figure survived without its condition. The condition:
+>
+> *(Sites are named by section, not by line: `STATE.md` row 3b cites this document at `:286`, which
+> was the figure's line **before** this banner was inserted and is `:345` after it. Line refs into
+> this file made before 2026-08-07 are off by +59 from here down.)*
+>
+> - **The frame is this document's own** — `n ≤ 6` exhaustive (126 posets) **+ `n = 7` top-λ spot
+>   only** (6 posets). The *Kill-shot 2* bullets state it; the Data-appendix row label repeats it.
+>   It is the *consequence* of that frame that was never recorded here.
+> - **`132 = 126 + 6`, and only the 126 ship.** Verified against this document's own data appendix
+>   (`data/onethird-mgb0a6-spectral-killshot.json`, mg-e2a0): its `summary` records
+>   `standard_dominance_tested: 126`, `standard_dominance_failures: 0`, and its `rows` are
+>   **`n ≤ 6` only** (104 at `n=6`, 15 at `n=5`, 5 at `n=4`, 2 at `n=3`). **The 6 `n = 7`
+>   spot-check posets — the entire off-exhaustive part of the denominator, and the only part the
+>   refuters are adjacent to — are not in the published data at all.** The `132` is a doc-level
+>   sum; `126` is the number that is re-checkable here.
+> - **`mg-8b64` exhibits 166 explicit refuters at moderate-λ `n = 7` — outside that spot-check**
+>   (`OneThird-L1b-BK-Transport-Transfer-Probe.md` §2.1). So `0 / 132` is `0` failures in a frame
+>   chosen so that the known failures are not inside it.
+> - **Therefore the word "universal" — in *"Is the programme alive?"*, second bullet — is wrong.** The **unconditional** statement is
+>   **REFUTED**, not unproven. `OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:310–313` said so
+>   about *this* kill-shot and the correction never reached this document.
+> - **What survives is the CONDITIONAL** — *all-pairs-frozen ⇒ standard dominance* — **and that
+>   conditional is L1b itself** (ibid. `:310`), i.e. the open problem. Kill-shot 2 is therefore not
+>   independent support for L1b. **Every one of the 166 has `δ(P) ∈ {0.473, 0.474, 0.500}`**, so
+>   none is a counterexample and none is in the all-pairs-frozen regime: they kill the
+>   unconditional form and leave the conditional untouched.
+> - **Which claim the figure is evidence FOR was also mis-read**, independently:
+>   `OneThird-StandardDominance-ComparisonRoute.md` §1.1 (mg-4a86) finds `0 / 132` is
+>   **SD-Cayley** evidence (`λ₂(Cayley walk) = λ_std`) and does **not** transfer to the BK chain;
+>   the 166 refuters are BK-side. Both readings point the same way — the figure supports less than
+>   it has been quoted for.
+>
+> **Evidence bound, carried forward unlaundered (mg-65f5's own):** `166` is **read from the probe
+> documents, not re-measured** — not by mg-65f5, not by mg-55f2, not here. What is solid is
+> **documentary**: it is what each probe declares about its own scope, and the frame-mismatch does
+> not depend on either figure being re-derived. `0 / 132` and `124 / 126` below are this
+> document's own measurements and are not in question.
+>
+> **Nothing else in this document is withdrawn.** Kill-shots 1, 3 and 4, the N-poset section, and
+> the risk localization stand as written. The full ruling is `onethird_program/STATE.md` row 3b
+> (mg-55f2); do not re-derive the analysis here.
+
 ## Executive verdict
 
 | Kill-shot | Claim tested | Verdict |
 |---|---|---|
 | **1. Distinguished-order existence** | the >2/3 strong-majority orientation ∪ poset is acyclic (a distinguished order `e` exists) | **GREEN** (well-stressed) |
-| **2. Standard dominance** | the full symmetrized Cayley-walk's 2nd eigenvalue = λ_std (gap lives in the standard sector) | **GREEN** |
+| **2. Standard dominance** | the full symmetrized Cayley-walk's 2nd eigenvalue = λ_std (gap lives in the standard sector) | ~~**GREEN**~~ ⚠️ **GREEN ONLY INSIDE THIS PROBE'S FRAME (`n ≤ 6` exhaustive + `n = 7` top-λ spot).** The **unconditional** statement is **REFUTED** — 166 moderate-λ `n = 7` refuters outside the frame (mg-8b64, read-not-measured); the **all-pairs-frozen conditional** that survives **is L1b**, i.e. the open problem, not support for it. See the scope correction above and `STATE.md` row 3b (mg-55f2). |
 | **3. Monotonicity (L2)** | dominant standard eigenvector monotone along `<_P` and in the expected-rank order | **AMBER** |
 | **4. Prefix capture / near ordinal sum (L4/L3)** | a threshold sweep yields a genuine prefix capturing λ_std **and that prefix is a thin interface** | **AMBER** |
 
@@ -100,7 +148,12 @@ is supported by analogy, not proven.
 
 ---
 
-## Kill-shot 2 — Standard dominance — **GREEN**
+## Kill-shot 2 — Standard dominance — ~~**GREEN**~~ **GREEN-IN-FRAME ONLY**
+
+⚠️ **Read the scope correction at the top of this document before quoting anything in this
+section.** The measurements below are correct and are not withdrawn; the *verdict word* is. The
+unconditional statement is refuted outside this section's frame (166 refuters, mg-8b64); what
+stays open is the all-pairs-frozen conditional, which is L1b. `mg-55f2`, `STATE.md` row 3b.
 
 *Supports the "Standard dominance" conjecture (§8 of the .tex).* The .tex warns
 this is "not automatic for a Cayley graph."
@@ -200,6 +253,11 @@ The mandated stress case (2+2 = {0<1, 2<3}) makes the point concretely. It
 | thinnest available cut `min Δ₁` | 0.167 (Δ₀ = 0.333: a third of extensions are non-concatenations) |
 | prefix capture fraction | 0.618 |
 
+*(The `standard dominance | holds` row above is a **per-poset measurement** on the N-poset —
+`2+2`, `n = 4` — which sits inside the exhaustively-swept part of the frame. It is **not** the
+aggregate claim and is **not** touched by the scope correction at the top: it is one poset's
+correct readout, not a verdict quotable over posets. Flagged and deliberately left, mg-e2a0.)*
+
 So the spectral/prefix machinery hands the N-poset a "good" prefix (monotone
 eigenvector, best-cut-is-a-prefix) whose interface is **as fat as possible**. The
 prefix construction, *on its own*, does **not** certify near-ordinal-sum
@@ -246,8 +304,14 @@ balanced pair` survives the probe, and the probe reassigns the risk:
   programme for almost no compute — a cyclic strong-majority tournament (no
   distinguished order) or a standard-dominance failure (the gap not in the
   quotient) — both held across exhaustive small posets and a large stress scan.
-- **The structural readouts behave as predicted:** standard dominance is
-  universal, the eigenvector order tracks expected rank (τ≈0.85), the best cut is
+- **The structural readouts behave as predicted:** ~~standard dominance is
+  universal~~ ⚠️ **"UNIVERSAL" IS WITHDRAWN AND WAS THE WORST SENTENCE IN THIS DOCUMENT
+  (mg-e2a0, landing mg-55f2 / mg-65f5 §1.5)** — it states as a property of *posets* what was
+  measured only inside this probe's frame, and the unconditional form is **refuted** by 166
+  moderate-λ `n = 7` refuters outside it (mg-8b64; `Reverse-Cheeger:310–313` names *this*
+  kill-shot). Read instead: **standard dominance holds throughout the frame swept here, and the
+  form that remains open off-frame is the all-pairs-frozen conditional — which is L1b.** The
+  eigenvector order tracks expected rank (τ≈0.85), the best cut is
   always a prefix, and λ_std→1 correlates (+0.78) with a thinning interface.
 - **The hard lemmas remain exactly as hard as flagged.** The probe did its job —
   viability-before-hardening — and returns a **GREEN-to-proceed-conditionally**
@@ -283,7 +347,7 @@ Aggregates this run:
 
 | metric | value |
 |---|---|
-| standard-dominance failures (n≤6 exhaustive + n=7 top-λ spot) | 0 / 132 |
+| standard-dominance failures (n≤6 exhaustive + n=7 top-λ spot) | 0 / 132 — ⚠️ **SAMPLING ARTIFACT, NEVER QUOTABLE BARE.** The frame in this row's own label **excludes the known refuters** (166 at moderate-λ `n = 7`, mg-8b64). The measurement is correct; the *sweep reading* of it is not. **And `132 = 126 + 6`: the JSON below carries only the `126` (`standard_dominance_tested: 126`, rows `n ≤ 6` only) — the 6 `n = 7` spot-check posets are not in it**, so a third-party check of this row bottoms out at `0 / 126`. `STATE.md` row 3b (mg-55f2); scope correction at the top of this document. |
 | poset-monotone posets | 124 / 126 |
 | Kendall-τ(v, E[pos]) median / mean / min | 0.857 / 0.842 / 0.286 |
 | exact eigenvector-order = expected-rank-order | 41 / 126 |
