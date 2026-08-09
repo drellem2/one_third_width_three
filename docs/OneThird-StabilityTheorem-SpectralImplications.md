@@ -55,7 +55,9 @@ spectral currency, and it is the sharpest possible statement of the block.
 
 **Neither theorem says anything whatsoever about the BK gap `λ₂^BK`.** Both are functionals of the
 stationary measure; `λ₂^BK` is the gap of a generator. Per mg-4a86 the two are not related by any
-inequality in general (`λ_std ≤ λ₂^BK` fails *exactly* on ordinal sums, exhaustively at `n = 4,5`), and
+inequality in general (`λ_std ≤ λ₂^BK` fails on *every* ordinal sum, ∀`n`; mg-4a86's stronger
+"and *exactly* there" reading was **refuted** by mg-d1be's exhaustive scan — true up to
+isomorphism at `n ≤ 6`, false from `n = 7`, broken wholesale at `n = 8` over width `≤ 3`), and
 Wilson (2004) already pins `gap_BK ≥ (1−cos(π/n))/(n−1)` universally — a bound no `Φ`-statement can
 interact with. **[blocked, structural]**
 
@@ -485,8 +487,15 @@ lesson), stated separately:
   Diaconis–Saloff-Coste, censoring — produces inequalities between Dirichlet forms. None can have
   `λ_std` as an endpoint, because `λ_std` is not the gap of any chain in the family."*
 - There is no inequality to borrow: **SD-BK (`λ₂^BK = λ_std`) is FALSE**, 0/195 at `n=4` and 0/4111 at
-  `n=5` (mg-4a86 C2), and even the weak form `λ_std ≤ λ₂^BK` **fails exactly on the ordinal sums**
-  (C3). Standard dominance is available only in the `SD-quant` overlap form and only
+  `n=5` (mg-4a86 C2), and even the weak form `λ_std ≤ λ₂^BK` **fails on every ordinal sum**
+  (C3, `⟸` proven ∀`n`). **Do not reach for C3's "and *exactly* there" clause as an escape
+  hatch — mg-d1be refuted it**: the set equality holds exhaustively at `n ≤ 6`, takes its first
+  hit at `n = 7` (an *indecomposable* violator), and breaks **wholesale at `n = 8`** — 19
+  indecomposable violators, 16 of **width exactly 3**, each certified by an exact separating
+  rational. It is a small-`n` coincidence, not a characterization with exceptions, so neither
+  indecomposability nor width-3 restores it
+  ([`OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md`](OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md) §(e)).
+  Standard dominance is available only in the `SD-quant` overlap form and only
   **conditional on the all-pairs-frozen regime**; it is not a universal fact and must not be invoked
   as one.
 - And the direction the program actually uses runs the other way (`bad BK mixing ⟹ λ_std ≈ 1`, L1), so

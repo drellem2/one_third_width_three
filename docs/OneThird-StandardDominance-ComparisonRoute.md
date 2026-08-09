@@ -72,7 +72,7 @@ stated is false and is not in the image of any comparison method.
 |---|---|---|
 | C1 | `λ_std(antichain_n) = 0` while `λ₂^BK → 1`; dominance excess → 1 | **[proven]** (hand proof §2.1 + exact numerics) |
 | C2 | `λ₂^BK = λ_std` holds for 0/195 (`n=4`) and 0/4111 (`n=5`) | **[proven]** (exhaustive) |
-| C3 | `λ_std ≤ λ₂^BK` fails **exactly on the ordinal sums**, holds elsewhere | **[proven]** at `n=4,5` (exact set equality); `⟸` proven ∀`n` (§2.4) |
+| C3 | `λ_std ≤ λ₂^BK` fails on **every** ordinal sum. ~~and **exactly** there~~ — **the "exactly" is FALSE for `n ≥ 7`** | `⟸` (all ordinal sums fail) **[proven]** ∀`n`. `⟹` (nothing else fails) **[REFUTED]** by `mg-d1be`: true `n ≤ 6` exhaustively, indecomposable violator at `n = 7`, **19 at `n = 8`** (16 of width exactly 3), exact certificates — a small-`n` coincidence, not a characterization (§2.4) |
 | C4 | Ordinal sums: exact BK product formula; `λ_std = 1`; dominance fails on the whole class | **[proven]** (hand proof §2.3 + 9/9 numeric) |
 | C5 | SD-BK is not a normalization slip (ratio spread 9.3×/18.8×, growing in `n`) | **[proven]** (§2.5) |
 | C6 | One-particle sector `U` invariant on ambient `S_n`, **not** on `L(P)`; leakage `Θ(0.1)` | **[proven]** (§3.2) |
@@ -126,17 +126,21 @@ dominance is not universal**").
 
 > "But `λ_std ≤ λ₂^{BK}` (the standard sector is a subspace)"
 
-**False as stated, but precisely characterizable** (§2.4): it holds on every poset
-that is *not* an ordinal sum, and fails on *every* ordinal sum. The stated
+**False as stated**, and ~~precisely characterizable~~ **not characterizable**: it fails on
+*every* ordinal sum (∀`n`, §2.3), and — contrary to what this document originally recorded —
+it fails **off** the ordinal sums too, from `n = 7` on (§2.4, `mg-d1be`). The stated
 justification is invalid regardless — it presupposes the standard sector embeds in
 `L²(L(P))` as an invariant subspace making `λ_std` a Rayleigh restriction, which
-it does not (§3.2). So the inequality is *true off the ordinal sums for a
-different reason than the one given*.
+it does not (§3.2).
 
 This matters concretely: the inequality is used to argue Theorem E "bounds the gap
-in the wrong direction". That argument survives on generic posets — but the
-near-ordinal-sum regime is exactly where the programme operates, and exactly where
-the inequality reverses.
+in the wrong direction". **That argument survives, on stronger ground** — see
+[`OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md`](OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md) §(d).
+Since no universal inequality holds in *either* direction (the reverse fails on antichains,
+§2.1, and the two are never equal, 0/4306), a bound on `λ₂^BK` carries **no information**
+about `λ_std` — strictly stronger than a wrong-way inequality, which would at least have
+been an inequality. What does *not* survive is the "off the ordinal sums" escape hatch: it
+is not a hypothesis that saves anything, because it is false.
 
 ---
 
@@ -222,21 +226,64 @@ On ordinal sums `λ_std = 1 > λ₂^BK`; on antichains `λ_std = 0 < λ₂^BK`. 
 extremal classes straddle the claimed equality from opposite sides — any putative
 proof of SD-BK would have to be false at both ends.
 
-### 2.4 Exactly where the weak inequality fails [proven]
+### 2.4 Where the weak inequality fails — a small-`n` coincidence, **not** a characterization [REFUTED beyond `n = 6`]
+
+> **⚠ SCOPE CORRECTION (`mg-d1be`, landed 2026-08-07; recorded here by `mg-24eb`).** The
+> "**exactly** the ordinal sums" reading below is **false for `n ≥ 7`** and breaks
+> **wholesale** at `n = 8`. It is a small-`n` coincidence, not a theorem with exceptions —
+> a reader who thinks it is "true with exceptions" will keep reaching for it; it does not
+> survive to be reached for. Only the `⟸` half (every ordinal sum violates) is a theorem
+> ∀`n`; the `⟹` half (nothing else violates) is dead. Details and both exact certificates:
+> [`OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md`](OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md) §(e).
 
 | `n` | posets | `λ_std > λ₂^BK` | `λ_std = 1` | **sets equal?** | sym. difference |
 |---|---|---|---|---|---|
 | 4 | 195 | 33 | 33 | **YES** | 0 |
 | 5 | 4111 | 550 | 550 | **YES** | 0 |
 
-> **Proposition.** For every labeled poset on `n ≤ 5` with `|L(P)| ≥ 2`:
+> **Proposition (`n ≤ 6` only — does NOT extend).** For every labeled poset on `n ≤ 5`
+> with `|L(P)| ≥ 2` (extended to `n ≤ 6` up to isomorphism by `mg-d1be`):
 > `λ_std > λ₂^BK` ⟺ `λ_std = 1` ⟺ `P` is an ordinal sum. Equivalently,
-> **`λ_std ≤ λ₂^BK` holds precisely off the ordinal sums.**
+> ~~**`λ_std ≤ λ₂^BK` holds precisely off the ordinal sums.**~~ — **true at `n ≤ 6`,
+> FALSE at every `n ≥ 7` we can check.**
 
-`⟸` is the §2.3 Corollary, **proven for all `n`**. `⟹` is **verified exhaustively
-at `n = 4,5`**, [heuristic] beyond. This is fairer to the repo than "the
-inequality is false": it is true generically and fails on a thin,
-exactly-identified set — which happens to be the set the programme is built around.
+`⟸` is the §2.3 Corollary, **proven for all `n`**. `⟹` is **false**: it is verified
+exhaustively at `n = 4,5` (and at `n = 6` by `mg-d1be`), and **refuted at `n = 7` and
+`n = 8`**. `mg-d1be` re-ran the set equality over every poset up to isomorphism through
+`n = 6` (enumerator self-checked against 1, 2, 5, 16, 63, 318 classes) and then two sizes
+further, at width `≤ 3`:
+
+| scan | classes | violations | ordinal sums | sym. diff. | **indecomposable violators** |
+|---|---|---|---|---|---|
+| all posets, `n = 4` | 15 | 8 | 8 | 0 | 0 |
+| all posets, `n = 5` | 62 | 31 | 31 | 0 | 0 |
+| all posets, `n = 6` | 317 | 133 | 133 | 0 | 0 |
+| width ≤ 3, `n = 7` | 1284 | 538 | 537 | **1** | **1** (width 2) |
+| width ≤ 3, `n = 8` | 7789 | 2876 | 2857 | **19** | **19** — of which **16 have width exactly 3** |
+
+The set equality holds through `n = 6`, takes its **first** hit at `n = 7`, and **breaks
+wholesale at `n = 8`** (19 exceptions in one sweep). Both witnesses are **indecomposable**
+(their incomparability graphs are connected, so they are not ordinal sums) and 16 of the
+`n = 8` ones have **width exactly 3** — so neither indecomposability nor the width-3
+restriction rescues the claim. Each is certified by an **exact** separating rational
+(`9437/10000` at `n = 7`, `243/250` at `n = 8`): `λ₂^BK ≤ c` by exact PSD elimination,
+`λ_std > c` by an exact rational Rayleigh quotient. Witnesses and certificates:
+[`OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md`](OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md) §(e)
+— not restated here, and neither sweep should be re-run (7789 classes at `n = 8` is not a
+cheap re-derivation, and it is already exact).
+
+**So the earlier framing — "fairer to the repo than *the inequality is false*: it is true
+generically and fails on a thin, exactly-identified set" — is withdrawn.** The set is not
+exactly identified. What survives is: the inequality fails on **all** ordinal sums (∀`n`,
+§2.3), and on an unidentified further set that is empty at `n ≤ 6` and non-empty from
+`n = 7` on.
+
+**Why this looked promising and why it never could have paid** (`mg-d1be`, the sharpest
+form of the point): at every exhaustively checkable size the direction that *would* have
+helped, `λ_std ≥ λ₂^BK`, holds exactly on the ordinal sums — i.e. exactly where
+`λ_std = 1` and the downstream target is already trivially true. **The helpful direction is
+available only where it is vacuous.** (At the `n = 7` violator it holds non-vacuously, so
+it is not *universally* vacuous — but it is not universal either.)
 
 ### 2.5 SD-BK is not a normalization slip [proven]
 
@@ -662,8 +709,12 @@ reason for `λ_std` to be in the BK spectrum — confirmed by its absence in
    to.
 2. `OneThird-L1b-Reverse-Cheeger-Proof-Attempt.md:273-275` — "`λ_std ≤ λ₂^BK` (the
    standard sector is a subspace)" — the justification is invalid, and the
-   inequality itself fails **exactly on the ordinal sums** (§2.4), i.e. exactly in
-   the programme's regime of interest.
+   inequality itself fails on **every** ordinal sum (§2.3), i.e. throughout the
+   programme's regime of interest. ✅ **DISCHARGED — struck at the destination by
+   `mg-d1be`**, which also **refuted the "and exactly there" rescue**: the set equality is a
+   small-`n` coincidence, false from `n = 7` on and broken wholesale at `n = 8` (§2.4). The
+   §5 conclusion it supported survives on stronger ground (incomparability, not a wrong-way
+   inequality).
 
 **Also worth recording:** the programme should know that
 `gap_BK ≥ (1−cos(π/n))/(n−1)` universally (Wilson 2004, §4). It is sharp, free,
@@ -731,14 +782,18 @@ Statements below were checked against primary sources rather than paraphrased.
 
 | Script | Produces | Certificate |
 |---|---|---|
-| `onethird_mg4a86_standard_dominance_target_audit.py` | §2.1, §2.2, §2.4, §2.5 | `data/onethird-mg4a86-standard-dominance-target-audit.json` |
+| `onethird_mg4a86_standard_dominance_target_audit.py` | §2.1, §2.2, §2.4 (`n = 4,5` table only), §2.5 | `data/onethird-mg4a86-standard-dominance-target-audit.json` |
+| `onethird_mgd1be_reverse_cheeger_ineq_audit.py` | §2.4 **refutation** (`n ≤ 6` up to iso; width ≤ 3 at `n = 7,8`) + both exact certificates | `data/onethird-mgd1be-reverse-cheeger-ineq-audit.json` |
 | `onethird_mg4a86_sector_leakage_and_tempering.py` | §3.2, §6.2, §6.4 | `data/onethird-mg4a86-sector-leakage-tempering.json` |
 | `onethird_mg4a86_ordinal_sum_theorem_check.py` | §2.3 | `data/onethird-mg4a86-ordinal-sum-check.json` |
 | `onethird_mg4a86_sdquant_overlap.py` | §7 | `data/onethird-mg4a86-sdquant-overlap.json` |
 
-All run under `python3.11` (the repo's numpy environment). No large enumerations:
-largest sweep is 4111 labeled posets at `n=5`; `n!`-sized tempered chains capped at
-`n ≤ 5`; the `n=6` work is a capped random sample plus named structured cases.
+All run under `python3.11` (the repo's numpy environment). Of the `mg-4a86` scripts, none
+carries a large enumeration: largest sweep is 4111 labeled posets at `n=5`; `n!`-sized
+tempered chains capped at `n ≤ 5`; the `n=6` work is a capped random sample plus named
+structured cases. **The `mg-d1be` audit is the exception** — 7789 isomorphism classes at
+`n = 8` in exact rational arithmetic. It is already exact and should **not** be re-run to
+confirm §2.4; read its certificate instead.
 
 **Built-in controls** (each catches a specific failure mode):
 - antichain `λ₂^BK` vs. the closed-form single-particle value — validates the BK
