@@ -82,7 +82,7 @@ Independently re-derived. `C` = CONFIRMED, `P` = PLAUSIBLE, `B` = BROKEN.
 | 3.4 | **Finding 3.4** LIB weakest **of the three** and alone suffices | PROVEN | **C as stated in the body** — but see §4.1: §0 and the STATE.md row drop "of the three" |
 | 3.4 | **(LIB-weak)** `E[inv_e] = o(n²)` ⟹ `λ_std → 1` | PROVEN (F2) | **C** — immediate from (F2) |
 | 3.4 | under (H), `E[inv_e] < C(n,2)/3` automatically | in-prose | **C** — each of ≤ `C(n,2)` incomparable pairs contributes `< 1/3` |
-| 3.4 | limit-vs-rate routing question unresolved in the record | **[OPEN]** | **C, and correctly left open** — this is the right call, see §4.3 |
+| 3.4 | limit-vs-rate routing question unresolved in the record | ~~**[OPEN]**~~ **RESOLVED elsewhere** | **C at the time, and correctly left open** — this is the right call, see §4.3. ⚠️ **ANSWERED 2026-07-29 by `mg-88bd` (audited `mg-e35c`) and reconciled back 2026-08-13 (`mg-ae9e`): NEITHER — the operative form is a constant threshold uniform in `n`, `E[inv_e] ≤ (ε/6)(n²−1)` at `ε ≤ ε_dem ≈ 2×10⁻²`. Full disposition in the target document's §14.** |
 | 3.4 | LIB = average-form, lemma = max-form of the same quantity | PROVEN (F1) | **C** |
 | 4 | **Identity 4.1** `h(x) − rank_e(x) = Σ_{x<_e y} m_{xy} − Σ_{y<_e x} m_{xy}`, **unconditional** | PROVEN | **C** — re-derived both sign cases; the `(H)`-is-unnecessary correction to mg-dcae §5.4 is right |
 | 4 | `b_x ≤ m_x`, equality iff mass one-sided | PROVEN | **C** (triangle inequality) |

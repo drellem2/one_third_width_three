@@ -45,6 +45,13 @@ Stanley, no Alexandrov–Fenchel, no Ma–Shenfeld, no combinatorial atlas is us
 > needs only **(LIB-weak)** `E[inv_e] = o(n²)`, which no arc has ever attacked. Whether the program
 > needs the limit or a rate is a scoping question I flag for pm-onethird rather than settle (§3.4).
 >
+> ⚠️ **THE FLAG WAS PICKED UP AND THE ANSWER IS NEITHER (added 2026-08-13, mg-ae9e — §14).** `mg-88bd`
+> (filed 58 minutes after this document was committed, audited `mg-e35c`) pins the operative form as
+> a **fourth** one: `E[inv_e] ≤ (ε/6)(n²−1)` at an absolute constant `ε ≤ ε_dem ≈ 2×10⁻²` **uniform
+> in `n`**. The limit *and* the rate are both stronger renderings that happen to be available, not
+> the requirement. **And (LIB-weak) has since been attacked** — `mg-c3ca`, audited `mg-c4f5` — with
+> the verdict that it does **not** deliver the operative form at any `n`.
+>
 > *(Both quantifiers narrowed 2026-07-31, mg-fccb, per the mg-d112 audit §4.1 — see §13. The
 > unrestricted forms said more than §3.4 proves.)*
 >
@@ -64,10 +71,11 @@ Stanley, no Alexandrov–Fenchel, no Ma–Shenfeld, no combinatorial atlas is us
 > also exactly the negation, *at every element*, of mg-dbd1 §3.1's named (B)-falsifier — which
 > mg-dbd1 stated only at the `e`-minimal element.
 >
-> **Named residuals for the next tickets, in priority order:** (i) the *routing* question of §3.4 —
-> pin whether the program consumes `λ_std → 1` or the rate `1 − λ_std ≤ C/(γn)`, since that decides
-> whether the live target is (LIB-weak) or LIB. It is a read of the merged record, not new
-> mathematics. (ii) prove **(EQ)** under freezing — elementary, Stanley-free, AF-free (genuinely so
+> **Named residuals for the next tickets, in priority order:** (i) ~~the *routing* question of §3.4~~
+> — **DISCHARGED `mg-88bd` (2026-07-29), audited `mg-e35c`; reconciled back here 2026-08-13, §14.**
+> The answer is neither: a constant threshold uniform in `n`, and the *"(LIB-weak) or LIB"* fork the
+> residual poses is malformed because both branches are stronger than what is consumed. It was
+> indeed a read of the merged record and not new mathematics. (ii) prove **(EQ)** under freezing — elementary, Stanley-free, AF-free (genuinely so
 > this time) and, unlike the locality lemma, not known to imply LIB.
 
 **What this does and does not kill.** *No mathematics is refuted.* Every `[PROVEN]` claim this
@@ -320,7 +328,9 @@ lemma is the **max** statement (§6.1 confirms the gap is a genuine factor `n`).
 > strictly-at-least-as-strong surrogates for it.**
 
 **And LIB itself is not the floor.** (F2) reads `1 − λ_std ≤ 6E[inv_e]/(n²−1)`, so for L1b's
-conclusion **exactly as `STATE.md` states it** (`λ_std → 1`, a limit, not a rate) it is enough that
+conclusion **exactly as `STATE.md` states it** (`λ_std → 1`, a limit, not a rate) — *as `STATE.md`
+stated it at the pin this document reads, `onethird_program @400f474`; it no longer does, see §14* —
+it is enough that
 
 > **(LIB-weak):** `E[inv_e] = o(n²)` under freezing,
 
@@ -328,6 +338,18 @@ which is weaker than LIB by a whole factor of `n`. Under (H) every incomparable 
 `< 1/3`, so `E[inv_e] < C(n,2)/3` automatically — (LIB-weak) asks only that freezing beat that
 trivial bound by any factor tending to infinity.
 
+> ⚠️ **ANSWERED ELSEWHERE — `mg-88bd`, audited `mg-e35c`, 2026-07-29. The text below is kept as
+> filed; read §14 first.**
+>
+> **The answer is NEITHER, and the dichotomy is malformed.** The architecture consumes a **fourth**
+> form — `E[inv_e] ≤ (ε/6)(n²−1)` at an absolute constant `ε ≤ ε_dem ≈ 2×10⁻²` **uniform in `n`**
+> (equivalently `1 − λ_std ≤ ε` at that `ε`). The limit and the rate are both *"stronger renderings
+> that happen to be available, not the requirement"* (`onethird_program/STATE.md:21`). The
+> recommendation this block closes with — *"the live target should be (LIB-weak)"* — **does not
+> follow and has since been refuted as a route**: `(LIB-weak) ⟹ (LIB-const)` holds only for
+> `n ≥ N₀`, and **no `N₀` works for the class at all** (`mg-c4f5` §5.3, landed `mg-5ce3`). See §14
+> for the pointer chain, the conditionality, and what this document got right.
+>
 > **Scoping question raised, not resolved [OPEN — for pm-onethird].** `STATE.md` states the wall's
 > conclusion as `λ_std → 1`, for which (LIB-weak) suffices; but mg-7ae7 (via the LIB-scoping doc §0)
 > states the program's operative target as the **rate** `1 − λ_std ≤ C/(γn)`, for which
@@ -661,6 +683,17 @@ not new mathematics, and it decides whether the live target is **(LIB-weak)** `E
 **LIB** `E[inv_e] = O(n/γ)`. If it is the limit, (LIB-weak) is by a wide margin the weakest open
 statement on this program and has never been attacked.
 
+> ⚠️ **THIS TICKET WAS FILED, DONE, AND AUDITED — and both of its stated alternatives lost
+> (added 2026-08-13, `mg-ae9e`; full disposition in §14).** `mg-88bd` (filed 2026-07-29 09:32Z,
+> **58 minutes after this document was committed**) derived the requirement backwards from L4 and
+> found **L4 states no `λ_std` hypothesis at all** — its hypothesis is prefix leakage
+> `Δ₁(A,B) ≤ ε` — so *"which one L4 consumes"* has no answer as posed. The consumer is one and two
+> links upstream (Step 2 / L1), and what it needs is a constant threshold **uniform in `n`**:
+> `E[inv_e] ≤ (ε/6)(n²−1)` at `ε ≤ ε_dem ≈ 2×10⁻²`. Audited `mg-e35c` (0 BROKEN mathematics).
+> **The last sentence above is now false in both halves:** it is not the limit, and (LIB-weak) *has*
+> been attacked (`mg-c3ca`, audited `mg-c4f5`) — with the finding that it does not close the
+> operative form at any `n`.
+
 **(ii) The mathematical ticket:**
 
 > **(EQ).** *Let `P` satisfy (H) with distinguished order `e`, `σ` uniform on `L(P)`. Show there is
@@ -723,8 +756,8 @@ Per the ticket: every claim asserted anywhere in this document, including reduct
 | 3.3 | correction 3: the "tolerates quadratic `E[inv_e]`" rationale (mg-dbd1 §0/§5, mg-8201 §2 = F5) is **vacuous** — the regime is empty | **PROVEN** (Thm 3.3) |
 | 3.3 | correction 4: given (B), (A) SPREAD and `Λ = O(1)` are **off the critical path** to the wall | **PROVEN** (Thm 3.3 + F2); (A) remains a true unconditional theorem, and (F2) postdates the certificate |
 | 3.4 | **Finding 3.4** — LIB is the weakest of {locality, (B), LIB} and alone suffices | **PROVEN** given Thms 3.2/3.3 + F2 |
-| 3.4 | **(LIB-weak)** `E[inv_e] = o(n²)` suffices for `λ_std → 1` as `STATE.md` states it | **PROVEN** (F2) |
-| 3.4 | the limit-vs-rate scoping question (`λ_std → 1` vs `1 − λ_std ≤ C/(γn)`) is unresolved in the merged record | **[OPEN]** — flagged for pm-onethird, deliberately not picked |
+| 3.4 | **(LIB-weak)** `E[inv_e] = o(n²)` suffices for `λ_std → 1` as `STATE.md` states it | **PROVEN** (F2) — ⚠️ the *mathematics* stands; **"as `STATE.md` states it" is stale**: true at the pin `@400f474`, and `STATE.md` no longer states the wall as a limit (mg-0e8c, §14) |
+| 3.4 | the limit-vs-rate scoping question (`λ_std → 1` vs `1 − λ_std ≤ C/(γn)`) is unresolved in the merged record | ~~**[OPEN]**~~ → **RESOLVED, AND THE DICHOTOMY WAS MALFORMED** — `mg-88bd` (2026-07-29, filed 58 min after this doc), audited `mg-e35c`; **neither** — the operative form is a constant threshold uniform in `n`, `E[inv_e] ≤ (ε/6)(n²−1)` at `ε ≤ ε_dem ≈ 2×10⁻²` (`onethird_program/docs/OneThird-lambda-std-Operative-Form.md` §0; `STATE.md:21`). **CONFIRMED CONDITIONALLY** — the condition is L4-as-stated, and it binds the constant that *suffices*, not the one we can *prove* (`mg-345e`). Reconciled back here 2026-08-13, `mg-ae9e` — **§14** |
 | 3.4 | LIB is the average-form, the lemma the max-form, of the same quantity | **PROVEN** (from F1) |
 | 3.4 | in-prose: Prop. 5.4's hypothesis is stronger than the theorem its conclusion was a step toward | **PROVEN** (Thm 3.2 vs F2) |
 | 4 | **Identity 4.1** — `h(x) − rank_e(x) = Σ_{x<_e y} m_{xy} − Σ_{y<_e x} m_{xy}`; **unconditional**, (H) not needed | **PROVEN**, elementary; corrects mg-dcae §5.4's "under (H)" framing (minor) |
@@ -899,5 +932,143 @@ The `W_m` caveat (`δ = 1/2`, so it separates the **quantities**, not the frozen
 
 ---
 
+## 14. The §3.4 scoping question — ANSWERED ELSEWHERE, reconciled back (added 2026-08-13, mg-ae9e)
+
+§3.4 flagged one question for pm-onethird rather than settling it: does the program consume the
+**limit** `λ_std → 1` or the **rate** `1 − λ_std ≤ C/(γn)`? The flag worked. **The question was
+picked up within the hour, answered, and independently audited — and the answer never came back to
+this document.** It has read `unresolved in the merged record` for fifteen days while the corpus
+moved past it. This section is the missing link, not a new result.
+
+### 14.1 The answer: NEITHER — and the dichotomy was malformed
+
+| | |
+|---|---|
+| **Settled by** | **`mg-88bd`** — *"Pin the operative `λ_std` form: the corpus holds THREE (limit / rate / fixed constant) and the architecture pins none — derive it backwards from L4"*. Deliverable: `onethird_program/docs/OneThird-lambda-std-Operative-Form.md` (589 lines, commit `64463ae`). |
+| **Audited by** | **`mg-e35c`** (adversarial, paper-and-pencil): **0 BROKEN mathematics**, 2 broken label/attribution derivations, and F5 superseding the constant `2×10⁻⁴ → 2×10⁻²`. |
+| **Landed at** | `onethird_program/STATE.md:21`, `:31`, `:125` (row 8), and the attempt-index row at `:171`. |
+| **Restated by** | **`mg-0e8c`** (on Daniel's challenge) and applied at nine sites; **`mg-28b6`** applied the tenth, `docs/state-of-the-wall.html:385`. |
+
+**The operative form is a fourth one, in neither branch of §3.4's fork** (`Op-Form` §0, verbatim):
+
+> `1 − λ_std(P) ≤ ε_spec` for an **absolute constant** `ε_spec > 0`, **uniformly in `n`** — i.e. an
+> explicit constant threshold holding at *every* `n`, not an asymptotic statement. It is **not** the
+> limit, **not** the rate, and **not quite** the source's own *"sufficiently small `ε`"* either.
+
+In inversion terms, via the same master bound (F2) this document uses:
+`E[inv_e] ≤ (ε_spec/6)(n²−1)` at `ε_spec ≤ ε_dem ≈ 2×10⁻²` — a constant-factor improvement on the
+uniform-random value, **weaker as an asymptotic class than (LIB-weak), which is weaker than LIB.**
+`STATE.md:21` now says it in one line: *"The limit `λ_std → 1` and mg-7ae7's rate
+`1 − λ_std ≤ C/(γn)` are **stronger renderings that happen to be available**, not the requirement."*
+
+**Why §3.4's fork was malformed, in one sentence a reader can check.** §3.4 asked *"which one L4
+and the downstream steps actually consume"*; `mg-88bd` found that **L4 states no `λ_std` hypothesis
+at all** — its hypothesis is prefix leakage `Δ₁(A,B) ≤ ε` — so the `λ_std` requirement enters one and
+two links upstream, at Step 2 / L1, where the source asks for a fixed small `ε` with no `n` in it.
+
+**And the rate's provenance is settled too, in this repository's own file.** `Op-Form` §5.2 shows
+mg-7ae7's `1/n` is an artifact of its *input*, not a demand of its consumer: Theorem E delivers
+`Φ(S) ≤ η(γ,n) = 2/(γn)`, and `step8.tex:68–72` says its consumer needs only *"the bound lies below
+any prescribed positive threshold once `n ≥ n₀(γ,T)`"*, with `rem:n-dependence-g1` (`step8.tex:290`)
+absorbing the `n`-dependence into the small-`n` base case. **Both quotations verified verbatim in
+this worktree** at `step8.tex:66–73` and `step8.tex:290–302`.
+
+### 14.2 What this document got right, and the one recommendation it got wrong
+
+**Right, and vindicated.** §3.4's instinct was that the live target sits nearer the `o(n²)` end than
+the `O(n/γ)` end, and that the program had been fighting a requirement a factor `n` stronger than it
+needs. The operative form is quadratic-with-a-small-constant. **`Op-Form` §7.3–7.4 is the sting**:
+the relaxation is real, correctly derived, and buys the mg-210d route **nothing** — the small
+constant makes the *asymptotically weaker* requirement **numerically stronger than LIB at every `n`
+below ≈ 900**.
+
+**Wrong, and now refuted as a route.** §3.4 closed with *"if `λ_std → 1` is genuinely what is
+needed, the live target should be (LIB-weak), which no arc on this program has ever attacked."*
+Both halves have since failed:
+
+- **`λ_std → 1` is not what is needed** (§14.1), so the conditional's antecedent is false.
+- **(LIB-weak) has since been attacked** — `mg-c3ca` (2026-08-05), whose title echoes §3.4's own
+  words, audited by `mg-c4f5`. The audit's verdict: (LIB-weak) closes the **limit** rendering but
+  **does not supply the operative constant form**. `(LIB-weak) ⟹ (LIB-const)` holds only for
+  `n ≥ N₀`, and **`mg-c4f5` §5.3 (landed `mg-5ce3`) shows no `N₀` works for the class at all** — for
+  any candidate `N₀`, `g(n) = n²` below `N₀` and `n²/log₂ n` at and above is `o(n²)` and violates the
+  constant form throughout `[1, N₀)`. **The gap is a quantifier and it is unbounded**, so *"go and
+  find `N₀`"* is closed rather than open.
+
+### 14.3 The conditionality — this is RESOLVED, not PROVEN
+
+`mg-88bd`'s ruling is recorded at the far end as **CONFIRMED CONDITIONALLY**, and the condition is
+carried here rather than dropped: it is **L4-as-stated**, and *if L4 needs an `n`-dependent modulus
+the answer flips*. **`mg-345e` narrows which side can flip: the demand side only** — the pair-bias
+derivation of the supply `ε_sup` is L4-independent. `ε_dem = ε_leak²/(2C₃)` additionally carries
+`C₃` unquantified, which is not an L4 question. So the resolution of §3.4's question is as solid as
+L4-as-stated, and no more.
+
+### 14.4 Two further staleness effects in this document, corrected in place
+
+1. **Every claim in this document about what `STATE.md` says is pinned**, at
+   `onethird_program @400f474` (§1.1), and that pin is 2026-07-21. At `400f474`, `STATE.md:13` read
+   `δ(P) < 1/3 ⟹ λ_std → 1 — equivalently E[inv_e] = O(n/γ) (LIB)`, so **§3.4's reading was exactly
+   right at the pin** — including its objection to that *"equivalently"*, which `mg-0e8c` later
+   killed at its own site. It is no longer right at `onethird_program` HEAD. Riders added at §0, §3.4
+   (prose and blockquote), §9, and the two §10 ledger rows.
+2. **§13's closing quotation of `STATE.md` row 8** (*"(B) ⟹ LIB ⟹ `λ_std→1`"*) is likewise a
+   quotation-as-of-2026-07-31 and has been superseded: row 8 now reads
+   *"(B) ⟹ LIB ⟹ (LIB-weak) `E[inv_e] = o(n²)`, which closes the **limit** rendering"*, with the
+   quantifier caveat of §14.2 attached. **§13 is left as filed** — it is a dated record of a
+   disposition, and editing it would falsify what it records.
+
+**§12's proposed `STATE.md` text is also left as filed**, for the same reason: it is an archive of
+what was proposed on 2026-07-29, and its *"Scoping question flagged, not picked"* clause is a true
+statement about that proposal. The far end has since moved past it (`mg-0e8c`, `mg-28b6`).
+
+### 14.5 The sweep the ticket asked for — how many other rows are in this position?
+
+The `mg-ae9e` brief asked whether other `§`-rows carrying *"unresolved in the merged record"* are
+answered-elsewhere-and-never-reconciled, and for the count if the check was cheap. It was.
+
+| population | hits | disposition |
+|---|---|---|
+| exact phrase *"unresolved in the merged record"*, `one_third_width_three` | **1** | this row — reconciled here |
+| exact phrase, `onethird_program` | **0** | — |
+| same claim, restated in the sibling audit (`…-IndependentAudit.md:85`, *"unresolved in the record"*) | **1** | **the second site, in the same position** — rider added there, pointing here |
+| other `[OPEN]` rows in this repository's claim ledgers routed to another owner | **0** | no further instance of this shape found |
+
+**So: two sites, one claim, both stale, both now carrying the link.** The phrase-exact sweep found
+one and missed the other by a single word (*"in the record"* vs *"in the merged record"*), which is
+the honest reading of how cheap this check is: it is cheap and it is **not** a detector. Other
+`unresolved`/`AMBER` matches in the repository (`state-F32.md`, `state-MA-Sig-*`,
+`state-S6-QA-*`, `state-S7F-*`, `compatibility-geometry-*`) belong to unrelated programs and were
+not assessed.
+
+### 14.6 The general shape, which is why this was worth a ticket
+
+`mg-ae9e` was surfaced by doctor asking whether an old review was *done* or *overtaken*. It was
+**neither: answered elsewhere and never reconciled back** — a third failure mode, and it is invisible
+to every detector this program has:
+
+- **not stale by mtime** — the document was edited on 2026-07-31, after the answer landed;
+- **not an open work item** — `mg-88bd` is `archived`, `mg-e35c` is `archived`, both `done`;
+- **not a false claim** — every sentence in §3.4 was true when written and the mathematics is still
+  correct. The row is *out of date about the state of an answer*, which no truth-check tests.
+
+**Two structural aggravators, both nameable.** (a) The question and its answer live in **different
+repositories** — this document is in `one_third_width_three`, `STATE.md` and `Op-Form` are in
+`onethird_program` — so no single-repo grep, gate, or pin could ever have connected them; §12 says in
+its own words that pm-onethird owns the far end and this ticket could not land there. (b) **Nothing
+links them**: no successor tag, no shared work item, and no commit message mentioning both — the
+timestamps below were the only evidence, and they had to be reconstructed rather than read.
+
+**The timeline, which is the part worth keeping.** The flag was raised at 2026-07-29 **08:34:32Z**
+(`f252afb`, carrying §3.4). `mg-1fdb` was filed at **09:13:38Z** and `mg-88bd` at **09:32:06Z**, both
+by Daniel — **58 minutes after the flag**, on exactly the question §3.4 declined to pick. The process
+this document was worried about worked perfectly, at the speed of an hour; what failed is that the
+answer had no path back to the document that asked. *Flagging a question routes it forward. Nothing
+routes the answer back.*
+
+---
+
 *Deliverable for mg-a58f. LaTeX-first rule honored (written proof + self-audit; no Lean). Subject to
 the standing independent pre-PM-review audit stage, `STATE.md` Appendix A.*
+*§14 added by `mg-ae9e` (2026-08-13): reconcile only — no mathematics is asserted, refuted, or
+re-derived here that is not quoted with its source.*
