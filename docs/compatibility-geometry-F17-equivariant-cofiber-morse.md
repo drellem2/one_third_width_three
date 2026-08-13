@@ -209,6 +209,16 @@ Every relation of `c(Q)` *into* `a_n` is therefore in `{r_\ast} ∪ {(z, a_n) : 
 
 A poset with a global minimum has a contractible (cone) order complex. A closure operator `c` on a poset `P` induces a homotopy equivalence `Δ(P) ≃ Δ(c(P))` (Björner, *Topological methods*, §10.2; the order-homotopy lemma for monotone `f ≥ id`). Hence `Δ(\overline L(Q_0)) ≃ Δ(c(\overline L(Q_0)))`, a cone — contractible. ∎
 
+> **Forward pointer, added 2026-08-14 (mg-52c4).** L1 is the special case `P = ` a chain of a
+> dichotomy that holds for **every** finite poset `P` with at least one relation, and its proof is L1's
+> proof with `r_*` replaced by *any comparable non-cover pair*:
+> `\Delta(\overline L(P))` is **contractible** if `P` has a 3-element chain, and is `S^{c-2}`
+> (`c = ` number of comparable pairs of `P`) if `P` has height 1. This matters outside F17: L1 is the
+> **only** per-poset proper-subposet statement in the corpus, and it is the answer to Daniel's
+> `mg-e768` PART B question *"did we prove anything for individual posets, say taking all their proper
+> subposets"*. See `docs/OneThird-mg52c4-PerPoset-Subposet-Question.md` §2.2–§2.3. Nothing in F17 is
+> changed or retracted by this.
+
 **Remarks.** (a) The lemma is *purely combinatorial and fully n-uniform* — the closure operator `c` and the witness `r_\ast` are given by an n-independent formula. (b) It is the **single** topological input that is not "a cone" or "an interior operator": it is the one place a genuine homotopy-equivalence argument is needed, and it is reused twice — once in MoveA (Prop. 2.1) and once in the `A_n^t` attachment (§4.2). (c) The harness confirms it at `n = 3` (`|\overline L| = 5`, image-min `{(0,2)}`, direct reduced Betti `(0,0)`), `n = 4` (`|\overline L| = 38`, direct reduced Betti `(0,0,0,0,0)`), and `n = 5` (`|\overline L| = 355`, image-min `{(0,4)}`; the direct Betti is skipped — the order complex is too large to materialise — but the closure-operator proof *is* the n-uniform argument and needs no computation).
 
 ---

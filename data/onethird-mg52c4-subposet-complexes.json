@@ -1,0 +1,59 @@
+{
+  "ALL_PASS": true,
+  "L1": {
+    "n=3": true,
+    "n=4": true,
+    "n=5": true
+  },
+  "claim": "mg-52c4 Theorem A + Corollary B",
+  "control": {
+    "PPF_4": {
+      "swapped_fail_height_1": 86,
+      "swapped_fail_height_ge_2": 108
+    },
+    "PPF_5": {
+      "swapped_fail_height_1": 840,
+      "swapped_fail_height_ge_2": 3270
+    }
+  },
+  "families": {
+    "PPF_3": {
+      "count": 12,
+      "full_betti_checked": 12,
+      "height_1": 12,
+      "height_ge_2": 0,
+      "mu_failures": 0
+    },
+    "PPF_4": {
+      "count": 194,
+      "full_betti_checked": 194,
+      "height_1": 86,
+      "height_ge_2": 108,
+      "mu_failures": 0
+    },
+    "PPF_5": {
+      "count": 4110,
+      "full_betti_checked": 0,
+      "height_1": 840,
+      "height_ge_2": 3270,
+      "mu_failures": 0
+    },
+    "PPF_6_sample": {
+      "count": 14813,
+      "height_1_all_included": 11642,
+      "mu_failures": 0
+    }
+  },
+  "links": {
+    "n=3": {
+      "failures": 0,
+      "height_ge_2_contractible": 0,
+      "links_computed": 12
+    },
+    "n=4": {
+      "failures": 0,
+      "height_ge_2_contractible": 108,
+      "links_computed": 194
+    }
+  }
+}

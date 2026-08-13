@@ -202,7 +202,15 @@ After §1, the framework has:
 (F-2) **Cohomology theory.** Mitchell / Baues–Wirsching cohomology, equivalent to constructible-coefficient cohomology of `\Delta_n`.
 (F-3) **F17+F18 unconditional content.** `H^k(PPF_n, \underline{\mathbb{Q}}) = sgn_{S_n}` in degree `n−2`, else trivial.
 (F-4) **Canonical obstruction class.** `\omega_{bal}^{(n)} \in H^{n-2}(PPF_n, \underline{\mathbb{Q}})^{sgn}` exists, unique up to scalar, *unconditional*.
-(F-5) **Sub-site framework.** Up-sets `\uparrow P` parametrise BK-subposet families; restriction maps carry local-to-global content.
+(F-5) **Sub-site framework.** Up-sets `\uparrow P` parametrise BK-subposet families; ~~restriction maps carry local-to-global content~~.
+
+> **STRUCK 2026-08-14 (mg-52c4) — the second clause is vacuous.** `\uparrow P` has `P` as a global
+> *minimum*, so `\Delta(\uparrow P)` is a cone and `\widetilde H^k(\uparrow P, \underline{\mathbb{Q}}) = 0`
+> for all `k`. Hence `\text{res}_{\uparrow P}(\omega_{bal}^{(n)}) = 0` for **every** `P \in PPF_n` and
+> every `n \ge 3`, unconditionally: the restriction map is zero and carries no local-to-global content
+> for any `P`, ever. (§2.3 half-notices this — *"`\Delta(\uparrow P)` is the cone of this over `P`"* —
+> but does not carry it back here.) The first clause stands: up-sets do parametrise BK-subposet
+> families. See `docs/OneThird-mg52c4-PerPoset-Subposet-Question.md` §3.1.
 
 What the framework *needs* next:
 
@@ -263,11 +271,29 @@ where `(a_i, b_i)` is the cover relation added in `P_i \to P_{i+1}` and `\Pr_{P_
 
 For `P \in PPF_n`, restriction `\text{res}_{\uparrow P} : H^{n-2}(PPF_n, \underline{\mathbb{Q}}) \to H^{n-2}(\uparrow P, \underline{\mathbb{Q}})` gives a class `\omega_{bal}^{(n)}|_{\uparrow P}`. Its non-vanishing carries local-to-global content (cf. §1.5).
 
-`\uparrow P` is rationally the link of `P` in `\Delta_n` (more precisely: `\Delta(\uparrow P \setminus \{P\}) = \text{lk}_{\Delta_n}(P)`, since `\uparrow P` includes `P` as its minimum but `\Delta(\uparrow P)` is the cone of this over `P`). For F17+F18-style constraints to apply to `\text{lk}_{\Delta_n}(P)`, we need this link's rational cohomology. **This is not in hand for general `P`** — F17+F18 control `\Delta_n` globally, not its links.
+`\uparrow P` is rationally the link of `P` in `\Delta_n` (more precisely: ~~`\Delta(\uparrow P \setminus \{P\}) = \text{lk}_{\Delta_n}(P)`~~, since `\uparrow P` includes `P` as its minimum but `\Delta(\uparrow P)` is the cone of this over `P`). For F17+F18-style constraints to apply to `\text{lk}_{\Delta_n}(P)`, we need this link's rational cohomology. **This is not in hand for general `P`** — F17+F18 control `\Delta_n` globally, not its links.
+
+> **CORRECTED + ANSWERED 2026-08-14 (mg-52c4).** Two amendments to this paragraph.
+>
+> **(i) The struck identification is false.** The link of a vertex in an order complex is the join of
+> *both* halves: `\text{lk}_{\Delta_n}(P) = \Delta(\overline L(P)) * \Delta(\uparrow P \setminus \{P\})`,
+> where `\overline L(P) = \{Q \in PPF_n : Q \subsetneq P\}` is the poset of **proper subposets** of `P`.
+> This paragraph drops the lower factor. Everything it goes on to say about "the link" is about the
+> *upper* half only.
+>
+> **(ii) The open question below is now closed — in the negative.** mg-52c4 Theorem A: for any finite
+> `P` with a 3-element chain, `\Delta(\overline L(P))` is **contractible** (and for height-1 `P` it is
+> `S^{c-2}`, `c = |\text{Comp}(P)|`). Since a join with a contractible factor is contractible,
+> `\text{lk}_{\Delta_n}(P)` is **contractible for every `P` of height `\ge 2`** — so it is *not* a
+> rational sphere of the predicted dimension, and `\omega_{bal}^{(n)}` has no non-zero fibrewise
+> restriction. By Mirsky, every width-`\le 3` poset on `n \ge 7` elements has a 3-chain, so this covers
+> the entire target regime. The `\Delta(\overline L(P))` half of the link is settled; the upper half
+> `\Delta(\uparrow P \setminus \{P\})` remains uncomputed but carries no anchor. See
+> `docs/OneThird-mg52c4-PerPoset-Subposet-Question.md` §2.3, §3.2–§3.3.
 
 Honest observation: the F17+F18 unconditional `\Delta_n \simeq_\mathbb{Q} S^{n-2}` *rational sphere* statement does NOT immediately give `\text{lk}(P)` is a rational sphere of dimension `n − 2 − \text{rk}(P) - 1`. Spheres have spherical links, but `\Delta_n` is only *rationally* a sphere, and rational-spherical links is a strictly weaker conclusion (requires integral / homotopy-spherical, not just `\mathbb{Q}`-spherical). So this is an open question — and an *interesting* one for F28's framework, though not in scope for this scoping pass.
 
-(Side note for §8: a F29 sub-question could be — *are the links `\text{lk}_{\Delta_n}(P)` rationally spherical of the predicted dimension `n − 2 − \text{rk}(P) - 1`?* This would refine F17+F18 to the link level.)
+(Side note for §8: a F29 sub-question could be — *are the links `\text{lk}_{\Delta_n}(P)` rationally spherical of the predicted dimension `n − 2 − \text{rk}(P) - 1`?* This would refine F17+F18 to the link level.) — **ANSWERED 2026-08-14 (mg-52c4): NO.** For every `P` of height `\ge 2` the link is *contractible*, not spherical of any dimension; the height-1 exceptions have `\le 6` elements at width `\le 3`. This does not refine F17+F18 to the link level — it shows there is nothing at the link level to refine to.
 
 ### 2.4 The `S_n`-equivariant decomposition
 
