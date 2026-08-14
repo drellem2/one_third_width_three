@@ -1,0 +1,385 @@
+{
+ "ALL_PASS": true,
+ "R2_measured": true,
+ "caveat": "What '= 6' is and is not.  It is a count over Z/2, in degree 4, over all 163 classes; beta~_Q <= beta~_{F2} always, so the 157 classes reading zero over Z/2 are rationally acyclic in that degree, but a Z/2 ONE bounds beta~_Q <= 1 and does not give a rational value (mg-72e4 Sec.3), so the field label stays on the figure.  Two blind spots remain and neither is the one R2 closed: (a) ODD torsion at a prime nobody read -- the three fields here are Z/2 and the instrument's two primes near 10^6, and a class could carry q-torsion at some other q; (b) 'no 2-torsion' is read against the primes standing in for the free rank, so torsion at 1000003 or 999983 itself would be invisible to the comparison.  The two primes agreeing on every one of the 163 classes is evidence for (b), not a proof.",
+ "control_Z1_rp2": {
+  "over_Z2": {
+   "-1": 0,
+   "0": 0,
+   "1": 1,
+   "2": 1
+  },
+  "over_primes": [
+   {
+    "-1": 0,
+    "0": 0,
+    "1": 0,
+    "2": 0
+   },
+   {
+    "-1": 0,
+    "0": 0,
+    "1": 0,
+    "2": 0
+   }
+  ],
+  "z2_sees_torsion_primes_miss": true
+ },
+ "control_Z2_pins_against_instrument": {
+  "comparisons": 72
+ },
+ "control_Z3_mutation": {
+  "broken_reader_over_RP2": {
+   "-1": 0,
+   "0": 0,
+   "1": 0,
+   "2": 0
+  },
+  "control_Z1_goes_red_on_it": true
+ },
+ "degree_of_interest": 4,
+ "failures": [],
+ "full_betti_atom_cap": 20,
+ "instrument_primes": [
+  1000003,
+  999983
+ ],
+ "measurement": {
+  "classes_nonzero_over_Z2": 6,
+  "classes_nonzero_over_primes": 6,
+  "classes_nonzero_over_primes_within_atom_cap": 2,
+  "classes_seen_ONLY_by_Z2": 0,
+  "classes_where_Z2_disagrees_with_primes": 0,
+  "degree": 4,
+  "no_2_torsion_among_the_R2_population": true,
+  "no_2_torsion_in_degrees_3_or_4": true,
+  "rows_disagreeing": [],
+  "rows_nonzero_over_Z2": [
+   {
+    "P": [
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      0,
+      5
+     ],
+     [
+      0,
+      6
+     ]
+    ],
+    "beta_deg_Z2": 1,
+    "beta_deg_primes": [
+     1,
+     1
+    ],
+    "c": 6,
+    "class_size": 7,
+    "n_atoms": 30,
+    "within_full_betti_atom_cap": false
+   },
+   {
+    "P": [
+     [
+      0,
+      6
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      4,
+      6
+     ],
+     [
+      5,
+      6
+     ]
+    ],
+    "beta_deg_Z2": 1,
+    "beta_deg_primes": [
+     1,
+     1
+    ],
+    "c": 6,
+    "class_size": 7,
+    "n_atoms": 30,
+    "within_full_betti_atom_cap": false
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      0,
+      5
+     ],
+     [
+      0,
+      6
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      1,
+      5
+     ],
+     [
+      1,
+      6
+     ]
+    ],
+    "beta_deg_Z2": 1,
+    "beta_deg_primes": [
+     1,
+     1
+    ],
+    "c": 10,
+    "class_size": 21,
+    "n_atoms": 22,
+    "within_full_betti_atom_cap": false
+   },
+   {
+    "P": [
+     [
+      0,
+      5
+     ],
+     [
+      0,
+      6
+     ],
+     [
+      1,
+      5
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      5
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      3,
+      5
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      4,
+      6
+     ]
+    ],
+    "beta_deg_Z2": 1,
+    "beta_deg_primes": [
+     1,
+     1
+    ],
+    "c": 10,
+    "class_size": 21,
+    "n_atoms": 22,
+    "within_full_betti_atom_cap": false
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      0,
+      5
+     ],
+     [
+      0,
+      6
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      1,
+      5
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      2,
+      5
+     ],
+     [
+      2,
+      6
+     ]
+    ],
+    "beta_deg_Z2": 1,
+    "beta_deg_primes": [
+     1,
+     1
+    ],
+    "c": 12,
+    "class_size": 35,
+    "n_atoms": 18,
+    "within_full_betti_atom_cap": true
+   },
+   {
+    "P": [
+     [
+      0,
+      4
+     ],
+     [
+      0,
+      5
+     ],
+     [
+      0,
+      6
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      1,
+      5
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      2,
+      5
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      3,
+      5
+     ],
+     [
+      3,
+      6
+     ]
+    ],
+    "beta_deg_Z2": 1,
+    "beta_deg_primes": [
+     1,
+     1
+    ],
+    "c": 12,
+    "class_size": 35,
+    "n_atoms": 18,
+    "within_full_betti_atom_cap": true
+   }
+  ]
+ },
+ "n": 7,
+ "of": "scripts/compat_geom_mg72e4_height1_anchor.py",
+ "population": {
+  "R2_population_within_atom_cap": {
+   "classes": 146,
+   "gate": "#atoms <= 20 -- the instrument's own full-homotopy-type gate",
+   "labelled": 225540
+  },
+  "classes": 163,
+  "every_elimination_within_instrument_cap": true,
+  "extension_outside_atom_cap": {
+   "classes": 17,
+   "labelled": 2352,
+   "note": "read here as well; mg-9cd1 read these over Z/2 first, and this is an independent re-derivation, not a quotation"
+  },
+  "instrument_elimination_cap": 600000,
+  "labelled": 227892,
+  "max_skeleton_faces_eliminated": 495147,
+  "seconds": 152.7
+ },
+ "remainder": "R2 -- mg-0f24 D3's '>= 6 of 163' is not '= 6' until the 146 are read over Z/2",
+ "ticket": "mg-c99c",
+ "verdict_D3": "R2 CLOSED.  The 146 classes within the atom cap carry NO 2-torsion in degree 3 or 4: beta~_4 over Z/2 equals beta~_4 over both instrument primes for every one of them (universal coefficients then forces t_4(2) = t_3(2) = 0, since they are non-negative and sum to zero).  Reading all 163 classes over Z/2 in degree 4 gives EXACTLY 6 non-zero, so D3's '>= 6 of 163' becomes '= 6 of 163 over Z/2'.  The inequality was carrying the 2-torsion blind spot and nothing else; the remaining blind spot is a DIFFERENT one -- see the caveat field."
+}

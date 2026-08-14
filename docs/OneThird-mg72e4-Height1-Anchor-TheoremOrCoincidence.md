@@ -258,8 +258,16 @@ entry, including the dimension-7 count `mg-bcd7` *predicted* and `mg-9cd1` measu
 >    over — the old gate excluded **exactly one** class, this one, and the realised-face gate
 >    excludes **none**. The defect had a population of 1. It bites harder further out: at `n = 8`
 >    the old gate would decline **6 classes / 1 792 labelled vertices** (`c = 1`, three `c = 2`,
->    two `c = 3`). *What the realised gate would say about those six is **not measured** — `n = 8`
->    is outside everything here, and counting their faces is a job, not a clause.*
+>    two `c = 3`). **`mg-c99c` R1 has now measured what the realised gate says about those six,
+>    and the `n ≤ 7` pattern does not repeat: it declines 3 of them (392 labelled) and admits 3
+>    (1 400 labelled, `78 %`).** So the defect's population is 1 at `n ≤ 7` and 3 at `n = 8`, not
+>    6 — but "the ambient gate's declines are always spurious" would have been wrong for half of
+>    them. The measurement is complete over all 206 gated classes at `n = 8` and the realised gate
+>    excludes **nothing** the ambient gate admitted, on either column, at any `n ≤ 8`
+>    ([`scripts/audit_mgc99c_n8_realised_gate.py`](../scripts/audit_mgc99c_n8_realised_gate.py),
+>    [`data/onethird-mgc99c-n8-realised-gate.json`](../data/onethird-mgc99c-n8-realised-gate.json);
+>    `mg-0f24`'s `n ≤ 7` per-class verdicts are replayed there and reproduce identically). *`n = 8`
+>    remains outside everything else here — this is a reading of a **gate**, not of any `β̃_d`.*
 > 2. **A naive swap would still have excluded it.** The census reads the skeleton through dimension
 >    `d + 1`, but the near-miss column `β̃_{d+1}` (control N1) needs one dimension more, and this
 >    class is `1 470 787` faces at the first and `3 546 022` at the second — *over* the same
@@ -310,7 +318,7 @@ different and much more informative measurement:
 | 4 | 4 of 8 | `{0, 1}` | **1** | 8 of 8 — complete |
 | 5 | 4 of 20 | `{2}` | **2** | 20 of 20 — complete |
 | 6 | 5 of 55 | `{3}` | **3** | 55 of 55 — complete |
-| 7 | **≥ 6 of 163** (2 of the 146 within cap; see §4.3) | `{4}` | **4**, attained at the stars | **163 of 163** — complete since `mg-dd84` |
+| 7 | **= 6 of 163 over `Z/2`** (see §4.3) | `{4}` | **4**, attained at the stars | **163 of 163** — complete since `mg-dd84` |
 
 *(Three things about that table, all of them scope. **(i) The first column is a field reading, not
 a `Q`-acyclicity verdict** — it used to be headed *"not `Q`-acyclic"*, which is the direction §3's
@@ -378,27 +386,57 @@ minimum margin is `n − 3`.
 The five non-`Q`-acyclic classes at `n = 6` are `c = 5` (the star `K_{5,1}` and its dual),
 `c = 8` (`K_{2,4}` and `K_{4,2}`) and `c = 9` (`K_{3,3}`) — complete bipartite height-1 posets.
 
-**At `n = 7` the list is `≥ 6` of the 163, not the 2 this section used to name** (`mg-9cd1` **D3**).
-The two this instrument found are the two it looked at; four more sat among the 17 classes it never
-gave a full homotopy type, and `mg-9cd1` §4.3 measured them. *(Read with §3's caveat: "carries
-homology" below means **reads non-zero over the field named in the last column**, which is a
-rational statement only where the last column says so.)*
+**At `n = 7` the list is `= 6` of the 163 over `Z/2`, not the 2 this section used to name**
+(`mg-9cd1` **D3**, corrected to `≥ 6` at `mg-0f24`, closed to `= 6` at `mg-c99c`). The two this
+instrument found are the two it looked at; four more sat among the 17 classes it never gave a full
+homotopy type, and `mg-9cd1` §4.3 measured them. *(Read with §3's caveat: "carries homology" below
+means **reads non-zero over the field named in the last column**, which is a rational statement
+only where the last column says so.)*
 
 | class | `c` | labelled | `β̃₄` | field, and what it establishes |
 |---|---|---|---|---|
-| `K_{3,4}`, `K_{4,3}` | 12 | 35 each | 1 | both instrument primes — the two within cap |
-| `K_{6,1}`, `K_{1,6}` (the stars) | 6 | 7 each | 1 | `Z/2` (`mg-9cd1`), **and rationally by F17+F18** |
-| `K_{2,5}`, `K_{5,2}` | 10 | 21 each | 1 | **`Z/2` only** — this bounds `β̃_Q ≤ 1`; no rational value |
+| `K_{3,4}`, `K_{4,3}` | 12 | 35 each | 1 | both instrument primes **and `Z/2`** (`mg-c99c`) — the two within cap |
+| `K_{6,1}`, `K_{1,6}` (the stars) | 6 | 7 each | 1 | `Z/2` (`mg-9cd1`), **both instrument primes** (`mg-c99c`), **and rationally by F17+F18** |
+| `K_{2,5}`, `K_{5,2}` | 10 | 21 each | 1 | `Z/2` (`mg-9cd1`) **and both instrument primes** (`mg-c99c`) — all three still only bound `β̃_Q ≤ 1`; **no rational value** |
 
 All six are complete bipartite with homology in degree exactly `n − 3 = 4`, which *strengthens* the
 reading below rather than weakening it; what was wrong was the count. The `n = 7` entry in §4.2's
-first column is therefore `≥ 6 of 163` and the `2` that stood there was `2 of the 146`.
+first column is therefore `= 6 of 163 over Z/2` and the `2` that stood there was `2 of the 146`.
 
-**Why `≥ 6` and not `= 6`, given that all 163 classes now have a degree-4 reading.** The two
-populations were read over **different fields** — the 146 over this instrument's two primes near
-`10⁶`, the 17 over `Z/2` — so a class among the 146 could carry 2-torsion in degree 4 that its
-primes cannot see. Six is what has been seen; nothing here rules out a seventh, and closing that
-would mean re-reading the 146 over `Z/2`, which nobody has done.
+**Why this is now `= 6` and not `≥ 6` — the inequality was carrying one blind spot, and it is
+closed** (`mg-c99c` **R2**). The two populations used to be read over **different fields** — the
+146 over this instrument's two primes near `10⁶`, the 17 over `Z/2` — so a class among the 146
+could have carried 2-torsion in degree 4 that its primes cannot see, and `≥` was the honest
+symbol. All 146 have now been re-read over `Z/2`
+([`scripts/audit_mgc99c_z2_reread.py`](../scripts/audit_mgc99c_z2_reread.py),
+[`data/onethird-mgc99c-z2-reread.json`](../data/onethird-mgc99c-z2-reread.json)):
+
+- `β̃₄` over `Z/2` **equals** `β̃₄` over both instrument primes on **every one of the 146**. By
+  universal coefficients `dim_{F₂} H̃₄ = rank₄ + t₄(2) + t₃(2)`, so the agreement forces
+  `t₄(2) = t₃(2) = 0` — both, since they are non-negative and sum to zero. There is no hidden
+  seventh class and no 2-torsion in degree 3 or 4 anywhere in that population.
+- The other **17** were re-read too, in the same run and independently of `mg-9cd1`, because
+  their degree-4 skeletons turn out to sit **inside this instrument's own `ELIM_CAP`** (largest
+  eliminated: `495 147` faces against the 600 000 budget). They were excluded from the census by
+  the gate on the **full** homotopy type, not by any degree-4 cost. That re-derivation reproduces
+  `mg-9cd1`'s four exactly — the two stars and `K_{2,5}`/`K_{5,2}` — so the `6` is now a figure
+  one script derives over all 163 rather than `2` measured here plus `4` quoted from elsewhere.
+- Reading the 17 over the instrument's primes as well (also new, also inside the cap) is what
+  moved the last column above. It does **not** move `β̃_Q`: §3's caveat is unchanged, a mod-`p`
+  ONE bounds `β̃_Q ≤ 1` in every field, so `K_{2,5}`/`K_{5,2}` still have no rational value.
+- **Cross-check with `mg-dd84`, which landed the same night on a different branch.** Three of the
+  17 are the `c ≤ 2` classes (`c = 1`, 42 labelled; two `c = 2`, 105 each) that `mg-dd84` found
+  carry **no homology in any degree** — §4.2's last table row. This run reads all three as `β̃₄ = 0`
+  over `Z/2` *and* over both instrument primes, by a different route and for a different purpose.
+  Neither measurement was aware of the other.
+
+**What `= 6` is not.** It is a count *over `Z/2`*, in degree 4, over all 163 — the field label
+stays on the figure. Two blind spots remain and **neither is the one that was closed**: (a) **odd
+torsion at a prime nobody read** — the three fields here are `Z/2` and the two primes near `10⁶`,
+and a class could carry `q`-torsion at some other `q`; (b) "no 2-torsion" is read against those
+primes standing in for the free rank, so torsion *at* `1 000 003` or `999 983` would be invisible
+to the comparison. The two primes agreeing on all 163 is evidence for (b), not a proof. What the
+`≥` was for is gone; what is left is different and is stated here rather than folded into it.
 
 This is not an accident and it is checkable by hand: for `P = K_{a,b}` a refinement `Q ⊋ P` can
 add relations only *within* the lower block and *within* the upper block, so
