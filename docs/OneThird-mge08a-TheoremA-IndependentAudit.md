@@ -328,6 +328,17 @@ headline needs is `H̃_{n−2}(lk_{Δ_n}(P))`. Measured:
 At `n = 5` this is computed through `H̃_{n−2}(lk P) = H̃_{n−1−c}(U)`, `U := Δ(↑P ∖ {P})`, which
 follows from (A2) plus the join formula verified in §5.
 
+> **AMENDED 2026-08-14 (`mg-72e4`, the follow-up this section asked for).** The near-miss
+> characterisation below is measured only at the anchor degree and its two neighbours, and that
+> under-reports the margin. Measured over the *whole* homotopy type of `U` — affordable once
+> Björner's crosscut theorem replaces `Δ(↑P ∖ {P})` by a complex on `≤ n(n−1) − 2c` vertices —
+> the nearest non-vanishing degree is `n − 3`, so the margin is `c − 2`: **`1` at `n = 4`, `2` at
+> `n = 5`, `3` at `n = 6`.** The `n = 4` row below is right; "every one lands on zero by one
+> degree" does not generalise. `n = 6` is now measured complete (55 height-1 classes, 11 642
+> vertices, 0 violations) and the three `n = 5` classes this audit left over cap are computed
+> (20/20). Still not a theorem for all `n`; the `c ≥ n` slice is proven. See
+> `docs/OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md`.
+
 **So the conclusion holds — but by a degree coincidence, and every case is a near-miss.** At
 `n = 4`: `c = 1` needs `H̃₂(U) = 0` and `U` is contractible; `c = 2` needs `H̃₁(U) = 0` and `U` is
 contractible; `c = 3` needs `H̃₀(U) = 0` and `U ≃ S¹`; `c = 4` needs `H̃₋₁(U) = 0` and `U` has 4

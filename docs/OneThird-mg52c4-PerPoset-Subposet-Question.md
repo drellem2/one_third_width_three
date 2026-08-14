@@ -51,6 +51,16 @@ Run: `/usr/bin/python3 scripts/compat_geom_mg52c4_subposet_complexes.py` (~2 min
    >   (11 642 of 129 302 at `n = 6`), and at `n ≥ 7` those vertices are all of width ≥ 4, so Mirsky
    >   says nothing about them either.
    >
+   >   > **UPDATED 2026-08-14 (`mg-72e4`).** `n = 6` **is** now established: all 55 height-1
+   >   > isomorphism classes, covering every one of the 11 642 labelled vertices, **0 violations**,
+   >   > none over cap. The `n = 5` evidence is now 20/20 classes rather than 58/61 — the three
+   >   > over `mg-e08a`'s materialisation cap are computed. **And the "exactly one degree" wording
+   >   > in the clause above is an `n = 4` artifact:** measured over the whole homotopy type rather
+   >   > than the anchor degree alone, the margin to the nearest non-vanishing degree is `1` at
+   >   > `n = 4`, `2` at `n = 5`, `3` at `n = 6`. Still **not proven** for all `n`; what is proven
+   >   > is the `c ≥ n` slice. See
+   >   > [`OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md`](OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md).
+   >
    > **This scopes the claim; it does not retract it.** The recommendation *"do not open an F33"*
    > (§5) survives the audit unchanged, and a reader who takes this note as licence to reopen the
    > arc has misread it. See `docs/OneThird-mge08a-TheoremA-IndependentAudit.md` §0, §6, §7, §9.
@@ -378,6 +388,18 @@ harder, because there is no non-zero class to work with.
 >   at `n = 5` — *including* the 38 whose links are not contractible. That is a **degree
 >   coincidence**: every case lands on zero by exactly one degree, `dim U` exceeds the needed degree
 >   for all `n ≥ 4`, and no proof of it is known. **It is not established for `n ≥ 6`.**
+>
+>   > **AMENDED 2026-08-14 (`mg-72e4`).** Three of the sentences above are now wrong, and the
+>   > conclusion is unchanged. (i) **"every case lands on zero by exactly one degree" is an `n = 4`
+>   > artifact** — the margin is `1` at `n = 4`, `2` at `n = 5`, `3` at `n = 6`, so the "near miss"
+>   > that motivated the follow-up ticket widens rather than persisting. (ii) **`n = 6` IS now
+>   > established**, all 55 height-1 classes / 11 642 labelled vertices, 0 violations, via
+>   > Björner's crosscut theorem, which replaces `Δ(↑P ∖ {P})` by a complex on at most
+>   > `n(n−1) − 2c` vertices. (iii) **`n = 5` is 20/20 classes**, not 58/61. What survives: it is
+>   > still not proven for all `n`, and *"`dim U` exceeds the needed degree"* is still true and is
+>   > still the reason a dimension argument cannot work — the correct target is a *connectivity*
+>   > statement. `mg-72e4` proves the `c ≥ n` slice outright. See
+>   > [`OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md`](OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md).
 > - **One nearby map is genuinely non-zero.** Restrictions are not the only maps to the local
 >   structure at `P`: the Mayer–Vietoris connecting map
 >   `∂ : H̃_{n−2}(Δ_n) → H̃_{n−3}(lk_{Δ_n}(P))` is not a restriction and is not covered by the cone
@@ -507,6 +529,14 @@ is not merely blocked but trivial.
   corpus has been bitten by exactly this shape twice — `mg-24eb` re-scoped *"exactly the ordinal
   sums"* as a coincidence false from `n = 7`, and `mg-d1be` closed the width-2 caveat only at
   `n = 8`.
+  > **ANSWERED: `mg-72e4`.** *"Not a coincidence, and not yet a theorem."* The
+  > *"every case is a one-degree near-miss"* premise is **refuted** — it is true at `n = 4` and
+  > false at `n = 5` and `n = 6`, where the margin is 2 and 3. `n = 6` is measured complete
+  > (55 classes, 11 642 vertices, 0 violations) and `n = 5` is 20/20 rather than 58/61, both via
+  > the crosscut reduction. The `c ≥ n` slice is proven for all `n ≥ 6`. What is left is a
+  > *connectivity* conjecture about a complex on `≤ n(n−1) − 2c` vertices, plus the `c ≤ 2` cases.
+  > **Nothing reopens.** See
+  > [`OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md`](OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md).
 - **The F28 corrections in §3.1–§3.2 are landed at their destination** in this same commit (a dated
   note at F28 §1.6 (F-5) and §2.3), so a future reader of F28 cannot re-inherit the vacuous (F-5) or
   the wrong link identity. F17 §3 gets a forward pointer recording that L1 is the special case of
