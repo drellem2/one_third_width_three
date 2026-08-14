@@ -1,0 +1,8326 @@
+{
+ "ALL_PASS": true,
+ "control_H1_known_answers": {
+  "bd_simplex_1": {
+   "-1": 0,
+   "0": 1
+  },
+  "bd_simplex_2": {
+   "-1": 0,
+   "0": 0,
+   "1": 1
+  },
+  "bd_simplex_3": {
+   "-1": 0,
+   "0": 0,
+   "1": 0,
+   "2": 1
+  },
+  "bd_simplex_4": {
+   "-1": 0,
+   "0": 0,
+   "1": 0,
+   "2": 0,
+   "3": 1
+  },
+  "bd_simplex_5": {
+   "-1": 0,
+   "0": 0,
+   "1": 0,
+   "2": 0,
+   "3": 0,
+   "4": 1
+  },
+  "empty": "S^{-1}",
+  "torus_Z7": {
+   "-1": 0,
+   "0": 0,
+   "1": 2,
+   "2": 1
+  }
+ },
+ "control_crosscut_and_join": {
+  "3": {
+   "anchor_nonzero_count": 0,
+   "crosscut_agrees_all": true,
+   "join_agrees_all": true,
+   "links_non_contractible": 12,
+   "rows": [
+    {
+     "P": [
+      [
+       0,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    }
+   ],
+   "vertices": 12
+  },
+  "4": {
+   "anchor_nonzero_count": 0,
+   "crosscut_agrees_all": true,
+   "join_agrees_all": true,
+   "links_non_contractible": 38,
+   "rows": [
+    {
+     "P": [
+      [
+       0,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "c": 1,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0
+     },
+     "c": 2,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       2,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 3
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 0
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 0,
+      "1": 1
+     },
+     "c": 3,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 6
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 3
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 3
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 3
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 4
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 3
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 3
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 3
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 4
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 3
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 3
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 3
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 4
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 3
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 3
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 3
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 4
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 3
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 3
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 3
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 4
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 3
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 3
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 3
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": false,
+     "join_formula_agrees": true,
+     "n_atoms": 4
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 0,
+      "0": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 0,
+      "0": 1
+     },
+     "c": 4,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       0
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "anchor_degree_betti": 0,
+     "betti_gamma": {
+      "-1": 1
+     },
+     "betti_link": {
+      "-1": 0,
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "betti_upper_direct": {
+      "-1": 1
+     },
+     "c": 5,
+     "crosscut_agrees": true,
+     "height_ge_2": true,
+     "join_formula_agrees": true,
+     "n_atoms": 0
+    }
+   ],
+   "vertices": 194
+  }
+ },
+ "failures": [],
+ "measurement_height1": {
+  "3": {
+   "iso_classes": 3,
+   "labeled_total": 12,
+   "near_miss_classes": 0,
+   "rows": [
+    {
+     "P": [
+      [
+       0,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 1,
+     "class_size": 6,
+     "n_atoms": 2,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 3,
+     "n_atoms": 0,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 3,
+     "n_atoms": 0,
+     "needed_degree": 0
+    }
+   ],
+   "violating_classes": [],
+   "violations": 0
+  },
+  "4": {
+   "iso_classes": 8,
+   "labeled_total": 86,
+   "near_miss_classes": 3,
+   "rows": [
+    {
+     "P": [
+      [
+       3,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 1,
+     "class_size": 12,
+     "n_atoms": 6,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 12,
+     "n_atoms": 5,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 1,
+     "c": 3,
+     "class_size": 4,
+     "n_atoms": 6,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 1,
+     "c": 3,
+     "class_size": 24,
+     "n_atoms": 3,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 4,
+     "class_size": 6,
+     "n_atoms": 4,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 12,
+     "n_atoms": 5,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 1,
+     "c": 3,
+     "class_size": 4,
+     "n_atoms": 6,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 12,
+     "n_atoms": 2,
+     "needed_degree": 1
+    }
+   ],
+   "violating_classes": [],
+   "violations": 0
+  }
+ },
+ "negative_controls": {
+  "N1_swapped_degree_is_n_minus_c": {
+   "claim": "beta~_{n-c}(Gamma) = 0 as well",
+   "discriminating": true,
+   "instances": 7,
+   "refuted_on": 3
+  },
+  "N2_height_ge_2_links": {
+   "all_links_contractible": true,
+   "count": 108
+  },
+  "N3_instrument_can_see_nonzero": {
+   "degree": 3,
+   "n": 4,
+   "values": [
+    1,
+    3
+   ],
+   "vertices_with_nonzero_beta3": 38
+  }
+ },
+ "nmax": 4,
+ "ticket": "mg-72e4"
+}
