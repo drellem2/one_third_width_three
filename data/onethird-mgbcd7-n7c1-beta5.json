@@ -1,0 +1,803 @@
+{
+ "ALL_PASS": true,
+ "ANSWER": {
+  "beta_tilde_4_rational": 0,
+  "beta_tilde_5_rational": 0,
+  "class": "n=7, c=1, height-1, P = a single relation",
+  "coefficients": "RATIONAL reduced Betti numbers.  beta~_5(Gamma(P); Q) = 0.  This is NOT a claim that Gamma(P) is contractible, and not a claim about integral homology beyond the primes listed.",
+  "consequence_for_mg72e4": {
+   "iso_classes_measured_at_n7": "163 of 163",
+   "labelled_vertices_measured_at_n7": "227892 of 227892",
+   "violations": 0
+  },
+  "gamma_vertices": 30,
+  "labelled_vertices_in_class": 42,
+  "needed_degree": 5,
+  "of_labelled_height1_vertices_at_n7": 227892,
+  "primes": [
+   2,
+   3,
+   5,
+   7,
+   46337,
+   999983,
+   1000003
+  ],
+  "torsion_note": "the F_p ranks are identical at p = 2,3,5,7 and at the large primes, so H_5 and H_6 of the pair (X, Gamma) carry no p-torsion for those p; nothing here rules out torsion at other primes"
+ },
+ "C0_known_homology": {
+  "RP2_rational_acyclic": true,
+  "RP2_seen_by_F2": true,
+  "bd_simplex_1": true,
+  "bd_simplex_2": true,
+  "bd_simplex_3": true,
+  "bd_simplex_4": true,
+  "bd_simplex_5": true,
+  "torus_Z7_beta_0_1_2_is_0_2_1": true
+ },
+ "C1_instrument_can_report_nonzero_in_target_slot": true,
+ "C1_instrument_can_report_nonzero_one_below": true,
+ "C1_instrument_can_see_torsion_only_F2_sees": true,
+ "C1_relative_vs_direct_on_known_complexes": [
+  {
+   "F2_sees_more_than_Q": false,
+   "N": 7,
+   "by_prime": {
+    "1000003": {
+     "agree": true,
+     "direct": [
+      20,
+      0
+     ],
+     "relative": [
+      20,
+      0
+     ]
+    },
+    "2": {
+     "agree": true,
+     "direct": [
+      20,
+      0
+     ],
+     "relative": [
+      20,
+      0
+     ]
+    }
+   },
+   "case": "SKEL_7_4",
+   "generator_size": 4,
+   "n_generators": 35,
+   "ok": true
+  },
+  {
+   "F2_sees_more_than_Q": false,
+   "N": 7,
+   "by_prime": {
+    "1000003": {
+     "agree": true,
+     "direct": [
+      10,
+      0
+     ],
+     "relative": [
+      10,
+      0
+     ]
+    },
+    "2": {
+     "agree": true,
+     "direct": [
+      10,
+      0
+     ],
+     "relative": [
+      10,
+      0
+     ]
+    }
+   },
+   "case": "STAR_7_4",
+   "generator_size": 4,
+   "n_generators": 20,
+   "ok": true
+  },
+  {
+   "F2_sees_more_than_Q": false,
+   "N": 8,
+   "by_prime": {
+    "1000003": {
+     "agree": true,
+     "direct": [
+      35,
+      0
+     ],
+     "relative": [
+      35,
+      0
+     ]
+    },
+    "2": {
+     "agree": true,
+     "direct": [
+      35,
+      0
+     ],
+     "relative": [
+      35,
+      0
+     ]
+    }
+   },
+   "case": "SKEL_8_5",
+   "generator_size": 5,
+   "n_generators": 56,
+   "ok": true
+  },
+  {
+   "F2_sees_more_than_Q": false,
+   "N": 8,
+   "by_prime": {
+    "1000003": {
+     "agree": true,
+     "direct": [
+      20,
+      0
+     ],
+     "relative": [
+      20,
+      0
+     ]
+    },
+    "2": {
+     "agree": true,
+     "direct": [
+      20,
+      0
+     ],
+     "relative": [
+      20,
+      0
+     ]
+    }
+   },
+   "case": "STAR_8_5",
+   "generator_size": 5,
+   "n_generators": 35,
+   "ok": true
+  },
+  {
+   "F2_sees_more_than_Q": false,
+   "N": 4,
+   "by_prime": {
+    "1000003": {
+     "agree": true,
+     "direct": [
+      0,
+      1
+     ],
+     "relative": [
+      0,
+      1
+     ]
+    },
+    "2": {
+     "agree": true,
+     "direct": [
+      0,
+      1
+     ],
+     "relative": [
+      0,
+      1
+     ]
+    }
+   },
+   "case": "CYCLE4",
+   "generator_size": 2,
+   "n_generators": 2,
+   "ok": true
+  },
+  {
+   "F2_sees_more_than_Q": false,
+   "N": 7,
+   "by_prime": {
+    "1000003": {
+     "agree": true,
+     "direct": [
+      2,
+      1
+     ],
+     "relative": [
+      2,
+      1
+     ]
+    },
+    "2": {
+     "agree": true,
+     "direct": [
+      2,
+      1
+     ],
+     "relative": [
+      2,
+      1
+     ]
+    }
+   },
+   "case": "TORUS_Z7",
+   "generator_size": 3,
+   "n_generators": 21,
+   "ok": true
+  },
+  {
+   "F2_sees_more_than_Q": true,
+   "N": 6,
+   "by_prime": {
+    "1000003": {
+     "agree": true,
+     "direct": [
+      0,
+      0
+     ],
+     "relative": [
+      0,
+      0
+     ]
+    },
+    "2": {
+     "agree": true,
+     "direct": [
+      1,
+      1
+     ],
+     "relative": [
+      1,
+      1
+     ]
+    }
+   },
+   "case": "RP2_6",
+   "generator_size": 3,
+   "n_generators": 10,
+   "ok": true
+  }
+ ],
+ "V1_atom_set": {
+  "expected": 30,
+  "n_atoms": 30,
+  "sizes": {
+   "A_arcs_inside_V": 20,
+   "B_zero_to_V": 5,
+   "C_V_to_one": 5
+  },
+  "splits_as_A_B_C": true
+ },
+ "V2_skeleton_sweep": {
+  "acyclic_subset_profile_on_V": [
+   1,
+   20,
+   180,
+   940,
+   3050,
+   6180,
+   7960,
+   6540,
+   3330,
+   960,
+   120,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "agree": true,
+  "dim7_face_count": 2075235,
+  "dim_max": 7,
+  "every_measured_face_lies_in_X": true,
+  "matches_mg72e4_reported_skeleton": true,
+  "measured_faces_by_dim": {
+   "0": 30,
+   "1": 425,
+   "2": 3760,
+   "3": 23160,
+   "4": 105032,
+   "5": 362740,
+   "6": 975640,
+   "7": 2075235
+  },
+  "mg72e4_reported_dim7_skeleton": 2075235,
+  "model_faces_by_dim": {
+   "0": 30,
+   "1": 425,
+   "2": 3760,
+   "3": 23160,
+   "4": 105032,
+   "5": 362740,
+   "6": 975640,
+   "7": 2075235
+  },
+  "seconds": 68.8,
+  "total_faces_measured": 3546022
+ },
+ "V3_X_is_a_cone": {
+  "apex_atom": [
+   0,
+   2
+  ],
+  "checked_all_subsets_up_to_size": 5,
+  "closed_under_adding_apex": true,
+  "note": "X = sigma(B u C) * K_m; adding a B or C atom cannot create a cycle, so X is a cone with any B/C atom as apex, hence contractible"
+ },
+ "V4_filter": {
+  "expected": 120,
+  "filter_faces_by_size": {
+   "6": 120,
+   "7": 1680,
+   "8": 10920
+  },
+  "generated_in_the_needed_degree": true,
+  "generator_dim": 5,
+  "generator_size": 6,
+  "generators_are_minimal": true,
+  "n_generators": 120,
+  "needed_degree": 5
+ },
+ "V5_relative_vs_direct": {
+  "4": {
+   "agree": true,
+   "direct_beta_needed_degree": 0,
+   "direct_beta_one_below": 0,
+   "direct_faces_by_size": {
+    "1": 6,
+    "2": 14,
+    "3": 14,
+    "4": 5
+   },
+   "direct_nonzero_reduced_betti": {
+    "1000003": {},
+    "2": {}
+   },
+   "mg72e4_recorded_betti_needed": 0,
+   "relative_beta_needed_degree": 0,
+   "relative_beta_one_below": 0
+  },
+  "5": {
+   "agree": true,
+   "direct_beta_needed_degree": 0,
+   "direct_beta_one_below": 0,
+   "direct_faces_by_size": {
+    "1": 12,
+    "2": 63,
+    "3": 188,
+    "4": 345,
+    "5": 396,
+    "6": 277,
+    "7": 108,
+    "8": 18
+   },
+   "direct_nonzero_reduced_betti": {
+    "1000003": {},
+    "2": {}
+   },
+   "mg72e4_recorded_betti_needed": 0,
+   "relative_beta_needed_degree": 0,
+   "relative_beta_one_below": 0
+  },
+  "6": {
+   "agree": true,
+   "direct_beta_needed_degree": 0,
+   "direct_beta_one_below": 0,
+   "direct_faces_by_size": {
+    "1": 20,
+    "2": 184,
+    "3": 1024,
+    "4": 3824,
+    "5": 10084,
+    "6": 19292,
+    "7": 27112,
+    "8": 28013,
+    "9": 21044,
+    "10": 11188,
+    "11": 3992,
+    "12": 858,
+    "13": 84
+   },
+   "direct_nonzero_reduced_betti": {
+    "1000003": {},
+    "2": {}
+   },
+   "mg72e4_recorded_betti_needed": 0,
+   "relative_beta_needed_degree": 0,
+   "relative_beta_one_below": 0
+  }
+ },
+ "V6_filter_substitutions": {
+  "at_least_one_differs": true,
+  "substitutions": [
+   {
+    "beta_needed_degree": 0,
+    "beta_one_below": 0,
+    "differs_from_true_filter": false,
+    "filter": "true filter minus one chain-generator",
+    "n_generators": 119
+   },
+   {
+    "beta_needed_degree": 0,
+    "beta_one_below": 0,
+    "differs_from_true_filter": false,
+    "filter": "a single chain-generator",
+    "n_generators": 1
+   },
+   {
+    "beta_needed_degree": 0,
+    "beta_one_below": 0,
+    "differs_from_true_filter": false,
+    "filter": "half the chain-generators",
+    "n_generators": 60
+   },
+   {
+    "beta_needed_degree": 0,
+    "beta_one_below": 5,
+    "differs_from_true_filter": true,
+    "filter": "120 non-chain faces of the same size",
+    "n_generators": 120
+   }
+  ],
+  "true_filter": {
+   "beta_needed_degree": 0,
+   "beta_one_below": 0
+  }
+ },
+ "extension_c1_beyond_n7": {
+  "8": {
+   "all_primes_agree": true,
+   "beta_needed_degree": 0,
+   "beta_one_below": 0,
+   "betti_by_prime": {
+    "1000003": {
+     "5": 0,
+     "6": 0
+    },
+    "2": {
+     "5": 0,
+     "6": 0
+    },
+    "3": {
+     "5": 0,
+     "6": 0
+    },
+    "46337": {
+     "5": 0,
+     "6": 0
+    },
+    "5": {
+     "5": 0,
+     "6": 0
+    },
+    "7": {
+     "5": 0,
+     "6": 0
+    },
+    "999983": {
+     "5": 0,
+     "6": 0
+    }
+   },
+   "c": 1,
+   "filter_faces_by_size": {
+    "7": 720,
+    "8": 14400,
+    "9": 136800
+   },
+   "generator_dim": 6,
+   "generator_size": 7,
+   "m": 6,
+   "n": 8,
+   "n_atoms": 42,
+   "n_generators": 720,
+   "needed_degree": 6,
+   "ranks_by_prime": {
+    "1000003": {
+     "d_8": 720,
+     "d_9": 13680
+    },
+    "2": {
+     "d_8": 720,
+     "d_9": 13680
+    },
+    "3": {
+     "d_8": 720,
+     "d_9": 13680
+    },
+    "46337": {
+     "d_8": 720,
+     "d_9": 13680
+    },
+    "5": {
+     "d_8": 720,
+     "d_9": 13680
+    },
+    "7": {
+     "d_8": 720,
+     "d_9": 13680
+    },
+    "999983": {
+     "d_8": 720,
+     "d_9": 13680
+    }
+   },
+   "rational_bound": {
+    "argument": "rank_{F_p} <= rank_Q for every p, so beta_Q <= beta_{F_p}; a single prime with beta_{F_p} = 0 forces beta_Q = 0",
+    "beta_Q_needed_degree": 0,
+    "beta_Q_one_below": 0
+   },
+   "seconds": 6.2
+  },
+  "9": {
+   "all_primes_agree": true,
+   "beta_needed_degree": 0,
+   "beta_one_below": 0,
+   "betti_by_prime": {
+    "1000003": {
+     "6": 0,
+     "7": 0
+    },
+    "2": {
+     "6": 0,
+     "7": 0
+    },
+    "3": {
+     "6": 0,
+     "7": 0
+    },
+    "46337": {
+     "6": 0,
+     "7": 0
+    },
+    "5": {
+     "6": 0,
+     "7": 0
+    },
+    "7": {
+     "6": 0,
+     "7": 0
+    },
+    "999983": {
+     "6": 0,
+     "7": 0
+    }
+   },
+   "c": 1,
+   "filter_faces_by_size": {
+    "10": 1769040,
+    "8": 5040,
+    "9": 136080
+   },
+   "generator_dim": 7,
+   "generator_size": 8,
+   "m": 7,
+   "n": 9,
+   "n_atoms": 56,
+   "n_generators": 5040,
+   "needed_degree": 7,
+   "ranks_by_prime": {
+    "1000003": {
+     "d_10": 131040,
+     "d_9": 5040
+    },
+    "2": {
+     "d_10": 131040,
+     "d_9": 5040
+    },
+    "3": {
+     "d_10": 131040,
+     "d_9": 5040
+    },
+    "46337": {
+     "d_10": 131040,
+     "d_9": 5040
+    },
+    "5": {
+     "d_10": 131040,
+     "d_9": 5040
+    },
+    "7": {
+     "d_10": 131040,
+     "d_9": 5040
+    },
+    "999983": {
+     "d_10": 131040,
+     "d_9": 5040
+    }
+   },
+   "rational_bound": {
+    "argument": "rank_{F_p} <= rank_Q for every p, so beta_Q <= beta_{F_p}; a single prime with beta_{F_p} = 0 forces beta_Q = 0",
+    "beta_Q_needed_degree": 0,
+    "beta_Q_one_below": 0
+   },
+   "seconds": 99.6
+  }
+ },
+ "extension_not_attempted": {
+  "n": 10,
+  "reason": "the size-(m+3) layer of the filter is ~19M faces at n=10; not attempted, so nothing is claimed there"
+ },
+ "failures": [],
+ "finishes": "mg-72e4",
+ "observed_pattern_relative_complex_is_exact": {
+  "holds_at_every_n_measured": true,
+  "rows": [
+   {
+    "filter_sizes": {
+     "3": 2,
+     "4": 4,
+     "5": 2
+    },
+    "n": 4,
+    "rank_d4_equals_|F_3|": true,
+    "rank_d5_equals_|F_4|-|F_3|": true
+   },
+   {
+    "filter_sizes": {
+     "4": 6,
+     "5": 30,
+     "6": 60
+    },
+    "n": 5,
+    "rank_d5_equals_|F_4|": true,
+    "rank_d6_equals_|F_5|-|F_4|": true
+   },
+   {
+    "filter_sizes": {
+     "5": 24,
+     "6": 216,
+     "7": 864
+    },
+    "n": 6,
+    "rank_d6_equals_|F_5|": true,
+    "rank_d7_equals_|F_6|-|F_5|": true
+   },
+   {
+    "filter_sizes": {
+     "6": 120,
+     "7": 1680,
+     "8": 10920
+    },
+    "n": 7,
+    "rank_d7_equals_|F_6|": true,
+    "rank_d8_equals_|F_7|-|F_6|": true
+   },
+   {
+    "filter_sizes": {
+     "7": 720,
+     "8": 14400,
+     "9": 136800
+    },
+    "n": 8,
+    "rank_d8_equals_|F_7|": true,
+    "rank_d9_equals_|F_8|-|F_7|": true
+   },
+   {
+    "filter_sizes": {
+     "10": 1769040,
+     "8": 5040,
+     "9": 136080
+    },
+    "n": 9,
+    "rank_d10_equals_|F_9|-|F_8|": true,
+    "rank_d9_equals_|F_8|": true
+   }
+  ],
+  "status": "OBSERVED at n = 4..9, NOT PROVED.  The c=1 slice remains measurement."
+ },
+ "primes": [
+  2,
+  3,
+  5,
+  7,
+  46337,
+  999983,
+  1000003
+ ],
+ "seconds_total": 181.8,
+ "target_class": {
+  "P": [
+   [
+    0,
+    1
+   ]
+  ],
+  "all_primes_agree": true,
+  "beta_needed_degree": 0,
+  "beta_one_below": 0,
+  "betti_by_prime": {
+   "1000003": {
+    "4": 0,
+    "5": 0
+   },
+   "2": {
+    "4": 0,
+    "5": 0
+   },
+   "3": {
+    "4": 0,
+    "5": 0
+   },
+   "46337": {
+    "4": 0,
+    "5": 0
+   },
+   "5": {
+    "4": 0,
+    "5": 0
+   },
+   "7": {
+    "4": 0,
+    "5": 0
+   },
+   "999983": {
+    "4": 0,
+    "5": 0
+   }
+  },
+  "c": 1,
+  "class_size": 42,
+  "filter_faces_by_size": {
+   "6": 120,
+   "7": 1680,
+   "8": 10920
+  },
+  "generator_dim": 5,
+  "generator_size": 6,
+  "labelled_total_at_n": 227892,
+  "m": 5,
+  "n": 7,
+  "n_atoms": 30,
+  "n_generators": 120,
+  "needed_degree": 5,
+  "ranks_by_prime": {
+   "1000003": {
+    "d_7": 120,
+    "d_8": 1560
+   },
+   "2": {
+    "d_7": 120,
+    "d_8": 1560
+   },
+   "3": {
+    "d_7": 120,
+    "d_8": 1560
+   },
+   "46337": {
+    "d_7": 120,
+    "d_8": 1560
+   },
+   "5": {
+    "d_7": 120,
+    "d_8": 1560
+   },
+   "7": {
+    "d_7": 120,
+    "d_8": 1560
+   },
+   "999983": {
+    "d_7": 120,
+    "d_8": 1560
+   }
+  },
+  "rational_bound": {
+   "argument": "rank_{F_p} <= rank_Q for every p, so beta_Q <= beta_{F_p}; a single prime with beta_{F_p} = 0 forces beta_Q = 0",
+   "beta_Q_needed_degree": 0,
+   "beta_Q_one_below": 0
+  }
+ },
+ "ticket": "mg-bcd7"
+}
