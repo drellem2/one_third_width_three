@@ -8070,8 +8070,16 @@
   }
  },
  "failures": [],
+ "gates": {
+  "elimination_cap_realised_faces": 600000,
+  "full_betti_atom_cap": 20,
+  "gate_measures": "realised faces of Gamma(P) (mg-0f24; was binom(#atoms, d+3), mg-9cd1 D7)",
+  "skeleton_cap_realised_faces": 3000000
+ },
  "measurement_height1": {
   "3": {
+   "full_homotopy_type_classes": 3,
+   "full_homotopy_type_labelled": 12,
    "gamma_nonvanishing_degrees": [
     -1,
     0
@@ -8079,7 +8087,12 @@
    "iso_classes": 3,
    "labeled_total": 12,
    "min_margin": -1,
+   "min_margin_population_classes": 3,
+   "min_margin_population_labelled": 12,
    "near_miss_classes": 0,
+   "near_miss_instances": 3,
+   "no_full_homotopy_type_classes": 0,
+   "no_full_homotopy_type_labelled": 0,
    "non_contractible_gamma": 3,
    "over_cap_classes": 0,
    "over_cap_labeled": 0,
@@ -8091,17 +8104,22 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": 0,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 1,
      "class_size": 6,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 0,
      "gamma_full_betti": {
       "0": 1
      },
      "margin": -1,
      "n_atoms": 2,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 2,
+     "realised_faces_nearmiss_skeleton": 2,
+     "realised_faces_needed_skeleton": 2
     },
     {
      "P": [
@@ -8114,17 +8132,22 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 0,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 3,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": -1,
      "gamma_full_betti": {
       "-1": 1
      },
      "margin": -1,
      "n_atoms": 0,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 0,
+     "realised_faces_nearmiss_skeleton": 0,
+     "realised_faces_needed_skeleton": 0
     },
     {
      "P": [
@@ -8137,23 +8160,34 @@
        0
       ]
      ],
+     "ambient_top_layer_old_gate": 0,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 3,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": -1,
      "gamma_full_betti": {
       "-1": 1
      },
      "margin": -1,
      "n_atoms": 0,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 0,
+     "realised_faces_nearmiss_skeleton": 0,
+     "realised_faces_needed_skeleton": 0
     }
    ],
+   "unresolved_by_reason": {
+    "declined_elimination": 0,
+    "over_cap": 0
+   },
    "violating_classes": [],
    "violations": 0
   },
   "4": {
+   "full_homotopy_type_classes": 8,
+   "full_homotopy_type_labelled": 86,
    "gamma_nonvanishing_degrees": [
     0,
     1
@@ -8161,7 +8195,12 @@
    "iso_classes": 8,
    "labeled_total": 86,
    "min_margin": 1,
+   "min_margin_population_classes": 4,
+   "min_margin_population_labelled": 38,
    "near_miss_classes": 3,
+   "near_miss_instances": 7,
+   "no_full_homotopy_type_classes": 0,
+   "no_full_homotopy_type_labelled": 0,
    "non_contractible_gamma": 4,
    "over_cap_classes": 0,
    "over_cap_labeled": 0,
@@ -8173,15 +8212,20 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": 6,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 1,
      "class_size": 12,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 39,
+     "realised_faces_nearmiss_skeleton": 39,
+     "realised_faces_needed_skeleton": 39
     },
     {
      "P": [
@@ -8194,15 +8238,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 5,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 12,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 5,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 19,
+     "realised_faces_nearmiss_skeleton": 19,
+     "realised_faces_needed_skeleton": 19
     },
     {
      "P": [
@@ -8219,17 +8268,22 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 20,
      "betti_needed": 0,
      "betti_one_above": 1,
      "c": 3,
      "class_size": 4,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 1,
      "gamma_full_betti": {
       "1": 1
      },
      "margin": 1,
      "n_atoms": 6,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 12,
+     "realised_faces_nearmiss_skeleton": 12,
+     "realised_faces_needed_skeleton": 12
     },
     {
      "P": [
@@ -8246,17 +8300,22 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 1,
      "betti_needed": 0,
      "betti_one_above": 1,
      "c": 3,
      "class_size": 24,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 1,
      "gamma_full_betti": {
       "1": 1
      },
      "margin": 1,
      "n_atoms": 3,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 6,
+     "realised_faces_nearmiss_skeleton": 6,
+     "realised_faces_needed_skeleton": 6
     },
     {
      "P": [
@@ -8277,17 +8336,22 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 4,
      "class_size": 6,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 0,
      "gamma_full_betti": {
       "0": 3
      },
      "margin": 1,
      "n_atoms": 4,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 4,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -8300,15 +8364,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 5,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 12,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 5,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 19,
+     "realised_faces_nearmiss_skeleton": 19,
+     "realised_faces_needed_skeleton": 19
     },
     {
      "P": [
@@ -8325,17 +8394,22 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 20,
      "betti_needed": 0,
      "betti_one_above": 1,
      "c": 3,
      "class_size": 4,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 1,
      "gamma_full_betti": {
       "1": 1
      },
      "margin": 1,
      "n_atoms": 6,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 12,
+     "realised_faces_nearmiss_skeleton": 12,
+     "realised_faces_needed_skeleton": 12
     },
     {
      "P": [
@@ -8348,28 +8422,44 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 0,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 12,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 2,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 3,
+     "realised_faces_nearmiss_skeleton": 3,
+     "realised_faces_needed_skeleton": 3
     }
    ],
+   "unresolved_by_reason": {
+    "declined_elimination": 0,
+    "over_cap": 0
+   },
    "violating_classes": [],
    "violations": 0
   },
   "5": {
+   "full_homotopy_type_classes": 20,
+   "full_homotopy_type_labelled": 840,
    "gamma_nonvanishing_degrees": [
     2
    ],
    "iso_classes": 20,
    "labeled_total": 840,
    "min_margin": 2,
+   "min_margin_population_classes": 4,
+   "min_margin_population_labelled": 30,
    "near_miss_classes": 0,
+   "near_miss_instances": 16,
+   "no_full_homotopy_type_classes": 0,
+   "no_full_homotopy_type_labelled": 0,
    "non_contractible_gamma": 4,
    "over_cap_classes": 0,
    "over_cap_labeled": 0,
@@ -8381,15 +8471,20 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": 924,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 1,
      "class_size": 20,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": 1407,
+     "realised_faces_nearmiss_skeleton": 1281,
+     "realised_faces_needed_skeleton": 1004
     },
     {
      "P": [
@@ -8402,15 +8497,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 252,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 30,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": 438,
+     "realised_faces_needed_skeleton": 308
     },
     {
      "P": [
@@ -8427,15 +8527,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 210,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 20,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 351,
+     "realised_faces_nearmiss_skeleton": 261,
+     "realised_faces_needed_skeleton": 146
     },
     {
      "P": [
@@ -8456,17 +8561,22 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 220,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 5,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 2,
      "gamma_full_betti": {
       "2": 1
      },
      "margin": 2,
      "n_atoms": 12,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 350,
+     "realised_faces_nearmiss_skeleton": 200,
+     "realised_faces_needed_skeleton": 72
     },
     {
      "P": [
@@ -8487,15 +8597,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 35,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 7,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 87,
+     "realised_faces_nearmiss_skeleton": 57,
+     "realised_faces_needed_skeleton": 27
     },
     {
      "P": [
@@ -8520,15 +8635,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 5,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 43,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -8557,17 +8677,22 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 10,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 2,
      "gamma_full_betti": {
       "2": 1
      },
      "margin": 4,
      "n_atoms": 8,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 50,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -8584,15 +8709,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 35,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 120,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 7,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 119,
+     "realised_faces_nearmiss_skeleton": 97,
+     "realised_faces_needed_skeleton": 63
     },
     {
      "P": [
@@ -8613,15 +8743,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 56,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 30,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 127,
+     "realised_faces_nearmiss_skeleton": 78,
+     "realised_faces_needed_skeleton": 34
     },
     {
      "P": [
@@ -8646,15 +8781,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 5,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 43,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -8683,17 +8823,22 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 10,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 2,
      "gamma_full_betti": {
       "2": 1
      },
      "margin": 4,
      "n_atoms": 8,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 50,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -8714,15 +8859,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 4,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 4,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 15,
+     "realised_faces_nearmiss_skeleton": 14,
+     "realised_faces_needed_skeleton": 10
     },
     {
      "P": [
@@ -8743,15 +8893,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 35,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 7,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 87,
+     "realised_faces_nearmiss_skeleton": 57,
+     "realised_faces_needed_skeleton": 27
     },
     {
      "P": [
@@ -8772,15 +8927,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 4,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 4,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 15,
+     "realised_faces_nearmiss_skeleton": 14,
+     "realised_faces_needed_skeleton": 10
     },
     {
      "P": [
@@ -8797,15 +8957,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 5,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 5,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 23,
+     "realised_faces_nearmiss_skeleton": 23,
+     "realised_faces_needed_skeleton": 21
     },
     {
      "P": [
@@ -8818,15 +8983,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 252,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 30,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": 438,
+     "realised_faces_needed_skeleton": 308
     },
     {
      "P": [
@@ -8843,15 +9013,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 210,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 20,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 351,
+     "realised_faces_nearmiss_skeleton": 261,
+     "realised_faces_needed_skeleton": 146
     },
     {
      "P": [
@@ -8872,17 +9047,22 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": 220,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 5,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 2,
      "gamma_full_betti": {
       "2": 1
      },
      "margin": 2,
      "n_atoms": 12,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 350,
+     "realised_faces_nearmiss_skeleton": 200,
+     "realised_faces_needed_skeleton": 72
     },
     {
      "P": [
@@ -8899,15 +9079,20 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": 5,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 5,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 23,
+     "realised_faces_nearmiss_skeleton": 23,
+     "realised_faces_needed_skeleton": 21
     },
     {
      "P": [
@@ -8920,28 +9105,44 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 6,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 63,
+     "realised_faces_nearmiss_skeleton": 62,
+     "realised_faces_needed_skeleton": 56
     }
    ],
+   "unresolved_by_reason": {
+    "declined_elimination": 0,
+    "over_cap": 0
+   },
    "violating_classes": [],
    "violations": 0
   },
   "6": {
+   "full_homotopy_type_classes": 55,
+   "full_homotopy_type_labelled": 11642,
    "gamma_nonvanishing_degrees": [
     3
    ],
    "iso_classes": 55,
    "labeled_total": 11642,
    "min_margin": 3,
+   "min_margin_population_classes": 5,
+   "min_margin_population_labelled": 62,
    "near_miss_classes": 0,
+   "near_miss_instances": 36,
+   "no_full_homotopy_type_classes": 0,
+   "no_full_homotopy_type_labelled": 0,
    "non_contractible_gamma": 5,
    "over_cap_classes": 0,
    "over_cap_labeled": 0,
@@ -8953,15 +9154,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 77520,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 1,
      "class_size": 30,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 20,
-     "needed_degree": 4
+     "needed_degree": 4,
+     "realised_faces_full": 126719,
+     "realised_faces_nearmiss_skeleton": 61540,
+     "realised_faces_needed_skeleton": 34428
     },
     {
      "P": [
@@ -8974,15 +9180,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 12376,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": 35327,
+     "realised_faces_nearmiss_skeleton": 14009,
+     "realised_faces_needed_skeleton": 7037
     },
     {
      "P": [
@@ -8999,15 +9210,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 4368,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 17663,
+     "realised_faces_nearmiss_skeleton": 4960,
+     "realised_faces_needed_skeleton": 2076
     },
     {
      "P": [
@@ -9028,15 +9244,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 2380,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 30,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 15839,
+     "realised_faces_nearmiss_skeleton": 2400,
+     "realised_faces_needed_skeleton": 729
     },
     {
      "P": [
@@ -9061,17 +9282,22 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 1140,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 6,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 3,
      "gamma_full_betti": {
       "3": 1
      },
      "margin": 3,
      "n_atoms": 20,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 21600,
+     "realised_faces_nearmiss_skeleton": 1140,
+     "realised_faces_needed_skeleton": 200
     },
     {
      "P": [
@@ -9096,15 +9322,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 286,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 120,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 3007,
+     "realised_faces_nearmiss_skeleton": 339,
+     "realised_faces_needed_skeleton": 88
     },
     {
      "P": [
@@ -9133,15 +9364,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 1087,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9174,15 +9410,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 120,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 751,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9219,17 +9460,22 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 15,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 3,
      "gamma_full_betti": {
       "3": 1
      },
      "margin": 6,
      "n_atoms": 14,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 1244,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9250,15 +9496,20 @@
        0
       ]
      ],
+     "ambient_top_layer_old_gate": 495,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 2943,
+     "realised_faces_nearmiss_skeleton": 737,
+     "realised_faces_needed_skeleton": 287
     },
     {
      "P": [
@@ -9283,15 +9534,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 165,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1471,
+     "realised_faces_nearmiss_skeleton": 221,
+     "realised_faces_needed_skeleton": 65
     },
     {
      "P": [
@@ -9320,15 +9576,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 2207,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9361,15 +9622,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 543,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9406,15 +9672,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 271,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9455,17 +9726,22 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 20,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 3,
      "gamma_full_betti": {
       "3": 1
      },
      "margin": 7,
      "n_atoms": 12,
-     "needed_degree": -4
+     "needed_degree": -4,
+     "realised_faces_full": 480,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9494,15 +9770,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 191,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9531,15 +9812,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 720,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 495,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9572,15 +9858,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 543,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9613,15 +9904,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 63,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9650,15 +9946,20 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 7,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 95,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9683,15 +9984,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 56,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 191,
+     "realised_faces_nearmiss_skeleton": 85,
+     "realised_faces_needed_skeleton": 35
     },
     {
      "P": [
@@ -9716,15 +10022,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 220,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 2175,
+     "realised_faces_nearmiss_skeleton": 276,
+     "realised_faces_needed_skeleton": 76
     },
     {
      "P": [
@@ -9749,15 +10060,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 56,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 255,
+     "realised_faces_nearmiss_skeleton": 92,
+     "realised_faces_needed_skeleton": 36
     },
     {
      "P": [
@@ -9778,15 +10094,20 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": 210,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 120,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 399,
+     "realised_faces_nearmiss_skeleton": 267,
+     "realised_faces_needed_skeleton": 146
     },
     {
      "P": [
@@ -9803,15 +10124,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 1287,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 5887,
+     "realised_faces_nearmiss_skeleton": 2145,
+     "realised_faces_needed_skeleton": 1025
     },
     {
      "P": [
@@ -9832,15 +10158,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 1001,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 90,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 6399,
+     "realised_faces_nearmiss_skeleton": 1236,
+     "realised_faces_needed_skeleton": 430
     },
     {
      "P": [
@@ -9865,15 +10196,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 165,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1471,
+     "realised_faces_nearmiss_skeleton": 221,
+     "realised_faces_needed_skeleton": 65
     },
     {
      "P": [
@@ -9902,15 +10238,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 2207,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9943,15 +10284,20 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 120,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 751,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -9988,17 +10334,22 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 15,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 3,
      "gamma_full_betti": {
       "3": 1
      },
      "margin": 6,
      "n_atoms": 14,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 1244,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -10027,15 +10378,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 7,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 95,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -10064,15 +10420,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 1087,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -10101,15 +10462,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 191,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -10134,15 +10500,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 56,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 143,
+     "realised_faces_nearmiss_skeleton": 78,
+     "realised_faces_needed_skeleton": 34
     },
     {
      "P": [
@@ -10163,15 +10534,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 126,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": 255,
+     "realised_faces_needed_skeleton": 129
     },
     {
      "P": [
@@ -10196,15 +10572,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 56,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 255,
+     "realised_faces_nearmiss_skeleton": 92,
+     "realised_faces_needed_skeleton": 36
     },
     {
      "P": [
@@ -10229,15 +10610,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 20,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 720,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 63,
+     "realised_faces_nearmiss_skeleton": 41,
+     "realised_faces_needed_skeleton": 21
     },
     {
      "P": [
@@ -10266,15 +10652,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 6,
      "class_size": 120,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 3,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 7,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -10295,15 +10686,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 495,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 2943,
+     "realised_faces_nearmiss_skeleton": 737,
+     "realised_faces_needed_skeleton": 287
     },
     {
      "P": [
@@ -10328,15 +10724,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 286,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 120,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 3007,
+     "realised_faces_nearmiss_skeleton": 339,
+     "realised_faces_needed_skeleton": 88
     },
     {
      "P": [
@@ -10361,15 +10762,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 56,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 191,
+     "realised_faces_nearmiss_skeleton": 85,
+     "realised_faces_needed_skeleton": 35
     },
     {
      "P": [
@@ -10390,15 +10796,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 126,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": 255,
+     "realised_faces_needed_skeleton": 129
     },
     {
      "P": [
@@ -10419,15 +10830,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 35,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 720,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 7,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 127,
+     "realised_faces_nearmiss_skeleton": 98,
+     "realised_faces_needed_skeleton": 63
     },
     {
      "P": [
@@ -10444,15 +10860,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 252,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": 544,
+     "realised_faces_needed_skeleton": 348
     },
     {
      "P": [
@@ -10473,15 +10894,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 70,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 90,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 143,
+     "realised_faces_nearmiss_skeleton": 119,
+     "realised_faces_needed_skeleton": 78
     },
     {
      "P": [
@@ -10502,15 +10928,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 126,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 287,
+     "realised_faces_nearmiss_skeleton": 198,
+     "realised_faces_needed_skeleton": 113
     },
     {
      "P": [
@@ -10523,15 +10954,20 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": 12376,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": 35327,
+     "realised_faces_nearmiss_skeleton": 14009,
+     "realised_faces_needed_skeleton": 7037
     },
     {
      "P": [
@@ -10548,15 +10984,20 @@
        1
       ]
      ],
+     "ambient_top_layer_old_gate": 4368,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 60,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 17663,
+     "realised_faces_nearmiss_skeleton": 4960,
+     "realised_faces_needed_skeleton": 2076
     },
     {
      "P": [
@@ -10577,15 +11018,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 2380,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 30,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 15839,
+     "realised_faces_nearmiss_skeleton": 2400,
+     "realised_faces_needed_skeleton": 729
     },
     {
      "P": [
@@ -10610,17 +11056,22 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 1140,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 6,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 3,
      "gamma_full_betti": {
       "3": 1
      },
      "margin": 3,
      "n_atoms": 20,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 21600,
+     "realised_faces_nearmiss_skeleton": 1140,
+     "realised_faces_needed_skeleton": 200
     },
     {
      "P": [
@@ -10641,15 +11092,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 210,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 120,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 399,
+     "realised_faces_nearmiss_skeleton": 267,
+     "realised_faces_needed_skeleton": 146
     },
     {
      "P": [
@@ -10666,15 +11122,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 252,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 360,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": 544,
+     "realised_faces_needed_skeleton": 348
     },
     {
      "P": [
@@ -10695,15 +11156,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 70,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 90,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 143,
+     "realised_faces_nearmiss_skeleton": 119,
+     "realised_faces_needed_skeleton": 78
     },
     {
      "P": [
@@ -10716,15 +11182,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 924,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 180,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": 3071,
+     "realised_faces_nearmiss_skeleton": 2123,
+     "realised_faces_needed_skeleton": 1409
     },
     {
      "P": [
@@ -10741,28 +11212,44 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 6,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 120,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 63,
+     "realised_faces_nearmiss_skeleton": 62,
+     "realised_faces_needed_skeleton": 56
     }
    ],
+   "unresolved_by_reason": {
+    "declined_elimination": 0,
+    "over_cap": 0
+   },
    "violating_classes": [],
    "violations": 0
   },
   "7": {
+   "full_homotopy_type_classes": 146,
+   "full_homotopy_type_labelled": 225540,
    "gamma_nonvanishing_degrees": [
     4
    ],
    "iso_classes": 163,
    "labeled_total": 227892,
    "min_margin": 10,
+   "min_margin_population_classes": 2,
+   "min_margin_population_labelled": 70,
    "near_miss_classes": 0,
+   "near_miss_instances": 85,
+   "no_full_homotopy_type_classes": 17,
+   "no_full_homotopy_type_labelled": 2352,
    "non_contractible_gamma": 2,
    "over_cap_classes": 1,
    "over_cap_labeled": 42,
@@ -10774,15 +11261,20 @@
        1
       ]
      ],
-     "betti_needed": "over_cap",
-     "betti_one_above": null,
+     "ambient_top_layer_old_gate": 5852925,
+     "betti_needed": "declined_elimination",
+     "betti_one_above": "declined_elimination",
      "c": 1,
      "class_size": 42,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 30,
-     "needed_degree": 5
+     "needed_degree": 5,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": 1470787
     },
     {
      "P": [
@@ -10795,15 +11287,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 657800,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 105,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 26,
-     "needed_degree": 4
+     "needed_degree": 4,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 574559,
+     "realised_faces_needed_skeleton": 217879
     },
     {
      "P": [
@@ -10816,15 +11313,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 657800,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 105,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 26,
-     "needed_degree": 4
+     "needed_degree": 4,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 574559,
+     "realised_faces_needed_skeleton": 217879
     },
     {
      "P": [
@@ -10837,15 +11339,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 77520,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 2,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 20,
-     "needed_degree": 4
+     "needed_degree": 4,
+     "realised_faces_full": 409599,
+     "realised_faces_nearmiss_skeleton": 99265,
+     "realised_faces_needed_skeleton": 47785
     },
     {
      "P": [
@@ -10862,15 +11369,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 134596,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 140,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 24,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 134761,
+     "realised_faces_needed_skeleton": 44329
     },
     {
      "P": [
@@ -10887,15 +11399,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 54264,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 840,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 21,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 66354,
+     "realised_faces_needed_skeleton": 24227
     },
     {
      "P": [
@@ -10912,15 +11429,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 12376,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": 73727,
+     "realised_faces_nearmiss_skeleton": 17987,
+     "realised_faces_needed_skeleton": 8263
     },
     {
      "P": [
@@ -10937,15 +11459,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 134596,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 140,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 24,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 134761,
+     "realised_faces_needed_skeleton": 44329
     },
     {
      "P": [
@@ -10962,15 +11489,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 12376,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": 73727,
+     "realised_faces_nearmiss_skeleton": 17987,
+     "realised_faces_needed_skeleton": 8263
     },
     {
      "P": [
@@ -10987,15 +11519,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 924,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 3,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 3
+     "needed_degree": 3,
+     "realised_faces_full": 4095,
+     "realised_faces_nearmiss_skeleton": 2509,
+     "realised_faces_needed_skeleton": 1585
     },
     {
      "P": [
@@ -11016,15 +11553,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 42504,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 105,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 24,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 41927,
+     "realised_faces_needed_skeleton": 11035
     },
     {
      "P": [
@@ -11045,15 +11587,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 11628,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 19,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 286719,
+     "realised_faces_nearmiss_skeleton": 15011,
+     "realised_faces_needed_skeleton": 4728
     },
     {
      "P": [
@@ -11074,15 +11621,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 26334,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 210,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 22,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 28607,
+     "realised_faces_needed_skeleton": 8029
     },
     {
      "P": [
@@ -11103,15 +11655,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 4368,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 49151,
+     "realised_faces_nearmiss_skeleton": 6414,
+     "realised_faces_needed_skeleton": 2410
     },
     {
      "P": [
@@ -11132,15 +11689,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 4368,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 25599,
+     "realised_faces_nearmiss_skeleton": 5401,
+     "realised_faces_needed_skeleton": 2179
     },
     {
      "P": [
@@ -11161,15 +11723,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 11628,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 19,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 286719,
+     "realised_faces_nearmiss_skeleton": 15011,
+     "realised_faces_needed_skeleton": 4728
     },
     {
      "P": [
@@ -11190,15 +11757,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 4368,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 49151,
+     "realised_faces_nearmiss_skeleton": 6414,
+     "realised_faces_needed_skeleton": 2410
     },
     {
      "P": [
@@ -11219,15 +11791,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 1287,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 5040,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 8191,
+     "realised_faces_nearmiss_skeleton": 2379,
+     "realised_faces_needed_skeleton": 1092
     },
     {
      "P": [
@@ -11248,15 +11825,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 2002,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 9215,
+     "realised_faces_nearmiss_skeleton": 2885,
+     "realised_faces_needed_skeleton": 1313
     },
     {
      "P": [
@@ -11277,15 +11859,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 3003,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 15,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 18431,
+     "realised_faces_nearmiss_skeleton": 4199,
+     "realised_faces_needed_skeleton": 1757
     },
     {
      "P": [
@@ -11306,15 +11893,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 42504,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 105,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 24,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 41927,
+     "realised_faces_needed_skeleton": 11035
     },
     {
      "P": [
@@ -11335,15 +11927,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 252,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": 544,
+     "realised_faces_needed_skeleton": 348
     },
     {
      "P": [
@@ -11364,15 +11961,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 4368,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 25599,
+     "realised_faces_nearmiss_skeleton": 5401,
+     "realised_faces_needed_skeleton": 2179
     },
     {
      "P": [
@@ -11393,15 +11995,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 2002,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 9215,
+     "realised_faces_nearmiss_skeleton": 2885,
+     "realised_faces_needed_skeleton": 1313
     },
     {
      "P": [
@@ -11422,15 +12029,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 252,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 4,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 2
+     "needed_degree": 2,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": 544,
+     "realised_faces_needed_skeleton": 348
     },
     {
      "P": [
@@ -11455,15 +12067,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 14950,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 42,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 26,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 14486,
+     "realised_faces_needed_skeleton": 2681
     },
     {
      "P": [
@@ -11488,15 +12105,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 3876,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 19,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 198655,
+     "realised_faces_nearmiss_skeleton": 4548,
+     "realised_faces_needed_skeleton": 1103
     },
     {
      "P": [
@@ -11521,15 +12143,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 3060,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 18,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 143359,
+     "realised_faces_nearmiss_skeleton": 3774,
+     "realised_faces_needed_skeleton": 953
     },
     {
      "P": [
@@ -11554,15 +12181,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 1001,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 12287,
+     "realised_faces_nearmiss_skeleton": 1391,
+     "realised_faces_needed_skeleton": 456
     },
     {
      "P": [
@@ -11587,15 +12219,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 2380,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 210,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 17375,
+     "realised_faces_nearmiss_skeleton": 2400,
+     "realised_faces_needed_skeleton": 729
     },
     {
      "P": [
@@ -11620,15 +12257,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 3060,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 18,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 143359,
+     "realised_faces_nearmiss_skeleton": 3774,
+     "realised_faces_needed_skeleton": 953
     },
     {
      "P": [
@@ -11653,15 +12295,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 1001,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 16383,
+     "realised_faces_nearmiss_skeleton": 1470,
+     "realised_faces_needed_skeleton": 469
     },
     {
      "P": [
@@ -11686,15 +12333,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 3060,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 18,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 143359,
+     "realised_faces_nearmiss_skeleton": 3774,
+     "realised_faces_needed_skeleton": 953
     },
     {
      "P": [
@@ -11719,15 +12371,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 495,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 3071,
+     "realised_faces_nearmiss_skeleton": 737,
+     "realised_faces_needed_skeleton": 287
     },
     {
      "P": [
@@ -11752,15 +12409,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 1001,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 16383,
+     "realised_faces_nearmiss_skeleton": 1470,
+     "realised_faces_needed_skeleton": 469
     },
     {
      "P": [
@@ -11785,15 +12447,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 715,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 2399,
+     "realised_faces_nearmiss_skeleton": 814,
+     "realised_faces_needed_skeleton": 327
     },
     {
      "P": [
@@ -11818,15 +12485,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 1365,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 15,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 9599,
+     "realised_faces_nearmiss_skeleton": 1558,
+     "realised_faces_needed_skeleton": 517
     },
     {
      "P": [
@@ -11851,15 +12523,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 495,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 5040,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 4095,
+     "realised_faces_nearmiss_skeleton": 793,
+     "realised_faces_needed_skeleton": 298
     },
     {
      "P": [
@@ -11884,15 +12561,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 1001,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 9215,
+     "realised_faces_nearmiss_skeleton": 1313,
+     "realised_faces_needed_skeleton": 443
     },
     {
      "P": [
@@ -11917,15 +12599,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 3876,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 19,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 198655,
+     "realised_faces_nearmiss_skeleton": 4548,
+     "realised_faces_needed_skeleton": 1103
     },
     {
      "P": [
@@ -11950,15 +12637,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 1001,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 12287,
+     "realised_faces_nearmiss_skeleton": 1391,
+     "realised_faces_needed_skeleton": 456
     },
     {
      "P": [
@@ -11983,15 +12675,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 126,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": 255,
+     "realised_faces_needed_skeleton": 129
     },
     {
      "P": [
@@ -12016,15 +12713,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 495,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 3071,
+     "realised_faces_nearmiss_skeleton": 737,
+     "realised_faces_needed_skeleton": 287
     },
     {
      "P": [
@@ -12049,15 +12751,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 330,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 1535,
+     "realised_faces_nearmiss_skeleton": 515,
+     "realised_faces_needed_skeleton": 221
     },
     {
      "P": [
@@ -12082,15 +12789,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 1365,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 15,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 9599,
+     "realised_faces_nearmiss_skeleton": 1558,
+     "realised_faces_needed_skeleton": 517
     },
     {
      "P": [
@@ -12115,15 +12827,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 330,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 1535,
+     "realised_faces_nearmiss_skeleton": 515,
+     "realised_faces_needed_skeleton": 221
     },
     {
      "P": [
@@ -12148,15 +12865,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 14950,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 42,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 26,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 14486,
+     "realised_faces_needed_skeleton": 2681
     },
     {
      "P": [
@@ -12181,15 +12903,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 126,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": 255,
+     "realised_faces_needed_skeleton": 129
     },
     {
      "P": [
@@ -12214,15 +12941,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 2380,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 210,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 17375,
+     "realised_faces_nearmiss_skeleton": 2400,
+     "realised_faces_needed_skeleton": 729
     },
     {
      "P": [
@@ -12247,15 +12979,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 715,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 5,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 1
+     "needed_degree": 1,
+     "realised_faces_full": 2399,
+     "realised_faces_nearmiss_skeleton": 814,
+     "realised_faces_needed_skeleton": 327
     },
     {
      "P": [
@@ -12284,15 +13021,20 @@
        6
       ]
      ],
+     "ambient_top_layer_old_gate": 4060,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 7,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 30,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 4050,
+     "realised_faces_needed_skeleton": 450
     },
     {
      "P": [
@@ -12321,15 +13063,20 @@
        2
       ]
      ],
+     "ambient_top_layer_old_gate": 1330,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 210,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 21,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 1433,
+     "realised_faces_needed_skeleton": 225
     },
     {
      "P": [
@@ -12358,15 +13105,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 680,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 71679,
+     "realised_faces_nearmiss_skeleton": 801,
+     "realised_faces_needed_skeleton": 151
     },
     {
      "P": [
@@ -12395,15 +13147,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 1140,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 210,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 20,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 218111,
+     "realised_faces_nearmiss_skeleton": 1253,
+     "realised_faces_needed_skeleton": 205
     },
     {
      "P": [
@@ -12432,15 +13189,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 364,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 12287,
+     "realised_faces_nearmiss_skeleton": 456,
+     "realised_faces_needed_skeleton": 104
     },
     {
      "P": [
@@ -12469,15 +13231,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 364,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 6399,
+     "realised_faces_nearmiss_skeleton": 428,
+     "realised_faces_needed_skeleton": 102
     },
     {
      "P": [
@@ -12506,15 +13273,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 220,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 2303,
+     "realised_faces_nearmiss_skeleton": 276,
+     "realised_faces_needed_skeleton": 76
     },
     {
      "P": [
@@ -12543,15 +13315,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 969,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 19,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 147455,
+     "realised_faces_nearmiss_skeleton": 1085,
+     "realised_faces_needed_skeleton": 186
     },
     {
      "P": [
@@ -12580,15 +13357,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 364,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 12287,
+     "realised_faces_nearmiss_skeleton": 456,
+     "realised_faces_needed_skeleton": 104
     },
     {
      "P": [
@@ -12617,15 +13399,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 455,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 5040,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 15,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 32255,
+     "realised_faces_nearmiss_skeleton": 575,
+     "realised_faces_needed_skeleton": 120
     },
     {
      "P": [
@@ -12654,15 +13441,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 286,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 6143,
+     "realised_faces_nearmiss_skeleton": 365,
+     "realised_faces_needed_skeleton": 90
     },
     {
      "P": [
@@ -12691,15 +13483,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 120,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 5040,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1023,
+     "realised_faces_nearmiss_skeleton": 175,
+     "realised_faces_needed_skeleton": 55
     },
     {
      "P": [
@@ -12728,15 +13525,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 1140,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 210,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 20,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 218111,
+     "realised_faces_nearmiss_skeleton": 1253,
+     "realised_faces_needed_skeleton": 205
     },
     {
      "P": [
@@ -12765,15 +13567,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 286,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 6143,
+     "realised_faces_nearmiss_skeleton": 365,
+     "realised_faces_needed_skeleton": 90
     },
     {
      "P": [
@@ -12802,15 +13609,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 286,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 6143,
+     "realised_faces_nearmiss_skeleton": 365,
+     "realised_faces_needed_skeleton": 90
     },
     {
      "P": [
@@ -12839,15 +13651,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 84,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": 129,
+     "realised_faces_needed_skeleton": 45
     },
     {
      "P": [
@@ -12876,15 +13693,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 165,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1535,
+     "realised_faces_nearmiss_skeleton": 221,
+     "realised_faces_needed_skeleton": 65
     },
     {
      "P": [
@@ -12913,15 +13735,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": 165,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1535,
+     "realised_faces_nearmiss_skeleton": 221,
+     "realised_faces_needed_skeleton": 65
     },
     {
      "P": [
@@ -12950,15 +13777,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 969,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 19,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 147455,
+     "realised_faces_nearmiss_skeleton": 1085,
+     "realised_faces_needed_skeleton": 186
     },
     {
      "P": [
@@ -12987,15 +13819,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 286,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 6143,
+     "realised_faces_nearmiss_skeleton": 365,
+     "realised_faces_needed_skeleton": 90
     },
     {
      "P": [
@@ -13024,15 +13861,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 84,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": 129,
+     "realised_faces_needed_skeleton": 45
     },
     {
      "P": [
@@ -13061,15 +13903,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 84,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": 129,
+     "realised_faces_needed_skeleton": 45
     },
     {
      "P": [
@@ -13098,15 +13945,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 680,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 71679,
+     "realised_faces_nearmiss_skeleton": 801,
+     "realised_faces_needed_skeleton": 151
     },
     {
      "P": [
@@ -13135,15 +13987,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 364,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 12287,
+     "realised_faces_nearmiss_skeleton": 456,
+     "realised_faces_needed_skeleton": 104
     },
     {
      "P": [
@@ -13172,15 +14029,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 56,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 255,
+     "realised_faces_nearmiss_skeleton": 92,
+     "realised_faces_needed_skeleton": 36
     },
     {
      "P": [
@@ -13209,15 +14071,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 364,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 12287,
+     "realised_faces_nearmiss_skeleton": 456,
+     "realised_faces_needed_skeleton": 104
     },
     {
      "P": [
@@ -13246,15 +14113,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 120,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 5040,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1023,
+     "realised_faces_nearmiss_skeleton": 175,
+     "realised_faces_needed_skeleton": 55
     },
     {
      "P": [
@@ -13283,15 +14155,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 165,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1535,
+     "realised_faces_nearmiss_skeleton": 221,
+     "realised_faces_needed_skeleton": 65
     },
     {
      "P": [
@@ -13320,15 +14197,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 220,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1727,
+     "realised_faces_nearmiss_skeleton": 265,
+     "realised_faces_needed_skeleton": 75
     },
     {
      "P": [
@@ -13357,15 +14239,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 165,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1535,
+     "realised_faces_nearmiss_skeleton": 221,
+     "realised_faces_needed_skeleton": 65
     },
     {
      "P": [
@@ -13394,15 +14281,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 56,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 8,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 255,
+     "realised_faces_nearmiss_skeleton": 92,
+     "realised_faces_needed_skeleton": 36
     },
     {
      "P": [
@@ -13431,15 +14323,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": 220,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 1727,
+     "realised_faces_nearmiss_skeleton": 265,
+     "realised_faces_needed_skeleton": 75
     },
     {
      "P": [
@@ -13468,15 +14365,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 1330,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 210,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 21,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 1433,
+     "realised_faces_needed_skeleton": 225
     },
     {
      "P": [
@@ -13505,15 +14407,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 364,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 6399,
+     "realised_faces_nearmiss_skeleton": 428,
+     "realised_faces_needed_skeleton": 102
     },
     {
      "P": [
@@ -13542,15 +14449,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": 220,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": 2303,
+     "realised_faces_nearmiss_skeleton": 276,
+     "realised_faces_needed_skeleton": 76
     },
     {
      "P": [
@@ -13579,15 +14491,20 @@
        6
       ]
      ],
+     "ambient_top_layer_old_gate": 4060,
      "betti_needed": 0,
      "betti_one_above": 0,
      "c": 6,
      "class_size": 7,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 30,
-     "needed_degree": 0
+     "needed_degree": 0,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": 4050,
+     "realised_faces_needed_skeleton": 450
     },
     {
      "P": [
@@ -13620,15 +14537,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 18,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 73727,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -13661,15 +14583,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 49663,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -13702,15 +14629,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 4607,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -13743,15 +14675,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 15,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 24063,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -13784,15 +14721,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 3071,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -13825,15 +14767,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 35839,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -13866,15 +14813,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 35839,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -13907,15 +14859,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 4095,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -13948,15 +14905,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 4095,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -13989,15 +14951,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 5040,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 1023,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14030,15 +14997,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 2303,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14071,15 +15043,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14112,15 +15089,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 7,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 127,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14153,15 +15135,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 2399,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14194,15 +15181,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 15,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 24063,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14235,15 +15227,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 4095,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14276,15 +15273,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 5040,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 1023,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14317,15 +15319,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 2303,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14358,15 +15365,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 49663,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14399,15 +15411,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 3071,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14440,15 +15457,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 383,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14481,15 +15503,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14522,15 +15549,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 7,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 127,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14563,15 +15595,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 383,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14604,15 +15641,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 2399,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14645,15 +15687,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 18,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 73727,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14686,15 +15733,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 7,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": -1
+     "needed_degree": -1,
+     "realised_faces_full": 4607,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14731,15 +15783,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 36863,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14776,15 +15833,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 105,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 20,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 98111,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14821,15 +15883,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 6399,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14866,15 +15933,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 12031,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14911,15 +15983,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 26623,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -14956,15 +16033,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 2047,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15001,15 +16083,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 1599,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15046,15 +16133,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 575,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15091,15 +16183,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 15,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 17919,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15136,15 +16233,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 3071,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15181,15 +16283,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 5040,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15226,15 +16333,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 1151,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15271,15 +16383,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 47,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15316,15 +16433,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 26623,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15361,15 +16483,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 3071,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15406,15 +16533,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 12031,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15451,15 +16583,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 2047,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15496,15 +16633,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 5040,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 9,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 511,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15541,15 +16683,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 1151,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15586,15 +16733,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 105,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 20,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 98111,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15631,15 +16783,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 12,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 1599,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15676,15 +16833,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 575,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15721,15 +16883,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 47,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15766,15 +16933,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 17,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 36863,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15811,15 +16983,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 8,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": -2
+     "needed_degree": -2,
+     "realised_faces_full": 6399,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15860,15 +17037,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 210,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 18,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 33215,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15909,15 +17091,20 @@
        3
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 18431,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -15958,15 +17145,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 6015,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16007,15 +17199,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16056,15 +17253,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 140,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 18,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 37695,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16105,15 +17307,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 1151,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16154,15 +17361,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 63,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16203,15 +17415,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 13,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 6015,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16252,15 +17469,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 11,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 1151,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16301,15 +17523,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 16,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 18431,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16350,15 +17577,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 2520,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16399,15 +17631,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 840,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 6,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 63,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16448,15 +17685,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 9,
      "class_size": 210,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 18,
-     "needed_degree": -3
+     "needed_degree": -3,
+     "realised_faces_full": 33215,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16501,15 +17743,20 @@
        6
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 10,
      "class_size": 21,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 22,
-     "needed_degree": -4
+     "needed_degree": -4,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16554,15 +17801,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 10,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": -4
+     "needed_degree": -4,
+     "realised_faces_full": 6655,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16607,15 +17859,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 10,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 15,
-     "needed_degree": -4
+     "needed_degree": -4,
+     "realised_faces_full": 9215,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16660,15 +17917,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 10,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -4
+     "needed_degree": -4,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16713,15 +17975,20 @@
        4
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 10,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 15,
-     "needed_degree": -4
+     "needed_degree": -4,
+     "realised_faces_full": 9215,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16766,15 +18033,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 10,
      "class_size": 630,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": -4
+     "needed_degree": -4,
+     "realised_faces_full": 6655,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16819,15 +18091,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 10,
      "class_size": 1260,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 10,
-     "needed_degree": -4
+     "needed_degree": -4,
+     "realised_faces_full": 767,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16872,15 +18149,20 @@
        6
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 10,
      "class_size": 21,
+     "full_betti_gate": "atoms_over_full_cap",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": null,
      "margin": null,
      "n_atoms": 22,
-     "needed_degree": -4
+     "needed_degree": -4,
+     "realised_faces_full": null,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16929,15 +18211,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 11,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": -5
+     "needed_degree": -5,
+     "realised_faces_full": 4607,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -16986,15 +18273,20 @@
        5
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 11,
      "class_size": 420,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": null,
      "gamma_full_betti": {},
      "margin": null,
      "n_atoms": 14,
-     "needed_degree": -5
+     "needed_degree": -5,
+     "realised_faces_full": 4607,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -17047,17 +18339,22 @@
        6
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 12,
      "class_size": 35,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 4,
      "gamma_full_betti": {
       "4": 1
      },
      "margin": 10,
      "n_atoms": 18,
-     "needed_degree": -6
+     "needed_degree": -6,
+     "realised_faces_full": 11270,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     },
     {
      "P": [
@@ -17110,28 +18407,72 @@
        6
       ]
      ],
+     "ambient_top_layer_old_gate": null,
      "betti_needed": 0,
      "betti_one_above": null,
      "c": 12,
      "class_size": 35,
+     "full_betti_gate": "computed",
      "gamma_first_nonvanishing": 4,
      "gamma_full_betti": {
       "4": 1
      },
      "margin": 10,
      "n_atoms": 18,
-     "needed_degree": -6
+     "needed_degree": -6,
+     "realised_faces_full": 11270,
+     "realised_faces_nearmiss_skeleton": null,
+     "realised_faces_needed_skeleton": null
     }
    ],
+   "unresolved_by_reason": {
+    "declined_elimination": 1,
+    "over_cap": 0
+   },
    "violating_classes": [],
    "violations": 0
   }
  },
  "negative_controls": {
   "N1_swapped_degree_is_n_minus_c": {
+   "by_n": {
+    "4": {
+     "classes_with_needed_degree_ge_0": 7,
+     "instances": 7,
+     "iso_classes": 8,
+     "refuted_c_values": [
+      3,
+      3,
+      3
+     ],
+     "refuted_on": 3
+    },
+    "5": {
+     "classes_with_needed_degree_ge_0": 16,
+     "instances": 16,
+     "iso_classes": 20,
+     "refuted_c_values": [],
+     "refuted_on": 0
+    },
+    "6": {
+     "classes_with_needed_degree_ge_0": 36,
+     "instances": 36,
+     "iso_classes": 55,
+     "refuted_c_values": [],
+     "refuted_on": 0
+    },
+    "7": {
+     "classes_with_needed_degree_ge_0": 86,
+     "instances": 85,
+     "iso_classes": 163,
+     "refuted_c_values": [],
+     "refuted_on": 0
+    }
+   },
    "claim": "beta~_{n-c}(Gamma) = 0 as well",
    "discriminating": true,
    "instances": 144,
+   "note": "an instance is one iso class with needed degree d >= 0 whose d+2 skeleton was computed; 'classes_with_needed_degree_ge_0' is the testable population at that n",
    "refuted_on": 3
   },
   "N2_height_ge_2_links": {

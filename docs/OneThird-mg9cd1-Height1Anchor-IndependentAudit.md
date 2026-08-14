@@ -408,7 +408,7 @@ correction AT ITS DESTINATION"* (`a8688f2`, `mg-e2a0`).
 
 | | Defect | Severity | Repair |
 |---|---|---|---|
-| **D1** | §0 verdict says *"163 iso classes … 0 violations"*; correct is **162 of 163**. The most quotable sentence in the document is the one place the class denominator is wrong. | **HIGH** — quotability | one word in §0 line 19 |
+| **D1** | §0 verdict says *"163 iso classes … 0 violations"*; correct is **162 of 163**. The most quotable sentence in the document is the one place the class denominator is wrong. | **HIGH** — quotability | ~~one word in §0 line 19~~ — **NOT a one-word fix; see §6.1.** By the time this was carried the word was *right* and the warrant was still missing. `mg-bcd7` measured the class, so `163` is now true and writing `162` would make the document **false** |
 | **D2** | *"min margin 4"* at `n = 7` is a minimum over **148 of 163** classes; 15 classes / 2 338 vertices had no margin information at all. A **fourth denominator**, stated nowhere. **This is the defect class the audit stage exists to catch.** | **HIGH** | state the population in §0 and §4.2; §4.3 above supplies the measurement for 12 of the 15 |
 | **D3** | *"2 of the 146"* homology-carrying classes at `n = 7`; **≥ 6 of the 163** actually carry homology in degree 4 (`K_{2,5}`, `K_{5,2}` and both stars are missing). | **MEDIUM** | correct the §4.2 row and extend §4.3's list |
 | **D4** | All four cross-doc amendments stop at `n = 6`, three commits stale. | **MEDIUM** | one clause each, at the four destinations |
@@ -416,6 +416,28 @@ correction AT ITS DESTINATION"* (`a8688f2`, `mg-e2a0`).
 | **D6** | *"contractible"* used bare 4× in §1, outside the stated scope of both `Q`-acyclicity caveats. | **LOW** | widen §3's caveat from *"the tables below"* |
 | **D7** | The over-cap test is `binom(#atoms, d+3)` — the **ambient simplex**, not `Γ`. It dropped a class whose actual complex (1 470 787 faces) sits well inside the instrument's own 3 000 000 cap. The gap was a test artifact, not a wall. | **MEDIUM** | cap on `Γ`'s realised face count; the class itself is `pbcd7`'s to land |
 | **O1** | 48.3% of the `n = 7` *"measured"* vertices are the Proposition-3 slice set to zero by degree arithmetic, not computed. §7 pt 1 and pt 3 overlap on them. | observation | note the overlap in §7 |
+
+### 6.1 Disposition — all seven carried, 2026-08-14 (`mg-0f24`)
+
+This table was the only place the seven defects existed for the length of one work item. That is
+the recurring failure this stage has: an audit that finds defects needs a successor and nothing
+files one. `pm-onethird` filed `mg-0f24` on second-line review and it landed them **at their
+destinations**, not in a new document.
+
+| | landed where | as what |
+|---|---|---|
+| **D1** | — | **discharged by `mg-bcd7` before this repair began**, and not by editing a word: `pbcd7` measured the missing class (`β̃₅ = 0`), so §0's `163` became **true** rather than corrected. `mg-72e4` §0 records what the line previously said. Changing it to `162` would have made the document false |
+| **D2** | `mg-72e4` §0 result 1 and §4.2 | the margin table gains a population column, and §4.2 **derives** the denominator: `146` (full homotopy type) → `148` (as published, `146` + the 2 stars) → **`160` of 163** (`146` + the 14 §4.3 measured). `148 + 14 = 162` is the trap — the stars are in both, so the overlap is 2 |
+| **D3** | `mg-72e4` §4.2 row and §4.3 | `2 of the 146` → **`≥ 6` of 163**, with `K_{2,5}`/`K_{5,2}` and both stars added and each reading labelled by the field it was read over |
+| **D4** | `mg-52c4` §0 pt 3, §3.3, §5; `mg-e08a` §7 | one dated clause each, carrying `n = 7` complete (163/163, 227 892/227 892, 0 violations) and margin `≥ 4` on 160 of 163 |
+| **D5** | `mg-72e4` §1 | N1 restated: **144 instances**, 3 refuted, **7** testable classes at `n = 4`, **0 of 137** at `n = 5,6,7`, and the three are the `n = 4` near-miss classes themselves |
+| **D6** | `mg-72e4` §3 | caveat widened from *"the tables below"* to the whole document — **and to both directions**: a mod-`p` zero proves rational vanishing, a mod-`p` one only bounds `β̃_Q ≤ 1` |
+| **D7** | `scripts/compat_geom_mg72e4_height1_anchor.py`, `mg-72e4` §4.1 | the gate now counts `Γ(P)`'s **realised** faces. Measured over all 249 classes at `n = 3..7`: the old gate wrongly excluded **exactly one** class, the new one excludes none. At `n = 8` the old gate would decline 6 classes / 1 792 labelled vertices; what the new one says there is **not measured**. Two findings the one-line remedy did not predict — a naive swap **still** excludes the class, because the near-miss column asks one dimension more (`3 546 022` faces, over the same cap), and the replacement is a materialisation proxy where the resource that failed was the *elimination* |
+| **O1** | `mg-72e4` §7 pt 1 | the overlap noted: 110 082 of the `n = 7` *"measured"* vertices are the Proposition-3 slice re-counted |
+
+The remainder this audit declined — `margin ≥ 4` for the 3 classes at `c ≤ 2`, 252 labelled
+vertices — was **not** folded into that repair, correctly. It is still open and still bounded only
+at `≥ 1`.
 
 **Not defects, checked and cleared:** Proposition 3 and its inequality direction; Proposition 1
 and its imported ingredient (A2); the crosscut reduction and control H2's discriminating power;

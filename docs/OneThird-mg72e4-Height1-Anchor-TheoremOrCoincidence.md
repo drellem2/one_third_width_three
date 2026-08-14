@@ -33,15 +33,22 @@ Four results, in descending order of how much they should change what anyone doe
    non-vanishing degree is **`n − 3`**, and the needed degree is `n − c − 1`, so the margin is
    **`c − 2`**, minimum `n − 3` over the classes where anything is non-zero:
 
-   | `n` | min margin | degrees where `Γ(P)` has homology |
-   |---|---|---|
-   | 4 | **1** | `{0, 1}` |
-   | 5 | **2** | `{2}` |
-   | 6 | **3** | `{3}` |
-   | 7 | **4** (see §4.2) | `{4}` |
+   | `n` | min margin | over how many of the iso classes | degrees where `Γ(P)` has homology |
+   |---|---|---|---|
+   | 4 | **1** | 8 of 8 | `{0, 1}` |
+   | 5 | **2** | 20 of 20 | `{2}` |
+   | 6 | **3** | 55 of 55 | `{3}` |
+   | 7 | **≥ 4** (see §4.2) | **160 of 163** | `{4}` |
 
-   A quantity that misses by one at `n = 4`, by two at `n = 5`, by three at `n = 6` and by four at
-   `n = 7` is not behaving like arithmetic luck. **`n = 7` matters specifically**: it is where
+   **Only the `n = 7` row needs that third column** — the first three are minima over complete
+   populations — and it is here because it was missing: as first published the figure `4` stood on
+   **148** of the 163 classes, and `mg-9cd1` **D2** recorded it as a fourth denominator stated
+   nowhere. §4.2 derives all of them. The three classes still outside it (`c ≤ 2`, 252 of the
+   227 892 labelled vertices) are bounded only at `margin ≥ 1`; they are the same `c ≤ 2` slice §6
+   names as the part Conjecture C would not reach.
+
+   A quantity that misses by one at `n = 4`, by two at `n = 5`, by three at `n = 6` and by at least
+   four at `n = 7` is not behaving like arithmetic luck. **`n = 7` matters specifically**: it is where
    `mg-24eb`'s *"exactly the ordinal sums"* coincidence broke, which is the precedent `mg-52c4` §5
    cites as the reason to suspect this one.
 
@@ -105,9 +112,19 @@ its tail-set and its head-set, plus free elements), canonicalising under `S_a ×
 same class sizes — and only then used at `n = 7`.
 
 **Negative controls.** (N1) The *swapped* claim — *"`β̃_{n−c}(Γ)` vanishes too"* — must be able to
-go RED, and it does: it is **refuted on 3 of the 8 classes at `n = 4`**. So the instrument is
-discriminating at the degree next to the one under test, which is exactly the degree the
-"coincidence" story is about. (N2) At the 108 height-≥2 vertices of `Δ₄` the link is contractible,
+go RED, and it does. **Its denominator and its scope, stated (`mg-9cd1` D5):** the control ran
+**144 instances** over `n = 4..7` and is refuted on **3**, all three at `n = 4`. At `n = 4` the
+testable population is **7 of the 8 classes**, not 8 — the `c = 4` class has `d = −1`, so the
+swapped degree is never computed there. At `n = 5, 6, 7` it is **0 of 137** (`16 + 36 + 85`; the
+86th testable class at `n = 7` is the one the over-cap gate declines, §4.1). So the instrument is
+demonstrably discriminating at the degree next to the one under test — but **at `n = 4` only**, and
+the three refuting classes are exactly the three `n = 4` classes with `β̃₁ ≠ 0` (`c = 3`, class
+sizes 4 / 24 / 4), i.e. three of the four §4.2 counts as carrying homology. **N1 is therefore not
+independent evidence: it is the headline `n = 4` finding wearing a control's label.**
+*(One more thing the `d = −1` branch hides, noted at `mg-0f24`: the `c = 4` class at `n = 4` would
+refute the swapped claim too — it is `K_{2,2}`, its swapped degree is `0`, and §4.3 records
+`β̃₀ = 3` there — so 4 of the 8 classes refute it and only 3 of them are inside N1's loop.)*
+(N2) At the 108 height-≥2 vertices of `Δ₄` the link is contractible,
 a different mechanism, and the instrument reports it as such. (N3) The instrument demonstrably
 **can** report a non-zero answer in the relevant range: it reports `β̃₃ ≠ 0` at 38 vertices of
 `Δ₄`.
@@ -169,8 +186,25 @@ have to be materialised.
 
 **This is a homotopy equivalence, not a rational one.** It is not subject to the `Q`-acyclicity
 trap `mg-e08a` §1 documents: what the crosscut theorem gives is `≃`, and the `Q` enters only when
-this document then *measures* `Γ(P)` with rational Betti numbers. Every "contractible" verdict in
-the tables below is therefore still **`Q`-acyclic**, for the ordinary reason, and is labelled so.
+this document then *measures* `Γ(P)` with rational Betti numbers.
+
+> **Scope of that caveat: the WHOLE document, `§1` included, and in both directions.**
+> As first written this read *"every 'contractible' verdict in **the tables below**"*, which left
+> the four bare uses of "contractible" in §1 — the 38 of 194 and 108/108 links at `n = 4`, the
+> 12 links at `n = 3`, and (N2) — outside it, although each is the same two-prime Betti verdict
+> (`mg-9cd1` **D6**). They are not, and never were, exempt. Both directions matter, because only
+> one of them is safe:
+>
+> - **A zero is stronger than it looks.** `β̃_p = 0` forces `β̃_Q = 0`, since `rank_{F_p} ≤ rank_Q`.
+>   So every *vanishing* verdict here — which is every census verdict, and the whole of §4.1 — is a
+>   genuine rational vanishing, and `mg-9cd1`'s mod-2 readings prove rational vanishing too.
+> - **A non-zero is weaker than it looks.** `β̃_p = 1` gives only `β̃_Q ≤ 1`; it cannot exclude
+>   `p`-torsion. So a non-zero reading in this document, or in `mg-9cd1`'s, is **not** a rational
+>   value and must not be quoted as one. Where a rational value is asserted for a non-zero — the
+>   stars' `β̃₄ = 1` in §4.2/§4.3 — it comes from **F17+F18**, not from the measurement.
+>
+> "Contractible" means `Q`-acyclic everywhere in this document, and cannot distinguish `RP²` from
+> a point.
 
 ---
 
@@ -202,7 +236,43 @@ through dimension 7 and only **`1 470 787` through dimension 6, which is all `β
 inside this instrument's own cap. And `mg-bcd7` did not need that skeleton at all: `Γ(P) = X ∖ F`
 with `X` a cone and `F` a filter generated by 120 six-element faces, so the answer comes from
 matrices of 120/1 680/10 920 generators. (Observation and the `1 470 787` are `mg-9cd1`'s; the
-f-vector and the reduction are `mg-bcd7`'s.)
+f-vector and the reduction are `mg-bcd7`'s. Both f-vectors are re-measured at `mg-0f24` by a third
+enumeration — `30, 425, 3 760, 23 160, 105 032, 362 740, 975 640, 2 075 235` — agreeing on every
+entry, including the dimension-7 count `mg-bcd7` *predicted* and `mg-9cd1` measured.)
+
+> **The gate is now repaired, and the repair is not the one class** (`mg-9cd1` **D7**, landed at
+> `mg-0f24`). `binom(#atoms, d + 3)` is the top layer of a simplex this instrument never builds; it
+> is replaced by a count of `Γ(P)`'s **realised** faces, enumerated with early abort, and the count
+> is recorded per class in the output. Three things came out of doing it against a measurement
+> instead of against the known class
+> ([`scripts/audit_mg0f24_cap_gap.py`](../scripts/audit_mg0f24_cap_gap.py),
+> [`data/onethird-mg0f24-cap-gap.json`](../data/onethird-mg0f24-cap-gap.json)):
+>
+> 1. **Nothing else was wrongly excluded, and that is measured rather than assumed.** Over every
+>    height-1 class at `n = 3..7` — 249 classes, the whole range this instrument has ever been run
+>    over — the old gate excluded **exactly one** class, this one, and the realised-face gate
+>    excludes **none**. The defect had a population of 1. It bites harder further out: at `n = 8`
+>    the old gate would decline **6 classes / 1 792 labelled vertices** (`c = 1`, three `c = 2`,
+>    two `c = 3`). *What the realised gate would say about those six is **not measured** — `n = 8`
+>    is outside everything here, and counting their faces is a job, not a clause.*
+> 2. **A naive swap would still have excluded it.** The census reads the skeleton through dimension
+>    `d + 1`, but the near-miss column `β̃_{d+1}` (control N1) needs one dimension more, and this
+>    class is `1 470 787` faces at the first and `3 546 022` at the second — *over* the same
+>    3 000 000 cap. The two skeletons are now gated separately, so a class over cap on the extra
+>    dimension still resolves the census question instead of being dropped whole. The audit's
+>    *"1 470 787 is all `β̃₅` needs"* is right, and only lands once the instrument stops asking for
+>    the extra degree.
+> 3. **The replacement gate is a proxy too, and is labelled as one.** Face count bounds
+>    *materialisation*; what actually failed to return here was the *elimination*. So the
+>    hand-off to the Betti routine has its own threshold, set at what this instrument has been
+>    **observed to complete** — over `n = 3..7`, the largest skeleton it has finished is `574 559`
+>    faces and the largest full `Γ(P)` it has materialised is `409 599`, both measured at
+>    `mg-0f24` — and declared a budget, not a feasibility bound. Under it this class
+>    is still declined, now for a stated and measured reason rather than a bound on the wrong
+>    object, and its value is known from two other routes. The margin gate above (`#atoms ≤ 20`,
+>    i.e. `2^20`) is the **same ambient proxy** and is deliberately left in place: it is what
+>    produced the published `146 of 163`, and moving it would move a published population rather
+>    than repair one. It is now recorded per class in the output so the population is readable.
 
 The `n = 6` row is the ticket's step 2, complete: `mg-1b3b` sized that job at 11 642 of 129 302
 vertices, and every one of them is covered by the 55 classes. The `n = 5` row is 20/20 classes,
@@ -230,23 +300,58 @@ Counting only whether the *needed* degree is empty is what produced the "one-deg
 reading. Because `Γ(P)` is small, its **whole** homotopy type is affordable, and that is a
 different and much more informative measurement:
 
-| `n` | classes with `Γ(P)` not `Q`-acyclic | degrees carrying homology | **min margin** `= firstnonzero − d` |
+| `n` | classes where `Γ(P)` **reads non-zero** | degrees carrying homology | **min margin** `= firstnonzero − d` | over what population |
+|---|---|---|---|---|
+| 4 | 4 of 8 | `{0, 1}` | **1** | 8 of 8 — complete |
+| 5 | 4 of 20 | `{2}` | **2** | 20 of 20 — complete |
+| 6 | 5 of 55 | `{3}` | **3** | 55 of 55 — complete |
+| 7 | **≥ 6 of 163** (2 of the 146 within cap; see §4.3) | `{4}` | **≥ 4**, attained at the stars | **160 of 163** — *not* complete |
+
+*(Three things about that table, all of them scope. **(i) The first column is a field reading, not
+a `Q`-acyclicity verdict** — it used to be headed *"not `Q`-acyclic"*, which is the direction §3's
+caveat does not license: `β̃_p ≠ 0` gives only `β̃_Q ≤ β̃_p`, so a non-zero reading cannot by itself
+promote a class out of `Q`-acyclic. The one place a rational non-vanishing is actually established
+is the stars, and it comes from F17+F18. **(ii) The `n ≤ 6` denominators are complete** — the
+largest `Γ(P)` there has 6 / 12 / 20 vertices and the full-homotopy-type gate admits everything up
+to 20; at `n = 7` the largest has 30 and the gate bites, so the first three rows and the fourth are
+not the same kind of number, which is what made the `n = 7` entry easy to misread. **(iii) `4` is
+a lower bound** — `≥` everywhere it was measured, `= 4` only at the stars.)*
+
+**The `n = 7` margin row needs its caveat stated, not buried — and the caveat has a denominator
+that has to be derived rather than picked.** Three numbers are in circulation (`146`, `148`,
+`14 of 17`) and they do not compose by addition. Deriving, at `n = 7`, out of **163 classes /
+227 892 labelled vertices**:
+
+| | classes | labelled | why |
 |---|---|---|---|
-| 4 | 4 of 8 | `{0, 1}` | **1** |
-| 5 | 4 of 20 | `{2}` | **2** |
-| 6 | 5 of 55 | `{3}` | **3** |
-| 7 | 2 of the 146 within cap | `{4}` | **10 measured / 4 including the star** |
+| full homotopy type of `Γ(P)` computed | **146** | 225 540 | the gate is `#atoms ≤ 20`; these are the classes that clear it |
+| no full homotopy type | 17 | 2 352 | `#atoms` between 21 and 30 |
+|  — of those, the two stars `K_{6,1}`, `K_{1,6}` | 2 | 14 | margin `4` **inferred** from F17+F18, not computed |
+|  — of those, the rest | 15 | 2 338 | **no margin information of any kind** — `mg-9cd1` **D2** |
+| **population of "min margin 4" as first published** | **148** | **225 554** | `146 + 2 stars` |
+| `mg-9cd1` §4.3 measured all 17 and reached `margin ≥ 4` on | **14** of the 17 | 2 100 | `c ∈ {3,4,5,6,10}`, `β̃` over `Z/2`. `mg-9cd1`'s §6 table calls this *"12 of the 15"* — same classes, counted out of the 15 that had **no** margin information rather than out of the 17 without a full type. `14 = 12 + the 2 stars`, `17 = 15 + the 2 stars` |
+| **population now** | **160** | **227 640** | `146 + 14`, **not** `148 + 14` |
+| still open | **3** | **252** | `c = 1` (42) and the two `c = 2` (105 each), bounded only at `margin ≥ 1` |
 
-**The `n = 7` margin row needs its caveat stated, not buried.** The full homotopy type of `Γ(P)` is
-computed only where `Γ(P)` has at most 20 vertices, which is 146 of the 163 classes at `n = 7`; the
-17 excluded include the star `K_{6,1}`. Over the 146, the minimum margin is **10** (attained at
-`K_{3,4}` and `K_{4,3}`, `c = 12`, `β̃₄ = 1`). The star is excluded from that pool but its margin is
-known without computing: `U(K_{n−1,1}) ≅ PPF_{n−1} ≃_Q S^{n−3}` by **F17+F18**, and `c = n − 1`
-gives `d = 0`, so its margin is exactly `n − 3 = 4`. So `4` is the honest `n = 7` figure and `10`
-is what was measured; both are ≥ the `n − 3` pattern and neither is `1`.
+**The trap in that table is the `population now` row.** `148 + 14 = 162` is wrong: the two stars
+are counted in *both* the 148 and the 14 — they are exactly the classes that moved from *inferred*
+to *measured* — so the union is `146 + 14 = 160` and the overlap is 2. Adding the two published
+figures would have produced a **fifth** denominator, which is the defect this repair exists to
+carry, reproduced inside its own repair.
 
-For `n ≥ 5` every non-`Q`-acyclic `Γ(P)` measured is a **rational `(n−3)`-sphere** — a single `1`
-in degree `n − 3` and nothing else — and every other `Γ(P)` is `Q`-acyclic. Since the needed
+Over the 146, the minimum margin is **10** (attained at `K_{3,4}` and `K_{4,3}`, `c = 12`,
+`β̃₄ = 1`). The stars are outside that pool and their margin is known without computing it:
+`U(K_{n−1,1}) ≅ PPF_{n−1} ≃_Q S^{n−3}` by **F17+F18**, and `c = n − 1` gives `d = 0`, so the margin
+is exactly `n − 3 = 4` — and `mg-9cd1` has since measured `β̃₄(Γ(K_{6,1}); Z/2) = 1` with nothing
+below, corroborating it. So **`4` is the honest `n = 7` figure, on 160 of 163 classes**, `10` is
+the figure over the 146 the instrument computed in full, and the three unresolved classes are
+bounded only at `≥ 1`. Neither figure is `1`, which is what the ticket asked.
+
+For `n ≥ 5` every non-`Q`-acyclic `Γ(P)` measured **reads as** a rational `(n−3)`-sphere — a single
+`1` in degree `n − 3` and nothing else — and every other `Γ(P)` is `Q`-acyclic. *(With §3's caveat
+applied in both directions: the zeros are rational vanishing outright, while the `1` in degree
+`n − 3` bounds `β̃_Q ≤ 1` over the instrument's primes and does not on its own exclude torsion. At
+the stars a rational value does follow — from F17+F18, not from this measurement.)* Since the needed
 degree is `n − c − 1`, the margin is `c − 2`, and the classes that carry homology all have
 `c ≥ 4` at `n = 5` and `c ≥ 5` at `n = 6`.
 
@@ -258,8 +363,30 @@ minimum margin is `n − 3`.
 ### 4.3 Where the homology actually lives
 
 The five non-`Q`-acyclic classes at `n = 6` are `c = 5` (the star `K_{5,1}` and its dual),
-`c = 8` (`K_{2,4}` and `K_{4,2}`) and `c = 9` (`K_{3,3}`) — complete bipartite height-1 posets; at
-`n = 7`, the two within cap are `K_{3,4}` and `K_{4,3}`.
+`c = 8` (`K_{2,4}` and `K_{4,2}`) and `c = 9` (`K_{3,3}`) — complete bipartite height-1 posets.
+
+**At `n = 7` the list is `≥ 6` of the 163, not the 2 this section used to name** (`mg-9cd1` **D3**).
+The two this instrument found are the two it looked at; four more sat among the 17 classes it never
+gave a full homotopy type, and `mg-9cd1` §4.3 measured them. *(Read with §3's caveat: "carries
+homology" below means **reads non-zero over the field named in the last column**, which is a
+rational statement only where the last column says so.)*
+
+| class | `c` | labelled | `β̃₄` | field, and what it establishes |
+|---|---|---|---|---|
+| `K_{3,4}`, `K_{4,3}` | 12 | 35 each | 1 | both instrument primes — the two within cap |
+| `K_{6,1}`, `K_{1,6}` (the stars) | 6 | 7 each | 1 | `Z/2` (`mg-9cd1`), **and rationally by F17+F18** |
+| `K_{2,5}`, `K_{5,2}` | 10 | 21 each | 1 | **`Z/2` only** — this bounds `β̃_Q ≤ 1`; no rational value |
+
+All six are complete bipartite with homology in degree exactly `n − 3 = 4`, which *strengthens* the
+reading below rather than weakening it; what was wrong was the count. The `n = 7` entry in §4.2's
+first column is therefore `≥ 6 of 163` and the `2` that stood there was `2 of the 146`.
+
+**Why `≥ 6` and not `= 6`, given that all 163 classes now have a degree-4 reading.** The two
+populations were read over **different fields** — the 146 over this instrument's two primes near
+`10⁶`, the 17 over `Z/2` — so a class among the 146 could carry 2-torsion in degree 4 that its
+primes cannot see. Six is what has been seen; nothing here rules out a seventh, and closing that
+would mean re-reading the 146 over `Z/2`, which nobody has done.
+
 This is not an accident and it is checkable by hand: for `P = K_{a,b}` a refinement `Q ⊋ P` can
 add relations only *within* the lower block and *within* the upper block, so
 
@@ -342,6 +469,12 @@ Stated so that nobody over-reads it:
 
 1. **Proven, all `n ≥ 6`, no measurement:** the vanishing at every height-1 vertex with `c ≥ n`
    (§5). 30.8% of the `n = 6` height-1 population.
+
+   > **Points 1 and 3 overlap; do not add them** (`mg-9cd1` O1). At `n = 7`, `110 082` of the
+   > 227 892 vertices point 3 calls *measured* (48.3%) are this proven slice re-counted: for
+   > `c ≥ 8` the needed degree is `≤ −2` and the instrument sets `β̃_d = 0` by arithmetic, and for
+   > `c = 7` it checks only that `Γ(P)` is non-empty — which *is* Proposition 3's content. Both
+   > statements are true; a reader adding them is double counting.
 2. **Measured exhaustively, `n ≤ 6`:** every height-1 iso class — 3 / 8 / 20 / 55 classes covering
    12 / 86 / 840 / 11 642 labelled vertices — **0 violations**, none over cap. This includes the
    three `n = 5` classes `mg-e08a` could not reach.
@@ -352,7 +485,11 @@ Stated so that nobody over-reads it:
    `n = 7` is the `n` at which the corpus's nearest precedent — `mg-24eb`'s *"exactly the ordinal
    sums"* — turned out to be false.
 4. **Refuted:** the *"every case is a one-degree near-miss"* premise. True at `n = 4`; false at
-   `n = 5, 6, 7`, where the margin is 2, 3 and (at least) 4.
+   `n = 5, 6, 7`, where the margin is 2, 3 and (at least) 4. The `n = 4, 5, 6` figures are minima
+   over the complete class populations; the `n = 7` figure is a minimum over **160 of the 163**
+   classes (227 640 of 227 892 labelled vertices) and three classes at `c ≤ 2` are bounded only at
+   `≥ 1` — §4.2 derives that denominator, and it is not the `148` the figure was first published
+   on.
 5. **Open:** Conjecture C (§6), and the `c ≤ 2` cases it does not cover. **Nothing here proves the
    statement for any `n`** beyond the `c ≥ n` slice of Proposition 3 — everything else is
    measurement, and measurement stops at `n = 7` (`n = 9` for `c = 1` alone, via `mg-bcd7`).
@@ -404,8 +541,19 @@ anchor-degree measurement, the `58/61` cap, the `Q`-acyclicity and Euler-blindne
 `docs/compatibility-geometry-F17-equivariant-cofiber-morse.md` (Lemma L1),
 `...-F18-ucc2-delta-injective.md`, `...-F28-sheaf-cohomology-on-POSET.md` (§2.3).
 
+**Repairs to this document:** `mg-9cd1`'s independent audit
+(`docs/OneThird-mg9cd1-Height1Anchor-IndependentAudit.md`) returned pass-with-defects; `mg-bcd7`
+discharged D1 by measurement and `mg-0f24` carried the rest — §0 result 1 and §4.2 (D2, the margin's
+denominator, derived), §4.2/§4.3 (D3, the homology-carrying count), §1 (D5, N1's scope), §3 (D6,
+the `Q`-acyclicity caveat, widened to the whole document and to both directions), §4.1 and
+`scripts/compat_geom_mg72e4_height1_anchor.py` (D7, the over-cap gate), §7 pt 1 (O1). The gate
+measurement is `scripts/audit_mg0f24_cap_gap.py` → `data/onethird-mg0f24-cap-gap.json`, whose
+face counter is pinned against this instrument's own `gamma_faces()` builder per dimension on all
+31 classes at `n ≤ 5` before any of its numbers are used.
+
 **Work items:** `mg-52c4` (Theorem A), `mg-e08a` (the audit that named this question),
-`mg-1b3b` (carried it and sized the `n = 6` job at 11 642), `mg-72e4` (this).
+`mg-1b3b` (carried it and sized the `n = 6` job at 11 642), `mg-72e4` (this),
+`mg-9cd1` (independent audit), `mg-bcd7` (the `n = 7` `c = 1` class), `mg-0f24` (the repairs).
 
 **Literature:** A. Björner, *Topological methods*, Handbook of Combinatorics (1995) — Thm 10.8
 (crosscut), §10.2 (closure/order-homotopy). L. Mirsky, *A dual of Dilworth's decomposition

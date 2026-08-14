@@ -34,7 +34,34 @@ WHAT THIS INSTRUMENT DOES
 Everything is re-implemented from scratch (stdlib only); nothing is imported from the repo, so
 this is an independent check of mg-e08a's numbers as well as a new measurement.
 
+THE OVER-CAP GATE (repaired at mg-0f24, defect mg-9cd1 D7)
+
+    As first landed this instrument declined a class when
+
+        _binom(len(atoms), d + 3) > SKELETON_CAP
+
+    which is the size of the top layer of the AMBIENT SIMPLEX on the atoms -- an object it never
+    builds.  Gamma(P) is far thinner than its ambient simplex, so the gate measured the wrong
+    thing and could decline a class that was well inside the budget it was pretending to enforce.
+    It did: the n = 7 c = 1 class, ambient top layer 5 852 925 against 1 470 787 REALISED faces
+    through the dimension beta~_5 needs.  The gate now counts Gamma(P)'s realised faces, with
+    early abort, and reports the count.
+
+    Two thresholds, both on realised faces, because they bound different resources:
+
+      SKELETON_CAP  -- MATERIALISATION.  How many faces this instrument will build at all.
+      ELIM_CAP      -- ELIMINATION.  How large a skeleton it will hand to reduced_betti_range().
+                       This is a BUDGET, not a feasibility bound: it records what this
+                       instrument has been observed to complete (574 559 faces, measured at
+                       mg-0f24, scripts/audit_mg0f24_cap_gap.py), not what is computable.  The
+                       n = 7 c = 1 class sits outside it and was computed by two other routes
+                       (mg-bcd7's cone/LES reduction; mg-9cd1's mod-2 skeleton rank).
+
+    A class can now be over on the near-miss column (beta~_{d+1}, one dimension more) while
+    still resolving the needed degree, instead of being dropped whole.
+
 Run:  /usr/bin/python3 scripts/compat_geom_mg72e4_height1_anchor.py
+Env:  MG72E4_NMAX, MG72E4_FULL_CAP, MG72E4_SKEL_CAP, MG72E4_ELIM_CAP, MG72E4_OUT
 """
 
 import itertools
@@ -341,6 +368,38 @@ def gamma_faces(P, n, atoms, dmax):
     return faces
 
 
+def gamma_face_count(P, n, atoms, dmax, cap):
+    """How many faces of dimension <= dmax does Gamma(P) REALLY have?  Counted, not stored.
+
+    Same face rule and same pruning as gamma_faces(); nothing is retained, so the count is
+    memory-free and a class far over the cap costs a bounded amount of work.  Returns
+    (total, exceeded); on `exceeded` the total is a lower bound (cap + 1).
+
+    This is the quantity the over-cap gate tests.  It replaces _binom(len(atoms), d + 3), which
+    counted the ambient simplex's top layer instead -- mg-9cd1 D7, repaired at mg-0f24.
+    """
+    m = len(atoms)
+    if m == 0:
+        return 0, False
+    total = 0
+    stack = [([i], atoms[i]) for i in range(m - 1, -1, -1)]
+    while stack:
+        prefix, cur = stack.pop()
+        d = len(prefix) - 1
+        total += 1
+        if total > cap:
+            return total, True
+        if d >= dmax:
+            continue
+        for j in range(m - 1, prefix[-1], -1):
+            U = cur | atoms[j]
+            Q = tc(U, n)
+            if Q is None or is_total(Q, n):
+                continue
+            stack.append((prefix + [j], Q))
+    return total, False
+
+
 # --------------------------------------------------------------------------- link (direct)
 def upper_link_poset(P, n, universe):
     return [Q for Q in universe if P < Q]
@@ -466,6 +525,33 @@ def main():
     meas = {}
     FULL_BETTI_ATOM_CAP = int(os.environ.get("MG72E4_FULL_CAP", "20"))
     SKELETON_CAP = int(os.environ.get("MG72E4_SKEL_CAP", "3000000"))
+    # Demonstrated-capability budget for the elimination, NOT a feasibility bound: the largest
+    # skeleton this instrument has been measured to complete is 574 559 faces and the largest
+    # full Gamma it has materialised is 409 599 (mg-0f24, data/onethird-mg0f24-cap-gap.json).
+    ELIM_CAP = int(os.environ.get("MG72E4_ELIM_CAP", "600000"))
+    report["gates"] = {
+        "full_betti_atom_cap": FULL_BETTI_ATOM_CAP,
+        "skeleton_cap_realised_faces": SKELETON_CAP,
+        "elimination_cap_realised_faces": ELIM_CAP,
+        "gate_measures": "realised faces of Gamma(P) (mg-0f24; was binom(#atoms, d+3), mg-9cd1 D7)",
+    }
+
+    def resolve(P, n, atoms, dmax, betti_dmax):
+        """beta~ of Gamma(P) in degrees <= betti_dmax, or a named reason for not computing it.
+
+        Returns (betti_or_None, realised_faces, status).  status is "computed", or
+        "over_cap" (more realised faces than this instrument will build), or
+        "declined_elimination" (buildable, but larger than it has been shown to complete).
+        """
+        n_faces, over = gamma_face_count(P, n, atoms, dmax, SKELETON_CAP)
+        if over:
+            return None, n_faces, "over_cap"
+        if n_faces > ELIM_CAP:
+            return None, n_faces, "declined_elimination"
+        g = gamma_faces(P, n, atoms, dmax=dmax)
+        b = reduced_betti_range(g, betti_dmax) if g else {-1: 1}
+        return b, n_faces, "computed"
+
     for n in range(3, NMAX + 1):
         classes = height1_iso_classes(n) if n <= 6 else height1_iso_classes_fast(n)
         if n <= 6:  # the fast enumerator must agree with the brute-force one
@@ -479,73 +565,145 @@ def main():
             d = n - c - 1
             atoms = atoms_of_upper(P, n)
             full, firstnz = None, None
+            faces_needed = faces_nearmiss = faces_full = None
             if d < -1:
                 bd, bnext = 0, None
             elif d == -1:
                 bd, bnext = (1 if not atoms else 0), None
-            elif _binom(len(atoms), d + 3) > SKELETON_CAP:
-                bd, bnext = "over_cap", None
             else:
-                g = gamma_faces(P, n, atoms, dmax=d + 2)
-                b = reduced_betti_range(g, d + 1) if g else {-1: 1}
-                bd, bnext = b.get(d, 0), b.get(d + 1, 0)
+                # The needed degree d reads the skeleton through dim d+1; the near-miss column
+                # (beta~_{d+1}, negative control N1) needs one dimension more.  They are gated
+                # SEPARATELY, so a class that is over cap only on the extra dimension still
+                # resolves the census question instead of being dropped whole -- mg-9cd1 D7.
+                b, faces_needed, st = resolve(P, n, atoms, d + 1, d)
+                bd = b.get(d, 0) if st == "computed" else st
+                if st != "computed":
+                    bnext = st
+                else:
+                    b2, faces_nearmiss, st2 = resolve(P, n, atoms, d + 2, d + 1)
+                    if st2 != "computed":
+                        bnext = st2
+                    else:
+                        bnext = b2.get(d + 1, 0)
+                        # free control: the needed degree, read off two different skeletons
+                        if b2.get(d, 0) != bd:
+                            failures.append("skeleton d+1 vs d+2 disagree n=%d c=%d" % (n, c))
             # MARGIN: the FULL homotopy type of Gamma(P), where it is affordable.  This is what
             # decides "theorem vs coincidence": the question is not only whether the needed
             # degree is empty but HOW FAR the nearest non-empty degree is.
+            #
+            # NOTE the gate here is on the ATOM COUNT, i.e. on 2^|atoms| -- the ambient simplex
+            # again, the same proxy mg-9cd1 D7 caught above.  It is left in place deliberately:
+            # it is the gate that produced the published margin denominators (146 of 163 at
+            # n = 7), and changing it would move a published population rather than repair it.
+            # It is recorded per row as `full_betti_gate` so the population is readable from the
+            # output, and the realised size is recorded beside it.
             if len(atoms) <= FULL_BETTI_ATOM_CAP:
-                g = gamma_faces(P, n, atoms, dmax=len(atoms))
-                bf = reduced_betti_range(g, max(g)) if g else {-1: 1}
-                full = {str(k): v for k, v in bf.items() if v}
-                nz = [k for k, v in bf.items() if v]
-                firstnz = min(nz) if nz else None
-                if bd != "over_cap" and bf.get(d, 0) != bd:
-                    failures.append("capped vs full disagree n=%d c=%d" % (n, c))
+                faces_full, over_full = gamma_face_count(P, n, atoms, len(atoms), SKELETON_CAP)
+                if over_full or faces_full > ELIM_CAP:
+                    full_gate = "over_cap" if over_full else "declined_elimination"
+                else:
+                    full_gate = "computed"
+                    g = gamma_faces(P, n, atoms, dmax=len(atoms))
+                    bf = reduced_betti_range(g, max(g)) if g else {-1: 1}
+                    full = {str(k): v for k, v in bf.items() if v}
+                    nz = [k for k, v in bf.items() if v]
+                    firstnz = min(nz) if nz else None
+                    if isinstance(bd, int) and bf.get(d, 0) != bd:
+                        failures.append("capped vs full disagree n=%d c=%d" % (n, c))
+            else:
+                full_gate = "atoms_over_full_cap"
             rows.append({
                 "P": sorted(map(list, P)), "c": c, "class_size": mult,
                 "needed_degree": d, "n_atoms": len(atoms),
                 "betti_needed": bd, "betti_one_above": bnext,
                 "gamma_full_betti": full, "gamma_first_nonvanishing": firstnz,
                 "margin": None if firstnz is None else firstnz - d,
+                "realised_faces_needed_skeleton": faces_needed,
+                "realised_faces_nearmiss_skeleton": faces_nearmiss,
+                "realised_faces_full": faces_full,
+                "ambient_top_layer_old_gate": _binom(len(atoms), d + 3) if d >= 0 else None,
+                "full_betti_gate": full_gate,
             })
-        bad = [r for r in rows if r["betti_needed"] not in (0, "over_cap")]
-        over = [r for r in rows if r["betti_needed"] == "over_cap"]
+        UNRESOLVED = ("over_cap", "declined_elimination")
+        bad = [r for r in rows if r["betti_needed"] not in (0,) + UNRESOLVED]
+        over = [r for r in rows if r["betti_needed"] in UNRESOLVED]
         margins = [r["margin"] for r in rows if r["margin"] is not None]
+        # THE MARGIN'S POPULATION, stated rather than inferable.  `min_margin` is a minimum over
+        # the classes whose FULL homotopy type was computed AND which are not Q-acyclic; both
+        # restrictions shrink the denominator and neither used to appear anywhere in the output.
+        # That is mg-9cd1 D2 -- a fourth denominator behind a headline figure -- landed at the
+        # instrument so the document cannot lose it again.
+        full_ok = [r for r in rows if r["full_betti_gate"] == "computed"]
+        no_full = [r for r in rows if r["full_betti_gate"] != "computed"]
         meas[str(n)] = {
             "iso_classes": len(rows),
             "labeled_total": sum(r["class_size"] for r in rows),
             "violations": len(bad),
             "over_cap_classes": len(over),
             "over_cap_labeled": sum(r["class_size"] for r in over),
+            "unresolved_by_reason": {
+                reason: len([r for r in over if r["betti_needed"] == reason])
+                for reason in UNRESOLVED},
             "violating_classes": bad,
-            "near_miss_classes": sum(1 for r in rows if r["betti_one_above"]),
+            "near_miss_classes": sum(1 for r in rows if isinstance(r["betti_one_above"], int)
+                                     and r["betti_one_above"]),
+            "near_miss_instances": sum(1 for r in rows if isinstance(r["betti_one_above"], int)),
             "non_contractible_gamma": sum(1 for r in rows if r["gamma_full_betti"]),
             "gamma_nonvanishing_degrees": sorted(set(
                 int(k) for r in rows if r["gamma_full_betti"] for k in r["gamma_full_betti"])),
             "min_margin": min(margins) if margins else None,
+            "min_margin_population_classes": len(margins),
+            "min_margin_population_labelled": sum(
+                r["class_size"] for r in rows if r["margin"] is not None),
+            "full_homotopy_type_classes": len(full_ok),
+            "full_homotopy_type_labelled": sum(r["class_size"] for r in full_ok),
+            "no_full_homotopy_type_classes": len(no_full),
+            "no_full_homotopy_type_labelled": sum(r["class_size"] for r in no_full),
             "rows": rows,
         }
-        print("n=%d: %d height-1 iso classes (%d labeled), %d violations, %d over-cap, %d near-misses, "
-              "min margin %s, Gamma non-vanishing degrees %s"
+        print("n=%d: %d height-1 iso classes (%d labeled), %d violations, %d unresolved %s, "
+              "%d near-misses, min margin %s over %d of %d classes (full homotopy type on %d), "
+              "Gamma non-vanishing degrees %s"
               % (n, len(rows), meas[str(n)]["labeled_total"], len(bad), len(over),
-                 meas[str(n)]["near_miss_classes"], meas[str(n)]["min_margin"],
+                 meas[str(n)]["unresolved_by_reason"], meas[str(n)]["near_miss_classes"],
+                 meas[str(n)]["min_margin"], meas[str(n)]["min_margin_population_classes"],
+                 len(rows), meas[str(n)]["full_homotopy_type_classes"],
                  meas[str(n)]["gamma_nonvanishing_degrees"]), flush=True)
     report["measurement_height1"] = meas
 
     # ---------------- NEGATIVE CONTROLS
     neg = {}
     # N1: the SWAPPED claim -- "the needed degree is n-c" -- must go RED.
+    #
+    # The counts here are BY n, and the totals are reported next to them, because N1 was
+    # published as "refuted on 3 of the 8 classes at n = 4" -- a denominator that is neither the
+    # number of instances the control ran (144) nor the number of testable classes at n = 4 (7).
+    # mg-9cd1 D5; landed at mg-0f24.  `betti_one_above` is now a string when the near-miss
+    # skeleton was not computed, so the test is isinstance(int), not `is not None`: a truthy
+    # "over_cap" would otherwise have counted as a refutation.
     swapped_red = 0
     swapped_total = 0
+    by_n = {}
     for n in range(4, NMAX + 1):
-        for r in meas[str(n)]["rows"]:
-            if r["betti_one_above"] is not None:
-                swapped_total += 1
-                if r["betti_one_above"]:
-                    swapped_red += 1
+        inst = [r for r in meas[str(n)]["rows"] if isinstance(r["betti_one_above"], int)]
+        red = [r for r in inst if r["betti_one_above"]]
+        testable = [r for r in meas[str(n)]["rows"] if r["needed_degree"] >= 0]
+        by_n[str(n)] = {
+            "instances": len(inst), "refuted_on": len(red),
+            "classes_with_needed_degree_ge_0": len(testable),
+            "iso_classes": meas[str(n)]["iso_classes"],
+            "refuted_c_values": sorted(r["c"] for r in red),
+        }
+        swapped_total += len(inst)
+        swapped_red += len(red)
     neg["N1_swapped_degree_is_n_minus_c"] = {
         "claim": "beta~_{n-c}(Gamma) = 0 as well",
         "instances": swapped_total, "refuted_on": swapped_red,
         "discriminating": swapped_red > 0,
+        "by_n": by_n,
+        "note": "an instance is one iso class with needed degree d >= 0 whose d+2 skeleton was "
+                "computed; 'classes_with_needed_degree_ge_0' is the testable population at that n",
     }
     # N2: perturb -- for a HEIGHT>=2 poset the lower factor is contractible, so the link is
     # contractible; the anchor-degree Betti of the link must be 0 for a DIFFERENT reason.
@@ -570,8 +728,9 @@ def main():
     report["ALL_PASS"] = not failures
     report["failures"] = failures
 
-    out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                       "data", "onethird-mg72e4-height1-anchor.json")
+    out = os.environ.get("MG72E4_OUT") or os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        "data", "onethird-mg72e4-height1-anchor.json")
     with open(out, "w") as f:
         json.dump(report, f, indent=1, sort_keys=True)
     print("ALL_PASS =", report["ALL_PASS"])

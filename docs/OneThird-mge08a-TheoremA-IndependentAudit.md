@@ -338,6 +338,15 @@ follows from (A2) plus the join formula verified in §5.
 > vertices, 0 violations) and the three `n = 5` classes this audit left over cap are computed
 > (20/20). Still not a theorem for all `n`; the `c ≥ n` slice is proven. See
 > `docs/OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md`.
+>
+> **EXTENDED to `n = 7` 2026-08-14 (`mg-9cd1` D4, carried by `mg-0f24`).** The amendment above
+> stopped at `n = 6` three commits after it was written, and the `1 / 2 / 3` sequence has a fourth
+> term: the margin is **`≥ 4` at `n = 7`**, on **160 of the 163** iso classes — three (`c ≤ 2`,
+> 252 labelled vertices) are bounded only at `≥ 1`, and the figure was first published on a
+> population of 148 that nobody stated (`mg-9cd1` D2). `n = 7` is measured **complete** otherwise:
+> **163 of 163** classes, **227 892 of 227 892** labelled height-1 vertices, **0 violations**
+> (`mg-72e4`; its last class closed by `mg-bcd7`, the whole census replicated independently by
+> `mg-9cd1`). Still not a theorem for all `n`.
 
 **So the conclusion holds — but by a degree coincidence, and every case is a near-miss.** At
 `n = 4`: `c = 1` needs `H̃₂(U) = 0` and `U` is contractible; `c = 2` needs `H̃₁(U) = 0` and `U` is

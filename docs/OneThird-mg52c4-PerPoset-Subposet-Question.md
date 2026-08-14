@@ -60,6 +60,14 @@ Run: `/usr/bin/python3 scripts/compat_geom_mg52c4_subposet_complexes.py` (~2 min
    >   > `n = 4`, `2` at `n = 5`, `3` at `n = 6`. Still **not proven** for all `n`; what is proven
    >   > is the `c ≥ n` slice. See
    >   > [`OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md`](OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md).
+   >   >
+   >   > **EXTENDED to `n = 7` 2026-08-14 (`mg-9cd1` D4, carried by `mg-0f24`).** The record above
+   >   > stopped at `n = 6` three commits after it was written. `n = 7` is measured **complete** —
+   >   > **163 of 163** iso classes, **227 892 of 227 892** labelled height-1 vertices, **0
+   >   > violations** (`mg-72e4`, its last class closed by `mg-bcd7` and replicated independently by
+   >   > `mg-9cd1`) — and the margin there is **`≥ 4`**, on 160 of the 163 classes, the remaining
+   >   > three (`c ≤ 2`, 252 vertices) bounded only at `≥ 1`. Nothing above is retracted and nothing
+   >   > is proven that was not: `n = 7` is still measurement.
    >
    > **This scopes the claim; it does not retract it.** The recommendation *"do not open an F33"*
    > (§5) survives the audit unchanged, and a reader who takes this note as licence to reopen the
@@ -400,6 +408,14 @@ harder, because there is no non-zero class to work with.
 >   > still the reason a dimension argument cannot work — the correct target is a *connectivity*
 >   > statement. `mg-72e4` proves the `c ≥ n` slice outright. See
 >   > [`OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md`](OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md).
+>   >
+>   > **EXTENDED to `n = 7` 2026-08-14 (`mg-9cd1` D4, carried by `mg-0f24`).** (i) and (ii) above
+>   > now reach one further: the margin is **`≥ 4` at `n = 7`** — on 160 of the 163 iso classes,
+>   > with three (`c ≤ 2`, 252 labelled vertices) bounded only at `≥ 1` — so the near-miss widens
+>   > again rather than stalling at `n = 6`; and **`n = 7` is established complete**, 163 of 163
+>   > classes / 227 892 of 227 892 labelled vertices, 0 violations. `n = 7` is the `n` at which
+>   > `mg-24eb`'s *"exactly the ordinal sums"* coincidence broke, which is why this row and not
+>   > another is the one worth carrying here. Still not proven for all `n`.
 > - **One nearby map is genuinely non-zero.** Restrictions are not the only maps to the local
 >   structure at `P`: the Mayer–Vietoris connecting map
 >   `∂ : H̃_{n−2}(Δ_n) → H̃_{n−3}(lk_{Δ_n}(P))` is not a restriction and is not covered by the cone
@@ -537,6 +553,12 @@ is not merely blocked but trivial.
   > *connectivity* conjecture about a complex on `≤ n(n−1) − 2c` vertices, plus the `c ≤ 2` cases.
   > **Nothing reopens.** See
   > [`OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md`](OneThird-mg72e4-Height1-Anchor-TheoremOrCoincidence.md).
+  >
+  > **EXTENDED to `n = 7` 2026-08-14 (`mg-9cd1` D4, carried by `mg-0f24`).** The premise is false
+  > at `n = 7` as well, where the margin is **`≥ 4`** (on 160 of the 163 iso classes; three at
+  > `c ≤ 2`, 252 labelled vertices, are bounded only at `≥ 1`). `n = 7` is measured **complete** —
+  > 163 of 163 classes, 227 892 of 227 892 labelled vertices, 0 violations — via the same crosscut
+  > reduction. Nothing reopens here either.
 - **The F28 corrections in §3.1–§3.2 are landed at their destination** in this same commit (a dated
   note at F28 §1.6 (F-5) and §2.3), so a future reader of F28 cannot re-inherit the vacuous (F-5) or
   the wrong link identity. F17 §3 gets a forward pointer recording that L1 is the special case of
