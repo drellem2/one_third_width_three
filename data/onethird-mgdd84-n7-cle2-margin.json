@@ -1,0 +1,3762 @@
+{
+ "ALL_PASS": true,
+ "V0_cross_check_mg72e4": {
+  "atoms_agree": true,
+  "available": true,
+  "bitset_rank_agrees_with_sparse_rank": true,
+  "detail": {
+   "c1": {
+    "mg72e4": 30,
+    "mine": 30,
+    "same_set": true
+   },
+   "c2_L": {
+    "mg72e4": 26,
+    "mine": 26,
+    "same_set": true
+   },
+   "c2_V": {
+    "mg72e4": 26,
+    "mine": 26,
+    "same_set": true
+   },
+   "c_le_2_classes_at_n7": [
+    [
+     [
+      [
+       0,
+       1
+      ]
+     ],
+     42,
+     30
+    ],
+    [
+     [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     105,
+     26
+    ],
+    [
+     [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     105,
+     26
+    ],
+    [
+     [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     420,
+     20
+    ]
+   ],
+   "c_le_2_over_the_20_atom_margin_gate": [
+    [
+     [
+      [
+       0,
+       1
+      ]
+     ],
+     42,
+     30
+    ],
+    [
+     [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     105,
+     26
+    ],
+    [
+     [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     105,
+     26
+    ]
+   ],
+   "labelled_vertices_at_n7": 227892,
+   "n_classes_at_n7": 163
+  },
+  "rank_routine_agrees_with_mg72e4": true,
+  "tc_agreement_over_2000_random_relations_n5": 2000
+ },
+ "V1_reader_controls": {
+  "RP2_6": {
+   "1000003": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "2": [
+    0,
+    0,
+    1,
+    1
+   ]
+  },
+  "boundary_of_simplex_1_is_S0": {
+   "1000003": [
+    0,
+    1,
+    0
+   ],
+   "2": [
+    0,
+    1,
+    0
+   ]
+  },
+  "boundary_of_simplex_2_is_S1": {
+   "1000003": [
+    0,
+    0,
+    1,
+    0
+   ],
+   "2": [
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  "boundary_of_simplex_3_is_S2": {
+   "1000003": [
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "2": [
+    0,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  "boundary_of_simplex_4_is_S3": {
+   "1000003": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "2": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  "boundary_of_simplex_5_is_S4": {
+   "1000003": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ],
+   "2": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  "torus_Z7": {
+   "1000003": [
+    0,
+    0,
+    2,
+    1
+   ],
+   "2": [
+    0,
+    0,
+    2,
+    1
+   ]
+  }
+ },
+ "V3_brute_force_cross_check": {
+  "c1_n3": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": false,
+   "L4_opt_sizes": [
+    0
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0
+   ],
+   "class": "c1",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     1
+    ],
+    "2": [
+     0,
+     1
+    ]
+   },
+   "direct_dmax": 0,
+   "gamma_faces": 2,
+   "n": 3,
+   "n_atoms": 2,
+   "realised_total_orders": 1,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     1
+    ]
+   },
+   "seconds": 0.0
+  },
+  "c1_n4": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    2
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0,
+    1,
+    2,
+    3
+   ],
+   "class": "c1",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "2": [
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "direct_dmax": 3,
+   "gamma_faces": 39,
+   "n": 4,
+   "n_atoms": 6,
+   "realised_total_orders": 2,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     0
+    ],
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ],
+    "4": [
+     0
+    ]
+   },
+   "seconds": 0.0
+  },
+  "c1_n5": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    5
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "class": "c1",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "2": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "direct_dmax": 7,
+   "gamma_faces": 1407,
+   "n": 5,
+   "n_atoms": 12,
+   "realised_total_orders": 6,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     0
+    ],
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ],
+    "4": [
+     0
+    ],
+    "5": [
+     0
+    ]
+   },
+   "seconds": 0.0
+  },
+  "c1_n6": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    9
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "class": "c1",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "2": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "direct_dmax": 4,
+   "gamma_faces": 126719,
+   "n": 6,
+   "n_atoms": 20,
+   "realised_total_orders": 24,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     0
+    ],
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ],
+    "4": [
+     0
+    ],
+    "5": [
+     0
+    ]
+   },
+   "seconds": 8.3
+  },
+  "c2_L_n4": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    1
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0,
+    1,
+    2
+   ],
+   "class": "c2_L",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "2": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "direct_dmax": 2,
+   "gamma_faces": 19,
+   "n": 4,
+   "n_atoms": 5,
+   "realised_total_orders": 2,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     0
+    ],
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ]
+   },
+   "seconds": 0.0
+  },
+  "c2_L_n5": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    4
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "class": "c2_L",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "2": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "direct_dmax": 6,
+   "gamma_faces": 511,
+   "n": 5,
+   "n_atoms": 10,
+   "realised_total_orders": 4,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     0
+    ],
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ],
+    "4": [
+     0
+    ],
+    "5": [
+     0
+    ]
+   },
+   "seconds": 0.0
+  },
+  "c2_L_n6": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    8
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "class": "c2_L",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "2": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "direct_dmax": 11,
+   "gamma_faces": 35327,
+   "n": 6,
+   "n_atoms": 17,
+   "realised_total_orders": 12,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     0
+    ],
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ],
+    "4": [
+     0
+    ],
+    "5": [
+     0
+    ]
+   },
+   "seconds": 3.8
+  },
+  "c2_V_n4": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    1
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0,
+    1,
+    2
+   ],
+   "class": "c2_V",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "2": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "direct_dmax": 2,
+   "gamma_faces": 19,
+   "n": 4,
+   "n_atoms": 5,
+   "realised_total_orders": 2,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     0
+    ],
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ]
+   },
+   "seconds": 0.0
+  },
+  "c2_V_n5": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    4
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "class": "c2_V",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "2": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "direct_dmax": 6,
+   "gamma_faces": 511,
+   "n": 5,
+   "n_atoms": 10,
+   "realised_total_orders": 4,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     0
+    ],
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ],
+    "4": [
+     0
+    ],
+    "5": [
+     0
+    ]
+   },
+   "seconds": 0.1
+  },
+  "c2_V_n6": {
+   "F_closed_form_matches_direct": true,
+   "L1_is_cone": true,
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    8
+   ],
+   "agree": true,
+   "agree_on_degrees": [
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "class": "c2_V",
+   "direct_beta_tilde": {
+    "1000003": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "2": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "direct_dmax": 11,
+   "gamma_faces": 35327,
+   "n": 6,
+   "n_atoms": 17,
+   "realised_total_orders": 12,
+   "relative_beta_tilde": {
+    "-1": [
+     0
+    ],
+    "0": [
+     0
+    ],
+    "1": [
+     0
+    ],
+    "2": [
+     0
+    ],
+    "3": [
+     0
+    ],
+    "4": [
+     0
+    ],
+    "5": [
+     0
+    ]
+   },
+   "seconds": 3.2
+  }
+ },
+ "V4_filter_substitution": {
+  "c1": {
+   "at_least_one_moves": true,
+   "generator_size": 5,
+   "n_true_generators": 24,
+   "pool_size": 10084,
+   "variants": {
+    "lex_first": {
+     "H": {
+      "0": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "1": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "2": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "3": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "4": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        1
+       ]
+      },
+      "5": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      }
+     },
+     "dims": {
+      "4": 24,
+      "5": 193,
+      "6": 807
+     },
+     "nonzero": true
+    },
+    "lex_last": {
+     "H": {
+      "0": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "1": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "2": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "3": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "4": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "5": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      }
+     },
+     "dims": {
+      "4": 24,
+      "5": 224,
+      "6": 897
+     },
+     "nonzero": false
+    },
+    "random": {
+     "H": {
+      "0": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "1": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "2": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "3": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "4": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "5": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      }
+     },
+     "dims": {
+      "4": 24,
+      "5": 278,
+      "6": 1369
+     },
+     "nonzero": false
+    }
+   }
+  },
+  "c2_L": {
+   "at_least_one_moves": true,
+   "generator_size": 5,
+   "n_true_generators": 12,
+   "pool_size": 4326,
+   "variants": {
+    "lex_first": {
+     "H": {
+      "0": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "1": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "2": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "3": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "4": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        1
+       ]
+      },
+      "5": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      }
+     },
+     "dims": {
+      "4": 12,
+      "5": 63,
+      "6": 188
+     },
+     "nonzero": true
+    },
+    "lex_last": {
+     "H": {
+      "0": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "1": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "2": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "3": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "4": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "5": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      }
+     },
+     "dims": {
+      "4": 12,
+      "5": 102,
+      "6": 372
+     },
+     "nonzero": false
+    },
+    "random": {
+     "H": {
+      "0": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "1": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "2": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "3": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "4": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "5": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      }
+     },
+     "dims": {
+      "4": 12,
+      "5": 113,
+      "6": 455
+     },
+     "nonzero": false
+    }
+   }
+  },
+  "c2_V": {
+   "at_least_one_moves": true,
+   "generator_size": 5,
+   "n_true_generators": 12,
+   "pool_size": 4326,
+   "variants": {
+    "lex_first": {
+     "H": {
+      "0": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "1": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "2": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "3": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "4": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        1
+       ]
+      },
+      "5": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      }
+     },
+     "dims": {
+      "4": 12,
+      "5": 63,
+      "6": 188
+     },
+     "nonzero": true
+    },
+    "lex_last": {
+     "H": {
+      "0": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "1": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "2": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "3": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "4": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "5": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      }
+     },
+     "dims": {
+      "4": 12,
+      "5": 100,
+      "6": 356
+     },
+     "nonzero": false
+    },
+    "random": {
+     "H": {
+      "0": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "1": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "2": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "3": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "4": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      },
+      "5": {
+       "primes": [
+        2,
+        3,
+        5,
+        7,
+        46337,
+        999983,
+        1000003
+       ],
+       "value": [
+        0
+       ]
+      }
+     },
+     "dims": {
+      "4": 12,
+      "5": 118,
+      "6": 496
+     },
+     "nonzero": false
+    }
+   }
+  }
+ },
+ "V5_reproduces_mgbcd7": {
+  "F_dims_5_6_7": [
+   120,
+   1680,
+   10920
+  ],
+  "beta4_beta5": [
+   [
+    0
+   ],
+   [
+    0
+   ]
+  ],
+  "expected": [
+   120,
+   1680,
+   10920
+  ],
+  "expected_ranks": [
+   120,
+   1560
+  ],
+  "rank_d6_d7_at_1000003": [
+   120,
+   1560
+  ]
+ },
+ "V6_shortcut_vs_unrestricted": {
+  "c1_n4": {
+   "faces": {
+    "2": 2,
+    "3": 4,
+    "4": 2
+   },
+   "identical": true
+  },
+  "c1_n5": {
+   "faces": {
+    "3": 6,
+    "4": 30,
+    "5": 60,
+    "6": 60
+   },
+   "identical": true
+  },
+  "c1_n6": {
+   "faces": {
+    "4": 24,
+    "5": 216,
+    "6": 864
+   },
+   "identical": true
+  },
+  "c2_L_n4": {
+   "faces": {
+    "2": 2,
+    "3": 2
+   },
+   "identical": true
+  },
+  "c2_L_n5": {
+   "faces": {
+    "3": 4,
+    "4": 16,
+    "5": 24,
+    "6": 16
+   },
+   "identical": true
+  },
+  "c2_L_n6": {
+   "faces": {
+    "4": 12,
+    "5": 96,
+    "6": 336
+   },
+   "identical": true
+  },
+  "c2_V_n4": {
+   "faces": {
+    "2": 2,
+    "3": 2
+   },
+   "identical": true
+  },
+  "c2_V_n5": {
+   "faces": {
+    "3": 4,
+    "4": 16,
+    "5": 24,
+    "6": 16
+   },
+   "identical": true
+  },
+  "c2_V_n6": {
+   "faces": {
+    "4": 12,
+    "5": 96,
+    "6": 336
+   },
+   "identical": true
+  }
+ },
+ "V7_hypotheses_by_n": {
+  "c1_n3": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": false,
+   "acyclic_by_L1_L4": false,
+   "class": "c1",
+   "n": 3,
+   "n_atoms": 2,
+   "opt_sizes": [
+    0
+   ],
+   "realised_total_orders": 1,
+   "req_sizes": [
+    2
+   ],
+   "total_orders_containing_P": 3
+  },
+  "c1_n4": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c1",
+   "n": 4,
+   "n_atoms": 6,
+   "opt_sizes": [
+    2
+   ],
+   "realised_total_orders": 2,
+   "req_sizes": [
+    3
+   ],
+   "total_orders_containing_P": 12
+  },
+  "c1_n5": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c1",
+   "n": 5,
+   "n_atoms": 12,
+   "opt_sizes": [
+    5
+   ],
+   "realised_total_orders": 6,
+   "req_sizes": [
+    4
+   ],
+   "total_orders_containing_P": 60
+  },
+  "c1_n6": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c1",
+   "n": 6,
+   "n_atoms": 20,
+   "opt_sizes": [
+    9
+   ],
+   "realised_total_orders": 24,
+   "req_sizes": [
+    5
+   ],
+   "total_orders_containing_P": 360
+  },
+  "c1_n7": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c1",
+   "n": 7,
+   "n_atoms": 30,
+   "opt_sizes": [
+    14
+   ],
+   "realised_total_orders": 120,
+   "req_sizes": [
+    6
+   ],
+   "total_orders_containing_P": 2520
+  },
+  "c1_n8": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c1",
+   "n": 8,
+   "n_atoms": 42,
+   "opt_sizes": [
+    20
+   ],
+   "realised_total_orders": 720,
+   "req_sizes": [
+    7
+   ],
+   "total_orders_containing_P": 20160
+  },
+  "c2_L_n3": {
+   "L1_apex_form": null,
+   "L1_is_cone": false,
+   "L3_cover_atom_multiplicities": [],
+   "L4_opt_all_nonempty": false,
+   "acyclic_by_L1_L4": false,
+   "class": "c2_L",
+   "n": 3,
+   "n_atoms": 0,
+   "opt_sizes": [],
+   "realised_total_orders": 0,
+   "req_sizes": [],
+   "total_orders_containing_P": 2
+  },
+  "c2_L_n4": {
+   "L1_apex_form": "sink",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_L",
+   "n": 4,
+   "n_atoms": 5,
+   "opt_sizes": [
+    1
+   ],
+   "realised_total_orders": 2,
+   "req_sizes": [
+    3
+   ],
+   "total_orders_containing_P": 8
+  },
+  "c2_L_n5": {
+   "L1_apex_form": "sink",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_L",
+   "n": 5,
+   "n_atoms": 10,
+   "opt_sizes": [
+    4
+   ],
+   "realised_total_orders": 4,
+   "req_sizes": [
+    4
+   ],
+   "total_orders_containing_P": 40
+  },
+  "c2_L_n6": {
+   "L1_apex_form": "sink",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_L",
+   "n": 6,
+   "n_atoms": 17,
+   "opt_sizes": [
+    8
+   ],
+   "realised_total_orders": 12,
+   "req_sizes": [
+    5
+   ],
+   "total_orders_containing_P": 240
+  },
+  "c2_L_n7": {
+   "L1_apex_form": "sink",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_L",
+   "n": 7,
+   "n_atoms": 26,
+   "opt_sizes": [
+    13
+   ],
+   "realised_total_orders": 48,
+   "req_sizes": [
+    6
+   ],
+   "total_orders_containing_P": 1680
+  },
+  "c2_L_n8": {
+   "L1_apex_form": "sink",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_L",
+   "n": 8,
+   "n_atoms": 37,
+   "opt_sizes": [
+    19
+   ],
+   "realised_total_orders": 240,
+   "req_sizes": [
+    7
+   ],
+   "total_orders_containing_P": 13440
+  },
+  "c2_V_n3": {
+   "L1_apex_form": null,
+   "L1_is_cone": false,
+   "L3_cover_atom_multiplicities": [],
+   "L4_opt_all_nonempty": false,
+   "acyclic_by_L1_L4": false,
+   "class": "c2_V",
+   "n": 3,
+   "n_atoms": 0,
+   "opt_sizes": [],
+   "realised_total_orders": 0,
+   "req_sizes": [],
+   "total_orders_containing_P": 2
+  },
+  "c2_V_n4": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_V",
+   "n": 4,
+   "n_atoms": 5,
+   "opt_sizes": [
+    1
+   ],
+   "realised_total_orders": 2,
+   "req_sizes": [
+    3
+   ],
+   "total_orders_containing_P": 8
+  },
+  "c2_V_n5": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_V",
+   "n": 5,
+   "n_atoms": 10,
+   "opt_sizes": [
+    4
+   ],
+   "realised_total_orders": 4,
+   "req_sizes": [
+    4
+   ],
+   "total_orders_containing_P": 40
+  },
+  "c2_V_n6": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_V",
+   "n": 6,
+   "n_atoms": 17,
+   "opt_sizes": [
+    8
+   ],
+   "realised_total_orders": 12,
+   "req_sizes": [
+    5
+   ],
+   "total_orders_containing_P": 240
+  },
+  "c2_V_n7": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_V",
+   "n": 7,
+   "n_atoms": 26,
+   "opt_sizes": [
+    13
+   ],
+   "realised_total_orders": 48,
+   "req_sizes": [
+    6
+   ],
+   "total_orders_containing_P": 1680
+  },
+  "c2_V_n8": {
+   "L1_apex_form": "source",
+   "L1_is_cone": true,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "acyclic_by_L1_L4": true,
+   "class": "c2_V",
+   "n": 8,
+   "n_atoms": 37,
+   "opt_sizes": [
+    19
+   ],
+   "realised_total_orders": 240,
+   "req_sizes": [
+    7
+   ],
+   "total_orders_containing_P": 13440
+  }
+ },
+ "V8_where_the_mechanism_fails": {
+  "K_1_6_star": {
+   "L1_apex_form": null,
+   "L1_is_cone": false,
+   "L1_sinks_carried_by_no_atom_tail": [
+    6
+   ],
+   "L1_sources_carried_by_no_atom_head": [],
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "failing_step": "L1",
+   "n_atoms": 30,
+   "opt_sizes": [
+    10
+   ],
+   "realised_total_orders": 720,
+   "req_sizes": [
+    5
+   ]
+  },
+  "K_3_4": {
+   "L1_apex_form": null,
+   "L1_is_cone": false,
+   "L1_sinks_carried_by_no_atom_tail": [],
+   "L1_sources_carried_by_no_atom_head": [],
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "failing_step": "L1",
+   "n_atoms": 18,
+   "opt_sizes": [
+    4
+   ],
+   "realised_total_orders": 144,
+   "req_sizes": [
+    5
+   ]
+  },
+  "K_6_1_star": {
+   "L1_apex_form": null,
+   "L1_is_cone": false,
+   "L1_sinks_carried_by_no_atom_tail": [],
+   "L1_sources_carried_by_no_atom_head": [
+    0
+   ],
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L4_opt_all_nonempty": true,
+   "failing_step": "L1",
+   "n_atoms": 30,
+   "opt_sizes": [
+    10
+   ],
+   "realised_total_orders": 720,
+   "req_sizes": [
+    5
+   ]
+  }
+ },
+ "all_primes_block_cap": 20000,
+ "failures": [],
+ "global_rank_cap": 50000,
+ "primes": [
+  2,
+  3,
+  5,
+  7,
+  46337,
+  999983,
+  1000003
+ ],
+ "results": {
+  "n7_c1": {
+   "F_closed_form_by_dim": {
+    "10": 240240,
+    "11": 360360,
+    "12": 411840,
+    "13": 360360,
+    "14": 240240,
+    "15": 120120,
+    "16": 43680,
+    "17": 10920,
+    "18": 1680,
+    "19": 120,
+    "5": 120,
+    "6": 1680,
+    "7": 10920,
+    "8": 43680,
+    "9": 120120
+   },
+   "F_closed_form_matches_direct": true,
+   "F_direct_by_dim": {
+    "10": 240240,
+    "5": 120,
+    "6": 1680,
+    "7": 10920,
+    "8": 43680,
+    "9": 120120
+   },
+   "F_enum_seconds": 21.3,
+   "F_minimal_faces_are_exactly_the_Req": true,
+   "F_minimal_faces_bruteforce": 120,
+   "L1_apex_form": "source",
+   "L1_apex_generating_pair": [
+    0,
+    2
+   ],
+   "L1_cone_check_passes": true,
+   "L1_cone_check_size": 4,
+   "L1_cone_faces_checked": 23586,
+   "L1_is_cone": true,
+   "L1_sinks_carried_by_no_atom_tail": [
+    1
+   ],
+   "L1_sources_carried_by_no_atom_head": [
+    0
+   ],
+   "L2_boundary_crossings_between_blocks": 0,
+   "L2_realised_total_orders": 120,
+   "L2_total_orders_containing_P": 2520,
+   "L3_blocks_that_are_not_a_shifted_simplex": 0,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L3_req_sizes": [
+    6
+   ],
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    14
+   ],
+   "P": [
+    [
+     0,
+     1
+    ]
+   ],
+   "beta_tilde_gamma": {
+    "-1": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "0": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "1": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "2": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "3": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "4": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "5": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "6": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "7": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "8": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    }
+   },
+   "c": 1,
+   "d_needed_degree": 5,
+   "label": "P = {(0,1)}",
+   "n": 7,
+   "n_atoms": 30,
+   "relative": {
+    "H": {
+     "0": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "1": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "2": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "3": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "4": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "5": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "6": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "7": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "8": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "9": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     }
+    },
+    "dims": {
+     "10": 240240,
+     "5": 120,
+     "6": 1680,
+     "7": 10920,
+     "8": 43680,
+     "9": 120120
+    },
+    "global_and_blocked_agree": true,
+    "rank_blocked": {
+     "0": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "1": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "10": {
+      "1000003": 85800,
+      "2": 85800,
+      "3": 85800,
+      "46337": 85800,
+      "5": 85800,
+      "7": 85800,
+      "999983": 85800
+     },
+     "2": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "3": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "4": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "5": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "6": {
+      "1000003": 120,
+      "2": 120,
+      "3": 120,
+      "46337": 120,
+      "5": 120,
+      "7": 120,
+      "999983": 120
+     },
+     "7": {
+      "1000003": 1560,
+      "2": 1560,
+      "3": 1560,
+      "46337": 1560,
+      "5": 1560,
+      "7": 1560,
+      "999983": 1560
+     },
+     "8": {
+      "1000003": 9360,
+      "2": 9360,
+      "3": 9360,
+      "46337": 9360,
+      "5": 9360,
+      "7": 9360,
+      "999983": 9360
+     },
+     "9": {
+      "1000003": 34320,
+      "2": 34320,
+      "3": 34320,
+      "46337": 34320,
+      "5": 34320,
+      "7": 34320,
+      "999983": 34320
+     }
+    },
+    "rank_global": {
+     "0": null,
+     "1": null,
+     "10": null,
+     "2": null,
+     "3": null,
+     "4": null,
+     "5": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "6": {
+      "1000003": 120,
+      "2": 120,
+      "3": 120,
+      "46337": 120,
+      "5": 120,
+      "7": 120,
+      "999983": 120
+     },
+     "7": {
+      "1000003": 1560,
+      "2": 1560,
+      "3": 1560,
+      "46337": 1560,
+      "5": 1560,
+      "7": 1560,
+      "999983": 1560
+     },
+     "8": {
+      "1000003": 9360,
+      "2": 9360,
+      "3": 9360,
+      "46337": 9360,
+      "5": 9360,
+      "7": 9360,
+      "999983": 9360
+     },
+     "9": null
+    },
+    "seconds": 41.77
+   },
+   "relative_complex_empty_below_dim": 5,
+   "seconds": 91.8
+  },
+  "n7_c2_L": {
+   "F_closed_form_by_dim": {
+    "10": 61776,
+    "11": 82368,
+    "12": 82368,
+    "13": 61776,
+    "14": 34320,
+    "15": 13728,
+    "16": 3744,
+    "17": 624,
+    "18": 48,
+    "5": 48,
+    "6": 624,
+    "7": 3744,
+    "8": 13728,
+    "9": 34320
+   },
+   "F_closed_form_matches_direct": true,
+   "F_direct_by_dim": {
+    "5": 48,
+    "6": 624,
+    "7": 3744,
+    "8": 13728,
+    "9": 34320
+   },
+   "F_enum_seconds": 2.4,
+   "F_minimal_faces_are_exactly_the_Req": true,
+   "F_minimal_faces_bruteforce": 48,
+   "L1_apex_form": "sink",
+   "L1_apex_generating_pair": [
+    3,
+    2
+   ],
+   "L1_cone_check_passes": true,
+   "L1_cone_check_size": 4,
+   "L1_cone_faces_checked": 13192,
+   "L1_is_cone": true,
+   "L1_sinks_carried_by_no_atom_tail": [
+    2
+   ],
+   "L1_sources_carried_by_no_atom_head": [],
+   "L2_boundary_crossings_between_blocks": 0,
+   "L2_realised_total_orders": 48,
+   "L2_total_orders_containing_P": 1680,
+   "L3_blocks_that_are_not_a_shifted_simplex": 0,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L3_req_sizes": [
+    6
+   ],
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    13
+   ],
+   "P": [
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     2
+    ]
+   ],
+   "beta_tilde_gamma": {
+    "-1": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "0": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "1": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "2": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "3": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "4": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "5": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "6": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "7": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    }
+   },
+   "c": 2,
+   "d_needed_degree": 4,
+   "label": "P = {(0,2),(1,2)}",
+   "n": 7,
+   "n_atoms": 26,
+   "relative": {
+    "H": {
+     "0": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "1": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "2": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "3": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "4": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "5": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "6": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "7": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "8": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     }
+    },
+    "dims": {
+     "5": 48,
+     "6": 624,
+     "7": 3744,
+     "8": 13728,
+     "9": 34320
+    },
+    "global_and_blocked_agree": true,
+    "rank_blocked": {
+     "0": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "1": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "2": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "3": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "4": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "5": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "6": {
+      "1000003": 48,
+      "2": 48,
+      "3": 48,
+      "46337": 48,
+      "5": 48,
+      "7": 48,
+      "999983": 48
+     },
+     "7": {
+      "1000003": 576,
+      "2": 576,
+      "3": 576,
+      "46337": 576,
+      "5": 576,
+      "7": 576,
+      "999983": 576
+     },
+     "8": {
+      "1000003": 3168,
+      "2": 3168,
+      "3": 3168,
+      "46337": 3168,
+      "5": 3168,
+      "7": 3168,
+      "999983": 3168
+     },
+     "9": {
+      "1000003": 10560,
+      "2": 10560,
+      "3": 10560,
+      "46337": 10560,
+      "5": 10560,
+      "7": 10560,
+      "999983": 10560
+     }
+    },
+    "rank_global": {
+     "0": null,
+     "1": null,
+     "2": null,
+     "3": null,
+     "4": null,
+     "5": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "6": {
+      "1000003": 48,
+      "2": 48,
+      "3": 48,
+      "46337": 48,
+      "5": 48,
+      "7": 48,
+      "999983": 48
+     },
+     "7": {
+      "1000003": 576,
+      "2": 576,
+      "3": 576,
+      "46337": 576,
+      "5": 576,
+      "7": 576,
+      "999983": 576
+     },
+     "8": {
+      "1000003": 3168,
+      "2": 3168,
+      "3": 3168,
+      "46337": 3168,
+      "5": 3168,
+      "7": 3168,
+      "999983": 3168
+     },
+     "9": {
+      "1000003": 10560,
+      "2": 10560,
+      "3": 10560,
+      "46337": 10560,
+      "5": 10560,
+      "7": 10560,
+      "999983": 10560
+     }
+    },
+    "seconds": 6.17
+   },
+   "relative_complex_empty_below_dim": 5,
+   "seconds": 17.3
+  },
+  "n7_c2_V": {
+   "F_closed_form_by_dim": {
+    "10": 61776,
+    "11": 82368,
+    "12": 82368,
+    "13": 61776,
+    "14": 34320,
+    "15": 13728,
+    "16": 3744,
+    "17": 624,
+    "18": 48,
+    "5": 48,
+    "6": 624,
+    "7": 3744,
+    "8": 13728,
+    "9": 34320
+   },
+   "F_closed_form_matches_direct": true,
+   "F_direct_by_dim": {
+    "5": 48,
+    "6": 624,
+    "7": 3744,
+    "8": 13728,
+    "9": 34320
+   },
+   "F_enum_seconds": 2.22,
+   "F_minimal_faces_are_exactly_the_Req": true,
+   "F_minimal_faces_bruteforce": 48,
+   "L1_apex_form": "source",
+   "L1_apex_generating_pair": [
+    0,
+    3
+   ],
+   "L1_cone_check_passes": true,
+   "L1_cone_check_size": 4,
+   "L1_cone_faces_checked": 13192,
+   "L1_is_cone": true,
+   "L1_sinks_carried_by_no_atom_tail": [],
+   "L1_sources_carried_by_no_atom_head": [
+    0
+   ],
+   "L2_boundary_crossings_between_blocks": 0,
+   "L2_realised_total_orders": 48,
+   "L2_total_orders_containing_P": 1680,
+   "L3_blocks_that_are_not_a_shifted_simplex": 0,
+   "L3_cover_atom_multiplicities": [
+    1
+   ],
+   "L3_req_sizes": [
+    6
+   ],
+   "L4_opt_all_nonempty": true,
+   "L4_opt_sizes": [
+    13
+   ],
+   "P": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ]
+   ],
+   "beta_tilde_gamma": {
+    "-1": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "0": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "1": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "2": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "3": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "4": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "5": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "6": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    },
+    "7": {
+     "primes": [
+      2,
+      3,
+      5,
+      7,
+      46337,
+      999983,
+      1000003
+     ],
+     "value": [
+      0
+     ]
+    }
+   },
+   "c": 2,
+   "d_needed_degree": 4,
+   "label": "P = {(0,1),(0,2)}",
+   "n": 7,
+   "n_atoms": 26,
+   "relative": {
+    "H": {
+     "0": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "1": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "2": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "3": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "4": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "5": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "6": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "7": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     },
+     "8": {
+      "primes": [
+       2,
+       3,
+       5,
+       7,
+       46337,
+       999983,
+       1000003
+      ],
+      "value": [
+       0
+      ]
+     }
+    },
+    "dims": {
+     "5": 48,
+     "6": 624,
+     "7": 3744,
+     "8": 13728,
+     "9": 34320
+    },
+    "global_and_blocked_agree": true,
+    "rank_blocked": {
+     "0": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "1": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "2": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "3": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "4": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "5": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "6": {
+      "1000003": 48,
+      "2": 48,
+      "3": 48,
+      "46337": 48,
+      "5": 48,
+      "7": 48,
+      "999983": 48
+     },
+     "7": {
+      "1000003": 576,
+      "2": 576,
+      "3": 576,
+      "46337": 576,
+      "5": 576,
+      "7": 576,
+      "999983": 576
+     },
+     "8": {
+      "1000003": 3168,
+      "2": 3168,
+      "3": 3168,
+      "46337": 3168,
+      "5": 3168,
+      "7": 3168,
+      "999983": 3168
+     },
+     "9": {
+      "1000003": 10560,
+      "2": 10560,
+      "3": 10560,
+      "46337": 10560,
+      "5": 10560,
+      "7": 10560,
+      "999983": 10560
+     }
+    },
+    "rank_global": {
+     "0": null,
+     "1": null,
+     "2": null,
+     "3": null,
+     "4": null,
+     "5": {
+      "1000003": 0,
+      "2": 0,
+      "3": 0,
+      "46337": 0,
+      "5": 0,
+      "7": 0,
+      "999983": 0
+     },
+     "6": {
+      "1000003": 48,
+      "2": 48,
+      "3": 48,
+      "46337": 48,
+      "5": 48,
+      "7": 48,
+      "999983": 48
+     },
+     "7": {
+      "1000003": 576,
+      "2": 576,
+      "3": 576,
+      "46337": 576,
+      "5": 576,
+      "7": 576,
+      "999983": 576
+     },
+     "8": {
+      "1000003": 3168,
+      "2": 3168,
+      "3": 3168,
+      "46337": 3168,
+      "5": 3168,
+      "7": 3168,
+      "999983": 3168
+     },
+     "9": {
+      "1000003": 10560,
+      "2": 10560,
+      "3": 10560,
+      "46337": 10560,
+      "5": 10560,
+      "7": 10560,
+      "999983": 10560
+     }
+    },
+    "seconds": 7.08
+   },
+   "relative_complex_empty_below_dim": 5,
+   "seconds": 18.0
+  }
+ },
+ "seconds": 160.5,
+ "ticket": "mg-dd84"
+}

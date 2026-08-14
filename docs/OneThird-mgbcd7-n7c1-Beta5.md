@@ -260,6 +260,20 @@ vanish. That is `n = 4 … 9`, and it is **not proved here**. The `c = 1` slice 
 measurement, not theorem. It is written down because it is the shape a proof of the `c = 1` case
 would have, and `mg-72e4` §7.5 names exactly that as open.
 
+> **2026-08-14 — the pattern now has a reason (`mg-dd84`,
+> `docs/OneThird-mgdd84-n7-cLE2-Margin.md`).** The relative complex is not merely exact in the two
+> degrees read: it is a **direct sum, over the total orders `F` realises, of augmented chain
+> complexes of simplices**, and those are exact in every degree. The `120` generators here are the
+> `Req(L)` of the `5! = 120` realised total orders, `|F_{m+1+t}| = m! · C(k, t)` with
+> `k = |Opt(L)| = C(m,2) + m − 1`, and the two identities above are its first two exactness
+> relations. So `H̃_k(Γ(P); Z) = 0` for **every** `k` at every `n ≥ 4` — for the `c = 1` family and
+> for the two `c = 2` shapes, on the hypotheses that `X` is a cone and `Opt(L) ≠ ∅`, both checked
+> at `n = 3 … 8`. Both are real: at `n = 3` the `c = 1` class has `Opt(L) = ∅` and `Γ` really is
+> `S⁰`. Two things this does **not** do: it is `Z`-acyclic and not contractible, and it is an
+> argument for three named families, not for the `c ≤ 2` slice — the **cone** hypothesis fails at
+> the stars (measured), where `Γ(K_{6,1})` genuinely carries `β̃₄ = 1`. The `n = 8` and `n = 9`
+> rows above were not re-run.
+
 ## 8. What this changes, and what it does not
 
 **Changes.** `mg-72e4`'s `n = 7` row: `162 of 163` → **163 of 163** iso classes, `227 850 of
@@ -277,7 +291,9 @@ exception** — the phrase *"the `n = 7` `c = 1` class excepted"* comes out.
 - **`mg-72e4`'s other named gap is untouched:** 17 of 163 classes at `n = 7` still have no full
   homotopy type recorded there, and the margin for this class is not computed here. (`p9cd1`
   reports having measured those 17 separately; those are its numbers, not re-derived here, and
-  they belong in its document.)
+  they belong in its document.) *(**2026-08-14:** the margin for this class was computed at
+  `mg-dd84` — there is no first non-zero degree — and the `n = 7` min-margin denominator closed at
+  163 of 163 / 227 892 of 227 892. Neither figure is re-derived here.)*
 - This does not measure `n ≥ 8` for anything except the `c = 1` class (§7).
 
 ## 9. References

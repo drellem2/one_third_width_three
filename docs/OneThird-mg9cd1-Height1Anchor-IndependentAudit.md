@@ -343,8 +343,8 @@ The one gap that could actually break the headline was D2's 15 classes. I measur
 
 | `c` | classes | labelled | atoms | `d` | `β̃₂` computed through | first non-zero | margin |
 |---|---|---|---|---|---|---|---|
-| 1 | 1 | 42 | 30 | 5 | **5** (§4.1) | none ≤ 5 | **≥ 1 — OPEN** |
-| 2 | 2 | 210 | 26 | 4 | 4 | none ≤ 4 | **≥ 1 — OPEN** |
+| 1 | 1 | 42 | 30 | 5 | **5** (§4.1) | none ≤ 5 | ~~**≥ 1 — OPEN**~~ → **CLOSED by `mg-dd84`: no non-zero degree at all** |
+| 2 | 2 | 210 | 26 | 4 | 4 | none ≤ 4 | ~~**≥ 1 — OPEN**~~ → **CLOSED by `mg-dd84`: no non-zero degree at all** |
 | 3 | 3 | 1 120 | 21–24 | 3 | 6 | none ≤ 6 | ≥ 4 ✅ |
 | 4 | 3 | 420 | 22–24 | 2 | 5 | none ≤ 5 | ≥ 4 ✅ |
 | 5 | 2 | 84 | 26 | 1 | 4 | none ≤ 4 | ≥ 4 ✅ |
@@ -362,6 +362,18 @@ Three results:
    than my core budget allows. **These three are exactly the `c ≤ 2` slice §6 already names as
    the part Conjecture C would not cover** — the residual is where the document says the
    residual is.
+
+   > **2026-08-14 — this remainder is CLOSED (`mg-dd84`,
+   > `docs/OneThird-mgdd84-n7-cLE2-Margin.md`), and the resource judgement above was sound but
+   > the resource estimate was not.** All three classes have `H̃_k(Γ(P)) = 0` in **every**
+   > degree, so `margin ≥ 4` holds vacuously and the population is **163 of 163 classes /
+   > 227 892 of 227 892 labelled vertices**, with `min margin = 4` still attained at the stars.
+   > The route is the one this audit named — `mg-bcd7`'s cone/LES decomposition — pushed one
+   > step further: the filter `X ∖ Γ` is a direct sum of augmented simplex chain complexes,
+   > which are exact, so no degree needed computing separately. **The whole run cost 47.8 s and
+   > 277 MB in one process**, against the `β̃`-through-degree-8 brute force this section
+   > correctly declined. Declining was right on the information available; what closed it was
+   > reading `mg-bcd7`, not more cores.
 
 2. **Conjecture C is now verified at `n = 7` on all 163 classes.** No class among the 17 carries
    any homology below degree `n − 3 = 4`; the 146 already had full homotopy types with homology
@@ -434,10 +446,13 @@ destinations**, not in a new document.
 | **D6** | `mg-72e4` §3 | caveat widened from *"the tables below"* to the whole document — **and to both directions**: a mod-`p` zero proves rational vanishing, a mod-`p` one only bounds `β̃_Q ≤ 1` |
 | **D7** | `scripts/compat_geom_mg72e4_height1_anchor.py`, `mg-72e4` §4.1 | the gate now counts `Γ(P)`'s **realised** faces. Measured over all 249 classes at `n = 3..7`: the old gate wrongly excluded **exactly one** class, the new one excludes none. At `n = 8` the old gate would decline 6 classes / 1 792 labelled vertices; what the new one says there is **not measured**. Two findings the one-line remedy did not predict — a naive swap **still** excludes the class, because the near-miss column asks one dimension more (`3 546 022` faces, over the same cap), and the replacement is a materialisation proxy where the resource that failed was the *elimination* |
 | **O1** | `mg-72e4` §7 pt 1 | the overlap noted: 110 082 of the `n = 7` *"measured"* vertices are the Proposition-3 slice re-counted |
+| **D2 residual** | `mg-72e4` §0 result 1 and §4.2; §4.3 and §7 above | **`mg-dd84`, 2026-08-14.** The 3 classes at `c ≤ 2` / 252 labelled vertices that `mg-0f24` deliberately did not fold in. All three have `H̃_k(Γ(P)) = 0` in **every** degree — `margin ≥ 4` vacuously — so the denominator closes at **163 of 163 classes / 227 892 of 227 892 labelled vertices** and `min margin = 4` is attained, at the stars. `160 + 3 = 163` composes because the 3 are by construction the classes with no margin information after `mg-0f24`; `mg-dd84` checks the disjointness rather than assuming it, which is the same trap as `148 + 14` one level down |
 
 The remainder this audit declined — `margin ≥ 4` for the 3 classes at `c ≤ 2`, 252 labelled
-vertices — was **not** folded into that repair, correctly. It is still open and still bounded only
-at `≥ 1`.
+vertices — was **not** folded into that repair, correctly. `pm-onethird` filed it as `mg-dd84`
+instead, and **`mg-dd84` closed it on 2026-08-14** (row above). Declining to fold it in is what
+made it a work item with a successor rather than a sentence in a document, which is the failure
+mode §6.1 opens by naming.
 
 **Not defects, checked and cleared:** Proposition 3 and its inequality direction; Proposition 1
 and its imported ingredient (A2); the crosscut reduction and control H2's discriminating power;
@@ -449,7 +464,9 @@ in the document; §4.3's descriptive labelling; §6/§7's labelling of Conjectur
 
 - **The margin for 3 classes** (`c ≤ 2`, 252 vertices) is bounded only by `≥ 1`, so
   *"min margin 4 at `n = 7`"* is measured on 160 of 163 classes and remains unestablished on
-  three. D2 is reduced, not retired.
+  three. D2 is reduced, not retired. *(**Retired 2026-08-14 by `mg-dd84`** — all three carry no
+  homology in any degree, and the figure now stands on 163 of 163 / 227 892 of 227 892. This
+  bullet records what **this** audit did not verify and is left as written.)*
 - `n ≥ 8` — untouched here, as in the target.
 - `pbcd7`'s cone/LES derivation of `β̃₅ = 0` — I did not re-derive it. What I can say is that my
   own direct computation lands on the same value and that our face counts agree.

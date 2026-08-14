@@ -38,14 +38,19 @@ Four results, in descending order of how much they should change what anyone doe
    | 4 | **1** | 8 of 8 | `{0, 1}` |
    | 5 | **2** | 20 of 20 | `{2}` |
    | 6 | **3** | 55 of 55 | `{3}` |
-   | 7 | **≥ 4** (see §4.2) | **160 of 163** | `{4}` |
+   | 7 | **4** (see §4.2) | **163 of 163** | `{4}` |
 
-   **Only the `n = 7` row needs that third column** — the first three are minima over complete
-   populations — and it is here because it was missing: as first published the figure `4` stood on
-   **148** of the 163 classes, and `mg-9cd1` **D2** recorded it as a fourth denominator stated
-   nowhere. §4.2 derives all of them. The three classes still outside it (`c ≤ 2`, 252 of the
-   227 892 labelled vertices) are bounded only at `margin ≥ 1`; they are the same `c ≤ 2` slice §6
-   names as the part Conjecture C would not reach.
+   **The `n = 7` row's third column is here because it was missing**, and it is now complete: as
+   first published the figure `4` stood on **148** of the 163 classes, and `mg-9cd1` **D2**
+   recorded it as a fourth denominator stated nowhere. §4.2 derives all of them. `mg-0f24` took it
+   to **160 of 163**, and `mg-dd84` closed the last three (`c ≤ 2`, 252 of the 227 892 labelled
+   vertices) — so the population is now **163 of 163 iso classes and 227 892 of 227 892 labelled
+   height-1 vertices**, the same as every other `n = 7` figure here, and the value is `= 4` rather
+   than `≥ 4` because the minimum is *attained*, at the two stars. Those three classes do not
+   attain it: `Γ(P)` carries **no homology in any degree** for all three
+   (`docs/OneThird-mgdd84-n7-cLE2-Margin.md`), so they satisfy `margin ≥ 4` vacuously. They are
+   still the `c ≤ 2` slice §6 names as the part Conjecture C would not reach — `mg-dd84` supplies
+   an argument for those three *families*, not for the slice.
 
    A quantity that misses by one at `n = 4`, by two at `n = 5`, by three at `n = 6` and by at least
    four at `n = 7` is not behaving like arithmetic luck. **`n = 7` matters specifically**: it is where
@@ -305,7 +310,7 @@ different and much more informative measurement:
 | 4 | 4 of 8 | `{0, 1}` | **1** | 8 of 8 — complete |
 | 5 | 4 of 20 | `{2}` | **2** | 20 of 20 — complete |
 | 6 | 5 of 55 | `{3}` | **3** | 55 of 55 — complete |
-| 7 | **≥ 6 of 163** (2 of the 146 within cap; see §4.3) | `{4}` | **≥ 4**, attained at the stars | **160 of 163** — *not* complete |
+| 7 | **≥ 6 of 163** (2 of the 146 within cap; see §4.3) | `{4}` | **4**, attained at the stars | **163 of 163** — complete since `mg-dd84` |
 
 *(Three things about that table, all of them scope. **(i) The first column is a field reading, not
 a `Q`-acyclicity verdict** — it used to be headed *"not `Q`-acyclic"*, which is the direction §3's
@@ -315,7 +320,9 @@ is the stars, and it comes from F17+F18. **(ii) The `n ≤ 6` denominators are c
 largest `Γ(P)` there has 6 / 12 / 20 vertices and the full-homotopy-type gate admits everything up
 to 20; at `n = 7` the largest has 30 and the gate bites, so the first three rows and the fourth are
 not the same kind of number, which is what made the `n = 7` entry easy to misread. **(iii) `4` is
-a lower bound** — `≥` everywhere it was measured, `= 4` only at the stars.)*
+attained, not merely bounded** — it is `≥ 4` everywhere it was measured and `= 4` at the stars, so
+the minimum over the whole population is `4`. *(Read as a lower bound until `mg-dd84` closed the
+last three classes; the qualifier that came off is the denominator, not the value.)*)*
 
 **The `n = 7` margin row needs its caveat stated, not buried — and the caveat has a denominator
 that has to be derived rather than picked.** Three numbers are in circulation (`146`, `148`,
@@ -330,22 +337,28 @@ that has to be derived rather than picked.** Three numbers are in circulation (`
 |  — of those, the rest | 15 | 2 338 | **no margin information of any kind** — `mg-9cd1` **D2** |
 | **population of "min margin 4" as first published** | **148** | **225 554** | `146 + 2 stars` |
 | `mg-9cd1` §4.3 measured all 17 and reached `margin ≥ 4` on | **14** of the 17 | 2 100 | `c ∈ {3,4,5,6,10}`, `β̃` over `Z/2`. `mg-9cd1`'s §6 table calls this *"12 of the 15"* — same classes, counted out of the 15 that had **no** margin information rather than out of the 17 without a full type. `14 = 12 + the 2 stars`, `17 = 15 + the 2 stars` |
-| **population now** | **160** | **227 640** | `146 + 14`, **not** `148 + 14` |
-| still open | **3** | **252** | `c = 1` (42) and the two `c = 2` (105 each), bounded only at `margin ≥ 1` |
+| population after `mg-0f24` | **160** | **227 640** | `146 + 14`, **not** `148 + 14` |
+| the last 3 (`c = 1`, 42; the two `c = 2`, 105 each) | **3** | **252** | `mg-dd84`: `Γ(P)` carries **no homology in any degree**, so `margin ≥ 4` holds vacuously and is not attained |
+| **population now** | **163** | **227 892** | `160 + 3` — complete |
 
-**The trap in that table is the `population now` row.** `148 + 14 = 162` is wrong: the two stars
-are counted in *both* the 148 and the 14 — they are exactly the classes that moved from *inferred*
-to *measured* — so the union is `146 + 14 = 160` and the overlap is 2. Adding the two published
-figures would have produced a **fifth** denominator, which is the defect this repair exists to
-carry, reproduced inside its own repair.
+**The trap in that table is the `population after mg-0f24` row.** `148 + 14 = 162` is wrong: the
+two stars are counted in *both* the 148 and the 14 — they are exactly the classes that moved from
+*inferred* to *measured* — so the union is `146 + 14 = 160` and the overlap is 2. Adding the two
+published figures would have produced a **fifth** denominator, which is the defect this repair
+exists to carry, reproduced inside its own repair. **`160 + 3 = 163` does compose**, and only
+because the three classes `mg-dd84` closed are by construction the ones with *no* margin
+information after `mg-0f24` — disjoint from the 160. `mg-dd84` checks that disjointness rather
+than assuming it, for the reason the row above it exists.
 
 Over the 146, the minimum margin is **10** (attained at `K_{3,4}` and `K_{4,3}`, `c = 12`,
 `β̃₄ = 1`). The stars are outside that pool and their margin is known without computing it:
 `U(K_{n−1,1}) ≅ PPF_{n−1} ≃_Q S^{n−3}` by **F17+F18**, and `c = n − 1` gives `d = 0`, so the margin
 is exactly `n − 3 = 4` — and `mg-9cd1` has since measured `β̃₄(Γ(K_{6,1}); Z/2) = 1` with nothing
-below, corroborating it. So **`4` is the honest `n = 7` figure, on 160 of 163 classes**, `10` is
-the figure over the 146 the instrument computed in full, and the three unresolved classes are
-bounded only at `≥ 1`. Neither figure is `1`, which is what the ticket asked.
+below, corroborating it. So **`4` is the honest `n = 7` figure, on 163 of 163 classes and 227 892
+of 227 892 labelled vertices** (`mg-dd84`; it was `160 of 163` between `mg-0f24` and that), `10` is
+the figure over the 146 the instrument computed in full, and the last three classes turned out to
+carry no homology at all rather than to sit just above the bound. Neither figure is `1`, which is
+what the ticket asked.
 
 For `n ≥ 5` every non-`Q`-acyclic `Γ(P)` measured **reads as** a rational `(n−3)`-sphere — a single
 `1` in degree `n − 3` and nothing else — and every other `Γ(P)` is `Q`-acyclic. *(With §3's caveat
@@ -485,16 +498,18 @@ Stated so that nobody over-reads it:
    `n = 7` is the `n` at which the corpus's nearest precedent — `mg-24eb`'s *"exactly the ordinal
    sums"* — turned out to be false.
 4. **Refuted:** the *"every case is a one-degree near-miss"* premise. True at `n = 4`; false at
-   `n = 5, 6, 7`, where the margin is 2, 3 and (at least) 4. The `n = 4, 5, 6` figures are minima
-   over the complete class populations; the `n = 7` figure is a minimum over **160 of the 163**
-   classes (227 640 of 227 892 labelled vertices) and three classes at `c ≤ 2` are bounded only at
-   `≥ 1` — §4.2 derives that denominator, and it is not the `148` the figure was first published
-   on.
+   `n = 5, 6, 7`, where the margin is 2, 3 and 4. All four figures are now minima over the
+   **complete** class populations — the `n = 7` one over **163 of 163** classes and 227 892 of
+   227 892 labelled vertices, since `mg-dd84` closed the last three (`c ≤ 2`, 252 vertices) by
+   showing `Γ(P)` carries no homology in any degree there. §4.2 derives that denominator through
+   all four of its values, and it is not the `148` the figure was first published on.
 5. **Open:** Conjecture C (§6), and the `c ≤ 2` cases it does not cover. **Nothing here proves the
    statement for any `n`** beyond the `c ≥ n` slice of Proposition 3 — everything else is
    measurement, and measurement stops at `n = 7` (`n = 9` for `c = 1` alone, via `mg-bcd7`).
-   `mg-bcd7` removed the *hole* in the `c ≤ 2` evidence; it did not supply an argument, and that
-   slice still has none.
+   `mg-bcd7` removed the *hole* in the `c ≤ 2` evidence; `mg-dd84` then supplied an **argument**
+   for three named `c ≤ 2` families — `P = {(0,1)}` and the two `c = 2` shapes — good at every
+   `n ≥ 4` and checked to `n = 8`. That is three families, **not** the `c ≤ 2` slice: the slice
+   still has no general argument, and `mg-dd84` §6 pt 3 says so in the same terms.
 
 **What would close it.** Conjecture C plus a `c ≤ 2` argument. Both are now statements about
 `Γ(P)`, a complex on at most `n(n−1) − 2c` vertices with an explicit face rule, rather than about

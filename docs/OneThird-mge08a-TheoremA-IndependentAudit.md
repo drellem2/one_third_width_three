@@ -347,6 +347,13 @@ follows from (A2) plus the join formula verified in §5.
 > **163 of 163** classes, **227 892 of 227 892** labelled height-1 vertices, **0 violations**
 > (`mg-72e4`; its last class closed by `mg-bcd7`, the whole census replicated independently by
 > `mg-9cd1`). Still not a theorem for all `n`.
+>
+> **DENOMINATOR CLOSED 2026-08-14 (`mg-dd84`).** The fourth term is `4` on the **complete**
+> population: **163 of 163** classes and **227 892 of 227 892** labelled vertices, attained at the
+> stars. The three `c ≤ 2` classes bounded at `≥ 1` above carry **no homology in any degree**
+> (`Z`-acyclic, not contractible — the trap this document names is honoured there). The
+> `160 of 163` and the `148` are the historical values and are not retracted. See
+> `docs/OneThird-mgdd84-n7-cLE2-Margin.md`.
 
 **So the conclusion holds — but by a degree coincidence, and every case is a near-miss.** At
 `n = 4`: `c = 1` needs `H̃₂(U) = 0` and `U` is contractible; `c = 2` needs `H̃₁(U) = 0` and `U` is

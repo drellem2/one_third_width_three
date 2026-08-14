@@ -68,6 +68,12 @@ Run: `/usr/bin/python3 scripts/compat_geom_mg52c4_subposet_complexes.py` (~2 min
    >   > `mg-9cd1`) — and the margin there is **`≥ 4`**, on 160 of the 163 classes, the remaining
    >   > three (`c ≤ 2`, 252 vertices) bounded only at `≥ 1`. Nothing above is retracted and nothing
    >   > is proven that was not: `n = 7` is still measurement.
+   >   >
+   >   > **DENOMINATOR CLOSED 2026-08-14 (`mg-dd84`).** Those three classes carry **no homology in
+   >   > any degree**, so the `n = 7` margin is **`4`** on **163 of 163** classes and **227 892 of
+   >   > 227 892** labelled vertices — attained at the stars `K_{6,1}`, `K_{1,6}`. The `160 of 163`
+   >   > above is superseded, not retracted: it was correct when written. See
+   >   > [`OneThird-mgdd84-n7-cLE2-Margin.md`](OneThird-mgdd84-n7-cLE2-Margin.md).
    >
    > **This scopes the claim; it does not retract it.** The recommendation *"do not open an F33"*
    > (§5) survives the audit unchanged, and a reader who takes this note as licence to reopen the
@@ -416,6 +422,11 @@ harder, because there is no non-zero class to work with.
 >   > classes / 227 892 of 227 892 labelled vertices, 0 violations. `n = 7` is the `n` at which
 >   > `mg-24eb`'s *"exactly the ordinal sums"* coincidence broke, which is why this row and not
 >   > another is the one worth carrying here. Still not proven for all `n`.
+>   >
+>   > **DENOMINATOR CLOSED 2026-08-14 (`mg-dd84`).** The three `c ≤ 2` classes carry **no homology
+>   > in any degree**, so the `n = 7` margin is **`4`** on **163 of 163** classes / **227 892 of
+>   > 227 892** labelled vertices, attained at the stars. The `160 of 163` above is superseded, not
+>   > retracted. See [`OneThird-mgdd84-n7-cLE2-Margin.md`](OneThird-mgdd84-n7-cLE2-Margin.md).
 > - **One nearby map is genuinely non-zero.** Restrictions are not the only maps to the local
 >   structure at `P`: the Mayer–Vietoris connecting map
 >   `∂ : H̃_{n−2}(Δ_n) → H̃_{n−3}(lk_{Δ_n}(P))` is not a restriction and is not covered by the cone
@@ -559,6 +570,13 @@ is not merely blocked but trivial.
   > `c ≤ 2`, 252 labelled vertices, are bounded only at `≥ 1`). `n = 7` is measured **complete** —
   > 163 of 163 classes, 227 892 of 227 892 labelled vertices, 0 violations — via the same crosscut
   > reduction. Nothing reopens here either.
+  >
+  > **DENOMINATOR CLOSED 2026-08-14 (`mg-dd84`).** The margin at `n = 7` is **`4`** on **163 of
+  > 163** classes / **227 892 of 227 892** labelled vertices: the three `c ≤ 2` classes carry no
+  > homology in any degree. `mg-dd84` supplies an *argument* for those three families at every
+  > `n ≥ 4`, which is the first thing in the `c ≤ 2` slice that is not a measurement — but it is
+  > three families, **not** the slice, and *"plus the `c ≤ 2` cases"* above stands.
+  > See [`OneThird-mgdd84-n7-cLE2-Margin.md`](OneThird-mgdd84-n7-cLE2-Margin.md).
 - **The F28 corrections in §3.1–§3.2 are landed at their destination** in this same commit (a dated
   note at F28 §1.6 (F-5) and §2.3), so a future reader of F28 cannot re-inherit the vacuous (F-5) or
   the wrong link identity. F17 §3 gets a forward pointer recording that L1 is the special case of
