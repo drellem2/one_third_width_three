@@ -86,11 +86,39 @@ STRIKE_MARKUP = "~~"
 # and are RIGHT to.  Keyed by (file, first quoted span), which survives reflow in
 # a way line numbers do not.
 #
-# Both entries are `docs/OneThird-mg069f-BodyStrikePopulation-IndependentAudit.md`
+# The first two entries are
+# `docs/OneThird-mg069f-BodyStrikePopulation-IndependentAudit.md`
 # QUOTING the G1 defect in order to report it.  An audit that could not quote the
 # text it found would not be an audit; mg-0242 §8 makes the same point about the
 # signature sweep, and measured it at 16 of 17 hits.  The audit's finding text is
 # a record and is not rewritten by the repair that closes it.
+#
+# The third entry is a DIFFERENT class and mg-457a is the finding that says why
+# (`docs/OneThird-mg457a-DeclaredStrike-RedMain.md`).  It is a CROSS-DOCUMENT
+# STRIKE REPORT THAT NAMES ITS SUBJECT: `mg-52c4` §0 item 4 reports, in one
+# summary clause, that two F28 statements were retracted **at their destination**
+# -- and names one of them by quoting it.  The retraction is real and it is
+# elsewhere: `docs/compatibility-geometry-F28-sheaf-cohomology-on-POSET.md:205`
+# carries the `~~` markup on that exact sentence, plus a STRUCK blockquote under
+# it, both landed in the same commit (cf63bb3) that wrote the summary clause.  So
+# the clause DESCRIBES a strike rather than making one -- which is the case the
+# docstring above already excludes ("reporting on an edit made elsewhere"), for
+# every such report EXCEPT one that names its subject by quoting it.
+#
+# Recorded rather than marked up, and the choice was measured, not preferred:
+# putting `~~` on that quotation would be the wrong edit twice over.  It would
+# render `mg-52c4`'s own summary clause as retracted text when nothing in
+# `mg-52c4` is retracted; and it would contradict §3.1 of the same document,
+# which blockquotes the identical F28 sentence UNSTRUCK, on purpose, as the thing
+# being adjudicated.  Worse for this control specifically: backing is per BLOCK,
+# the block here is 42 lines (§0 items 3-5 and the mg-e08a scoping note), so one
+# `~~` at that quotation would exempt every declaration in all 42 lines -- an
+# unnamed, unprinted tolerance strictly larger than this one keyed line.
+#
+# Rewording the clause to dodge the DECLARATION regex was also available and was
+# rejected: it removes the site from the record instead of recording it, and the
+# next author who writes the natural phrasing trips the control again with no
+# trace of why it was decided.
 #
 # Adding to this set is how a future reader would tolerate an unmade strike, so
 # don't, without a finding that says why.  A baseline entry that STOPS matching
@@ -101,6 +129,8 @@ BASELINE = {
      "is struck with it"),
     ("OneThird-mg069f-BodyStrikePopulation-IndependentAudit.md",
      "over every poset and every reference order at those sizes"),
+    ("OneThird-mg52c4-PerPoset-Subposet-Question.md",
+     "restriction maps carry local-to-global content"),
 }
 
 
