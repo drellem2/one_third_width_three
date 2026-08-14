@@ -300,6 +300,26 @@ warning (from `lem_layered_balanced`) and several hundred benign
 linter warnings (`unusedDecidableInType`, `unusedSectionVars`).
 There should be no errors.
 
+### Running the controls locally, before you submit
+
+```sh
+./presubmit.sh            # every control script-controls.yml runs, in your tree
+./presubmit.sh --list     # print the plan without running it
+```
+
+`presubmit.sh` holds **no list of its own** — it derives what to run from
+`.github/workflows/script-controls.yml` on every run, so the local and CI
+verdicts cannot drift apart. Every step runs and the worst exit wins, so one
+run tells you about every red control rather than only the first.
+
+It catches defects **in your own tree**. It cannot catch interactions with
+whatever lands while you work, and it is not a substitute for the merge gate,
+which grades the *rebased* tree. Two things it does that are worth knowing about
+before the first run: it will not `pip install` anything (it picks an
+interpreter that already imports what CI installs, or refuses to start), and it
+reports any file the controls themselves wrote to your tree. Rationale, costs
+and measurements: [`docs/OneThird-mg3067-PresubmitGate.md`](docs/OneThird-mg3067-PresubmitGate.md).
+
 ## Repository layout
 
 ```
@@ -311,6 +331,8 @@ summary.pdf              2-page intuitive summary (pre-built PDF)
 generalization.md        where width-3 is essential, and what generalizes
 lean/                    Lean 4 / mathlib formalization
 scripts/                 Python search / verification / control scripts
+presubmit.sh             local pre-submit gate — runs script-controls.yml's
+                            controls in your worktree (see "Building")
 .github/workflows/       CI — lean.yml (Lean build, on lean/**)
                             script-controls.yml (fast controls, on
                             scripts/**, data/**, docs/**)

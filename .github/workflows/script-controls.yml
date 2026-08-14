@@ -203,6 +203,35 @@ jobs:
       - name: 'mg-856d demo-exemption control (can the gate skip what it must not skip?)'
         run: python3 scripts/onethird_mg856d_exemption_control.py
 
+      # mg-3067: THE LOCAL PRE-SUBMIT GATE'S PLAN, CHECKED AGAINST THIS FILE.
+      # pm-onethird's decision (mg-69b4) gave this repo `./presubmit.sh`, which
+      # an author runs in their own worktree before submitting.  The refinery is
+      # a SERIAL SHARED resource and a local gate is PARALLEL and PRIVATE, so
+      # the cheap own-tree class of defect -- mg-457a's declared-strike
+      # violation, red in its own author's tree, found only after 5 hours of red
+      # main -- should not be discovered at the shared slot.
+      #
+      # presubmit.sh CONTAINS NO LIST.  It derives what to run from THIS FILE on
+      # every run, because two gate lists that can disagree are worse than one.
+      # This step is what makes that derivation a checked claim rather than a
+      # hope: it asserts that every line of every `run:` above and below is
+      # either executed locally or is one of the two DECLARED transformations
+      # (interpreter substitution; the hosted runner's `pip install`, which a
+      # gate must not perform in an author's environment).  A new step here is
+      # picked up with no edit there; a step that stops being covered is red.
+      #
+      # It refuses a PASS over an empty plan (mg-9a59's defect: a parser that
+      # finds nothing exits 0 over zero assertions), and it runs its own six
+      # drifts before its verdict is believed.  Standard library only,
+      # order-milliseconds.
+      #
+      # WHAT IT DOES NOT CLAIM: that green locally predicts green here.  It
+      # cannot -- presubmit.sh grades the AUTHOR'S tree and the refinery grades
+      # the REBASED one, and mg-5058's four-file conflict did not exist at
+      # pre-submit time.  See docs/OneThird-mg3067-PresubmitGate.md.
+      - name: 'mg-3067 pre-submit plan coverage (does presubmit.sh still run what this job runs?)'
+        run: python3 scripts/onethird_mg3067_presubmit_steps.py --check
+
       # mg-5ad1 / mg-7db4: the STANDING BLINDNESS CHECK, and the reason it is
       # here rather than in the paths-filtered job.
       #
