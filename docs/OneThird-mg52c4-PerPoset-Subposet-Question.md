@@ -30,14 +30,39 @@ Run: `/usr/bin/python3 scripts/compat_geom_mg52c4_subposet_complexes.py` (~2 min
    (§3.1); and by Theorem A the *link* `lk_{Δ_n}(P)` is contractible for every `P` with a 3-chain, so
    the class dies there too (§3.3). Every width-≤3 poset on `n ≥ 7` elements has a 3-chain (Mirsky),
    so in the target regime the fibrewise anchor is **identically trivial**, not merely unproven.
+
+   > **SCOPED 2026-08-14 (`mg-e08a` audit, carried by `mg-1b3b`).** *"Identically trivial"* is
+   > proven for less than the sentence above implies, and the rest is true by measurement.
+   > The honest statement, in four clauses:
+   >
+   > - **Proven at height ≥ 2.** The link is contractible at every height-≥2 vertex — Corollary B,
+   >   all `n`, no width bound (§3.3). That is 108 of the 194 vertices at `n = 4`.
+   > - **VACUOUS at `n = 3`.** `PPF_3` has **no** height-≥2 element (the census in §2.4 says `0`), so
+   >   Corollary B's population there is empty; and **all 12 links at `n = 3` are non-contractible**
+   >   (each is `S⁰`).
+   > - **Measurement only elsewhere.** At the height-1 vertices — which Mirsky removes from the
+   >   *width-≤3 family* but **not** from the *vertex set of `Δ_n`*, which is all of `PPF_n` — the
+   >   link is often **not** contractible: 38 of 194 at `n = 4` (32 with `β̃₃ = 1`, 6 with `β̃₃ = 3`).
+   >   What survives there is the weaker fact that the anchor-degree component
+   >   `H̃_{n−2}(lk_{Δ_n}(P))` is zero, established by **exhaustive measurement at `n ≤ 5`**
+   >   (`mg-e08a` §7) and by no argument: every case lands on zero by exactly one degree and no
+   >   dimension argument forces it.
+   > - **Not established for `n ≥ 6`.** The height-1 population does not vanish there
+   >   (11 642 of 129 302 at `n = 6`), and at `n ≥ 7` those vertices are all of width ≥ 4, so Mirsky
+   >   says nothing about them either.
+   >
+   > **This scopes the claim; it does not retract it.** The recommendation *"do not open an F33"*
+   > (§5) survives the audit unchanged, and a reader who takes this note as licence to reopen the
+   > arc has misread it. See `docs/OneThird-mge08a-TheoremA-IndependentAudit.md` §0, §6, §7, §9.
 4. **Two F28 statements are wrong and are struck at their destination** (§3.1–§3.2): (F-5)
    *"restriction maps carry local-to-global content"* is **vacuous**, and §2.3's identification
    `Δ(↑P ∖ {P}) = lk_{Δ_n}(P)` **drops the lower factor** — the very factor Theorem A computes.
 5. **Sub-question 3 (what would a fibrewise sphere theorem buy?): nothing** (§4). It would replace a
    rank-1 sgn-isotype anchor by a rank-0 one; and in the one case where a sphere *does* appear
-   (height 1) its dimension depends only on `|Comp(P)|`, so it cannot separate a bad-cut poset from a
-   good one — and no height-1 poset of width ≤ 3 has more than 6 elements. **Recommendation: do not
-   open an F33.** §5.
+   (height 1) the dimension of **`Δ(L̄(P))`, the lower join factor**, depends only on `|Comp(P)|`, so
+   it cannot separate a bad-cut poset from a good one — and no height-1 poset of width ≤ 3 has more
+   than 6 elements. (The blindness is a property of that *lower factor* and does **not** transfer to
+   `lk_{Δ_n}(P)` itself — §4 point 4, as corrected.) **Recommendation: do not open an F33.** §5.
 
 ---
 
@@ -162,7 +187,7 @@ missing cover) — contractible; otherwise `Γ = ∂Δ^{c-1}`. Same dichotomy, n
 |---|---|---|
 | **T1** Möbius number `μ(∅, P)` = predicted reduced Euler characteristic (`0` / `(−1)^c`) | **every** `P ∈ PPF_3` (12), `PPF_4` (194), `PPF_5` (4110); a `PPF_6` sample of 14813 that **includes every height-1 poset of `PPF_6`** | 0 failures |
 | **T2** full reduced Betti vector of `Δ(L̄(P))` = predicted (all-zero, or a single 1 in degree `c−2`) | every `P ∈ PPF_3`, `PPF_4` (206 complexes) | 0 failures |
-| **T3** full reduced Betti vector of the **link** `lk_{Δ_n}(P)` | every `P ∈ PPF_3` (12), `PPF_4` (194) | 108/108 height-≥2 links contractible; 0 failures |
+| **T3** full reduced Betti vector of the **link** `lk_{Δ_n}(P)` | every `P ∈ PPF_3` (12), `PPF_4` (194) | 108/108 height-≥2 links contractible; 0 failures. **This row is silent on the other 86 vertices at `n = 4` and on all 12 at `n = 3` — see the completed table below** |
 | **T4** F17 Lemma L1 recovered as the chain case | `n = 3, 4` full Betti; `n = 5` Möbius | contractible, as F17 §3 Remark (c) also reports |
 | **CONTROL** the *swapped* prediction (sphere ↔ contractible) must go RED | every `P ∈ PPF_4`, `PPF_5` | fails on 108/108 + 86/86 (`n=4`) and 3270/3270 + 840/840 (`n=5`) — **discriminating in both directions**, so T1's pass is not vacuous |
 
@@ -175,7 +200,28 @@ missing cover) — contractible; otherwise `Γ = ∂Δ^{c-1}`. Same dichotomy, n
 | 5 | 4110 | 3270 | 840 (20%) |
 | 6 | 129302 | 117660 | 11642 (9.0%) |
 
-and at width ≤ 3 with `n ≥ 7` the height-1 column is **empty** (§3.3).
+and at width ≤ 3 with `n ≥ 7` the height-1 column is **empty** (§3.3). **The height-1 column is not
+empty in `Δ_n`, whose vertex set is all of `PPF_n`** — that is the distinction the scoping note in
+§0 point 3 turns on.
+
+**T3 completed (`mg-e08a`, independently measured — every vertex of `Δ_4`, not only the 108).** The
+T3 row above reports the height-≥2 rows and stops; here are all seven:
+
+| height | `c` | link contractible | link `β̃` | count |
+|---|---|---|---|---|
+| ≥ 2 | 3 | ✅ | all zero | 24 |
+| ≥ 2 | 4 | ✅ | all zero | 48 |
+| ≥ 2 | 5 | ✅ | all zero | 36 |
+| 1 | 1 | ✅ | all zero | 12 |
+| 1 | 2 | ✅ | all zero | 36 |
+| **1** | **3** | **❌** | **`β̃₃ = 1`** | **32** |
+| **1** | **4** | **❌** | **`β̃₃ = 3`** | **6** |
+
+**38 of 194 vertices — 19.6% — have a link that is not contractible**, and all 38 are height-1. At
+`n = 3` all 12 links are non-contractible (each `S⁰`) and the height-≥2 population is empty, so the
+height-≥2 roll-up there is an `all()` over an empty set; `mg-e08a`'s roll-up refuses that as a pass
+rather than counting it. This is a reporting omission of the T3 row, not an uncomputed case — the
+same test computes it.
 
 Betti numbers use the two-prime rank routine of `scripts/compat_geom_F17_equivariant_morse.py`
 (imported, not re-implemented, so there is exactly one `reduced_betti` in the tree).
@@ -183,9 +229,28 @@ Betti numbers use the two-prime rank routine of `scripts/compat_geom_F17_equivar
 **What the verification does and does not establish.** T2/T3/T4 pin the homotopy type only through
 rational Betti numbers, and only for `n ≤ 4` (`n = 5` chain: `355`-element poset, 6.5M simplices, over
 the materialisation cap — Möbius only). Theorem A's proof, not the harness, is what covers all `n`.
-**Theorem A has not been independently audited.** Its two halves are three paragraphs each and
-`§2.3` gives both routes; an auditor should check (i) the join-irreducibility of cover relations under
-`tc`, and (ii) that `κ`'s image is nonempty *and* proper.
+Its two halves are three paragraphs each and `§2.3` gives both routes; an auditor should check (i)
+the join-irreducibility of cover relations under `tc`, and (ii) that `κ`'s image is nonempty *and*
+proper.
+
+> **"Contractible" here means `Q`-acyclic (`mg-e08a` §1, carried by `mg-1b3b`).** Rational Betti
+> numbers are the verification currency of this harness *and* of the audit's independent one, and
+> they cannot distinguish `RP²` from a point: the minimal 6-vertex `RP²` measures all-zero over `Q`
+> and is not contractible. So **every "contractible" verdict produced by a Betti computation in
+> either harness is really "`Q`-acyclic"**. Genuine contractibility comes from Theorem A (A1)'s
+> **proof** — a closure operator onto a cone, `n`-uniform and computation-free — not from any Betti
+> number. The prose in this document says "contractible" because the theorem says so; the tables say
+> "contractible" when they mean `Q`-acyclic, and where the two could differ it is the proof that
+> carries the claim.
+
+> **AUDITED 2026-08-14 (`mg-e08a`, commit `191af85`).** Theorem A and Corollary B **passed** an
+> independent audit that imported nothing from this tree: both named proof steps were run as
+> exhaustive machine predicates (297 416 and 285 156 instances, 0 failures), steps (iii)/(iv) too,
+> and the conclusion was re-verified by **full reduced Betti over all 4110 elements of `PPF_5`** —
+> closing the `n = 5` gap this paragraph admits. 25 predictions were pre-registered at `a752fd0`
+> before any audit code existed; 24 confirmed, 1 partially, none refuted. The audit's findings that
+> bear on this document are carried at §0 point 3, §3.3, §3.5 and §4 point 4 (by `mg-1b3b`). See
+> `docs/OneThird-mge08a-TheoremA-IndependentAudit.md`.
 
 ### 2.5 The (S3) reading, for completeness
 
@@ -292,6 +357,38 @@ The spherical case (A2) is empty in the regime the 1/3–2/3 program is about.
 and more useful finding than "nothing is known": a fibrewise route cannot be rescued by working
 harder, because there is no non-zero class to work with.
 
+> **SCOPED 2026-08-14 (`mg-e08a` §6–§7, carried by `mg-1b3b`) — the two sentences above merge a
+> theorem with a measurement, and only one of them is a theorem.**
+>
+> - **Corollary B is proven and non-vacuous where its hypothesis has instances**: 108/108 height-≥2
+>   links contractible at `n = 4`, verified directly from the link poset. No `n` bound, no width
+>   bound. Nothing here is retracted.
+> - **At `n = 3` Corollary B is VACUOUS.** `PPF_3` has no height-≥2 element at all (§2.4's own
+>   census says `0`), so its population is empty; and all 12 links at `n = 3` are **non-contractible**
+>   (each `S⁰`). An `all()` over an empty set is not a pass and is not reported as one.
+> - **Mirsky does not remove the height-1 vertices from `Δ_n`.** It removes them from the
+>   *width-≤3 family*. The vertices of `Δ_n` are all of `PPF_n`, and the height-1 fraction is
+>   86/194 at `n = 4`, 840/4110 at `n = 5` and 11 642/129 302 at `n = 6`. At `n ≥ 7` they are all of
+>   width ≥ 4, so Mirsky says nothing about them; they are still vertices and Corollary B still does
+>   not cover them. **38 of the 194 links at `n = 4` are not contractible** (§2.4's completed T3
+>   table).
+> - **What holds at those vertices is weaker and is a measurement.** The quantity the "identically
+>   trivial" headline needs is the anchor-degree component `H̃_{n−2}(lk_{Δ_n}(P))`, and it is zero at
+>   every one of the 12 vertices at `n = 3`, all 194 at `n = 4` and every height-1 class within cap
+>   at `n = 5` — *including* the 38 whose links are not contractible. That is a **degree
+>   coincidence**: every case lands on zero by exactly one degree, `dim U` exceeds the needed degree
+>   for all `n ≥ 4`, and no proof of it is known. **It is not established for `n ≥ 6`.**
+> - **One nearby map is genuinely non-zero.** Restrictions are not the only maps to the local
+>   structure at `P`: the Mayer–Vietoris connecting map
+>   `∂ : H̃_{n−2}(Δ_n) → H̃_{n−3}(lk_{Δ_n}(P))` is not a restriction and is not covered by the cone
+>   argument. At `n = 3`, deleting **any one** of the 12 vertices makes `Δ_3 ∖ {P}` contractible — so
+>   *"no restriction of `ω_bal^(n)` to the local structure at `P` is non-zero"* is true **for
+>   restrictions** and false for the local structure in general.
+>
+> **Net effect on the recommendation: none.** The conclusion holds where it is proven and holds
+> elsewhere at `n ≤ 5` because it was exhaustively counted; §5's *"do not open an F33"* stands
+> (`mg-e08a` §0, §9). Scoping a claim is not retracting it.
+
 ### 3.4 F31 §3.6 (R-B) is the same wall from another side
 
 F31 §3.6 rescue **(R-B)** (stabiliser-orbit refinement) records: *"F17+F18 constrains the
@@ -311,6 +408,23 @@ merely uncomputed, it is zero.
    (zero, §3.1) or on the full link (zero for height ≥ 2, §3.3). Computing `Δ(↑P ∖ {P})` would be a
    new theorem about a new object, not a restriction of an existing one — so it inherits no anchor,
    which is precisely the F28 (N-2) gap in a new place.
+
+> **STRENGTHENED and MEASURED 2026-08-14 (`mg-e08a` §7–§8, carried by `mg-1b3b`).** Two amendments,
+> both of which make this section's conclusion rest on less.
+>
+> **(a) Point 2 needs no height hypothesis.** Since `Δ(↑P ∖ {P}) ⊆ Δ(↑P) ⊆ Δ_n` and `Δ(↑P)` is a
+> cone (§3.1), the restriction of `ω_bal^(n)` to the **upper link** factors through a cone and is
+> therefore zero for **every** `P`, at every height, for every `n`. This section inherits a height-≥2
+> hypothesis from §3.3 that this half does not need — so §3.5's conclusion survives the scoping note
+> at §3.3 untouched, and for a better reason than the one given above.
+>
+> **(b) It is no longer uncomputed at `n ≤ 5`, and it is not always contractible.** `Δ(↑P ∖ {P})` was
+> computed for 14/14 isomorphism classes at `n = 4` and 58/61 at `n = 5` (three over cap, named in
+> the audit's JSON). At `n = 4` it has `β̃₁ = 1` at the `c = 3` height-1 classes, `β̃₀ ∈ {1, 3}` at
+> `c = 4`, and is **empty** at the maximal vertices; at `n = 5` it ranges over `β̃₂ = 1`,
+> `β̃₁ ∈ {1, 2}`, `β̃₀ ∈ {1, 3}`, and empty. §3.5's instinct — *not trivially a cone* — is right.
+> The finding does not change the conclusion: by (a) the object still carries no anchor, so computing
+> it produced exactly the fact-with-no-consumer this section predicts.
 
 ---
 
@@ -339,10 +453,21 @@ And three positive reasons it would be worse than the ambient statement:
 
 3. **The class is zero, not merely unknown** (§3.1, §3.3). A fibrewise route trades a rank-1
    sgn-isotype anchor (`H^{n-2}(Δ_n) = sgn`) for a rank-0 one.
-4. **Where a sphere does appear it is blind.** In the height-1 case (A2) the homotopy type is
-   `S^{c-2}` with `c = |Comp(P)|` — a function of the *number of relations only*. Two height-1 posets
-   with the same number of comparable pairs, one with a bad cut and one without, have identical
-   subposet complexes. The invariant cannot see the property the program needs it to see.
+4. **Where a sphere does appear it is blind — in `Δ(L̄(P))`, the lower join factor.** In the
+   height-1 case (A2) the homotopy type **of `Δ(L̄(P))`** is `S^{c-2}` with `c = |Comp(P)|` — a
+   function of the *number of relations only*. Two height-1 posets with the same number of comparable
+   pairs, one with a bad cut and one without, have identical **subposet complexes**. That invariant
+   cannot see the property the program needs it to see.
+
+   > **CORRECTED 2026-08-14 (`mg-e08a` §6.4, carried by `mg-1b3b`) — the blindness is a property of
+   > the lower factor and does NOT transfer to the link.** The object F28 §2.3 and F29-B ask about is
+   > `lk_{Δ_n}(P) = Δ(L̄(P)) * Δ(↑P ∖ {P})`, whose type at a height-1 vertex is
+   > `Σ^{c−1} Δ(↑P ∖ {P})` — **not** a function of `c` alone. Measured at `n = 4`: height-1 vertices
+   > with `c = 3` give `β̃₃ = 1` and with `c = 4` give `β̃₃ = 3`, while `c = 1, 2` give contractible
+   > links. So `lk_{Δ_n}(P)` is *not* blind in the way `Δ(L̄(P))` is, and the argument above must be
+   > read as being about the lower factor only. **Point 4 is still a correct reason not to want a
+   > fibrewise sphere theorem** — the invariant it names really is blind — but it is a statement about
+   > `Δ(L̄(P))`, and quoting it about "the link" is the conflation this note removes.
 5. **The height-1 case is empty in-regime anyway** (§3.3, Mirsky): width ≤ 3 and `n ≥ 7` forces a
    3-chain.
 
@@ -366,10 +491,22 @@ is not merely blocked but trivial.
 - **Do not open an F33.** There is no fibrewise sphere theorem to prove: Theorem A settles (S1), and
   what it settles is contractibility. The only uncomputed fibrewise object is the upper link `↑P ∖
   {P}` (§3.5), and it carries no anchor, so computing it would produce a fact with no consumer.
+  > **The recommendation survives the `mg-e08a` audit unchanged (2026-08-14).** The scoping notes at
+  > §0 point 3, §2.4, §3.3, §3.5 and §4 point 4 narrow *what is proven where*; none of them supplies
+  > a non-zero fibrewise class, and the audit's own verdict is that the recommendation stands
+  > (`mg-e08a` §0, §9). **Do not read the scoping as licence to reopen the arc.**
+
 - **If anything is worth a separate ticket**, it is a **one-session independent audit of Theorem A
   and Corollary B** (§2.4 names the two steps to check), because they are the load-bearing new claims
   here and they are being used to *close* a direction rather than open one. That is cheap and is the
-  right shape of follow-up.
+  right shape of follow-up. — **DONE: `mg-e08a`, commit `191af85`. Verdict: both CORRECT** (§2.4).
+  The audit leaves **exactly one** follow-up worth a ticket: whether `H̃_{n−2}(lk_{Δ_n}(P)) = 0` at
+  height-1 vertices is a **theorem** or a small-`n` coincidence. It is the load-bearing fact under
+  "identically trivial" at the vertices Corollary B does not reach, it holds at `n = 3, 4, 5` by
+  measurement only, every case is a one-degree near-miss, and no dimension argument forces it. This
+  corpus has been bitten by exactly this shape twice — `mg-24eb` re-scoped *"exactly the ordinal
+  sums"* as a coincidence false from `n = 7`, and `mg-d1be` closed the width-2 caveat only at
+  `n = 8`.
 - **The F28 corrections in §3.1–§3.2 are landed at their destination** in this same commit (a dated
   note at F28 §1.6 (F-5) and §2.3), so a future reader of F28 cannot re-inherit the vacuous (F-5) or
   the wrong link identity. F17 §3 gets a forward pointer recording that L1 is the special case of
@@ -380,11 +517,18 @@ is not merely blocked but trivial.
 - It does **not** re-derive the F-series (ticket mandate) and **retracts nothing** from F17/F18: they
   are GREEN, unconditional, and untouched. F31 stays RED, F28 stays AMBER; §3.1–§3.2 strike two
   *framework* statements inside F28, not its verdict.
-- It does **not** compute `Δ(↑P ∖ {P})` (§3.5), the (S3) image poset (§2.5), or any twisted-coefficient
+- It does **not** compute `Δ(↑P ∖ {P})` (§3.5 — `mg-e08a` since has, for `n ≤ 5`; see the note
+  there), the (S3) image poset (§2.5), or any twisted-coefficient
   or equivariant refinement of Theorem A (`Aut(P)` acts on `L̄(P)`; the equivariant homotopy type is
   not computed here and is not needed for §3–§4, since contractible is contractible equivariantly for
   the cone in (A1) but that is not verified).
-- Theorem A / Corollary B are **new in this document and not independently audited** (§2.4).
+- Theorem A / Corollary B are **new in this document**. ~~and not independently audited~~ —
+  **superseded 2026-08-14:** both were independently audited by `mg-e08a` (commit `191af85`) and
+  both **passed**; the audit's scoping findings are carried into this document by `mg-1b3b` at
+  §0 point 3, §2.4, §3.3, §3.5, §4 point 4 and §5. What remains not established is the *unproven*
+  half named in §5: `H̃_{n−2}(lk_{Δ_n}(P)) = 0` at height-1 vertices for `n ≥ 6`.
+- Every "contractible" verdict this document's **tables** report is `Q`-acyclicity (§2.4); genuine
+  contractibility comes from Theorem A's proof.
 
 ## 7. References
 
@@ -396,8 +540,15 @@ notation and Lemma 1.4), `...-F28-sheaf-cohomology-on-POSET.md` (§1.5, §1.6 (F
 reverse-direction argument), `...-F29-cech-bias-cohomology.md`, `...-F30-chain-level-phi.md`,
 `...-F31-phi-star-injectivity.md` (§3.2, §3.6 (R-B), §3.7).
 
+**Audit:** `docs/OneThird-mge08a-TheoremA-IndependentAudit.md` (`mg-e08a`, commit `191af85`), its
+pre-registered predictions `docs/OneThird-mge08a-TheoremA-AUDIT-PREDICTIONS.md` (`a752fd0`),
+instrument `scripts/compat_geom_mge08a_theoremA_audit.py`, output
+`data/onethird-mge08a-theoremA-audit.json`.
+
 **Work items:** `mg-e768` (PART A/B, archived), `mg-65f5` (R1/R2/R3 — did not carry PART B),
-`mg-4d3a` (F17), `mg-d039` (F18), `mg-d0fa` (F28), `mg-01ce` (F31), `mg-52c4` (this).
+`mg-4d3a` (F17), `mg-d039` (F18), `mg-d0fa` (F28), `mg-01ce` (F31), `mg-52c4` (this),
+`mg-e08a` (the audit), `mg-1b3b` (carried the audit's three scoping repairs into this document,
+F28 §2.3 and §4 point 4).
 
 **Literature:** A. Björner, *Topological methods*, in Handbook of Combinatorics (1995) — §10.2
 closure/order-homotopy lemma (used by F17 §3 and by §2.3 (A1)); Thm 10.8 crosscut theorem (§2.3

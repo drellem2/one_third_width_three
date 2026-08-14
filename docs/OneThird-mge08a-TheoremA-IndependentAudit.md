@@ -385,6 +385,18 @@ contractible does not imply a spectral gap — is the document's most careful mo
 documents and a second worker editing them is how a correct fix gets reverted by another correct
 fix.
 
+> **ALL THREE APPLIED 2026-08-14 by `mg-1b3b`**, which was opened to own exactly this remainder (a
+> recommendation with no owner is a deferred half, and deferred halves die with the ticket that
+> deferred them). Landed at: (1) `docs/OneThird-mg52c4-PerPoset-Subposet-Question.md` §0 point 3 and
+> §3.3, plus §2.4 (the T3 table completed to all seven rows, and the `Q`-acyclic limitation of §1
+> disclosed) and §5–§6 (the "not independently audited" scope line superseded); (2) F28 §2.3, both
+> the mg-52c4 note and the F29-B side note; (3) **`docs/OneThird-mg52c4-...` §4 point 4** — note that
+> §6.4's "§4 point 4" is *this document's* §4 point 4 as quoted there, i.e. mg-52c4's §4, **not**
+> F28 §4 (which is "which cohomology theory" and contains no such point). `mg-1b3b` also checked the
+> cross-repo index `onethird_program/docs/OneThird-Cohomology-Arc-Index-mg-ea7f.md`: it does **not**
+> quote the mg-52c4 conclusion, so it needed no scope. The recommendation *"do not open an F33"* was
+> **not** weakened anywhere.
+
 1. **`docs/OneThird-mg52c4-PerPoset-Subposet-Question.md` §0 point 3 and §3.3.** Replace
    *"the fibrewise anchor is identically trivial"* with a statement scoped to what is proven:
    *"the link is contractible at every height-≥2 vertex, which is every width-≤3 poset on `n ≥ 7`;

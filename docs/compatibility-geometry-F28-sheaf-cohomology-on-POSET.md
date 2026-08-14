@@ -290,10 +290,50 @@ For `P \in PPF_n`, restriction `\text{res}_{\uparrow P} : H^{n-2}(PPF_n, \underl
 > the entire target regime. The `\Delta(\overline L(P))` half of the link is settled; the upper half
 > `\Delta(\uparrow P \setminus \{P\})` remains uncomputed but carries no anchor. See
 > `docs/OneThird-mg52c4-PerPoset-Subposet-Question.md` §2.3, §3.2–§3.3.
+>
+> **(iii) SCOPED 2026-08-14 (`mg-e08a` §6–§7, carried by `mg-1b3b`) — (ii) is true where it is
+> proven, and `P` in this § ranges over more than that.** Under **F28's own quantifier** — `P` ranges
+> over all of `PPF_n`, which is the vertex set of `\Delta_n` — (ii) must be read in four clauses:
+>
+> - **Height `\ge 2`: PROVEN**, all `n`, no width bound. 108/108 links contractible at `n = 4`.
+> - **`n = 3`: VACUOUS.** `PPF_3` has **no** height-`\ge 2` element, so the hypothesis of (ii) has no
+>   instances there, and all 12 links at `n = 3` are **non-contractible** (each `S^0`).
+> - **Height 1: NOT contractible, in general.** Mirsky removes those posets from the *width-`\le 3`
+>   family*, not from the *vertex set of `\Delta_n`* — 86/194 vertices at `n = 4`, 840/4110 at
+>   `n = 5`, 11 642/129 302 at `n = 6`, and at `n \ge 7` they are all of width `\ge 4`, where Mirsky
+>   says nothing. **38 of the 194 links at `n = 4` are not contractible**: 32 with
+>   `\widetilde\beta_3 = 1`, 6 with `\widetilde\beta_3 = 3`, all height-1.
+> - **"No non-zero fibrewise restriction" survives, but for two different reasons.** The restriction
+>   to `\uparrow P` and to the upper link `\Delta(\uparrow P \setminus \{P\})` is zero for **every**
+>   `P` at **every** height, because both factor through the cone `\Delta(\uparrow P)` (§1.6, struck
+>   (F-5)) — no height hypothesis needed. The anchor-degree component of the **full** link,
+>   `\widetilde H_{n-2}(\text{lk}_{\Delta_n}(P))`, is zero at every vertex at `n = 3, 4` and every
+>   height-1 class within cap at `n = 5` **by exhaustive measurement, not by argument** — every case
+>   lands on zero by exactly one degree. **It is not established for `n \ge 6`.**
+>
+> One further caveat that belongs next to the word *contractible*: every "contractible" verdict
+> produced by a **Betti computation** in either harness is really "`\mathbb{Q}`-acyclic" — rational
+> Betti cannot distinguish `RP^2` from a point. Genuine contractibility comes from Theorem A's
+> closure-operator **proof**. Nothing above is retracted, and the `mg-52c4` recommendation *"do not
+> open an F33"* **stands** (`mg-e08a` §0, §9). See
+> `docs/OneThird-mge08a-TheoremA-IndependentAudit.md` §1, §6, §7.
 
 Honest observation: the F17+F18 unconditional `\Delta_n \simeq_\mathbb{Q} S^{n-2}` *rational sphere* statement does NOT immediately give `\text{lk}(P)` is a rational sphere of dimension `n − 2 − \text{rk}(P) - 1`. Spheres have spherical links, but `\Delta_n` is only *rationally* a sphere, and rational-spherical links is a strictly weaker conclusion (requires integral / homotopy-spherical, not just `\mathbb{Q}`-spherical). So this is an open question — and an *interesting* one for F28's framework, though not in scope for this scoping pass.
 
-(Side note for §8: a F29 sub-question could be — *are the links `\text{lk}_{\Delta_n}(P)` rationally spherical of the predicted dimension `n − 2 − \text{rk}(P) - 1`?* This would refine F17+F18 to the link level.) — **ANSWERED 2026-08-14 (mg-52c4): NO.** For every `P` of height `\ge 2` the link is *contractible*, not spherical of any dimension; the height-1 exceptions have `\le 6` elements at width `\le 3`. This does not refine F17+F18 to the link level — it shows there is nothing at the link level to refine to.
+(Side note for §8: a F29 sub-question could be — *are the links `\text{lk}_{\Delta_n}(P)` rationally spherical of the predicted dimension `n − 2 − \text{rk}(P) - 1`?* This would refine F17+F18 to the link level.) — **ANSWERED 2026-08-14 (mg-52c4): NO.** For every `P` of height `\ge 2` the link is *contractible*, not spherical of any dimension; the height-1 exceptions have `\le 6` elements at width `\le 3`. This does not refine F17+F18 to the link level — ~~it shows there is nothing at the link level to refine to~~ **there is nothing at the link level to refine to *at the height-`\ge 2` vertices*.**
+
+> **SCOPED 2026-08-14 (`mg-e08a` §6.3, carried by `mg-1b3b`).** The struck clause is refuted under
+> this §'s own quantifier: `P` ranges over all of `PPF_n`, and at the **height-1** vertices the links
+> *are* rationally spherical or wedges of spheres — at `n = 4`, **32 of the 194 are rational `S^3`
+> and 6 are rational wedges of three `S^3`s**, measured. The complete answer to F29-B is therefore
+> **"no at height `\ge 2`; yes at 38 of the 194 vertices at `n = 4`"**, not *"nothing at the link
+> level"*. The height-1 exceptions have `\le 6` elements **only within the width-`\le 3` family** —
+> as vertices of `\Delta_n` they persist at every `n` (86/194 at `n = 4`, 11 642/129 302 at `n = 6`)
+> and at `n \ge 7` are all of width `\ge 4`. **This does not reopen F29-B as a route:** what a
+> refinement would need is a non-zero fibrewise class, and the anchor-degree component
+> `\widetilde H_{n-2}(\text{lk}_{\Delta_n}(P))` is measured **zero at every vertex reached**
+> (`n \le 5`) — proven nowhere, refuted nowhere, unestablished for `n \ge 6`. See
+> `docs/OneThird-mge08a-TheoremA-IndependentAudit.md` §6.1–§6.3, §7.
 
 ### 2.4 The `S_n`-equivariant decomposition
 
