@@ -1,0 +1,78 @@
+{
+ "B_iso_classes": {
+  "3": {
+   "classes_by_c": {
+    "1": 1,
+    "2": 2
+   },
+   "iso_classes": 3,
+   "labelled": 12,
+   "sum_class_sizes": 12
+  },
+  "4": {
+   "classes_by_c": {
+    "1": 1,
+    "2": 3,
+    "3": 3,
+    "4": 1
+   },
+   "iso_classes": 8,
+   "labelled": 86,
+   "sum_class_sizes": 86
+  },
+  "5": {
+   "classes_by_c": {
+    "1": 1,
+    "2": 3,
+    "3": 5,
+    "4": 7,
+    "5": 2,
+    "6": 2
+   },
+   "iso_classes": 20,
+   "labelled": 840,
+   "sum_class_sizes": 840
+  },
+  "6": {
+   "classes_by_c": {
+    "1": 1,
+    "2": 3,
+    "3": 6,
+    "4": 13,
+    "5": 13,
+    "6": 10,
+    "7": 5,
+    "8": 3,
+    "9": 1
+   },
+   "iso_classes": 55,
+   "labelled": 11642,
+   "sum_class_sizes": 11642
+  },
+  "7": {
+   "classes_by_c": {
+    "1": 1,
+    "10": 8,
+    "11": 2,
+    "12": 2,
+    "2": 3,
+    "3": 6,
+    "4": 15,
+    "5": 25,
+    "6": 36,
+    "7": 27,
+    "8": 25,
+    "9": 13
+   },
+   "iso_classes": 163,
+   "labelled": 227892,
+   "sum_class_sizes": 227892
+  }
+ },
+ "audit": "mg-9cd1",
+ "of": "mg-72e4 @ 75fb81d",
+ "primes": [
+  2147483647,
+  1000000007
+ ]
+}
