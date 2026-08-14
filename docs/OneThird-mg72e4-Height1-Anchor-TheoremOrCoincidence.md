@@ -16,7 +16,14 @@ Run: `/usr/bin/python3 scripts/compat_geom_mg72e4_height1_anchor.py` (stdlib onl
 
 > ### The "one-degree near-miss" is an `n = 4` ARTIFACT. The margin is `n − 3` and it GROWS.
 >
-> ### The question is not settled as a theorem, but the reason to suspect a coincidence is gone, and the measurement now runs through `n = 7` — 163 iso classes and 227 850 of the 227 892 labelled height-1 vertices there, **0 violations**.
+> ### The question is not settled as a theorem, but the reason to suspect a coincidence is gone, and the measurement now runs through `n = 7` — all 163 iso classes and all 227 892 labelled height-1 vertices there, **0 violations**.
+
+*(This line read "163 iso classes and 227 850 of the 227 892 labelled height-1 vertices" as first
+landed — a mismatch `mg-9cd1` recorded as **D1**, because the class count was stated complete
+while the vertex count was not. Both are complete now: `mg-bcd7` measured the one class this
+document left over cap. Nothing else in §0 changes, and in particular the **min margin** row in
+result 1 below is untouched — `mg-bcd7` did not compute a margin for that class, so `mg-9cd1`'s
+finding **D2** about the min-margin denominator stands exactly as written.)*
 
 Four results, in descending order of how much they should change what anyone does.
 

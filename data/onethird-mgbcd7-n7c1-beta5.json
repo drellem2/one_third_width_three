@@ -324,7 +324,7 @@
    "6": 975640,
    "7": 2075235
   },
-  "seconds": 68.8,
+  "seconds": 67.6,
   "total_faces_measured": 3546022
  },
  "V3_X_is_a_cone": {
@@ -539,7 +539,7 @@
     "beta_Q_needed_degree": 0,
     "beta_Q_one_below": 0
    },
-   "seconds": 6.2
+   "seconds": 6.3
   },
   "9": {
    "all_primes_agree": true,
@@ -623,7 +623,7 @@
     "beta_Q_needed_degree": 0,
     "beta_Q_one_below": 0
    },
-   "seconds": 99.6
+   "seconds": 101.4
   }
  },
  "extension_not_attempted": {
@@ -707,7 +707,7 @@
   999983,
   1000003
  ],
- "seconds_total": 181.8,
+ "seconds_total": 182.2,
  "target_class": {
   "P": [
    [
