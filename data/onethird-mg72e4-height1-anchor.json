@@ -10754,13 +10754,6384 @@
    ],
    "violating_classes": [],
    "violations": 0
+  },
+  "7": {
+   "gamma_nonvanishing_degrees": [
+    4
+   ],
+   "iso_classes": 163,
+   "labeled_total": 227892,
+   "min_margin": 10,
+   "near_miss_classes": 0,
+   "non_contractible_gamma": 2,
+   "over_cap_classes": 1,
+   "over_cap_labeled": 42,
+   "rows": [
+    {
+     "P": [
+      [
+       0,
+       1
+      ]
+     ],
+     "betti_needed": "over_cap",
+     "betti_one_above": null,
+     "c": 1,
+     "class_size": 42,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 30,
+     "needed_degree": 5
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 105,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 26,
+     "needed_degree": 4
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 105,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 26,
+     "needed_degree": 4
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 20,
+     "needed_degree": 4
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 140,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 24,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 21,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 140,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 24,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 105,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 24,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 19,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 210,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 22,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 19,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 5040,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 15,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 105,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 24,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 42,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 26,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 19,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 18,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 210,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 18,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 18,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 15,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 5040,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 19,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 9,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 15,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 42,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 26,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 9,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 210,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 7,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 30,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 210,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 21,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 210,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 20,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 19,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 5040,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 15,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 5040,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 210,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 20,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 9,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 19,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 9,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 9,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 8,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 5040,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 8,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 210,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 21,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       6
+      ],
+      [
+       4,
+       6
+      ],
+      [
+       5,
+       6
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 6,
+     "class_size": 7,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 30,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 18,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 15,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 5040,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 7,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 15,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 5040,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 9,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 7,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 9,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 18,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 105,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 20,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 15,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 5040,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 9,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 6,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 5040,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 9,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 105,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 20,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 12,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 6,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 17,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       6
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 210,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 18,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 140,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 18,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 6,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 13,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 11,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 16,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 2520,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 840,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 6,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       3,
+       6
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 210,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 18,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 10,
+     "class_size": 21,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 22,
+     "needed_degree": -4
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 10,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": -4
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 10,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 15,
+     "needed_degree": -4
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 10,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -4
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 10,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 15,
+     "needed_degree": -4
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 10,
+     "class_size": 630,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": -4
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 10,
+     "class_size": 1260,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 10,
+     "needed_degree": -4
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       3,
+       6
+      ],
+      [
+       4,
+       5
+      ],
+      [
+       4,
+       6
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 10,
+     "class_size": 21,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": null,
+     "margin": null,
+     "n_atoms": 22,
+     "needed_degree": -4
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 11,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": -5
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 11,
+     "class_size": 420,
+     "gamma_first_nonvanishing": null,
+     "gamma_full_betti": {},
+     "margin": null,
+     "n_atoms": 14,
+     "needed_degree": -5
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 12,
+     "class_size": 35,
+     "gamma_first_nonvanishing": 4,
+     "gamma_full_betti": {
+      "4": 1
+     },
+     "margin": 10,
+     "n_atoms": 18,
+     "needed_degree": -6
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       0,
+       6
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       1,
+       6
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       2,
+       6
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       3,
+       6
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 12,
+     "class_size": 35,
+     "gamma_first_nonvanishing": 4,
+     "gamma_full_betti": {
+      "4": 1
+     },
+     "margin": 10,
+     "n_atoms": 18,
+     "needed_degree": -6
+    }
+   ],
+   "violating_classes": [],
+   "violations": 0
   }
  },
  "negative_controls": {
   "N1_swapped_degree_is_n_minus_c": {
    "claim": "beta~_{n-c}(Gamma) = 0 as well",
    "discriminating": true,
-   "instances": 59,
+   "instances": 144,
    "refuted_on": 3
   },
   "N2_height_ge_2_links": {
@@ -10777,6 +17148,6 @@
    "vertices_with_nonzero_beta3": 38
   }
  },
- "nmax": 6,
+ "nmax": 7,
  "ticket": "mg-72e4"
 }

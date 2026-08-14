@@ -16,7 +16,7 @@ Run: `/usr/bin/python3 scripts/compat_geom_mg72e4_height1_anchor.py` (stdlib onl
 
 > ### The "one-degree near-miss" is an `n = 4` ARTIFACT. The margin is `n − 3` and it GROWS.
 >
-> ### The question is not settled as a theorem, but the reason to suspect a coincidence is gone, and the measurement now runs to `n = 6` complete — 55 iso classes, all 11 642 labelled height-1 vertices, **0 violations**.
+> ### The question is not settled as a theorem, but the reason to suspect a coincidence is gone, and the measurement now runs through `n = 7` — 163 iso classes and 227 850 of the 227 892 labelled height-1 vertices there, **0 violations**.
 
 Four results, in descending order of how much they should change what anyone does.
 
@@ -31,21 +31,25 @@ Four results, in descending order of how much they should change what anyone doe
    | 4 | **1** | `{0, 1}` |
    | 5 | **2** | `{2}` |
    | 6 | **3** | `{3}` |
+   | 7 | **4** (see §4.2) | `{4}` |
 
-   A quantity that misses by one at `n = 4`, by two at `n = 5` and by three at `n = 6` is not
-   behaving like arithmetic luck.
+   A quantity that misses by one at `n = 4`, by two at `n = 5`, by three at `n = 6` and by four at
+   `n = 7` is not behaving like arithmetic luck. **`n = 7` matters specifically**: it is where
+   `mg-24eb`'s *"exactly the ordinal sums"* coincidence broke, which is the precedent `mg-52c4` §5
+   cites as the reason to suspect this one.
 
-2. **The measurement is no longer expensive, and `n = 6` is complete.** Björner's **crosscut
+2. **The measurement is no longer expensive, and it now reaches `n = 7`.** Björner's **crosscut
    theorem** replaces the order complex of the upper link — whose vertex set is most of `PPF_n`,
    which is what put `mg-e08a`'s three `n = 5` classes over its materialisation cap — by a complex
    `Γ(P)` on **at most `n(n−1) − 2c` vertices** (§3). At `n = 6` the largest `Γ(P)` has 20
-   vertices. The whole `n ≤ 6` sweep runs in well under a minute where the direct computation was
-   infeasible. **`mg-e08a`'s three uncomputed `n = 5` classes are computed here** (§4): the `n = 5`
-   evidence is 20/20 iso classes, not 58/61.
+   vertices; at `n = 7`, 30. The `n ≤ 6` sweep runs in about 20 seconds and `n = 7` in minutes,
+   where the direct computation was infeasible. **`mg-e08a`'s three uncomputed `n = 5` classes are
+   computed here** (§4): the `n = 5` evidence is 20/20 iso classes, not 58/61.
 
 3. **A piece of it is now a theorem, not a measurement** (§5): for `c ≥ n` the vanishing follows
    from `U(P) ≠ ∅`, which is proven for every `n ≥ 6` with no measurement. That is 3 590 of the
-   11 642 height-1 vertices at `n = 6`. The rest is still measurement.
+   11 642 height-1 vertices at `n = 6` (30.8%) and 110 082 of the 227 892 at `n = 7` (48.3%) —
+   a share that grows with `n`. The rest is still measurement.
 
 4. **The structure the remaining conjecture needs is now explicit and small.** What is left to
    prove is a *connectivity* statement about one concrete complex — `Γ(P)` is `(n−4)`-connected —
@@ -86,6 +90,12 @@ complex and the two-prime Betti routine are written from scratch. It independent
 | all 12 links at `n = 3` non-contractible | **12/12** |
 | 0 vertices with non-zero `H̃_{n−2}(lk P)` at `n = 3, 4` | **0** |
 | height-1 census 12 / 86 / 840 / 11 642 at `n = 3..6` | **12 / 86 / 840 / 11 642** |
+
+A fourth control, added because `n = 7` is out of brute-force reach: the height-1 isomorphism
+classes at `n = 7` are enumerated by **bipartition** (a height-1 poset is a bipartite graph between
+its tail-set and its head-set, plus free elements), canonicalising under `S_a × S_b` instead of
+`S_n`. That enumerator is checked against the brute-force one at `n = 3, 4, 5, 6` — same classes,
+same class sizes — and only then used at `n = 7`.
 
 **Negative controls.** (N1) The *swapped* claim — *"`β̃_{n−c}(Γ)` vanishes too"* — must be able to
 go RED, and it does: it is **refuted on 3 of the 8 classes at `n = 4`**. So the instrument is
@@ -169,6 +179,11 @@ Height-1 isomorphism classes, all `n` from 3 to 6, with `d := n − c − 1` the
 | 4 | 8 | 86 | **0** | 0 |
 | 5 | 20 | 840 | **0** | 0 |
 | 6 | **55** | **11 642** | **0** | 0 |
+| 7 | **163** | **227 892** | **0** | 1 class / 42 vertices |
+
+The single over-cap class at `n = 7` is the `c = 1` one (`Γ(P)` has 30 vertices and the needed
+degree is 5, so the skeleton exceeds the instrument's 3 000 000-face cap). It is **42 of the
+227 892** labelled height-1 vertices, and it is named rather than silently dropped.
 
 The `n = 6` row is the ticket's step 2, complete: `mg-1b3b` sized that job at 11 642 of 129 302
 vertices, and every one of them is covered by the 55 classes. The `n = 5` row is 20/20 classes,
@@ -201,6 +216,15 @@ different and much more informative measurement:
 | 4 | 4 of 8 | `{0, 1}` | **1** |
 | 5 | 4 of 20 | `{2}` | **2** |
 | 6 | 5 of 55 | `{3}` | **3** |
+| 7 | 2 of the 146 within cap | `{4}` | **10 measured / 4 including the star** |
+
+**The `n = 7` margin row needs its caveat stated, not buried.** The full homotopy type of `Γ(P)` is
+computed only where `Γ(P)` has at most 20 vertices, which is 146 of the 163 classes at `n = 7`; the
+17 excluded include the star `K_{6,1}`. Over the 146, the minimum margin is **10** (attained at
+`K_{3,4}` and `K_{4,3}`, `c = 12`, `β̃₄ = 1`). The star is excluded from that pool but its margin is
+known without computing: `U(K_{n−1,1}) ≅ PPF_{n−1} ≃_Q S^{n−3}` by **F17+F18**, and `c = n − 1`
+gives `d = 0`, so its margin is exactly `n − 3 = 4`. So `4` is the honest `n = 7` figure and `10`
+is what was measured; both are ≥ the `n − 3` pattern and neither is `1`.
 
 For `n ≥ 5` every non-`Q`-acyclic `Γ(P)` measured is a **rational `(n−3)`-sphere** — a single `1`
 in degree `n − 3` and nothing else — and every other `Γ(P)` is `Q`-acyclic. Since the needed
@@ -215,7 +239,8 @@ minimum margin is `n − 3`.
 ### 4.3 Where the homology actually lives
 
 The five non-`Q`-acyclic classes at `n = 6` are `c = 5` (the star `K_{5,1}` and its dual),
-`c = 8` (`K_{2,4}` and `K_{4,2}`) and `c = 9` (`K_{3,3}`) — complete bipartite height-1 posets.
+`c = 8` (`K_{2,4}` and `K_{4,2}`) and `c = 9` (`K_{3,3}`) — complete bipartite height-1 posets; at
+`n = 7`, the two within cap are `K_{3,4}` and `K_{4,3}`.
 This is not an accident and it is checkable by hand: for `P = K_{a,b}` a refinement `Q ⊋ P` can
 add relations only *within* the lower block and *within* the upper block, so
 
@@ -252,8 +277,9 @@ relation of a chain is join-irreducible for `tc` (`mg-52c4` §2.3 step (i)), so 
 `Cov(t) ⊆ P ∪ {v}`, and `v ∉ Cov(t)`, hence `Cov(t) ⊆ P` and `P ⊇ tc(Cov(t)) = t` — contradicting
 `P ⊊ t`. So `Q ⊆ t` with `Q ≠ t` is non-total, and `Q ∈ U(P)`. ∎
 
-At `n = 6` this covers `c ∈ {6,7,8,9}`, i.e. **3 590 of the 11 642 height-1 vertices (30.8%)** with
-no computation at all. The `n ≥ 6` hypothesis is only used for the counting step; at `n = 4, 5`
+At `n = 6` this covers `c ∈ {6,...,9}`, i.e. **3 590 of the 11 642 height-1 vertices (30.8%)**, and
+at `n = 7` it covers `c ∈ {7,...,12}`, i.e. **110 082 of 227 892 (48.3%)** — with no computation at
+all, and a share that grows with `n`. The `n ≥ 6` hypothesis is only used for the counting step; at `n = 4, 5`
 the same conclusion is measured rather than proven (§4.1), and `n = 5` is the boundary case where
 `C(n,2) − (n−1) = ⌊n²/4⌋ = 6`.
 
@@ -295,12 +321,17 @@ Stated so that nobody over-reads it:
 1. **Proven, all `n ≥ 6`, no measurement:** the vanishing at every height-1 vertex with `c ≥ n`
    (§5). 30.8% of the `n = 6` height-1 population.
 2. **Measured exhaustively, `n ≤ 6`:** every height-1 iso class — 3 / 8 / 20 / 55 classes covering
-   12 / 86 / 840 / 11 642 labelled vertices — **0 violations**, with no class over cap. This
-   includes the three `n = 5` classes `mg-e08a` could not reach.
-3. **Refuted:** the *"every case is a one-degree near-miss"* premise. True at `n = 4`; false at
-   `n = 5` and `n = 6`, where the margin is 2 and 3.
-4. **Open:** Conjecture C (§6), and the `c ≤ 2` cases it does not cover. **Nothing here proves the
-   statement for `n ≥ 7`** beyond the `c ≥ n` slice of Proposition 3.
+   12 / 86 / 840 / 11 642 labelled vertices — **0 violations**, none over cap. This includes the
+   three `n = 5` classes `mg-e08a` could not reach.
+3. **Measured at `n = 7` with one named gap:** 162 of 163 iso classes, **227 850 of 227 892**
+   labelled vertices, **0 violations**. The gap is the single `c = 1` class (42 vertices).
+   `n = 7` is the `n` at which the corpus's nearest precedent — `mg-24eb`'s *"exactly the ordinal
+   sums"* — turned out to be false.
+4. **Refuted:** the *"every case is a one-degree near-miss"* premise. True at `n = 4`; false at
+   `n = 5, 6, 7`, where the margin is 2, 3 and (at least) 4.
+5. **Open:** Conjecture C (§6), and the `c ≤ 2` cases it does not cover. **Nothing here proves the
+   statement for any `n`** beyond the `c ≥ n` slice of Proposition 3 — everything else is
+   measurement, and measurement stops at `n = 7`.
 
 **What would close it.** Conjecture C plus a `c ≤ 2` argument. Both are now statements about
 `Γ(P)`, a complex on at most `n(n−1) − 2c` vertices with an explicit face rule, rather than about
@@ -329,7 +360,9 @@ was filed against, and it is the concrete deliverable this ticket leaves behind.
   evidence* — "one-degree near-miss" — not a claim about the mathematics.
 - It does not compute anything at height ≥ 2 beyond the `n = 4` control, because Corollary B
   already covers those vertices.
-- It does not establish Conjecture C, and it does not measure `n ≥ 7` beyond what §4 reports.
+- It does not establish Conjecture C, and it does not measure `n ≥ 8` at all. The `n = 7` sweep
+  leaves one `c = 1` class (42 of 227 892 vertices) over cap, and 17 of 163 classes without a full
+  homotopy type; both are named in §4, not rolled into a pass.
 
 ## 9. References
 
