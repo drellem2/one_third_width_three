@@ -150,6 +150,61 @@ def height1_iso_classes(n):
     return [(reps[k], counts[k]) for k in sorted(reps)]
 
 
+def _binom(a, b):
+    if b < 0 or b > a:
+        return 0
+    r = 1
+    for i in range(b):
+        r = r * (a - i) // (i + 1)
+    return r
+
+
+def _factorial(k):
+    r = 1
+    for i in range(2, k + 1):
+        r *= i
+    return r
+
+
+def height1_iso_classes_fast(n):
+    """Same output as height1_iso_classes(n), but enumerated by BIPARTITION rather than by
+    brute force over all labelled height-1 posets.
+
+    A height-1 poset is a set of relations from a tail-set T to a head-set H with T n H = {}
+    and no isolated vertex inside T u H (isolated elements are 'free' and carry no relation).
+    So the iso classes are exactly the iso classes of bipartite graphs with parts (|T|,|H|) and
+    no isolated vertex, with |T| + |H| <= n.  Canonicalising under S_|T| x S_|H| is cheap where
+    canonicalising under S_n is not.  Checked against height1_iso_classes at n = 3..6.
+    """
+    reps = {}
+    for a in range(1, n):
+        for b in range(1, n - a + 1):
+            base = [(i, j) for i in range(a) for j in range(a, a + b)]
+            permsA = list(itertools.permutations(range(a)))
+            permsB = list(itertools.permutations(range(a, a + b)))
+            for mask in range(1, 1 << len(base)):
+                E = [base[i] for i in range(len(base)) if mask >> i & 1]
+                if len({e[0] for e in E}) != a or len({e[1] for e in E}) != b:
+                    continue
+                best = None
+                for pa in permsA:
+                    for pb in permsB:
+                        key = tuple(sorted((pa[x], pb[y - a]) for (x, y) in E))
+                        if best is None or key < best:
+                            best = key
+                if best not in reps:
+                    reps[best] = frozenset(E)
+    out = []
+    fact = _factorial(n)
+    for P in reps.values():
+        aut = 0
+        for perm in itertools.permutations(range(n)):
+            if frozenset((perm[x], perm[y]) for (x, y) in P) == P:
+                aut += 1
+        out.append((P, fact // aut))
+    return sorted(out, key=lambda pr: (len(pr[0]), sorted(pr[0])))
+
+
 # --------------------------------------------------------------------------- homology
 def _rank_mod_p(cols, nrows, p):
     """Rank of a sparse matrix given as a list of {row: coeff} columns."""
@@ -409,44 +464,71 @@ def main():
 
     # ---------------- the measurement: height-1 iso classes, n = 3 .. NMAX
     meas = {}
+    FULL_BETTI_ATOM_CAP = int(os.environ.get("MG72E4_FULL_CAP", "20"))
+    SKELETON_CAP = int(os.environ.get("MG72E4_SKEL_CAP", "3000000"))
     for n in range(3, NMAX + 1):
-        d_needed = lambda c: n - c - 1
-        classes = height1_iso_classes(n)
+        classes = height1_iso_classes(n) if n <= 6 else height1_iso_classes_fast(n)
+        if n <= 6:  # the fast enumerator must agree with the brute-force one
+            fast = height1_iso_classes_fast(n)
+            if sorted((canonical(P, n), k) for P, k in fast) != \
+               sorted((canonical(P, n), k) for P, k in classes):
+                failures.append("iso enumerators disagree at n=%d" % n)
         rows = []
         for P, mult in classes:
             c = len(P)
-            d = d_needed(c)
+            d = n - c - 1
             atoms = atoms_of_upper(P, n)
+            full, firstnz = None, None
             if d < -1:
                 bd, bnext = 0, None
-                gsize = len(atoms)
             elif d == -1:
-                bd = 1 if not atoms else 0
-                bnext = None
-                gsize = len(atoms)
+                bd, bnext = (1 if not atoms else 0), None
+            elif _binom(len(atoms), d + 3) > SKELETON_CAP:
+                bd, bnext = "over_cap", None
             else:
                 g = gamma_faces(P, n, atoms, dmax=d + 2)
                 b = reduced_betti_range(g, d + 1) if g else {-1: 1}
-                bd = b.get(d, 0)
-                bnext = b.get(d + 1, 0)
-                gsize = len(atoms)
+                bd, bnext = b.get(d, 0), b.get(d + 1, 0)
+            # MARGIN: the FULL homotopy type of Gamma(P), where it is affordable.  This is what
+            # decides "theorem vs coincidence": the question is not only whether the needed
+            # degree is empty but HOW FAR the nearest non-empty degree is.
+            if len(atoms) <= FULL_BETTI_ATOM_CAP:
+                g = gamma_faces(P, n, atoms, dmax=len(atoms))
+                bf = reduced_betti_range(g, max(g)) if g else {-1: 1}
+                full = {str(k): v for k, v in bf.items() if v}
+                nz = [k for k, v in bf.items() if v]
+                firstnz = min(nz) if nz else None
+                if bd != "over_cap" and bf.get(d, 0) != bd:
+                    failures.append("capped vs full disagree n=%d c=%d" % (n, c))
             rows.append({
                 "P": sorted(map(list, P)), "c": c, "class_size": mult,
-                "needed_degree": d, "n_atoms": gsize,
+                "needed_degree": d, "n_atoms": len(atoms),
                 "betti_needed": bd, "betti_one_above": bnext,
+                "gamma_full_betti": full, "gamma_first_nonvanishing": firstnz,
+                "margin": None if firstnz is None else firstnz - d,
             })
-        bad = [r for r in rows if r["betti_needed"]]
+        bad = [r for r in rows if r["betti_needed"] not in (0, "over_cap")]
+        over = [r for r in rows if r["betti_needed"] == "over_cap"]
+        margins = [r["margin"] for r in rows if r["margin"] is not None]
         meas[str(n)] = {
             "iso_classes": len(rows),
             "labeled_total": sum(r["class_size"] for r in rows),
             "violations": len(bad),
+            "over_cap_classes": len(over),
+            "over_cap_labeled": sum(r["class_size"] for r in over),
             "violating_classes": bad,
             "near_miss_classes": sum(1 for r in rows if r["betti_one_above"]),
+            "non_contractible_gamma": sum(1 for r in rows if r["gamma_full_betti"]),
+            "gamma_nonvanishing_degrees": sorted(set(
+                int(k) for r in rows if r["gamma_full_betti"] for k in r["gamma_full_betti"])),
+            "min_margin": min(margins) if margins else None,
             "rows": rows,
         }
-        print("n=%d: %d height-1 iso classes (%d labeled), %d violations, %d one-degree near-misses"
-              % (n, len(rows), meas[str(n)]["labeled_total"], len(bad),
-                 meas[str(n)]["near_miss_classes"]), flush=True)
+        print("n=%d: %d height-1 iso classes (%d labeled), %d violations, %d over-cap, %d near-misses, "
+              "min margin %s, Gamma non-vanishing degrees %s"
+              % (n, len(rows), meas[str(n)]["labeled_total"], len(bad), len(over),
+                 meas[str(n)]["near_miss_classes"], meas[str(n)]["min_margin"],
+                 meas[str(n)]["gamma_nonvanishing_degrees"]), flush=True)
     report["measurement_height1"] = meas
 
     # ---------------- NEGATIVE CONTROLS
