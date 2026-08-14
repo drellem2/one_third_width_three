@@ -1,0 +1,2824 @@
+{
+ "ALL_PASS": true,
+ "CHECKS": {
+  "COROLLARY_B_n4_NONVACUOUS": true,
+  "D1_euler_check_is_provably_blind": true,
+  "H1_instrument_controls": true,
+  "H2_swapped_control_discriminates": true,
+  "H3_perturbation_control_discriminates": true,
+  "JOIN_formula": true,
+  "PS_step_i": true,
+  "PS_step_ii": true,
+  "PS_step_iii": true,
+  "PS_step_iv": true,
+  "TA_high_c": true,
+  "TA_theoremA_all_n<=5": true
+ },
+ "D1_euler_blindness": {
+  "BETTI_predicate_calls_it_contractible": false,
+  "EULER_predicate_calls_it_contractible": true,
+  "n_poset_elements": 19,
+  "note": "A Moebius/Euler check cannot distinguish this from contractible. This is why full Betti, not Euler, is what verifies (A1).",
+  "object": "order complex of the face poset of (S^1 wedge S^2)",
+  "pass": true,
+  "reduced_betti": {
+   "1": 1,
+   "2": 1
+  },
+  "reduced_euler_char": 0,
+  "two_primes_agree": true
+ },
+ "DEL_deletion_n3": {
+  "Delta_n": {
+   "1": 1
+  },
+  "all_changed_are_height_1": true,
+  "deletions_that_change_homology": 12,
+  "deletions_that_do_not": 0,
+  "examples": [
+   {
+    "P": [
+     [
+      1,
+      2
+     ]
+    ],
+    "betti_after_deletion": {},
+    "c": 1,
+    "height>=2": false
+   },
+   {
+    "P": [
+     [
+      2,
+      1
+     ]
+    ],
+    "betti_after_deletion": {},
+    "c": 1,
+    "height>=2": false
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ]
+    ],
+    "betti_after_deletion": {},
+    "c": 1,
+    "height>=2": false
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ]
+    ],
+    "betti_after_deletion": {},
+    "c": 2,
+    "height>=2": false
+   }
+  ],
+  "n_vertices": 12
+ },
+ "DEL_deletion_n4": {
+  "Delta_n": {
+   "2": 1
+  },
+  "all_changed_are_height_1": true,
+  "deletions_that_change_homology": 38,
+  "deletions_that_do_not": 156,
+  "examples": [
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "betti_after_deletion": {
+     "2": 1,
+     "3": 1
+    },
+    "c": 3,
+    "height>=2": false
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ]
+    ],
+    "betti_after_deletion": {
+     "2": 1,
+     "3": 1
+    },
+    "c": 3,
+    "height>=2": false
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      2,
+      1
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "betti_after_deletion": {
+     "2": 1,
+     "3": 1
+    },
+    "c": 3,
+    "height>=2": false
+   },
+   {
+    "P": [
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ]
+    ],
+    "betti_after_deletion": {
+     "2": 1,
+     "3": 1
+    },
+    "c": 3,
+    "height>=2": false
+   }
+  ],
+  "n_vertices": 194
+ },
+ "FINDINGS": {
+  "F0_corollary_B_is_VACUOUS_at_n3": {
+   "height>=2_vertices_at_n=3": 0,
+   "note": "Every vertex of Delta_3 is height 1, so Corollary B says nothing at n=3 and every one of the 12 links is non-contractible.",
+   "vacuous": true
+  },
+  "F1_theoremA_sound": "All four named/implied proof steps verified as exhaustive machine predicates; full Betti agrees at every iso class n<=5 within cap.",
+  "F2_euler_gap_real_but_not_load_bearing": "The Moebius/Euler check IS blind (D1 exhibits a poset it passes and Betti fails), but Theorem A's proof is n-independent, and this run supplies full Betti at n=5 anyway.",
+  "F3_corollary_B_does_not_cover_every_vertex": {
+   "all_are_height_1": true,
+   "n=3": "12 of 12 vertices have a NON-contractible link",
+   "n=4": "38 of 194 vertices have a NON-contractible link"
+  },
+  "F4_anchor_degree_still_zero_everywhere_measured": {
+   "n=3": [],
+   "n=4": [],
+   "n=5_height1_via_join": true
+  },
+  "F5_upper_link_not_always_contractible": {
+   "n=4": true,
+   "n=5": true
+  }
+ },
+ "H1_instrument_controls": [
+  {
+   "case": "bd_simplex_1_is_S0",
+   "expected": {
+    "0": 1
+   },
+   "got": {
+    "0": 1
+   },
+   "pass": true,
+   "two_primes_agree": true
+  },
+  {
+   "case": "bd_simplex_2_is_S1",
+   "expected": {
+    "1": 1
+   },
+   "got": {
+    "1": 1
+   },
+   "pass": true,
+   "two_primes_agree": true
+  },
+  {
+   "case": "bd_simplex_3_is_S2",
+   "expected": {
+    "2": 1
+   },
+   "got": {
+    "2": 1
+   },
+   "pass": true,
+   "two_primes_agree": true
+  },
+  {
+   "case": "bd_simplex_4_is_S3",
+   "expected": {
+    "3": 1
+   },
+   "got": {
+    "3": 1
+   },
+   "pass": true,
+   "two_primes_agree": true
+  },
+  {
+   "case": "bd_simplex_5_is_S4",
+   "expected": {
+    "4": 1
+   },
+   "got": {
+    "4": 1
+   },
+   "pass": true,
+   "two_primes_agree": true
+  },
+  {
+   "case": "torus_moebius_kantor_7vertex",
+   "expected": {
+    "1": 2,
+    "2": 1
+   },
+   "got": {
+    "1": 2,
+    "2": 1
+   },
+   "pass": true,
+   "two_primes_agree": true
+  },
+  {
+   "LIMITATION": "Rational Betti calls this contractible and it is not. Every 'contractible' verdict in this file and in the audited harness is really 'Q-acyclic'. Theorem A (A1) claims genuine contractibility; the PROOF (a closure operator onto a cone) is what supplies that, not any Betti computation.",
+   "case": "RP2_is_Q_acyclic_but_NOT_contractible",
+   "expected": {
+    "(all zero over Q)": 0
+   },
+   "got": {
+    "0": 0,
+    "1": 0,
+    "2": 0
+   },
+   "pass": true,
+   "two_primes_agree": true
+  },
+  {
+   "case": "empty_complex_is_S-1",
+   "expected": {
+    "-1": 1
+   },
+   "got": {
+    "-1": 1
+   },
+   "pass": true,
+   "two_primes_agree": true
+  },
+  {
+   "case": "two_circles_disjoint",
+   "expected": {
+    "0": 1,
+    "1": 2
+   },
+   "got": {
+    "0": 1,
+    "1": 2
+   },
+   "pass": true,
+   "two_primes_agree": true
+  }
+ ],
+ "H2_swapped_control": {
+  "counts": {
+   "height1_swapped_FAILS": 86,
+   "height>=2_swapped_FAILS": 108
+  },
+  "height1_fail_rate": 1.0,
+  "height>=2_fail_rate": 1.0,
+  "note": "DISCRIMINATING iff both swapped classes fail 100%.",
+  "pass": true
+ },
+ "H3_perturbation_control": {
+  "all_match_prediction": true,
+  "answer_moved_on_add": true,
+  "answer_moved_on_delete": true,
+  "pass": true,
+  "rows": [
+   {
+    "P": [
+     [
+      0,
+      1
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "betti": {
+     "0": 1
+    },
+    "c": 2,
+    "case": "add-relation before_add",
+    "height>=2": false,
+    "matches_prediction": true,
+    "predicted": "sphere"
+   },
+   {
+    "P": [
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "betti": {},
+    "c": 6,
+    "case": "add-relation after_add",
+    "height>=2": true,
+    "matches_prediction": true,
+    "predicted": "contractible"
+   },
+   {
+    "P": [
+     [
+      0,
+      1
+     ],
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ]
+    ],
+    "betti": {},
+    "c": 3,
+    "case": "delete-relation before_delete",
+    "height>=2": true,
+    "matches_prediction": true,
+    "predicted": "contractible"
+   },
+   {
+    "P": [
+     [
+      0,
+      1
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      5,
+      6
+     ]
+    ],
+    "betti": {
+     "1": 1
+    },
+    "c": 3,
+    "case": "delete-relation after_delete",
+    "height>=2": false,
+    "matches_prediction": true,
+    "predicted": "sphere"
+   }
+  ]
+ },
+ "JOIN_link_is_join_of_both_halves": {
+  "counterexamples": [],
+  "join_betti_formula_reproduces_every_link": true,
+  "link_poset_is_ordinal_sum_of_both_halves": true,
+  "pass": true,
+  "vertices_checked": 194
+ },
+ "LK_links_n3": {
+  "COROLLARY_B_check_is_VACUOUS_here": true,
+  "COROLLARY_B_holds_on_height>=2": true,
+  "Delta_n_reduced_betti": {
+   "1": 1
+  },
+  "anchor_degree": 1,
+  "example_noncontractible_links": [
+   [
+    [
+     1,
+     2
+    ]
+   ],
+   [
+    [
+     2,
+     1
+    ]
+   ],
+   [
+    [
+     0,
+     2
+    ]
+   ],
+   [
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     2
+    ]
+   ]
+  ],
+  "height>=2_population": 0,
+  "n_links_noncontractible": 12,
+  "n_vertices": 12,
+  "rows": [
+   {
+    "c": 1,
+    "count": 6,
+    "example_P": [
+     [
+      1,
+      2
+     ]
+    ],
+    "height": "h=1",
+    "link_contractible": false,
+    "link_reduced_betti": {
+     "0": 1
+    }
+   },
+   {
+    "c": 2,
+    "count": 6,
+    "example_P": [
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ]
+    ],
+    "height": "h=1",
+    "link_contractible": false,
+    "link_reduced_betti": {
+     "0": 1
+    }
+   }
+  ],
+  "vertices_with_NONZERO_link_homology_in_anchor_degree_n-2": []
+ },
+ "LK_links_n4": {
+  "COROLLARY_B_check_is_VACUOUS_here": false,
+  "COROLLARY_B_holds_on_height>=2": true,
+  "Delta_n_reduced_betti": {
+   "2": 1
+  },
+  "anchor_degree": 2,
+  "example_noncontractible_links": [
+   [
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     3
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   [
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     1,
+     3
+    ]
+   ],
+   [
+    [
+     0,
+     3
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     3
+    ]
+   ],
+   [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ]
+  ],
+  "height>=2_population": 108,
+  "n_links_noncontractible": 38,
+  "n_vertices": 194,
+  "rows": [
+   {
+    "c": 1,
+    "count": 12,
+    "example_P": [
+     [
+      2,
+      3
+     ]
+    ],
+    "height": "h=1",
+    "link_contractible": true,
+    "link_reduced_betti": {}
+   },
+   {
+    "c": 2,
+    "count": 36,
+    "example_P": [
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "height": "h=1",
+    "link_contractible": true,
+    "link_reduced_betti": {}
+   },
+   {
+    "c": 3,
+    "count": 32,
+    "example_P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "height": "h=1",
+    "link_contractible": false,
+    "link_reduced_betti": {
+     "3": 1
+    }
+   },
+   {
+    "c": 4,
+    "count": 6,
+    "example_P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ]
+    ],
+    "height": "h=1",
+    "link_contractible": false,
+    "link_reduced_betti": {
+     "3": 3
+    }
+   },
+   {
+    "c": 3,
+    "count": 24,
+    "example_P": [
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "height": "h>=2",
+    "link_contractible": true,
+    "link_reduced_betti": {}
+   },
+   {
+    "c": 4,
+    "count": 48,
+    "example_P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "height": "h>=2",
+    "link_contractible": true,
+    "link_reduced_betti": {}
+   },
+   {
+    "c": 5,
+    "count": 36,
+    "example_P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "height": "h>=2",
+    "link_contractible": true,
+    "link_reduced_betti": {}
+   }
+  ],
+  "vertices_with_NONZERO_link_homology_in_anchor_degree_n-2": []
+ },
+ "MIRSKY": {
+  "mirsky_bound_tight_at_6": true,
+  "note": "Exhaustive check that height-1 + width<=3 survives at n=6 and the Mirsky bound of 6 is attained; for n>=7 the count must be 0 by Mirsky (2 antichains of size <=3), which is a proof, not a search.",
+  "rows": [
+   {
+    "height1_and_width<=3_count": 2,
+    "n": 2
+   },
+   {
+    "height1_and_width<=3_count": 12,
+    "n": 3
+   },
+   {
+    "height1_and_width<=3_count": 86,
+    "n": 4
+   },
+   {
+    "height1_and_width<=3_count": 710,
+    "n": 5
+   },
+   {
+    "height1_and_width<=3_count": 4940,
+    "n": 6
+   }
+  ],
+  "witness_at_n=6": [
+   [
+    1,
+    0
+   ],
+   [
+    1,
+    4
+   ],
+   [
+    1,
+    5
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    4
+   ],
+   [
+    2,
+    5
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    5
+   ]
+  ]
+ },
+ "PS_named_proof_steps": {
+  "step_i_cover_join_irreducible": {
+   "failures": [],
+   "pass": true,
+   "tested": 297416
+  },
+  "step_ii_kappa_image": {
+   "failures": [],
+   "pass": true,
+   "tested": 285156
+  },
+  "step_iii_kappa_closure_operator": {
+   "failures": [],
+   "pass": true,
+   "tested": 285156
+  },
+  "step_iv_image_is_fixed_points_with_min_v": {
+   "failures": [],
+   "pass": true,
+   "tested": 3528
+  }
+ },
+ "TA_high_c": {
+  "pass": true,
+  "rows": [
+   {
+    "P": "disjoint union of 1 2-chains (height 1, c=1)",
+    "betti": {
+     "-1": 1
+    },
+    "c": 1,
+    "n_simplices": 0,
+    "pass": true,
+    "predicted": "sphere",
+    "predicted_dim": -1,
+    "two_primes_agree": true,
+    "|Lbar|": 0
+   },
+   {
+    "P": "disjoint union of 2 2-chains (height 1, c=2)",
+    "betti": {
+     "0": 1
+    },
+    "c": 2,
+    "n_simplices": 2,
+    "pass": true,
+    "predicted": "sphere",
+    "predicted_dim": 0,
+    "two_primes_agree": true,
+    "|Lbar|": 2
+   },
+   {
+    "P": "disjoint union of 3 2-chains (height 1, c=3)",
+    "betti": {
+     "1": 1
+    },
+    "c": 3,
+    "n_simplices": 12,
+    "pass": true,
+    "predicted": "sphere",
+    "predicted_dim": 1,
+    "two_primes_agree": true,
+    "|Lbar|": 6
+   },
+   {
+    "P": "disjoint union of 4 2-chains (height 1, c=4)",
+    "betti": {
+     "2": 1
+    },
+    "c": 4,
+    "n_simplices": 74,
+    "pass": true,
+    "predicted": "sphere",
+    "predicted_dim": 2,
+    "two_primes_agree": true,
+    "|Lbar|": 14
+   },
+   {
+    "P": "disjoint union of 5 2-chains (height 1, c=5)",
+    "betti": {
+     "3": 1
+    },
+    "c": 5,
+    "n_simplices": 540,
+    "pass": true,
+    "predicted": "sphere",
+    "predicted_dim": 3,
+    "two_primes_agree": true,
+    "|Lbar|": 30
+   },
+   {
+    "P": "disjoint union of 6 2-chains (height 1, c=6)",
+    "betti": {
+     "4": 1
+    },
+    "c": 6,
+    "n_simplices": 4682,
+    "pass": true,
+    "predicted": "sphere",
+    "predicted_dim": 4,
+    "two_primes_agree": true,
+    "|Lbar|": 62
+   },
+   {
+    "P": "disjoint union of 7 2-chains (height 1, c=7)",
+    "betti": {
+     "5": 1
+    },
+    "c": 7,
+    "n_simplices": 47292,
+    "pass": true,
+    "predicted": "sphere",
+    "predicted_dim": 5,
+    "two_primes_agree": true,
+    "|Lbar|": 126
+   },
+   {
+    "P": "disjoint union of 8 2-chains (height 1, c=8)",
+    "betti": {
+     "6": 1
+    },
+    "c": 8,
+    "n_simplices": 545834,
+    "pass": true,
+    "predicted": "sphere",
+    "predicted_dim": 6,
+    "two_primes_agree": true,
+    "|Lbar|": 254
+   }
+  ]
+ },
+ "TA_theoremA_full_betti": {
+  "n=2": {
+   "failures": [],
+   "iso_classes_with_a_relation": 1,
+   "largest_complex_verified": 0,
+   "over_cap_skipped": 0,
+   "pass": true,
+   "skipped_detail": [],
+   "verified_full_betti": 1
+  },
+  "n=3": {
+   "failures": [],
+   "iso_classes_with_a_relation": 4,
+   "largest_complex_verified": 9,
+   "over_cap_skipped": 0,
+   "pass": true,
+   "skipped_detail": [],
+   "verified_full_betti": 4
+  },
+  "n=4": {
+   "failures": [],
+   "iso_classes_with_a_relation": 15,
+   "largest_complex_verified": 1511,
+   "over_cap_skipped": 0,
+   "pass": true,
+   "skipped_detail": [],
+   "verified_full_betti": 15
+  },
+  "n=5": {
+   "failures": [],
+   "iso_classes_with_a_relation": 62,
+   "largest_complex_verified": 1104707,
+   "over_cap_skipped": 1,
+   "pass": true,
+   "skipped_detail": [
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "c": 10,
+     "n_simplices": 6566003,
+     "|Lbar|": 355
+    }
+   ],
+   "verified_full_betti": 61
+  }
+ },
+ "UP_upper_links_n4": {
+  "computed": 14,
+  "height1_anchor_components_all_zero": true,
+  "height1_rows": [
+   {
+    "P": [
+     [
+      2,
+      3
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 1,
+    "height>=2": false,
+    "n_simplices": 873,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_2(U) by the join formula with (A2)",
+    "|U|": 53
+   },
+   {
+    "P": [
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 2,
+    "height>=2": false,
+    "n_simplices": 117,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_1(U) by the join formula with (A2)",
+    "|U|": 23
+   },
+   {
+    "P": [
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 3,
+    "height>=2": false,
+    "n_simplices": 24,
+    "two_primes_agree": true,
+    "upper_link_betti": {
+     "1": 1
+    },
+    "upper_link_contractible": false,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 12
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 3,
+    "height>=2": false,
+    "n_simplices": 16,
+    "two_primes_agree": true,
+    "upper_link_betti": {
+     "1": 1
+    },
+    "upper_link_contractible": false,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 8
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 4,
+    "height>=2": false,
+    "n_simplices": 4,
+    "two_primes_agree": true,
+    "upper_link_betti": {
+     "0": 3
+    },
+    "upper_link_contractible": false,
+    "via": "Hred_-1(U) by the join formula with (A2)",
+    "|U|": 4
+   },
+   {
+    "P": [
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 2,
+    "height>=2": false,
+    "n_simplices": 117,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_1(U) by the join formula with (A2)",
+    "|U|": 23
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 3,
+    "height>=2": false,
+    "n_simplices": 24,
+    "two_primes_agree": true,
+    "upper_link_betti": {
+     "1": 1
+    },
+    "upper_link_contractible": false,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 12
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 2,
+    "height>=2": false,
+    "n_simplices": 57,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_1(U) by the join formula with (A2)",
+    "|U|": 13
+   }
+  ],
+  "iso_classes": 14,
+  "noncontractible_upper_links": [
+   {
+    "P": [
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ]
+    ],
+    "betti": {
+     "1": 1
+    },
+    "c": 3
+   },
+   {
+    "P": [
+     [
+      1,
+      2
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ]
+    ],
+    "betti": {
+     "0": 1
+    },
+    "c": 4
+   },
+   {
+    "P": [
+     [
+      2,
+      0
+     ],
+     [
+      2,
+      1
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ]
+    ],
+    "betti": {
+     "-1": 1
+    },
+    "c": 5
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ]
+    ],
+    "betti": {
+     "-1": 1
+    },
+    "c": 5
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "betti": {
+     "-1": 1
+    },
+    "c": 5
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "betti": {
+     "0": 1
+    },
+    "c": 4
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ]
+    ],
+    "betti": {
+     "1": 1
+    },
+    "c": 3
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ]
+    ],
+    "betti": {
+     "0": 3
+    },
+    "c": 4
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "betti": {
+     "1": 1
+    },
+    "c": 3
+   }
+  ],
+  "over_cap": [],
+  "upper_link_is_NOT_always_contractible": true
+ },
+ "UP_upper_links_n5": {
+  "computed": 58,
+  "height1_anchor_components_all_zero": true,
+  "height1_rows": [
+   {
+    "P": [
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 3,
+    "height>=2": false,
+    "n_simplices": 100089,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_1(U) by the join formula with (A2)",
+    "|U|": 305
+   },
+   {
+    "P": [
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 4,
+    "height>=2": false,
+    "n_simplices": 15074,
+    "two_primes_agree": true,
+    "upper_link_betti": {
+     "2": 1
+    },
+    "upper_link_contractible": false,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 194
+   },
+   {
+    "P": [
+     [
+      0,
+      4
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 4,
+    "height>=2": false,
+    "n_simplices": 8321,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 115
+   },
+   {
+    "P": [
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 5,
+    "height>=2": false,
+    "n_simplices": 1217,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_-1(U) by the join formula with (A2)",
+    "|U|": 65
+   },
+   {
+    "P": [
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 6,
+    "height>=2": false,
+    "n_simplices": 278,
+    "two_primes_agree": true,
+    "upper_link_betti": {
+     "2": 1
+    },
+    "upper_link_contractible": false,
+    "via": "Hred_-2(U) by the join formula with (A2)",
+    "|U|": 44
+   },
+   {
+    "P": [
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 3,
+    "height>=2": false,
+    "n_simplices": 68405,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_1(U) by the join formula with (A2)",
+    "|U|": 219
+   },
+   {
+    "P": [
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 4,
+    "height>=2": false,
+    "n_simplices": 10065,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 133
+   },
+   {
+    "P": [
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 5,
+    "height>=2": false,
+    "n_simplices": 1217,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_-1(U) by the join formula with (A2)",
+    "|U|": 65
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 6,
+    "height>=2": false,
+    "n_simplices": 278,
+    "two_primes_agree": true,
+    "upper_link_betti": {
+     "2": 1
+    },
+    "upper_link_contractible": false,
+    "via": "Hred_-2(U) by the join formula with (A2)",
+    "|U|": 44
+   },
+   {
+    "P": [
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      2
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 4,
+    "height>=2": false,
+    "n_simplices": 5211,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 90
+   },
+   {
+    "P": [
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 4,
+    "height>=2": false,
+    "n_simplices": 8321,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 115
+   },
+   {
+    "P": [
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 4,
+    "height>=2": false,
+    "n_simplices": 5211,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 90
+   },
+   {
+    "P": [
+     [
+      0,
+      4
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 3,
+    "height>=2": false,
+    "n_simplices": 33609,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_1(U) by the join formula with (A2)",
+    "|U|": 147
+   },
+   {
+    "P": [
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 3,
+    "height>=2": false,
+    "n_simplices": 100089,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_1(U) by the join formula with (A2)",
+    "|U|": 305
+   },
+   {
+    "P": [
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 4,
+    "height>=2": false,
+    "n_simplices": 15074,
+    "two_primes_agree": true,
+    "upper_link_betti": {
+     "2": 1
+    },
+    "upper_link_contractible": false,
+    "via": "Hred_0(U) by the join formula with (A2)",
+    "|U|": 194
+   },
+   {
+    "P": [
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 3,
+    "height>=2": false,
+    "n_simplices": 33609,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_1(U) by the join formula with (A2)",
+    "|U|": 147
+   },
+   {
+    "P": [
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ]
+    ],
+    "anchor_degree_component_Hred_{n-2}(lk P)": 0,
+    "c": 2,
+    "height>=2": false,
+    "n_simplices": 408755,
+    "two_primes_agree": true,
+    "upper_link_betti": {},
+    "upper_link_contractible": true,
+    "via": "Hred_2(U) by the join formula with (A2)",
+    "|U|": 324
+   }
+  ],
+  "iso_classes": 61,
+  "noncontractible_upper_links": [
+   {
+    "P": [
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "betti": {
+     "2": 1
+    },
+    "c": 4
+   },
+   {
+    "P": [
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ]
+    ],
+    "betti": {
+     "1": 1
+    },
+    "c": 7
+   },
+   {
+    "P": [
+     [
+      1,
+      2
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ]
+    ],
+    "betti": {
+     "0": 1
+    },
+    "c": 8
+   },
+   {
+    "P": [
+     [
+      2,
+      0
+     ],
+     [
+      2,
+      1
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ]
+    ],
+    "betti": {
+     "-1": 1
+    },
+    "c": 9
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ]
+    ],
+    "betti": {
+     "-1": 1
+    },
+    "c": 9
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "betti": {
+     "-1": 1
+    },
+    "c": 9
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "betti": {
+     "0": 1
+    },
+    "c": 8
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "betti": {
+     "1": 1
+    },
+    "c": 7
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "betti": {
+     "0": 3
+    },
+    "c": 8
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "betti": {
+     "1": 1
+    },
+    "c": 7
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "betti": {
+     "-1": 1
+    },
+    "c": 9
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "betti": {
+     "0": 1
+    },
+    "c": 8
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "betti": {
+     "0": 3
+    },
+    "c": 8
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "betti": {
+     "1": 2
+    },
+    "c": 7
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "betti": {
+     "1": 1
+    },
+    "c": 7
+   },
+   {
+    "P": [
+     [
+      0,
+      2
+     ],
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "betti": {
+     "0": 3
+    },
+    "c": 8
+   },
+   {
+    "P": [
+     [
+      1,
+      2
+     ],
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ]
+    ],
+    "betti": {
+     "1": 2
+    },
+    "c": 7
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "betti": {
+     "2": 1
+    },
+    "c": 6
+   },
+   {
+    "P": [
+     [
+      3,
+      0
+     ],
+     [
+      3,
+      1
+     ],
+     [
+      3,
+      2
+     ],
+     [
+      4,
+      0
+     ],
+     [
+      4,
+      1
+     ],
+     [
+      4,
+      2
+     ]
+    ],
+    "betti": {
+     "2": 1
+    },
+    "c": 6
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "betti": {
+     "1": 1
+    },
+    "c": 7
+   },
+   {
+    "P": [
+     [
+      0,
+      3
+     ],
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      2,
+      4
+     ]
+    ],
+    "betti": {
+     "2": 1
+    },
+    "c": 6
+   },
+   {
+    "P": [
+     [
+      0,
+      4
+     ],
+     [
+      1,
+      4
+     ],
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "betti": {
+     "2": 1
+    },
+    "c": 4
+   }
+  ],
+  "over_cap": [
+   {
+    "P": [
+     [
+      3,
+      4
+     ]
+    ],
+    "c": 1,
+    "height>=2": false,
+    "n_simplices": 11345097,
+    "|U|": 1163
+   },
+   {
+    "P": [
+     [
+      4,
+      2
+     ],
+     [
+      4,
+      3
+     ]
+    ],
+    "c": 2,
+    "height>=2": false,
+    "n_simplices": 887425,
+    "|U|": 537
+   },
+   {
+    "P": [
+     [
+      2,
+      4
+     ],
+     [
+      3,
+      4
+     ]
+    ],
+    "c": 2,
+    "height>=2": false,
+    "n_simplices": 887425,
+    "|U|": 537
+   }
+  ],
+  "upper_link_is_NOT_always_contractible": true
+ },
+ "audits": "mg-52c4 / commit cf63bb3 / docs/OneThird-mg52c4-PerPoset-Subposet-Question.md",
+ "independence": "no repo imports; poset enumeration, tc, order complex and reduced-Betti all re-implemented here",
+ "predictions": "docs/OneThird-mge08a-TheoremA-AUDIT-PREDICTIONS.md",
+ "primes": [
+  2147483647,
+  1000003
+ ],
+ "simplex_cap": 1300000,
+ "work_item": "mg-e08a"
+}
