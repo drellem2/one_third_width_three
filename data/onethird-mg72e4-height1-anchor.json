@@ -8298,13 +8298,2149 @@
    ],
    "violating_classes": [],
    "violations": 0
+  },
+  "5": {
+   "iso_classes": 20,
+   "labeled_total": 840,
+   "near_miss_classes": 0,
+   "rows": [
+    {
+     "P": [
+      [
+       4,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 1,
+     "class_size": 20,
+     "n_atoms": 12,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 30,
+     "n_atoms": 10,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 20,
+     "n_atoms": 10,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 5,
+     "n_atoms": 12,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 60,
+     "n_atoms": 7,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 5,
+     "class_size": 60,
+     "n_atoms": 6,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       4,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 10,
+     "n_atoms": 8,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 120,
+     "n_atoms": 7,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 30,
+     "n_atoms": 8,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 5,
+     "class_size": 60,
+     "n_atoms": 6,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 10,
+     "n_atoms": 8,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 60,
+     "n_atoms": 4,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 60,
+     "n_atoms": 7,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 60,
+     "n_atoms": 4,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 60,
+     "n_atoms": 5,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 30,
+     "n_atoms": 10,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       4,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 20,
+     "n_atoms": 10,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       4,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 5,
+     "n_atoms": 12,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       4,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 60,
+     "n_atoms": 5,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       2,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 60,
+     "n_atoms": 6,
+     "needed_degree": 2
+    }
+   ],
+   "violating_classes": [],
+   "violations": 0
+  },
+  "6": {
+   "iso_classes": 55,
+   "labeled_total": 11642,
+   "near_miss_classes": 0,
+   "rows": [
+    {
+     "P": [
+      [
+       2,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 1,
+     "class_size": 30,
+     "n_atoms": 20,
+     "needed_degree": 4
+    },
+    {
+     "P": [
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 60,
+     "n_atoms": 17,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 60,
+     "n_atoms": 16,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 30,
+     "n_atoms": 17,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 6,
+     "n_atoms": 20,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       4,
+       1
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 120,
+     "n_atoms": 13,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 180,
+     "n_atoms": 11,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 120,
+     "n_atoms": 11,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 15,
+     "n_atoms": 14,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       5,
+       0
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 360,
+     "n_atoms": 12,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 360,
+     "n_atoms": 11,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 60,
+     "n_atoms": 13,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 180,
+     "n_atoms": 10,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 180,
+     "n_atoms": 9,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       2,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 9,
+     "class_size": 20,
+     "n_atoms": 12,
+     "needed_degree": -4
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 180,
+     "n_atoms": 8,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 720,
+     "n_atoms": 9,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 180,
+     "n_atoms": 10,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 360,
+     "n_atoms": 6,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       5,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 360,
+     "n_atoms": 7,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 360,
+     "n_atoms": 8,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 180,
+     "n_atoms": 12,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 360,
+     "n_atoms": 8,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       5,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 120,
+     "n_atoms": 10,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       5,
+       2
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 360,
+     "n_atoms": 13,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 90,
+     "n_atoms": 14,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 360,
+     "n_atoms": 11,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 60,
+     "n_atoms": 13,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       5,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 7,
+     "class_size": 120,
+     "n_atoms": 11,
+     "needed_degree": -2
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 8,
+     "class_size": 15,
+     "n_atoms": 14,
+     "needed_degree": -3
+    },
+    {
+     "P": [
+      [
+       2,
+       1
+      ],
+      [
+       2,
+       3
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 360,
+     "n_atoms": 7,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       0
+      ],
+      [
+       3,
+       0
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 180,
+     "n_atoms": 11,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       2
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 180,
+     "n_atoms": 8,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 180,
+     "n_atoms": 8,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       1,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 360,
+     "n_atoms": 9,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       0,
+       5
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 360,
+     "n_atoms": 8,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       1,
+       3
+      ],
+      [
+       4,
+       0
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 720,
+     "n_atoms": 6,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       2,
+       0
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       5,
+       0
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": null,
+     "c": 6,
+     "class_size": 120,
+     "n_atoms": 3,
+     "needed_degree": -1
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       1,
+       5
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 360,
+     "n_atoms": 12,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       1
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 120,
+     "n_atoms": 13,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 360,
+     "n_atoms": 8,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       4,
+       3
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 360,
+     "n_atoms": 9,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       0,
+       3
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 720,
+     "n_atoms": 7,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       3
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 360,
+     "n_atoms": 10,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       3,
+       0
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 90,
+     "n_atoms": 8,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       2
+      ],
+      [
+       4,
+       2
+      ],
+      [
+       5,
+       1
+      ],
+      [
+       5,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 180,
+     "n_atoms": 9,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       4,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 60,
+     "n_atoms": 17,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       1
+      ],
+      [
+       3,
+       1
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 60,
+     "n_atoms": 16,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       1,
+       5
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       5
+      ],
+      [
+       4,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 30,
+     "n_atoms": 17,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       4
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 5,
+     "class_size": 6,
+     "n_atoms": 20,
+     "needed_degree": 0
+    },
+    {
+     "P": [
+      [
+       0,
+       4
+      ],
+      [
+       1,
+       2
+      ],
+      [
+       3,
+       2
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 120,
+     "n_atoms": 10,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       4,
+       1
+      ],
+      [
+       5,
+       2
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 360,
+     "n_atoms": 10,
+     "needed_degree": 2
+    },
+    {
+     "P": [
+      [
+       0,
+       5
+      ],
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       4
+      ],
+      [
+       3,
+       5
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 4,
+     "class_size": 90,
+     "n_atoms": 8,
+     "needed_degree": 1
+    },
+    {
+     "P": [
+      [
+       3,
+       1
+      ],
+      [
+       5,
+       4
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 2,
+     "class_size": 180,
+     "n_atoms": 12,
+     "needed_degree": 3
+    },
+    {
+     "P": [
+      [
+       0,
+       1
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       4,
+       3
+      ]
+     ],
+     "betti_needed": 0,
+     "betti_one_above": 0,
+     "c": 3,
+     "class_size": 120,
+     "n_atoms": 6,
+     "needed_degree": 2
+    }
+   ],
+   "violating_classes": [],
+   "violations": 0
   }
  },
  "negative_controls": {
   "N1_swapped_degree_is_n_minus_c": {
    "claim": "beta~_{n-c}(Gamma) = 0 as well",
    "discriminating": true,
-   "instances": 7,
+   "instances": 59,
    "refuted_on": 3
   },
   "N2_height_ge_2_links": {
@@ -8321,6 +10457,6 @@
    "vertices_with_nonzero_beta3": 38
   }
  },
- "nmax": 4,
+ "nmax": 6,
  "ticket": "mg-72e4"
 }
