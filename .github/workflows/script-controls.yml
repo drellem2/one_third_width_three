@@ -34,6 +34,14 @@ on:
 jobs:
   controls:
     runs-on: ubuntu-latest
+    # mg-75f0 raised this to 20 and then put it back, which is worth one line of
+    # explanation rather than a silent revert.  The raise assumed the mg-5ad1
+    # probe was expensive, on a 2m33s measurement taken while a 25-minute
+    # mutation demonstration was saturating the same host.  Uncontended it is
+    # 30.8 s here, and mg-7db4 measured this whole workflow going 41-64 s ->
+    # 1m12s with both new steps on a hosted runner.  10 minutes was never close
+    # to tight, and a bound loosened on a bad measurement is worse than one
+    # left alone: it stops being a wedge detector.
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
@@ -73,12 +81,55 @@ jobs:
       # leaves the favourable reading at 1), and the identity check now
       # compares lambda_2^BK against its committed reference instead of
       # fetching it and discarding it (a rescaled BK step was invisible to
-      # every other control).  Both repairs are demonstrated to FIRE by
-      # scripts/onethird_mg60d3_gate_mutation_demo.py, which is NOT run here:
-      # it is six full runs of this step (~12 min), far outside the
-      # order-seconds rule at the top of this file.  Run it on demand when the
-      # gate changes.
+      # every other control).
+      #
+      # WIDENED after the mg-5ad1 audit (mg-75f0): the repairs above were
+      # derived FROM the two failures mg-09ea found, so they closed two
+      # instances and not the class.  mg-5ad1 measured the residual -- the
+      # identity check opened the committed mg-8b64 reference row and compared
+      # 4 of its 22 fields -- and beat the repaired gate with two more one-line
+      # mutations.  The identity check now compares the WHOLE reference row (22
+      # of 22, one declared exclusion), and CONTROL E / CONTROL F were added.
+      #
+      # The full source-level mutation demonstrations are NOT run here:
+      # onethird_mg60d3_gate_mutation_demo.py is six runs of this step (~12
+      # min) and onethird_mg75f0_gate_class_closure_demo.py is fourteen (~35
+      # min), both far outside the order-seconds rule at the top of this file.
+      # What IS run here is the next step, which is the part of them that is
+      # fast enough -- see there for why that is not the same as "on demand".
       - name: 'mg-2c34 SD-quant overlap controls (can the instrument fail?)'
         run: |
           pip install --quiet numpy
           python3 scripts/onethird_mg2c34_n7_overlap_test.py --no-sweep
+
+      # mg-75f0 (wiring in the mg-5ad1 audit probe): the standing control on the
+      # step above.  mg-5ad1 finding 2 was that the gate's proof-of-firing has no
+      # owner and no mechanism -- "run it on demand when the gate changes" names
+      # no person and no trigger, and a control that has stopped being able to
+      # fire prints nothing and exits 0, which is indistinguishable from a
+      # control that fired.  This step is the mechanism, and it is cheap enough
+      # to be one.  It checks:
+      #
+      #   A  the mg-60d3 F4 repair is sound in BOTH directions on A_4/A_5/A_6 --
+      #      non-vacuous (dim_E = n-1 > 1), true to < 1e-12 against a 1e-8
+      #      assertion, and not knife-edge in the degeneracy tolerance.  Rebuilt
+      #      from definitions, importing nothing from the corpus.
+      #   B  every field of the committed mg-8b64 reference row is either
+      #      COMPARED by the gate or excluded with a stated reason (22 + 1 of
+      #      23); perturbing ANY of the 22 makes the gate's own predicate fail;
+      #      and a field newly ADDED to the reference row is picked up
+      #      automatically.  This part takes the census FROM THE GATE ITSELF --
+      #      it calls the gate's comparison function rather than keeping a list.
+      #      A hand-maintained census goes wrong, silently, the first time
+      #      someone adds a field, which is this same defect one turn later.
+      #   C  the argmin-ratio frozen-pair selector still reproduces the
+      #      committed frozen_pair at 5/5 posets, and flipping it still moves
+      #      the pair at 5/5 -- so mg-5ad1's M3 remains a real mutation and the
+      #      comparison that catches it remains available.
+      #   D  every gate predicate (CONTROL B, E, F) is handed a row it must
+      #      accept and a row it must REJECT.
+      #
+      # 30.8 s uncontended on the fleet host; mg-7db4 measured ~30 s on a
+      # hosted runner.  Exits non-zero on any failure.
+      - name: 'mg-5ad1 gate blindspot probe (is the gate above still able to fail?)'
+        run: python3 scripts/onethird_mg5ad1_gate_blindspot_probe.py

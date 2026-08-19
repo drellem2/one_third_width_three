@@ -1,5 +1,5 @@
 {
-  "what": "mg-5ad1 independent-audit probe for the mg-60d3 CI-gate repair (af7fc2df) to scripts/onethird_mg2c34_n7_overlap_test.py",
+  "what": "mg-5ad1 independent-audit probe for the mg-60d3 CI-gate repair (af7fc2df) to scripts/onethird_mg2c34_n7_overlap_test.py; extended by mg-75f0 into the standing control that keeps the gate's identity comparison from narrowing again",
   "part_A_control_B_two_sided": {
     "question": "does asserting c_min forbid a case the mathematics permits, and is it non-vacuous?",
     "EIG_TOL": 1e-09,
@@ -40,8 +40,8 @@
         "lambda2_BK": 0.952254248593738,
         "dim_eigenspace": 4,
         "dim_eigenspace_expected": 4,
-        "c_max": 1.0000000000000016,
-        "c_min": 1.0000000000000009,
+        "c_max": 1.0000000000000013,
+        "c_min": 1.0000000000000007,
         "eigenspace_internal_spread": 1.3322676295501878e-15,
         "nearest_excluded_eigenvalue_gap": 0.055078038481326974,
         "gap_over_EIG_TOL": 55078038.48132697,
@@ -49,12 +49,12 @@
           "0": {
             "dim_U": 17,
             "c_max": 1.0000000000000013,
-            "c_min": 0.9999999999999998
+            "c_min": 1.0000000000000002
           },
           "0,1": {
             "dim_U": 13,
-            "c_max": 1.0000000000000009,
-            "c_min": -1.1102230246251607e-16
+            "c_max": 1.000000000000001,
+            "c_min": -1.0988520168067454e-16
           }
         }
       },
@@ -64,43 +64,56 @@
         "num_LE": 720,
         "dim_U": 26,
         "dim_U_expected": 26,
-        "lambda2_BK": 0.9732050807568895,
+        "lambda2_BK": 0.9732050807568882,
         "dim_eigenspace": 5,
         "dim_eigenspace_expected": 5,
-        "c_max": 1.0000000000000016,
-        "c_min": 0.9999999999999962,
-        "eigenspace_internal_spread": 2.4424906541753444e-15,
-        "nearest_excluded_eigenvalue_gap": 0.030478061366691955,
-        "gap_over_EIG_TOL": 30478061.366691954,
+        "c_max": 1.000000000000001,
+        "c_min": 0.9999999999999973,
+        "eigenspace_internal_spread": 2.220446049250313e-15,
+        "nearest_excluded_eigenvalue_gap": 0.030478061366690512,
+        "gap_over_EIG_TOL": 30478061.36669051,
         "U_shrunk": {
           "0": {
             "dim_U": 26,
-            "c_max": 1.0000000000000024,
-            "c_min": 0.9999999999999981
+            "c_max": 1.000000000000001,
+            "c_min": 0.999999999999999
           },
           "0,1": {
             "dim_U": 21,
-            "c_max": 1.0000000000000038,
-            "c_min": 7.098613619934468e-17
+            "c_max": 1.0000000000000024,
+            "c_min": -1.1948870581400904e-62
           }
         }
       }
     ]
   },
   "part_B_reference_field_census": {
-    "predicates": [
-      "match_bk_lambda2",
-      "match_delta",
-      "match_lambda_std",
-      "match_num_LE"
-    ],
-    "reference_fields_compared": [
+    "reference_fields_present": [
+      "bk_gap",
       "bk_lambda2",
       "delta",
+      "frozen_p",
+      "frozen_pair",
+      "frozen_phi_bk",
+      "frozen_phi_t_image",
+      "frozen_ratio",
+      "frozen_sep_k",
       "lambda_std",
-      "num_LE"
+      "max_bias",
+      "min_phi_bk",
+      "min_phi_bk_pair",
+      "minphi_phi_t_image",
+      "n",
+      "name",
+      "num_LE",
+      "num_incomp_pairs",
+      "phi_t_cheeger",
+      "phi_t_min_prefix",
+      "ratio_of_sums",
+      "transport_gap",
+      "width"
     ],
-    "reference_fields_present": [
+    "reference_fields_compared": [
       "bk_gap",
       "bk_lambda2",
       "delta",
@@ -124,26 +137,37 @@
       "transport_gap",
       "width"
     ],
-    "reference_fields_uncompared": [
-      "bk_gap",
-      "frozen_p",
-      "frozen_pair",
-      "frozen_phi_bk",
-      "frozen_phi_t_image",
-      "frozen_ratio",
-      "frozen_sep_k",
-      "max_bias",
-      "min_phi_bk",
-      "min_phi_bk_pair",
-      "minphi_phi_t_image",
-      "n",
-      "num_incomp_pairs",
-      "phi_t_cheeger",
-      "phi_t_min_prefix",
-      "ratio_of_sums",
-      "transport_gap",
-      "width"
-    ]
+    "reference_fields_excluded": {
+      "name": "the lookup key itself.  The row is FETCHED BY this value (`ref_rows[name]`), so comparing it is a tautology that cannot fail.  This is the only exclusion."
+    },
+    "reference_fields_uncompared": [],
+    "per_field_firing": {
+      "bk_gap": true,
+      "bk_lambda2": true,
+      "delta": true,
+      "frozen_p": true,
+      "frozen_pair": true,
+      "frozen_phi_bk": true,
+      "frozen_phi_t_image": true,
+      "frozen_ratio": true,
+      "frozen_sep_k": true,
+      "lambda_std": true,
+      "max_bias": true,
+      "min_phi_bk": true,
+      "min_phi_bk_pair": true,
+      "minphi_phi_t_image": true,
+      "n": true,
+      "num_LE": true,
+      "num_incomp_pairs": true,
+      "phi_t_cheeger": true,
+      "phi_t_min_prefix": true,
+      "ratio_of_sums": true,
+      "transport_gap": true,
+      "width": true
+    },
+    "fields_that_fire": 22,
+    "anti_drift_canary_compared": true,
+    "anti_drift_canary_fails": true
   },
   "part_C_frozen_pair_selector": {
     "question": "is the F3 shape -- a committed reference value fetched/available and never compared -- still live?",
@@ -242,6 +266,91 @@
         "argmax_ratio": 0.2604166666666667,
         "reproduces_committed": true,
         "flip_moves_the_pair": true
+      }
+    ]
+  },
+  "part_D_predicate_firing": {
+    "question": "can each of the gate's predicates FAIL at all?",
+    "rows": [
+      {
+        "predicate": "_antichain_row_ok",
+        "label": "CONTROL B",
+        "must_accept": true,
+        "accepted": true,
+        "PASS": true,
+        "why": "the known answer on the antichain"
+      },
+      {
+        "predicate": "_antichain_row_ok",
+        "label": "CONTROL B / c_max",
+        "must_accept": false,
+        "accepted": false,
+        "PASS": true,
+        "why": "favourable reading broken"
+      },
+      {
+        "predicate": "_antichain_row_ok",
+        "label": "CONTROL B / c_min (mg-09ea F4)",
+        "must_accept": false,
+        "accepted": false,
+        "PASS": true,
+        "why": "M2's signature: c_max survives a shrink of U, c_min does not"
+      },
+      {
+        "predicate": "_antichain_row_ok",
+        "label": "CONTROL B / dim U (mg-5ad1 M4)",
+        "must_accept": false,
+        "accepted": false,
+        "PASS": true,
+        "why": "M4's signature: the rank filter admits null directions, so U inflates to n^2 and both readings still say 1"
+      },
+      {
+        "predicate": "_projector_row_ok",
+        "label": "CONTROL E",
+        "must_accept": true,
+        "accepted": true,
+        "PASS": true,
+        "why": "dim U inside its structural bound and proper"
+      },
+      {
+        "predicate": "_projector_row_ok",
+        "label": "CONTROL E / bound (mg-5ad1 M4)",
+        "must_accept": false,
+        "accepted": false,
+        "PASS": true,
+        "why": "dim U = n^2 > (n-1)^2+1 is not a rank the one-particle span can have"
+      },
+      {
+        "predicate": "_projector_row_ok",
+        "label": "CONTROL E / vacuity (mg-5ad1 M4)",
+        "must_accept": false,
+        "accepted": false,
+        "PASS": true,
+        "why": "U is the whole space, so c = null = 1 and the measurement is vacuous by sec 2's own criterion"
+      },
+      {
+        "predicate": "_two_sided_row_ok",
+        "label": "CONTROL F",
+        "must_accept": true,
+        "accepted": true,
+        "PASS": true,
+        "why": "degenerate lambda_2 with a reading-independent c"
+      },
+      {
+        "predicate": "_two_sided_row_ok",
+        "label": "CONTROL F / split readings",
+        "must_accept": false,
+        "accepted": false,
+        "PASS": true,
+        "why": "the reported c is reading-dependent"
+      },
+      {
+        "predicate": "_two_sided_row_ok",
+        "label": "CONTROL F / coverage gone",
+        "must_accept": false,
+        "accepted": false,
+        "PASS": true,
+        "why": "lambda_2 simple, so this control would be vacuous -- the state mg-5ad1 finding 4 found the real-data two-sided check in"
       }
     ]
   },

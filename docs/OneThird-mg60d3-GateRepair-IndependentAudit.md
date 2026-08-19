@@ -432,6 +432,20 @@ bare `python3` on this host has no numpy.
 
 ## §10 — Findings ledger
 
+> **[DISPOSITION, 2026-07-30 (mg-75f0) — `docs/OneThird-mg75f0-GateClassClosure.md`.]** Findings **1**,
+> **3** and **4** are closed; finding **2** is closed for its cheap half only and its expensive half is
+> assigned. Nothing in this audit was contradicted; the repair mg-60d3 made and ledger claim 27 both
+> stand as this audit records them.
+>
+> | # | disposition |
+> |---|---|
+> | **1** | **CLOSED.** The identity check now compares the **whole** committed row — 22 of 23 fields, one exclusion (`name`) with its reason in the source — by iterating the reference row rather than a conjunction, so a field *added* to that row is compared automatically. `dim U`'s rank is the one surface that widening does not reach, so **CONTROL E** was added for it. **Acceptance was not M3/M4**: three further one-line mutations that neither mg-60d3 nor this audit used were run, and all three were invisible to the repaired gate (exit 0) and are fatal to the widened one (exit 1). |
+> | **2** | **CLOSED for the ~30 s half**: this audit's own probe (`scripts/onethird_mg5ad1_gate_blindspot_probe.py`) is now a step in `script-controls.yml`, with a new part D that exercises every gate predicate for firing in milliseconds. **STILL OPEN for the expensive half** — the ~12 min mg-60d3 demo, plus mg-75f0's own ~25 min class-closure demo, are run by nothing. That trigger is **mg-7db4's**, which was in flight and unmerged; mailed. |
+> | **3** | **FIXED, docstring only, no behaviour change.** `_antichain_row_ok` now cites Aldous/CLR for the gap **eigenvalue** alone and cites the eigenspace containment as a **verified property of `A₄/A₅/A₆/A₇`**, with the consequence stated: if it ever fails at larger `n`, narrow the control's *population*, do not loosen the *assertion*. |
+> | **4** | **CLOSED as a coverage gap.** **CONTROL F** measures `enum-n7-#52` and `#88` — the committed sweep's only posets with `dim_E > 1` — and asserts `dim_E > 1` as well as `\|c_max − c_min\| ≤ 1e-9`, so the coverage cannot quietly evaporate. It is real, not decorative: under M2 the two readings split by `7.58e-02` and `4.30e-02` at those posets. |
+> | **5, 6, 7** | Untouched. §7's *"three" → "five"* correction landed with this audit; the identity population is now **seven**. Finding 6 (the signed-zero print) and finding 7 (`onethird_program` has no CI) are out of mg-75f0's scope. |
+
+
 | # | finding | severity | site |
 |---|---|---|---|
 | **1** | **The repair is a patch on two instances, not a fix for the class.** M3 (frozen-pair selector, one character) and M4 (`projector_U` rank filter, one expression) both pass the repaired gate with *"All controls and identity checks PASSED."* M3 is F3 verbatim: `frozen_pair` is in the same committed reference row the gate has open, and **4 of 22** fields in that row are compared | **RED** | §3 |
