@@ -1,8 +1,10 @@
 #!/bin/sh
 # mg-3067 -- THE LOCAL PRE-SUBMIT GATE.  Run this before `pogo refinery submit`.
 #
-#     ./presubmit.sh            run every control script-controls.yml runs
+#     ./presubmit.sh            run the controls THIS BRANCH CAN AFFECT
+#     ./presubmit.sh --all      run every control script-controls.yml runs
 #     ./presubmit.sh --list     print the plan without running it
+#     ./presubmit.sh --why      print what would run on this branch, and why
 #     ./presubmit.sh --plan-check   run only the plan-coverage control
 #
 # ============================ WHAT IT IS FOR =================================
