@@ -74,6 +74,11 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SPREAD = "docs/OneThird-L1b-Spread-Locality.md"
 SELF_DOC = "OneThird-mg069f-BodyStrikePopulation-IndependentAudit.md"
 
+# Assertion failures collected outside the ledger's own live/baseline logic --
+# the instrument standard (part A's tally, part E's detectability matrix).  Any
+# entry here fails the run; see main().
+FAILURES = []
+
 
 def load_control():
     spec = importlib.util.spec_from_file_location(
@@ -136,6 +141,86 @@ LEDGER = [
      r"sweep over all posets", "mg-8a71 F2", "gone",
      "rewrite-in-place (mg-069f, F2)"),
 ]
+
+# ------------------------------------------------- THE FIVE INSTRUMENTS (G4) ---
+# mg-0242 finding G4, ticketed and closed as mg-1d03.
+#
+# THE FINDING.  Claims proved false in this arc were remediated FIVE different
+# ways, and only the first was ever named as the standard.  The standard as
+# stated -- "strike at the site; an annotation leaves the wrong claim in the
+# body" -- does not distinguish the other four, so a worker who rewrote in place
+# or annotated was not violating a rule: THE RULE DID NOT COVER WHAT THEY DID.
+# That is why C9 could be written in good faith by an author applying the rule.
+#
+# G4 IS A FINDING ABOUT A MISSING STANDARD, NOT ABOUT FIVE MISTAKES.  Four of the
+# five uses were sound; they were simply unnamed.  The remedy is to name all five
+# and say when each is acceptable -- NOT to mandate strike-at-site everywhere.
+#
+# `detects` names the control that can tell this instrument apart FROM THE
+# OTHERS, and it is the uncomfortable half: only two of the five are separable by
+# any control in CI.  See part (E), which measures this rather than asserting it.
+INSTRUMENTS = {
+    "strike-at-site": dict(
+        rank="PREFERRED",
+        record="the wrong text stays in place, visibly wrong, inside ~~ markup",
+        acceptable=(
+            "always, and it is the default.  Use it whenever the false text is a "
+            "SENTENCE or CLAUSE a reader could otherwise still act on: the reader "
+            "sees what was believed and that it is no longer believed, at the one "
+            "place they would look."),
+        detects="live-claim control — only as ABSENCE FROM LIVE TEXT, which the "
+                "next three produce too",
+        observed="not live, and the text survives inside a ~~struck~~ span"),
+    "rewrite + annotation": dict(
+        rank="acceptable",
+        record="the text is replaced; an ANNOTATION block quotes what was there",
+        acceptable=(
+            "when the false text cannot simply be struck because correct text "
+            "must stand in the same position -- a table cell, a population "
+            "clause, a figure inside a sentence that is otherwise true.  Striking "
+            "a table cell and writing the replacement beside it makes the table "
+            "unreadable; the annotation carries the record instead.  This is what "
+            "mg-1d03 itself used on both G3 figures."),
+        detects="NOTHING — indistinguishable from strike-at-site to every control "
+                "in CI",
+        observed="not live; the text survives inside an ANNOTATION/RE-DERIVATION "
+                 "block or a ~~ span"),
+    "rewrite-in-place": dict(
+        rank="acceptable ONLY under the condition below",
+        record="NONE — the corpus keeps no trace of what the text said",
+        acceptable=(
+            "only when the false text is not itself a finding: a DESCRIPTION that "
+            "was wrong, where an audit or closeout elsewhere already carries the "
+            "record.  It is NOT acceptable for a claim this arc proved false, "
+            "because then the corpus's only record of the refutation is the "
+            "refutation, and the thing refuted is gone.  When in doubt, this is "
+            "the instrument to escalate to 'rewrite + annotation'."),
+        detects="NOTHING — indistinguishable from strike-at-site to every control "
+                "in CI",
+        observed="not live, and the text is absent from the file entirely"),
+    "DELETION declared as a strike": dict(
+        rank="NOT ACCEPTABLE — this is the defect, not an instrument",
+        record="claims to keep one and does not",
+        acceptable=(
+            "never.  A block that says text 'is struck' and carries no ~~ markup "
+            "asserts a record it did not make.  This is mg-0242 finding G1 (C9), "
+            "closed by mg-cd04 at the site."),
+        detects="mg-cd04 declared-strike control — CORPUS-WIDE, and this is the "
+                "ONE instrument any control can name",
+        observed="declaration present, markup absent"),
+    "none": dict(
+        rank="acceptable ONLY when routed",
+        record="the claim stays live and is flagged",
+        acceptable=(
+            "when the disposition is not the worker's to make -- an adjudication "
+            "between two prior findings, as with C5.  Acceptable only if it is "
+            "FLAGGED and ROUTED to a named owner and recorded in a control "
+            "baseline, so 'not acted on' cannot decay into 'forgotten'."),
+        detects="live-claim control, but ONLY if a signature exists for the claim "
+                "-- C5 has none there and is reached only by this ledger's "
+                "EXTRA_SIGNATURES",
+        observed="live"),
+}
 
 # BASELINE — the ledger entries that ARE live in body text at bb1cb9b, recorded
 # explicitly in the style mg-8a71 used for its own control.  A THIRD live entry
@@ -215,12 +300,30 @@ def part_a(tree=None):
     print(f"  STILL LIVE                                      : {live}"
           f"   ({', '.join(c.split()[0] for c in live_ids) or '—'})")
     print()
-    print("  BY INSTRUMENT (the repair used three, and named only one):")
     kinds = {}
     for cid, f, pat, by, expect, instrument in LEDGER:
         kinds[instrument.split(" (")[0]] = kinds.get(instrument.split(" (")[0], 0) + 1
+    # This line read "the repair used three, and named only one" until mg-1d03,
+    # over a tally that has always printed FIVE keys -- a named-vs-counted error
+    # inside the line whose job is to report the count.  It is COMPUTED now.
+    print(f"  BY INSTRUMENT — the arc used {len(kinds)}, and named 1 as the"
+          f" standard (mg-0242 finding G4, closed by mg-1d03):")
     for k, v in sorted(kinds.items(), key=lambda kv: -kv[1]):
-        print(f"      {v:>2}  {k}")
+        spec = INSTRUMENTS.get(k)
+        print(f"      {v:>2}  {k:<30} {spec['rank'] if spec else '?? NOT IN THE NAMED STANDARD'}")
+    # P12 / the partition.  A sixth instrument appearing, or the counts ceasing
+    # to sum to the ledger, fails the run rather than being narrated.
+    unnamed = sorted(set(kinds) - set(INSTRUMENTS))
+    if unnamed:
+        FAILURES.append(
+            f"ledger uses instrument(s) the standard does not name: {unnamed}. "
+            f"Add them to INSTRUMENTS with a rank and an acceptability rule, or "
+            f"use one that is named — an unnamed instrument is finding G4 again.")
+    if sum(kinds.values()) != total:
+        FAILURES.append(
+            f"instrument tally {sum(kinds.values())} != {total} ledger entries")
+    print(f"      {'':>2}  {'':<30} population: the {total} ledger entries;"
+          f" grain: one instrument per entry; sum {sum(kinds.values())}")
     gone_from_baseline = KNOWN_LIVE - set(live_ids)
     return total, struck, live, unexpected, gone_from_baseline, live_ids
 
@@ -365,6 +468,114 @@ def part_c(tmpdir):
     return rc1, rc2, rc3, (start + 1, end)
 
 
+# ------------------------------------------------------------------ part E ---
+# mg-0242 finding G4, closed by mg-1d03.  The five instruments are NAMED in
+# INSTRUMENTS above; this part MEASURES which of them any control can tell apart.
+#
+# The measurement is the point.  "Only strike-at-site is named as the standard"
+# is a statement about the rule; "four of the five are unpoliced by construction"
+# is a statement about the instruments, and it is the one that decides how a
+# green run should be read.  It is measured here rather than narrated, by
+# remediating ONE refuted sentence five different ways in a copy of the
+# controlled document and running both corpus controls over each.
+
+
+def load_declared_strike_control():
+    spec = importlib.util.spec_from_file_location(
+        "dsc", ROOT / "scripts/onethird_mgcd04_declared_strike_control.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def instrument_forms():
+    """The same refuted sentence, remediated one way per instrument.
+
+    Population: the five instruments of INSTRUMENTS.  Grain: one mutant document
+    per instrument, each differing from the controlled document in exactly the
+    lines listed here.
+    """
+    q = f'"{MUTANT_SENTENCE}"'
+    return [
+        ("strike-at-site", ["", f"~~{MUTANT_SENTENCE}~~"]),
+        ("rewrite + annotation",
+         ["", "> **ANNOTATION (mutant).** The claim below was refuted and the",
+          "> sentence rewritten; the original read:",
+          ">", f"> {q}"]),
+        # the true replacement text leaves NO trace of the claim: the mutant is
+        # the unmodified document, and that is exactly what makes it invisible.
+        ("rewrite-in-place", []),
+        ("DELETION declared as a strike",
+         ["", "> **POPULATION CORRECTION (mutant).** The sentence that followed —",
+          f"> {q} — is struck with it."]),
+        ("none", ["", MUTANT_SENTENCE]),
+    ]
+
+
+def part_e(tmpdir):
+    print("=" * 96)
+    print("(E) INSTRUMENT DETECTABILITY — which of the five can any control see?")
+    print("=" * 96)
+    dsc = load_declared_strike_control()
+    base = (ROOT / SPREAD).read_text(encoding="utf-8").split("\n")
+    print(f"  method: one refuted sentence, remediated five ways in a copy of")
+    print(f"          {SPREAD},")
+    print("          then both corpus controls run over each copy.")
+    print("          population: the 5 named instruments; grain: one mutant per")
+    print("          instrument, 2 control verdicts per mutant.")
+    print()
+    # MEASURE FIRST, JUDGE AFTER.  A first draft of this table decided each row's
+    # verdict against the rows already seen, so whichever instrument of an
+    # indistinguishable set ran first was labelled SEPARATED -- an order-dependent
+    # readout, in a part whose subject is readouts that mislead.  The grouping is
+    # computed from the complete matrix now, and the column is read off it.
+    seen = {}
+    for name, extra in instrument_forms():
+        text = "\n".join(base + extra)
+        p = tmpdir / f"instr_{name.replace(' ', '_').replace('+', 'and')}.md"
+        p.write_text(text, encoding="utf-8")
+        lc_rc = run_control(p)
+        ds_hits, _near, _cov = dsc.scan_text(p.name, text)
+        seen[name] = (lc_rc, len(ds_hits))
+
+    # Group the instruments by the verdict PAIR they produce.  Any group of size
+    # > 1 is a set of instruments no control in CI can tell apart -- so a green
+    # run cannot mean "the standard was followed".
+    groups = {}
+    for name, sig in seen.items():
+        groups.setdefault(sig, []).append(name)
+
+    print(f"  {'instrument':<30} {'live-claim':<12} {'declared-strike':<16} verdict")
+    print(f"  {'-'*30} {'-'*12} {'-'*16} {'-'*30}")
+    for name, _extra in instrument_forms():
+        lc_rc, n_hits = seen[name]
+        peers = [g for g in groups[(lc_rc, n_hits)] if g != name]
+        verdict = ("separable" if not peers
+                   else "INDISTINGUISHABLE from " + ", ".join(peers))
+        print(f"  {name:<30} exit {lc_rc:<7} {n_hits:<16} {verdict}")
+    print()
+    blind = [g for g in groups.values() if len(g) > 1]
+    for sig, names in sorted(groups.items()):
+        tag = "INDISTINGUISHABLE" if len(names) > 1 else "separable"
+        print(f"  (live-claim exit {sig[0]}, declared-strike hits {sig[1]}):"
+              f" {tag} — {', '.join(names)}")
+    print()
+    print("  WHAT THIS MEANS FOR A GREEN RUN.  The controls answer 'is this claim")
+    print("  asserted in live body text' and 'does a block promise a strike it did")
+    print("  not make'.  Neither asks WHICH instrument was used, so instruments")
+    print("  that all end with the claim out of live text are one thing to them.")
+    print("  Green therefore means NO UN-REMEDIATED CLAIM, never NO UNRECORDED")
+    print("  REMEDIATION.  The instrument column of part (A) is the only record")
+    print("  that distinguishes them, and it is maintained by hand.")
+    if not blind:
+        FAILURES.append(
+            "part (E) found every instrument separable — that contradicts G4 as "
+            "filed.  Either a control gained discrimination (good: update "
+            "INSTRUMENTS[...]['detects'] and this check) or the mutants stopped "
+            "exercising the instruments they name.")
+    return seen, groups
+
+
 # ------------------------------------------------------------------ part D ---
 
 
@@ -442,6 +653,8 @@ def main():
     print()
     with tempfile.TemporaryDirectory(prefix="mg0242-mutants-") as td:
         rc1, rc2, rc3, span = part_c(pathlib.Path(td))
+        print()
+        seen, groups = part_e(pathlib.Path(td))
     part_d(None)
 
     print()
@@ -457,7 +670,18 @@ def main():
           f"({'the exemption is UNBOUNDED' if rc1 == 0 else 'bounded'});"
           f" paired live-paragraph mutant: exit {rc2};"
           f" strike-block tail mutant: exit {rc3}")
+    blind = max((len(g) for g in groups.values()), default=0)
+    print(f"  remediation instruments in use: {len(INSTRUMENTS)}; named as the"
+          f" standard: 1 (strike-at-site).")
+    print(f"  largest set of instruments NO control in CI can tell apart: {blind}."
+          f"  A green run below means NO UN-REMEDIATED CLAIM.  It does not, and")
+    print("  cannot, mean every remediation used the preferred instrument.")
     rc = 0
+    if FAILURES:
+        print("\nRESULT: FAIL — the remediation standard is violated:")
+        for f in FAILURES:
+            print(f"          {f}")
+        rc = 1
     if unexpected:
         print("\nRESULT: FAIL — a refuted claim is live in body text and is not in")
         print("        the baseline.  Either strike it or record why it stands.")

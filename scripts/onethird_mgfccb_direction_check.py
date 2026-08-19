@@ -39,7 +39,9 @@ element triples -- NOT over the 4 469 labelled posets on those ground sets
 still EXHAUSTIVE for these questions, and that is the stronger claim: b_x and m_x
 are relabelling-invariant, so this family is a complete set of representatives of
 (P, e) pairs up to isomorphism.  Earlier text here and in the CI comment said
-"ALL posets", which named a population 6.9x larger than the one swept.  The
+"ALL posets", which named a population 11.06x larger than the one swept AT POSET
+GRAIN -- 4 469 against 404.  (That figure read "6.9x" here until 2026-08-05,
+mg-1d03: 6.9x is the PAIR and TRIPLE ratio, mg-0242 finding G3.)  The
 genuinely all-labelled sweep (43 842 pairs, 218 166 triples, same verdict) is
 `scripts/onethird_mg8a71_audit_instrument.py`.
 
@@ -166,7 +168,20 @@ def posets_with_identity_extension(n):
         3 |            7  |                      19
         4 |           40  |                     219
         5 |          357  |                    4231
-      tot |          404  |                    4469          (6.9x larger)
+      tot |          404  |                    4469          (11.06x larger)
+
+    THE RATIO IS GRAIN-DEPENDENT AND THE GRAIN OF THIS ROW IS *POSETS*.  This row
+    read "(6.9x larger)" until 2026-08-05 (mg-1d03, closing mg-0242 finding G3).
+    6.9x is a real number and it belongs to the two adjacent grains, which is why
+    it read as plausible on a poset row:
+
+        POSETS   4 469 /   404 = 11.06x   <- this table
+        PAIRS   43 842 / 6 385 =  6.87x
+        TRIPLES 218 166/ 31 625 =  6.90x
+
+    Every figure above is machine-checked against the generators by
+    scripts/onethird_mg0242_population_census.py part (6) -- the per-n rows too,
+    not only the totals row that was wrong.
 
     WHY IT IS STILL THE RIGHT FAMILY *HERE*, and exactly when it is not.
     `b_x` and `m_x` are invariant under simultaneous relabelling of the poset and
@@ -175,7 +190,8 @@ def posets_with_identity_extension(n):
     LABEL-INDEPENDENT property this family is a complete set of representatives
     of (P, e) pairs up to isomorphism, and a sweep over it is exhaustive -- the
     stronger statement, not a weaker one.  For a LABEL-DEPENDENT property it is
-    not: it would silently under-sweep by 6.9x.  Use `poset_family(n,
+    not: it would silently under-sweep by 11.06x at POSET grain (6.90x if the
+    property is counted per element triple).  Use `poset_family(n,
     label_dependent=...)` rather than calling either generator directly, so that
     every call site has to state which case it is in.
     """
@@ -215,8 +231,9 @@ def poset_family(n, *, label_dependent):
     """The correct poset population for a property, given its label-dependence.
 
     Callers must state whether the property under test is label-dependent; the
-    generator is chosen accordingly.  This exists so that the 6.9x gap between
-    the two families can never again be crossed silently (mg-8a71 finding F2).
+    generator is chosen accordingly.  This exists so that the 11.06x gap between
+    the two families (404 vs 4 469 POSETS) can never again be crossed silently
+    (mg-8a71 finding F2).
     """
     if label_dependent:
         return all_labelled_posets(n)

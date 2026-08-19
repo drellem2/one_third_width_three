@@ -365,6 +365,21 @@ def main():
     print("        as outstanding (§3.2's 'Equivalently', §5 rec 2's converse) were")
     print("        struck at the site by mg-069f; §2.3's struck sentence has not")
     print("        returned to live body text.")
+    print()
+    print("WHAT THIS GREEN DOES NOT SAY (mg-0242 finding G4, closed by mg-1d03).")
+    print("        Five remediation instruments are in use in this arc —")
+    print("        strike-at-site (the standard), rewrite + annotation,")
+    print("        rewrite-in-place, deletion, and none-with-a-routing.  THIS")
+    print("        CONTROL CANNOT TELL THE FIRST THREE APART: it asks only whether")
+    print("        a refuted claim is asserted in live text, and strike, rewrite")
+    print("        and rewrite-with-annotation all end with it not asserted.")
+    print("        So PASS means NO UN-REMEDIATED CLAIM.  It does not mean 'every")
+    print("        remediation used the standard', and it does not mean 'the")
+    print("        corpus kept a record of what was there' — rewrite-in-place")
+    print("        keeps none, and is invisible here.")
+    print("        The standard is named in full in")
+    print("        scripts/onethird_mg0242_struck_vs_refuted.py INSTRUMENTS;")
+    print("        its part (E) measures this blind spot rather than asserting it.")
     return 0
 
 

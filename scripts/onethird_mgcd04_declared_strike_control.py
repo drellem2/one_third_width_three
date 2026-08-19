@@ -302,6 +302,17 @@ def main():
     print("        sentence struck backs the declaration with ~~ markup, except the")
     print("        baselined quotations inside the audit that found the defect.")
     print("        mg-0242 finding G1 is closed at the site AND at the population.")
+    print()
+    print("WHAT THIS GREEN DOES NOT SAY (mg-0242 finding G4, closed by mg-1d03).")
+    print("        This control sees exactly ONE of the arc's five remediation")
+    print("        instruments: 'deletion DECLARED as a strike'.  It is blind by")
+    print("        construction to the other four, and deliberately so — it checks")
+    print("        a STRUCTURE (a promise backed by markup), and a rewrite, an")
+    print("        annotation or a silent deletion promises nothing, so there is")
+    print("        nothing here for it to check.  PASS therefore means NO UNMADE")
+    print("        DECLARED STRIKE.  It says nothing at all about whether a claim")
+    print("        was remediated, or by which instrument.  The standard is named")
+    print("        in scripts/onethird_mg0242_struck_vs_refuted.py INSTRUMENTS.")
     return 0
 
 

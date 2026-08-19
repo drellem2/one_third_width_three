@@ -221,7 +221,9 @@ jobs:
       # mg-8a71 (independent audit of the mg-fccb repair): the same direction on
       # the genuinely all-labelled population -- 4 469 posets on n = 3,4,5,
       # 43 842 (poset, reference-order) pairs, 218 166 element triples.  This is
-      # 6.9x the family the step above sweeps.  That gap is not a defect in the
+      # 11.06x the family the step above sweeps AT POSET GRAIN (404 -> 4 469);
+      # 6.87x over pairs and 6.90x over triples.  The figure here read "6.9x"
+      # against a poset count until mg-1d03 (mg-0242 G3).  That gap is not a defect in the
       # step above (its family is a complete set of representatives up to
       # isomorphism, and b_x/m_x are relabelling-invariant) -- it was a defect in
       # how both were DESCRIBED, which mg-069f corrected at every site.  The step
@@ -336,12 +338,21 @@ jobs:
       # construction, 9.0% on the labelled one) and confirms it sweeps all
       # labellings when told to and REFUSES (TypeError) when not told.
       #
-      # It carries a BASELINE of two doc-level NAME-vs-COUNT gaps found by this
-      # audit and left for pm-onethird: the closeout's §6.1 table says the
+      # Its BASELINE is now EMPTY (mg-1d03).  It held mg-0242 finding G3's two
+      # doc-level NAME-vs-COUNT gaps: the closeout's §6.1 table said the
       # live-claim control sweeps "537/537 lines" (it sweeps 539), and the
-      # direction check's docstring labels the 404 -> 4 469 POSET row "6.9x
-      # larger" (it is 11.06x; 6.9x is the PAIR and TRIPLE ratio).  A baseline gap
-      # closing fails the step, so repairing one forces a re-baseline.
+      # direction check's docstring labelled the 404 -> 4 469 POSET row "6.9x
+      # larger" (it is 11.06x; 6.9x is the PAIR and TRIPLE ratio -- a real number
+      # from an adjacent grain, which is why it read as plausible).  Both are
+      # corrected at the site; the re-baseline gate fired on the correction, as
+      # built, and the keys were removed rather than left to pass silently.  Both
+      # comparisons are plain assertions from here.
+      #
+      # mg-1d03 also widened it from the two rows that were wrong to EVERY row of
+      # BOTH tables: part (5b) parses closeout §6.1 rows 1-2 out of the markdown
+      # and part (6) parses the docstring's per-n rows, each figure compared
+      # against a count obtained by CALLING the generator.  A table that got its
+      # own row wrong had not earned trust on its neighbours.
       # Demonstrated against a commit where F2 is still present:
       #   python3 scripts/onethird_mg0242_population_census.py --demonstrate 2697c07
       #     -> all_posets(), docstring "All posets on n labelled elements", 404
@@ -376,6 +387,24 @@ jobs:
       # RE-DERIVATION block, quoting nothing, inside the G2 blind spot.  With the
       # exemption bounded the same ledger sees it.  The drift reading -- the
       # repair working -- holds and is now computed rather than narrated.)
+      # mg-1d03 added part (E) and the INSTRUMENTS standard, closing mg-0242
+      # finding G4.  Claims proved false in this arc were remediated FIVE ways --
+      # strike-at-site x4, rewrite-in-place x2, rewrite+annotation x2, deletion
+      # declared as a strike x1, none-routed x1 -- and only strike-at-site was
+      # ever named as the standard, which is why C9 could be written in good
+      # faith: the rule did not cover what its author did.  All five are named
+      # now, each with a rank and an acceptability rule, and part (A) FAILS if a
+      # ledger entry uses a sixth.
+      #
+      # Part (E) then MEASURES which of the five any control can see, by
+      # remediating one refuted sentence five ways and running both corpus
+      # controls over each copy.  The result is the reason the two steps above
+      # print a "what this green does not say" paragraph: strike-at-site,
+      # rewrite+annotation and rewrite-in-place are INDISTINGUISHABLE to every
+      # control in CI.  A green live-claim run means NO UN-REMEDIATED CLAIM; it
+      # cannot mean NO UNRECORDED REMEDIATION, and it was being read as the
+      # latter.  Part (E) fails if that blind spot ever silently disappears --
+      # gaining discrimination is good and must be recorded, not absorbed.
       - name: 'mg-0242 struck-vs-refuted ledger (is every refuted claim gone from the body?)'
         run: python3 scripts/onethird_mg0242_struck_vs_refuted.py
 

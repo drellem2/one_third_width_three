@@ -2,9 +2,13 @@
 """mg-0242 — census of every poset population the corpus's controls NAME.
 
 WHY THIS EXISTS.  mg-8a71 finding F2 was that a control NAMED 4 469 labelled
-posets and SWEPT 404 -- a 6.9x gap, invisible because nobody had called the
-helper and counted; the name and the docstring were read instead.  mg-069f fixed
-that gap.  This instrument is the audit of the fix, and it obeys the same rule
+posets and SWEPT 404 -- an 11.06x gap AT POSET GRAIN, invisible because nobody
+had called the helper and counted; the name and the docstring were read instead.
+mg-069f fixed that gap.  (The ratio is grain-dependent and this is the whole of
+mg-0242 finding G3: 4 469/404 = 11.06x over POSETS, 43 842/6 385 = 6.87x over
+(poset, reference-order) PAIRS, 218 166/31 625 = 6.90x over element TRIPLES.  A
+figure quoted without its grain is not checkable, and "6.9x" attached to a poset
+count is a real number read off the wrong row.)  This instrument is the audit of the fix, and it obeys the same rule
 that produced the finding: for every population a control names, CALL the helper
 and COUNT what it enumerates.  No name is trusted, no docstring is trusted, and
 the two generators of the "same" population are checked against each other
@@ -43,6 +47,17 @@ WHAT IT DOES, in five parts:
       line count.  This runs its scanner and compares NAMED against SWEPT -- the
       F2 test applied to the script that F2's fix produced.
 
+  (5b) EVERY OTHER ROW OF THE SAME TABLE (mg-1d03, mg-0242 G3).  Closeout §6.1 is
+      the table whose entire purpose is to report NAMED vs SWEPT, and one of its
+      three rows was itself wrong.  A table that got its own row wrong has not
+      earned trust on its neighbours, so the OTHER two rows are now PARSED out of
+      the markdown and each figure compared against the count obtained by calling
+      the helper -- not against the figure printed elsewhere in this script.
+
+  (6) THE RATIO ON THE DOCSTRING'S POSET ROW, AND EVERY OTHER ROW OF THAT TABLE
+      TOO (mg-1d03).  Same rule: the totals row was wrong, so the per-n rows are
+      parsed and counted rather than read.
+
 Exits non-zero if any named population differs from the population enumerated.
 
 Run:  python3 scripts/onethird_mg0242_population_census.py
@@ -65,15 +80,22 @@ NS = (3, 4, 5)
 # passing silently.  Adding to this set is how a future reader would tolerate a
 # population that is named wrongly; so don't, without a finding that says why.
 #
-#   G1  docs/OneThird-mg8a71-VerdictRepairs-Closeout.md §6.1 states the
+#
+# BASELINE: EMPTY, as of 2026-08-05 (mg-1d03), and the emptying is the point.
+# It held mg-0242 finding G3's two doc-level gaps, left for pm-onethird:
+#
+#   G3a docs/OneThird-mg8a71-VerdictRepairs-Closeout.md §6.1 stated the
 #       live-claim control sweeps "537/537 lines"; it sweeps 539.
-#   G2  scripts/onethird_mgfccb_direction_check.py's docstring table labels the
+#   G3b scripts/onethird_mgfccb_direction_check.py's docstring table labelled the
 #       404 -> 4 469 POSET row "(6.9x larger)".  4 469/404 = 11.06x.  6.9x is the
 #       ratio of PAIRS (6.87x) and TRIPLES (6.90x), not of posets.
-BASELINE = {
-    "closeout §6.1: live-claim control lines named vs swept",
-    "direction_check docstring: poset-row ratio named vs computed",
-}
+#
+# mg-1d03 corrected both at the site.  Running this script with the two keys
+# still listed above failed with "BASELINE GAP CLOSED" twice -- the re-baseline
+# gate firing exactly as it was built to -- and they are removed here rather than
+# left to pass silently.  From here both comparisons are plain assertions: either
+# figure drifting off the count fails the run outright.
+BASELINE = set()
 
 FAILURES = []
 SEEN_GAPS = set()
@@ -274,6 +296,20 @@ def guard_reach():
 CLOSEOUT = "docs/OneThird-mg8a71-VerdictRepairs-Closeout.md"
 
 
+def closeout_section_6_1():
+    """The text of closeout §6.1 alone -- the named-vs-swept table and nothing else.
+
+    Anchored on the section heading rather than on first-match anywhere in the
+    file: §6.2 (exit codes) and §7 (files touched) both carry table rows keyed by
+    the same script names, and reading "the first row that mentions the script"
+    would start reporting a different table the day someone reorders the doc.
+    Returns "" if §6.1 is gone, which the callers turn into a failure.
+    """
+    whole = (ROOT / CLOSEOUT).read_text(encoding="utf-8")
+    m = re.search(r"^### 6\.1\b.*?(?=^### |\Z)", whole, re.M | re.S)
+    return m.group(0) if m else ""
+
+
 def live_claim_control_population(lc):
     """The F2 test, applied to the script F2's fix produced.
 
@@ -285,7 +321,7 @@ def live_claim_control_population(lc):
     print()
     print("(5) THE LIVE-CLAIM CONTROL'S OWN POPULATION — F2's test applied to F2's fix")
     total, n_live, hits, coverage = lc.scan(str(ROOT / lc.DOC))
-    text = (ROOT / CLOSEOUT).read_text(encoding="utf-8")
+    text = closeout_section_6_1()
     m = re.search(r"\*\*(\d+)/(\d+) lines\*\*", text)
     named = int(m.group(2)) if m else None
     print(f"  {CLOSEOUT} §6.1 NAMES : {named} lines")
@@ -296,30 +332,121 @@ def live_claim_control_population(lc):
           f"  EXEMPT {coverage.get('exempt_annotation', 0)}"
           f" = {100.0*coverage.get('exempt_annotation', 0)/total:.1f}%"
           f" (granted per-block from 3 label lines, no length bound)")
-    check("closeout §6.1: live-claim control lines named vs swept", named, total,
-          "closeout §6.1: live-claim control lines named vs swept")
+    check("closeout §6.1: live-claim control lines named vs swept", named, total)
     return named, total, coverage
 
 
-def docstring_ratio(dc_path):
-    """The '(6.9x larger)' label on the docstring's POSET row (part of F2's fix)."""
+# ----------------------------------------------------------------- part 5b ---
+# mg-1d03, mg-0242 finding G3.  §6.1's third row was wrong.  Its OTHER TWO rows
+# are therefore not taken on trust either: every figure in them is parsed out of
+# the markdown and compared against a number this script obtained by CALLING the
+# generator, never against a number typed elsewhere in this file.
+
+
+def cell_numbers(cell):
+    """Integers a markdown table cell NAMES, in order.
+
+    Two corpus-specific hazards, both real in §6.1 as written:
+      * thousands are separated by a NARROW NO-BREAK SPACE (U+202F) or an
+        ordinary space -- "6 385" is one number, not two;
+      * a cell may cite an OEIS id, and "A001035" is not a population.  A digit
+        run glued to a letter is dropped rather than silently counted as 1035.
+    """
+    cell = re.sub(r"(?<=\d)[\s   ](?=\d)", "", cell)
+    return [int(t) for t in re.findall(r"(?<![A-Za-z0-9])\d+", cell)]
+
+
+def closeout_table_neighbour_rows(counted):
+    """Parse §6.1 rows 1-2 of the closeout and count what they NAME.
+
+    `counted` maps a script filename to (posets, pairs, triples) as ENUMERATED in
+    part (1).  Population: the two non-live-claim rows of §6.1.  Grain: one
+    integer per (generator x {posets, pairs, triples}) -- six figures.
+    """
     print()
-    print("(6) THE RATIO THE REPAIR'S OWN DOCSTRING PUTS ON ITS POSET ROW")
+    print("(5b) THE OTHER ROWS OF THE SAME TABLE — counted, not read")
+    print("  the row this repair fixed was wrong; its neighbours have not thereby")
+    print("  earned trust.  Six figures, each re-obtained by calling the helper.")
+    text = closeout_section_6_1()
+    if not text:
+        FAILURES.append(f"{CLOSEOUT} has no §6.1 section to parse")
+        print("  [GAP ] no §6.1 section found")
+        return 0
+    seen = 0
+    for script, triple in sorted(counted.items()):
+        # the row is keyed by the script it reports on; digits may carry the
+        # narrow spaces this corpus uses as thousands separators.
+        row = None
+        for line in text.splitlines():
+            if line.startswith("|") and script in line:
+                row = line
+                break
+        if row is None:
+            FAILURES.append(f"closeout §6.1 has no row for {script}")
+            print(f"  [GAP ] no §6.1 row found for {script}")
+            continue
+        named_cell, swept_cell = row.split("|")[2], row.split("|")[3]
+        for cell, which in ((named_cell, "NAMED"), (swept_cell, "SWEPT")):
+            nums = cell_numbers(cell)
+            seen += len(nums)
+            check(f"§6.1 {which} cell, {script}", nums, list(triple))
+    print(f"  figures parsed from §6.1 rows 1-2: {seen}"
+          f"   (population: those two rows; grain: one integer per cell entry)")
+    return seen
+
+
+def docstring_table(dc_path, per_n, lper_n):
+    """EVERY row of the `posets_with_identity_extension` docstring table.
+
+    mg-0242 G3's second half was the TOTALS row's ratio label.  Same rule as 5b:
+    the per-n rows are parsed and compared against the per-n counts obtained by
+    calling both generators, and the totals row's ratio is required to agree with
+    the ratio of the COUNTED totals to two decimal places.
+
+    Two decimals is not a style preference.  The three ratios this table could be
+    reporting are 11.06x (posets), 6.87x (pairs) and 6.90x (triples); at one
+    decimal a poset-grain figure and a triple-grain figure are still four times
+    further apart than the rounding, but stating 2dp is what makes the GRAIN of
+    the figure recoverable from the figure itself.  The G3 defect was a real
+    number from the adjacent grain, and a coarser check is exactly what let it
+    read as plausible.
+    """
+    print()
+    print("(6) THE DOCSTRING TABLE — every row, counted rather than read")
     text = pathlib.Path(dc_path).read_text(encoding="utf-8")
+    ok_rows = 0
+    for n in NS:
+        m = re.search(rf"^\s*{n} \|\s*(\d+)\s*\|\s*(\d+)\s*$", text, re.M)
+        if not m:
+            FAILURES.append(f"docstring table has no row for n={n}")
+            print(f"  [GAP ] no docstring table row for n={n}")
+            continue
+        ok_rows += 1
+        check(f"docstring row n={n}: identity-extension family",
+              int(m.group(1)), per_n[n])
+        check(f"docstring row n={n}: labelled posets (A001035)",
+              int(m.group(2)), lper_n[n])
     m = re.search(r"tot \|\s*(\d+)\s*\|\s*(\d+)\s*\((\d+(?:\.\d+)?)x larger\)", text)
     if not m:
         print("  no '(Nx larger)' label found on the totals row")
-        return None
+        FAILURES.append("docstring totals row carries no '(Nx larger)' label")
+        return ok_rows, None
     small, big, named = int(m.group(1)), int(m.group(2)), float(m.group(3))
-    computed = round(big / small, 1)
+    check("docstring totals row: identity-extension family",
+          small, sum(per_n.values()))
+    check("docstring totals row: labelled posets", big, sum(lper_n.values()))
+    csmall, cbig = sum(per_n.values()), sum(lper_n.values())
+    computed = round(cbig / csmall, 2)
     print(f"  docstring totals row: {small} -> {big}, labelled '{named}x larger'")
-    print(f"  {big}/{small} = {big/small:.4f}  -> {computed}x")
-    print(f"  6.9x is the ratio of PAIRS (43842/6385 = {43842/6385:.4f}) and of")
-    print(f"  TRIPLES (218166/31625 = {218166/31625:.4f}), not of posets.")
-    check("direction_check docstring: poset-row ratio named vs computed",
-          named, computed,
-          "direction_check docstring: poset-row ratio named vs computed")
-    return named, computed
+    print(f"  counted {cbig}/{csmall} = {cbig/csmall:.4f}  -> {computed}x"
+          f"   (grain: POSETS)")
+    print(f"  the two adjacent grains, for contrast: PAIRS 43842/6385 ="
+          f" {43842/6385:.4f}, TRIPLES 218166/31625 = {218166/31625:.4f}.")
+    print(f"  mg-0242 G3 was this row carrying 6.9x — the TRIPLE ratio, a real")
+    print(f"  number from an adjacent row, which is why it read as plausible.")
+    check("docstring poset-row ratio named vs computed (2 dp, POSET grain)",
+          named, computed)
+    return ok_rows, computed
 
 
 # --------------------------------------------------------------------- main ---
@@ -396,9 +523,14 @@ def main():
     check("audit instrument: (poset, order) pairs", 43842, apairs)
     check("audit instrument: element triples", 218166, atriples)
 
-    ratio = ltot / tot
-    print(f"  ratio all-labelled : identity-extension = {ratio:.4f}x"
-          f"   ({100.0*triples/ltriples:.1f}% of the triples)")
+    # The three ratios, printed side by side and labelled with their GRAIN,
+    # because mg-0242 G3 was one of them attached to another one's row.
+    print(f"  all-labelled : identity-extension, BY GRAIN —"
+          f"  POSETS {ltot}/{tot} = {ltot/tot:.4f}x,"
+          f"  PAIRS {lpairs}/{pairs} = {lpairs/pairs:.4f}x,"
+          f"  TRIPLES {ltriples}/{triples} = {ltriples/triples:.4f}x")
+    print(f"  ({100.0*triples/ltriples:.1f}% of the triples).  Quoting any of the"
+          f" three without its grain is finding G3.")
 
     print()
     print("(2) CROSS-GENERATOR IDENTITY — same COUNT is not the same POPULATION")
@@ -415,7 +547,11 @@ def main():
     label_dependence_probe(dc)
     guard_reach()
     live_claim_control_population(lc)
-    docstring_ratio(dc_path)
+    closeout_table_neighbour_rows({
+        "onethird_mgfccb_direction_check.py": (tot, pairs, triples),
+        "onethird_mg8a71_audit_instrument.py": (atot, apairs, atriples),
+    })
+    docstring_table(dc_path, per_n, lper_n)
 
     print()
     print("=" * 96)
@@ -427,8 +563,13 @@ def main():
         for f in FAILURES:
             print(f"  - {f}")
         return 1
-    print("RESULT: PASS — every population NAMED equals the population COUNTED,")
-    print("        except the two doc-level gaps recorded in the baseline above.")
+    print("RESULT: PASS — every population NAMED equals the population COUNTED.")
+    print("        The baseline is EMPTY: mg-0242 finding G3's two doc-level gaps")
+    print("        (closeout §6.1's '537' where the control sweeps 539; the")
+    print("        docstring's '6.9x' on a POSET row where the poset ratio is")
+    print("        11.06x) were corrected at the site by mg-1d03, and both are now")
+    print("        plain assertions rather than tolerated gaps.  Every row of BOTH")
+    print("        of those tables is checked, not just the two that were wrong.")
     return 0
 
 

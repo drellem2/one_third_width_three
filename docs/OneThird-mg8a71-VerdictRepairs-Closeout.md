@@ -15,8 +15,10 @@ which mg-8a71 confirmed and this deliverable did not re-open beyond the checks e
 
 The audited repair **stated a remediation standard** — *"an annotation leaves the wrong claim in the
 body"* — struck one site by it, and left the same standard unapplied at two sites **it had itself
-proved false**. Both are now struck at the site. Separately, its control **named a population 6.9×
-larger than the one it swept**; the population is now stated correctly at every site, the helper is
+proved false**. Both are now struck at the site. Separately, its control **named a population 11.06×
+larger than the one it swept** (4 469 posets named, 404 swept — *poset* grain; the figure here read
+`6.9×`, the pair/triple ratio, until mg-1d03 corrected it per mg-0242 finding G3); the population is
+now stated correctly at every site, the helper is
 renamed to what it returns, and both scripts **assert their own population counts** so the gap cannot
 reopen silently.
 
@@ -106,8 +108,9 @@ poset_family(n, *, label_dependent)
 ```
 
 so a call site cannot pick a family without stating which case it is in. This is the actual danger
-mg-8a71 named: for a **label-dependent** property the old helper would have under-swept **6.9× in
-silence**, and nothing at the call site said so.
+mg-8a71 named: for a **label-dependent** property the old helper would have under-swept **11.06× in
+silence** — *poset* grain, 404 of 4 469; **6.90×** if the property is counted per element triple —
+and nothing at the call site said so.
 
 **Both scripts now assert their population counts** (404 / 6 385 / 31 625 and 4 469 / 43 842 /
 218 166, the latter checked per-`n` against A001035). A generator drifting off its stated family now
@@ -184,9 +187,28 @@ Per the verdict's instruction to enumerate. **Predictions were written before ru
 
 | control | population NAMED | population SWEPT | agree? |
 |---|---|---|---|
-| `onethird_mgfccb_direction_check.py` | 404 posets / 6 385 pairs / 31 625 triples | **404 / 6 385 / 31 625**, asserted in-script | ✅ (was *"ALL posets"*, 6.9× too large — this is F2) |
+| `onethird_mgfccb_direction_check.py` | 404 posets / 6 385 pairs / 31 625 triples | **404 / 6 385 / 31 625**, asserted in-script | ✅ (was *"ALL posets"*, **11.06× too large at POSET grain** — this is F2) |
 | `onethird_mg8a71_audit_instrument.py` | 4 469 posets / 43 842 pairs / 218 166 triples | **4 469 / 43 842 / 218 166**, asserted in-script and per-`n` against A001035 | ✅ correct as written; now enforced |
-| `onethird_mg8a71_live_claim_control.py` | *"one file, all of it"* | **537/537 lines**, each in exactly one of {paragraph, quote, heading, exempt-annotation, blank}, asserted to sum | ⚠️ **headings were silently dropped** while the docstring claimed "all of it" — my own instance of the F2 defect, found by applying F2's test to myself. Fixed: headings are scanned, and coverage is now proven rather than asserted. |
+| `onethird_mg8a71_live_claim_control.py` | *"one file, all of it"* | **539/539 lines**, each in exactly one of {paragraph, quote, heading, exempt-annotation, blank}, asserted to sum | ⚠️ **headings were silently dropped** while the docstring claimed "all of it" — my own instance of the F2 defect, found by applying F2's test to myself. Fixed: headings are scanned, and coverage is now proven rather than asserted. |
+
+> **CORRECTION ANNOTATION (2026-08-05, mg-1d03 — mg-0242 finding G3).** Two figures in the table
+> above were wrong, and this is the table whose entire purpose is to report NAMED vs SWEPT. Recorded
+> here rather than silently overwritten, because what the figures were is the finding:
+>
+> * row 3 read ~~*"537/537 lines"*~~. The control sweeps **539**. *(Population: every line of
+>   `docs/OneThird-L1b-Spread-Locality.md`. Grain: one newline-split element — `wc -l` reports 538
+>   newlines, so 539 elements.)*
+> * row 1 read ~~*"6.9× too large"*~~. F2's gap is **11.06×** at the grain row 1 is about.
+>   *(Population: labelled posets on `n = 3,4,5` versus those with the identity as a linear
+>   extension. Grain: POSETS — 4 469/404 = 11.06×. 6.9× is a real number from an adjacent grain:
+>   43 842/6 385 = 6.87× over PAIRS, 218 166/31 625 = 6.90× over TRIPLES, which is why it read as
+>   plausible.)*
+>
+> **Every other figure in this table is now machine-checked** by calling the generator, not by
+> reading the row: `scripts/onethird_mg0242_population_census.py` part (5b) parses rows 1–2 out of
+> this markdown and compares all six integers against enumerated counts. A table that got its own
+> row wrong had not earned trust on its neighbours. Both figures were held by that script's
+> `BASELINE`; correcting them fired its re-baseline gate, and the baseline is now **empty**.
 
 ### 6.2 Exit codes — predicted before running, all five hit
 
